@@ -26,15 +26,14 @@ fun hex2byte(hex: Char): Int {
 
     return if (hex in '0'..'9') {
         (hex - '0')
-    }
-    else {
+    } else {
         0
     }
 }
 
-fun String.hexString2Byte() : Byte {
-    var resultByte : Byte = 0
-    forEach {currentChar ->
+fun String.hexString2Byte(): Byte {
+    var resultByte: Byte = 0
+    forEach { currentChar ->
         resultByte = (resultByte * 10 + hex2byte(currentChar)).toByte()
     }
 
@@ -48,3 +47,11 @@ fun String.toBase64DecodedByteArray(): ByteArray {
 fun String.toAsciiByteArray(): ByteArray = this.toByteArray(Charsets.ISO_8859_1)
 
 fun String.toGbkByteArray(): ByteArray = toByteArray(Charset.forName("GBK"))
+
+fun String?.notEmptyOrNull(): String? {
+    return if (this.isNullOrEmpty()) {
+        null
+    } else {
+        this
+    }
+}

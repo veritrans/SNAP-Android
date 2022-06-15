@@ -6,7 +6,7 @@ import com.midtrans.sdk.corekit.SnapCore
 
 class SampleViewModel: ViewModel() {
     var helloLiveData = MutableLiveData<String>()
-    private val coreKit: SnapCore = SnapCore.Builder().build()
+    private val coreKit: SnapCore = SnapCore.getInstance()!!
 
     fun getHelloFromSnap(){
         helloLiveData.value = coreKit.hello()

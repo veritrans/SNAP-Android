@@ -12,7 +12,7 @@ object Dependencies {
     const val appCompatVersion = "1.2.0"
     const val materialDesignComponentVersion = "1.2.1"
     const val constraintLayoutVersion = "2.0.4"
-    const val daggerVersion = "2.26"
+    const val daggerVersion = "2.42"
     const val mockitoVersion = "2.25.0"
     const val mockitoKotlinVersion = "2.0.0"
     const val clevertapVersion = "4.4.0"

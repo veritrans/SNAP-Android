@@ -16,6 +16,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 //        consumerProguardFiles = "consumer-rules.pro"
+        buildConfigField("String", "SNAP_BASE_URL", com.gtf.snap.ApiConfig.SNAP_SBX_BASE_URL)
     }
 
     buildTypes {
@@ -24,6 +25,10 @@ android {
             proguardFiles.add(getDefaultProguardFile("proguard-android.txt"))
 //            proguardFiles =
 //                    getDefaultProguardFile("proguard-android-optimize.txt", "proguard-rules.pro")
+        }
+
+        debug {
+
         }
     }
     compileOptions {
@@ -100,6 +105,9 @@ dependencies {
     implementation (com.gtf.snap.NetworkLibraries.okHttp)
     implementation (com.gtf.snap.NetworkLibraries.okHttpLogging)
     implementation (com.gtf.snap.NetworkLibraries.okHttpUrlConnection)
+
+    debugImplementation(com.gtf.snap.NetworkLibraries.chuck)
+    releaseImplementation(com.gtf.snap.NetworkLibraries.chuckNoOp)
 
 //    debugImplementation networkLibraries.chuck
 //    releaseImplementation networkLibraries.chuckNoOp
