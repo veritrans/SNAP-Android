@@ -16,9 +16,9 @@ class SampleViewModel: ViewModel() {
         helloLiveData.value = coreKit.hello()
     }
 
-    fun chargeBniVa(){
+    fun chargeBniVa(snapToken: String){
         coreKit.paymentUsingBankTransfer(
-            snapToken = "e88eb8d5-f51c-4bd0-a94e-442b5f40d86b",
+            snapToken = snapToken,
             paymentType = PaymentType.BCA_VA,
             email = "bayar@bayar.com",
             callback = object : Callback<TransactionResponse> {

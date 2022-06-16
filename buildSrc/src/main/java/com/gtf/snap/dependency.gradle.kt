@@ -14,7 +14,7 @@ object Dependencies {
     const val constraintLayoutVersion = "2.0.4"
     const val daggerVersion = "2.42"
     const val mockitoVersion = "2.25.0"
-    const val mockitoKotlinVersion = "2.0.0"
+    const val mockitoKotlinVersion = "4.0.0"
     const val clevertapVersion = "4.4.0"
     const val okHttpVersion = "3.12.1"
     const val curlLoggerInterceptorVersion = "0.1"
@@ -178,8 +178,7 @@ object TestLibraries {
         "androidx.test.espresso:espresso-core:${Dependencies.espressoCoreVersion}"
     const val robolectric = "org.robolectric:robolectric:${Dependencies.robolectricVersion}"
     const val mockito = "org.mockito:mockito-core:${Dependencies.mockitoVersion}"
-    const val mockitoKotlin =
-        "com.nhaarman.mockitokotlin2:mockito-kotlin:${Dependencies.mockitoKotlinVersion}"
+    const val mockitoKotlin = "org.mockito.kotlin:mockito-kotlin:${Dependencies.mockitoKotlinVersion}"
     const val jodaTime = "joda-time:joda-time:${Dependencies.jodaTimeTestVersion}"
     const val powerMockModule =
         "org.powermock:powermock-module-junit4:${Dependencies.powerMockVersion}"

@@ -2,8 +2,6 @@ package com.midtrans.sdk.corekit.api.model
 
 import com.google.gson.annotations.SerializedName
 import com.midtrans.sdk.corekit.internal.constant.Authentication
-import com.midtrans.sdk.corekit.internal.network.model.request.Installment
-import com.midtrans.sdk.corekit.internal.network.model.request.SavedToken
 import com.midtrans.sdk.corekit.internal.util.Utils.mappingToCreditCardAuthentication
 
 /**

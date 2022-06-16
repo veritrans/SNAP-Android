@@ -1,11 +1,11 @@
-package com.midtrans.sdk.corekit.internal.network.model.request
+package com.midtrans.sdk.corekit.api.model
 
 import com.google.gson.annotations.SerializedName
 
 /**
  * @author rakawm
  */
-internal class SavedToken {
+ class SavedToken {
     var token: String? = null
 
     @SerializedName("token_type")
