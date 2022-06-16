@@ -5,13 +5,11 @@ import android.content.Context
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
-import com.midtrans.sdk.corekit.api.model.TransactionRequest
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.di.DaggerSnapComponent
 import com.midtrans.sdk.corekit.internal.di.SnapComponent
 import com.midtrans.sdk.corekit.internal.scheduler.SdkScheduler
 import com.midtrans.sdk.corekit.internal.usecase.BankTransferUsecase
-import com.midtrans.sdk.corekit.internal.util.NetworkUtil
 import javax.inject.Inject
 
 class SnapCore private constructor(builder: Builder) {
@@ -75,8 +73,4 @@ class SnapCore private constructor(builder: Builder) {
         }
     }
 
-    //Todo: this pattern seems anti pattern.
-//    private fun isTransactionRequestAvailable(): Boolean {
-//        return transactionRequest != null || !TextUtils.isEmpty(authenticationToken)
-//    }
 }

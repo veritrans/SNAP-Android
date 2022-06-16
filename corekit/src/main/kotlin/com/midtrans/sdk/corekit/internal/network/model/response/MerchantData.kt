@@ -3,7 +3,7 @@ package com.midtrans.sdk.corekit.internal.network.model.response
 /**
  * @author rakawm
  */
-class MerchantData     constructor (){
+internal class MerchantData     constructor (){
     var  preference: MerchantPreferences? = null
         get() {
             return field

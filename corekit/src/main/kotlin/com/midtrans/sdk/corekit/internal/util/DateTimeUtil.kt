@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-object DateTimeUtil : TimeProvider {
+internal object DateTimeUtil : TimeProvider {
     private val indonesiaLocale = Locale("id")
     private const val DAY_FORMATTER = "ddMMMyyyy"
     private val dayFormatter = DateTimeFormat

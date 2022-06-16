@@ -3,7 +3,7 @@ package com.midtrans.sdk.corekit.internal.util
 import android.content.Context
 import android.net.ConnectivityManager
 
-object NetworkUtil {
+internal object NetworkUtil {
     fun isNetworkAvailable(context: Context): Boolean {
         try {
             val connManager =

@@ -6,7 +6,7 @@ import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.Gopay
 import com.midtrans.sdk.corekit.api.model.ItemDetails
 
-class Transaction {
+internal class Transaction {
     var token: String? = null
 
     @SerializedName("transaction_details")

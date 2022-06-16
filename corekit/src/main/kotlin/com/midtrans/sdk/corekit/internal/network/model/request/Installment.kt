@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by ziahaqi on 8/5/16.
  */
-class Installment {
+internal class Installment {
     var isRequired = false
 
     @SerializedName("terms")

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * @author rakawm
  */
-class SavedToken {
+internal class SavedToken {
     var token: String? = null
 
     @SerializedName("token_type")

@@ -6,7 +6,7 @@ import java.io.Serializable
 /**
  * Created by rakawm on 1/2/17.
  */
-class PromoResponse : Serializable {
+internal class PromoResponse : Serializable {
     var id = 0
     var bins: List<String>? = null
 

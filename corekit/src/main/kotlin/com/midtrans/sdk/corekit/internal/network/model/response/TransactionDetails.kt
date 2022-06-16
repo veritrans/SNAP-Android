@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * @author rakawm
  */
-class TransactionDetails {
+internal class TransactionDetails {
     @SerializedName("order_id")
     var orderId: String? = null
 

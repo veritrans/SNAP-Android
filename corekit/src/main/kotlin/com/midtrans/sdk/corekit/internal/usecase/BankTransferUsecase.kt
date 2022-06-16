@@ -4,7 +4,7 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferPaymentRequest
 import com.midtrans.sdk.corekit.internal.network.model.request.CustomerDetailRequest
-import com.midtrans.sdk.corekit.internal.repository.SnapRepository
+import com.midtrans.sdk.corekit.internal.data.repository.SnapRepository
 import io.reactivex.Single
 
 internal class BankTransferUsecase(

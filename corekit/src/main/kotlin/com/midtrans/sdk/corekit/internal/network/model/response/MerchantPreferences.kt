@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by rakawm on 10/12/16.
  */
-class MerchantPreferences {
+internal class MerchantPreferences {
     @SerializedName("other_va_processor")
     var otherVaProcessor: String? = null
 

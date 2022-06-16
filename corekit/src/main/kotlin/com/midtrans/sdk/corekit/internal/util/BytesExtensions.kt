@@ -15,21 +15,21 @@ internal fun ByteArray.toAsciiString(): String {
     return stringBuilder.toString()
 }
 
-fun ByteArray.copyWithOffset(fromIndex: Int, offset: Int): ByteArray {
+internal fun ByteArray.copyWithOffset(fromIndex: Int, offset: Int): ByteArray {
     return this.copyOfRange(fromIndex, fromIndex + offset)
 }
 
-fun ByteArray.toPanHexString() =
+internal fun ByteArray.toPanHexString() =
     this.toHexString()
         .toCharArray()
         .filter { it.isDigit() }
         .joinToString("")
         .trimStart('0')
 
-fun ByteArray.toBase64EncodedString(): String {
+internal fun ByteArray.toBase64EncodedString(): String {
     val encodedByte = Base64.encode(this, Base64.NO_WRAP)
     return String(encodedByte)
 }
 
-fun ByteArray?.orEmptyByteArray() =
+internal fun ByteArray?.orEmptyByteArray() =
     this ?: ByteArray(0)

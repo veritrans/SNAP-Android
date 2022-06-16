@@ -1,6 +1,5 @@
-package com.midtrans.sdk.corekit.internal.repository
+package com.midtrans.sdk.corekit.internal.data.repository
 
-import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferPaymentRequest
 import com.midtrans.sdk.corekit.internal.network.restapi.SnapApi

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by ziahaqi on 12/22/17.
  */
-class Promo : Cloneable {
+internal class Promo : Cloneable {
     @SerializedName("id")
     val id: Long = 0
 
