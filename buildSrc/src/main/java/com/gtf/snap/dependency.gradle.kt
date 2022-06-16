@@ -154,7 +154,7 @@ object ComposeUiLibraries {
 //    ...
     const val compose = "androidx.compose.ui:ui:${Dependencies.composeVersion}"
     const val composeFoundation = "androidx.compose.foundation:foundation:${Dependencies.composeVersion}"
-    const val composeTool = "androidx.ui:ui-tooling:${Dependencies.composeVersion}"
+    const val composeTool = "androidx.compose.ui:ui-tooling:${Dependencies.composeVersion}"
     const val composeMaterial = "androidx.compose.material:material:${Dependencies.composeVersion}"
     const val composeActivity = "androidx.activity:activity-compose:1.4.0"
     const val composeFramework = "androidx.ui:ui-framework:${Dependencies.composeVersion}"
