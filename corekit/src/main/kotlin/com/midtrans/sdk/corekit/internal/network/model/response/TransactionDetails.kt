@@ -5,17 +5,12 @@ import com.google.gson.annotations.SerializedName
 /**
  * @author rakawm
  */
-internal class TransactionDetails {
+internal data class TransactionDetails(
     @SerializedName("order_id")
-    var orderId: String? = null
+    var orderId: String? = null,
 
     @SerializedName("gross_amount")
-    var amount = 0.0
+    var amount: Double = 0.0,
     val currency: String? = null
 
-    constructor() {}
-    constructor(orderId: String?, amount: Double) {
-        this.orderId = orderId
-        this.amount = amount
-    }
-}
+)

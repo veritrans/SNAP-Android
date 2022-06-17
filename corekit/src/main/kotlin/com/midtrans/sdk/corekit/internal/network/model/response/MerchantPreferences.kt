@@ -5,29 +5,29 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by rakawm on 10/12/16.
  */
-internal class MerchantPreferences {
+internal data class MerchantPreferences (
     @SerializedName("other_va_processor")
-    var otherVaProcessor: String? = null
+    val otherVaProcessor: String? = null,
 
     @SerializedName("display_name")
-    var displayName: String? = null
+    val displayName: String? = null,
 
     @SerializedName("finish_url")
-    var finishUrl: String? = null
+    val finishUrl: String? = null,
 
     @SerializedName("error_url")
-    var errorUrl: String? = null
+    val errorUrl: String? = null,
 
     @SerializedName("pending_url")
-    var pendingUrl: String? = null
+    val pendingUrl: String? = null,
 
     @SerializedName("logo_url")
-    var logoUrl: String? = null
+    val logoUrl: String? = null,
 
     @SerializedName("color_scheme")
-    var colorScheme: String? = null
+    val colorScheme: String? = null,
 
     @SerializedName("color_scheme_url")
-    var colorSchemeUrl: String? = null
-    var locale: String? = null
-}
+    val colorSchemeUrl: String? = null,
+    val locale: String? = null
+)

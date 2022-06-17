@@ -1,46 +1,35 @@
 package com.midtrans.sdk.corekit.api.model
 
 import com.google.gson.annotations.SerializedName
-import com.midtrans.sdk.corekit.internal.constant.Authentication
-import com.midtrans.sdk.corekit.internal.util.Utils.mappingToCreditCardAuthentication
 
 /**
  * Created by ziahaqi on 8/5/16.
  */
-class CreditCard {
+data class CreditCard(
     @SerializedName("save_card")
-    var isSaveCard = false
+    val isSaveCard: Boolean = false,
 
     @SerializedName("token_id")
-    var tokenId: String? = null
-    var isSecure = false
-        private set
-    var channel: String? = null
-    var bank: String? = null
+    val tokenId: String? = null,
+    val isSecure: Boolean = false,
+    val channel: String? = null,
+    val bank: String? = null,
 
     @SerializedName("saved_tokens")
-    var savedTokens: List<SavedToken>? = null
+    val savedTokens: List<SavedToken>? = null,
 
     @SerializedName("whitelist_bins")
-    var whitelistBins: ArrayList<String>? = null
-        private set
+    val whitelistBins: ArrayList<String>? = null,
 
     @SerializedName("blacklist_bins")
-    var blacklistBins: List<String>? = null
+    val blacklistBins: List<String>? = null,
 
     @SerializedName("installment")
-    var installment: Installment? = null
-    var type: String? = null
-    var authentication: String? = null
-        set(cardAuthentication) {
-            isSecure = cardAuthentication != null && cardAuthentication == Authentication.AUTH_3DS
-            field = mappingToCreditCardAuthentication(cardAuthentication, isSecure)
-        }
+    val installment: Installment? = null,
+    val type: String? = null,
+    val authentication: String? = null,
 
-    fun setWhiteListBins(whiteListBins: ArrayList<String>?) {
-        whitelistBins = whiteListBins
-    }
-
+    ) {
     companion object {
         const val MIGS = "migs"
 

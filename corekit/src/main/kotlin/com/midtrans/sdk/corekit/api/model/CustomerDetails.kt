@@ -7,29 +7,21 @@ import com.google.gson.annotations.SerializedName
  *
  * Created by shivam on 10/29/15.
  */
-class CustomerDetails {
+data class CustomerDetails(
     @SerializedName("customer_identifier")
-    var customerIdentifier: String? = null
+    val customerIdentifier: String? = null,
 
     @SerializedName("first_name")
-    var firstName: String? = null
+    val firstName: String? = null,
 
     @SerializedName("last_name")
-    var lastName: String? = null
-    var email: String? = null
-    var phone: String? = null
+    val lastName: String? = null,
+    val email: String? = null,
+    val phone: String? = null,
 
     @SerializedName("shipping_address")
-    var shippingAddress: ShippingAddress? = null
+    val shippingAddress: ShippingAddress? = null,
 
     @SerializedName("billing_address")
-    var billingAddress: BillingAddress? = null
-
-    constructor() {}
-    constructor(firstName: String?, lastName: String?, email: String?, phone: String?) {
-        this.firstName = firstName
-        this.lastName = lastName
-        this.email = email
-        this.phone = phone
-    }
-}
+    val billingAddress: BillingAddress? = null
+)

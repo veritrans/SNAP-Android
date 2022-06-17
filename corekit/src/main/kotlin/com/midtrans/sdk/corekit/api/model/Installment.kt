@@ -6,10 +6,10 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by ziahaqi on 8/5/16.
  */
- class Installment {
-    var isRequired = false
+data class Installment(
+    val isRequired: Boolean = false,
 
     @SerializedName("terms")
     @Expose
-    var terms: Map<String, ArrayList<Int>>? = null
-}
+    val terms: Map<String, ArrayList<Int>>? = null,
+)

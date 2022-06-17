@@ -6,31 +6,31 @@ import java.io.Serializable
 /**
  * Created by rakawm on 1/2/17.
  */
-internal class PromoResponse : Serializable {
-    var id = 0
-    var bins: List<String>? = null
+internal data class PromoResponse(
+    val id: Int = 0,
+    val bins: List<String>? = null,
 
     @SerializedName("discount_amount")
-    var discountAmount = 0
+    val discountAmount: Double = 0.0,
 
     @SerializedName("start_date")
-    var startDate: String? = null
+    val startDate: String? = null,
 
     @SerializedName("end_date")
-    var endDate: String? = null
+    val endDate: String? = null,
 
     @SerializedName("discount_type")
-    var discountType: String? = null
+    val discountType: String? = null,
 
     @SerializedName("promo_code")
-    var promoCode: String? = null
+    val promoCode: String? = null,
 
     @SerializedName("sponsor_name")
-    var sponsorName: String? = null
+    val sponsorName: String? = null,
 
     @SerializedName("sponsor_message_en")
-    var sponsorMessageEn: String? = null
+    val sponsorMessageEn: String? = null,
 
     @SerializedName("sponsor_message_id")
-    var sponsorMessageId: String? = null
-}
+    val sponsorMessageId: String? = null
+)

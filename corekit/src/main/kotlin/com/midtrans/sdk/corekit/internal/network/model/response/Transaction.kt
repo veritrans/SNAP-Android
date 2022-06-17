@@ -6,34 +6,34 @@ import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.Gopay
 import com.midtrans.sdk.corekit.api.model.ItemDetails
 
-internal class Transaction {
-    var token: String? = null
+internal data class Transaction(
+    val token: String? = null,
 
     @SerializedName("transaction_details")
-    var transactionDetails: TransactionDetails? = null
-    var callbacks: Callbacks? = null
+    val transactionDetails: TransactionDetails? = null,
+    val callbacks: Callbacks? = null,
 
     @SerializedName("enabled_payments")
-    var enabledPayments: List<EnabledPayment>? = null
+    val enabledPayments: List<EnabledPayment>? = null,
 
     @SerializedName("merchant")
-    var merchantData: MerchantData? = null
+    val merchantData: MerchantData? = null,
 
     @SerializedName("credit_card")
-    var creditCard: CreditCard? = null
+    val creditCard: CreditCard? = null,
 
     @Deprecated("")
-    var promos: List<PromoResponse>? = null
+    val promos: List<PromoResponse>? = null,
 
     @SerializedName("promo_details")
-    var promoDetails: PromoDetails? = null
+    val promoDetails: PromoDetails? = null,
 
     @SerializedName("item_details")
-    var itemDetails: List<ItemDetails>? = null
+    val itemDetails: List<ItemDetails>? = null,
 
     @SerializedName("customer_details")
-    var customerDetails: CustomerDetails? = null
+    val customerDetails: CustomerDetails? = null,
 
     @SerializedName("gopay")
-    var gopay: Gopay? = null
-}
+    val gopay: Gopay? = null
+)
