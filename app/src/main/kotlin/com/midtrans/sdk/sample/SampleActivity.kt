@@ -24,7 +24,7 @@ class SampleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         SnapCore.Builder().withContext(this.applicationContext).build()
         viewModel.getHelloFromSnap()
-       setContent{Greeting()}
+        setContent { Greeting() }
     }
 
     @Composable
