@@ -8,28 +8,22 @@ import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 
-class SampleViewModel: ViewModel() {
+class SampleViewModel : ViewModel() {
     var helloLiveData = MutableLiveData<String>()
     private val coreKit: SnapCore = SnapCore.getInstance()!!
 
-    fun getHelloFromSnap(){
+    fun getHelloFromSnap() {
         helloLiveData.value = coreKit.hello()
     }
 
-    fun chargeBniVa(snapToken: String){
+    fun chargeBniVa(snapToken: String) {
         coreKit.paymentUsingBankTransfer(
             snapToken = snapToken,
             paymentType = PaymentType.BCA_VA,
             email = "bayar@bayar.com",
             callback = object : Callback<TransactionResponse> {
-                override fun onSuccess(result: TransactionResponse) {
-
-                }
-
-                override fun onError(error: SnapError) {
-
-                }
-
+                override fun onSuccess(result: TransactionResponse) {}
+                override fun onError(error: SnapError) {}
             }
         )
     }
