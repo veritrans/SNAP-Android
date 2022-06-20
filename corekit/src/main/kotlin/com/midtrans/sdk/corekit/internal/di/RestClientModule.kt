@@ -74,7 +74,7 @@ internal class RestClientModule {
     fun provideGson(): Gson {
         return GsonBuilder()
             .setLenient()
-            .setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .registerTypeAdapter(Date::class.java, DateTypeAdapter())
             .create()
     }

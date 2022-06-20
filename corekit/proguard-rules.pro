@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep public class com.midtrans.sdk.corekit.api.model.** { *; }
+-keep public class com.midtrans.sdk.corekit.internal.model.** { *; }
+-keep public class com.midtrans.sdk.corekit.internal.network.model.** { *; }
