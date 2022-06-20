@@ -51,12 +51,10 @@ internal class RestClientModule {
     @Singleton
     @Named("snap_client")
     fun provideSnapOkHttpClient(
-        chuckInterceptor: ChuckerInterceptor,
-        connectionPool: ConnectionPool
+        chuckInterceptor: ChuckerInterceptor
     ): OkHttpClient {
 
         return OkHttpClient.Builder()
-            .connectionPool(connectionPool)
             .readTimeout(READ_TIME_OUT.toLong(), TimeUnit.SECONDS)
             .writeTimeout(WRITE_TIME_OUT.toLong(), TimeUnit.SECONDS)
             .connectTimeout(CONNECTION_TIME_OUT.toLong(), TimeUnit.SECONDS)
@@ -73,15 +71,6 @@ internal class RestClientModule {
 
     @Provides
     @Singleton
-    fun provideConnectionPool(): ConnectionPool {
-        return ConnectionPool(
-            MAX_IDLE_CONNECTIONS,
-            KEEP_ALIVE_DURATION, TimeUnit.MILLISECONDS
-        )
-    }
-
-    @Provides
-    @Singleton
     fun provideGson(): Gson {
         return GsonBuilder()
             .setLenient()
@@ -94,7 +83,5 @@ internal class RestClientModule {
         private const val READ_TIME_OUT = 120
         private const val WRITE_TIME_OUT = 120
         private const val CONNECTION_TIME_OUT = 30
-        private const val KEEP_ALIVE_DURATION = (30 * 1000).toLong()
-        private const val MAX_IDLE_CONNECTIONS = 10
     }
 }
