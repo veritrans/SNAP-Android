@@ -24,7 +24,7 @@ object Dependencies {
     const val rxAndroid2Version = "2.1.0"
     const val rxJava2Version = "2.2.7"
     const val rxBindingVersion = "3.0.0-alpha2"
-    const val jodaTimeVersion = "2.9.9.4"
+    const val jodaTimeVersion = "2.9.9.4" // TODO: migrate to javatime
     const val jodaTimeTestVersion = "2.9.9"
     const val zxingVersion = "3.6.0"
     const val robolectricVersion = "4.4"

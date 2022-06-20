@@ -54,7 +54,7 @@ class ExampleUnitTest {
     fun bankTransferUsecase() {
         val snapRepository = mock<SnapRepository>()
         val scheduler = TestSdkScheduler().io()
-        `when`(snapRepository.chargeBankTransfer(any(), any())).thenReturn(Single.just(mockk()))
+        `when`(snapRepository.chargeBankTransfer(any(), any())).thenReturn(Single.just(mock()))
         val bankTransferUsecase = BankTransferUsecase(snapRepository)
         val snapToken = "token"
         val email = "email"
