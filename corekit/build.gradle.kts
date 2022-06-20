@@ -15,19 +15,18 @@ android {
         targetSdk = 32
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-//        consumerProguardFiles = "consumer-rules.pro"
-        buildConfigField("String", "SNAP_BASE_URL", com.gtf.snap.ApiConfig.SNAP_SBX_BASE_URL)
+//        consumerProguardFiles = "consumer-rules.pro" // TODO: check if we need consumer proguard or not
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles.add(getDefaultProguardFile("proguard-android.txt"))
-//            proguardFiles =
-//                    getDefaultProguardFile("proguard-android-optimize.txt", "proguard-rules.pro")
+            buildConfigField("String", "SNAP_BASE_URL", "\"https://app.midtrans.com/snap/\"")
         }
 
         debug {
+            buildConfigField("String", "SNAP_BASE_URL", "\"https://app.sandbox.midtrans.com/snap/\"")
 
         }
     }
@@ -71,8 +70,8 @@ afterEvaluate {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.4.1")
+    implementation(com.gtf.snap.KotlinExtensionLibraries.coreKtx)
+    implementation(com.gtf.snap.AndroidSupportLibraries.appCompact)
     implementation(com.gtf.snap.CommonLibraries.androidxDatastore)
     implementation(com.gtf.snap.JodaTimeLibraries.jodaTime)
     implementation(com.gtf.snap.CommonLibraries.uuid)
@@ -109,8 +108,6 @@ dependencies {
     debugImplementation(com.gtf.snap.NetworkLibraries.chuck)
     releaseImplementation(com.gtf.snap.NetworkLibraries.chuckNoOp)
 
-//    debugImplementation networkLibraries.chuck
-//    releaseImplementation networkLibraries.chuckNoOp
 
     //testing-tools
     testImplementation (com.gtf.snap.TestLibraries.junit)
