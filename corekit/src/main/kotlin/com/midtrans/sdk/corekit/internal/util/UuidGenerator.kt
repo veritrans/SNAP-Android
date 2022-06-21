@@ -3,7 +3,7 @@ package com.midtrans.sdk.corekit.internal.util
 import com.fasterxml.uuid.Generators
 import java.util.*
 
-class UuidGenerator {
+internal class UuidGenerator {
     fun generateTimeBasedUuid(): String {
         return Generators.timeBasedGenerator().generate().toString()
     }

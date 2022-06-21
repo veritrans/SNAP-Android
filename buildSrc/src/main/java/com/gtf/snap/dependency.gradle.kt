@@ -2,7 +2,7 @@ package com.gtf.snap
 
 
 object Dependencies {
-    const val coreKtxVersion = "1.3.2"
+    const val coreKtxVersion = "1.7.0"
     const val navigationUiKtxVersion = "2.3.1"
     const val navigationFragmentKtxVersion = "2.3.1"
     const val junitVersion = "4.13.1"
@@ -12,9 +12,9 @@ object Dependencies {
     const val appCompatVersion = "1.2.0"
     const val materialDesignComponentVersion = "1.2.1"
     const val constraintLayoutVersion = "2.0.4"
-    const val daggerVersion = "2.26"
+    const val daggerVersion = "2.42"
     const val mockitoVersion = "2.25.0"
-    const val mockitoKotlinVersion = "2.0.0"
+    const val mockitoKotlinVersion = "4.0.0"
     const val clevertapVersion = "4.4.0"
     const val okHttpVersion = "3.12.1"
     const val curlLoggerInterceptorVersion = "0.1"
@@ -24,7 +24,7 @@ object Dependencies {
     const val rxAndroid2Version = "2.1.0"
     const val rxJava2Version = "2.2.7"
     const val rxBindingVersion = "3.0.0-alpha2"
-    const val jodaTimeVersion = "2.9.9.4"
+    const val jodaTimeVersion = "2.9.9.4" // TODO: migrate to javatime
     const val jodaTimeTestVersion = "2.9.9"
     const val zxingVersion = "3.6.0"
     const val robolectricVersion = "4.4"
@@ -33,7 +33,7 @@ object Dependencies {
     const val iso8583Version = "1.0.0"
     const val itmsLibVersion = "1.0.1"
     const val androidxTestVersion = "1.1.1"
-    const val androidxLibVersion = "1.0.0"
+    const val androidxLibVersion = "1.4.2"
     const val timberVersion = "4.7.1"
     const val roomVersion = "2.2.6"
     const val powerMockVersion = "2.0.0"
@@ -60,7 +60,8 @@ object CommonLibraries {
     const val roomRxJava2 = "androidx.room:room-rxjava2:${Dependencies.roomVersion}"
     const val timber = "com.jakewharton.timber:timber:${Dependencies.timberVersion}"
     const val zxing = "com.journeyapps:zxing-android-embedded:${Dependencies.zxingVersion}"
-    const val androidxDatastore = "androidx.datastore:datastore-preferences:${Dependencies.androidxDatastoreVersion}"
+    const val androidxDatastore =
+        "androidx.datastore:datastore-preferences:${Dependencies.androidxDatastoreVersion}"
 
 }
 
@@ -78,12 +79,6 @@ object KotlinExtensionLibraries {
     const val navigationFragmentKtx =
         "androidx.navigation:navigation-fragment-ktx:${Dependencies.navigationFragmentKtxVersion}"
 }
-
-
-//    gojekLibraries = [
-//        asphalt     = "com.gojek.android:asphalt:${asphaltVersion}",
-//        asphaltAloha: "com.gojek.android:asphalt-aloha:${asphaltAlohaVersion}"
-//    ]
 
 object DaggerLibraries {
     const val dagger = "com.google.dagger:dagger:${Dependencies.daggerVersion}"
@@ -150,22 +145,26 @@ object ApacheLibraries {
 }
 
 object ComposeUiLibraries {
-//    def composeVersion = "1.0.0-alpha06"
+    //    def composeVersion = "1.0.0-alpha06"
 //    ...
     const val compose = "androidx.compose.ui:ui:${Dependencies.composeVersion}"
-    const val composeFoundation = "androidx.compose.foundation:foundation:${Dependencies.composeVersion}"
-    const val composeTool = "androidx.ui:ui-tooling:${Dependencies.composeVersion}"
+    const val composeFoundation =
+        "androidx.compose.foundation:foundation:${Dependencies.composeVersion}"
+    const val composeTool = "androidx.compose.ui:ui-tooling:${Dependencies.composeVersion}"
     const val composeMaterial = "androidx.compose.material:material:${Dependencies.composeVersion}"
     const val composeActivity = "androidx.activity:activity-compose:1.4.0"
     const val composeFramework = "androidx.ui:ui-framework:${Dependencies.composeVersion}"
 
 
     const val composeRuntime = "androidx.compose.runtime:runtime:${Dependencies.composeVersion}"
-    const val composeLayout = "androidx.compose.foundation:foundation-layout:${Dependencies.composeVersion}"
+    const val composeLayout =
+        "androidx.compose.foundation:foundation-layout:${Dependencies.composeVersion}"
 
-    const val composeMaterialIconsExtended = "androidx.compose.material:material-icons-extended:${Dependencies.composeVersion}"
+    const val composeMaterialIconsExtended =
+        "androidx.compose.material:material-icons-extended:${Dependencies.composeVersion}"
 
-    const val composeToolingPreview = "androidx.compose.ui:ui-tooling-preview:${Dependencies.composeVersion}"
+    const val composeToolingPreview =
+        "androidx.compose.ui:ui-tooling-preview:${Dependencies.composeVersion}"
 
 }
 
@@ -179,7 +178,7 @@ object TestLibraries {
     const val robolectric = "org.robolectric:robolectric:${Dependencies.robolectricVersion}"
     const val mockito = "org.mockito:mockito-core:${Dependencies.mockitoVersion}"
     const val mockitoKotlin =
-        "com.nhaarman.mockitokotlin2:mockito-kotlin:${Dependencies.mockitoKotlinVersion}"
+        "org.mockito.kotlin:mockito-kotlin:${Dependencies.mockitoKotlinVersion}"
     const val jodaTime = "joda-time:joda-time:${Dependencies.jodaTimeTestVersion}"
     const val powerMockModule =
         "org.powermock:powermock-module-junit4:${Dependencies.powerMockVersion}"

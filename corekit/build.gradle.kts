@@ -1,4 +1,3 @@
-
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -15,15 +14,24 @@ android {
         targetSdk = 32
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-//        consumerProguardFiles = "consumer-rules.pro"
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles.add(getDefaultProguardFile("proguard-android.txt"))
-//            proguardFiles =
-//                    getDefaultProguardFile("proguard-android-optimize.txt", "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                "proguard-rules.pro"
+            ) //TODO: check this working or not
+            buildConfigField("String", "SNAP_BASE_URL", "\"https://app.midtrans.com/snap/\"")
+        }
+
+        debug {
+            buildConfigField(
+                "String",
+                "SNAP_BASE_URL",
+                "\"https://app.sandbox.midtrans.com/snap/\""
+            )
         }
     }
     compileOptions {
@@ -66,8 +74,8 @@ afterEvaluate {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.4.1")
+    implementation(com.gtf.snap.KotlinExtensionLibraries.coreKtx)
+    implementation(com.gtf.snap.AndroidSupportLibraries.appCompact)
     implementation(com.gtf.snap.CommonLibraries.androidxDatastore)
     implementation(com.gtf.snap.JodaTimeLibraries.jodaTime)
     implementation(com.gtf.snap.CommonLibraries.uuid)
@@ -78,43 +86,44 @@ dependencies {
 
     //dagger
     implementation(com.gtf.snap.DaggerLibraries.dagger)
-    kapt (com.gtf.snap.DaggerLibraries.daggerCompiler)
+    kapt(com.gtf.snap.DaggerLibraries.daggerCompiler)
     implementation(com.gtf.snap.DaggerLibraries.daggerAndroid)
-    kapt (com.gtf.snap.DaggerLibraries.daggerAndroidCompiler)
+    kapt(com.gtf.snap.DaggerLibraries.daggerAndroidCompiler)
 
-    testImplementation (com.gtf.snap.DaggerLibraries.dagger)
-    kaptTest (com.gtf.snap.DaggerLibraries.daggerCompiler)
-    testImplementation (com.gtf.snap.DaggerLibraries.daggerAndroid)
-    kaptTest (com.gtf.snap.DaggerLibraries.daggerAndroidCompiler)
+    testImplementation(com.gtf.snap.DaggerLibraries.dagger)
+    kaptTest(com.gtf.snap.DaggerLibraries.daggerCompiler)
+    testImplementation(com.gtf.snap.DaggerLibraries.daggerAndroid)
+    kaptTest(com.gtf.snap.DaggerLibraries.daggerAndroidCompiler)
 
     //rx android
-    implementation (com.gtf.snap.RxLibraries.rxAndroid2)
-    implementation (com.gtf.snap.RxLibraries.rxJava2)
-    implementation (com.gtf.snap.RxLibraries.rxBinding)
+    implementation(com.gtf.snap.RxLibraries.rxAndroid2)
+    implementation(com.gtf.snap.RxLibraries.rxJava2)
+    implementation(com.gtf.snap.RxLibraries.rxBinding)
 
     //network rest-client
 //    implementation networkLibraries.curlLoggerInterceptor
-    implementation (com.gtf.snap.NetworkLibraries.retrofit)
-    implementation (com.gtf.snap.NetworkLibraries.retrofitGson)
-    implementation (com.gtf.snap.NetworkLibraries.retrofitRx)
-    implementation (com.gtf.snap.NetworkLibraries.okHttp)
-    implementation (com.gtf.snap.NetworkLibraries.okHttpLogging)
-    implementation (com.gtf.snap.NetworkLibraries.okHttpUrlConnection)
+    implementation(com.gtf.snap.NetworkLibraries.retrofit)
+    implementation(com.gtf.snap.NetworkLibraries.retrofitGson)
+    implementation(com.gtf.snap.NetworkLibraries.retrofitRx)
+    implementation(com.gtf.snap.NetworkLibraries.okHttp)
+    implementation(com.gtf.snap.NetworkLibraries.okHttpLogging)
+    implementation(com.gtf.snap.NetworkLibraries.okHttpUrlConnection)
 
-//    debugImplementation networkLibraries.chuck
-//    releaseImplementation networkLibraries.chuckNoOp
+    debugImplementation(com.gtf.snap.NetworkLibraries.chuck)
+    releaseImplementation(com.gtf.snap.NetworkLibraries.chuckNoOp)
+
 
     //testing-tools
-    testImplementation (com.gtf.snap.TestLibraries.junit)
-    testImplementation (com.gtf.snap.TestLibraries.mockito)
-    testImplementation (com.gtf.snap.TestLibraries.mockitoKotlin)
-    testImplementation (com.gtf.snap.TestLibraries.robolectric)
-    testImplementation (com.gtf.snap.TestLibraries.androidxJunit)
-    testImplementation (com.gtf.snap.TestLibraries.androidxArchTesting)
-    testImplementation (com.gtf.snap.TestLibraries.jodaTime)
-    testImplementation (com.gtf.snap.TestLibraries.powerMockModule)
-    testImplementation (com.gtf.snap.TestLibraries.powerMockApi)
-    testImplementation (com.gtf.snap.TestLibraries.powerMockCore)
-    testImplementation (com.gtf.snap.TestLibraries.powerMockModuleRule)
-    testImplementation (com.gtf.snap.TestLibraries.mockK)
+    testImplementation(com.gtf.snap.TestLibraries.junit)
+    testImplementation(com.gtf.snap.TestLibraries.mockito)
+    testImplementation(com.gtf.snap.TestLibraries.mockitoKotlin)
+    testImplementation(com.gtf.snap.TestLibraries.robolectric)
+    testImplementation(com.gtf.snap.TestLibraries.androidxJunit)
+    testImplementation(com.gtf.snap.TestLibraries.androidxArchTesting)
+    testImplementation(com.gtf.snap.TestLibraries.jodaTime)
+    testImplementation(com.gtf.snap.TestLibraries.powerMockModule)
+    testImplementation(com.gtf.snap.TestLibraries.powerMockApi)
+    testImplementation(com.gtf.snap.TestLibraries.powerMockCore)
+    testImplementation(com.gtf.snap.TestLibraries.powerMockModuleRule)
+    testImplementation(com.gtf.snap.TestLibraries.mockK)
 }

@@ -5,7 +5,7 @@ pluginManagement {
         google()
         mavenCentral()
         maven { url= uri("https://jitpack.io")}
-
+        maven { url= uri("https://maven.google.com/")}
     }
 }
 dependencyResolutionManagement {
@@ -14,6 +14,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url= uri("https://jitpack.io")}
+        maven { url= uri("https://maven.google.com/")}
     }
 }
 

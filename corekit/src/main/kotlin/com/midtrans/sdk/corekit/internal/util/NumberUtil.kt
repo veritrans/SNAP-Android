@@ -1,4 +1,4 @@
-package com.gojek.offline.payment.sdk.common.util
+package com.midtrans.sdk.corekit.internal.util
 
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -6,7 +6,7 @@ import java.text.NumberFormat
 import java.util.*
 import kotlin.math.ceil
 
-object NumberUtil {
+internal object NumberUtil {
     private const val ZERO_DOUBLE = 0.0
     private const val DEFAULT_ROUND_TO = 100L
 

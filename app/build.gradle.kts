@@ -55,7 +55,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 
     implementation(com.gtf.snap.ComposeUiLibraries.compose)
-//    implementation(com.gtf.snap.ComposeUiLibraries.composeTool)
+    implementation(com.gtf.snap.ComposeUiLibraries.composeTool)
     implementation(com.gtf.snap.ComposeUiLibraries.composeMaterial)
     implementation(com.gtf.snap.ComposeUiLibraries.composeFoundation)
     implementation(com.gtf.snap.ComposeUiLibraries.composeActivity)
