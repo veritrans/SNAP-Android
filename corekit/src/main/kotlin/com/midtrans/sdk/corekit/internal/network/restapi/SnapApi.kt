@@ -26,6 +26,7 @@ internal interface SnapApi {
          *
          * @param paymentRequest Payment Request Details.
          */
+        //TODO: generalize all charge request for all payment type
         @POST("v1/transactions/{snap_token}/pay")
         fun paymentUsingVa(
                 @Path("snap_token") snapToken: String,
