@@ -11,7 +11,7 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AndroidInjectionModule::class,
-        BankTransferModule::class,
+        UsecaseModule::class,
         RestClientModule::class,
         RepositoryModule::class
     ]

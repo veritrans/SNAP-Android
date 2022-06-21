@@ -10,12 +10,16 @@ import com.midtrans.sdk.corekit.internal.di.DaggerSnapComponent
 import com.midtrans.sdk.corekit.internal.di.SnapComponent
 import com.midtrans.sdk.corekit.internal.scheduler.SdkScheduler
 import com.midtrans.sdk.corekit.internal.usecase.BankTransferUsecase
+import com.midtrans.sdk.corekit.internal.usecase.DirectDebitUsecase
 import javax.inject.Inject
 
 class SnapCore private constructor(builder: Builder) {
 
     @Inject
     internal lateinit var bankTransferUsecase: BankTransferUsecase
+
+    @Inject
+    internal lateinit var directDebitUsecase: DirectDebitUsecase
 
     init {
         buildDaggerComponent(builder.context).inject(this)
@@ -45,6 +49,36 @@ class SnapCore private constructor(builder: Builder) {
                 }
             )
 
+    }
+
+    @SuppressLint("CheckResult")
+    fun paymentUsingDirectDebit(
+        snapToken: String,
+        @PaymentType.Def paymentType: String,
+        input3: String? = null,
+        token: String? = null,
+        tokenId: String? = null,
+        userId: String? = null,
+        callback: Callback<TransactionResponse>
+    ) {
+        directDebitUsecase.charge(
+            snaptoken = snapToken,
+            paymentType = paymentType,
+            input3 = input3,
+            token = token,
+            tokenId = tokenId,
+            userId = userId
+        )
+            .subscribeOn(SdkScheduler().io())
+            .observeOn(SdkScheduler().ui())
+            .subscribe(
+                {
+                    callback.onSuccess(it)
+                },
+                {
+                    callback.onError(SnapError(cause = it))
+                }
+            )
     }
 
     companion object {
