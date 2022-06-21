@@ -25,6 +25,7 @@ class SnapCore private constructor(builder: Builder) {
         return "hello snap"
     }
 
+    //TODO: single API call for all payment type.
     @SuppressLint("CheckResult")
     fun paymentUsingBankTransfer(
         snapToken: String,
