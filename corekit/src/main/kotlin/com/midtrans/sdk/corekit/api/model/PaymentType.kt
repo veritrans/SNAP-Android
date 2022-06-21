@@ -14,16 +14,8 @@ class PaymentType {
         KLIK_BCA,
         BCA_KLIKPAY,
         CIMB_CLICKS,
-        MANDIRI_CLICKPAY,
         BRI_EPAY,
-        TELKOMSEL_CASH,
-        XL_TUNAI,
-        BBM_MONEY,
-        MANDIRI_ECASH,
         INDOMARET,
-        INDOSAT_DOMPETKU,
-        KIOSON,
-        GCI,
         GOPAY,
         SHOPEEPAY,
         QRIS,
@@ -48,16 +40,8 @@ class PaymentType {
         const val KLIK_BCA = "bca_klikbca"
         const val BCA_KLIKPAY = "bca_klikpay"
         const val CIMB_CLICKS = "cimb_clicks"
-        const val MANDIRI_CLICKPAY = "mandiri_clickpay"
         const val BRI_EPAY = "bri_epay"
-        const val TELKOMSEL_CASH = "telkomsel_cash"
-        const val XL_TUNAI = "xl_tunai"
-        const val BBM_MONEY = "bbm_money"
-        const val MANDIRI_ECASH = "mandiri_ecash"
         const val INDOMARET = "indomaret"
-        const val INDOSAT_DOMPETKU = "indosat_dompetku"
-        const val KIOSON = "kioson"
-        const val GCI = "gci"
         const val GOPAY = "gopay"
         const val SHOPEEPAY = "shopeepay"
         const val QRIS = "qris"
