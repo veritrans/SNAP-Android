@@ -1,25 +1,18 @@
 package com.midtrans.sdk.corekit
 
-import android.annotation.SuppressLint
 import android.content.Context
 import com.midtrans.sdk.corekit.api.callback.Callback
-import com.midtrans.sdk.corekit.api.exception.SnapError
-import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.api.requestbuilder.PaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.di.DaggerSnapComponent
 import com.midtrans.sdk.corekit.internal.di.SnapComponent
-import com.midtrans.sdk.corekit.internal.scheduler.SdkScheduler
-import com.midtrans.sdk.corekit.internal.usecase.BankTransferUsecase
-import com.midtrans.sdk.corekit.internal.usecase.DirectDebitUsecase
+import com.midtrans.sdk.corekit.internal.usecase.PaymentUsecase
 import javax.inject.Inject
 
 class SnapCore private constructor(builder: Builder) {
 
     @Inject
-    internal lateinit var bankTransferUsecase: BankTransferUsecase
-
-    @Inject
-    internal lateinit var directDebitUsecase: DirectDebitUsecase
+    internal lateinit var paymentUsecase: PaymentUsecase
 
     init {
         buildDaggerComponent(builder.context).inject(this)
@@ -29,56 +22,12 @@ class SnapCore private constructor(builder: Builder) {
         return "hello snap"
     }
 
-    //TODO: single API call for all payment type.
-    @SuppressLint("CheckResult")
-    fun paymentUsingBankTransfer(
+    fun pay(
         snapToken: String,
-        @PaymentType.Def paymentType: String,
-        email: String? = null,
+        paymentRequestBuilder: PaymentRequestBuilder,
         callback: Callback<TransactionResponse>
     ) {
-        bankTransferUsecase.charge(snapToken, paymentType, email)
-            .subscribeOn(SdkScheduler().io())
-            .observeOn(SdkScheduler().ui())
-            .subscribe(
-                {
-                    callback.onSuccess(it)
-                },
-                {
-                    callback.onError(SnapError(cause = it))
-                }
-            )
-
-    }
-
-    @SuppressLint("CheckResult")
-    fun paymentUsingDirectDebit(
-        snapToken: String,
-        @PaymentType.Def paymentType: String,
-        input3: String? = null,
-        token: String? = null,
-        tokenId: String? = null,
-        userId: String? = null,
-        callback: Callback<TransactionResponse>
-    ) {
-        directDebitUsecase.charge(
-            snaptoken = snapToken,
-            paymentType = paymentType,
-            input3 = input3,
-            token = token,
-            tokenId = tokenId,
-            userId = userId
-        )
-            .subscribeOn(SdkScheduler().io())
-            .observeOn(SdkScheduler().ui())
-            .subscribe(
-                {
-                    callback.onSuccess(it)
-                },
-                {
-                    callback.onError(SnapError(cause = it))
-                }
-            )
+        paymentUsecase.pay(snapToken, paymentRequestBuilder, callback)
     }
 
     companion object {
@@ -94,7 +43,7 @@ class SnapCore private constructor(builder: Builder) {
     }
 
 
-    class Builder() {
+    class Builder {
         internal lateinit var context: Context
 
         fun withContext(context: Context) = apply {
