@@ -1,21 +1,18 @@
 package com.midtrans.sdk.corekit
 
-import android.annotation.SuppressLint
 import android.content.Context
 import com.midtrans.sdk.corekit.api.callback.Callback
-import com.midtrans.sdk.corekit.api.exception.SnapError
-import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.api.requestbuilder.PaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.di.DaggerSnapComponent
 import com.midtrans.sdk.corekit.internal.di.SnapComponent
-import com.midtrans.sdk.corekit.internal.scheduler.SdkScheduler
-import com.midtrans.sdk.corekit.internal.usecase.BankTransferUsecase
+import com.midtrans.sdk.corekit.internal.usecase.PaymentUsecase
 import javax.inject.Inject
 
 class SnapCore private constructor(builder: Builder) {
 
     @Inject
-    internal lateinit var bankTransferUsecase: BankTransferUsecase
+    internal lateinit var paymentUsecase: PaymentUsecase
 
     init {
         buildDaggerComponent(builder.context).inject(this)
@@ -25,26 +22,12 @@ class SnapCore private constructor(builder: Builder) {
         return "hello snap"
     }
 
-    //TODO: single API call for all payment type.
-    @SuppressLint("CheckResult")
-    fun paymentUsingBankTransfer(
+    fun pay(
         snapToken: String,
-        @PaymentType.Def paymentType: String,
-        email: String? = null,
+        paymentRequestBuilder: PaymentRequestBuilder,
         callback: Callback<TransactionResponse>
     ) {
-        bankTransferUsecase.charge(snapToken, paymentType, email)
-            .subscribeOn(SdkScheduler().io())
-            .observeOn(SdkScheduler().ui())
-            .subscribe(
-                {
-                    callback.onSuccess(it)
-                },
-                {
-                    callback.onError(SnapError(cause = it))
-                }
-            )
-
+        paymentUsecase.pay(snapToken, paymentRequestBuilder, callback)
     }
 
     companion object {
@@ -60,7 +43,7 @@ class SnapCore private constructor(builder: Builder) {
     }
 
 
-    class Builder() {
+    class Builder {
         internal lateinit var context: Context
 
         fun withContext(context: Context) = apply {

@@ -1,6 +1,6 @@
 package com.midtrans.sdk.corekit.api.exception
 
-open class SnapError(cause: Throwable? = null): Throwable(cause) {
+open class SnapError(cause: Throwable? = null, message: String? = null): Throwable(cause = cause, message = message) {
 
 
     companion object{

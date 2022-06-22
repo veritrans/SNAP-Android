@@ -31,21 +31,26 @@ class PaymentType {
     annotation class Def
     companion object {
         const val CREDIT_CARD = "credit_card"
+
+        //BANK TRANSFER
         const val PERMATA_VA = "permata_va"
         const val BCA_VA = "bca_va"
         const val BNI_VA = "bni_va"
         const val BRI_VA = "bri_va"
         const val ALL_VA = "other_va"
         const val E_CHANNEL = "echannel"
+
+        //DIRECT DEBIT
         const val KLIK_BCA = "bca_klikbca"
         const val BCA_KLIKPAY = "bca_klikpay"
         const val CIMB_CLICKS = "cimb_clicks"
         const val BRI_EPAY = "bri_epay"
+        const val DANAMON_ONLINE = "danamon_online"
+
         const val INDOMARET = "indomaret"
         const val GOPAY = "gopay"
         const val SHOPEEPAY = "shopeepay"
         const val QRIS = "qris"
-        const val DANAMON_ONLINE = "danamon_online"
         const val INDOMARET_CSTORE = "cstore"
         const val AKULAKU = "akulaku"
         const val ALFAMART = "alfamart"
