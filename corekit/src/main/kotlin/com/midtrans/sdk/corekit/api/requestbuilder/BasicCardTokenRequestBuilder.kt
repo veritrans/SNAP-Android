@@ -1,12 +1,14 @@
 package com.midtrans.sdk.corekit.api.requestbuilder
 
 import com.midtrans.sdk.corekit.api.exception.MissingParameterException
+import com.midtrans.sdk.corekit.internal.util.NumberUtil
+import java.util.*
 
 class BasicCardTokenRequestBuilder: CreditCardTokenRequestBuilder() {
 
 
-    override fun build(): Map<String, Any> {
-        val result = mutableMapOf<String, Any>()
+    override fun build(): Map<String, String> {
+        val result = mutableMapOf<String, String>()
         appendQueryParam(target = result,
             key = CARD_NUMBER,
             value = cardNumber,
@@ -34,13 +36,13 @@ class BasicCardTokenRequestBuilder: CreditCardTokenRequestBuilder() {
         )
         appendQueryParam(target = result,
             key = GROSS_AMOUNT,
-            value = grossAmount,
+            value = grossAmount?.let { NumberUtil.formatDoubleToString(it) },
             errorMessage = "Gross amount required"
         )
         return result
     }
 
-    private fun appendQueryParam(target: MutableMap<String, Any>, key: String, value: Any?, errorMessage: String) {
+    private fun appendQueryParam(target: MutableMap<String, String>, key: String, value: String?, errorMessage: String) {
 
         target.apply {
             value?.also {

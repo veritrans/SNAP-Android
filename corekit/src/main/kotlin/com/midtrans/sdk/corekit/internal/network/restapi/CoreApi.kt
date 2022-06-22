@@ -9,6 +9,6 @@ internal interface CoreApi {
 
     @GET("token?x_source=android")
     fun getToken(
-        @QueryMap param : Map<String, Any>
+        @QueryMap param : Map<String, String>
     ): Single<CardTokenResponse>
 }

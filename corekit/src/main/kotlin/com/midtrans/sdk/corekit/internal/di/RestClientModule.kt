@@ -105,13 +105,11 @@ internal class RestClientModule {
     }
 
     @Provides
-    @Singleton
     fun provideChuckInterceptor(context: Context): ChuckerInterceptor {
         return ChuckerInterceptor.Builder(context).build()
     }
 
     @Provides
-    @Singleton
     fun provideGson(): Gson {
         return GsonBuilder()
             .setLenient()

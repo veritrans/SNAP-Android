@@ -25,7 +25,7 @@ class SampleViewModel : ViewModel() {
         coreKit.pay(
             snapToken = snapToken,
             paymentRequestBuilder = BankTransferPaymentRequestBuilder()
-                .withPaymentType(PaymentType.CIMB_CLICKS)
+                .withPaymentType(PaymentType.BCA_VA)
                 .withCustomerEmail("belajar@example.com"),
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {}
@@ -39,7 +39,7 @@ class SampleViewModel : ViewModel() {
     fun getCardTokenBasic(){
         coreKit.getCardToken(cardTokenRequestBuilder = BasicCardTokenRequestBuilder()
             .withClientKey("SB-Mid-client-Y1-C6UEY5qGZTAEt")
-            .withGrossAmount(10000.0)
+            .withGrossAmount(10000.3333)
             .withCardNumber("4811 1111 1111 1114")
             .withCardExpMonth("12")
             .withCardExpYear("24")

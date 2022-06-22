@@ -28,7 +28,7 @@ abstract class CreditCardTokenRequestBuilder {
         cardCvv = value
     }
 
-    internal abstract fun build():Map<String,Any>
+    internal abstract fun build():Map<String,String>
 
     companion object{
         const val CARD_NUMBER = "card_number"

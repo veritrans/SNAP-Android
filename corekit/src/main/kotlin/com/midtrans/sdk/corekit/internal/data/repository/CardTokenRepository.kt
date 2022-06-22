@@ -6,7 +6,7 @@ import io.reactivex.Single
 
 internal class CardTokenRepository(private val coreApi: CoreApi) {
 
-    fun getCardToken(param: Map<String,Any>): Single<CardTokenResponse> {
+    fun getCardToken(param: Map<String,String>): Single<CardTokenResponse> {
         return coreApi.getToken(param)
     }
 }
