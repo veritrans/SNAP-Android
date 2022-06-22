@@ -2,7 +2,9 @@ package com.midtrans.sdk.corekit
 
 import android.content.Context
 import com.midtrans.sdk.corekit.api.callback.Callback
+import com.midtrans.sdk.corekit.api.model.CardTokenResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.api.requestbuilder.CreditCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.PaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.di.DaggerSnapComponent
 import com.midtrans.sdk.corekit.internal.di.SnapComponent
@@ -28,6 +30,13 @@ class SnapCore private constructor(builder: Builder) {
         callback: Callback<TransactionResponse>
     ) {
         paymentUsecase.pay(snapToken, paymentRequestBuilder, callback)
+    }
+
+    fun getCardToken(
+        cardTokenRequestBuilder: CreditCardTokenRequestBuilder,
+        callback: Callback<CardTokenResponse>
+    ) {
+        paymentUsecase.getCardToken(cardTokenRequestBuilder, callback)
     }
 
     companion object {

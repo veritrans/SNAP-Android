@@ -42,6 +42,11 @@ class SampleActivity : AppCompatActivity() {
             }) {
 
             }
+            Button(onClick = {
+                viewModel.getCardTokenBasic()
+            }) {
+
+            }
         }
     }
 }
