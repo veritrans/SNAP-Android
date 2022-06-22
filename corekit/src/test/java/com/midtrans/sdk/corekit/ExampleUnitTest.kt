@@ -2,7 +2,7 @@ package com.midtrans.sdk.corekit
 
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.internal.data.repository.SnapRepository
-import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferPaymentRequest
+import com.midtrans.sdk.corekit.internal.network.model.request.PaymentRequest
 import com.midtrans.sdk.corekit.internal.network.restapi.SnapApi
 import com.midtrans.sdk.corekit.internal.scheduler.TestSdkScheduler
 import com.midtrans.sdk.corekit.internal.usecase.BankTransferUsecase
@@ -37,7 +37,7 @@ class ExampleUnitTest {
         `when`(snapApi.paymentUsingVa(any(), any())).thenReturn(Single.just(mockk()))
         val snapRepository = SnapRepository(snapApi = snapApi)
         val snapToken = "token"
-        val bankTransferPaymentRequest = mockk<BankTransferPaymentRequest>()
+        val bankTransferPaymentRequest = mockk<PaymentRequest>()
         val scheduler = TestSdkScheduler().io()
         snapRepository.chargeBankTransfer(
             snapToken = snapToken,
@@ -66,7 +66,7 @@ class ExampleUnitTest {
             .subscribe()
         scheduler.start()
 
-        var capturedBankTfPaymentRequest: BankTransferPaymentRequest? = null
+        var capturedBankTfPaymentRequest: PaymentRequest? = null
         verify(snapRepository).chargeBankTransfer(eq(snapToken), argThat {
             capturedBankTfPaymentRequest = this
             true

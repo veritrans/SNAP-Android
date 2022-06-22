@@ -1,10 +1,9 @@
 package com.midtrans.sdk.corekit.internal.network.restapi
 
-import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferPaymentRequest
+import com.midtrans.sdk.corekit.internal.network.model.request.PaymentRequest
 import com.midtrans.sdk.corekit.internal.network.model.response.Transaction
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import io.reactivex.Single
-import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -30,7 +29,7 @@ internal interface SnapApi {
         @POST("v1/transactions/{snap_token}/pay")
         fun paymentUsingVa(
                 @Path("snap_token") snapToken: String,
-                @Body paymentRequest: BankTransferPaymentRequest?
+                @Body paymentRequest: PaymentRequest?
         ): Single<TransactionResponse>
 
 }
