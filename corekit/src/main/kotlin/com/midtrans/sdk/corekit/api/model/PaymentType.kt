@@ -51,7 +51,7 @@ class PaymentType {
         const val SHOPEEPAY_QRIS = "shopeepay_qris"
         const val QRIS = "qris"
 
-        //BUY NOW PAY LATER
+        //PAY LATER
         const val AKULAKU = "akulaku"
 
         //CONVENIENCE STORE
