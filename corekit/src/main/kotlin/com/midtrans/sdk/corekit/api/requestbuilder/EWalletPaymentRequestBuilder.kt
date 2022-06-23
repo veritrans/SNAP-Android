@@ -5,10 +5,10 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.internal.network.model.request.PaymentParam
 import com.midtrans.sdk.corekit.internal.network.model.request.PaymentRequest
 
-class EwalletPaymentRequestBuilder : PaymentRequestBuilder() {
+class EWalletPaymentRequestBuilder : PaymentRequestBuilder() {
     private lateinit var paymentType: String
 
-    fun withPaymentType(@PaymentType.Def value: String): EwalletPaymentRequestBuilder = apply {
+    fun withPaymentType(@PaymentType.Def value: String): EWalletPaymentRequestBuilder = apply {
         paymentType = value
     }
 
