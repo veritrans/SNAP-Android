@@ -15,22 +15,26 @@ abstract class CreditCardTokenRequestBuilder {
     fun withGrossAmount(value: Double): CreditCardTokenRequestBuilder = apply {
         grossAmount = value
     }
+
     fun withCardNumber(value: String): CreditCardTokenRequestBuilder = apply {
         cardNumber = value
     }
+
     fun withCardExpMonth(value: String): CreditCardTokenRequestBuilder = apply {
         cardExpMonth = value
     }
+
     fun withCardExpYear(value: String): CreditCardTokenRequestBuilder = apply {
         cardExpYear = value
     }
+
     fun withCardCvv(value: String): CreditCardTokenRequestBuilder = apply {
         cardCvv = value
     }
 
-    internal abstract fun build():Map<String,String>
+    internal abstract fun build(): Map<String, String>
 
-    companion object{
+    companion object {
         const val CARD_NUMBER = "card_number"
         const val CARD_CVV = "card_cvv"
         const val CARD_EXPIRY_MONTH = "card_exp_month"
