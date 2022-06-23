@@ -7,10 +7,7 @@ import io.reactivex.Single
 
 internal class SnapRepository(private val snapApi: SnapApi): BaseRepository() {
 
-    fun chargeBankTransfer(
-        snapToken: String,
-        request: PaymentRequest
-    ): Single<TransactionResponse> {
-       return snapApi.paymentUsingVa(snapToken, request)
+    fun pay(snapToken: String, paymentRequest: PaymentRequest): Single<TransactionResponse> {
+        return snapApi.pay(snapToken, paymentRequest)
     }
 }
