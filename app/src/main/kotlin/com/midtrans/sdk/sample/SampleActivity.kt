@@ -47,6 +47,11 @@ class SampleActivity : AppCompatActivity() {
             }) {
                 Text(text = "Create card token")
             }
+            Button(onClick = {
+                viewModel.deleteSavedCard()
+            }) {
+                Text(text = "Delete card token")
+            }
         }
     }
 }

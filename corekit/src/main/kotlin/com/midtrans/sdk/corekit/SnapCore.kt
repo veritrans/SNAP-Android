@@ -3,6 +3,7 @@ package com.midtrans.sdk.corekit
 import android.content.Context
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.model.CardTokenResponse
+import com.midtrans.sdk.corekit.api.model.DeleteSavedCardResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.CreditCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.PaymentRequestBuilder
@@ -42,7 +43,7 @@ class SnapCore private constructor(builder: Builder) {
     fun deleteSavedCard(
         snapToken: String,
         maskedCard: String,
-        callback: Callback<Void?>
+        callback: Callback<DeleteSavedCardResponse>
     ){
         paymentUsecase.deleteSavedCard(snapToken, maskedCard, callback)
     }

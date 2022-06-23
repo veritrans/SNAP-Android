@@ -1,5 +1,6 @@
 package com.midtrans.sdk.corekit.internal.network.restapi
 
+import com.midtrans.sdk.corekit.api.model.DeleteSavedCardResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.network.model.request.PaymentRequest
 import com.midtrans.sdk.corekit.internal.network.model.response.Transaction
@@ -22,5 +23,5 @@ internal interface SnapApi {
     fun deleteSavedCard(
         @Path("snap_token") snapToken: String?,
         @Path("masked_card") maskedCard: String?
-    ): Single<Void?>
+    ): Single<DeleteSavedCardResponse>
 }

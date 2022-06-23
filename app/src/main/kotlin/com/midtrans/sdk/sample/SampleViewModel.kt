@@ -7,6 +7,7 @@ import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.CardTokenResponse
+import com.midtrans.sdk.corekit.api.model.DeleteSavedCardResponse
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.BankTransferPaymentRequestBuilder
@@ -76,17 +77,17 @@ class SampleViewModel : ViewModel() {
             }
         )
     }
-    fun deleteSavedCard(snapToken: String){
+    fun deleteSavedCard(){
         coreKit.deleteSavedCard(
-            snapToken = snapToken,
-            maskedCard = transactionResponse?.maskedCard.toString(),
-            callback = object : Callback<Void?> {
-                override fun onSuccess(result: Void?) {
-                    TODO("Not yet implemented")
+            snapToken = "a5de6d5e-096b-4de7-a3d9-cadbb67ddfa0",
+            maskedCard = "481111-1114",
+            callback = object : Callback<DeleteSavedCardResponse> {
+                override fun onSuccess(result: DeleteSavedCardResponse) {
+                    Log.e("DELETE SUKSES EUY", "DELETE CARD SUKSES")
                 }
 
                 override fun onError(error: SnapError) {
-                    TODO("Not yet implemented")
+                    Log.e("error, error, error", "delete error, error, error")
                 }
 
             }

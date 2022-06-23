@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.CardTokenResponse
+import com.midtrans.sdk.corekit.api.model.DeleteSavedCardResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.CreditCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.PaymentRequestBuilder
@@ -75,7 +76,7 @@ internal class PaymentUsecase(
     fun deleteSavedCard(
         snapToken: String,
         maskedCard: String,
-        callback: Callback<Void?>
+        callback: Callback<DeleteSavedCardResponse>
     ) {
         try {
             snapRepository.deleteSavedCard(snapToken, maskedCard)
