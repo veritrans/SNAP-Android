@@ -22,7 +22,7 @@ class BasicCardTokenRequestBuilder: CreditCardTokenRequestBuilder() {
         appendQueryParam(target = result,
             key = CARD_EXPIRY_MONTH,
             value = cardExpMonth,
-            errorMessage = "Card expiry required"
+            errorMessage = "Card expiry month required"
         )
         appendQueryParam(target = result,
             key = CARD_EXPIRY_YEAR,

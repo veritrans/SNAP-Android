@@ -10,4 +10,7 @@ internal class SnapRepository(private val snapApi: SnapApi): BaseRepository() {
     fun pay(snapToken: String, paymentRequest: PaymentRequest): Single<TransactionResponse> {
         return snapApi.pay(snapToken, paymentRequest)
     }
+    fun deleteSavedCard(snapToken: String, maskedCard: String): Single<Void?> {
+        return  snapApi.deleteSavedCard(snapToken, maskedCard)
+    }
 }

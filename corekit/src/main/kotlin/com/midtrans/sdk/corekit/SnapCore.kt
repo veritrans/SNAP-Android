@@ -39,6 +39,14 @@ class SnapCore private constructor(builder: Builder) {
         paymentUsecase.getCardToken(cardTokenRequestBuilder, callback)
     }
 
+    fun deleteSavedCard(
+        snapToken: String,
+        maskedCard: String,
+        callback: Callback<Void?>
+    ){
+        paymentUsecase.deleteSavedCard(snapToken, maskedCard, callback)
+    }
+
     companion object {
         private var INSTANCE: SnapCore? = null
 

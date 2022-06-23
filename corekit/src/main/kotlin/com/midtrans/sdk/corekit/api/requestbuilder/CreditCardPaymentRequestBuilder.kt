@@ -23,6 +23,12 @@ class CreditCardPaymentRequestBuilder: PaymentRequestBuilder() {
     fun withCustomerEmail(value: String): CreditCardPaymentRequestBuilder = apply {
         customerEmail = value
     }
+    fun withCustomerFullName(value: String): CreditCardPaymentRequestBuilder = apply {
+        customerFullName = value
+    }
+    fun withCustomerPhone(value: String): CreditCardPaymentRequestBuilder = apply {
+        customerPhone = value
+    }
     fun withCardToken(value: String): CreditCardPaymentRequestBuilder = apply {
         cardToken = value
     }

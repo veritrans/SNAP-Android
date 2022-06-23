@@ -10,6 +10,7 @@ import com.midtrans.sdk.corekit.api.requestbuilder.PaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.data.repository.CardTokenRepository
 import com.midtrans.sdk.corekit.internal.data.repository.SnapRepository
 import com.midtrans.sdk.corekit.internal.scheduler.SdkScheduler
+import io.reactivex.Single
 
 internal class PaymentUsecase(
     private val scheduler: SdkScheduler,
@@ -69,5 +70,27 @@ internal class PaymentUsecase(
             deliverError(error, callback)
         }
 
+    }
+    @SuppressLint("CheckResult")
+    fun deleteSavedCard(
+        snapToken: String,
+        maskedCard: String,
+        callback: Callback<Void?>
+    ) {
+        try {
+            snapRepository.deleteSavedCard(snapToken, maskedCard)
+                .subscribeOn(scheduler.io())
+                .observeOn(scheduler.ui())
+                .subscribe(
+                    {
+                        callback.onSuccess(it)
+                    },
+                    {
+                        deliverError(it, callback)
+                    }
+                )
+        } catch (error: Throwable) {
+            deliverError(error, callback)
+        }
     }
 }

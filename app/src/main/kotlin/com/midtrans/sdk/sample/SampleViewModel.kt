@@ -11,11 +11,14 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.BankTransferPaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.BasicCardTokenRequestBuilder
+import com.midtrans.sdk.corekit.api.requestbuilder.CreditCardPaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.CreditCardTokenRequestBuilder
 
 class SampleViewModel : ViewModel() {
     var helloLiveData = MutableLiveData<String>()
     private val coreKit: SnapCore = SnapCore.getInstance()!!
+    private var cardTokenResponse : CardTokenResponse? = null
+    private var transactionResponse : TransactionResponse? = null
 
     fun getHelloFromSnap() {
         helloLiveData.value = coreKit.hello()
@@ -45,11 +48,49 @@ class SampleViewModel : ViewModel() {
             .withCardExpYear("24")
             .withCardCvv("123"),
             callback = object : Callback<CardTokenResponse> {
-                override fun onSuccess(result: CardTokenResponse) {}
+                override fun onSuccess(result: CardTokenResponse) {
+                    cardTokenResponse = result
+                }
                 override fun onError(error: SnapError) {
                     Log.e("error, error, error", "error, error, error")
                 }
             }
+        )
+    }
+
+    fun chargeUsingCreditCard(snapToken: String) {
+        coreKit.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = CreditCardPaymentRequestBuilder()
+                .withCardToken(cardTokenResponse?.tokenId.toString())
+                .withSaveCard(true)
+                .withPaymentType(PaymentType.CREDIT_CARD)
+                .withCustomerEmail("belajar@example.com"),
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    transactionResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
+    fun deleteSavedCard(snapToken: String){
+        coreKit.deleteSavedCard(
+            snapToken = snapToken,
+            maskedCard = transactionResponse?.maskedCard.toString(),
+            callback = object : Callback<Void?> {
+                override fun onSuccess() {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onError(error: SnapError) {
+                    TODO("Not yet implemented")
+                }
+
+            }
+
         )
     }
 }
