@@ -7,6 +7,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.internal.bind.DateTypeAdapter
 import com.midtrans.sdk.corekit.BuildConfig
+import com.midtrans.sdk.corekit.internal.network.restapi.CoreApi
 import com.midtrans.sdk.corekit.internal.network.restapi.SnapApi
 import dagger.Module
 import dagger.Provides
@@ -65,12 +66,50 @@ internal class RestClientModule {
 
     @Provides
     @Singleton
+    fun provideCoreApi(
+        @Named("core_retrofit") retrofit: Retrofit
+    ): CoreApi {
+        return retrofit.create(CoreApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    @Named("core_retrofit")
+    fun provideCoreApiRetrofit(
+        gson: Gson,
+        @Named("core_client") httpClient: OkHttpClient
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.CORE_API_BASE_URL)
+            .client(httpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
+    }
+
+
+    @Provides
+    @Singleton
+    @Named("core_client")
+    fun provideCoreApiOkHttpClient(
+        chuckInterceptor: ChuckerInterceptor
+    ): OkHttpClient {
+
+        return OkHttpClient.Builder()
+            .readTimeout(READ_TIME_OUT.toLong(), TimeUnit.SECONDS)
+            .writeTimeout(WRITE_TIME_OUT.toLong(), TimeUnit.SECONDS)
+            .connectTimeout(CONNECTION_TIME_OUT.toLong(), TimeUnit.SECONDS)
+            .addInterceptor(chuckInterceptor)
+            .build()
+
+    }
+
+    @Provides
     fun provideChuckInterceptor(context: Context): ChuckerInterceptor {
         return ChuckerInterceptor.Builder(context).build()
     }
 
     @Provides
-    @Singleton
     fun provideGson(): Gson {
         return GsonBuilder()
             .setLenient()

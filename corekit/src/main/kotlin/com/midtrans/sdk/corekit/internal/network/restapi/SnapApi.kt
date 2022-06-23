@@ -1,13 +1,12 @@
 package com.midtrans.sdk.corekit.internal.network.restapi
 
+import com.midtrans.sdk.corekit.api.model.DeleteSavedCardResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.network.model.request.PaymentRequest
 import com.midtrans.sdk.corekit.internal.network.model.response.Transaction
 import io.reactivex.Single
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.Call
+import retrofit2.http.*
 
 internal interface SnapApi {
 
@@ -19,4 +18,10 @@ internal interface SnapApi {
         @Path("snap_token") snapToken: String,
         @Body paymentRequest: PaymentRequest
     ): Single<TransactionResponse>
+
+    @DELETE("v1/transactions/{snap_token}/saved_tokens/{masked_card}")
+    fun deleteSavedCard(
+        @Path("snap_token") snapToken: String?,
+        @Path("masked_card") maskedCard: String?
+    ): Single<DeleteSavedCardResponse>
 }

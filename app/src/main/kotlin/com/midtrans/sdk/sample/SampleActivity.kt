@@ -38,9 +38,19 @@ class SampleActivity : AppCompatActivity() {
             }, enabled = true, readOnly = false)
 
             Button(onClick = {
-                viewModel.chargeBniVa(text)
+                viewModel.chargeUsingCreditCard(text)
             }) {
 
+            }
+            Button(onClick = {
+                viewModel.getCardTokenBasic()
+            }) {
+                Text(text = "Create card token")
+            }
+            Button(onClick = {
+                viewModel.deleteSavedCard()
+            }) {
+                Text(text = "Delete card token")
             }
         }
     }
