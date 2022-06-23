@@ -48,16 +48,18 @@ class PaymentType {
         const val BRI_EPAY = "bri_epay"
         const val DANAMON_ONLINE = "danamon_online"
 
-        const val INDOMARET = "indomaret"
+        //E-WALLET
+        const val SHOPEEPAY_QRIS = "shopeepay_qris"
+        const val QRIS = "qris"
         const val GOPAY = "gopay"
         const val SHOPEEPAY = "shopeepay"
-        const val QRIS = "qris"
+
+        const val INDOMARET = "indomaret"
         const val INDOMARET_CSTORE = "cstore"
         const val AKULAKU = "akulaku"
         const val ALFAMART = "alfamart"
         const val UOB_WEB = "uobweb"
         const val UOB_APP = "uobapp"
         const val UOB_EZPAY = "uob_ezpay"
-        const val SHOPEEPAY_QRIS = "shopeepay_qris"
     }
 }
