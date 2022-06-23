@@ -1,7 +1,9 @@
 package com.midtrans.sdk.corekit.internal.di
 
+import com.midtrans.sdk.corekit.internal.data.repository.CardTokenRepository
 import com.midtrans.sdk.corekit.internal.network.restapi.SnapApi
 import com.midtrans.sdk.corekit.internal.data.repository.SnapRepository
+import com.midtrans.sdk.corekit.internal.network.restapi.CoreApi
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -15,5 +17,13 @@ internal class RepositoryModule {
         snapApi: SnapApi
     ): SnapRepository {
         return SnapRepository(snapApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCardTokenRepository(
+        coreApi: CoreApi
+    ): CardTokenRepository {
+        return CardTokenRepository(coreApi)
     }
 }
