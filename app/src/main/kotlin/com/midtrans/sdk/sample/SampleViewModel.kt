@@ -81,7 +81,7 @@ class SampleViewModel : ViewModel() {
             snapToken = snapToken,
             maskedCard = transactionResponse?.maskedCard.toString(),
             callback = object : Callback<Void?> {
-                override fun onSuccess() {
+                override fun onSuccess(result: Void?) {
                     TODO("Not yet implemented")
                 }
 
