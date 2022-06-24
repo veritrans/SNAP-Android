@@ -25,7 +25,8 @@ class PaymentType {
         ALFAMART,
         UOB_WEB,
         UOB_APP,
-        UOB_EZPAY
+        UOB_EZPAY,
+        SHOPEEPAY_QRIS
     )
     @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
     annotation class Def
@@ -47,10 +48,13 @@ class PaymentType {
         const val BRI_EPAY = "bri_epay"
         const val DANAMON_ONLINE = "danamon_online"
 
-        const val INDOMARET = "indomaret"
+        //E-WALLET
+        const val SHOPEEPAY_QRIS = "shopeepay_qris"
+        const val QRIS = "qris"
         const val GOPAY = "gopay"
         const val SHOPEEPAY = "shopeepay"
-        const val QRIS = "qris"
+
+        const val INDOMARET = "indomaret"
         const val INDOMARET_CSTORE = "cstore"
         const val AKULAKU = "akulaku"
         const val ALFAMART = "alfamart"
