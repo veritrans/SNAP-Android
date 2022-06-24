@@ -1,5 +1,6 @@
 package com.midtrans.sdk.corekit.api.requestbuilder
 
+import com.midtrans.sdk.corekit.api.exception.InvalidPaymentTypeException
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import org.junit.Assert
 import org.junit.Test
@@ -16,5 +17,12 @@ internal class ConvenienceStorePaymentRequestBuilderTest {
     fun shouldConstructAlfamartPaymentRequest() {
         val request = ConvenienceStorePaymentRequestBuilder().withPaymentType(PaymentType.ALFAMART).build()
         Assert.assertEquals(PaymentType.ALFAMART, request.paymentType)
+    }
+
+    @Test
+    fun shouldThrowInvalidPaymentTypeExceptionWhenPaymentTypeIsNotSupported() {
+        Assert.assertThrows(
+            InvalidPaymentTypeException::class.java
+        ) { ConvenienceStorePaymentRequestBuilder().withPaymentType(PaymentType.KLIK_BCA).build() }
     }
 }
