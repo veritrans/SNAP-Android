@@ -50,6 +50,8 @@ class PaymentType {
         //E-WALLET
         const val SHOPEEPAY_QRIS = "shopeepay_qris"
         const val QRIS = "qris"
+        const val GOPAY = "gopay"
+        const val SHOPEEPAY = "shopeepay"
 
         //PAY LATER
         const val AKULAKU = "akulaku"
@@ -58,8 +60,6 @@ class PaymentType {
         const val INDOMARET = "indomaret"
         const val ALFAMART = "alfamart"
 
-        const val GOPAY = "gopay"
-        const val SHOPEEPAY = "shopeepay"
         const val UOB_WEB = "uobweb"
         const val UOB_APP = "uobapp"
         const val UOB_EZPAY = "uob_ezpay"
