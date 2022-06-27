@@ -1,16 +1,6 @@
 package com.midtrans.sdk.corekit.api.requestbuilder.cardtoken
 
 abstract class CreditCardTokenRequestBuilder {
-    protected var clientKey: String? = null
-    protected var grossAmount: Double? = null
-    protected var cardNumber: String? = null
-    protected var cardExpMonth: String? = null
-    protected var cardExpYear: String? = null
-    protected var cardCvv: String? = null
-    protected var twoClick: Boolean = true
-    protected var tokenId: String? = null
-
-
     internal abstract fun build(): Map<String, String>
 
     companion object {
