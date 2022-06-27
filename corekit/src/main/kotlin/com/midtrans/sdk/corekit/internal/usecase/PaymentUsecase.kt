@@ -6,12 +6,11 @@ import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.CardTokenResponse
 import com.midtrans.sdk.corekit.api.model.DeleteSavedCardResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
-import com.midtrans.sdk.corekit.api.requestbuilder.CreditCardTokenRequestBuilder
-import com.midtrans.sdk.corekit.api.requestbuilder.PaymentRequestBuilder
+import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.CreditCardTokenRequestBuilder
+import com.midtrans.sdk.corekit.api.requestbuilder.payment.PaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.data.repository.CardTokenRepository
 import com.midtrans.sdk.corekit.internal.data.repository.SnapRepository
 import com.midtrans.sdk.corekit.internal.scheduler.SdkScheduler
-import io.reactivex.Single
 
 internal class PaymentUsecase(
     private val scheduler: SdkScheduler,
