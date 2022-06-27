@@ -3,7 +3,7 @@ package com.midtrans.sdk.corekit.api.requestbuilder.cardtoken
 import com.midtrans.sdk.corekit.api.exception.MissingParameterException
 import com.midtrans.sdk.corekit.internal.util.NumberUtil
 
-class BasicCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
+class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
     private var clientKey: String? = null
     private var grossAmount: Double? = null
     private var cardNumber: String? = null
@@ -11,27 +11,27 @@ class BasicCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
     private var cardExpYear: String? = null
     private var cardCvv: String? = null
 
-    fun withCardNumber(value: String): BasicCardTokenRequestBuilder = apply {
+    fun withCardNumber(value: String): NormalCardTokenRequestBuilder = apply {
         cardNumber = value
     }
 
-    fun withCardExpMonth(value: String): BasicCardTokenRequestBuilder = apply {
+    fun withCardExpMonth(value: String): NormalCardTokenRequestBuilder = apply {
         cardExpMonth = value
     }
 
-    fun withCardExpYear(value: String): BasicCardTokenRequestBuilder = apply {
+    fun withCardExpYear(value: String): NormalCardTokenRequestBuilder = apply {
         cardExpYear = value
     }
 
-    fun withCardCvv(value: String): BasicCardTokenRequestBuilder = apply {
+    fun withCardCvv(value: String): NormalCardTokenRequestBuilder = apply {
         cardCvv = value
     }
 
-    fun withClientKey(value: String): BasicCardTokenRequestBuilder = apply {
+    fun withClientKey(value: String): NormalCardTokenRequestBuilder = apply {
         clientKey = value
     }
 
-    fun withGrossAmount(value: Double): BasicCardTokenRequestBuilder = apply {
+    fun withGrossAmount(value: Double): NormalCardTokenRequestBuilder = apply {
         grossAmount = value
     }
 
