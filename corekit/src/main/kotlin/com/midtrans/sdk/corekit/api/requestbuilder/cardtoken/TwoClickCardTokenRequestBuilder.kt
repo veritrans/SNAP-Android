@@ -4,6 +4,11 @@ import com.midtrans.sdk.corekit.api.exception.MissingParameterException
 import com.midtrans.sdk.corekit.internal.util.NumberUtil
 
 class TwoClickCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
+    private var twoClick: Boolean = true
+    private var tokenId: String? = null
+    private var cardCvv: String? = null
+    private var clientKey: String? = null
+    private var grossAmount: Double? = null
 
     fun withCardCvv(value: String): TwoClickCardTokenRequestBuilder = apply {
         cardCvv = value
@@ -44,7 +49,7 @@ class TwoClickCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
             target = result,
             key = TOKEN_ID,
             value = tokenId,
-            errorMessage = "Two click required"
+            errorMessage = "Saved token id required"
         )
         appendQueryParam(
             target = result,
