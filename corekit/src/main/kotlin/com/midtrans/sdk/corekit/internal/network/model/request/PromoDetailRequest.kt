@@ -1,4 +1,6 @@
 package com.midtrans.sdk.corekit.internal.network.model.request
 
-class PromoDetailRequest {
-}
+internal data class PromoDetailRequest(
+    val discountedGrossAmount: String? = null,
+    val promoId: String? = null,
+)
