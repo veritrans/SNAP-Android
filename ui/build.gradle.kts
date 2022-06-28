@@ -1,12 +1,7 @@
-
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("kotlin-android-extensions")
-    id("maven-publish")
 }
-
 
 android {
     compileSdk = 32
@@ -16,35 +11,26 @@ android {
         targetSdk = 32
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-//        consumerProguardFiles = "consumer-rules.pro"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles.add(getDefaultProguardFile("proguard-android.txt"))
-
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-
-    buildFeatures {
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = com.gtf.snap.Dependencies.composeVersion
-    }
-
-
     kotlinOptions {
         jvmTarget = "1.8"
     }
 }
-
 
 dependencies {
 
@@ -65,7 +51,4 @@ dependencies {
     implementation(com.gtf.snap.ComposeUiLibraries.composeLayout)
     implementation(com.gtf.snap.ComposeUiLibraries.composeRuntime)
     implementation(project(":corekit"))
-    implementation(project(":ui"))
-
-
 }
