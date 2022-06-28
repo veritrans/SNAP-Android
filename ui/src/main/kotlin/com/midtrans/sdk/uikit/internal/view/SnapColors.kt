@@ -1,5 +1,7 @@
 package com.midtrans.sdk.uikit.internal.view
 
+import androidx.compose.ui.graphics.Color
+
 object SnapColors {
 
     const val BACKGROUND_BORDER_SOLID_SECONDARY = 0XE6E9EF
@@ -31,7 +33,7 @@ object SnapColors {
     const val INTERACTIVE_FILL_BRAND_HOVER = 0X41CFF8
     const val INTERACTIVE_FILL_BRAND_ACTIVE = 0X054FBF
 
-    const val INTERACTIVE_FILL_DEFAULT = 0X4F515C
+    const val INTERACTIVE_FILL_DEFAULT = 0X5070FD
     const val INTERACTIVE_FILL_HOVER = 0X85A2F9
     const val INTERACTIVE_FILL_ACTIVE = 0X1C3ABB
     const val INTERACTIVE_BORDER_INPUT = 0XDCDFE6
@@ -39,7 +41,7 @@ object SnapColors {
     const val INTERACTIVE_DISABLED = 0XF1F3F6
     const val INTERACTIVE_FOCUS = 0X054FBF
     const val INTERACTIVE_BORDER_SUPPORT = 0XF27E89
-    const val INTERACTIVE_BORDER_ACTION = 0X5070FD
+    const val INTERACTIVE_BORDER_ACTION = 0X4F515C
     const val INTERACTIVE_FILL_INVERSE = 0X383942
 
     const val SUPPORT_DANGER_DEFAULT = 0XF3536B
@@ -60,8 +62,12 @@ object SnapColors {
     const val SUPPORT_INFO_FILL = 0XE3EDFF
     const val SUPPORT_NEUTRAL_FILL = 0XEFF2F6
 
+    const val TRANSPARENT = 0L
+
     const val OVERLAY_BLACK = 0X32333A
     const val OVERLAY_WHITE = 0XFFFFFF
 
-
+    fun getARGBColor(color: Int): Color {
+        return Color((color.toLong() + (0xFF000000).toLong()))
+    }
 }
