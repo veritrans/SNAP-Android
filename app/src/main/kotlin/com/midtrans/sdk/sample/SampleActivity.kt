@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
@@ -13,6 +12,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.SnapCore
+import com.midtrans.sdk.uikit.internal.view.SnapButton
+import com.midtrans.sdk.uikit.internal.view.SnapButtonAttribute
 
 class SampleActivity : AppCompatActivity() {
 
@@ -36,21 +37,26 @@ class SampleActivity : AppCompatActivity() {
             TextField(value = text, onValueChange = {
                 text = it
             }, enabled = true, readOnly = false)
-
-            Button(onClick = {
+            SnapButton(
+                enabled = true,
+                text = "Bayar",
+                style = SnapButtonAttribute.Style.PRIMARY
+            ) {
                 viewModel.chargeUsingCreditCard(text)
-            }) {
-
             }
-            Button(onClick = {
+            SnapButton(
+                enabled = true,
+                text = "Create card token",
+                style = SnapButtonAttribute.Style.PRIMARY
+            ) {
                 viewModel.getCardTokenBasic()
-            }) {
-                Text(text = "Create card token")
             }
-            Button(onClick = {
+            SnapButton(
+                enabled = true,
+                text = "Delete card token",
+                style = SnapButtonAttribute.Style.TERTIARY
+            ) {
                 viewModel.deleteSavedCard()
-            }) {
-                Text(text = "Delete card token")
             }
         }
     }
