@@ -36,13 +36,15 @@ class SampleActivity : AppCompatActivity() {
     @Composable
     @Preview
     fun Greeting() {
+        var text by remember { mutableStateOf("") }
+        ShowChargeContent(text = text, onTextFieldValueChange = { text = it})
+    }
+
+    @Composable
+    fun ShowChargeContent(text: String, onTextFieldValueChange: (String)-> Unit){
         Column {
-            val uriHandler = LocalUriHandler.current
-            var text by remember { mutableStateOf("") }
             Text("insert snap token", style = TextStyle(color = Color.Red))
-            TextField(value = text, onValueChange = {
-                text = it
-            }, enabled = true, readOnly = false)
+            TextField(value = text, onValueChange = onTextFieldValueChange, enabled = true, readOnly = false)
 
             Button(onClick = {
                 viewModel.chargeUsingCreditCardWithPromo(text)
@@ -67,7 +69,6 @@ class SampleActivity : AppCompatActivity() {
             }) {
                 Text(text = "Delete card token")
             }
-
         }
     }
 }
