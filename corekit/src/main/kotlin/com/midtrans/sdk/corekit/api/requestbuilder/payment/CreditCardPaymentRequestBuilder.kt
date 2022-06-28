@@ -51,9 +51,6 @@ class CreditCardPaymentRequestBuilder: PaymentRequestBuilder() {
         promoId = value
     }
 
-
-
-
     override fun build(): PaymentRequest {
         return when (paymentType) {
             PaymentType.CREDIT_CARD -> PaymentRequest(
