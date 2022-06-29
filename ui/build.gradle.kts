@@ -55,10 +55,11 @@ dependencies {
     implementation(com.gtf.snap.ComposeUiLibraries.composeMaterial)
     implementation(com.gtf.snap.ComposeUiLibraries.composeFoundation)
     implementation(com.gtf.snap.ComposeUiLibraries.composeActivity)
-//    implementation(com.gtf.snap.ComposeUiLibraries.composeFramework)
+    implementation(com.gtf.snap.ComposeUiLibraries.composeFramework)
 
-//    implementation(com.gtf.snap.ComposeUiLibraries.composeToolingPreview)
+    implementation(com.gtf.snap.ComposeUiLibraries.composeToolingPreview)
     implementation(com.gtf.snap.ComposeUiLibraries.composeLayout)
     implementation(com.gtf.snap.ComposeUiLibraries.composeRuntime)
+    implementation(com.gtf.snap.ComposeUiLibraries.composeGoogleFont)
     implementation(project(":corekit"))
 }
