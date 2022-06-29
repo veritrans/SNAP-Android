@@ -30,7 +30,10 @@ fun SnapButton( //TODO border disabled/enabled color, font, font size, corner ra
         shape = RoundedCornerShape(2.dp),
         border = selectBorderStroke(style),
         colors = selectButtonColors(style),
-        content = { Text(text = text) }
+        content = { Text(
+            fontFamily = getPoppinsFontFamily(),
+            text = text
+        ) }
     )
 }
 
