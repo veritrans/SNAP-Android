@@ -24,7 +24,7 @@ android {
                 "proguard-rules.pro"
             ) //TODO: check this working or not
             buildConfigField("String", "SNAP_BASE_URL", "\"https://app.midtrans.com/snap/\"")
-            buildConfigField("String", "CORE_API_BASE_URL", "\"https://api.midtrans.com/v2/\"")
+            buildConfigField("String", "CORE_API_BASE_URL", "\"https://api.midtrans.com/\"")
         }
 
         debug {
@@ -36,7 +36,7 @@ android {
             buildConfigField(
                 "String",
                 "CORE_API_BASE_URL",
-                "\"https://api.sandbox.midtrans.com/v2/\""
+                "\"https://api.sandbox.midtrans.com/\""
             )
         }
     }
