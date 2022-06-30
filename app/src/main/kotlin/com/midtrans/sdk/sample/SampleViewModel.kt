@@ -6,10 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
-import com.midtrans.sdk.corekit.api.model.CardTokenResponse
-import com.midtrans.sdk.corekit.api.model.DeleteSavedCardResponse
-import com.midtrans.sdk.corekit.api.model.PaymentType
-import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.NormalCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.TwoClickCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.BankTransferPaymentRequestBuilder
@@ -127,6 +124,21 @@ class SampleViewModel : ViewModel() {
 
                 override fun onError(error: SnapError) {
                     Log.e("error, error, error", "delete error, error, error")
+                }
+            }
+        )
+    }
+
+    fun getBinData(binNumber: String){
+        coreKit.getBinData(
+            binNumber = binNumber,
+            clientKey = "VT-client-yrHf-c8Sxr-ck8tx",
+            callback = object : Callback<BinResponse> {
+                override fun onSuccess(result: BinResponse) {
+                }
+
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "get exbin error, error, error")
                 }
             }
         )
