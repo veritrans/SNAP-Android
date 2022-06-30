@@ -1,4 +1,5 @@
 package com.midtrans.sdk.corekit.api.model
 
-class BinResponse {
-}
+data class BinResponse (
+    var data: BinData?
+)
