@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-object SnapButtonAttribute {
+object SnapButton {
     enum class Style {
         PRIMARY,
         TERTIARY
@@ -20,7 +20,7 @@ object SnapButtonAttribute {
 @Composable
 fun SnapButton( //TODO border disabled/enabled color, font, font size, corner radius
     enabled: Boolean = true,
-    style: SnapButtonAttribute.Style = SnapButtonAttribute.Style.PRIMARY,
+    style: SnapButton.Style = SnapButton.Style.PRIMARY,
     text: String,
     onClick: () -> Unit
 ) {
@@ -31,22 +31,22 @@ fun SnapButton( //TODO border disabled/enabled color, font, font size, corner ra
         border = selectBorderStroke(style),
         colors = selectButtonColors(style),
         content = { Text(
-            fontFamily = getPoppinsFontFamily(),
+            style= SnapTypography.STYLES.snapButton,
             text = text
         ) }
     )
 }
 
 @Composable
-private fun selectButtonColors(style: SnapButtonAttribute.Style): ButtonColors {
+private fun selectButtonColors(style: SnapButton.Style): ButtonColors {
     return when (style) {
-        SnapButtonAttribute.Style.PRIMARY -> ButtonDefaults.buttonColors(
+        SnapButton.Style.PRIMARY -> ButtonDefaults.buttonColors(
             backgroundColor = SnapColors.getARGBColor(SnapColors.INTERACTIVE_FILL_INVERSE),
             contentColor = SnapColors.getARGBColor(SnapColors.TEXT_INVERSE),
             disabledContentColor = SnapColors.getARGBColor(SnapColors.TEXT_DISABLED),
             disabledBackgroundColor = SnapColors.getARGBColor(SnapColors.INTERACTIVE_DISABLED)
         )
-        SnapButtonAttribute.Style.TERTIARY -> ButtonDefaults.buttonColors(
+        SnapButton.Style.TERTIARY -> ButtonDefaults.buttonColors(
             backgroundColor = Color(SnapColors.TRANSPARENT),
             contentColor = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY),
             disabledContentColor = SnapColors.getARGBColor(SnapColors.TEXT_DISABLED),
@@ -56,12 +56,12 @@ private fun selectButtonColors(style: SnapButtonAttribute.Style): ButtonColors {
 }
 
 @Composable
-private fun selectBorderStroke(style: SnapButtonAttribute.Style): BorderStroke {
+private fun selectBorderStroke(style: SnapButton.Style): BorderStroke {
     return when (style) {
-        SnapButtonAttribute.Style.PRIMARY -> BorderStroke(
+        SnapButton.Style.PRIMARY -> BorderStroke(
             ButtonDefaults.OutlinedBorderSize, SnapColors.getARGBColor(SnapColors.INTERACTIVE_FILL_INVERSE)
         )
-        SnapButtonAttribute.Style.TERTIARY -> BorderStroke(
+        SnapButton.Style.TERTIARY -> BorderStroke(
             ButtonDefaults.OutlinedBorderSize, SnapColors.getARGBColor(SnapColors.INTERACTIVE_BORDER_ACTION)
         )
     }

@@ -11,26 +11,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 
-class SampleActivity : AppCompatActivity() {
-
-    private val viewModel: SampleViewModel by lazy {
-        ViewModelProvider(this).get(SampleViewModel::class.java)
-    }
-
+class SampleUiActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SnapCore.Builder().withContext(this.applicationContext).build()
-        viewModel.getHelloFromSnap()
-        setContent { Greeting() }
+        setContent { SampleUi() }
     }
 
     @Composable
     @Preview
-    fun Greeting() {
+    fun SampleUi() {
         Column {
             var text by remember { mutableStateOf("") }
             Text("insert snap token", style = TextStyle(color = Color.Red))
@@ -39,33 +32,27 @@ class SampleActivity : AppCompatActivity() {
             }, enabled = true, readOnly = false)
             SnapButton(
                 enabled = true,
-                text = "Bayar",
+                text = "Primary Button",
                 style = SnapButton.Style.PRIMARY
-            ) {
-                viewModel.chargeUsingCreditCard(text)
-            }
-            SnapButton(
-                enabled = true,
-                text = "Create card token",
-                style = SnapButton.Style.PRIMARY
-            ) {
-                viewModel.getCardTokenBasic()
-            }
-            SnapButton(
-                enabled = true,
-                text = "Delete card token",
-                style = SnapButton.Style.TERTIARY
-            ) {
-                viewModel.deleteSavedCard()
-            }
+            ) {}
 
             SnapButton(
                 enabled = true,
-                text = "To Sample UI",
+                text = "Tertiary Button",
+                style = SnapButton.Style.TERTIARY
+            ) {}
+
+            SnapButton(
+                enabled = false,
+                text = "Primary Disabled Button",
                 style = SnapButton.Style.PRIMARY
-            ){
-                startActivity(Intent(this@SampleActivity, SampleUiActivity::class.java))
-            }
+            ) {}
+
+            SnapButton(
+                enabled = false,
+                text = "Tertiary Disabled Button",
+                style = SnapButton.Style.TERTIARY
+            ) {}
         }
     }
 }

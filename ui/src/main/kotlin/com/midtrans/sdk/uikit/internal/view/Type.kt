@@ -54,6 +54,19 @@ fun getPoppinsFontFamily(): FontFamily {
     )
 }
 
+@OptIn(ExperimentalTextApi::class)
+fun getRobotoFontFamily(): FontFamily {
+    return getGoogleFontFamily(
+        name = "Roboto",
+        weights = listOf(
+            FontWeight.Normal,
+            FontWeight.Bold,
+            FontWeight.ExtraLight,
+            FontWeight.SemiBold
+        )
+    )
+}
+
 val AppFontTypography = Typography(
     defaultFontFamily = getPoppinsFontFamily()
 )
@@ -77,6 +90,6 @@ fun Spanned.toAnnotatedString(): AnnotatedString = buildAnnotatedString {
             }
             is UnderlineSpan -> addStyle(SpanStyle(textDecoration = TextDecoration.Underline), start, end)
             is ForegroundColorSpan -> addStyle(SpanStyle(color = Color(span.foregroundColor)), start, end)
-        } 
+        }
     }
 }

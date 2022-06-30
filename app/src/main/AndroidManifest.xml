@@ -6,20 +6,23 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        >
+        android:roundIcon="@mipmap/ic_launcher_round">
 
 
         <activity
             android:name=".sample.SampleActivity"
+            android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.Light"
-            android:exported="true">
+            android:theme="@style/Theme.AppCompat.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".sample.SampleUiActivity"
+            android:theme="@style/Theme.AppCompat.Light" />
     </application>
 
 
