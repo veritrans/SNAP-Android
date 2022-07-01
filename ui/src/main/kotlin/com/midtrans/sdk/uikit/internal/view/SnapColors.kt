@@ -1,6 +1,7 @@
 package com.midtrans.sdk.uikit.internal.view
 
 import androidx.compose.ui.graphics.Color
+import java.util.prefs.BackingStoreException
 
 object SnapColors {
 
@@ -11,6 +12,7 @@ object SnapColors {
     const val BACKGROUND_FILL_HIGHLIGHT = 0XE8EBEF
     const val BACKGROUND_FILL_BRAND = 0X3A5EAB
     const val BACKGROUND_FILL_INVERSE = 0X2044
+    const val BACKGROUND_FILL_LIGHT = 0XFFFBFE
 
     const val TEXT_PRIMARY = 0X2D2E34
     const val TEXT_SECONDARY = 0X4F515C

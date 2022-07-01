@@ -1,13 +1,19 @@
 package com.midtrans.sdk.uikit.internal.view
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 object SnapButton {
@@ -24,6 +30,9 @@ fun SnapButton( //TODO border disabled/enabled color, font, font size, corner ra
     text: String,
     onClick: () -> Unit
 ) {
+    Row(modifier = Modifier.wrapContentWidth()) {
+        
+    }
     OutlinedButton(
         onClick = onClick,
         enabled = enabled,
