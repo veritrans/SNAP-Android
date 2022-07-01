@@ -69,6 +69,8 @@ object SnapColors {
     const val OVERLAY_BLACK = 0X32333A
     const val OVERLAY_WHITE = 0XFFFFFF
 
+    const val LINE_LIGHT_MUTED = 0XE8E8E8
+
     fun getARGBColor(color: Int): Color {
         return Color((color.toLong() + (0xFF000000).toLong()))
     }
