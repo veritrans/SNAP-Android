@@ -22,6 +22,7 @@ import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapButton
+import com.midtrans.sdk.uikit.internal.view.SnapNumberedListItem
 import com.midtrans.sdk.uikit.internal.view.SnapText
 
 class SampleUiActivity : AppCompatActivity() {
@@ -39,6 +40,15 @@ class SampleUiActivity : AppCompatActivity() {
                 state = rememberScrollState()
             )
         ) {
+            SnapAppBar(
+                title = "App Bar",
+                iconResId = R.drawable.psdk_ic_gopay
+            ) {
+                Toast.makeText(this@SampleUiActivity, "Icon App Bar clicked!", Toast.LENGTH_LONG).show()
+            }
+
+            SnapNumberedListItem(number = "1.", paragraph = "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad")
+
             var text by remember { mutableStateOf("") }
             Text("insert snap token", style = TextStyle(color = Color.Red))
             TextField(value = text, onValueChange = {
@@ -76,13 +86,6 @@ class SampleUiActivity : AppCompatActivity() {
                     "  <li>Milk</li>" +
                     "</ol>"
             )
-
-            SnapAppBar(
-                title = "App Bar",
-                iconResId = R.drawable.psdk_ic_gopay
-            ) {
-                Toast.makeText(this@SampleUiActivity, "Icon App Bar clicked!", Toast.LENGTH_LONG).show()
-            }
         }
     }
 }
