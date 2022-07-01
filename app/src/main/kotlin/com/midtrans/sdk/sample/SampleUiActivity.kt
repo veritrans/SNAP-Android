@@ -47,7 +47,7 @@ class SampleUiActivity : AppCompatActivity() {
             SnapNumberedListItem(number = "1.", paragraph = "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad")
 
             SnapMultiIconListItem(title = "Bank Transfer", iconList = listOf(R.drawable.ic_bri,R.drawable.ic_bri,R.drawable.ic_bri,R.drawable.ic_bri)) {
-
+                Toast.makeText(this@SampleUiActivity, "Bank Transfer is C.L.I.C.K.E.D!!!", Toast.LENGTH_LONG).show()
             }
 
 //            val words = listOf<String>(

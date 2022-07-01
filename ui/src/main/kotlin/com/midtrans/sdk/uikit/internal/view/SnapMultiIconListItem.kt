@@ -2,6 +2,7 @@ package com.midtrans.sdk.uikit.internal.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,6 +28,7 @@ fun SnapMultiIconListItem(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
+            .clickable(onClick = onClick)
             .background(Color.Yellow)
     ) {
         Column(
