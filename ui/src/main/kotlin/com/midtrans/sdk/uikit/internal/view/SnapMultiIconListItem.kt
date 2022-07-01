@@ -41,19 +41,16 @@ fun SnapMultiIconListItem(
                 modifier = Modifier.padding(top = 16.dp, bottom = 13.dp),
                 style = SnapTypography.STYLES.snapTextBig
             )
-            Row {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(space = 8.dp, alignment = Alignment.Start)
+            ) {
                 iconList.forEach {
-                    Row(
-                        modifier = Modifier.padding(end = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
                         Icon(
                             painter = painterResource(id = it),
                             tint = Color.Unspecified,
                             contentDescription = null,
                             modifier = Modifier.border(1.dp, Color.Black)
                         )
-                    }
                 }
             }
             Divider(
