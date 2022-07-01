@@ -150,28 +150,3 @@ fun Spanned.toAnnotatedString(): AnnotatedString = buildAnnotatedString {
     }
 }
 
-
-class ssss() {
-    @Composable
-    fun qqq() {
-        val bullet = "\u2022"
-        val messages = listOf(
-            "Hey This is first paragraph",
-            "Hey this is my second paragraph. Any this is 2nd line.",
-            "Hey this is 3rd paragraph."
-        )
-
-        val paragraphStyle = ParagraphStyle(textIndent = TextIndent(restLine = 12.sp))
-        Text(
-            buildAnnotatedString {
-                messages.forEach {
-                    withStyle(style = paragraphStyle) {
-                        append(bullet)
-                        append("\t\t")
-                        append(it)
-                    }
-                }
-            }
-        )
-    }
-}

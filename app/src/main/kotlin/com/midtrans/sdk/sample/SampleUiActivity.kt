@@ -11,8 +11,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.midtrans.sdk.corekit.SnapCore
+import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapText
+import com.midtrans.sdk.uikit.R
 
 class SampleUiActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +62,11 @@ class SampleUiActivity: AppCompatActivity() {
                     "  <li>Tea</li>" +
                     "  <li>Milk</li>" +
                     "</ol>")
+
+            SnapAppBar(
+                title = "App Bar",
+                iconResId = R.drawable.psdk_ic_gopay
+            ){}
         }
     }
 }
