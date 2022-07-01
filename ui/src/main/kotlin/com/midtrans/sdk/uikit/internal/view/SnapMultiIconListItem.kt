@@ -24,45 +24,46 @@ fun SnapMultiIconListItem(
     iconList: List<Int>,
     onClick: () -> Unit
 ) {
-    Column(modifier = Modifier.background(Color.Blue)) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .background(Color.Yellow)
+    ) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
         ) {
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = title,
-                    modifier = Modifier.padding(top = 16.dp, bottom = 13.dp),
-                    style = SnapTypography.STYLES.snapTextBig
-                )
-                Row() {
-                    iconList.forEach() {
 
-                        Row(
-                            modifier = Modifier.padding(end = 8.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Icon(
-                                painter = painterResource(id = it),
-                                tint = Color.Unspecified,
-                                contentDescription = null,
-                                modifier = Modifier.border(1.dp, Color.Black)
-                            )
-                        }
+            Text(
+                text = title,
+                modifier = Modifier.padding(top = 16.dp, bottom = 13.dp),
+                style = SnapTypography.STYLES.snapTextBig
+            )
+            Row {
+                iconList.forEach {
+                    Row(
+                        modifier = Modifier.padding(end = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Icon(
+                            painter = painterResource(id = it),
+                            tint = Color.Unspecified,
+                            contentDescription = null,
+                            modifier = Modifier.border(1.dp, Color.Black)
+                        )
                     }
                 }
             }
-            Icon(
-                painter = painterResource(id = R.drawable.ic_chevron_right),
-                tint = Color.Unspecified,
-                contentDescription = null,
+            Divider(
+                thickness = 1.dp,
+                color = SnapColors.getARGBColor(LINE_LIGHT_MUTED),
+                modifier = Modifier.padding(top = 21.dp)
             )
         }
-        Divider(
-            thickness = 1.dp,
-            color = SnapColors.getARGBColor(LINE_LIGHT_MUTED),
-            modifier = Modifier.padding(top = 21.dp)
+        Icon(
+            painter = painterResource(id = R.drawable.ic_chevron_right),
+            tint = Color.Unspecified,
+            contentDescription = null,
         )
     }
 }
