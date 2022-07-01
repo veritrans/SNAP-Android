@@ -23,6 +23,23 @@ class SnapTypography private constructor(){
         fontWeight = FontWeight.SemiBold
     )
 
+    val snapTextBig = TextStyle(
+        fontFamily = getPoppinsFontFamily(),
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Normal
+    )
+
+    val snapTextMedium = TextStyle(
+        fontFamily = getPoppinsFontFamily(),
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Normal
+    )
+
+    val snapTextSmall = TextStyle(
+        fontFamily = getPoppinsFontFamily(),
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Normal
+    )
     companion object {
         val STYLES by lazy {
             SnapTypography()

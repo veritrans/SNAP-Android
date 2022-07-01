@@ -1,6 +1,5 @@
 package com.midtrans.sdk.sample
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +12,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.uikit.internal.view.SnapButton
+import com.midtrans.sdk.uikit.internal.view.SnapText
 
 class SampleUiActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +53,13 @@ class SampleUiActivity: AppCompatActivity() {
                 text = "Tertiary Disabled Button",
                 style = SnapButton.Style.TERTIARY
             ) {}
+            
+            SnapText(text = "This is <b>bolt</b> <i>italic</i> <u>underline</u>")
+            SnapText(text = "<ol>" +
+                    "  <li>Coffee <b>asldjflasjdfalkdf</b> alsdf ladsfjlkasjdf jasdlf lasjdflk as alsdkjflalaksdf jalskdfj alskdjf ajsdf lalksd jfalkd sfjlaksd jflasdkjf aslkd fjlaksdj falkdsf jalkds jflaksdj falksdfj alksdfj aslkdfj alskdf</li>" +
+                    "  <li>Tea</li>" +
+                    "  <li>Milk</li>" +
+                    "</ol>")
         }
     }
 }
