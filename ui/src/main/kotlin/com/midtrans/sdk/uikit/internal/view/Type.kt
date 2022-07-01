@@ -81,71 +81,44 @@ val AppFontTypography = Typography(
  */
 fun Spanned.toAnnotatedString(): AnnotatedString = buildAnnotatedString {
     val spanned = this@toAnnotatedString
-    var normalStart = 0
-    var normalEnd = 0
+    append(spanned.toString())
     val spanList = getSpans(0, spanned.length, Any::class.java)
     spanList.forEach { span ->
         val start = getSpanStart(span)
-        normalEnd = start
-//        append(spanned.toString().substring(normalStart, normalEnd))
         val end = getSpanEnd(span)
-        normalStart = end
-        val text = spanned.toString().substring(start, end)
         when (span) {
             is StyleSpan -> {
-                append(buildAnnotatedString {
-                    append(text)
-                    when (span.style) {
-                        Typeface.BOLD -> addStyle(
-                            SpanStyle(fontWeight = FontWeight.Bold),
-                            0,
-                            text.length
-                        )
-                        Typeface.ITALIC -> addStyle(
-                            SpanStyle(fontStyle = FontStyle.Italic),
-                            0,
-                            text.length
-                        )
-                        Typeface.BOLD_ITALIC -> addStyle(
-                            SpanStyle(
-                                fontWeight = FontWeight.Bold,
-                                fontStyle = FontStyle.Italic
-                            ), 0, text.length
-                        )
-                    }
-                })
-
+                when (span.style) {
+                    Typeface.BOLD -> addStyle(
+                        SpanStyle(fontWeight = FontWeight.Bold),
+                        start,
+                        end
+                    )
+                    Typeface.ITALIC -> addStyle(
+                        SpanStyle(fontStyle = FontStyle.Italic),
+                        start,
+                        end
+                    )
+                    Typeface.BOLD_ITALIC -> addStyle(
+                        SpanStyle(
+                            fontWeight = FontWeight.Bold,
+                            fontStyle = FontStyle.Italic
+                        ), start, end
+                    )
+                }
             }
+
             is UnderlineSpan -> {
-                append(buildAnnotatedString {
-                    append(text)
-                    addStyle(SpanStyle(textDecoration = TextDecoration.Underline), 0, text.length)
-                })
+
+                addStyle(SpanStyle(textDecoration = TextDecoration.Underline), start, end)
+
             }
             is ForegroundColorSpan -> {
-                append(buildAnnotatedString {
-                    append(text)
-                    addStyle(SpanStyle(color = Color(span.foregroundColor)), 0, text.length)
-                })
-            }
-            is BulletSpan -> {
-                val paragraphStyle = ParagraphStyle(textIndent = TextIndent(restLine = 12.sp))
-                append(buildAnnotatedString {
-                    withStyle(style = paragraphStyle){
-                        append("1. ")
-                        append("")
-                        append(text)
-                    }
 
-                    withStyle(style = paragraphStyle){
-                        append("1. ")
-                        append("")
-                        append(text)
-                    }
-
-                })
+                addStyle(SpanStyle(color = Color(span.foregroundColor)), start, end)
 
             }
+
         }
     }
 }
