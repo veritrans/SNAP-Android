@@ -23,11 +23,15 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.*
 
 class SampleUiActivity : AppCompatActivity() {
+
+    val ccvVisible = mutableStateOf(true)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SnapCore.Builder().withContext(this.applicationContext).build()
         setContent { SampleUi() }
     }
+
 
     @Composable
     @Preview
@@ -37,18 +41,21 @@ class SampleUiActivity : AppCompatActivity() {
                 state = rememberScrollState()
             )
         ) {
-            val isVisible = mutableStateOf(true)
-            var visible by remember { isVisible}
-            SnapCCDetailListItem(visible)
+
+            var shouldReveal by remember {
+                ccvVisible
+            }
+            SnapCCDetailListItem(shouldReveal)
 
             SnapAppBar(
                 title = "App Bar",
                 iconResId = R.drawable.psdk_ic_gopay
             ) {
                 Toast.makeText(this@SampleUiActivity, "Icon App Bar clicked!", Toast.LENGTH_LONG).show()
-                visible = !visible
+                shouldReveal = !shouldReveal
             }
 
+            CcRadioGroup(states = listOf("satu", "dua", "tiga"))
             SnapNumberedListItem(number = "1.", paragraph = "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad")
 
             SnapMultiIconListItem(title = "Bank Transfer", iconList = listOf(R.drawable.ic_bri,R.drawable.ic_bri,R.drawable.ic_bri,R.drawable.ic_bri)) {
