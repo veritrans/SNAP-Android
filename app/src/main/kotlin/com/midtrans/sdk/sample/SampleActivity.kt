@@ -30,23 +30,34 @@ class SampleActivity : AppCompatActivity() {
     @Composable
     @Preview
     fun Greeting() {
+        var text by remember { mutableStateOf("") }
+        ShowChargeContent(text = text, onTextFieldValueChange = { text = it})
+    }
+
+    @Composable
+    fun ShowChargeContent(text: String, onTextFieldValueChange: (String)-> Unit){
         Column {
-            var text by remember { mutableStateOf("") }
             Text("insert snap token", style = TextStyle(color = Color.Red))
-            TextField(value = text, onValueChange = {
-                text = it
-            }, enabled = true, readOnly = false)
+            TextField(value = text, onValueChange = onTextFieldValueChange, enabled = true, readOnly = false)
 
             Button(onClick = {
-                viewModel.chargeUsingCreditCard(text)
+                viewModel.chargeUsingCreditCardWithPromo(text)
             }) {
-
+                Text(text = "Charge")
             }
+
+            Button(onClick = {
+                viewModel.getTwoClickToken()
+            }) {
+                Text(text = "2click card token")
+            }
+
             Button(onClick = {
                 viewModel.getCardTokenBasic()
             }) {
-                Text(text = "Create card token")
+                Text(text = "normal card token")
             }
+
             Button(onClick = {
                 viewModel.deleteSavedCard()
             }) {

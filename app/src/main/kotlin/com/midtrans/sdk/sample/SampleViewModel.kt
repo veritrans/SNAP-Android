@@ -10,16 +10,16 @@ import com.midtrans.sdk.corekit.api.model.CardTokenResponse
 import com.midtrans.sdk.corekit.api.model.DeleteSavedCardResponse
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
-import com.midtrans.sdk.corekit.api.requestbuilder.BankTransferPaymentRequestBuilder
-import com.midtrans.sdk.corekit.api.requestbuilder.BasicCardTokenRequestBuilder
-import com.midtrans.sdk.corekit.api.requestbuilder.CreditCardPaymentRequestBuilder
-import com.midtrans.sdk.corekit.api.requestbuilder.CreditCardTokenRequestBuilder
+import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.NormalCardTokenRequestBuilder
+import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.TwoClickCardTokenRequestBuilder
+import com.midtrans.sdk.corekit.api.requestbuilder.payment.BankTransferPaymentRequestBuilder
+import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
 
 class SampleViewModel : ViewModel() {
     var helloLiveData = MutableLiveData<String>()
     private val coreKit: SnapCore = SnapCore.getInstance()!!
-    private var cardTokenResponse : CardTokenResponse? = null
-    private var transactionResponse : TransactionResponse? = null
+    var cardTokenResponse : CardTokenResponse? = null
+    var transactionResponse : TransactionResponse? = null
 
     fun getHelloFromSnap() {
         helloLiveData.value = coreKit.hello()
@@ -41,13 +41,30 @@ class SampleViewModel : ViewModel() {
     }
 
     fun getCardTokenBasic(){
-        coreKit.getCardToken(cardTokenRequestBuilder = BasicCardTokenRequestBuilder()
-            .withClientKey("SB-Mid-client-Y1-C6UEY5qGZTAEt")
-            .withGrossAmount(10000.3333)
+        coreKit.getCardToken(cardTokenRequestBuilder = NormalCardTokenRequestBuilder()
+            .withClientKey("VT-client-yrHf-c8Sxr-ck8tx")
+            .withGrossAmount(145000.0)
             .withCardNumber("4811 1111 1111 1114")
             .withCardExpMonth("12")
             .withCardExpYear("24")
             .withCardCvv("123"),
+            callback = object : Callback<CardTokenResponse> {
+                override fun onSuccess(result: CardTokenResponse) {
+                    cardTokenResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
+
+    fun getTwoClickToken(){
+        coreKit.getCardToken(cardTokenRequestBuilder = TwoClickCardTokenRequestBuilder()
+            .withClientKey("VT-client-yrHf-c8Sxr-ck8tx")
+            .withGrossAmount(145000.0)
+            .withCardCvv("123")
+            .withTokenId("481111YgYEIkDdzJNVqfEdcAkkue1114"),
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
                     cardTokenResponse = result
@@ -77,6 +94,28 @@ class SampleViewModel : ViewModel() {
             }
         )
     }
+
+    fun chargeUsingCreditCardWithPromo(snapToken: String) {
+        coreKit.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = CreditCardPaymentRequestBuilder()
+                .withCardToken(cardTokenResponse?.tokenId.toString())
+                .withSaveCard(true)
+                .withPaymentType(PaymentType.CREDIT_CARD)
+                .withDiscountedGrossAmount(145000.0)
+                .withPromoId("431")
+                .withCustomerEmail("belajar@example.com"),
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    transactionResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
+
     fun deleteSavedCard(){
         coreKit.deleteSavedCard(
             snapToken = "a5de6d5e-096b-4de7-a3d9-cadbb67ddfa0",
@@ -89,9 +128,7 @@ class SampleViewModel : ViewModel() {
                 override fun onError(error: SnapError) {
                     Log.e("error, error, error", "delete error, error, error")
                 }
-
             }
-
         )
     }
 }
