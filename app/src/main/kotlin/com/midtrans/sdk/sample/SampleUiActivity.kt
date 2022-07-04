@@ -37,11 +37,16 @@ class SampleUiActivity : AppCompatActivity() {
                 state = rememberScrollState()
             )
         ) {
+            val isVisible = mutableStateOf(true)
+            var visible by remember { isVisible}
+            SnapCCDetailListItem(visible)
+
             SnapAppBar(
                 title = "App Bar",
                 iconResId = R.drawable.psdk_ic_gopay
             ) {
                 Toast.makeText(this@SampleUiActivity, "Icon App Bar clicked!", Toast.LENGTH_LONG).show()
+                visible = !visible
             }
 
             SnapNumberedListItem(number = "1.", paragraph = "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad")
