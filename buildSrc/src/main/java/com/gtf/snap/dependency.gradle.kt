@@ -43,7 +43,7 @@ object Dependencies {
     const val nanohttpd = "2.2.0"
     const val nanolets = "2.3.1"
     const val androidxDatastoreVersion = "1.0.0"
-    const val composeVersion = "1.2.0-rc01"
+    const val composeVersion = "1.2.0-rc02"
 }
 
 object CommonLibraries {

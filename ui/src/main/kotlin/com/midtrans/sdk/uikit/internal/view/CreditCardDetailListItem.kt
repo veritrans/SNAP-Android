@@ -1,70 +1,139 @@
 package com.midtrans.sdk.uikit.internal.view
 
-import android.util.Log
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.RadioButton
+import androidx.compose.material.RadioButtonDefaults
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.view.SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY
+import com.midtrans.sdk.uikit.internal.view.SnapColors.INTERACTIVE_BORDER_SUPPORT
+import com.midtrans.sdk.uikit.internal.view.SnapColors.LINK_HOVER
+import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
+import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_NEUTRAL_FILL
 
 object CreditCardDetailListItem {
 }
 
 @Composable
 fun SnapCCDetailListItem(
-    cardNumber: String,
+    @DrawableRes startIconId: Int,
+    @DrawableRes endIconId: Int,
+    itemTitle: String,
     shouldReveal: Boolean,
+    inputTitle: String,
+    isInputError: Boolean,
+    errorTitle: String,
     onValueChange: (String) -> Unit,
-    onRemoveClicked: () -> Unit
+    onEndIconClicked: () -> Unit
 ) {
-    Log.e("wahyu", "shouldReveal + $shouldReveal")
-    Column() {
-        Row() {
+    Column {
+        Row(
+            verticalAlignment = CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_chevron_right),
+                painter = painterResource(id = startIconId),
                 contentDescription = null,
                 tint = Color.Unspecified
             )
             Text(
-                text = cardNumber,
-                modifier = Modifier.weight(weight = 1.0f)
+                text = itemTitle,
+                style = SnapTypography.STYLES.snapTextBig,
+                modifier = Modifier
+                    .weight(weight = 1.0f)
             )
-            IconButton(onClick = { onRemoveClicked()}) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_bri),
-                    contentDescription = null,
-                    tint = Color.Unspecified
-                )
+            if (shouldReveal) {
+                IconButton(onClick = { onEndIconClicked() }) {
+                    Icon(
+                        painter = painterResource(id = endIconId),
+                        contentDescription = null,
+                        tint = Color.Unspecified
+                    )
+                }
             }
         }
-        Column() {
-            var text by remember { mutableStateOf("") }
-            AnimatedVisibility(
-                visible = shouldReveal,
-                enter = expandVertically(),
-//                exit = slideIn {  }(
-//                    animationSpec = tween(durationMillis = 250)
-//                )
+
+        AnimatedVisibility(
+            visible = shouldReveal,
+            enter = expandVertically()
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(
+                        SnapColors.getARGBColor(SUPPORT_NEUTRAL_FILL),
+                        RoundedCornerShape(4.dp)
+                    )
+                    .fillMaxWidth(1f)
+                    .padding(start = 16.dp, bottom = 8.dp, top = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Text(text = "fdfdfd")
-                TextField(value = text, enabled = true, readOnly = false, onValueChange = {
-                    if(it.length <= 3) {
-                        text = it.filter { it.isDigit() }
-                        onValueChange(it.filter { it.isDigit() })
-                    }
-                },
+                var text by remember { mutableStateOf("") }
+                Text(
+                    text = inputTitle,
+                    style = SnapTypography.STYLES.snapTextSmall
+                )
+                BasicTextField(
+                    value = text,
+                    onValueChange = { value ->
+                        if (value.length <= 3) {
+                            text = value.filter { it.isDigit() }
+                            onValueChange(value.filter { it.isDigit() })
+                        }
+                    },
+                    modifier = Modifier
+                        .border(
+                            1.dp,
+                            if (isInputError) {
+                                SnapColors.getARGBColor(INTERACTIVE_BORDER_SUPPORT)
+                            } else {
+                                SnapColors.getARGBColor(LINK_HOVER)
+                            },
+                            RoundedCornerShape(4.dp)
+                        )
+                        .background(Color.White, RoundedCornerShape(4.dp))
+                        .width(69.dp)
+                        .height(39.dp)
+                        .padding(top = 8.dp, bottom = 8.dp, start = 12.dp, end = 12.dp),
+                    visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
+                if (isInputError)
+                    Text(
+                        text = errorTitle,
+                        color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT),
+                        style = SnapTypography.STYLES.snapTextSmall
+                    )
             }
 
         }
@@ -78,29 +147,48 @@ fun CcRadioGroup(
     onItemRemoveClicked: (item: String) -> Unit
 ) {
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(states[0]) }
-    val (satu, dua) = mapOf(Pair())
 
-    Column() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
         states.forEach { item ->
-            Row(
-                modifier = Modifier.selectable(
-                    selected = (item == selectedOption),
-                    onClick = {
-                        onOptionSelected(item)
-                    },
-                    role = Role.RadioButton
-                )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                RadioButton(
-                    selected = item == selectedOption,
-                    onClick = null,
-                    colors = RadioButtonDefaults.colors(selectedColor = Color.Black)
-                )
-                SnapCCDetailListItem(cardNumber = item, item == selectedOption,
-                    { onValueChange(selectedOption, it) }, { onItemRemoveClicked(item) }
+                Row(
+                    modifier = Modifier.selectable(
+                        selected = (item == selectedOption),
+                        onClick = {
+                            onOptionSelected(item)
+                        },
+                        role = Role.RadioButton
+                    ),
+                    verticalAlignment = CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    RadioButton(
+                        selected = item == selectedOption,
+                        onClick = null,
+                        colors = RadioButtonDefaults.colors(selectedColor = Color.Black)
+                    )
+                    SnapCCDetailListItem(
+                        startIconId = R.drawable.ic_bri,
+                        endIconId = R.drawable.ic_chevron_right,
+                        itemTitle = item,
+                        shouldReveal = item == selectedOption,
+                        inputTitle = "Masukkan CVV",
+                        isInputError = true,
+                        errorTitle = "jangan salah",
+                        onValueChange = { onValueChange(selectedOption, it) },
+                        onEndIconClicked = { onItemRemoveClicked(item) }
+                    )
+                }
+
+                Divider(
+                    thickness = 1.dp,
+                    color = SnapColors.getARGBColor(BACKGROUND_BORDER_SOLID_SECONDARY)
                 )
             }
         }
     }
 }
-
