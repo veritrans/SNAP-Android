@@ -135,7 +135,30 @@ fun SnapCCDetailListItem(
                         style = SnapTypography.STYLES.snapTextSmall
                     )
             }
+        }
+    }
+}
 
+@Composable
+fun InputNewCardItem() {
+    val iconIdList = mutableListOf(R.drawable.ic_bri, R.drawable.ic_bri, R.drawable.ic_bri, R.drawable.ic_bri)
+    Column() {
+        Text(text = "Gunakan kartu lain")
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            Text(
+                text = "Nomor kartu",
+                modifier = Modifier.weight(1f)
+            )
+
+            iconIdList.forEach {
+                Icon(
+                    painter = painterResource(id = it),
+                    contentDescription = null,
+                    tint = Color.Unspecified
+                )
+            }
         }
     }
 }
@@ -143,6 +166,7 @@ fun SnapCCDetailListItem(
 @Composable
 fun CcRadioGroup(
     states: List<String>,
+    inputTitle: String,
     onValueChange: (item: String, cvv: String) -> Unit,
     onItemRemoveClicked: (item: String) -> Unit
 ) {
