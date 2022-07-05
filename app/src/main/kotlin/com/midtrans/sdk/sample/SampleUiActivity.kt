@@ -33,6 +33,8 @@ class SampleUiActivity : AppCompatActivity() {
         setContent { SampleUi() }
     }
 
+    fun provideRadioList() = mutableListOf("satu", "dua", "tiga")
+
 
     @Composable
     @Preview
@@ -56,9 +58,12 @@ class SampleUiActivity : AppCompatActivity() {
                 shouldReveal = !shouldReveal
             }
 
-            CcRadioGroup(states = listOf("satu", "dua", "tiga")){ selected: String, value: String ->
+            var list = provideRadioList()
+            CcRadioGroup(states = list,{ selected: String, value: String ->
                 Log.e("wahyu", "cardNumber: $selected  cvv: $value")
-            }
+            }, onItemRemoveClicked = {
+                list.remove(it)}
+            )
             SnapNumberedListItem(number = "1.", paragraph = "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad")
 
             SnapMultiIconListItem(title = "Bank Transfer", iconList = listOf(R.drawable.ic_bri,R.drawable.ic_bri,R.drawable.ic_bri,R.drawable.ic_bri)) {

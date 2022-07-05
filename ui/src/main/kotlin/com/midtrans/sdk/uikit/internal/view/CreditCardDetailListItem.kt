@@ -10,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import com.midtrans.sdk.uikit.R
@@ -86,7 +87,8 @@ fun CcRadioGroup(
             ) {
                 RadioButton(
                     selected = item == selectedOption,
-                    onClick = null
+                    onClick = null,
+                    colors = RadioButtonDefaults.colors(selectedColor = Color.Black)
                 )
                 SnapCCDetailListItem(item == selectedOption,
                     { onValueChange(selectedOption, it) }, { onItemRemoveClicked(item) }
