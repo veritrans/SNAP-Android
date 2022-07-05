@@ -1,6 +1,7 @@
 package com.midtrans.sdk.sample
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -45,7 +46,7 @@ class SampleUiActivity : AppCompatActivity() {
             var shouldReveal by remember {
                 ccvVisible
             }
-            SnapCCDetailListItem(shouldReveal)
+//            SnapCCDetailListItem(shouldReveal)
 
             SnapAppBar(
                 title = "App Bar",
@@ -55,7 +56,9 @@ class SampleUiActivity : AppCompatActivity() {
                 shouldReveal = !shouldReveal
             }
 
-            CcRadioGroup(states = listOf("satu", "dua", "tiga"))
+            CcRadioGroup(states = listOf("satu", "dua", "tiga")){ selected: String, value: String ->
+                Log.e("wahyu", "cardNumber: $selected  cvv: $value")
+            }
             SnapNumberedListItem(number = "1.", paragraph = "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad")
 
             SnapMultiIconListItem(title = "Bank Transfer", iconList = listOf(R.drawable.ic_bri,R.drawable.ic_bri,R.drawable.ic_bri,R.drawable.ic_bri)) {
