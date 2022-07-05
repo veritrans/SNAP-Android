@@ -2,6 +2,7 @@ package com.midtrans.sdk.uikit.internal.view
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,9 +51,7 @@ fun SnapCCDetailListItem(
             var text by remember { mutableStateOf("") }
             AnimatedVisibility(
                 visible = shouldReveal,
-                enter = fadeIn(
-                    initialAlpha = 0.4f
-                ),
+                enter = expandVertically(),
 //                exit = slideIn {  }(
 //                    animationSpec = tween(durationMillis = 250)
 //                )
@@ -79,6 +78,7 @@ fun CcRadioGroup(
     onItemRemoveClicked: (item: String) -> Unit
 ) {
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(states[0]) }
+    val (satu, dua) = mapOf(Pair())
 
     Column() {
         states.forEach { item ->
