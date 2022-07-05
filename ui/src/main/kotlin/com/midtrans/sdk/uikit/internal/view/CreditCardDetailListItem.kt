@@ -6,13 +6,14 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.input.KeyboardType
 import com.midtrans.sdk.uikit.R
 
 object CreditCardDetailListItem {
@@ -20,6 +21,7 @@ object CreditCardDetailListItem {
 
 @Composable
 fun SnapCCDetailListItem(
+    cardNumber: String,
     shouldReveal: Boolean,
     onValueChange: (String) -> Unit,
     onRemoveClicked: () -> Unit
@@ -33,10 +35,10 @@ fun SnapCCDetailListItem(
                 tint = Color.Unspecified
             )
             Text(
-                text = "dfdfdfdff",
+                text = cardNumber,
                 modifier = Modifier.weight(weight = 1.0f)
             )
-            IconButton(onClick = { }) {
+            IconButton(onClick = { onRemoveClicked()}) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_bri),
                     contentDescription = null,
@@ -57,9 +59,13 @@ fun SnapCCDetailListItem(
             ) {
                 Text(text = "fdfdfd")
                 TextField(value = text, enabled = true, readOnly = false, onValueChange = {
-                    text = it
-                    onValueChange(it)
-                })
+                    if(it.length <= 3) {
+                        text = it.filter { it.isDigit() }
+                        onValueChange(it.filter { it.isDigit() })
+                    }
+                },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                )
             }
 
         }
@@ -90,7 +96,7 @@ fun CcRadioGroup(
                     onClick = null,
                     colors = RadioButtonDefaults.colors(selectedColor = Color.Black)
                 )
-                SnapCCDetailListItem(item == selectedOption,
+                SnapCCDetailListItem(cardNumber = item, item == selectedOption,
                     { onValueChange(selectedOption, it) }, { onItemRemoveClicked(item) }
                 )
             }
