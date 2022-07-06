@@ -51,7 +51,7 @@ class SampleViewModel : ViewModel() {
             .withCardExpMonth("12")
             .withCardExpYear("24")
             .withCardCvv("123")
-            .withOrderId("cobacoba-1")
+            .withOrderId("cobacoba-4")
             .withCurrency("IDR"),
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
@@ -70,7 +70,7 @@ class SampleViewModel : ViewModel() {
             .withGrossAmount(150000.0)
             .withCardCvv("123")
             .withTokenId(ccSavedTokenIdBniTwoClickPoint)
-            .withOrderId("cobacoba-1")
+            .withOrderId("cobacoba-4")
             .withCurrency("IDR"),
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
@@ -112,6 +112,52 @@ class SampleViewModel : ViewModel() {
                 .withDiscountedGrossAmount(145000.0)
                 .withPromoId("431")
                 .withCustomerEmail("belajar@example.com"),
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    transactionResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
+
+    fun chargeUsingCreditCardWithBniPoint(snapToken: String) {
+        coreKit.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = CreditCardPaymentRequestBuilder()
+                .withCardToken(cardTokenResponse?.tokenId.toString())
+                .withSaveCard(true)
+                .withPaymentType(PaymentType.CREDIT_CARD)
+                .withCustomerEmail("belajar@example.com")
+                .withBank("bni")
+                .withPoint(100000.0)
+            ,
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    transactionResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
+
+    fun chargeUsingCreditCardWithBniPointAndPromo(snapToken: String) {
+        coreKit.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = CreditCardPaymentRequestBuilder()
+                .withCardToken(cardTokenResponse?.tokenId.toString())
+                .withSaveCard(true)
+                .withPaymentType(PaymentType.CREDIT_CARD)
+                .withCustomerEmail("belajar@example.com")
+                .withBank("bni")
+                .withPoint(100000.0)
+                .withDiscountedGrossAmount(149850.0)
+                .withPromoId("436")
+            ,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
                     transactionResponse = result

@@ -53,6 +53,18 @@ class SampleActivity : AppCompatActivity() {
             }
 
             Button(onClick = {
+                viewModel.chargeUsingCreditCardWithBniPoint(text)
+            }) {
+                Text(text = "charge with bank point")
+            }
+
+            Button(onClick = {
+                viewModel.chargeUsingCreditCardWithBniPointAndPromo(text)
+            }) {
+                Text(text = "charge with bank point and promo")
+            }
+
+            Button(onClick = {
                 viewModel.getCardTokenBasic()
             }) {
                 Text(text = "normal card token")
