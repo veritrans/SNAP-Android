@@ -1,7 +1,5 @@
 package com.midtrans.sdk.corekit.api.model
 
-import com.google.gson.annotations.SerializedName
-
 data class CardTokenResponse (
     /**
      * statusMessage : OK, success request new token bank : bni statusCode : 200 tokenId :
