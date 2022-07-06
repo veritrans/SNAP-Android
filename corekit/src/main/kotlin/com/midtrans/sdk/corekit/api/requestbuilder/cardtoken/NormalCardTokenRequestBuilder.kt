@@ -10,6 +10,8 @@ class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
     private var cardExpMonth: String? = null
     private var cardExpYear: String? = null
     private var cardCvv: String? = null
+    private var currency: String? = null
+    private var orderId: String? = null
 
     fun withCardNumber(value: String): NormalCardTokenRequestBuilder = apply {
         cardNumber = value
@@ -33,6 +35,14 @@ class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
 
     fun withGrossAmount(value: Double): NormalCardTokenRequestBuilder = apply {
         grossAmount = value
+    }
+
+    fun withOrderId(value: String): NormalCardTokenRequestBuilder = apply {
+        orderId = value
+    }
+
+    fun withCurrency(value: String): NormalCardTokenRequestBuilder = apply {
+        currency = value
     }
 
     override fun build(): Map<String, String> {
@@ -73,6 +83,19 @@ class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
             value = grossAmount?.let { NumberUtil.formatDoubleToString(it) },
             errorMessage = "Gross amount required"
         )
+        appendQueryParam(
+            target = result,
+            key = ORDER_ID,
+            value = orderId,
+            errorMessage = "Order Id required"
+        )
+        appendQueryParam(
+            target = result,
+            key = CURRENCY,
+            value = currency,
+            errorMessage = "Currency is required"
+        )
+
         return result
     }
 

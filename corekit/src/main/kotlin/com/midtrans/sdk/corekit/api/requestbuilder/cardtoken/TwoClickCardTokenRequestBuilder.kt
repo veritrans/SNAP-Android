@@ -9,6 +9,8 @@ class TwoClickCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
     private var cardCvv: String? = null
     private var clientKey: String? = null
     private var grossAmount: Double? = null
+    private var currency: String? = null
+    private var orderId: String? = null
 
     fun withCardCvv(value: String): TwoClickCardTokenRequestBuilder = apply {
         cardCvv = value
@@ -21,8 +23,17 @@ class TwoClickCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
     fun withGrossAmount(value: Double): TwoClickCardTokenRequestBuilder = apply {
         grossAmount = value
     }
+
     fun withTokenId(value: String): TwoClickCardTokenRequestBuilder = apply {
         tokenId = value
+    }
+
+    fun withOrderId(value: String): TwoClickCardTokenRequestBuilder = apply {
+        orderId = value
+    }
+
+    fun withCurrency(value: String): TwoClickCardTokenRequestBuilder = apply {
+        currency = value
     }
 
     override fun build(): Map<String, String> {
@@ -56,6 +67,18 @@ class TwoClickCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
             key = TWO_CLICK,
             value = twoClick.toString(),
             errorMessage = "Two click required"
+        )
+        appendQueryParam(
+            target = result,
+            key = ORDER_ID,
+            value = orderId,
+            errorMessage = "Order Id required"
+        )
+        appendQueryParam(
+            target = result,
+            key = CURRENCY,
+            value = currency,
+            errorMessage = "Currency is required"
         )
 
         return result
