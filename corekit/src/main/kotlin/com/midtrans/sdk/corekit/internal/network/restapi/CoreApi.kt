@@ -11,7 +11,7 @@ import retrofit2.http.QueryMap
 
 internal interface CoreApi {
 
-    @GET("v1/token?x_source=android")
+    @GET("v2/token?")
     fun getCardToken(
         @QueryMap param : Map<String, String>
     ): Single<CardTokenResponse>
