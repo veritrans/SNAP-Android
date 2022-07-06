@@ -70,6 +70,12 @@ class SampleActivity : AppCompatActivity() {
                 Text(text = "get Bin data")
             }
 
+            Button(onClick = {
+                viewModel.getBankPoint()
+            }) {
+                Text(text = "get Bank Point data")
+            }
+
         }
     }
 }

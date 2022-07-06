@@ -17,6 +17,12 @@ class SampleViewModel : ViewModel() {
     private val coreKit: SnapCore = SnapCore.getInstance()!!
     var cardTokenResponse : CardTokenResponse? = null
     var transactionResponse : TransactionResponse? = null
+    val clientKeyForPoint = "SB-Mid-client-hOWJXiCCDRvT0RGr"
+    val clientKeyForPromo = "VT-client-yrHf-c8Sxr-ck8tx"
+    val ccSavedTokenIdBniTwoClickPoint = "410505fpOTKmsvZJRVolnxHuApec1467"
+    val ccSavedTokenIdTwoClickPromo = "481111YgYEIkDdzJNVqfEdcAkkue1114"
+    val defaultCcNumber = "4811 1111 1111 1114"
+    val bniCcNumber = "4105 0586 8948 1467"
 
     fun getHelloFromSnap() {
         helloLiveData.value = coreKit.hello()
@@ -39,13 +45,13 @@ class SampleViewModel : ViewModel() {
 
     fun getCardTokenBasic(){
         coreKit.getCardToken(cardTokenRequestBuilder = NormalCardTokenRequestBuilder()
-            .withClientKey("VT-client-yrHf-c8Sxr-ck8tx")
-            .withGrossAmount(145000.0)
-            .withCardNumber("4811 1111 1111 1114")
+            .withClientKey(clientKeyForPoint)
+            .withGrossAmount(150000.0)
+            .withCardNumber(bniCcNumber)
             .withCardExpMonth("12")
             .withCardExpYear("24")
             .withCardCvv("123")
-            .withOrderId("ORDER-104-14443abcdqe1aaa")
+            .withOrderId("cobacoba-1")
             .withCurrency("IDR"),
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
@@ -60,11 +66,11 @@ class SampleViewModel : ViewModel() {
 
     fun getTwoClickToken(){
         coreKit.getCardToken(cardTokenRequestBuilder = TwoClickCardTokenRequestBuilder()
-            .withClientKey("VT-client-yrHf-c8Sxr-ck8tx")
-            .withGrossAmount(145000.0)
+            .withClientKey(clientKeyForPoint)
+            .withGrossAmount(150000.0)
             .withCardCvv("123")
-            .withTokenId("481111YgYEIkDdzJNVqfEdcAkkue1114")
-            .withOrderId("ORDER-104-14443abcdqe1aaa")
+            .withTokenId(ccSavedTokenIdBniTwoClickPoint)
+            .withOrderId("cobacoba-1")
             .withCurrency("IDR"),
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
@@ -143,6 +149,22 @@ class SampleViewModel : ViewModel() {
 
                 override fun onError(error: SnapError) {
                     Log.e("error, error, error", "get exbin error, error, error")
+                }
+            }
+        )
+    }
+
+    fun getBankPoint(
+    ){
+        coreKit.getBankPoint(
+            snapToken = "fe23915e-bae3-4dcb-b17c-82b7dd80d233",
+            cardToken = cardTokenResponse?.tokenId.toString(),
+            grossAmount = 150000.0,
+            callback = object : Callback<BankPointResponse> {
+                override fun onSuccess(result: BankPointResponse) {
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "get point error, error, error")
                 }
             }
         )
