@@ -165,12 +165,11 @@ fun InputNewCardItem() {
 
 @Composable
 fun CcRadioGroup(
-    states: List<String>,
-    inputTitle: String,
+    states: List<FormData>,
     onValueChange: (item: String, cvv: String) -> Unit,
     onItemRemoveClicked: (item: String) -> Unit
 ) {
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(states[0]) }
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf(states[0].title) }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -181,9 +180,9 @@ fun CcRadioGroup(
             ) {
                 Row(
                     modifier = Modifier.selectable(
-                        selected = (item == selectedOption),
+                        selected = (item.title == selectedOption),
                         onClick = {
-                            onOptionSelected(item)
+                            onOptionSelected(item.title)
                         },
                         role = Role.RadioButton
                     ),
@@ -191,21 +190,23 @@ fun CcRadioGroup(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     RadioButton(
-                        selected = item == selectedOption,
+                        selected = item.title == selectedOption,
                         onClick = null,
                         colors = RadioButtonDefaults.colors(selectedColor = Color.Black)
                     )
-                    SnapCCDetailListItem(
-                        startIconId = R.drawable.ic_bri,
-                        endIconId = R.drawable.ic_chevron_right,
-                        itemTitle = item,
-                        shouldReveal = item == selectedOption,
-                        inputTitle = "Masukkan CVV",
-                        isInputError = true,
-                        errorTitle = "jangan salah",
-                        onValueChange = { onValueChange(selectedOption, it) },
-                        onEndIconClicked = { onItemRemoveClicked(item) }
-                    )
+                    when(item){
+                        is SavedCreditCardFormData -> SnapCCDetailListItem(
+                            startIconId = item.startIcon,
+                            endIconId = item.endIcon,
+                            itemTitle = item.maskedCardNumber,
+                            shouldReveal = item.title == selectedOption,
+                            inputTitle = item.inputTitle,
+                            isInputError = true,
+                            errorTitle = item.errorText,
+                            onValueChange = { onValueChange(selectedOption, it) },
+                            onEndIconClicked = { onItemRemoveClicked(item.title) }
+                        )
+                    }
                 }
 
                 Divider(
@@ -216,3 +217,20 @@ fun CcRadioGroup(
         }
     }
 }
+
+class SavedCreditCardFormData(
+    val startIcon: Int,
+    val endIcon: Int,
+    val maskedCardNumber: String,
+    val errorText: String,
+    val inputTitle: String,
+    title: String
+): FormData(title)
+
+class NewCardFormData(
+)
+
+open class FormData(
+    public val title: String
+)
+

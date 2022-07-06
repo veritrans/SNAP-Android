@@ -47,20 +47,64 @@ class SampleUiActivity : AppCompatActivity() {
                 title = "App Bar",
                 iconResId = R.drawable.psdk_ic_gopay
             ) {
-                Toast.makeText(this@SampleUiActivity, "Icon App Bar clicked!", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@SampleUiActivity, "Icon App Bar clicked!", Toast.LENGTH_LONG)
+                    .show()
                 shouldReveal = !shouldReveal
             }
 
-            var list = listOf("satu", "dua", "tiga").toMutableStateList()
-            CcRadioGroup(states = list,{ selected: String, value: String ->
+            var list = listOf(
+                SavedCreditCardFormData(
+                    title = "satu",
+                    inputTitle = "Masukkan CVV",
+                    endIcon = android.R.drawable.ic_delete,
+                    startIcon = R.drawable.ic_bri,
+                    errorText = "jangan salah ya",
+                    maskedCardNumber = "123***********345"
+                ),
+                SavedCreditCardFormData(
+                    title = "dua",
+                    inputTitle = "Masukkan CVV",
+                    endIcon = android.R.drawable.ic_delete,
+                    startIcon = R.drawable.ic_bri,
+                    errorText = "jangan salah ya",
+                    maskedCardNumber = "123***********345"
+                ),
+                SavedCreditCardFormData(
+                    title = "tiga",
+                    inputTitle = "Masukkan CVV",
+                    endIcon = android.R.drawable.ic_delete,
+                    startIcon = R.drawable.ic_bri,
+                    errorText = "jangan salah ya",
+                    maskedCardNumber = "123***********345"
+                )
+            ).toMutableStateList()
+            CcRadioGroup(states = list, { selected: String, value: String ->
                 Log.e("wahyu", "cardNumber: $selected  cvv: $value")
-            }, onItemRemoveClicked = {
-                list.remove(it)}
+            }, onItemRemoveClicked = { title ->
+                list.find { it.title == title }.let { member ->
+                    list.remove(member)
+                }
+            }
             )
-            SnapNumberedListItem(number = "1.", paragraph = "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad")
+            SnapNumberedListItem(
+                number = "1.",
+                paragraph = "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad"
+            )
 
-            SnapMultiIconListItem(title = "Bank Transfer", iconList = listOf(R.drawable.ic_bri,R.drawable.ic_bri,R.drawable.ic_bri,R.drawable.ic_bri)) {
-                Toast.makeText(this@SampleUiActivity, "Bank Transfer is C.L.I.C.K.E.D!!!", Toast.LENGTH_LONG).show()
+            SnapMultiIconListItem(
+                title = "Bank Transfer",
+                iconList = listOf(
+                    R.drawable.ic_bri,
+                    R.drawable.ic_bri,
+                    R.drawable.ic_bri,
+                    R.drawable.ic_bri
+                )
+            ) {
+                Toast.makeText(
+                    this@SampleUiActivity,
+                    "Bank Transfer is C.L.I.C.K.E.D!!!",
+                    Toast.LENGTH_LONG
+                ).show()
             }
 
 //            val words = listOf<String>(
@@ -72,7 +116,6 @@ class SampleUiActivity : AppCompatActivity() {
 //                "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad",
 //            )
 //            SnapNumberedList(list = words)
-
 
 
 //            var text by remember { mutableStateOf("") }
