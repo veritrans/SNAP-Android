@@ -18,6 +18,8 @@ class CreditCardPaymentRequestBuilder: PaymentRequestBuilder() {
     private var customerPhone: String? = null
     private var discountedGrossAmount: Double? = null
     private var promoId: String? = null
+    private var bank: String? = null
+    private var point: Double? = null
 
     fun withPaymentType(@PaymentType.Def value: String): CreditCardPaymentRequestBuilder = apply {
         paymentType = value
@@ -51,12 +53,20 @@ class CreditCardPaymentRequestBuilder: PaymentRequestBuilder() {
         promoId = value
     }
 
+    fun withBank(value: String): CreditCardPaymentRequestBuilder = apply {
+        bank = value
+    }
+
+    fun withPoint(value: Double): CreditCardPaymentRequestBuilder = apply {
+        point = value
+    }
+
     override fun build(): PaymentRequest {
         return when (paymentType) {
             PaymentType.CREDIT_CARD -> PaymentRequest(
                 paymentType = paymentType,
                 customerDetails = constructCustomerDetail(),
-                paymentParams = PaymentParam(cardToken = cardToken, saveCard = saveCard),
+                paymentParams = PaymentParam(cardToken = cardToken, saveCard = saveCard, bank = bank, point = point),
                 promoDetails = PromoDetailRequest(discountedGrossAmount = discountedGrossAmount?.let { NumberUtil.formatDoubleToString(it)},
                     promoId = promoId)
             )
