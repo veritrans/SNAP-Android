@@ -22,11 +22,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.RadioButton
 import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -169,7 +165,7 @@ fun CcRadioGroup(
     onValueChange: (item: String, cvv: String) -> Unit,
     onItemRemoveClicked: (item: String) -> Unit
 ) {
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(states[0].title) }
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf(states[0].identifier) }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -180,9 +176,9 @@ fun CcRadioGroup(
             ) {
                 Row(
                     modifier = Modifier.selectable(
-                        selected = (item.title == selectedOption),
+                        selected = (item.identifier == selectedOption),
                         onClick = {
-                            onOptionSelected(item.title)
+                            onOptionSelected(item.identifier)
                         },
                         role = Role.RadioButton
                     ),
@@ -190,22 +186,25 @@ fun CcRadioGroup(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     RadioButton(
-                        selected = item.title == selectedOption,
+                        selected = item.identifier == selectedOption,
                         onClick = null,
                         colors = RadioButtonDefaults.colors(selectedColor = Color.Black)
                     )
-                    when(item){
-                        is SavedCreditCardFormData -> SnapCCDetailListItem(
-                            startIconId = item.startIcon,
-                            endIconId = item.endIcon,
-                            itemTitle = item.maskedCardNumber,
-                            shouldReveal = item.title == selectedOption,
-                            inputTitle = item.inputTitle,
-                            isInputError = true,
-                            errorTitle = item.errorText,
-                            onValueChange = { onValueChange(selectedOption, it) },
-                            onEndIconClicked = { onItemRemoveClicked(item.title) }
-                        )
+                    when(item) {
+                        is SavedCreditCardFormData -> {
+                            val errorText by item.errorText
+                            SnapCCDetailListItem(
+                                startIconId = item.startIcon,
+                                endIconId = item.endIcon,
+                                itemTitle = item.maskedCardNumber,
+                                shouldReveal = item.identifier == selectedOption,
+                                inputTitle = item.inputTitle,
+                                isInputError = errorText.isNotBlank(),
+                                errorTitle = errorText,
+                                onValueChange = { onValueChange(selectedOption, it) },
+                                onEndIconClicked = { onItemRemoveClicked(item.identifier) }
+                            )
+                        }
                     }
                 }
 
@@ -218,19 +217,22 @@ fun CcRadioGroup(
     }
 }
 
-class SavedCreditCardFormData(
+data class SavedCreditCardFormData(
     val startIcon: Int,
     val endIcon: Int,
     val maskedCardNumber: String,
-    val errorText: String,
+    var errorText: MutableState<String>,
     val inputTitle: String,
-    title: String
-): FormData(title)
+    var title: String
+): FormData(title){
+
+}
+
 
 class NewCardFormData(
 )
 
 open class FormData(
-    public val title: String
+    public val identifier: String
 )
 

@@ -167,6 +167,7 @@ object ComposeUiLibraries {
         "androidx.compose.ui:ui-tooling-preview:${Dependencies.composeVersion}"
     const val composeGoogleFont =
         "androidx.compose.ui:ui-text-google-fonts:${Dependencies.composeVersion}"
+    const val composeLiveData = "androidx.compose.runtime:runtime-livedata:${Dependencies.composeVersion}"
 
 }
 

@@ -8,20 +8,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.*
 
 class SampleUiActivity : AppCompatActivity() {
 
-    val ccvVisible = mutableStateOf(true)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +29,10 @@ class SampleUiActivity : AppCompatActivity() {
     @Composable
     @Preview
     fun SampleUi() {
+        val ccvVisible = remember {
+            mutableStateOf(true)
+        }
+
         Column(
             modifier = Modifier.verticalScroll(
                 state = rememberScrollState()
@@ -52,13 +53,13 @@ class SampleUiActivity : AppCompatActivity() {
                 shouldReveal = !shouldReveal
             }
 
-            var list = listOf(
+            var list = mutableListOf(
                 SavedCreditCardFormData(
                     title = "satu",
                     inputTitle = "Masukkan CVV",
                     endIcon = android.R.drawable.ic_delete,
                     startIcon = R.drawable.ic_bri,
-                    errorText = "jangan salah ya",
+                    errorText = remember { mutableStateOf("") },
                     maskedCardNumber = "123***********345"
                 ),
                 SavedCreditCardFormData(
@@ -66,7 +67,7 @@ class SampleUiActivity : AppCompatActivity() {
                     inputTitle = "Masukkan CVV",
                     endIcon = android.R.drawable.ic_delete,
                     startIcon = R.drawable.ic_bri,
-                    errorText = "jangan salah ya",
+                    errorText = remember { mutableStateOf("") },
                     maskedCardNumber = "123***********345"
                 ),
                 SavedCreditCardFormData(
@@ -74,14 +75,23 @@ class SampleUiActivity : AppCompatActivity() {
                     inputTitle = "Masukkan CVV",
                     endIcon = android.R.drawable.ic_delete,
                     startIcon = R.drawable.ic_bri,
-                    errorText = "jangan salah ya",
+                    errorText = remember { mutableStateOf("") },
                     maskedCardNumber = "123***********345"
                 )
+
             ).toMutableStateList()
+
             CcRadioGroup(states = list, { selected: String, value: String ->
                 Log.e("wahyu", "cardNumber: $selected  cvv: $value")
+
+                list.find { it.identifier == selected }.let { member ->
+                    member?.apply {
+                        errorText.value = if (value.length >= 3) "jangan salah" else ""
+                    }
+                }
+
             }, onItemRemoveClicked = { title ->
-                list.find { it.title == title }.let { member ->
+                list.find { it.identifier == title }.let { member ->
                     list.remove(member)
                 }
             }
