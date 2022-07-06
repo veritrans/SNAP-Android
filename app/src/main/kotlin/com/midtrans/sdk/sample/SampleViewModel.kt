@@ -44,13 +44,15 @@ class SampleViewModel : ViewModel() {
             .withCardNumber("4811 1111 1111 1114")
             .withCardExpMonth("12")
             .withCardExpYear("24")
-            .withCardCvv("123"),
+            .withCardCvv("123")
+            .withOrderId("ORDER-104-14443abcdqe1aaa")
+            .withCurrency("IDR"),
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
                     cardTokenResponse = result
                 }
                 override fun onError(error: SnapError) {
-                    Log.e("error, error, error", "error, error, error")
+                    Log.e("error, error, error", "error, error, error ${error.message} ${error.cause}")
                 }
             }
         )
@@ -61,7 +63,9 @@ class SampleViewModel : ViewModel() {
             .withClientKey("VT-client-yrHf-c8Sxr-ck8tx")
             .withGrossAmount(145000.0)
             .withCardCvv("123")
-            .withTokenId("481111YgYEIkDdzJNVqfEdcAkkue1114"),
+            .withTokenId("481111YgYEIkDdzJNVqfEdcAkkue1114")
+            .withOrderId("ORDER-104-14443abcdqe1aaa")
+            .withCurrency("IDR"),
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
                     cardTokenResponse = result
