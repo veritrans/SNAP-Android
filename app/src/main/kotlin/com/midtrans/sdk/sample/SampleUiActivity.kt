@@ -77,6 +77,9 @@ class SampleUiActivity : AppCompatActivity() {
                     startIcon = R.drawable.ic_bri,
                     errorText = remember { mutableStateOf("") },
                     maskedCardNumber = "123***********345"
+                ),
+                NewCardFormData(
+                    title = "new"
                 )
 
             ).toMutableStateList()
@@ -86,7 +89,7 @@ class SampleUiActivity : AppCompatActivity() {
 
                 list.find { it.identifier == selected }.let { member ->
                     member?.apply {
-                        errorText.value = if (value.length >= 3) "jangan salah" else ""
+                            if(this is SavedCreditCardFormData) errorText.value = if (value.length >= 3) "jangan salah" else ""
                     }
                 }
 

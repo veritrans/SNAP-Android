@@ -137,7 +137,8 @@ fun SnapCCDetailListItem(
 
 @Composable
 fun InputNewCardItem() {
-    val iconIdList = mutableListOf(R.drawable.ic_bri, R.drawable.ic_bri, R.drawable.ic_bri, R.drawable.ic_bri)
+    val iconIdList =
+        mutableListOf(R.drawable.ic_bri, R.drawable.ic_bri, R.drawable.ic_bri, R.drawable.ic_bri)
     Column() {
         Text(text = "Gunakan kartu lain")
         Row(
@@ -190,7 +191,7 @@ fun CcRadioGroup(
                         onClick = null,
                         colors = RadioButtonDefaults.colors(selectedColor = Color.Black)
                     )
-                    when(item) {
+                    when (item) {
                         is SavedCreditCardFormData -> {
                             val errorText by item.errorText
                             SnapCCDetailListItem(
@@ -204,6 +205,10 @@ fun CcRadioGroup(
                                 onValueChange = { onValueChange(selectedOption, it) },
                                 onEndIconClicked = { onItemRemoveClicked(item.identifier) }
                             )
+                        }
+
+                        is NewCardFormData -> {
+                            InputNewCardItem()
                         }
                     }
                 }
@@ -224,13 +229,14 @@ data class SavedCreditCardFormData(
     var errorText: MutableState<String>,
     val inputTitle: String,
     var title: String
-): FormData(title){
+) : FormData(title) {
 
 }
 
 
 class NewCardFormData(
-)
+    var title: String
+) : FormData(title)
 
 open class FormData(
     public val identifier: String
