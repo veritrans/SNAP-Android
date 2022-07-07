@@ -121,7 +121,11 @@ fun SnapCCDetailListItem(
 
 @Composable
 fun InputNewCardItem(
-    shouldReveal: Boolean
+    shouldReveal: Boolean,
+    data: NewCardFormData,
+    onCardNumberValueChange: (String) -> Unit,
+    onExpiryDateValueChange: (String) -> Unit,
+    onCvvValueChange: (String) -> Unit
 ) {
     val iconIdList =
         mutableListOf(R.drawable.ic_bri, R.drawable.ic_bri, R.drawable.ic_bri, R.drawable.ic_bri)
@@ -164,10 +168,11 @@ fun InputNewCardItem(
                     var newCardNumberText by remember { mutableStateOf(TextFieldValue()) }
                     SnapTextField(
                         value = newCardNumberText,
-                        hint = "1234567890",
+                        hint = "0000 0000 0000 0000",
                         onValueChange = { value ->
                             Log.e("wahyu", "value cc $value")
                             newCardNumberText = formatForCreditCard(value)
+                            onCardNumberValueChange(value.text.replace(" ", ""))
                         },
                         trailingIcon = {
                             Icon(
@@ -192,16 +197,20 @@ fun InputNewCardItem(
                         modifier = Modifier.weight(1.0f)
                     ) {
 
+                        var expiryDate by remember {
+                            mutableStateOf("")
+                        }
                         Text(
                             text = "Masa berlaku",
                             style = SnapTypography.STYLES.snapTextSmallRegular
                         )
                         SnapTextField(
-                            value = "1234567890",
-                            onValueChange = { value ->
-
+                            hint = "MM/YY",
+                            value = expiryDate,
+                            onValueChange = { value: String ->
+                                expiryDate = value
+                                onExpiryDateValueChange(value)
                             },
-                            visualTransformation = PasswordVisualTransformation(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                         )
                         Text(
@@ -212,15 +221,19 @@ fun InputNewCardItem(
                     Column(
                         modifier = Modifier.weight(1.0f)
                     ) {
-
+                        var cardCvv by remember {
+                            mutableStateOf("")
+                        }
                         Text(
                             text = "CVV",
                             style = SnapTypography.STYLES.snapTextSmallRegular
                         )
                         SnapTextField(
-                            value = "1234567890",
+                            value = cardCvv,
+                            hint = "***",
                             onValueChange = { value ->
-
+                                cardCvv = value
+                                onCvvValueChange(value)
                             },
                             visualTransformation = PasswordVisualTransformation(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
@@ -284,7 +297,12 @@ fun CcRadioGroup(
                         }
 
                         is NewCardFormData -> {
-                            InputNewCardItem(shouldReveal = item.identifier == selectedOption)
+                            InputNewCardItem(
+                                shouldReveal = item.identifier == selectedOption,
+                                item,
+                                {},
+                                {},
+                                {})
                         }
                     }
                 }
@@ -447,7 +465,6 @@ fun SnapTextField(
 }
 
 
-
 data class SavedCreditCardFormData(
     val startIcon: Int,
     val endIcon: Int,
@@ -467,13 +484,13 @@ class NewCardFormData(
     var isCvvValid: MutableState<Boolean>,
     var bankIconId: MutableState<Int?>,
     var principalIconId: MutableState<Int?>
-    ) : FormData(title)
+) : FormData(title)
 
 open class FormData(
     public val identifier: String
 )
 
-fun formatForCreditCard(input: TextFieldValue): TextFieldValue{
+fun formatForCreditCard(input: TextFieldValue): TextFieldValue {
     var processed: String = input.text.replace("\\D", "").replace(" ", "")
     // insert a space after all groups of 4 digits that are followed by another digit
     // insert a space after all groups of 4 digits that are followed by another digit
