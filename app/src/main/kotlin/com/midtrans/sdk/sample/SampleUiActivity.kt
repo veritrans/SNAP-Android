@@ -8,12 +8,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.uikit.internal.view.*
+import com.midtrans.sdk.uikit.internal.view.NewCardFormData
+import com.midtrans.sdk.uikit.internal.view.SavedCardRadioGroup
+import com.midtrans.sdk.uikit.internal.view.SavedCreditCardFormData
+import com.midtrans.sdk.uikit.internal.view.SnapAppBar
+import com.midtrans.sdk.uikit.internal.view.SnapMultiIconListItem
+import com.midtrans.sdk.uikit.internal.view.SnapNumberedListItem
 
 class SampleUiActivity : AppCompatActivity() {
 
@@ -79,20 +89,16 @@ class SampleUiActivity : AppCompatActivity() {
                 ),
                 NewCardFormData(
                     title = "new",
-                    isCardNumberValid = remember { mutableStateOf(true) },
-                    bankIconId = remember { mutableStateOf(null) },
-                    isCvvValid = remember { mutableStateOf(true) },
-                    isExpiryDateValid = remember {
-                        mutableStateOf(true)
-                    },
-                    principalIconId = remember {
-                        mutableStateOf(null)
-                    }
+                    isCardNumberInvalid = remember { mutableStateOf(false) },
+                    bankIconId = remember { mutableStateOf(R.drawable.ic_bri) },
+                    isCvvInvalid = remember { mutableStateOf(false) },
+                    isExpiryDateInvalid = remember { mutableStateOf(false) },
+                    principalIconId = remember { mutableStateOf(R.drawable.psdk_ic_gopay) }
                 )
 
             ).toMutableStateList()
 
-            CcRadioGroup(states = list, { selected: String, value: String ->
+            SavedCardRadioGroup(states = list, { selected: String, value: String ->
                 Log.e("wahyu", "cardNumber: $selected  cvv: $value")
 
                 list.find { it.identifier == selected }.let { member ->
@@ -106,7 +112,16 @@ class SampleUiActivity : AppCompatActivity() {
                 list.find { it.identifier == title }.let { member ->
                     list.remove(member)
                 }
-            }
+            },
+                onCardNumberValueChange = {
+                    Toast.makeText(this@SampleUiActivity, "HA${it.length}X", Toast.LENGTH_SHORT).show()
+                },
+                onCvvValueChange = {
+                    Toast.makeText(this@SampleUiActivity, "HI${it.length}X", Toast.LENGTH_SHORT).show()
+                },
+                onExpiryDateValueChange = {
+                    Toast.makeText(this@SampleUiActivity, "HE${it.length}X", Toast.LENGTH_SHORT).show()
+                }
             )
             SnapNumberedListItem(
                 number = "1.",

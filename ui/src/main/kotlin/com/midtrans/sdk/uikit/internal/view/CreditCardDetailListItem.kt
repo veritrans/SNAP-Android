@@ -1,19 +1,37 @@
 package com.midtrans.sdk.uikit.internal.view
 
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.RadioButton
+import androidx.compose.material.RadioButtonDefaults
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -34,6 +52,7 @@ import com.midtrans.sdk.uikit.internal.view.SnapColors.INTERACTIVE_BORDER_SUPPOR
 import com.midtrans.sdk.uikit.internal.view.SnapColors.LINK_HOVER
 import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
 import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_NEUTRAL_FILL
+import kotlin.math.min
 
 object CreditCardDetailListItem {
 }
@@ -127,8 +146,22 @@ fun InputNewCardItem(
     onExpiryDateValueChange: (String) -> Unit,
     onCvvValueChange: (String) -> Unit
 ) {
-    val iconIdList =
-        mutableListOf(R.drawable.ic_bri, R.drawable.ic_bri, R.drawable.ic_bri, R.drawable.ic_bri)
+    val principalIconId by remember { data.principalIconId }
+    val iconIdList by remember {
+        if (principalIconId == null) {
+            mutableStateOf(
+                listOf(
+                    R.drawable.ic_bri,
+                    R.drawable.ic_bri,
+                    R.drawable.ic_bri,
+                    R.drawable.ic_bri
+                )
+            )
+        } else {
+            mutableStateOf(listOf(principalIconId!!))
+        }
+    }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 16.dp)
     ) {
@@ -145,8 +178,7 @@ fun InputNewCardItem(
                 verticalArrangement = Arrangement.spacedBy(space = 16.dp)
             ) {
 
-                Column() {
-
+                Column {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
@@ -166,28 +198,34 @@ fun InputNewCardItem(
                     }
 
                     var newCardNumberText by remember { mutableStateOf(TextFieldValue()) }
+                    val bankIconId by remember { data.bankIconId }
                     SnapTextField(
                         value = newCardNumberText,
                         hint = "0000 0000 0000 0000",
                         onValueChange = { value ->
-                            Log.e("wahyu", "value cc $value")
                             newCardNumberText = formatForCreditCard(value)
                             onCardNumberValueChange(value.text.replace(" ", ""))
                         },
-                        trailingIcon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_bri),
-                                contentDescription = null,
-                                tint = Color.Unspecified
-                            )
+                        trailingIcon = bankIconId?.let {
+                            {
+                                Icon(
+                                    painter = painterResource(id = it),
+                                    contentDescription = null,
+                                    tint = Color.Unspecified
+                                )
+                            }
                         },
                         modifier = Modifier.fillMaxWidth(1.0f),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
-                    Text(
-                        text = "Nomor kartu tidak berlaku",
-                        style = SnapTypography.STYLES.snapTextSmallRegular
-                    )
+                    val isCardNumberInvalid by remember { data.isCardNumberInvalid }
+                    if (isCardNumberInvalid) {
+                        Text(
+                            text = "Nomor kartu tidak berlaku",
+                            style = SnapTypography.STYLES.snapTextSmallRegular,
+                            color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                        )
+                    }
                 }
 
                 Row(
@@ -197,9 +235,7 @@ fun InputNewCardItem(
                         modifier = Modifier.weight(1.0f)
                     ) {
 
-                        var expiryDate by remember {
-                            mutableStateOf("")
-                        }
+                        var expiryDate by remember { mutableStateOf(TextFieldValue()) }
                         Text(
                             text = "Masa berlaku",
                             style = SnapTypography.STYLES.snapTextSmallRegular
@@ -207,20 +243,26 @@ fun InputNewCardItem(
                         SnapTextField(
                             hint = "MM/YY",
                             value = expiryDate,
-                            onValueChange = { value: String ->
-                                expiryDate = value
-                                onExpiryDateValueChange(value)
+                            onValueChange = {
+                                expiryDate = formatExpiryDate(it)
+                                onExpiryDateValueChange(it.text)
                             },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                         )
-                        Text(
-                            text = "Masa berlaku tidak valid",
-                            style = SnapTypography.STYLES.snapTextSmallRegular
-                        )
+                        val isExpiryDateInvalid by remember { data.isExpiryDateInvalid }
+                        if (isExpiryDateInvalid) {
+                            Text(
+                                text = "Masa berlaku tidak valid",
+                                style = SnapTypography.STYLES.snapTextSmallRegular,
+                                color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                            )
+                        }
                     }
+
                     Column(
                         modifier = Modifier.weight(1.0f)
                     ) {
+                        val isCvvInvalid by remember { data.isCvvInvalid }
                         var cardCvv by remember {
                             mutableStateOf("")
                         }
@@ -238,10 +280,13 @@ fun InputNewCardItem(
                             visualTransformation = PasswordVisualTransformation(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                         )
-                        Text(
-                            text = "Nomor CVV tidak valid",
-                            style = SnapTypography.STYLES.snapTextSmallRegular
-                        )
+                        if (isCvvInvalid) {
+                            Text(
+                                text = "Nomor CVV tidak valid",
+                                style = SnapTypography.STYLES.snapTextSmallRegular,
+                                color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                            )
+                        }
                     }
                 }
             }
@@ -249,11 +294,22 @@ fun InputNewCardItem(
     }
 }
 
+fun formatExpiryDate(input: TextFieldValue): TextFieldValue {
+    var processed = input.text.replace("/", "")
+    processed = processed.replace("(\\d{2})(?=\\d)".toRegex(), "$1/")
+    val length = min(processed.length, 5)
+    val output = input.copy(processed.substring(0 until length), TextRange(length))
+    return output
+}
+
 @Composable
-fun CcRadioGroup(
+fun SavedCardRadioGroup(
     states: List<FormData>,
     onValueChange: (item: String, cvv: String) -> Unit,
-    onItemRemoveClicked: (item: String) -> Unit
+    onItemRemoveClicked: (item: String) -> Unit,
+    onCardNumberValueChange: (String) -> Unit,
+    onExpiryDateValueChange: (String) -> Unit,
+    onCvvValueChange: (String) -> Unit
 ) {
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(states[0].identifier) }
 
@@ -299,10 +355,11 @@ fun CcRadioGroup(
                         is NewCardFormData -> {
                             InputNewCardItem(
                                 shouldReveal = item.identifier == selectedOption,
-                                item,
-                                {},
-                                {},
-                                {})
+                                data = item,
+                                onCardNumberValueChange = onCardNumberValueChange,
+                                onExpiryDateValueChange = onExpiryDateValueChange,
+                                onCvvValueChange = onCvvValueChange
+                            )
                         }
                     }
                 }
@@ -472,16 +529,13 @@ data class SavedCreditCardFormData(
     var errorText: MutableState<String>,
     val inputTitle: String,
     var title: String
-) : FormData(title) {
-
-}
-
+) : FormData(title)
 
 class NewCardFormData(
     var title: String,
-    var isCardNumberValid: MutableState<Boolean>,
-    var isExpiryDateValid: MutableState<Boolean>,
-    var isCvvValid: MutableState<Boolean>,
+    var isCardNumberInvalid: MutableState<Boolean>,
+    var isExpiryDateInvalid: MutableState<Boolean>,
+    var isCvvInvalid: MutableState<Boolean>,
     var bankIconId: MutableState<Int?>,
     var principalIconId: MutableState<Int?>
 ) : FormData(title)
