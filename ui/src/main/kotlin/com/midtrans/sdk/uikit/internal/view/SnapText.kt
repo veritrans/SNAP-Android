@@ -27,8 +27,8 @@ fun SnapText(
 
 private fun getTextStyle(style: SnapText.Style): TextStyle{
     return when(style){
-        SnapText.Style.BIG -> SnapTypography.STYLES.snapTextBig
-        SnapText.Style.MEDIUM -> SnapTypography.STYLES.snapTextMedium
-        SnapText.Style.SMALL -> SnapTypography.STYLES.snapTextSmall
+        SnapText.Style.BIG -> SnapTypography.STYLES.snapTextBigRegular
+        SnapText.Style.MEDIUM -> SnapTypography.STYLES.snapTextMediumRegular
+        SnapText.Style.SMALL -> SnapTypography.STYLES.snapTextSmallRegular
     }
 }

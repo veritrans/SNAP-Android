@@ -17,28 +17,34 @@ class SnapTypography private constructor(){
         fontWeight = FontWeight.SemiBold
     )
 
-    val snapBigNumber = TextStyle(
+    val snapBigNumberSemiBold = TextStyle(
         fontFamily = getPoppinsFontFamily(),
         fontSize = 24.sp,
         fontWeight = FontWeight.SemiBold
     )
 
-    val snapTextBig = TextStyle(
+    val snapTextBigRegular = TextStyle(
         fontFamily = getPoppinsFontFamily(),
         fontSize = 16.sp,
         fontWeight = FontWeight.Normal
     )
 
-    val snapTextMedium = TextStyle(
+    val snapTextMediumRegular = TextStyle(
         fontFamily = getPoppinsFontFamily(),
         fontSize = 14.sp,
         fontWeight = FontWeight.Normal
     )
 
-    val snapTextSmall = TextStyle(
+    val snapTextSmallRegular = TextStyle(
         fontFamily = getPoppinsFontFamily(),
         fontSize = 12.sp,
         fontWeight = FontWeight.Normal
+    )
+
+    val snapTextMediumMedium = TextStyle(
+        fontFamily = getPoppinsFontFamily(),
+        fontSize = 14.sp,
+        fontWeight = FontWeight.SemiBold
     )
     companion object {
         val STYLES by lazy {

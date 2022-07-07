@@ -39,7 +39,7 @@ fun SnapMultiIconListItem(
             Text(
                 text = title,
                 modifier = Modifier.padding(top = 16.dp, bottom = 13.dp),
-                style = SnapTypography.STYLES.snapTextBig
+                style = SnapTypography.STYLES.snapTextBigRegular
             )
             Row(
                 horizontalArrangement = Arrangement.spacedBy(space = 8.dp, alignment = Alignment.Start)

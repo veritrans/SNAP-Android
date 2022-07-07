@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,16 +17,16 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.RadioButton
-import androidx.compose.material.RadioButtonDefaults
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.focus.focusTarget
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,6 +34,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY
+import com.midtrans.sdk.uikit.internal.view.SnapColors.INTERACTIVE_BORDER_INPUT
 import com.midtrans.sdk.uikit.internal.view.SnapColors.INTERACTIVE_BORDER_SUPPORT
 import com.midtrans.sdk.uikit.internal.view.SnapColors.LINK_HOVER
 import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
@@ -65,7 +67,7 @@ fun SnapCCDetailListItem(
             )
             Text(
                 text = itemTitle,
-                style = SnapTypography.STYLES.snapTextBig,
+                style = SnapTypography.STYLES.snapTextBigRegular,
                 modifier = Modifier
                     .weight(weight = 1.0f)
             )
@@ -97,7 +99,7 @@ fun SnapCCDetailListItem(
                 var text by remember { mutableStateOf("") }
                 Text(
                     text = inputTitle,
-                    style = SnapTypography.STYLES.snapTextSmall
+                    style = SnapTypography.STYLES.snapTextSmallRegular
                 )
                 BasicTextField(
                     value = text,
@@ -128,7 +130,7 @@ fun SnapCCDetailListItem(
                     Text(
                         text = errorTitle,
                         color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT),
-                        style = SnapTypography.STYLES.snapTextSmall
+                        style = SnapTypography.STYLES.snapTextSmallRegular
                     )
             }
         }
@@ -136,25 +138,151 @@ fun SnapCCDetailListItem(
 }
 
 @Composable
-fun InputNewCardItem() {
+fun InputNewCardItem(
+    shouldReveal: Boolean
+) {
     val iconIdList =
         mutableListOf(R.drawable.ic_bri, R.drawable.ic_bri, R.drawable.ic_bri, R.drawable.ic_bri)
-    Column() {
-        Text(text = "Gunakan kartu lain")
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(2.dp)
-        ) {
-            Text(
-                text = "Nomor kartu",
-                modifier = Modifier.weight(1f)
-            )
+    Column(
+        verticalArrangement = Arrangement.spacedBy(space = 16.dp)
+    ) {
+        Text(
+            text = "Gunakan kartu lain",
+            style = SnapTypography.STYLES.snapTextMediumMedium
+        )
 
-            iconIdList.forEach {
-                Icon(
-                    painter = painterResource(id = it),
-                    contentDescription = null,
-                    tint = Color.Unspecified
-                )
+        AnimatedVisibility(
+            visible = shouldReveal,
+            enter = expandVertically()
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(space = 16.dp)
+            ) {
+
+                Column() {
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+                        Text(
+                            text = "Nomor kartu",
+                            modifier = Modifier.weight(1f),
+                            style = SnapTypography.STYLES.snapTextSmallRegular
+                        )
+
+                        iconIdList.forEach {
+                            Icon(
+                                painter = painterResource(id = it),
+                                contentDescription = null,
+                                tint = Color.Unspecified
+                            )
+                        }
+                    }
+
+                    TextField(
+                        value = "1234567890",
+                        onValueChange = { value ->
+
+                        },
+                        shape = RoundedCornerShape(4.dp),
+                        modifier = Modifier
+                            .border(
+                                1.dp,
+                                if (true) {
+                                    SnapColors.getARGBColor(INTERACTIVE_BORDER_SUPPORT)
+                                } else if (false) {
+                                    SnapColors.getARGBColor(LINK_HOVER)
+                                } else {
+                                    SnapColors.getARGBColor(INTERACTIVE_BORDER_INPUT)
+                                }
+                            )
+                            .background(Color.White, RoundedCornerShape(4.dp))
+                            .width(69.dp)
+                            .height(39.dp)
+                            .padding(top = 8.dp, bottom = 8.dp, start = 12.dp, end = 12.dp),
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+                    Text(
+                        text = "Nomor kartu tidak berlaku",
+                        style = SnapTypography.STYLES.snapTextSmallRegular
+                    )
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(space = 28.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.weight(1.0f)
+                    ) {
+
+                        Text(
+                            text = "Masa berlaku",
+                            style = SnapTypography.STYLES.snapTextSmallRegular
+                        )
+                        BasicTextField(
+                            value = "1234567890",
+                            onValueChange = { value ->
+
+                            },
+                            modifier = Modifier
+                                .border(
+                                    1.dp,
+                                    if (true) {
+                                        SnapColors.getARGBColor(INTERACTIVE_BORDER_SUPPORT)
+                                    } else {
+                                        SnapColors.getARGBColor(LINK_HOVER)
+                                    },
+                                    RoundedCornerShape(4.dp)
+                                )
+                                .background(Color.White, RoundedCornerShape(4.dp))
+                                .fillMaxWidth(1.0f)
+                                .height(39.dp)
+                                .padding(top = 8.dp, bottom = 8.dp, start = 12.dp, end = 12.dp),
+                            visualTransformation = PasswordVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        )
+                        Text(
+                            text = "Masa berlaku tidak valid",
+                            style = SnapTypography.STYLES.snapTextSmallRegular
+                        )
+                    }
+                    Column(
+                        modifier = Modifier.weight(1.0f)
+                    ) {
+
+                        Text(
+                            text = "CVV",
+                            style = SnapTypography.STYLES.snapTextSmallRegular
+                        )
+                        BasicTextField(
+                            value = "1234567890",
+                            onValueChange = { value ->
+
+                            },
+                            modifier = Modifier
+                                .border(
+                                    1.dp,
+                                    if (true) {
+                                        SnapColors.getARGBColor(INTERACTIVE_BORDER_SUPPORT)
+                                    } else {
+                                        SnapColors.getARGBColor(LINK_HOVER)
+                                    },
+                                    RoundedCornerShape(4.dp)
+                                )
+                                .background(Color.White, RoundedCornerShape(4.dp))
+                                .fillMaxWidth(1.0f)
+                                .height(39.dp)
+                                .padding(top = 8.dp, bottom = 8.dp, start = 12.dp, end = 12.dp),
+                            visualTransformation = PasswordVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        )
+                        Text(
+                            text = "Nomor CVV tidak valid",
+                            style = SnapTypography.STYLES.snapTextSmallRegular
+                        )
+                    }
+                }
             }
         }
     }
@@ -208,7 +336,7 @@ fun CcRadioGroup(
                         }
 
                         is NewCardFormData -> {
-                            InputNewCardItem()
+                            InputNewCardItem(shouldReveal = item.identifier == selectedOption)
                         }
                     }
                 }
@@ -220,6 +348,39 @@ fun CcRadioGroup(
             }
         }
     }
+}
+
+@Composable
+fun testTextField(error: Boolean) {
+    var fokus by remember { mutableStateOf(false) }
+    BasicTextField(
+        value = "1234567890",
+        onValueChange = { value ->
+
+        },
+        modifier = Modifier
+            .border(
+                1.dp,
+                when {
+                    error -> {
+                        SnapColors.getARGBColor(INTERACTIVE_BORDER_SUPPORT)
+                    }
+
+                    fokus -> SnapColors.getARGBColor(LINK_HOVER)
+                    else -> SnapColors.getARGBColor(INTERACTIVE_BORDER_INPUT)
+                },
+                RoundedCornerShape(4.dp)
+            )
+            .background(Color.White, RoundedCornerShape(4.dp))
+            .fillMaxWidth(1.0f)
+            .height(39.dp)
+            .padding(top = 8.dp, bottom = 8.dp, start = 12.dp, end = 12.dp)
+            .onFocusChanged { focusState ->
+                fokus = focusState.isFocused
+            },
+        visualTransformation = PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+    )
 }
 
 data class SavedCreditCardFormData(

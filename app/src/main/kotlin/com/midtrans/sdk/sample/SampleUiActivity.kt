@@ -119,6 +119,9 @@ class SampleUiActivity : AppCompatActivity() {
                     Toast.LENGTH_LONG
                 ).show()
             }
+            
+            testTextField(error = false)
+            testTextField(error = true)
 
 //            val words = listOf<String>(
 //                "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad lasldasdla halo halo bandung ibukkota priangan, kokwaowkeaowkeo awas pusing",
