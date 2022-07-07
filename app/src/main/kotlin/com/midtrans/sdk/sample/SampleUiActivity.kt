@@ -11,8 +11,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.*
@@ -29,6 +27,8 @@ class SampleUiActivity : AppCompatActivity() {
     @Composable
     @Preview
     fun SampleUi() {
+
+
         val ccvVisible = remember {
             mutableStateOf(true)
         }
@@ -38,7 +38,6 @@ class SampleUiActivity : AppCompatActivity() {
                 state = rememberScrollState()
             )
         ) {
-
             var shouldReveal by remember {
                 ccvVisible
             }
@@ -79,7 +78,16 @@ class SampleUiActivity : AppCompatActivity() {
                     maskedCardNumber = "123***********345"
                 ),
                 NewCardFormData(
-                    title = "new"
+                    title = "new",
+                    isCardNumberValid = remember { mutableStateOf(true) },
+                    bankIconId = remember { mutableStateOf(null) },
+                    isCvvValid = remember { mutableStateOf(true) },
+                    isExpiryDateValid = remember {
+                        mutableStateOf(true)
+                    },
+                    principalIconId = remember {
+                        mutableStateOf(null)
+                    }
                 )
 
             ).toMutableStateList()
@@ -89,7 +97,8 @@ class SampleUiActivity : AppCompatActivity() {
 
                 list.find { it.identifier == selected }.let { member ->
                     member?.apply {
-                            if(this is SavedCreditCardFormData) errorText.value = if (value.length >= 3) "jangan salah" else ""
+                        if (this is SavedCreditCardFormData) errorText.value =
+                            if (value.length >= 3) "jangan salah" else ""
                     }
                 }
 
@@ -119,9 +128,7 @@ class SampleUiActivity : AppCompatActivity() {
                     Toast.LENGTH_LONG
                 ).show()
             }
-            
-            testTextField(error = false)
-            testTextField(error = true)
+
 
 //            val words = listOf<String>(
 //                "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad lasldasdla halo halo bandung ibukkota priangan, kokwaowkeaowkeo awas pusing",

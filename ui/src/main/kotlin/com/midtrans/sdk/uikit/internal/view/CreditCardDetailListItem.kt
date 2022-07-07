@@ -1,18 +1,13 @@
 package com.midtrans.sdk.uikit.internal.view
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.focusable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -21,16 +16,16 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusState
-import androidx.compose.ui.focus.focusModifier
-import androidx.compose.ui.focus.focusTarget
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY
@@ -101,7 +96,7 @@ fun SnapCCDetailListItem(
                     text = inputTitle,
                     style = SnapTypography.STYLES.snapTextSmallRegular
                 )
-                BasicTextField(
+                SnapTextField(
                     value = text,
                     onValueChange = { value ->
                         if (value.length <= 3) {
@@ -109,20 +104,7 @@ fun SnapCCDetailListItem(
                             onValueChange(value.filter { it.isDigit() })
                         }
                     },
-                    modifier = Modifier
-                        .border(
-                            1.dp,
-                            if (isInputError) {
-                                SnapColors.getARGBColor(INTERACTIVE_BORDER_SUPPORT)
-                            } else {
-                                SnapColors.getARGBColor(LINK_HOVER)
-                            },
-                            RoundedCornerShape(4.dp)
-                        )
-                        .background(Color.White, RoundedCornerShape(4.dp))
-                        .width(69.dp)
-                        .height(39.dp)
-                        .padding(top = 8.dp, bottom = 8.dp, start = 12.dp, end = 12.dp),
+                    modifier = Modifier.width(69.dp),
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
@@ -179,28 +161,22 @@ fun InputNewCardItem(
                         }
                     }
 
-                    TextField(
-                        value = "1234567890",
+                    var newCardNumberText by remember { mutableStateOf(TextFieldValue()) }
+                    SnapTextField(
+                        value = newCardNumberText,
+                        hint = "1234567890",
                         onValueChange = { value ->
-
+                            Log.e("wahyu", "value cc $value")
+                            newCardNumberText = formatForCreditCard(value)
                         },
-                        shape = RoundedCornerShape(4.dp),
-                        modifier = Modifier
-                            .border(
-                                1.dp,
-                                if (true) {
-                                    SnapColors.getARGBColor(INTERACTIVE_BORDER_SUPPORT)
-                                } else if (false) {
-                                    SnapColors.getARGBColor(LINK_HOVER)
-                                } else {
-                                    SnapColors.getARGBColor(INTERACTIVE_BORDER_INPUT)
-                                }
+                        trailingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_bri),
+                                contentDescription = null,
+                                tint = Color.Unspecified
                             )
-                            .background(Color.White, RoundedCornerShape(4.dp))
-                            .width(69.dp)
-                            .height(39.dp)
-                            .padding(top = 8.dp, bottom = 8.dp, start = 12.dp, end = 12.dp),
-                        visualTransformation = PasswordVisualTransformation(),
+                        },
+                        modifier = Modifier.fillMaxWidth(1.0f),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
                     Text(
@@ -220,25 +196,11 @@ fun InputNewCardItem(
                             text = "Masa berlaku",
                             style = SnapTypography.STYLES.snapTextSmallRegular
                         )
-                        BasicTextField(
+                        SnapTextField(
                             value = "1234567890",
                             onValueChange = { value ->
 
                             },
-                            modifier = Modifier
-                                .border(
-                                    1.dp,
-                                    if (true) {
-                                        SnapColors.getARGBColor(INTERACTIVE_BORDER_SUPPORT)
-                                    } else {
-                                        SnapColors.getARGBColor(LINK_HOVER)
-                                    },
-                                    RoundedCornerShape(4.dp)
-                                )
-                                .background(Color.White, RoundedCornerShape(4.dp))
-                                .fillMaxWidth(1.0f)
-                                .height(39.dp)
-                                .padding(top = 8.dp, bottom = 8.dp, start = 12.dp, end = 12.dp),
                             visualTransformation = PasswordVisualTransformation(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                         )
@@ -255,25 +217,11 @@ fun InputNewCardItem(
                             text = "CVV",
                             style = SnapTypography.STYLES.snapTextSmallRegular
                         )
-                        BasicTextField(
+                        SnapTextField(
                             value = "1234567890",
                             onValueChange = { value ->
 
                             },
-                            modifier = Modifier
-                                .border(
-                                    1.dp,
-                                    if (true) {
-                                        SnapColors.getARGBColor(INTERACTIVE_BORDER_SUPPORT)
-                                    } else {
-                                        SnapColors.getARGBColor(LINK_HOVER)
-                                    },
-                                    RoundedCornerShape(4.dp)
-                                )
-                                .background(Color.White, RoundedCornerShape(4.dp))
-                                .fillMaxWidth(1.0f)
-                                .height(39.dp)
-                                .padding(top = 8.dp, bottom = 8.dp, start = 12.dp, end = 12.dp),
                             visualTransformation = PasswordVisualTransformation(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                         )
@@ -350,38 +298,155 @@ fun CcRadioGroup(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun testTextField(error: Boolean) {
-    var fokus by remember { mutableStateOf(false) }
+fun SnapTextField(
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    readOnly: Boolean = false,
+    textStyle: TextStyle = SnapTypography.STYLES.snapTextMediumRegular,
+    hint: String? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    isError: Boolean = false,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    var isFocused by remember { mutableStateOf(false) }
     BasicTextField(
-        value = "1234567890",
-        onValueChange = { value ->
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier.then(
+            Modifier
+                .border(
+                    1.dp,
+                    when {
+                        isError -> {
+                            SnapColors.getARGBColor(INTERACTIVE_BORDER_SUPPORT)
+                        }
 
-        },
-        modifier = Modifier
-            .border(
-                1.dp,
-                when {
-                    error -> {
-                        SnapColors.getARGBColor(INTERACTIVE_BORDER_SUPPORT)
+                        isFocused -> SnapColors.getARGBColor(LINK_HOVER)
+                        else -> SnapColors.getARGBColor(INTERACTIVE_BORDER_INPUT)
+                    },
+                    RoundedCornerShape(4.dp)
+                )
+                .background(Color.White, RoundedCornerShape(4.dp))
+                .width(200.dp)
+                .height(39.dp)
+                .padding(top = 8.dp, bottom = 8.dp, start = 12.dp, end = 12.dp)
+                .onFocusChanged { focusState ->
+                    isFocused = focusState.isFocused
+                }),
+        keyboardOptions = keyboardOptions,
+        enabled = enabled,
+        readOnly = readOnly,
+        textStyle = textStyle,
+        visualTransformation = visualTransformation,
+        decorationBox = {
+            TextFieldDefaults.TextFieldDecorationBox(
+                value = value.text,
+                innerTextField = it,
+                singleLine = true,
+                enabled = true,
+                placeholder = hint?.let {
+                    {
+                        Text(text = it, style = SnapTypography.STYLES.snapTextMediumRegular)
                     }
-
-                    fokus -> SnapColors.getARGBColor(LINK_HOVER)
-                    else -> SnapColors.getARGBColor(INTERACTIVE_BORDER_INPUT)
                 },
-                RoundedCornerShape(4.dp)
+                visualTransformation = visualTransformation,
+                // same interaction source as the one passed to BasicTextField to read focus state
+                // for text field styling
+
+                interactionSource = interactionSource,
+                leadingIcon = leadingIcon,
+                trailingIcon = trailingIcon,
+                // keep vertical paddings but change the horizontal
+                contentPadding = TextFieldDefaults.textFieldWithoutLabelPadding(
+                    start = 0.dp, end = 0.dp, top = 0.dp, bottom = 0.dp
+                )
             )
-            .background(Color.White, RoundedCornerShape(4.dp))
-            .fillMaxWidth(1.0f)
-            .height(39.dp)
-            .padding(top = 8.dp, bottom = 8.dp, start = 12.dp, end = 12.dp)
-            .onFocusChanged { focusState ->
-                fokus = focusState.isFocused
-            },
-        visualTransformation = PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        }
     )
 }
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun SnapTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    readOnly: Boolean = false,
+    textStyle: TextStyle = SnapTypography.STYLES.snapTextMediumRegular,
+    hint: String? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    isError: Boolean = false,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    var isFocused by remember { mutableStateOf(false) }
+    BasicTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier.then(
+            Modifier
+                .border(
+                    1.dp,
+                    when {
+                        isError -> {
+                            SnapColors.getARGBColor(INTERACTIVE_BORDER_SUPPORT)
+                        }
+
+                        isFocused -> SnapColors.getARGBColor(LINK_HOVER)
+                        else -> SnapColors.getARGBColor(INTERACTIVE_BORDER_INPUT)
+                    },
+                    RoundedCornerShape(4.dp)
+                )
+                .background(Color.White, RoundedCornerShape(4.dp))
+                .width(200.dp)
+                .height(39.dp)
+                .padding(top = 8.dp, bottom = 8.dp, start = 12.dp, end = 12.dp)
+                .onFocusChanged { focusState ->
+                    isFocused = focusState.isFocused
+                }),
+        keyboardOptions = keyboardOptions,
+        enabled = enabled,
+        readOnly = readOnly,
+        textStyle = textStyle,
+        visualTransformation = visualTransformation,
+        decorationBox = {
+            TextFieldDefaults.TextFieldDecorationBox(
+                value = value,
+                innerTextField = it,
+                singleLine = true,
+                enabled = true,
+                placeholder = hint?.let {
+                    {
+                        Text(text = it, style = SnapTypography.STYLES.snapTextMediumRegular)
+                    }
+                },
+                visualTransformation = visualTransformation,
+                // same interaction source as the one passed to BasicTextField to read focus state
+                // for text field styling
+
+                interactionSource = interactionSource,
+                leadingIcon = leadingIcon,
+                trailingIcon = trailingIcon,
+                // keep vertical paddings but change the horizontal
+                contentPadding = TextFieldDefaults.textFieldWithoutLabelPadding(
+                    start = 0.dp, end = 0.dp, top = 0.dp, bottom = 0.dp
+                )
+            )
+        }
+    )
+}
+
+
 
 data class SavedCreditCardFormData(
     val startIcon: Int,
@@ -396,10 +461,23 @@ data class SavedCreditCardFormData(
 
 
 class NewCardFormData(
-    var title: String
-) : FormData(title)
+    var title: String,
+    var isCardNumberValid: MutableState<Boolean>,
+    var isExpiryDateValid: MutableState<Boolean>,
+    var isCvvValid: MutableState<Boolean>,
+    var bankIconId: MutableState<Int?>,
+    var principalIconId: MutableState<Int?>
+    ) : FormData(title)
 
 open class FormData(
     public val identifier: String
 )
 
+fun formatForCreditCard(input: TextFieldValue): TextFieldValue{
+    var processed: String = input.text.replace("\\D", "").replace(" ", "")
+    // insert a space after all groups of 4 digits that are followed by another digit
+    // insert a space after all groups of 4 digits that are followed by another digit
+    processed = processed.replace("(\\d{4})(?=\\d)".toRegex(), "$1 ")
+    val output = input.copy(text = processed, selection = TextRange(processed.length))
+    return output
+}
