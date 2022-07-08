@@ -83,6 +83,52 @@ class SampleViewModel : ViewModel() {
         )
     }
 
+    fun getCardTokenNormalWithInstallment(){
+        coreKit.getCardToken(cardTokenRequestBuilder = NormalCardTokenRequestBuilder()
+            .withClientKey(clientKeyForPoint)
+            .withGrossAmount(150000.0)
+            .withCardNumber(bniCcNumber)
+            .withCardExpMonth("12")
+            .withCardExpYear("24")
+            .withCardCvv("123")
+            .withOrderId("cobacoba-4")
+            .withCurrency("IDR")
+            .withBank("offline")
+            .withInstallment(true)
+            .withInstallmentTerm(3),
+            callback = object : Callback<CardTokenResponse> {
+                override fun onSuccess(result: CardTokenResponse) {
+                    cardTokenResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error ${error.message} ${error.cause}")
+                }
+            }
+        )
+    }
+
+    fun getTwoClickTokenWithInstallment(){
+        coreKit.getCardToken(cardTokenRequestBuilder = TwoClickCardTokenRequestBuilder()
+            .withClientKey(clientKeyForPoint)
+            .withGrossAmount(150000.0)
+            .withCardCvv("123")
+            .withTokenId(ccSavedTokenIdBniTwoClickPoint)
+            .withOrderId("cobacoba-4")
+            .withCurrency("IDR")
+            .withBank("offline")
+            .withInstallment(true)
+            .withInstallmentTerm(3),
+            callback = object : Callback<CardTokenResponse> {
+                override fun onSuccess(result: CardTokenResponse) {
+                    cardTokenResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
+
     fun chargeUsingCreditCard(snapToken: String) {
         coreKit.pay(
             snapToken = snapToken,
@@ -157,6 +203,48 @@ class SampleViewModel : ViewModel() {
                 .withPoint(100000.0)
                 .withDiscountedGrossAmount(149850.0)
                 .withPromoId("436")
+            ,
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    transactionResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
+
+    fun chargeUsingInstallment(snapToken: String) {
+        coreKit.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = CreditCardPaymentRequestBuilder()
+                .withCardToken(cardTokenResponse?.tokenId.toString())
+                .withPaymentType(PaymentType.CREDIT_CARD)
+                .withCustomerEmail("belajar@example.com")
+                .withInstallment("offline_3")
+            ,
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    transactionResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
+
+    fun chargeUsingInstallmentAndPromo(snapToken: String) {
+        coreKit.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = CreditCardPaymentRequestBuilder()
+                .withCardToken(cardTokenResponse?.tokenId.toString())
+                .withPaymentType(PaymentType.CREDIT_CARD)
+                .withCustomerEmail("belajar@example.com")
+                .withInstallment("offline_3")
+                .withPromoId("436")
+                .withDiscountedGrossAmount(149850.0)
             ,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
