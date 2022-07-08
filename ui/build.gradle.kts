@@ -62,5 +62,6 @@ dependencies {
     implementation(com.gtf.snap.ComposeUiLibraries.composeRuntime)
     implementation(com.gtf.snap.ComposeUiLibraries.composeGoogleFont)
     implementation(com.gtf.snap.ComposeUiLibraries.composeLiveData)
+    implementation(com.gtf.snap.ComposeUiLibraries.composeConstraintLayout)
     implementation(project(":corekit"))
 }

@@ -18,12 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.uikit.internal.view.NewCardFormData
-import com.midtrans.sdk.uikit.internal.view.SavedCardRadioGroup
-import com.midtrans.sdk.uikit.internal.view.SavedCreditCardFormData
-import com.midtrans.sdk.uikit.internal.view.SnapAppBar
-import com.midtrans.sdk.uikit.internal.view.SnapMultiIconListItem
-import com.midtrans.sdk.uikit.internal.view.SnapNumberedListItem
+import com.midtrans.sdk.uikit.internal.view.*
 
 class SampleUiActivity : AppCompatActivity() {
 
@@ -53,6 +48,7 @@ class SampleUiActivity : AppCompatActivity() {
             }
 //            SnapCCDetailListItem(shouldReveal)
 
+            OverlayExpandingBox()
             SnapAppBar(
                 title = "App Bar",
                 iconResId = R.drawable.psdk_ic_gopay

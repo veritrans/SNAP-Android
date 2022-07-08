@@ -168,6 +168,7 @@ object ComposeUiLibraries {
     const val composeGoogleFont =
         "androidx.compose.ui:ui-text-google-fonts:${Dependencies.composeVersion}"
     const val composeLiveData = "androidx.compose.runtime:runtime-livedata:${Dependencies.composeVersion}"
+    const val composeConstraintLayout = "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha03"
 
 }
 
