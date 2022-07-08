@@ -12,6 +12,9 @@ class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
     private var cardCvv: String? = null
     private var currency: String? = null
     private var orderId: String? = null
+    private var bank: String? = null
+    private var installment: Boolean? = null
+    private var installmentTerm : Int? = null
 
     fun withCardNumber(value: String): NormalCardTokenRequestBuilder = apply {
         cardNumber = value
@@ -43,6 +46,18 @@ class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
 
     fun withCurrency(value: String): NormalCardTokenRequestBuilder = apply {
         currency = value
+    }
+
+    fun withBank(value: String): NormalCardTokenRequestBuilder = apply {
+        bank = value
+    }
+
+    fun withInstallment(value: Boolean): NormalCardTokenRequestBuilder = apply {
+        installment = value
+    }
+
+    fun withInstallmentTerm(value: Int): NormalCardTokenRequestBuilder = apply {
+        installmentTerm = value
     }
 
     override fun build(): Map<String, String> {
@@ -94,6 +109,24 @@ class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
             key = CURRENCY,
             value = currency,
             errorMessage = "Currency is required"
+        )
+        appendQueryParam(
+            target = result,
+            key = BANK,
+            value = bank,
+            errorMessage = "Bank is required"
+        )
+        appendQueryParam(
+            target = result,
+            key = INSTALLMENT,
+            value = installment.toString(),
+            errorMessage = "Installment is required"
+        )
+        appendQueryParam(
+            target = result,
+            key = INSTALLMENT_TERM,
+            value = installmentTerm.toString(),
+            errorMessage = "Installment term is required"
         )
 
         return result
