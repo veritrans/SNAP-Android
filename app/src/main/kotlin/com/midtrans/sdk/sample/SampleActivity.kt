@@ -3,11 +3,15 @@ package com.midtrans.sdk.sample
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,12 +35,16 @@ class SampleActivity : AppCompatActivity() {
     @Preview
     fun Greeting() {
         var text by remember { mutableStateOf("") }
-        ShowChargeContent(text = text, onTextFieldValueChange = { text = it})
+        val state = rememberScrollState()
+        ShowChargeContent(text = text, state = state,  onTextFieldValueChange = { text = it})
     }
 
     @Composable
-    fun ShowChargeContent(text: String, onTextFieldValueChange: (String)-> Unit){
-        Column {
+    fun ShowChargeContent(text: String, state: ScrollState  ,onTextFieldValueChange: (String)-> Unit){
+
+        Column (
+            modifier = Modifier.verticalScroll(state)
+        ) {
             Text("insert snap token", style = TextStyle(color = Color.Red))
             TextField(value = text, onValueChange = onTextFieldValueChange, enabled = true, readOnly = false)
 
@@ -47,27 +55,51 @@ class SampleActivity : AppCompatActivity() {
             }
 
             Button(onClick = {
+                viewModel.getCardTokenBasic()
+            }) {
+                Text(text = "normal card token")
+            }
+
+            Button(onClick = {
                 viewModel.getTwoClickToken()
             }) {
                 Text(text = "2click card token")
             }
 
             Button(onClick = {
+                viewModel.getCardTokenNormalWithInstallment()
+            }) {
+                Text(text = "get ccToken + installment")
+            }
+
+            Button(onClick = {
+                viewModel.getTwoClickTokenWithInstallment()
+            }) {
+                Text(text = "get 2lick ccToken + installment")
+            }
+
+            Button(onClick = {
                 viewModel.chargeUsingCreditCardWithBniPoint(text)
             }) {
-                Text(text = "charge with bank point")
+                Text(text = "charge + point")
             }
 
             Button(onClick = {
                 viewModel.chargeUsingCreditCardWithBniPointAndPromo(text)
             }) {
-                Text(text = "charge with bank point and promo")
+                Text(text = "charge + point + promo")
             }
 
             Button(onClick = {
-                viewModel.getCardTokenBasic()
+                viewModel.chargeUsingInstallment(text)
             }) {
-                Text(text = "normal card token")
+                Text(text = "charge + installment")
+            }
+
+            Button(onClick = {
+                viewModel.chargeUsingInstallmentAndPromo(text)
+            }) {
+                Text(text = "charge + installment + promo")
             }
 
             Button(onClick = {
@@ -87,7 +119,6 @@ class SampleActivity : AppCompatActivity() {
             }) {
                 Text(text = "get Bank Point data")
             }
-
         }
     }
 }
