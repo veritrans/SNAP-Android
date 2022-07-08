@@ -11,6 +11,9 @@ class TwoClickCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
     private var grossAmount: Double? = null
     private var currency: String? = null
     private var orderId: String? = null
+    private var bank: String? = null
+    private var installment: Boolean? = null
+    private var installmentTerm : Int? = null
 
     fun withCardCvv(value: String): TwoClickCardTokenRequestBuilder = apply {
         cardCvv = value
@@ -34,6 +37,18 @@ class TwoClickCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
 
     fun withCurrency(value: String): TwoClickCardTokenRequestBuilder = apply {
         currency = value
+    }
+
+    fun withBank(value: String): TwoClickCardTokenRequestBuilder = apply {
+        bank = value
+    }
+
+    fun withInstallment(value: Boolean): TwoClickCardTokenRequestBuilder = apply {
+        installment = value
+    }
+
+    fun withInstallmentTerm(value: Int): TwoClickCardTokenRequestBuilder = apply {
+        installmentTerm = value
     }
 
     override fun build(): Map<String, String> {
@@ -79,6 +94,24 @@ class TwoClickCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
             key = CURRENCY,
             value = currency,
             errorMessage = "Currency is required"
+        )
+        appendQueryParam(
+            target = result,
+            key = BANK,
+            value = bank,
+            errorMessage = "Bank is required"
+        )
+        appendQueryParam(
+            target = result,
+            key = INSTALLMENT,
+            value = installment.toString(),
+            errorMessage = "Installment is required"
+        )
+        appendQueryParam(
+            target = result,
+            key = INSTALLMENT_TERM,
+            value = installmentTerm.toString(),
+            errorMessage = "Installment term is required"
         )
 
         return result

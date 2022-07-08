@@ -4,6 +4,7 @@ abstract class CreditCardTokenRequestBuilder {
     internal abstract fun build(): Map<String, String>
 
     companion object {
+        const val BANK = "bank"
         const val CARD_NUMBER = "card_number"
         const val CARD_CVV = "card_cvv"
         const val CARD_EXPIRY_MONTH = "card_exp_month"
