@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,7 +49,32 @@ class SampleUiActivity : AppCompatActivity() {
             }
 //            SnapCCDetailListItem(shouldReveal)
 
-            OverlayExpandingBox()
+            var expanding by remember {
+              mutableStateOf(false)
+            }
+            OverlayExpandingBox(
+                isExpanded = expanding,
+                mainContent = {
+                    SnapTotal {
+                        expanding = !expanding
+                    }
+                },
+                expandingContent = { Text(text = "fsadfjlsakjflkasjflkjaskldfjksalfjklasjdfklsadjfksajdfklasjdklfjsadlkfjaslkdfjlasdfj") },
+                followingContent = {
+                    SnapAppBar(
+                        title = "App Bar",
+                        iconResId = R.drawable.psdk_ic_gopay
+                    ) {
+                        Toast.makeText(
+                            this@SampleUiActivity,
+                            "Icon App Bar clicked!",
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
+                        shouldReveal = !shouldReveal
+                    }
+                }
+            )
             SnapAppBar(
                 title = "App Bar",
                 iconResId = R.drawable.psdk_ic_gopay
@@ -110,13 +136,16 @@ class SampleUiActivity : AppCompatActivity() {
                 }
             },
                 onCardNumberValueChange = {
-                    Toast.makeText(this@SampleUiActivity, "HA${it.length}X", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@SampleUiActivity, "HA${it.length}X", Toast.LENGTH_SHORT)
+                        .show()
                 },
                 onCvvValueChange = {
-                    Toast.makeText(this@SampleUiActivity, "HI${it.length}X", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@SampleUiActivity, "HI${it.length}X", Toast.LENGTH_SHORT)
+                        .show()
                 },
                 onExpiryDateValueChange = {
-                    Toast.makeText(this@SampleUiActivity, "HE${it.length}X", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@SampleUiActivity, "HE${it.length}X", Toast.LENGTH_SHORT)
+                        .show()
                 }
             )
             SnapNumberedListItem(
