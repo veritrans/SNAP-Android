@@ -6,10 +6,10 @@ data class CardTokenResponse (
      * 481111-1114-0452c0cb-3199-4081-82ba-2e05b378c0ca redirectUrl : https://api.sandbox.veritrans.co
      * .id/v2/token/redirect/481111-1114-0452c0cb-3199-4081-82ba-2e05b378c0ca
      */
-    var statusCode: String?,
-    var statusMessage: String?,
-    var bank: String?,
-    var tokenId: String?,
-    var redirectUrl: String?,
-    var hash: String?
+    val statusCode: String?,
+    val statusMessage: String?,
+    val bank: String?,
+    val tokenId: String?,
+    val redirectUrl: String?,
+    val hash: String?
 )
