@@ -1,6 +1,6 @@
 package com.midtrans.sdk.corekit.internal.di
 
-import com.midtrans.sdk.corekit.internal.data.repository.CardTokenRepository
+import com.midtrans.sdk.corekit.internal.data.repository.CoreApiRepository
 import com.midtrans.sdk.corekit.internal.network.restapi.SnapApi
 import com.midtrans.sdk.corekit.internal.data.repository.SnapRepository
 import com.midtrans.sdk.corekit.internal.network.restapi.CoreApi
@@ -23,7 +23,7 @@ internal class RepositoryModule {
     @Singleton
     fun provideCardTokenRepository(
         coreApi: CoreApi
-    ): CardTokenRepository {
-        return CardTokenRepository(coreApi)
+    ): CoreApiRepository {
+        return CoreApiRepository(coreApi)
     }
 }

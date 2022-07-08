@@ -63,6 +63,13 @@ class SampleActivity : AppCompatActivity() {
             }) {
                 Text(text = "Delete card token")
             }
+
+            Button(onClick = {
+                viewModel.getBinData(text)
+            }) {
+                Text(text = "get Bin data")
+            }
+
         }
     }
 }
