@@ -92,7 +92,7 @@ class SampleUiActivity : AppCompatActivity() {
                 SavedCreditCardFormData(
                     title = "satu",
                     inputTitle = "Masukkan CVV",
-                    endIcon = android.R.drawable.ic_delete,
+                    endIcon = R.drawable.ic_trash,
                     startIcon = R.drawable.ic_bri,
                     errorText = remember { mutableStateOf("") },
                     maskedCardNumber = "123***********345"
@@ -100,7 +100,7 @@ class SampleUiActivity : AppCompatActivity() {
                 SavedCreditCardFormData(
                     title = "dua",
                     inputTitle = "Masukkan CVV",
-                    endIcon = android.R.drawable.ic_delete,
+                    endIcon = R.drawable.ic_trash,
                     startIcon = R.drawable.ic_bri,
                     errorText = remember { mutableStateOf("") },
                     maskedCardNumber = "123***********345"
@@ -108,7 +108,7 @@ class SampleUiActivity : AppCompatActivity() {
                 SavedCreditCardFormData(
                     title = "tiga",
                     inputTitle = "Masukkan CVV",
-                    endIcon = android.R.drawable.ic_delete,
+                    endIcon = R.drawable.ic_trash,
                     startIcon = R.drawable.ic_bri,
                     errorText = remember { mutableStateOf("") },
                     maskedCardNumber = "123***********345"
