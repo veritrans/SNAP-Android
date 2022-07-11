@@ -63,8 +63,13 @@ fun OverlayExpandingBox(
 
 @Composable
 fun SnapTotal(
-    onExpandClick: () -> Unit
+    amount: String,
+    orderId: String,
+    remainingTime: String,
+    onExpandClick: (isExpand: Boolean) -> Unit
 ) {
+    var isExpand by remember { mutableStateOf(false) }
+    var iconExpand by remember { mutableStateOf(R.drawable.ic_chevron_down) }
     Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(
@@ -79,28 +84,32 @@ fun SnapTotal(
                 color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)
             )
             Text(
-                text = "01:59:32",
+                text = remainingTime,
                 style = SnapTypography.STYLES.snapTextSmallRegular,
                 color = SnapColors.getARGBColor(SnapColors.SUPPORT_INFO_DEFAULT)
             )
         }
         Row {
             Text(
-                text = "Rp399.000",
+                text = amount,
                 style = SnapTypography.STYLES.snapBigNumberSemiBold,
                 color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY),
                 modifier = Modifier.weight(1f)
             )
-            IconButton(onClick = { onExpandClick.invoke() }) {
+            IconButton(onClick = {
+                isExpand = !isExpand
+                iconExpand = if (isExpand) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down
+                onExpandClick.invoke(isExpand)
+            }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_chevron_down),
+                    painter = painterResource(id = iconExpand),
                     contentDescription = null
                 )
 
             }
         }
         Text(
-            text = "Order Id #12341234213",
+            text = orderId,
             style = SnapTypography.STYLES.snapTextSmallRegular,
             color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)
         )

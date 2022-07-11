@@ -55,8 +55,12 @@ class SampleUiActivity : AppCompatActivity() {
             OverlayExpandingBox(
                 isExpanded = expanding,
                 mainContent = {
-                    SnapTotal {
-                        expanding = !expanding
+                    SnapTotal(
+                        amount = "Rp399.000",
+                        orderId = "#121231231231",
+                        remainingTime = "22:22:22"
+                    ) {
+                        expanding = it
                     }
                 },
                 expandingContent = { Text(text = "fsadfjlsakjflkasjflkjaskldfjksalfjklasjdfklsadjfksajdfklasjdklfjsadlkfjaslkdfjlasdfj") },
