@@ -2,6 +2,7 @@ package com.midtrans.sdk.uikit.internal.view
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -45,7 +46,8 @@ fun OverlayExpandingBox(
                 .zIndex(2f)) {
                 AnimatedVisibility(
                     visible = isExpanded,
-                    enter = expandVertically()
+                    enter = expandVertically(),
+                    exit = shrinkVertically()
                 ) {
                     expandingContent?.invoke()
                 }
@@ -63,23 +65,45 @@ fun OverlayExpandingBox(
 fun SnapTotal(
     onExpandClick: () -> Unit
 ) {
-    Column {
-        Row {
-            Text(text = "total")
-            Text(text = "bayar dalam")
-            Text(text = "01:59:32")
+    Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Text(
+                text = "total",
+                style = SnapTypography.STYLES.snapTextMediumMedium,
+                modifier = Modifier.weight(1f),
+                color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)
+            )
+            Text(
+                text = "bayar dalam",
+                style = SnapTypography.STYLES.snapTextSmallRegular,
+                color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)
+            )
+            Text(
+                text = "01:59:32",
+                style = SnapTypography.STYLES.snapTextSmallRegular,
+                color = SnapColors.getARGBColor(SnapColors.SUPPORT_INFO_DEFAULT)
+            )
         }
         Row {
-            Text(text = "rp399.000")
+            Text(
+                text = "Rp399.000",
+                style = SnapTypography.STYLES.snapBigNumberSemiBold,
+                color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY),
+                modifier = Modifier.weight(1f)
+            )
             IconButton(onClick = { onExpandClick.invoke() }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_chevron_right),
+                    painter = painterResource(id = R.drawable.ic_chevron_down),
                     contentDescription = null
                 )
 
             }
         }
-        Text(text = "Order Id #12341234213")
+        Text(
+            text = "Order Id #12341234213",
+            style = SnapTypography.STYLES.snapTextSmallRegular,
+            color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)
+        )
     }
 }
 
