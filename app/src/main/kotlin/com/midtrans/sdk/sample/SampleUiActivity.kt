@@ -272,7 +272,10 @@ class SampleUiActivity : AppCompatActivity() {
                 ),
                 PromoData(
                     leftText = "Lanjut tanpa promo",
-                    rightText = " "
+                    rightText = " ",
+                    enabled = remember {
+                        mutableStateOf(true)
+                    }
                 )
             )
             SnapPromoListRadioButton(

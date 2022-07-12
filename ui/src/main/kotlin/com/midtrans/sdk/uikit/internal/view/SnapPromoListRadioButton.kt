@@ -23,7 +23,7 @@ fun SnapPromoListRadioButton(
     onItemSelectedListener: (promodata: PromoData) -> Unit
 ) {
     val (selectedOption, onOptionSelected) = remember {
-        mutableStateOf(states[0].leftText)
+        mutableStateOf(states.filter { it.enabled.value }[0].leftText)
     }
     Column(
         verticalArrangement = Arrangement.spacedBy(24.dp)
