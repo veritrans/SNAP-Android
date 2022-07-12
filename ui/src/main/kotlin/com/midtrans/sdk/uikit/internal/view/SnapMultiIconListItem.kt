@@ -1,6 +1,5 @@
 package com.midtrans.sdk.uikit.internal.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +28,6 @@ fun SnapMultiIconListItem(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .clickable(onClick = onClick)
-            .background(Color.Yellow)
     ) {
         Column(
             modifier = Modifier
@@ -38,7 +36,7 @@ fun SnapMultiIconListItem(
 
             Text(
                 text = title,
-                modifier = Modifier.padding(top = 16.dp, bottom = 13.dp),
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
                 style = SnapTypography.STYLES.snapTextBigRegular
             )
             Row(
@@ -48,15 +46,14 @@ fun SnapMultiIconListItem(
                         Icon(
                             painter = painterResource(id = it),
                             tint = Color.Unspecified,
-                            contentDescription = null,
-                            modifier = Modifier.border(1.dp, Color.Black)
+                            contentDescription = null
                         )
                 }
             }
             Divider(
                 thickness = 1.dp,
                 color = SnapColors.getARGBColor(LINE_LIGHT_MUTED),
-                modifier = Modifier.padding(top = 21.dp)
+                modifier = Modifier.padding(top = 16.dp)
             )
         }
         Icon(

@@ -72,7 +72,7 @@ fun SnapCCDetailListItem(
     Column {
         Row(
             verticalAlignment = CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Icon(
                 painter = painterResource(id = startIconId),

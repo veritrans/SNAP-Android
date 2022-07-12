@@ -1,5 +1,6 @@
 package com.midtrans.sdk.uikit.internal.view
 
+import android.provider.ContactsContract
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -11,6 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -113,6 +115,40 @@ fun SnapTotal(
             style = SnapTypography.STYLES.snapTextSmallRegular,
             color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)
         )
+    }
+}
+
+@Composable
+fun SnapCustomerDetail(
+    name: String,
+    phone: String,
+    addressLines: List<String>
+) {
+    Column(
+        modifier = Modifier.background(color = SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY))
+    ) {
+        Text(
+            text = "Detail pelanggan",
+            style = SnapTypography.STYLES.snapTextSmallRegular,
+            color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY)
+        )
+        Row() {
+            Text(
+                text = name,
+                style = SnapTypography.STYLES.snapTextSmallRegular,
+                color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY)
+            )
+            Text(
+                text = phone, style = SnapTypography.STYLES.snapTextSmallRegular,
+                color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY)
+            )
+        }
+        addressLines.forEach {
+            Text(
+                text = it, style = SnapTypography.STYLES.snapTextSmallRegular,
+                color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY)
+            )
+        }
     }
 }
 
