@@ -252,6 +252,35 @@ class SampleUiActivity : AppCompatActivity() {
                         "  <li>Milk</li>" +
                         "</ol>"
             )
+            val promoList = listOf(
+                PromoData(
+                    leftText = "Summer sale",
+                    rightText = "-Rp100.000"
+                ),
+                PromoData(
+                    leftText = "Surprise 8.8",
+                    rightText = "-Rp88.000"
+                ),
+                PromoData(
+                    leftText = "Example of a very long long long long long long promo name from VISA",
+                    rightText = "               ",
+                    subLeftText = "This promo is only available for VISA card",
+                    enabled = remember {
+                        mutableStateOf(false)
+                    }
+
+                ),
+                PromoData(
+                    leftText = "Lanjut tanpa promo",
+                    rightText = " "
+                )
+            )
+            SnapPromoListRadioButton(
+                states = promoList,
+                onItemSelectedListener = {
+                    Toast.makeText(this@SampleUiActivity, it.leftText, Toast.LENGTH_SHORT).show()
+                }
+            )
         }
     }
 }
