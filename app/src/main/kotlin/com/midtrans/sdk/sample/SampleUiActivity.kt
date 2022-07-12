@@ -45,9 +45,11 @@ class SampleUiActivity : AppCompatActivity() {
         }
 
         Column(
-            modifier = Modifier.verticalScroll(
-                state = rememberScrollState()
-            ).padding(start = 16.dp, end = 16.dp)
+            modifier = Modifier
+                .verticalScroll(
+                    state = rememberScrollState()
+                )
+                .padding(start = 16.dp, end = 16.dp)
         ) {
             var shouldReveal by remember {
                 ccvVisible
@@ -83,28 +85,42 @@ class SampleUiActivity : AppCompatActivity() {
                     )
                 },
                 followingContent = {
-                    SnapAppBar(
-                        title = "App Bar",
-                        iconResId = R.drawable.ic_arrow_left
-                    ) {
-                        Toast.makeText(
-                            this@SampleUiActivity,
-                            "Icon App Bar clicked!",
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
-                        shouldReveal = !shouldReveal
+                    Column() {
+
+                        SnapAppBar(
+                            title = "App Bar",
+                            iconResId = R.drawable.ic_arrow_left
+                        ) {
+                            Toast.makeText(
+                                this@SampleUiActivity,
+                                "Icon App Bar clicked!",
+                                Toast.LENGTH_LONG
+                            )
+                                .show()
+                            shouldReveal = !shouldReveal
+                        }
+                        SnapAppBar(
+                            title = "App Bar",
+                            iconResId = R.drawable.ic_cross
+                        ) {
+                            Toast.makeText(
+                                this@SampleUiActivity,
+                                "Icon App Bar clicked!",
+                                Toast.LENGTH_LONG
+                            )
+                                .show()
+                            shouldReveal = !shouldReveal
+                        }
+
+                        SnapButton(
+                            enabled = false,
+                            text = "Tertiary Disabled Button",
+                            style = SnapButton.Style.TERTIARY
+                        ) {}
                     }
                 }
             )
-            SnapAppBar(
-                title = "App Bar",
-                iconResId = R.drawable.ic_cross
-            ) {
-                Toast.makeText(this@SampleUiActivity, "Icon App Bar clicked!", Toast.LENGTH_LONG)
-                    .show()
-                shouldReveal = !shouldReveal
-            }
+
 
             var list = mutableListOf(
                 SavedCreditCardFormData(
@@ -227,11 +243,6 @@ class SampleUiActivity : AppCompatActivity() {
                 style = SnapButton.Style.PRIMARY
             ) {}
 
-            SnapButton(
-                enabled = false,
-                text = "Tertiary Disabled Button",
-                style = SnapButton.Style.TERTIARY
-            ) {}
 
             SnapText(text = "This is <b>bolt</b> <i>italic</i> <u>underline</u>")
             SnapText(

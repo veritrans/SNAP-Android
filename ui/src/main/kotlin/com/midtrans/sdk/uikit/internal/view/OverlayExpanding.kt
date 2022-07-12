@@ -11,6 +11,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
@@ -45,6 +46,7 @@ fun OverlayExpandingBox(
                 .constrainAs(expanding) {
                     top.linkTo(main.bottom)
                 }
+                .padding(top = 24.dp)
                 .zIndex(2f)) {
                 AnimatedVisibility(
                     visible = isExpanded,
@@ -132,11 +134,12 @@ fun SnapCustomerDetail(
             style = SnapTypography.STYLES.snapTextSmallRegular,
             color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY)
         )
-        Row() {
+        Row(modifier = Modifier.padding(top = 12.dp)) {
             Text(
                 text = name,
                 style = SnapTypography.STYLES.snapTextSmallRegular,
-                color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY)
+                color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY),
+                modifier = Modifier.weight(1f)
             )
             Text(
                 text = phone, style = SnapTypography.STYLES.snapTextSmallRegular,
