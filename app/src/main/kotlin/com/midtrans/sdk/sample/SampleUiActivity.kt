@@ -48,7 +48,10 @@ class SampleUiActivity : AppCompatActivity() {
                 ccvVisible
             }
 //            SnapCCDetailListItem(shouldReveal)
-
+            SnapSingleIconListItem(
+                iconResId = R.drawable.ic_bank_mandiri_40,
+                title = "Mandiri"
+            )
             var expanding by remember {
               mutableStateOf(false)
             }
