@@ -6,7 +6,6 @@ import com.midtrans.sdk.corekit.internal.network.model.request.CustomerDetailReq
 import com.midtrans.sdk.corekit.internal.network.model.request.PaymentParam
 import com.midtrans.sdk.corekit.internal.network.model.request.PaymentRequest
 import com.midtrans.sdk.corekit.internal.network.model.request.PromoDetailRequest
-import com.midtrans.sdk.corekit.internal.util.NumberUtil
 import com.midtrans.sdk.corekit.internal.util.StringUtil.checkIfContentNotNull
 
 class CreditCardPaymentRequestBuilder: PaymentRequestBuilder() {
@@ -16,11 +15,11 @@ class CreditCardPaymentRequestBuilder: PaymentRequestBuilder() {
     private var customerEmail: String? = null
     private var customerFullName: String? = null
     private var customerPhone: String? = null
-    private var discountedGrossAmount: Double? = null
-    private var promoId: String? = null
     private var bank: String? = null
     private var point: Double? = null
     private var installment: String? = null
+    private var promoDetailRequest: PromoDetailRequest? = null
+
 
     fun withPaymentType(@PaymentType.Def value: String): CreditCardPaymentRequestBuilder = apply {
         paymentType = value
@@ -46,12 +45,8 @@ class CreditCardPaymentRequestBuilder: PaymentRequestBuilder() {
         saveCard = value
     }
 
-    fun withDiscountedGrossAmount(value: Double): CreditCardPaymentRequestBuilder = apply {
-        discountedGrossAmount = value
-    }
-
-    fun withPromoId(value: String): CreditCardPaymentRequestBuilder = apply {
-        promoId = value
+    fun withPromo(value: PromoDetailRequest): CreditCardPaymentRequestBuilder = apply {
+         promoDetailRequest = value
     }
 
     fun withBank(value: String): CreditCardPaymentRequestBuilder = apply {
@@ -72,8 +67,7 @@ class CreditCardPaymentRequestBuilder: PaymentRequestBuilder() {
                 paymentType = paymentType,
                 customerDetails = constructCustomerDetail(),
                 paymentParams = PaymentParam(cardToken = cardToken, saveCard = saveCard, bank = bank, point = point, installment = installment),
-                promoDetails = PromoDetailRequest(discountedGrossAmount = discountedGrossAmount?.let { NumberUtil.formatDoubleToString(it)},
-                    promoId = promoId)
+                promoDetails = promoDetailRequest
             )
             else -> throw InvalidPaymentTypeException()
         }
