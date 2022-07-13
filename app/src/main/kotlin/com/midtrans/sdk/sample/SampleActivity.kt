@@ -49,9 +49,15 @@ class SampleActivity : AppCompatActivity() {
             TextField(value = text, onValueChange = onTextFieldValueChange, enabled = true, readOnly = false)
 
             Button(onClick = {
-                viewModel.chargeUsingCreditCardWithPromo(text)
+                viewModel.chargeUsingCreditCard(text)
             }) {
                 Text(text = "Charge")
+            }
+
+            Button(onClick = {
+                viewModel.chargeUsingCreditCardWithPromo(text)
+            }) {
+                Text(text = "Charge + promo")
             }
 
             Button(onClick = {
@@ -109,6 +115,18 @@ class SampleActivity : AppCompatActivity() {
             }
 
             Button(onClick = {
+                viewModel.chargeUsingOneClickCardWithPromo(text)
+            }) {
+                Text(text = "charge + One Click + Promo")
+            }
+
+            Button(onClick = {
+                viewModel.chargeUsingOneClickCardWithPromoAndInstallment(text)
+            }) {
+                Text(text = "charge + One Click + Promo + Installment")
+            }
+
+            Button(onClick = {
                 viewModel.deleteSavedCard()
             }) {
                 Text(text = "Delete card token")
@@ -121,7 +139,7 @@ class SampleActivity : AppCompatActivity() {
             }
 
             Button(onClick = {
-                viewModel.getBankPoint()
+                viewModel.getBankPoint(text)
             }) {
                 Text(text = "get Bank Point data")
             }

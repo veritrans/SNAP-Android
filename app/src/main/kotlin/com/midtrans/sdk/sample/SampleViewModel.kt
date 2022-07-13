@@ -13,6 +13,7 @@ import com.midtrans.sdk.corekit.api.requestbuilder.payment.BankTransferPaymentRe
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.OneClickCardPaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.network.model.request.InstallmentRequest
+import com.midtrans.sdk.corekit.internal.network.model.request.PromoDetailRequest
 
 class SampleViewModel : ViewModel() {
     var helloLiveData = MutableLiveData<String>()
@@ -155,8 +156,7 @@ class SampleViewModel : ViewModel() {
                 .withCardToken(cardTokenResponse?.tokenId.toString())
                 .withSaveCard(true)
                 .withPaymentType(PaymentType.CREDIT_CARD)
-                .withDiscountedGrossAmount(145000.0)
-                .withPromoId("431")
+                .withPromo(PromoDetailRequest(discountedGrossAmount = 149850.0, promoId = "436"))
                 .withCustomerEmail("belajar@example.com"),
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
@@ -201,8 +201,7 @@ class SampleViewModel : ViewModel() {
                 .withCustomerEmail("belajar@example.com")
                 .withBank("bni")
                 .withPoint(100000.0)
-                .withDiscountedGrossAmount(149850.0)
-                .withPromoId("436")
+                .withPromo(PromoDetailRequest(discountedGrossAmount = 149850.0, promoId = "436"))
             ,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
@@ -243,8 +242,7 @@ class SampleViewModel : ViewModel() {
                 .withPaymentType(PaymentType.CREDIT_CARD)
                 .withCustomerEmail("belajar@example.com")
                 .withInstallment("offline_3")
-                .withPromoId("436")
-                .withDiscountedGrossAmount(149850.0)
+                .withPromo(PromoDetailRequest(discountedGrossAmount = 149850.0, promoId = "436"))
             ,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
@@ -267,7 +265,43 @@ class SampleViewModel : ViewModel() {
                 override fun onSuccess(result: TransactionResponse) {
                     transactionResponse = result
                 }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
 
+    fun chargeUsingOneClickCardWithPromo(snapToken: String){
+        coreKit.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = OneClickCardPaymentRequestBuilder()
+                .withPaymentType(PaymentType.CREDIT_CARD)
+                .withMaskedCard(oneClickMaskedCard)
+                .withPromo(PromoDetailRequest(discountedGrossAmount = 149500.0, promoId = "432")),
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    transactionResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
+
+    fun chargeUsingOneClickCardWithPromoAndInstallment(snapToken: String){
+        coreKit.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = OneClickCardPaymentRequestBuilder()
+                .withPaymentType(PaymentType.CREDIT_CARD)
+                .withMaskedCard(oneClickMaskedCard)
+                .withPromo(PromoDetailRequest(discountedGrossAmount = 149500.0, promoId = "432"))
+                .withInstallment("offline_3"),
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    transactionResponse = result
+                }
                 override fun onError(error: SnapError) {
                     Log.e("error, error, error", "error, error, error")
                 }
@@ -306,10 +340,10 @@ class SampleViewModel : ViewModel() {
         )
     }
 
-    fun getBankPoint(
-    ){
+    fun getBankPoint(snapToken: String)
+    {
         coreKit.getBankPoint(
-            snapToken = "fe23915e-bae3-4dcb-b17c-82b7dd80d233",
+            snapToken = snapToken,
             cardToken = cardTokenResponse?.tokenId.toString(),
             grossAmount = 150000.0,
             callback = object : Callback<BankPointResponse> {
