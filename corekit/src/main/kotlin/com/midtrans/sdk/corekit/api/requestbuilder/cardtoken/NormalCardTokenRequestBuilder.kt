@@ -1,6 +1,7 @@
 package com.midtrans.sdk.corekit.api.requestbuilder.cardtoken
 
 import com.midtrans.sdk.corekit.api.exception.MissingParameterException
+import com.midtrans.sdk.corekit.internal.network.model.request.InstallmentRequest
 import com.midtrans.sdk.corekit.internal.util.NumberUtil
 
 class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
@@ -12,9 +13,7 @@ class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
     private var cardCvv: String? = null
     private var currency: String? = null
     private var orderId: String? = null
-    private var bank: String? = null
-    private var installment: Boolean? = null
-    private var installmentTerm : Int? = null
+    private var installmentRequest: InstallmentRequest? = null
 
     fun withCardNumber(value: String): NormalCardTokenRequestBuilder = apply {
         cardNumber = value
@@ -48,17 +47,10 @@ class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
         currency = value
     }
 
-    fun withBank(value: String): NormalCardTokenRequestBuilder = apply {
-        bank = value
+    fun withInstallment(value: InstallmentRequest): NormalCardTokenRequestBuilder = apply {
+        installmentRequest = value
     }
 
-    fun withInstallment(value: Boolean): NormalCardTokenRequestBuilder = apply {
-        installment = value
-    }
-
-    fun withInstallmentTerm(value: Int): NormalCardTokenRequestBuilder = apply {
-        installmentTerm = value
-    }
 
     override fun build(): Map<String, String> {
         val result = mutableMapOf<String, String>()
@@ -110,24 +102,8 @@ class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
             value = currency,
             errorMessage = "Currency is required"
         )
-        appendQueryParam(
-            target = result,
-            key = BANK,
-            value = bank,
-            errorMessage = "Bank is required"
-        )
-        appendQueryParam(
-            target = result,
-            key = INSTALLMENT,
-            value = installment.toString(),
-            errorMessage = "Installment is required"
-        )
-        appendQueryParam(
-            target = result,
-            key = INSTALLMENT_TERM,
-            value = installmentTerm.toString(),
-            errorMessage = "Installment term is required"
-        )
+
+        constructInstallmentRequest(installmentRequest = installmentRequest, target = result)
 
         return result
     }
@@ -138,11 +114,37 @@ class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
         value: String?,
         errorMessage: String
     ) {
-
-        target.apply {
-            value?.also {
-                put(key, it)
-            } ?: throw MissingParameterException(errorMessage)
+        value?.let {
+            target.apply {
+                it.also {
+                    put(key, it)
+                } ?: throw MissingParameterException(errorMessage)
+            }
         }
+    }
+
+    private fun constructInstallmentRequest(installmentRequest: InstallmentRequest?, target: MutableMap<String, String>){
+
+        installmentRequest?.let {
+            appendQueryParam(
+                target = target,
+                key = BANK,
+                value = installmentRequest.bank,
+                errorMessage = "Bank is required"
+            )
+            appendQueryParam(
+                target = target,
+                key = INSTALLMENT,
+                value = installmentRequest.installment.toString(),
+                errorMessage = "Installment is required"
+            )
+            appendQueryParam(
+                target = target,
+                key = INSTALLMENT_TERM,
+                value = installmentRequest.installmentTerm.toString(),
+                errorMessage = "Installment term is required"
+            )
+        }
+
     }
 }
