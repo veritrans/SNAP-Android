@@ -7,5 +7,6 @@ internal data class PaymentParam(
     var acquirer: List<String>? = null,
     val point: Double? = null,
     val bank: String? = null,
-    val installment: String? = null
+    val installment: String? = null,
+    val maskedCard: String? = null
 )
