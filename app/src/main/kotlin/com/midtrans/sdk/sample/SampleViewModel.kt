@@ -11,6 +11,8 @@ import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.NormalCardTokenRequ
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.TwoClickCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.BankTransferPaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
+import com.midtrans.sdk.corekit.api.requestbuilder.payment.OneClickCardPaymentRequestBuilder
+import com.midtrans.sdk.corekit.internal.network.model.request.InstallmentRequest
 
 class SampleViewModel : ViewModel() {
     var helloLiveData = MutableLiveData<String>()
@@ -23,6 +25,7 @@ class SampleViewModel : ViewModel() {
     val ccSavedTokenIdTwoClickPromo = "481111YgYEIkDdzJNVqfEdcAkkue1114"
     val defaultCcNumber = "4811 1111 1111 1114"
     val bniCcNumber = "4105 0586 8948 1467"
+    val oneClickMaskedCard = "410505-1467"
 
     fun getHelloFromSnap() {
         helloLiveData.value = coreKit.hello()
@@ -52,7 +55,8 @@ class SampleViewModel : ViewModel() {
             .withCardExpYear("24")
             .withCardCvv("123")
             .withOrderId("cobacoba-4")
-            .withCurrency("IDR"),
+            .withCurrency("IDR")
+            .withInstallment(InstallmentRequest(true, "offline", 3)),
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
                     cardTokenResponse = result
@@ -93,9 +97,7 @@ class SampleViewModel : ViewModel() {
             .withCardCvv("123")
             .withOrderId("cobacoba-4")
             .withCurrency("IDR")
-            .withBank("offline")
-            .withInstallment(true)
-            .withInstallmentTerm(3),
+            .withInstallment(InstallmentRequest(installment = true, bank = "offline", installmentTerm = 3)),
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
                     cardTokenResponse = result
@@ -115,9 +117,7 @@ class SampleViewModel : ViewModel() {
             .withTokenId(ccSavedTokenIdBniTwoClickPoint)
             .withOrderId("cobacoba-4")
             .withCurrency("IDR")
-            .withBank("offline")
-            .withInstallment(true)
-            .withInstallmentTerm(3),
+            .withInstallment(InstallmentRequest(installment = true, bank = "offline", installmentTerm = 6)),
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
                     cardTokenResponse = result
@@ -250,6 +250,24 @@ class SampleViewModel : ViewModel() {
                 override fun onSuccess(result: TransactionResponse) {
                     transactionResponse = result
                 }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
+
+    fun chargeUsingOneClickCard(snapToken: String){
+        coreKit.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = OneClickCardPaymentRequestBuilder()
+                .withPaymentType(PaymentType.CREDIT_CARD)
+                .withMaskedCard(oneClickMaskedCard),
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    transactionResponse = result
+                }
+
                 override fun onError(error: SnapError) {
                     Log.e("error, error, error", "error, error, error")
                 }

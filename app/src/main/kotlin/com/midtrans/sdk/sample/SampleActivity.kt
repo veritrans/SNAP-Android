@@ -103,6 +103,12 @@ class SampleActivity : AppCompatActivity() {
             }
 
             Button(onClick = {
+                viewModel.chargeUsingOneClickCard(text)
+            }) {
+                Text(text = "charge with One Click")
+            }
+
+            Button(onClick = {
                 viewModel.deleteSavedCard()
             }) {
                 Text(text = "Delete card token")
