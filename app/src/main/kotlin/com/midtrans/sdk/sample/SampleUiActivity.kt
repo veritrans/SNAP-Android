@@ -11,12 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.toMutableStateList
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -51,6 +46,8 @@ class SampleUiActivity : AppCompatActivity() {
                 )
                 .padding(start = 16.dp, end = 16.dp)
         ) {
+            AnimatedIcon(resId = R.drawable.ic_midtrans_animated).start()
+
             var shouldReveal by remember {
                 ccvVisible
             }
