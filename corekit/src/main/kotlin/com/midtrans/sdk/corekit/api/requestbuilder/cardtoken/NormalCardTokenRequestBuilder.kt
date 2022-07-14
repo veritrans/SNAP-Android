@@ -143,6 +143,5 @@ class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
                 errorMessage = "Installment term is required"
             )
         }
-
     }
 }

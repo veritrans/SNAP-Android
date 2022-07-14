@@ -127,6 +127,5 @@ class TwoClickCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
                 errorMessage = "Installment term is required"
             )
         }
-
     }
 }
