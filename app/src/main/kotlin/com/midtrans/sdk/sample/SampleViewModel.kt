@@ -56,8 +56,7 @@ class SampleViewModel : ViewModel() {
             .withCardExpYear("24")
             .withCardCvv("123")
             .withOrderId("cobacoba-4")
-            .withCurrency("IDR")
-            .withInstallment(InstallmentRequest(true, "offline", 3)),
+            .withCurrency("IDR"),
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
                     cardTokenResponse = result
