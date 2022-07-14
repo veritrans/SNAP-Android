@@ -114,12 +114,10 @@ class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
         value: String?,
         errorMessage: String
     ) {
-        value?.let {
-            target.apply {
-                it.also {
-                    put(key, it)
-                } ?: throw MissingParameterException(errorMessage)
-            }
+        target.apply {
+            value?.also {
+                put(key, it)
+            } ?: throw MissingParameterException(errorMessage)
         }
     }
 

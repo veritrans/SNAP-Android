@@ -98,7 +98,6 @@ class TwoClickCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
         value: String?,
         errorMessage: String
     ) {
-
         target.apply {
             value?.also {
                 put(key, it)
