@@ -155,7 +155,7 @@ class SampleViewModel : ViewModel() {
                 .withCardToken(cardTokenResponse?.tokenId.toString())
                 .withSaveCard(true)
                 .withPaymentType(PaymentType.CREDIT_CARD)
-                .withPromo(PromoDetailRequest(discountedGrossAmount = 149850.0, promoId = "436"))
+                .withPromo(discountedGrossAmount = 149850.0, promoId = "436")
                 .withCustomerEmail("belajar@example.com"),
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
@@ -200,7 +200,7 @@ class SampleViewModel : ViewModel() {
                 .withCustomerEmail("belajar@example.com")
                 .withBank("bni")
                 .withPoint(100000.0)
-                .withPromo(PromoDetailRequest(discountedGrossAmount = 149850.0, promoId = "436"))
+                .withPromo(discountedGrossAmount = 149850.0, promoId = "436")
             ,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
@@ -241,7 +241,7 @@ class SampleViewModel : ViewModel() {
                 .withPaymentType(PaymentType.CREDIT_CARD)
                 .withCustomerEmail("belajar@example.com")
                 .withInstallment("offline_3")
-                .withPromo(PromoDetailRequest(discountedGrossAmount = 149850.0, promoId = "436"))
+                .withPromo(discountedGrossAmount = 149850.0, promoId = "436")
             ,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
@@ -277,7 +277,7 @@ class SampleViewModel : ViewModel() {
             paymentRequestBuilder = OneClickCardPaymentRequestBuilder()
                 .withPaymentType(PaymentType.CREDIT_CARD)
                 .withMaskedCard(oneClickMaskedCard)
-                .withPromo(PromoDetailRequest(discountedGrossAmount = 149500.0, promoId = "432")),
+                .withPromo(discountedGrossAmount = 149500.0, promoId = "432"),
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
                     transactionResponse = result
@@ -295,7 +295,7 @@ class SampleViewModel : ViewModel() {
             paymentRequestBuilder = OneClickCardPaymentRequestBuilder()
                 .withPaymentType(PaymentType.CREDIT_CARD)
                 .withMaskedCard(oneClickMaskedCard)
-                .withPromo(PromoDetailRequest(discountedGrossAmount = 149500.0, promoId = "432"))
+                .withPromo(discountedGrossAmount = 149500.0, promoId = "432")
                 .withInstallment("offline_3"),
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
