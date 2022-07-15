@@ -1,6 +1,7 @@
 package com.midtrans.sdk.corekit.api.requestbuilder.cardtoken
 
 import com.midtrans.sdk.corekit.api.exception.MissingParameterException
+import com.midtrans.sdk.corekit.api.model.InstallmentBank
 import com.midtrans.sdk.corekit.internal.network.model.request.InstallmentRequest
 import com.midtrans.sdk.corekit.internal.util.NumberUtil
 
@@ -38,7 +39,7 @@ class TwoClickCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
         currency = value
     }
 
-    fun withInstallment(value: Boolean, bank: String, installmentTerm: Int): TwoClickCardTokenRequestBuilder = apply {
+    fun withInstallment(value: Boolean, @InstallmentBank.Def bank: String, installmentTerm: Int): TwoClickCardTokenRequestBuilder = apply {
         installmentRequest = InstallmentRequest(
             installment = value,
             bank = bank,
