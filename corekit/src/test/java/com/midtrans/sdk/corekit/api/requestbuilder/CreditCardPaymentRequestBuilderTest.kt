@@ -3,7 +3,7 @@ package com.midtrans.sdk.corekit.api.requestbuilder
 import com.midtrans.sdk.corekit.api.exception.InvalidPaymentTypeException
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
-import com.midtrans.sdk.corekit.internal.network.model.request.PromoDetailRequest
+import com.midtrans.sdk.corekit.internal.util.NumberUtil
 import org.junit.Assert
 import org.junit.Test
 
@@ -11,7 +11,8 @@ internal class CreditCardPaymentRequestBuilderTest {
 
     private val cardToken = "cardToken"
     private val installment = "offline_3"
-    private val promo = PromoDetailRequest(discountedGrossAmount = 145000.0, promoId = "431" )
+    private val discountedGrossAmount = 145000.0
+    private val promoId = "promoId"
 
     @Test
     fun shouldConstructCreditCardPaymentRequestBasic() {
@@ -40,11 +41,12 @@ internal class CreditCardPaymentRequestBuilderTest {
         val request = CreditCardPaymentRequestBuilder()
             .withPaymentType(PaymentType.CREDIT_CARD)
             .withCardToken(cardToken)
-            .withPromo(promo)
+            .withPromo(discountedGrossAmount = discountedGrossAmount, promoId = promoId)
             .build()
         Assert.assertEquals(PaymentType.CREDIT_CARD, request.paymentType)
         Assert.assertEquals(cardToken, request.paymentParams?.cardToken)
-        Assert.assertEquals(promo, request.promoDetails)
+        Assert.assertEquals(discountedGrossAmount?.let { NumberUtil.formatDoubleToString(it) }, request.promoDetails?.discountedGrossAmount)
+        Assert.assertEquals(promoId, request.promoDetails?.promoId)
     }
 
     @Test
