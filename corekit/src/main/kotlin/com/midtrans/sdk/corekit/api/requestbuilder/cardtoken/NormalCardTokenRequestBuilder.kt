@@ -47,10 +47,13 @@ class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
         currency = value
     }
 
-    fun withInstallment(value: InstallmentRequest): NormalCardTokenRequestBuilder = apply {
-        installmentRequest = value
+    fun withInstallment(value: Boolean, bank: String, installmentTerm: Int): NormalCardTokenRequestBuilder = apply {
+        installmentRequest = InstallmentRequest(
+            installment = value,
+            bank = bank,
+            installmentTerm = installmentTerm
+        )
     }
-
 
     override fun build(): Map<String, String> {
         val result = mutableMapOf<String, String>()

@@ -38,8 +38,12 @@ class TwoClickCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
         currency = value
     }
 
-    fun withInstallment(value: InstallmentRequest): TwoClickCardTokenRequestBuilder = apply {
-        installmentRequest = value
+    fun withInstallment(value: Boolean, bank: String, installmentTerm: Int): TwoClickCardTokenRequestBuilder = apply {
+        installmentRequest = InstallmentRequest(
+            installment = value,
+            bank = bank,
+            installmentTerm = installmentTerm
+        )
     }
 
     override fun build(): Map<String, String> {
