@@ -6,6 +6,7 @@ import com.midtrans.sdk.corekit.internal.network.model.request.CustomerDetailReq
 import com.midtrans.sdk.corekit.internal.network.model.request.PaymentParam
 import com.midtrans.sdk.corekit.internal.network.model.request.PaymentRequest
 import com.midtrans.sdk.corekit.internal.network.model.request.PromoDetailRequest
+import com.midtrans.sdk.corekit.internal.util.NumberUtil
 import com.midtrans.sdk.corekit.internal.util.StringUtil.checkIfContentNotNull
 
 class CreditCardPaymentRequestBuilder: PaymentRequestBuilder() {
@@ -45,8 +46,10 @@ class CreditCardPaymentRequestBuilder: PaymentRequestBuilder() {
         saveCard = value
     }
 
-    fun withPromo(value: PromoDetailRequest): CreditCardPaymentRequestBuilder = apply {
-         promoDetailRequest = value
+    fun withPromo(discountedGrossAmount: Double, promoId: String): CreditCardPaymentRequestBuilder = apply {
+         promoDetailRequest = PromoDetailRequest(
+             discountedGrossAmount = discountedGrossAmount?.let { NumberUtil.formatDoubleToString(it) },
+             promoId = promoId)
     }
 
     fun withBank(value: String): CreditCardPaymentRequestBuilder = apply {

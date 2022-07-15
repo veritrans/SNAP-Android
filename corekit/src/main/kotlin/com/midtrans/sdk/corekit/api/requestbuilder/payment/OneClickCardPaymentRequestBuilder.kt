@@ -6,6 +6,7 @@ import com.midtrans.sdk.corekit.internal.network.model.request.CustomerDetailReq
 import com.midtrans.sdk.corekit.internal.network.model.request.PaymentParam
 import com.midtrans.sdk.corekit.internal.network.model.request.PaymentRequest
 import com.midtrans.sdk.corekit.internal.network.model.request.PromoDetailRequest
+import com.midtrans.sdk.corekit.internal.util.NumberUtil
 import com.midtrans.sdk.corekit.internal.util.StringUtil
 
 class OneClickCardPaymentRequestBuilder: PaymentRequestBuilder() {
@@ -33,8 +34,10 @@ class OneClickCardPaymentRequestBuilder: PaymentRequestBuilder() {
         customerPhone = value
     }
 
-    fun withPromo(value: PromoDetailRequest): OneClickCardPaymentRequestBuilder = apply {
-        promoDetailRequest = value
+    fun withPromo(discountedGrossAmount: Double, promoId: String): OneClickCardPaymentRequestBuilder = apply {
+        promoDetailRequest = PromoDetailRequest(
+            discountedGrossAmount = discountedGrossAmount?.let { NumberUtil.formatDoubleToString(it) },
+            promoId = promoId)
     }
 
     fun withInstallment(value: String): OneClickCardPaymentRequestBuilder = apply {
