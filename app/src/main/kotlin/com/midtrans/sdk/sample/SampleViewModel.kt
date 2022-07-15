@@ -12,8 +12,6 @@ import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.TwoClickCardTokenRe
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.BankTransferPaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.OneClickCardPaymentRequestBuilder
-import com.midtrans.sdk.corekit.internal.network.model.request.InstallmentRequest
-import com.midtrans.sdk.corekit.internal.network.model.request.PromoDetailRequest
 
 class SampleViewModel : ViewModel() {
     var helloLiveData = MutableLiveData<String>()
@@ -97,7 +95,7 @@ class SampleViewModel : ViewModel() {
             .withCardCvv("123")
             .withOrderId("cobacoba-4")
             .withCurrency("IDR")
-            .withInstallment(value = true, bank = "offline", installmentTerm = 3),
+            .withInstallment(value = true, bank = InstallmentBank.OFFLINE, installmentTerm = 3),
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
                     cardTokenResponse = result
@@ -117,7 +115,7 @@ class SampleViewModel : ViewModel() {
             .withTokenId(ccSavedTokenIdBniTwoClickPoint)
             .withOrderId("cobacoba-4")
             .withCurrency("IDR")
-            .withInstallment(value = true, bank = "offline", installmentTerm = 3),
+            .withInstallment(value = true, bank = InstallmentBank.OFFLINE, installmentTerm = 3),
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
                     cardTokenResponse = result
