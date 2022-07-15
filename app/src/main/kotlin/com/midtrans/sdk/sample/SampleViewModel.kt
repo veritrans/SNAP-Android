@@ -97,7 +97,7 @@ class SampleViewModel : ViewModel() {
             .withCardCvv("123")
             .withOrderId("cobacoba-4")
             .withCurrency("IDR")
-            .withInstallment(InstallmentRequest(installment = true, bank = "offline", installmentTerm = 3)),
+            .withInstallment(value = true, bank = "offline", installmentTerm = 3),
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
                     cardTokenResponse = result
@@ -117,7 +117,7 @@ class SampleViewModel : ViewModel() {
             .withTokenId(ccSavedTokenIdBniTwoClickPoint)
             .withOrderId("cobacoba-4")
             .withCurrency("IDR")
-            .withInstallment(InstallmentRequest(installment = true, bank = "offline", installmentTerm = 6)),
+            .withInstallment(value = true, bank = "offline", installmentTerm = 3),
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
                     cardTokenResponse = result
