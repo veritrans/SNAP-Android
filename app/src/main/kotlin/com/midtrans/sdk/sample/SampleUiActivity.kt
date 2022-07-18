@@ -24,12 +24,6 @@ import com.midtrans.sdk.uikit.internal.view.*
 class SampleUiActivity : AppCompatActivity() {
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        SnapCore.Builder().withContext(this.applicationContext).build()
-        setContent { SampleUi() }
-    }
-
     @Composable
     @Preview
     fun SampleUi() {
@@ -155,7 +149,7 @@ class SampleUiActivity : AppCompatActivity() {
 
             ).toMutableStateList()
 
-            SavedCardRadioGroup(states = list, { selected: String, value: String ->
+            SnapSavedCardRadioGroup(states = list, { selected: String, value: String ->
                 Log.e("wahyu", "cardNumber: $selected  cvv: $value")
 
                 list.find { it.identifier == selected }.let { member ->
@@ -281,6 +275,62 @@ class SampleUiActivity : AppCompatActivity() {
                     Toast.makeText(this@SampleUiActivity, it.leftText, Toast.LENGTH_SHORT).show()
                 }
             )
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        SnapCore.Builder().withContext(this.applicationContext).build()
+        setContent {
+            SampleUi()
+            var redeemed by remember {
+                mutableStateOf(false)
+            }
+            SnapBottomSheet(
+                content = {
+                    val data = SnapPointRedeemDialogData(
+                        title = "Pakai BNI Reward point",
+                        infoMessage = remember {
+                            mutableStateOf("Anda memiliki poin senilai Rp10.000")
+                        },
+                        isError = remember {
+                            mutableStateOf(false)
+                        },
+                        total = remember {
+                            mutableStateOf("Rp990.000")
+                        }
+                    )
+                    SnapPointRedeemDialogContent(
+                        data = data,
+                        onValueChange = { value ->
+                            data.apply {
+                                if (value.toInt() > 10000) {
+                                    isError.value = true
+                                    infoMessage.value = "Melebihi jumlah point yang tersedia"
+
+                                } else {
+                                    isError.value = false
+                                    infoMessage.value = "Anda memiliki poin senilai Rp10.000"
+                                }
+                            }
+
+                        },
+                        onClick = {
+                            Toast.makeText(
+                                this@SampleUiActivity,
+                                "Bayar",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            redeemed = true
+                        }
+                    )
+                }
+            ).apply {
+                if (redeemed) {
+                    this.hide()
+                }
+            }
+
         }
     }
 }

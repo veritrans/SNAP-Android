@@ -28,21 +28,22 @@ fun SnapButton( //TODO border disabled/enabled color, font, font size, corner ra
     enabled: Boolean = true,
     style: SnapButton.Style = SnapButton.Style.PRIMARY,
     text: String,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    Row(modifier = Modifier.wrapContentWidth()) {
-        
-    }
     OutlinedButton(
         onClick = onClick,
         enabled = enabled,
-        shape = RoundedCornerShape(2.dp),
+        shape = RoundedCornerShape(4.dp),
         border = selectBorderStroke(style),
         colors = selectButtonColors(style),
-        content = { Text(
-            style= SnapTypography.STYLES.snapButton,
-            text = text
-        ) }
+        modifier = modifier,
+        content = {
+            Text(
+                style = SnapTypography.STYLES.snapButton,
+                text = text
+            )
+        }
     )
 }
 
@@ -53,7 +54,7 @@ private fun selectButtonColors(style: SnapButton.Style): ButtonColors {
             backgroundColor = SnapColors.getARGBColor(SnapColors.INTERACTIVE_FILL_INVERSE),
             contentColor = SnapColors.getARGBColor(SnapColors.TEXT_INVERSE),
             disabledContentColor = SnapColors.getARGBColor(SnapColors.TEXT_DISABLED),
-            disabledBackgroundColor = SnapColors.getARGBColor(SnapColors.INTERACTIVE_DISABLED)
+            disabledBackgroundColor = SnapColors.getARGBColor(SnapColors.INTERACTIVE_FILL_INVERSE)
         )
         SnapButton.Style.TERTIARY -> ButtonDefaults.buttonColors(
             backgroundColor = Color(SnapColors.TRANSPARENT),
@@ -68,10 +69,12 @@ private fun selectButtonColors(style: SnapButton.Style): ButtonColors {
 private fun selectBorderStroke(style: SnapButton.Style): BorderStroke {
     return when (style) {
         SnapButton.Style.PRIMARY -> BorderStroke(
-            ButtonDefaults.OutlinedBorderSize, SnapColors.getARGBColor(SnapColors.INTERACTIVE_FILL_INVERSE)
+            ButtonDefaults.OutlinedBorderSize,
+            SnapColors.getARGBColor(SnapColors.INTERACTIVE_FILL_INVERSE)
         )
         SnapButton.Style.TERTIARY -> BorderStroke(
-            ButtonDefaults.OutlinedBorderSize, SnapColors.getARGBColor(SnapColors.INTERACTIVE_BORDER_ACTION)
+            ButtonDefaults.OutlinedBorderSize,
+            SnapColors.getARGBColor(SnapColors.INTERACTIVE_BORDER_ACTION)
         )
     }
 }

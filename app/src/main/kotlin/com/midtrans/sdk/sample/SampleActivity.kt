@@ -4,16 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.uikit.internal.view.SnapButton
+import com.midtrans.sdk.uikit.internal.view.SnapPointRedeemDialogContent
+import com.midtrans.sdk.uikit.internal.view.SnapPointRedeemDialogData
 
 class SampleActivity : AppCompatActivity() {
 
@@ -31,7 +35,9 @@ class SampleActivity : AppCompatActivity() {
     @Composable
     @Preview
     fun Greeting() {
-        Column {
+        Column(
+            modifier = Modifier.background(Color.White)
+        ) {
             var text by remember { mutableStateOf("") }
             Text("insert snap token", style = TextStyle(color = Color.Red))
             TextField(value = text, onValueChange = {
@@ -63,9 +69,10 @@ class SampleActivity : AppCompatActivity() {
                 enabled = true,
                 text = "To Sample UI",
                 style = SnapButton.Style.PRIMARY
-            ){
+            ) {
                 startActivity(Intent(this@SampleActivity, SampleUiActivity::class.java))
             }
+
         }
     }
 }

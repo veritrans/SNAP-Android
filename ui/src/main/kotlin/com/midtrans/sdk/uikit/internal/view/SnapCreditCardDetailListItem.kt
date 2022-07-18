@@ -303,7 +303,7 @@ fun formatExpiryDate(input: TextFieldValue): TextFieldValue {
 }
 
 @Composable
-fun SavedCardRadioGroup(
+fun SnapSavedCardRadioGroup(
     states: List<FormData>,
     onValueChange: (item: String, cvv: String) -> Unit,
     onItemRemoveClicked: (item: String) -> Unit,
