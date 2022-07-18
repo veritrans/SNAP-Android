@@ -1,10 +1,39 @@
-package com.midtrans.sdk.corekit.api.requestbuilder
+package com.midtrans.sdk.corekit.api.requestbuilder.cardtoken
 
 import com.midtrans.sdk.corekit.api.exception.MissingParameterException
 import com.midtrans.sdk.corekit.internal.util.NumberUtil
-import java.util.*
 
-class BasicCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
+class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
+    private var clientKey: String? = null
+    private var grossAmount: Double? = null
+    private var cardNumber: String? = null
+    private var cardExpMonth: String? = null
+    private var cardExpYear: String? = null
+    private var cardCvv: String? = null
+
+    fun withCardNumber(value: String): NormalCardTokenRequestBuilder = apply {
+        cardNumber = value
+    }
+
+    fun withCardExpMonth(value: String): NormalCardTokenRequestBuilder = apply {
+        cardExpMonth = value
+    }
+
+    fun withCardExpYear(value: String): NormalCardTokenRequestBuilder = apply {
+        cardExpYear = value
+    }
+
+    fun withCardCvv(value: String): NormalCardTokenRequestBuilder = apply {
+        cardCvv = value
+    }
+
+    fun withClientKey(value: String): NormalCardTokenRequestBuilder = apply {
+        clientKey = value
+    }
+
+    fun withGrossAmount(value: Double): NormalCardTokenRequestBuilder = apply {
+        grossAmount = value
+    }
 
     override fun build(): Map<String, String> {
         val result = mutableMapOf<String, String>()

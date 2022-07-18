@@ -2,6 +2,7 @@ package com.midtrans.sdk.corekit.api.requestbuilder
 
 import com.midtrans.sdk.corekit.api.exception.InvalidPaymentTypeException
 import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.requestbuilder.payment.EWalletPaymentRequestBuilder
 import org.junit.Assert
 import org.junit.Test
 

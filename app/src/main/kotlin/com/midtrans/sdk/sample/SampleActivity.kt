@@ -4,20 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.uikit.internal.view.SnapButton
-import com.midtrans.sdk.uikit.internal.view.SnapPointRedeemDialogContent
-import com.midtrans.sdk.uikit.internal.view.SnapPointRedeemDialogData
 
 class SampleActivity : AppCompatActivity() {
 
@@ -35,34 +32,44 @@ class SampleActivity : AppCompatActivity() {
     @Composable
     @Preview
     fun Greeting() {
-        Column(
-            modifier = Modifier.background(Color.White)
-        ) {
-            var text by remember { mutableStateOf("") }
+        var text by remember { mutableStateOf("") }
+        ShowChargeContent(text = text, onTextFieldValueChange = { text = it})
+    }
+
+    @Composable
+    fun ShowChargeContent(text: String, onTextFieldValueChange: (String)-> Unit){
+        Column {
             Text("insert snap token", style = TextStyle(color = Color.Red))
-            TextField(value = text, onValueChange = {
-                text = it
-            }, enabled = true, readOnly = false)
-            SnapButton(
-                enabled = true,
-                text = "Bayar",
-                style = SnapButton.Style.PRIMARY
-            ) {
-                viewModel.chargeUsingCreditCard(text)
+            TextField(value = text, onValueChange = onTextFieldValueChange, enabled = true, readOnly = false)
+
+            Button(onClick = {
+                viewModel.chargeUsingCreditCardWithPromo(text)
+            }) {
+                Text(text = "Charge")
             }
-            SnapButton(
-                enabled = true,
-                text = "Create card token",
-                style = SnapButton.Style.PRIMARY
-            ) {
+
+            Button(onClick = {
+                viewModel.getTwoClickToken()
+            }) {
+                Text(text = "2click card token")
+            }
+
+            Button(onClick = {
                 viewModel.getCardTokenBasic()
+            }) {
+                Text(text = "normal card token")
             }
-            SnapButton(
-                enabled = true,
-                text = "Delete card token",
-                style = SnapButton.Style.TERTIARY
-            ) {
+
+            Button(onClick = {
                 viewModel.deleteSavedCard()
+            }) {
+                Text(text = "Delete card token")
+            }
+
+            Button(onClick = {
+                viewModel.getBinData(text)
+            }) {
+                Text(text = "get Bin data")
             }
 
             SnapButton(

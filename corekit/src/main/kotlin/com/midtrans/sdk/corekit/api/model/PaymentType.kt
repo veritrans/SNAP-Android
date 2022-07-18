@@ -20,7 +20,6 @@ class PaymentType {
         SHOPEEPAY,
         QRIS,
         DANAMON_ONLINE,
-        INDOMARET_CSTORE,
         AKULAKU,
         ALFAMART,
         UOB_WEB,
@@ -54,10 +53,13 @@ class PaymentType {
         const val GOPAY = "gopay"
         const val SHOPEEPAY = "shopeepay"
 
-        const val INDOMARET = "indomaret"
-        const val INDOMARET_CSTORE = "cstore"
+        //PAY LATER
         const val AKULAKU = "akulaku"
+
+        //CONVENIENCE STORE
+        const val INDOMARET = "indomaret"
         const val ALFAMART = "alfamart"
+
         const val UOB_WEB = "uobweb"
         const val UOB_APP = "uobapp"
         const val UOB_EZPAY = "uob_ezpay"
