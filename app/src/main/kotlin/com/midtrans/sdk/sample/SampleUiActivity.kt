@@ -27,8 +27,6 @@ class SampleUiActivity : AppCompatActivity() {
     @Composable
     @Preview
     fun SampleUi() {
-
-
         val ccvVisible = remember {
             mutableStateOf(true)
         }
@@ -45,7 +43,6 @@ class SampleUiActivity : AppCompatActivity() {
             var shouldReveal by remember {
                 ccvVisible
             }
-//            SnapCCDetailListItem(shouldReveal)
             SnapSingleIconListItem(
                 iconResId = R.drawable.ic_bank_mandiri_40,
                 title = "Mandiri"
@@ -112,7 +109,6 @@ class SampleUiActivity : AppCompatActivity() {
                 }
             )
 
-
             var list = mutableListOf(
                 SavedCreditCardFormData(
                     title = "satu",
@@ -158,7 +154,6 @@ class SampleUiActivity : AppCompatActivity() {
                             if (value.length >= 3) "jangan salah" else ""
                     }
                 }
-
             }, onItemRemoveClicked = { title ->
                 list.find { it.identifier == title }.let { member ->
                     list.remove(member)
@@ -177,6 +172,7 @@ class SampleUiActivity : AppCompatActivity() {
                         .show()
                 }
             )
+
             SnapNumberedListItem(
                 number = "1.",
                 paragraph = "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad"
@@ -199,7 +195,6 @@ class SampleUiActivity : AppCompatActivity() {
                 ).show()
             }
 
-
             val words = listOf<String>(
                 "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad lasldasdla halo halo bandung ibukkota priangan, kokwaowkeaowkeo awas pusing",
                 "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad, ga tau mau nulis apa, bingung semuanya",
@@ -208,8 +203,8 @@ class SampleUiActivity : AppCompatActivity() {
                 "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad",
                 "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad",
             )
-            SnapNumberedList(list = words)
 
+            SnapNumberedList(list = words)
 
             var text by remember { mutableStateOf("") }
             Text("insert snap token", style = TextStyle(color = Color.Red))
@@ -234,7 +229,6 @@ class SampleUiActivity : AppCompatActivity() {
                 style = SnapButton.Style.PRIMARY
             ) {}
 
-
             SnapText(text = "This is <b>bolt</b> <i>italic</i> <u>underline</u>")
             SnapText(
                 text = "<ol>" +
@@ -243,6 +237,7 @@ class SampleUiActivity : AppCompatActivity() {
                         "  <li>Milk</li>" +
                         "</ol>"
             )
+
             val promoList = listOf(
                 PromoData(
                     leftText = "Summer sale",
@@ -269,6 +264,7 @@ class SampleUiActivity : AppCompatActivity() {
                     }
                 )
             )
+
             SnapPromoListRadioButton(
                 states = promoList,
                 onItemSelectedListener = {
@@ -327,10 +323,9 @@ class SampleUiActivity : AppCompatActivity() {
                 }
             ).apply {
                 if (redeemed) {
-                    this.hide()
+                    hide()
                 }
             }
-
         }
     }
 }
