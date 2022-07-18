@@ -1,6 +1,5 @@
 package com.midtrans.sdk.uikit.internal.view
 
-import android.provider.ContactsContract
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -11,9 +10,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,12 +17,9 @@ import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.midtrans.sdk.uikit.R
 
-class OverlayExpanding {
-}
-
 @Composable
 @Preview
-fun OverlayExpandingBox(
+fun SnapOverlayExpandingBox(
     isExpanded: Boolean = true,
     mainContent: @Composable (() -> Unit)? = null,
     expandingContent: @Composable (() -> Unit)? = null,
@@ -41,22 +34,21 @@ fun OverlayExpandingBox(
             mainContent?.invoke()
         }
 
-        if (true) {
-            Box(modifier = Modifier
-                .constrainAs(expanding) {
-                    top.linkTo(main.bottom)
-                }
-                .padding(top = 24.dp)
-                .zIndex(2f)) {
-                AnimatedVisibility(
-                    visible = isExpanded,
-                    enter = expandVertically(),
-                    exit = shrinkVertically()
-                ) {
-                    expandingContent?.invoke()
-                }
+        Box(modifier = Modifier
+            .constrainAs(expanding) {
+                top.linkTo(main.bottom)
+            }
+            .padding(top = 24.dp)
+            .zIndex(2f)) {
+            AnimatedVisibility(
+                visible = isExpanded,
+                enter = expandVertically(),
+                exit = shrinkVertically()
+            ) {
+                expandingContent?.invoke()
             }
         }
+
         Box(modifier = Modifier.constrainAs(following) {
             top.linkTo(main.bottom)
         }) {

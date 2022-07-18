@@ -53,7 +53,7 @@ class SampleUiActivity : AppCompatActivity() {
             var expanding by remember {
                 mutableStateOf(false)
             }
-            OverlayExpandingBox(
+            SnapOverlayExpandingBox(
                 isExpanded = expanding,
                 mainContent = {
                     SnapTotal(
