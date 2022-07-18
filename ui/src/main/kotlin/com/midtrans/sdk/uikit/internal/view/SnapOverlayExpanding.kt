@@ -61,7 +61,7 @@ fun SnapOverlayExpandingBox(
 fun SnapTotal(
     amount: String,
     orderId: String,
-    remainingTime: String,
+    remainingTime: String?,
     onExpandClick: (isExpand: Boolean) -> Unit
 ) {
     var isExpand by remember { mutableStateOf(false) }
@@ -74,16 +74,18 @@ fun SnapTotal(
                 modifier = Modifier.weight(1f),
                 color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)
             )
-            Text(
-                text = "bayar dalam",
-                style = SnapTypography.STYLES.snapTextSmallRegular,
-                color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)
-            )
-            Text(
-                text = remainingTime,
-                style = SnapTypography.STYLES.snapTextSmallRegular,
-                color = SnapColors.getARGBColor(SnapColors.SUPPORT_INFO_DEFAULT)
-            )
+            remainingTime?.let {
+                Text(
+                    text = "bayar dalam",
+                    style = SnapTypography.STYLES.snapTextSmallRegular,
+                    color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)
+                )
+                Text(
+                    text = remainingTime,
+                    style = SnapTypography.STYLES.snapTextSmallRegular,
+                    color = SnapColors.getARGBColor(SnapColors.SUPPORT_INFO_DEFAULT)
+                )
+            }
         }
         Row {
             Text(
