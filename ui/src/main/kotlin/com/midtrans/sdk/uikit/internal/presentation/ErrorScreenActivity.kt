@@ -49,9 +49,17 @@ class ErrorScreenActivity : BaseActivity() {
 
     @Preview
     @Composable
+    private fun forPreview() {
+        ErrorContent(
+            title = "Transaksi sudah kedaluarsa",
+            content = "Transaksi gagal diproses karena sudah melewati batas waktu pembayaran..."
+        )
+    }
+
+    @Composable
     private fun ErrorContent(
-        title: String = "Transaksi sudah kedaluarsa",
-        content: String = "Transaksi gagal diproses karena sudah melewati batas waktu pembayaran..."
+        title: String,
+        content: String
     ) {
         Column(
             modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.SUPPORT_DANGER_FILL))
@@ -97,7 +105,9 @@ class ErrorScreenActivity : BaseActivity() {
                 text = "Anda dapat menutup halaman ini",
                 style = SnapTypography.STYLES.snapTextMediumMedium,
                 color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY),
-                modifier = Modifier.fillMaxWidth(1f).padding(28.dp),
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .padding(28.dp),
                 textAlign = TextAlign.Center
             )
         }

@@ -50,10 +50,19 @@ class SuccessScreenActivity : BaseActivity() {
 
     @Preview
     @Composable
+    private fun forPreview() {
+        SuccessContent(
+            total = "Rp399.000",
+            orderId = "Order ID #333333333",
+            isWithBackButton = true
+        )
+    }
+
+    @Composable
     private fun SuccessContent(
-        total: String? = "Rp399.000",
-        orderId: String? = "Order ID #333333333",
-        isWithBackButton: Boolean = true
+        total: String?,
+        orderId: String?,
+        isWithBackButton: Boolean
     ) {
         Column(
             modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.SUPPORT_SUCCESS_FILL))
@@ -117,7 +126,9 @@ class SuccessScreenActivity : BaseActivity() {
                     text = "Anda dapat menutup halaman ini",
                     style = SnapTypography.STYLES.snapTextMediumMedium,
                     color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY),
-                    modifier = Modifier.fillMaxWidth(1f).padding(28.dp),
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                        .padding(28.dp),
                     textAlign = TextAlign.Center
                 )
             }
