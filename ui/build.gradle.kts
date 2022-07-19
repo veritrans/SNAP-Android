@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-android-extensions")
 }
 
 android {
@@ -65,5 +66,8 @@ dependencies {
     implementation(com.gtf.snap.ComposeUiLibraries.composeConstraintLayout)
     implementation(com.gtf.snap.ComposeUiLibraries.composeAnimatedDrawable)
     implementation(com.gtf.snap.ComposeUiLibraries.composeAnimation)
+
+    debugImplementation("androidx.customview:customview:1.2.0-alpha01")
+    debugImplementation("androidx.customview:customview-poolingcontainer:1.0.0-alpha01")
     implementation(project(":corekit"))
 }

@@ -1,5 +1,7 @@
 package com.midtrans.sdk.corekit.internal.base
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 
-internal open class BaseActivity : Activity()
+//TODO: move to uikit
+
+open class BaseActivity : AppCompatActivity()
