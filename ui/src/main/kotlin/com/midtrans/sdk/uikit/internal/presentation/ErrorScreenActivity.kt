@@ -77,7 +77,7 @@ class ErrorScreenActivity : BaseActivity() {
 
                 Divider(
                     thickness = 2.dp,
-                    color = SnapColors.getARGBColor(SnapColors.SUPPORT_SUCCESS_DEFAULT),
+                    color = SnapColors.getARGBColor(SnapColors.SUPPORT_DANGER_DEFAULT),
                     modifier = Modifier
                         .width(40.dp)
                         .padding(top = 24.dp),
