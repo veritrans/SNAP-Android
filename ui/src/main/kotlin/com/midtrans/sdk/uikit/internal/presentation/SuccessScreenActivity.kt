@@ -85,7 +85,6 @@ class SuccessScreenActivity : BaseActivity() {
                     color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY),
                     modifier = Modifier.padding(top = 24.dp)
                 )
-
                 Divider(
                     thickness = 2.dp,
                     color = SnapColors.getARGBColor(SnapColors.SUPPORT_SUCCESS_DEFAULT),

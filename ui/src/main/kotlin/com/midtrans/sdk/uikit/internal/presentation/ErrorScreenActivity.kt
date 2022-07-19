@@ -82,7 +82,6 @@ class ErrorScreenActivity : BaseActivity() {
                     color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY),
                     modifier = Modifier.padding(top = 24.dp)
                 )
-
                 Divider(
                     thickness = 2.dp,
                     color = SnapColors.getARGBColor(SnapColors.SUPPORT_DANGER_DEFAULT),
@@ -90,8 +89,6 @@ class ErrorScreenActivity : BaseActivity() {
                         .width(40.dp)
                         .padding(top = 24.dp),
                 )
-
-
                 Text(
                     text = content,
                     style = SnapTypography.STYLES.snapTextMediumRegular,
@@ -100,7 +97,6 @@ class ErrorScreenActivity : BaseActivity() {
                     textAlign = TextAlign.Center
                 )
             }
-
             Text(
                 text = "Anda dapat menutup halaman ini",
                 style = SnapTypography.STYLES.snapTextMediumMedium,
