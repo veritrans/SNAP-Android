@@ -27,7 +27,7 @@ class SampleUiActivity : AppCompatActivity() {
     @Composable
     @Preview
     fun SampleUi() {
-        val ccvVisible = remember {
+        val cvvVisible = remember {
             mutableStateOf(true)
         }
 
@@ -41,7 +41,7 @@ class SampleUiActivity : AppCompatActivity() {
             AnimatedIcon(resId = R.drawable.ic_midtrans_animated).start()
 
             var shouldReveal by remember {
-                ccvVisible
+                cvvVisible
             }
             SnapSingleIconListItem(
                 iconResId = R.drawable.ic_bank_mandiri_40,
