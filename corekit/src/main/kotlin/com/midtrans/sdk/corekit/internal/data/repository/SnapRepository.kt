@@ -1,5 +1,6 @@
 package com.midtrans.sdk.corekit.internal.data.repository
 
+import com.midtrans.sdk.corekit.api.model.BankPointResponse
 import com.midtrans.sdk.corekit.api.model.DeleteSavedCardResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.network.model.request.PaymentRequest
@@ -13,5 +14,12 @@ internal class SnapRepository(private val snapApi: SnapApi): BaseRepository() {
     }
     fun deleteSavedCard(snapToken: String, maskedCard: String): Single<DeleteSavedCardResponse> {
         return  snapApi.deleteSavedCard(snapToken, maskedCard)
+    }
+    fun getBankPoint(
+        snapToken: String,
+        cardToken: String,
+        grossAmount: Double
+    ): Single<BankPointResponse> {
+        return snapApi.getBankPoint(snapToken, cardToken, grossAmount)
     }
 }
