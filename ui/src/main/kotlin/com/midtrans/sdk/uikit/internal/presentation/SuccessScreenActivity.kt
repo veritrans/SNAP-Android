@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
@@ -52,7 +53,7 @@ class SuccessScreenActivity : BaseActivity() {
     private fun SuccessContent(
         total: String? = null,
         orderId: String? = null,
-        isWithBackButton: Boolean = true
+        isWithBackButton: Boolean = false
     ) {
         Column(
             modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.SUPPORT_SUCCESS_FILL))
@@ -116,7 +117,8 @@ class SuccessScreenActivity : BaseActivity() {
                     text = "Anda dapat menutup halaman ini",
                     style = SnapTypography.STYLES.snapTextMediumMedium,
                     color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY),
-                    modifier = Modifier.fillMaxWidth(1f).padding(28.dp)
+                    modifier = Modifier.fillMaxWidth(1f).padding(28.dp),
+                    textAlign = TextAlign.Center
                 )
             }
 

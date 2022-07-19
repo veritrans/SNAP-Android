@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
@@ -53,7 +54,7 @@ class ErrorScreenActivity : BaseActivity() {
         content: String = "Transaksi gagal diproses karena sudah melewati batas waktu pembayaran..."
     ) {
         Column(
-            modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.SUPPORT_SUCCESS_FILL))
+            modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.SUPPORT_DANGER_FILL))
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -65,7 +66,7 @@ class ErrorScreenActivity : BaseActivity() {
                     painter = painterResource(id = R.drawable.ic_exclamation),
                     contentDescription = null,
                     tint = Color.Unspecified,
-                    modifier = Modifier.padding(top = 80.dp)
+                    modifier = Modifier.padding(top = 88.dp)
                 )
                 Text(
                     text = title,
@@ -87,14 +88,17 @@ class ErrorScreenActivity : BaseActivity() {
                     text = content,
                     style = SnapTypography.STYLES.snapTextMediumRegular,
                     color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY),
-                    modifier = Modifier.padding(top = 12.dp)
+                    modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
+                    textAlign = TextAlign.Center
                 )
             }
 
             Text(
                 text = "Anda dapat menutup halaman ini",
                 style = SnapTypography.STYLES.snapTextMediumMedium,
-                color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY)
+                color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY),
+                modifier = Modifier.fillMaxWidth(1f).padding(28.dp),
+                textAlign = TextAlign.Center
             )
         }
     }
