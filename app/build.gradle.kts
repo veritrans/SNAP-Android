@@ -65,6 +65,7 @@ dependencies {
     implementation(com.gtf.snap.ComposeUiLibraries.composeLayout)
     implementation(com.gtf.snap.ComposeUiLibraries.composeRuntime)
     implementation(project(":corekit"))
+    implementation(project(":ui"))
 
 
 }

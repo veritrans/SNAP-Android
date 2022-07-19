@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 rootProject.name = "Snap"
 include(":app")
 include(":corekit")
+include(":ui")

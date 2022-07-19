@@ -43,7 +43,7 @@ object Dependencies {
     const val nanohttpd = "2.2.0"
     const val nanolets = "2.3.1"
     const val androidxDatastoreVersion = "1.0.0"
-    const val composeVersion = "1.2.0-beta03"
+    const val composeVersion = "1.2.0-rc02"
 }
 
 object CommonLibraries {
@@ -165,6 +165,12 @@ object ComposeUiLibraries {
 
     const val composeToolingPreview =
         "androidx.compose.ui:ui-tooling-preview:${Dependencies.composeVersion}"
+    const val composeGoogleFont =
+        "androidx.compose.ui:ui-text-google-fonts:${Dependencies.composeVersion}"
+    const val composeLiveData = "androidx.compose.runtime:runtime-livedata:${Dependencies.composeVersion}"
+    const val composeConstraintLayout = "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha03"
+    const val composeAnimatedDrawable = "androidx.compose.animation:animation-graphics:${Dependencies.composeVersion}"
+    const val composeAnimation = "androidx.compose.animation:animation:${Dependencies.composeVersion}"
 
 }
 

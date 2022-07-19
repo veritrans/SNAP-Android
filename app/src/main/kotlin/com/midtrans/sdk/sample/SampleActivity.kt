@@ -1,5 +1,6 @@
 package com.midtrans.sdk.sample
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +18,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.SnapCore
+import com.midtrans.sdk.uikit.internal.view.SnapButton
 
 class SampleActivity : AppCompatActivity() {
 
@@ -142,6 +144,14 @@ class SampleActivity : AppCompatActivity() {
                 viewModel.getBankPoint(text)
             }) {
                 Text(text = "get Bank Point data")
+            }
+
+            SnapButton(
+                enabled = true,
+                text = "To Sample UI",
+                style = SnapButton.Style.PRIMARY
+            ) {
+                startActivity(Intent(this@SampleActivity, SampleUiActivity::class.java))
             }
         }
     }
