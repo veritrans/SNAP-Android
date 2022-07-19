@@ -3,10 +3,7 @@ package com.midtrans.sdk.corekit.internal.usecase
 import android.annotation.SuppressLint
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
-import com.midtrans.sdk.corekit.api.model.BinResponse
-import com.midtrans.sdk.corekit.api.model.CardTokenResponse
-import com.midtrans.sdk.corekit.api.model.DeleteSavedCardResponse
-import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.CreditCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.PaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.data.repository.CoreApiRepository
@@ -104,6 +101,30 @@ internal class PaymentUsecase(
     ) {
         try {
             snapRepository.deleteSavedCard(snapToken, maskedCard)
+                .subscribeOn(scheduler.io())
+                .observeOn(scheduler.ui())
+                .subscribe(
+                    {
+                        callback.onSuccess(it)
+                    },
+                    {
+                        deliverError(it, callback)
+                    }
+                )
+        } catch (error: Throwable) {
+            deliverError(error, callback)
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    fun getBankPoint(
+        snapToken: String,
+        cardToken: String,
+        grossAmount: Double,
+        callback: Callback<BankPointResponse>
+    ) {
+        try {
+            snapRepository.getBankPoint(snapToken, cardToken, grossAmount)
                 .subscribeOn(scheduler.io())
                 .observeOn(scheduler.ui())
                 .subscribe(

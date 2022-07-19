@@ -16,8 +16,11 @@ class CreditCardPaymentRequestBuilder: PaymentRequestBuilder() {
     private var customerEmail: String? = null
     private var customerFullName: String? = null
     private var customerPhone: String? = null
-    private var discountedGrossAmount: Double? = null
-    private var promoId: String? = null
+    private var bank: String? = null
+    private var point: Double? = null
+    private var installment: String? = null
+    private var promoDetailRequest: PromoDetailRequest? = null
+
 
     fun withPaymentType(@PaymentType.Def value: String): CreditCardPaymentRequestBuilder = apply {
         paymentType = value
@@ -43,12 +46,22 @@ class CreditCardPaymentRequestBuilder: PaymentRequestBuilder() {
         saveCard = value
     }
 
-    fun withDiscountedGrossAmount(value: Double): CreditCardPaymentRequestBuilder = apply {
-        discountedGrossAmount = value
+    fun withPromo(discountedGrossAmount: Double, promoId: String): CreditCardPaymentRequestBuilder = apply {
+         promoDetailRequest = PromoDetailRequest(
+             discountedGrossAmount = discountedGrossAmount?.let { NumberUtil.formatDoubleToString(it) },
+             promoId = promoId)
     }
 
-    fun withPromoId(value: String): CreditCardPaymentRequestBuilder = apply {
-        promoId = value
+    fun withBank(value: String): CreditCardPaymentRequestBuilder = apply {
+        bank = value
+    }
+
+    fun withPoint(value: Double): CreditCardPaymentRequestBuilder = apply {
+        point = value
+    }
+
+    fun withInstallment(value: String): CreditCardPaymentRequestBuilder = apply {
+        installment = value
     }
 
     override fun build(): PaymentRequest {
@@ -56,9 +69,8 @@ class CreditCardPaymentRequestBuilder: PaymentRequestBuilder() {
             PaymentType.CREDIT_CARD -> PaymentRequest(
                 paymentType = paymentType,
                 customerDetails = constructCustomerDetail(),
-                paymentParams = PaymentParam(cardToken = cardToken, saveCard = saveCard),
-                promoDetails = PromoDetailRequest(discountedGrossAmount = discountedGrossAmount?.let { NumberUtil.formatDoubleToString(it)},
-                    promoId = promoId)
+                paymentParams = PaymentParam(cardToken = cardToken, saveCard = saveCard, bank = bank, point = point, installment = installment),
+                promoDetails = promoDetailRequest
             )
             else -> throw InvalidPaymentTypeException()
         }
