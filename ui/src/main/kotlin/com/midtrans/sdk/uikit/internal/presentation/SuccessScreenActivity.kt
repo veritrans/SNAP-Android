@@ -51,9 +51,9 @@ class SuccessScreenActivity : BaseActivity() {
     @Preview
     @Composable
     private fun SuccessContent(
-        total: String? = null,
-        orderId: String? = null,
-        isWithBackButton: Boolean = false
+        total: String? = "Rp399.000",
+        orderId: String? = "Order ID #333333333",
+        isWithBackButton: Boolean = true
     ) {
         Column(
             modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.SUPPORT_SUCCESS_FILL))

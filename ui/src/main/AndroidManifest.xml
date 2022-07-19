@@ -8,6 +8,11 @@
             android:name=".internal.presentation.SuccessScreenActivity"
             android:theme="@style/Theme.AppCompat.Light"
             android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".internal.presentation.ErrorScreenActivity"
+            android:theme="@style/Theme.AppCompat.Light"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
