@@ -67,6 +67,7 @@ dependencies {
     implementation(com.gtf.snap.ComposeUiLibraries.composeAnimatedDrawable)
     implementation(com.gtf.snap.ComposeUiLibraries.composeAnimation)
 
+    //TODO: work around, remove when google fix compose tooling
     debugImplementation("androidx.customview:customview:1.2.0-alpha01")
     debugImplementation("androidx.customview:customview-poolingcontainer:1.0.0-alpha01")
     implementation(project(":corekit"))
