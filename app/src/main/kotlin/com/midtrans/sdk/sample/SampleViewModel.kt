@@ -11,12 +11,20 @@ import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.NormalCardTokenRequ
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.TwoClickCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.BankTransferPaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
+import com.midtrans.sdk.corekit.api.requestbuilder.payment.OneClickCardPaymentRequestBuilder
 
 class SampleViewModel : ViewModel() {
     var helloLiveData = MutableLiveData<String>()
     private val coreKit: SnapCore = SnapCore.getInstance()!!
     var cardTokenResponse : CardTokenResponse? = null
     var transactionResponse : TransactionResponse? = null
+    val clientKeyForPoint = "SB-Mid-client-hOWJXiCCDRvT0RGr"
+    val clientKeyForPromo = "VT-client-yrHf-c8Sxr-ck8tx"
+    val ccSavedTokenIdBniTwoClickPoint = "410505fpOTKmsvZJRVolnxHuApec1467"
+    val ccSavedTokenIdTwoClickPromo = "481111YgYEIkDdzJNVqfEdcAkkue1114"
+    val defaultCcNumber = "4811 1111 1111 1114"
+    val bniCcNumber = "4105 0586 8948 1467"
+    val oneClickMaskedCard = "410505-1467"
 
     fun getHelloFromSnap() {
         helloLiveData.value = coreKit.hello()
@@ -39,12 +47,33 @@ class SampleViewModel : ViewModel() {
 
     fun getCardTokenBasic(){
         coreKit.getCardToken(cardTokenRequestBuilder = NormalCardTokenRequestBuilder()
-            .withClientKey("VT-client-yrHf-c8Sxr-ck8tx")
-            .withGrossAmount(145000.0)
-            .withCardNumber("4811 1111 1111 1114")
+            .withClientKey(clientKeyForPoint)
+            .withGrossAmount(150000.0)
+            .withCardNumber(bniCcNumber)
             .withCardExpMonth("12")
             .withCardExpYear("24")
-            .withCardCvv("123"),
+            .withCardCvv("123")
+            .withOrderId("cobacoba-4")
+            .withCurrency("IDR"),
+            callback = object : Callback<CardTokenResponse> {
+                override fun onSuccess(result: CardTokenResponse) {
+                    cardTokenResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error ${error.message} ${error.cause}")
+                }
+            }
+        )
+    }
+
+    fun getTwoClickToken(){
+        coreKit.getCardToken(cardTokenRequestBuilder = TwoClickCardTokenRequestBuilder()
+            .withClientKey(clientKeyForPoint)
+            .withGrossAmount(150000.0)
+            .withCardCvv("123")
+            .withTokenId(ccSavedTokenIdBniTwoClickPoint)
+            .withOrderId("cobacoba-4")
+            .withCurrency("IDR"),
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
                     cardTokenResponse = result
@@ -56,12 +85,37 @@ class SampleViewModel : ViewModel() {
         )
     }
 
-    fun getTwoClickToken(){
-        coreKit.getCardToken(cardTokenRequestBuilder = TwoClickCardTokenRequestBuilder()
-            .withClientKey("VT-client-yrHf-c8Sxr-ck8tx")
-            .withGrossAmount(145000.0)
+    fun getCardTokenNormalWithInstallment(){
+        coreKit.getCardToken(cardTokenRequestBuilder = NormalCardTokenRequestBuilder()
+            .withClientKey(clientKeyForPoint)
+            .withGrossAmount(150000.0)
+            .withCardNumber(bniCcNumber)
+            .withCardExpMonth("12")
+            .withCardExpYear("24")
             .withCardCvv("123")
-            .withTokenId("481111YgYEIkDdzJNVqfEdcAkkue1114"),
+            .withOrderId("cobacoba-4")
+            .withCurrency("IDR")
+            .withInstallment(value = true, bank = InstallmentBank.OFFLINE, installmentTerm = 3),
+            callback = object : Callback<CardTokenResponse> {
+                override fun onSuccess(result: CardTokenResponse) {
+                    cardTokenResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error ${error.message} ${error.cause}")
+                }
+            }
+        )
+    }
+
+    fun getTwoClickTokenWithInstallment(){
+        coreKit.getCardToken(cardTokenRequestBuilder = TwoClickCardTokenRequestBuilder()
+            .withClientKey(clientKeyForPoint)
+            .withGrossAmount(150000.0)
+            .withCardCvv("123")
+            .withTokenId(ccSavedTokenIdBniTwoClickPoint)
+            .withOrderId("cobacoba-4")
+            .withCurrency("IDR")
+            .withInstallment(value = true, bank = InstallmentBank.OFFLINE, installmentTerm = 3),
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
                     cardTokenResponse = result
@@ -99,9 +153,148 @@ class SampleViewModel : ViewModel() {
                 .withCardToken(cardTokenResponse?.tokenId.toString())
                 .withSaveCard(true)
                 .withPaymentType(PaymentType.CREDIT_CARD)
-                .withDiscountedGrossAmount(145000.0)
-                .withPromoId("431")
+                .withPromo(discountedGrossAmount = 149850.0, promoId = "436")
                 .withCustomerEmail("belajar@example.com"),
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    transactionResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
+
+    fun chargeUsingCreditCardWithBniPoint(snapToken: String) {
+        coreKit.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = CreditCardPaymentRequestBuilder()
+                .withCardToken(cardTokenResponse?.tokenId.toString())
+                .withSaveCard(true)
+                .withPaymentType(PaymentType.CREDIT_CARD)
+                .withCustomerEmail("belajar@example.com")
+                .withBank("bni")
+                .withPoint(100000.0)
+            ,
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    transactionResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
+
+    fun chargeUsingCreditCardWithBniPointAndPromo(snapToken: String) {
+        coreKit.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = CreditCardPaymentRequestBuilder()
+                .withCardToken(cardTokenResponse?.tokenId.toString())
+                .withSaveCard(true)
+                .withPaymentType(PaymentType.CREDIT_CARD)
+                .withCustomerEmail("belajar@example.com")
+                .withBank("bni")
+                .withPoint(100000.0)
+                .withPromo(discountedGrossAmount = 149850.0, promoId = "436")
+            ,
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    transactionResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
+
+    fun chargeUsingInstallment(snapToken: String) {
+        coreKit.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = CreditCardPaymentRequestBuilder()
+                .withCardToken(cardTokenResponse?.tokenId.toString())
+                .withPaymentType(PaymentType.CREDIT_CARD)
+                .withCustomerEmail("belajar@example.com")
+                .withInstallment("offline_3")
+            ,
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    transactionResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
+
+    fun chargeUsingInstallmentAndPromo(snapToken: String) {
+        coreKit.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = CreditCardPaymentRequestBuilder()
+                .withCardToken(cardTokenResponse?.tokenId.toString())
+                .withPaymentType(PaymentType.CREDIT_CARD)
+                .withCustomerEmail("belajar@example.com")
+                .withInstallment("offline_3")
+                .withPromo(discountedGrossAmount = 149850.0, promoId = "436")
+            ,
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    transactionResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
+
+    fun chargeUsingOneClickCard(snapToken: String){
+        coreKit.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = OneClickCardPaymentRequestBuilder()
+                .withPaymentType(PaymentType.CREDIT_CARD)
+                .withMaskedCard(oneClickMaskedCard),
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    transactionResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
+
+    fun chargeUsingOneClickCardWithPromo(snapToken: String){
+        coreKit.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = OneClickCardPaymentRequestBuilder()
+                .withPaymentType(PaymentType.CREDIT_CARD)
+                .withMaskedCard(oneClickMaskedCard)
+                .withPromo(discountedGrossAmount = 149500.0, promoId = "432"),
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    transactionResponse = result
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error, error, error")
+                }
+            }
+        )
+    }
+
+    fun chargeUsingOneClickCardWithPromoAndInstallment(snapToken: String){
+        coreKit.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = OneClickCardPaymentRequestBuilder()
+                .withPaymentType(PaymentType.CREDIT_CARD)
+                .withMaskedCard(oneClickMaskedCard)
+                .withPromo(discountedGrossAmount = 149500.0, promoId = "432")
+                .withInstallment("offline_3"),
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
                     transactionResponse = result
@@ -139,6 +332,22 @@ class SampleViewModel : ViewModel() {
 
                 override fun onError(error: SnapError) {
                     Log.e("error, error, error", "get exbin error, error, error")
+                }
+            }
+        )
+    }
+
+    fun getBankPoint(snapToken: String)
+    {
+        coreKit.getBankPoint(
+            snapToken = snapToken,
+            cardToken = cardTokenResponse?.tokenId.toString(),
+            grossAmount = 150000.0,
+            callback = object : Callback<BankPointResponse> {
+                override fun onSuccess(result: BankPointResponse) {
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "get point error, error, error")
                 }
             }
         )

@@ -2,10 +2,7 @@ package com.midtrans.sdk.corekit
 
 import android.content.Context
 import com.midtrans.sdk.corekit.api.callback.Callback
-import com.midtrans.sdk.corekit.api.model.BinResponse
-import com.midtrans.sdk.corekit.api.model.CardTokenResponse
-import com.midtrans.sdk.corekit.api.model.DeleteSavedCardResponse
-import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.CreditCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.PaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.di.DaggerSnapComponent
@@ -57,6 +54,15 @@ class SnapCore private constructor(builder: Builder) {
         paymentUsecase.getBinData(binNumber, clientKey, callback)
     }
 
+    fun getBankPoint(
+        snapToken: String,
+        cardToken: String,
+        grossAmount: Double,
+        callback: Callback<BankPointResponse>
+    ){
+        paymentUsecase.getBankPoint(snapToken, cardToken, grossAmount, callback)
+    }
+
     companion object {
         private var INSTANCE: SnapCore? = null
 
@@ -68,7 +74,6 @@ class SnapCore private constructor(builder: Builder) {
 
         fun getInstance(): SnapCore? = INSTANCE
     }
-
 
     class Builder {
         internal lateinit var context: Context
