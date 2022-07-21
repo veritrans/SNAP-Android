@@ -1,5 +1,6 @@
 package com.midtrans.sdk.uikit.internal.view
 
+import androidx.compose.material.Text
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -44,6 +45,18 @@ class SnapTypography private constructor(){
     val snapTextMediumMedium = TextStyle(
         fontFamily = getPoppinsFontFamily(),
         fontSize = 14.sp,
+        fontWeight = FontWeight.SemiBold
+    )
+
+    val snapHeadingL = TextStyle(
+        fontFamily = getPoppinsFontFamily(),
+        fontSize = 18.sp,
+        fontWeight = FontWeight.SemiBold
+    )
+
+    val snapHeading2Xl = TextStyle(
+        fontFamily = getPoppinsFontFamily(),
+        fontSize = 24.sp,
         fontWeight = FontWeight.SemiBold
     )
     companion object {
