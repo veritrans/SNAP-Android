@@ -18,6 +18,7 @@ import com.midtrans.sdk.uikit.internal.view.SnapColors.LINK
 
 @Composable
 fun SnapInstructionButton(
+    modifier: Modifier = Modifier,
     isExpanded: Boolean = true,
     @DrawableRes iconResId: Int,
     title: String,
@@ -25,7 +26,10 @@ fun SnapInstructionButton(
     expandingContent: @Composable (() -> Unit)? = null
 ) {
 
-    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(20.dp)
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(13.dp),
