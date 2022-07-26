@@ -237,7 +237,10 @@ class PaymentOptionActivity : BaseActivity() {
                             }
                         }
                     },
-                    modifier = Modifier.fillMaxHeight(1f).padding(all = 16.dp)
+                    modifier = Modifier
+                        .fillMaxHeight(1f)
+                        .padding(all = 16.dp)
+                        .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
                 )
         }
     }
