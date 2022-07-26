@@ -17,7 +17,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.SnapColors.LINK
 
 @Composable
-fun SnapInstructionExpanding(
+fun SnapInstructionButton(
     isExpanded: Boolean = true,
     @DrawableRes iconResId: Int,
     title: String,

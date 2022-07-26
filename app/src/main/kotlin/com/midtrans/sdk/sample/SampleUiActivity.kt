@@ -195,7 +195,7 @@ class SampleUiActivity : AppCompatActivity() {
             }
 
             var isExpanded by remember { mutableStateOf(false) }
-            SnapInstructionExpanding(
+            SnapInstructionButton(
                 isExpanded = isExpanded,
                 iconResId = R.drawable.ic_help,
                 title = "Cara bayar",
