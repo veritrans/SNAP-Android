@@ -1,7 +1,5 @@
 package com.midtrans.sdk.uikit.internal.presentation.paymentoption
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.AKULAKU
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.ALFAMART
@@ -45,12 +43,14 @@ class PaymentOptionViewModel : ViewModel() {
                     paymentMethodItems.add(
                         PaymentMethodItem(
                             type = it.category,
+                            titleId = R.string.payment_summary_bank_transfer,
                             icons = getBankTransferIconList(it, null)
                         )
                     )
                 } else {
                     paymentMethodItems[index] = PaymentMethodItem(
                         type = it.category,
+                        titleId = R.string.payment_summary_bank_transfer,
                         icons = getBankTransferIconList(it, paymentMethodItems[index].icons)
                     )
                 }
@@ -58,6 +58,7 @@ class PaymentOptionViewModel : ViewModel() {
                 paymentMethodItems.add(
                     element = PaymentMethodItem(
                         type = it.type!!,
+                        titleId = getSoloMethodTitle(it.type),
                         methods = if (it.type == UOB_EZPAY) {
                             it.mode.orEmpty()
                         } else {
@@ -70,7 +71,8 @@ class PaymentOptionViewModel : ViewModel() {
                 paymentMethodItems.add(
                     element = PaymentMethodItem(
                         type = it.type!!,
-                        icons = getConvenienceStore(it.type)
+                        titleId = getConvenienceStoreTitle(it.type),
+                        icons = getConvenienceStoreIcons(it.type)
                     )
                 )
             } else if (
@@ -80,6 +82,7 @@ class PaymentOptionViewModel : ViewModel() {
                 paymentMethodItems.add(
                     element = PaymentMethodItem(
                         type = SHOPEEPAY,
+                        titleId = R.string.payment_summary_shopeepay,
                         icons = listOf(
                             R.drawable.ic_outline_shopeepay_40,
                             R.drawable.ic_outline_qris_40
@@ -89,6 +92,27 @@ class PaymentOptionViewModel : ViewModel() {
             }
         }
         return PaymentMethodList(paymentMethodItems)
+    }
+
+    private fun getConvenienceStoreTitle(type: String): Int {
+        return if (type == INDOMARET)
+            R.string.payment_summary_indomaret
+        else
+            R.string.payment_summary_alfamart
+    }
+
+    private fun getSoloMethodTitle(type: String): Int {
+        return when (type) {
+            KLIK_BCA -> R.string.payment_summary_klikbca
+            BCA_KLIKPAY -> R.string.payment_summary_bcaklikpay
+            CIMB_CLICKS -> R.string.payment_summary_octoclicks
+            BRI_EPAY -> R.string.payment_summary_brimo
+            DANAMON_ONLINE -> R.string.payment_summary_danamonob
+            UOB_EZPAY -> R.string.payment_summary_uobezpay
+            CREDIT_CARD -> R.string.payment_summary_cc_dc
+            AKULAKU -> R.string.payment_summary_akulaku
+            else -> R.string.payment_summary_gopay
+        }
     }
 
     private fun isShopeepayInPhone(paymentMethod: PaymentMethod, isTabletDevice: Boolean): Boolean {
@@ -104,7 +128,7 @@ class PaymentOptionViewModel : ViewModel() {
             isTabletDevice
     }
 
-    private fun getConvenienceStore(type: String): List<Int> {
+    private fun getConvenienceStoreIcons(type: String): List<Int> {
         return when (type) {
             INDOMARET -> listOf(R.drawable.ic_outline_indomaret_40)
             ALFAMART -> listOf(

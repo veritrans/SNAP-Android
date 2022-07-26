@@ -133,6 +133,7 @@ class PaymentOptionActivity : BaseActivity() {
                 listOf(
                     PaymentMethodItem(
                         type = "bt",
+                        titleId = R.string.payment_summary_bank_transfer,
                         icons = listOf(
                             R.drawable.ic_outline_permata_40,
                             R.drawable.ic_outline_bca_40,
@@ -143,6 +144,7 @@ class PaymentOptionActivity : BaseActivity() {
                     ),
                     PaymentMethodItem(
                         type = "qr-1",
+                        titleId = R.string.payment_summary_gopay,
                         icons = listOf(
                             R.drawable.ic_outline_gopay_40_2,
                             R.drawable.ic_outline_qris_40
@@ -150,6 +152,7 @@ class PaymentOptionActivity : BaseActivity() {
                     ),
                     PaymentMethodItem(
                         type = "qr-2",
+                        titleId = R.string.payment_summary_shopeepay,
                         icons = listOf(
                             R.drawable.ic_outline_gopay_40_2,
                             R.drawable.ic_outline_qris_40
@@ -157,6 +160,7 @@ class PaymentOptionActivity : BaseActivity() {
                     ),
                     PaymentMethodItem(
                         type = "qr-3",
+                        titleId = R.string.payment_summary_gopay,
                         icons = listOf(
                             R.drawable.ic_outline_gopay_40_2,
                             R.drawable.ic_outline_qris_40
@@ -164,6 +168,7 @@ class PaymentOptionActivity : BaseActivity() {
                     ),
                     PaymentMethodItem(
                         type = "qr-4",
+                        titleId = R.string.payment_summary_shopeepay,
                         icons = listOf(
                             R.drawable.ic_outline_gopay_40_2,
                             R.drawable.ic_outline_qris_40
@@ -171,6 +176,7 @@ class PaymentOptionActivity : BaseActivity() {
                     ),
                     PaymentMethodItem(
                         type = "qr-5",
+                        titleId = R.string.payment_summary_gopay,
                         icons = listOf(
                             R.drawable.ic_outline_gopay_40_2,
                             R.drawable.ic_outline_qris_40
@@ -178,6 +184,7 @@ class PaymentOptionActivity : BaseActivity() {
                     ),
                     PaymentMethodItem(
                         type = "cs",
+                        titleId = R.string.payment_summary_indomaret,
                         icons = listOf(
                             R.drawable.ic_outline_alfamart_40,
                             R.drawable.ic_outline_alfamidi_40,
@@ -228,7 +235,7 @@ class PaymentOptionActivity : BaseActivity() {
                                 }
                             ) { payment ->
                                 SnapMultiIconListItem(
-                                    title = payment.type,
+                                    title = resources.getString(payment.titleId),
                                     iconList = payment.icons
                                 ) {
                                     //TODO create intent to go to selected payment method page

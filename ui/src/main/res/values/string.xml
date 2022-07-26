@@ -22,8 +22,15 @@
     <string name="payment_summary_cc_dc">Credit/debit card</string>
     <string name="payment_summary_saved_card">card(s) saved</string>
     <string name="payment_summary_promo_available">Promo available</string>
-    <string name="payment_summary_gopay">GoPay</string>
-    <string name="payment_summary_shopeepay">ShopeePay</string>
+    <string name="payment_summary_gopay">Gopay/QRIS</string>
+    <string name="payment_summary_klikbca">KlikBCA</string>
+    <string name="payment_summary_bcaklikpay">BCA KlikPay</string>
+    <string name="payment_summary_octoclicks">OctoClicks</string>
+    <string name="payment_summary_brimo">BRIMo</string>
+    <string name="payment_summary_danamonob">Danamon Online Banking</string>
+    <string name="payment_summary_uobezpay">UOB EZ Pay</string>
+    <string name="payment_summary_akulaku">Akulaku</string>
+    <string name="payment_summary_shopeepay">ShopeePay/QRIS</string>
     <string name="payment_summary_alfamart">Alfa Group</string>
     <string name="payment_summary_indomaret">Indomaret</string>
 
@@ -68,7 +75,7 @@
     <string name="cc_dc_main_screen_placeholder_email">youremail@email.com</string>
 
     <string name="cc_dc_main_screen_card_number">Card number</string>
-    <string name="cc_dc_main_screen_placeholder_card_number">0000-0000-0000-0000</string>
+    <string name="cc_dc_main_screen_placeholder_card_number">0000–0000–0000–0000</string>
 
     <string name="cc_dc_main_screen_expiry">Expiration date</string>
     <string name="cc_dc_main_screen_placeholder_expiry">MM/YY</string>
@@ -105,7 +112,7 @@
     <string name="installment_6x_installment">6 months</string>
 
 
-    <string name="point_loading">Loading points...</string>
+    <string name="point_loading">Loading points…</string>
     <string name="point_title">Redeem points</string>
     <string name="point_amount_of_points">%s point(s)</string>
     <string name="point_failed_title">Failed to load points</string>
@@ -161,7 +168,7 @@
     <string name="redirection_instruction_gopay_cta">Pay now</string>
 
 
-    <string name="redirection_screen_gopay_main_message">Redirecting to Gojek...</string>
+    <string name="redirection_screen_gopay_main_message">Redirecting to Gojek…</string>
     <string name="redirection_screen_gopay_coundown_message">Page will be opened in %s second(s).</string>
     <string name="redirection_screen_gopay_cta">Open now</string>
 
@@ -178,7 +185,7 @@
     <string name="redirection_instruction_shopeepay_cta">Pay now</string>
 
 
-    <string name="redirection_screen_shopeepay_main_message">Redirecting to Shopee...</string>
+    <string name="redirection_screen_shopeepay_main_message">Redirecting to Shopee…</string>
     <string name="redirection_screen_shopeepay_coundown_message">Page will be opened in %s second(s).</string>
     <string name="redirection_screen_shopeepay_cta">Open now</string>
 
@@ -194,7 +201,7 @@
     <string name="indomaret_instruction">Show barcode to the cashier or enter payment code on i.saku app.</string>
 
     <string name="indomaret_payment_code_title">Payment code</string>
-    <string name="indomaret_loading_payment_code">Loading...</string>
+    <string name="indomaret_loading_payment_code">Loading…</string>
     <string name="indomaret_failed_to_load_payment_code">Failed to load</string>
     <string name="indomaret_cta_reload">Reload</string>
 
@@ -208,7 +215,7 @@
     <string name="alfa_group_instruction">Please go to nearest Alfa Group store and show the barcode/payment code to the cashier.</string>
 
     <string name="alfa_group_payment_code_title">Payment code</string>
-    <string name="alfa_group_loading_payment_code">Loading...</string>
+    <string name="alfa_group_loading_payment_code">Loading…</string>
     <string name="alfa_group_failed_to_load_payment_code">Failed to load</string>
     <string name="alfa_group_cta_reload">Reload</string>
 
@@ -260,13 +267,13 @@
     <string name="kredivo_cta">Pay now</string>
 
 
-    <string name="kredivo_redirection_main_message">Redirecting to Kredivo...</string>
+    <string name="kredivo_redirection_main_message">Redirecting to Kredivo…</string>
     <string name="kredivo_redirection_cta">Open now</string>
 
 
     <string name="uob_method_name">UOB EZ Pay via web</string>
     <string name="uob_desc">Please make sure that you have registered ID and complete your payment via UOB EZ Pay.</string>
-    <string name="uob_desc_detail">1. Click Pay now and you will be redirected to UOB EZ Pay website.  2. Login using your userID &amp; password. 3. Enter OTP you\'ll receive via SMS when prompted. 4. Select the account that you would like to pay from and choose "Continue". 5. Review your transaction details, enter the OTP you'll receive via SMS. 6 Choose "Confirm" to complete the payment.</string>
+    <string name="uob_desc_detail">1. Click Pay now and you will be redirected to UOB EZ Pay website.  2. Login using your userID &amp; password. 3. Enter OTP you\'ll receive via SMS when prompted. 4. Select the account that you would like to pay from and choose "Continue". 5. Review your transaction details, enter the OTP you\'ll receive via SMS. 6 Choose "Confirm" to complete the payment.</string>
 
 
     <string name="tmrw_method_name">UOB TMRW app</string>
