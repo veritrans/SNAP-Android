@@ -227,7 +227,6 @@ class SampleActivity : AppCompatActivity() {
                     "087788778212",
                     listOf("Jl. ABC", "Rumah DEF")
                 )
-//                val intent = SuccessScreenActivity.getIntent(this@SampleActivity, "123123", "#12b3k")
                 startActivity(
                     intent
                 )

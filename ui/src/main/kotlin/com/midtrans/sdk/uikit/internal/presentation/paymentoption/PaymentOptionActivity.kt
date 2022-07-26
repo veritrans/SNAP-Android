@@ -201,9 +201,6 @@ class PaymentOptionActivity : BaseActivity() {
             SnapAppBar(title = "Payment Methods", iconResId = R.drawable.ic_arrow_left) {
                 onBackPressed()
             }
-            Column(
-                modifier = Modifier.padding(all = 16.dp).weight(1f)
-            ) {
                 SnapOverlayExpandingBox(
                     isExpanded = isExpand,
                     mainContent = {
@@ -234,13 +231,14 @@ class PaymentOptionActivity : BaseActivity() {
                                     title = payment.type,
                                     iconList = payment.icons
                                 ) {
+                                    //TODO create intent to go to selected payment method page
                                     Toast.makeText(this@PaymentOptionActivity, "${payment.type}", Toast.LENGTH_LONG).show()
                                 }
                             }
                         }
-                    }
+                    },
+                    modifier = Modifier.fillMaxHeight(1f).padding(all = 16.dp)
                 )
-            }
         }
     }
 
