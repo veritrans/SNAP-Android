@@ -44,6 +44,7 @@ object Dependencies {
     const val nanolets = "2.3.1"
     const val androidxDatastoreVersion = "1.0.0"
     const val composeVersion = "1.2.0-rc02"
+    const val hamcrestVersion = "2.2"
 }
 
 object CommonLibraries {
@@ -176,6 +177,7 @@ object ComposeUiLibraries {
 
 object TestLibraries {
     const val junit = "junit:junit:${Dependencies.junitVersion}"
+    const val hamcrest = "org.hamcrest:hamcrest:${Dependencies.hamcrestVersion}"
     const val androidxJunit = "androidx.test.ext:junit:${Dependencies.androidxJunitVersion}"
     const val androidxArchTesting =
         "androidx.arch.core:core-testing:${Dependencies.androidxArchTestingVersion}"

@@ -44,6 +44,7 @@ class PaymentOptionViewModel : ViewModel() {
                         PaymentMethodItem(
                             type = it.category,
                             titleId = R.string.payment_summary_bank_transfer,
+                            methods = listOf(it.type.orEmpty()),
                             icons = getBankTransferIconList(it, null)
                         )
                     )
@@ -51,6 +52,7 @@ class PaymentOptionViewModel : ViewModel() {
                     paymentMethodItems[index] = PaymentMethodItem(
                         type = it.category,
                         titleId = R.string.payment_summary_bank_transfer,
+                        methods = getBankTransferMethodList(paymentMethodItems[index], it),
                         icons = getBankTransferIconList(it, paymentMethodItems[index].icons)
                     )
                 }
@@ -92,6 +94,16 @@ class PaymentOptionViewModel : ViewModel() {
             }
         }
         return PaymentMethodList(paymentMethodItems)
+    }
+
+    private fun getBankTransferMethodList(
+        paymentMethodItem: PaymentMethodItem,
+        paymentMethod: PaymentMethod
+    ): List<String> {
+        return paymentMethodItem
+            .methods
+            .toMutableList()
+            .apply { add(paymentMethod.type.orEmpty()) }
     }
 
     private fun getConvenienceStoreTitle(type: String): Int {
