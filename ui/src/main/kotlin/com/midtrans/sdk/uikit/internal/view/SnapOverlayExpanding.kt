@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.midtrans.sdk.uikit.R
 
 @Composable
@@ -23,14 +24,19 @@ fun SnapOverlayExpandingBox(
     isExpanded: Boolean = true,
     mainContent: @Composable (() -> Unit)? = null,
     expandingContent: @Composable (() -> Unit)? = null,
-    followingContent: @Composable (() -> Unit)? = null
+    followingContent: @Composable (() -> Unit)? = null,
+    modifier: Modifier = Modifier
 ) {
 
-    ConstraintLayout {
+    ConstraintLayout(
+        modifier = modifier
+    ) {
         val main = createRef()
         val expanding = createRef()
         val following = createRef()
-        Box(modifier = Modifier.constrainAs(main) {}) {
+        Box(modifier = Modifier.constrainAs(main) {
+            top.linkTo(parent.top)
+        }) {
             mainContent?.invoke()
         }
 
@@ -38,6 +44,7 @@ fun SnapOverlayExpandingBox(
             .constrainAs(expanding) {
                 top.linkTo(main.bottom)
             }
+            .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
             .padding(top = 24.dp)
             .zIndex(2f)) {
             AnimatedVisibility(
@@ -51,6 +58,8 @@ fun SnapOverlayExpandingBox(
 
         Box(modifier = Modifier.constrainAs(following) {
             top.linkTo(main.bottom)
+            bottom.linkTo(parent.bottom)
+            height = Dimension.fillToConstraints
         }) {
             followingContent?.invoke()
         }
@@ -69,7 +78,7 @@ fun SnapTotal(
     Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(
-                text = "total",
+                text = "Total",
                 style = SnapTypography.STYLES.snapTextMediumMedium,
                 modifier = Modifier.weight(1f),
                 color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)

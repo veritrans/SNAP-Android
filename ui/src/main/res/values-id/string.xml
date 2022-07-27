@@ -21,8 +21,15 @@
     <string name="payment_summary_cc_dc">Kartu kredit/debit</string>
     <string name="payment_summary_saved_card">card(s) saved</string>
     <string name="payment_summary_promo_available">Promo tersedia</string>
-    <string name="payment_summary_gopay">GoPay</string>
-    <string name="payment_summary_shopeepay">ShopeePay</string>
+    <string name="payment_summary_gopay">Gopay/QRIS</string>
+    <string name="payment_summary_klikbca">KlikBCA</string>
+    <string name="payment_summary_bcaklikpay">BCA KlikPay</string>
+    <string name="payment_summary_octoclicks">OctoClicks</string>
+    <string name="payment_summary_brimo">BRIMo</string>
+    <string name="payment_summary_danamonob">Danamon Online Banking</string>
+    <string name="payment_summary_uobezpay">UOB EZ Pay</string>
+    <string name="payment_summary_akulaku">Akulaku</string>
+    <string name="payment_summary_shopeepay">ShopeePay/QRIS</string>
     <string name="payment_summary_alfamart">Alfa Group</string>
     <string name="payment_summary_indomaret">Indomaret</string>
 
@@ -67,7 +74,7 @@
     <string name="cc_dc_main_screen_placeholder_email">emailanda@email.com</string>
 
     <string name="cc_dc_main_screen_card_number">Nomor kartu</string>
-    <string name="cc_dc_main_screen_placeholder_card_number">0000-0000-0000-0000</string>
+    <string name="cc_dc_main_screen_placeholder_card_number">0000–0000–0000–0000</string>
 
     <string name="cc_dc_main_screen_expiry">Masa berlaku</string>
     <string name="cc_dc_main_screen_placeholder_expiry">BB/TT</string>
@@ -104,10 +111,10 @@
     <string name="installment_6x_installment">6 bulan</string>
 
 
-    <string name="point_loading">Memuat poin...</string>
+    <string name="point_loading">Memuat poin…</string>
     <string name="point_title">Tukar poin</string>
     <string name="point_amount_of_points">%s poin</string>
-    <string name="point_title">Gagal memuat poin</string>
+    <string name="point_failed_title">Gagal memuat poin</string>
     <string name="point_desc">Silakan muat ulang halaman atau lanjutkan pembayaran tanpa menukarkan poin.</string>
 
 
@@ -159,7 +166,7 @@
     <string name="redirection_instruction_gopay_cta">Bayar sekarang</string>
 
 
-    <string name="redirection_screen_gopay_main_message">Mengalihkan ke Gojek...</string>
+    <string name="redirection_screen_gopay_main_message">Mengalihkan ke Gojek…</string>
     <string name="redirection_screen_gopay_coundown_message">Membuka otomatis dalam %s detik.</string>
     <string name="redirection_screen_gopay_cta">Buka sekarang</string>
 
@@ -176,7 +183,7 @@
     <string name="redirection_instruction_shopeepay_cta">Bayar sekarang</string>
 
 
-    <string name="redirection_screen_shopeepay_main_message">Mengalihkan ke Shopee...</string>
+    <string name="redirection_screen_shopeepay_main_message">Mengalihkan ke Shopee…</string>
     <string name="redirection_screen_shopeepay_coundown_message">Membuka otomatis dalam %s detik.</string>
     <string name="redirection_screen_shopeepay_cta">Buka sekarang</string>
 
@@ -192,7 +199,7 @@
     <string name="indomaret_instruction">Tunjukkan barcode ke kasir atau masukkan kode bayar ke aplikasi i.saku.</string>
 
     <string name="indomaret_payment_code_title">Kode pembayaran</string>
-    <string name="indomaret_loading_payment_code">Memuat...</string>
+    <string name="indomaret_loading_payment_code">Memuat…</string>
     <string name="indomaret_failed_to_load_payment_code">Gagal memuat</string>
     <string name="indomaret_cta_reload">Muat ulang</string>
 
@@ -206,7 +213,7 @@
     <string name="alfa_group_instruction">Silakan tunjukan barcode/kode bayar ke kasir di gerai Alfa Group terdekat.</string>
 
     <string name="alfa_group_payment_code_title">Kode pembayaran</string>
-    <string name="alfa_group_loading_payment_code">Memuat...</string>
+    <string name="alfa_group_loading_payment_code">Memuat…</string>
     <string name="alfa_group_failed_to_load_payment_code">Gagal memuat</string>
     <string name="alfa_group_cta_reload">Muat ulang</string>
 
@@ -255,7 +262,7 @@
     <string name="kredivo_cta">Bayar sekarang</string>
 
 
-    <string name="kredivo_redirection_main_message">Mengalihkan ke Kredivo...</string>
+    <string name="kredivo_redirection_main_message">Mengalihkan ke Kredivo…</string>
     <string name="kredivo_redirection_cta">Buka sekarang</string>
 
 
