@@ -6,6 +6,6 @@ data class CustomerDetails(
     val lastName: String? = null,
     val email: String? = null,
     val phone: String? = null,
-    val shippingAddress: ShippingAddress? = null,
-    val billingAddress: BillingAddress? = null
+    val shippingAddress: Address? = null,
+    val billingAddress: Address? = null
 )

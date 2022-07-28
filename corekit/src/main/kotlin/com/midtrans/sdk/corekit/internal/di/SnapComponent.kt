@@ -5,6 +5,7 @@ import com.midtrans.sdk.corekit.SnapCore
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
@@ -21,6 +22,8 @@ interface SnapComponent {
     interface Builder {
         @BindsInstance
         fun applicationContext(context: Context): Builder
+        @BindsInstance
+        fun merchantUrl(@Named("merchant_url") url: String): Builder
         fun build(): SnapComponent
     }
 

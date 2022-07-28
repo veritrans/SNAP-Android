@@ -23,6 +23,10 @@ class SnapCore private constructor(builder: Builder) {
         return "hello snap"
     }
 
+    fun getSnapToken() {
+
+    }
+
     fun pay(
         snapToken: String,
         paymentRequestBuilder: PaymentRequestBuilder,
@@ -66,9 +70,10 @@ class SnapCore private constructor(builder: Builder) {
     companion object {
         private var INSTANCE: SnapCore? = null
 
-        internal fun buildDaggerComponent(applicationContext: Context): SnapComponent {
+        internal fun buildDaggerComponent(applicationContext: Context, merchantUrl: String): SnapComponent {
             return DaggerSnapComponent.builder()
                 .applicationContext(applicationContext)
+                .merchantUrl(merchantUrl)
                 .build()
         }
 

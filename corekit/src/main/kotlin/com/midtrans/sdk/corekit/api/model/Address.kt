@@ -1,6 +1,6 @@
 package com.midtrans.sdk.corekit.api.model
 
-data class BillingAddress(
+data class Address(
     val firstName: String? = null,
     val lastName: String? = null,
     val address: String? = null,
