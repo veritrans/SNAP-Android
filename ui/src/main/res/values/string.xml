@@ -1,313 +1,286 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name ="payment_details_subtotal" >Subtotal</string>
+    <string name="payment_details_subtotal">Subtotal</string>
 
-    <string name ="payment_details_promo_title" >Promo</string>
+    <string name="payment_details_promo_title">Promo</string>
 
-    <string name ="payment_details_point_redemption_title" >Points</string>
+    <string name="payment_details_point_redemption_title">Points</string>
 
 
+    <string name="payment_details_total">Total</string>
 
-    <string name ="payment_details_total" >Total</string>
+    <string name="payment_details_customer_detail_title">Customer details</string>
 
-    <string name ="payment_details_customer_detail_title" >Customer details</string>
 
+    <string name="payment_summary_total">Total</string>
+    <string name="payment_summary_order_id">Order ID %s</string>
 
+    <string name="payment_summary_pay_method_selection_timer">Choose within</string>
 
+    <string name="payment_summary_select_method">Payment method</string>
+    <string name="payment_summary_bank_transfer">Bank transfer</string>
+    <string name="payment_summary_cc_dc">Credit/debit card</string>
+    <string name="payment_summary_saved_card">card(s) saved</string>
+    <string name="payment_summary_promo_available">Promo available</string>
+    <string name="payment_summary_gopay">GoPay</string>
+    <string name="payment_summary_shopeepay">ShopeePay</string>
+    <string name="payment_summary_alfamart">Alfa Group</string>
+    <string name="payment_summary_indomaret">Indomaret</string>
 
 
-    <string name ="payment_summary_total" >Total</string>
-    <string name ="payment_summary_order_id" >Order ID %s</string>
+    <string name="success_screen_v1_status">Payment successful</string>
+    <string name="success_screen_v1_order_id">Order ID %s</string>
+    <string name="success_screen_v1_redirecting_c_d">Redirecting back automatically in %s second(s)</string>
+    <string name="success_screen_v1_cta">Back to %s\'s web</string>
 
-    <string name ="payment_summary_pay_method_selection_timer" >Choose within</string>
 
-    <string name ="payment_summary_select_method" >Payment method</string>
-    <string name ="payment_summary_bank_transfer" >Bank transfer</string>
-    <string name ="payment_summary_cc_dc" >Credit/debit card</string>
-    <string name ="payment_summary_saved_card" >card(s) saved</string>
-    <string name ="payment_summary_promo_available" >Promo available</string>
-    <string name ="payment_summary_gopay" >GoPay</string>
-    <string name ="payment_summary_shopeepay" >ShopeePay</string>
-    <string name ="payment_summary_alfamart" >Alfa Group</string>
-    <string name ="payment_summary_indomaret" >Indomaret</string>
+    <string name="success_screen_v2_status">Payment successful</string>
+    <string name="success_screen_v2_info">You can now close this browser</string>
 
 
+    <string name="expired_title">Your transaction has expired</string>
+    <string name="expired_desc">Unable to process your transaction because you\'ve exceeded the allocated payment time. Please place your order again.</string>
+    <string name="expired_bottom_message">You can now close this page</string>
 
-    <string name ="success_screen_v1_status" >Payment successful</string>
-    <string name ="success_screen_v1_order_id" >Order ID %s</string>
-    <string name ="success_screen_v1_redirecting_c_d" >Redirecting back automatically in %s second(s)</string>
-    <string name ="success_screen_v1_cta" >Back to %s\'s web</string>
+    <string name="expired_double_tab_title">Your transaction has expired</string>
+    <string name="expired_double_tab_desc">Failed to process your transaction. Please place your order again.</string>
 
+    <string name="no_record_wrong_url_title">Couldn\'t find your transaction record</string>
+    <string name="no_record_wrong_url_desc">Make sure the transaction URL is correct or try contacting the merchant.</string>
+    <string name="no_record_wrong_url_bottom_message">You can now close this browser</string>
 
+    <string name="cancelled_title">Your transaction has been cancelled</string>
+    <string name="cancelled_desc">You haven\'t been charged with anything for this transaction. Please retry placing your order.</string>
+    <string name="cancelled_bottom_message">You can now close this browser</string>
 
-    <string name ="success_screen_v2_status" >Payment successful</string>
-    <string name ="success_screen_v2_info" >You can now close this browser</string>
+    <string name="pl_error_title">Can\'t continue the transaction</string>
+    <string name="pl_error_desc">This transaction link has been used or already expired. Please place new order and complete the transaction.</string>
+    <string name="pl_error_bottom_message">You can now close this browser</string>
 
 
+    <string name="cc_dc_main_screen_remaining_payment_time">Pay within %s</string>
+    <string name="cc_dc_main_screen_format_not_placeholder">0</string>
 
+    <string name="cc_dc_main_screen_tlp">Phone</string>
+    <string name="cc_dc_main_screen_placeholder_phone">1234567890</string>
 
+    <string name="cc_dc_main_screen_email">E-mail</string>
+    <string name="cc_dc_main_screen_placeholder_email">youremail@email.com</string>
 
-    <string name ="expired_title" >Your transaction has expired</string>
-    <string name ="expired_desc" >Unable to process your transaction because you\'ve exceeded the allocated payment time. Please place your order again.</string>
-    <string name ="expired_bottom_message" >You can now close this page</string>
+    <string name="cc_dc_main_screen_card_number">Card number</string>
+    <string name="cc_dc_main_screen_placeholder_card_number">0000–0000–0000–0000</string>
 
-    <string name ="expired_double_tab_title" >Your transaction has expired</string>
-    <string name ="expired_double_tab_desc" >Failed to process your transaction. Please place your order again.</string>
+    <string name="cc_dc_main_screen_expiry">Expiration date</string>
+    <string name="cc_dc_main_screen_placeholder_expiry">MM/YY</string>
 
-    <string name ="no_record_wrong_url_title" >Couldn\'t find your transaction record</string>
-    <string name ="no_record_wrong_url_desc" >Make sure the transaction URL is correct or try contacting the merchant.</string>
-    <string name ="no_record_wrong_url_bottom_message" >You can now close this browser</string>
+    <string name="cc_dc_main_screen_cvv">CVV</string>
+    <string name="cc_dc_main_screen_placeholder_cvv">---</string>
 
-    <string name ="cancelled_title" >Your transaction has been cancelled</string>
-    <string name ="cancelled_desc" >You haven\'t been charged with anything for this transaction. Please retry placing your order.</string>
-    <string name ="cancelled_bottom_message" >You can now close this browser</string>
+    <string name="cc_dc_main_screen_save_this_card">Save this card</string>
 
-    <string name ="pl_error_title" >Can\'t continue the transaction</string>
-    <string name ="pl_error_desc" >This transaction link has been used or already expired. Please place new order and complete the transaction.</string>
-    <string name ="pl_error_bottom_message" >You can now close this browser</string>
+    <string name="cc_dc_main_screen_security_disclaimer">Secure payments by Midtrans</string>
 
+    <string name="cc_dc_main_screen_cta">Pay now</string>
 
-    <string name ="cc_dc_main_screen_remaining_payment_time" >Pay within %s</string>
-    <string name ="cc_dc_main_screen_format_not_placeholder" >0</string>
 
-    <string name ="cc_dc_main_screen_tlp" >Phone</string>
-    <string name ="cc_dc_main_screen_placeholder_phone" >1234567890</string>
+    <string name="promo_select_promo_title">Select promo</string>
 
-    <string name ="cc_dc_main_screen_email" >E-mail</string>
-    <string name ="cc_dc_main_screen_placeholder_email" >youremail@email.com</string>
 
-    <string name ="cc_dc_main_screen_card_number" >Card number</string>
-    <string name ="cc_dc_main_screen_placeholder_card_number" >0000-0000-0000-0000</string>
+    <string name="cant_continue_promo_dont_want_to_use_promo">Proceed without promo</string>
+    <string name="cant_continue_promo_card_not_eligible">Can\'t use this promo with selected card</string>
+    <string name="cant_continue_promo_not_available_with_installment">Promo not available for installments</string>
+    <string name="cant_continue_promo_installment_condition">Only available for %s installment</string>
+    <string name="cant_continue_promo_limited_card_condition">Only available for %s card</string>
 
-    <string name ="cc_dc_main_screen_expiry" >Expiration date</string>
-    <string name ="cc_dc_main_screen_placeholder_expiry" >MM/YY</string>
 
-    <string name ="cc_dc_main_screen_cvv" >CVV</string>
-    <string name ="cc_dc_main_screen_placeholder_cvv" >---</string>
+    <string name="promo_exhausted_title">Promo quota is fully used</string>
+    <string name="promo_exhausted_desc">Do you want to proceed transaction without using promo?</string>
+    <string name="promo_exhausted_cta_1">Proceed</string>
+    <string name="promo_exhausted_cta_2">Back</string>
 
-    <string name ="cc_dc_main_screen_save_this_card" >Save this card</string>
 
-    <string name ="cc_dc_main_screen_security_disclaimer" >Secure payments by Midtrans</string>
+    <string name="installment_title">Choose installment</string>
+    <string name="installment_full_payment">Full payment</string>
+    <string name="installment_3x_installment">3 months</string>
+    <string name="installment_6x_installment">6 months</string>
 
-    <string name ="cc_dc_main_screen_cta" >Pay now</string>
 
+    <string name="point_loading">Loading points…</string>
+    <string name="point_title">Redeem points</string>
+    <string name="point_amount_of_points">%s point(s)</string>
+    <string name="point_failed_title">Failed to load points</string>
+    <string name="point_desc">You can try to refresh or proceed without redeeming points.</string>
 
-    <string name ="promo_select_promo_title" >Select promo</string>
 
+    <string name="failed_otp_title">Failed/cancelled OTP</string>
+    <string name="failed_otp_desc">Please retry payment.</string>
+    <string name="failed_otp_cta">Okay</string>
 
-    <string name ="cant_continue_promo_dont_want_to_use_promo" >Proceed without promo</string>
-    <string name ="cant_continue_promo_card_not_eligible" >Can\'t use this promo with selected card</string>
-    <string name ="cant_continue_promo_not_available_with_installment" >Promo not available for installments</string>
-    <string name ="cant_continue_promo_installment_condition" >Only available for %s installment</string>
-    <string name ="cant_continue_promo_limited_card_condition" >Only available for %s card</string>
 
+    <string name="card_error_invalid_card_number">Make sure your card number are correct.</string>
+    <string name="card_error_empty_card_number">Please enter your card number.</string>
+    <string name="card_error_blocked">This card has been blocked.</string>
+    <string name="card_error_insufficient_fund">Insufficient card fund. Try another card or payment method.</string>
+    <string name="card_error_declined_by_bank_allowed_to_retry">This card got declined by the bank. Try using another card/payment method.</string>
+    <string name="card_error_missing_stollen_card">This card got declined by the bank. Try using another card/payment method.</string>
+    <string name="card_error_exceeding_limit">Card limit has been exceeded.</string>
+    <string name="card_error_cant_be_used_for_online_payments">This card can\'t be used for online transactions.</string>
+    <string name="card_error_hasnt_been_registered_for_online_payments">This card hasn\'t been registered for online transactions.</string>
 
-    <string name ="promo_exhausted_title" >Promo quota is fully used</string>
-    <string name ="promo_exhausted_desc" >Do you want to proceed transaction without using promo?</string>
-    <string name ="promo_exhausted_cta_1" >Proceed</string>
-    <string name ="promo_exhausted_cta_2" >Back</string>
+    <string name="card_error_invalid_expiry">Invalid expiration detail.</string>
+    <string name="card_error_empty_expiry">Expiry can\'t be empty.</string>
+    <string name="card_error_invalid_cvv">Invalid CVV.</string>
+    <string name="card_error_empty_cvv">CVV can\'t be empty.</string>
+    <string name="card_error_declined_not_allowed_to_retry">Card declined by bank</string>
+    <string name="card_error_failed_to_process">Failed to process payment. Please place your order again.</string>
 
 
-    <string name ="installment_title" >Choose installment</string>
-    <string name ="installment_full_payment" >Full payment</string>
-    <string name ="installment_3x_installment" >3 months</string>
-    <string name ="installment_6x_installment" >6 months</string>
+    <string name="cc_dc_saved_card_enter_cvv">Enter CVV</string>
+    <string name="cc_dc_saved_card_use_another_card">Use another card</string>
 
 
-    <string name ="point_loading" >Loading points...</string>
-    <string name ="point_title" >Redeem points</string>
-    <string name ="point_amount_of_points" >%s point(s)</string>
-    <string name ="point_failed_title" >Failed to load points</string>
-    <string name ="point_desc" >You can try to refresh or proceed without redeeming points.</string>
+    <string name="remove_card_title">Remove this card?</string>
+    <string name="remove_card_desc">This card will be removed from your saved card list.</string>
+    <string name="remove_card_cta_1">Cancel</string>
+    <string name="remove_card_cta_2">Yes, remove</string>
 
 
-    <string name ="failed_otp_title" >Failed/cancelled OTP</string>
-    <string name ="failed_otp_desc" >Please retry payment.</string>
-    <string name ="failed_otp_cta" >Okay</string>
+    <string name="general_instruction_bca">Complete payment from BCA to the virtual account number below.</string>
+    <string name="general_instruction_mandiri">Complete payment from Mandiri to the virtual account number below.</string>
+    <string name="general_instruction_bni_bri_permata_other_bank">Complete payment from any bank to the virtual account number below.</string>
 
+    <string name="general_instruction_company_code_mandiri_only">Company code</string>
+    <string name="general_instruction_billing_number_mandiri_only">Billing number</string>
+    <string name="general_instruction_destination_bank_code_permata_only">Bank code</string>
 
+    <string name="general_instruction_va_number_title">Virtual account number</string>
+    <string name="general_instruction_copy_icon_text">Copy</string>
 
-    <string name ="card_error_invalid_card_number" >Make sure your card number are correct.</string>
-    <string name ="card_error_empty_card_number" >Please enter your card number.</string>
-    <string name ="card_error_blocked" >This card has been blocked.</string>
-    <string name ="card_error_insufficient_fund" >Insufficient card fund. Try another card or payment method.</string>
-    <string name ="card_error_declined_by_bank_allowed_to_retry" >This card got declined by the bank. Try using another card/payment method.</string>
-    <string name ="card_error_missing_stollen_card" >This card got declined by the bank. Try using another card/payment method.</string>
-    <string name ="card_error_exceeding_limit" >Card limit has been exceeded.</string>
-    <string name ="card_error_cant_be_used_for_online_payments" >This card can\'t be used for online transactions.</string>
-    <string name ="card_error_hasnt_been_registered_for_online_payments" >This card hasn\'t been registered for online transactions.</string>
 
-    <string name ="card_error_invalid_expiry" >Invalid expiration detail.</string>
-    <string name ="card_error_empty_expiry" >Expiry can\'t be empty.</string>
-    <string name ="card_error_invalid_cvv" >Invalid CVV.</string>
-    <string name ="card_error_empty_cvv" >CVV can\'t be empty.</string>
-    <string name ="card_error_declined_not_allowed_to_retry" >Card declined by bank</string>
-    <string name ="card_error_failed_to_process" >Failed to process payment. Please place your order again.</string>
+    <string name="redirection_instruction_gopay_message">1. Tap Pay now. 2. Gojek app will open. 3. Confirm payment in the Gojek app. 4. Payment complete.</string>
+    <string name="redirection_instruction_gopay_cta">Pay now</string>
 
 
-    <string name ="cc_dc_saved_card_enter_cvv" >Enter CVV</string>
-    <string name ="cc_dc_saved_card_use_another_card" >Use another card</string>
+    <string name="redirection_screen_gopay_main_message">Redirecting to Gojek…</string>
+    <string name="redirection_screen_gopay_coundown_message">Page will be opened in %s second(s).</string>
+    <string name="redirection_screen_gopay_cta">Open now</string>
 
 
+    <string name="transaction_denied_gopay_title">Failed to proceed to GoPay</string>
+    <string name="transaction_denied_gopay_desc">Please try other payment method.</string>
+    <string name="transaction_denied_gopay_cta">Okay</string>
 
-    <string name ="remove_card_title" >Remove this card?</string>
-    <string name ="remove_card_desc" >This card will be removed from your saved card list.</string>
-    <string name ="remove_card_cta_1" >Cancel</string>
-    <string name ="remove_card_cta_2" >Yes, remove</string>
 
+    <string name="scan_qr_instruction_gopay">1. Open your Gojek or other e-wallet app. 2. Scan the QR code on your monitor. 3. Confirm payment in the app. 4. Payment complete.</string>
 
-    <string name ="general_instruction_bca" >Complete payment from BCA to the virtual account number below.</string>
-    <string name ="general_instruction_mandiri" >Complete payment from Mandiri to the virtual account number below.</string>
-    <string name ="general_instruction_bni_bri_permata_other_bank" >Complete payment from any bank to the virtual account number below.</string>
 
-    <string name ="general_instruction_company_code_mandiri_only" >Company code</string>
-    <string name ="general_instruction_billing_number_mandiri_only" >Billing number</string>
-    <string name ="general_instruction_destination_bank_code_permata_only" >Bank code</string>
+    <string name="redirection_instruction_shopeepay_message">1. Tap Pay now. 2. Shopee app will open. 3. Confirm payment in the Shopee app. 4. Payment complete.</string>
+    <string name="redirection_instruction_shopeepay_cta">Pay now</string>
 
-    <string name ="general_instruction_va_number_title" >Virtual account number</string>
-    <string name ="general_instruction_copy_icon_text" >Copy</string>
 
+    <string name="redirection_screen_shopeepay_main_message">Redirecting to Shopee…</string>
+    <string name="redirection_screen_shopeepay_coundown_message">Page will be opened in %s second(s).</string>
+    <string name="redirection_screen_shopeepay_cta">Open now</string>
 
 
-    <string name ="redirection_instruction_gopay_message" >1. Tap Pay now. 2. Gojek app will open. 3. Confirm payment in the Gojek app. 4. Payment complete.</string>
-    <string name ="redirection_instruction_gopay_cta" >Pay now</string>
+    <string name="rejected_transaction_shopeepay_title">Failed to proceed to Shopee</string>
+    <string name="rejected_transaction_shopeepay_desc">Please try other payment method.</string>
+    <string name="rejected_transaction_shopeepay_cta">Okay</string>
 
 
-    <string name ="redirection_screen_gopay_main_message" >Redirecting to Gojek...</string>
-    <string name ="redirection_screen_gopay_coundown_message" >Page will be opened in %s second(s).</string>
-    <string name ="redirection_screen_gopay_cta" >Open now</string>
+    <string name="scan_qr_instruction_shopeepay_message">1. Open your Shopee or other e-wallet app. 2. Scan the QR code on your monitor. 3. Confirm payment in the app. 4. Payment complete.</string>
 
 
-    <string name ="transaction_denied_gopay_title" >Failed to proceed to GoPay</string>
-    <string name ="transaction_denied_gopay_desc" >Please try other payment method.</string>
-    <string name ="transaction_denied_gopay_cta" >Okay</string>
+    <string name="indomaret_instruction">Show barcode to the cashier or enter payment code on i.saku app.</string>
 
+    <string name="indomaret_payment_code_title">Payment code</string>
+    <string name="indomaret_loading_payment_code">Loading…</string>
+    <string name="indomaret_failed_to_load_payment_code">Failed to load</string>
+    <string name="indomaret_cta_reload">Reload</string>
 
 
-    <string name ="scan_qr_instruction_gopay" >1. Open your Gojek or other e-wallet app. 2. Scan the QR code on your monitor. 3. Confirm payment in the app. 4. Payment complete.</string>
+    <string name="indomaret_how_to_pay">1. Tap Download payment info to get a copy of your unique payment details. 2. If you’re going to pay on the counter, go to the nearest Indomaret store and show your payment code/barcode to the cashier. 3. The cashier will confirm your transaction details. Once your transaction is successful, you’ll receive the payment confirmation e-mail. 4. If you’re going to pay via i.saku, open the app and tap Bayar. 5. Choose the merchant you’d like to pay to, and enter your payment code. 6. Tap Selanjutnya and check your transaction details. 7. Tap Bayar sekarang to confirm your payment. 8. Please keep your Indomaret payment receipt in case you’ll need further help via support.</string>
 
+    <string name="indomaret_cta_1">Download payment info</string>
+    <string name="indomaret_cta_2">Close this page</string>
 
 
-    <string name ="redirection_instruction_shopeepay_message" >1. Tap Pay now. 2. Shopee app will open. 3. Confirm payment in the Shopee app. 4. Payment complete.</string>
-    <string name ="redirection_instruction_shopeepay_cta" >Pay now</string>
+    <string name="alfa_group_instruction">Please go to nearest Alfa Group store and show the barcode/payment code to the cashier.</string>
 
+    <string name="alfa_group_payment_code_title">Payment code</string>
+    <string name="alfa_group_loading_payment_code">Loading…</string>
+    <string name="alfa_group_failed_to_load_payment_code">Failed to load</string>
+    <string name="alfa_group_cta_reload">Reload</string>
 
-    <string name ="redirection_screen_shopeepay_main_message" >Redirecting to Shopee...</string>
-    <string name ="redirection_screen_shopeepay_coundown_message" >Page will be opened in %s second(s).</string>
-    <string name ="redirection_screen_shopeepay_cta" >Open now</string>
+    <string name="alfa_group_how_to_pay">1. Tap Download payment info to get a copy of your unique payment details. 2. Go to the nearest Alfamart/Alfamidi/Dan+Dan store near you and show your barcode/payment code to the cashier. 3. The cashier will confirm your transaction details. 4. Confirm your payment with the cashier. 5. Once your transaction is successful, you’ll receive the payment confirmation e-mail. 6. Please keep your Indomaret payment receipt in case you’ll need further help via support.</string>
 
+    <string name="alfa_group_cta_1">Download payment info</string>
+    <string name="alfa_group_cta_2">Close this page</string>
 
 
-    <string name ="rejected_transaction_shopeepay_title" >Failed to proceed to Shopee</string>
-    <string name ="rejected_transaction_shopeepay_desc" >Please try other payment method.</string>
-    <string name ="rejected_transaction_shopeepay_cta" >Okay</string>
+    <string name="akulaku_instruction">Akulaku allows you to shop in installments without using a credit card.</string>
+    <string name="akulaku_how_to_pay">1. Click Pay Now, then you will be directed to the Akulaku Payment Center page. 2. Select the desired installment tenor. 3. Login to your Akulaku account. 4. Enter the verification code (OTP) that has been sent to your mobile number, then click Next. 5. Confirm and finish your payment.</string>
+    <string name="akulaku_cta">Pay now</string>
 
 
+    <string name="danamon_instruction">Make sure you already have Danamon Online Banking account to complete payment through Danamon’s app/website.</string>
+    <string name="danamon_how_to_pay">1. Tap Pay Now and you will be redirected to Danamon Online Banking page. 2. Login and select the source of fund you’d like to use. 3. Recheck your transaction details. 4. Confirm your payment by entering the token code, and click Next. 5. Keep the merchant reference and payment reference number, then click Next to return to the merchant’s page.</string>
+    <string name="danamon_cta">Pay now</string>
 
-    <string name ="scan_qr_instruction_shopeepay_message" >1. Open your Shopee or other e-wallet app. 2. Scan the QR code on your monitor. 3. Confirm payment in the app. 4. Payment complete.</string>
 
+    <string name="bca_klik_pay_instruction">Please complete BCA KlikPay through BCA KlikPay app/website.</string>
+    <string name="bca_klik_pay_how_to_pay">1. Tap Pay Now and you will be redirected to BCA KlikPay page. 2. Login and check your payment details. 3. Choose KlikBCA or BCA Card to pay for your transaction. 4. To authorize payment with BCA KlikPay, tap the Send OTP button to receive an OTP code via SMS, then enter code in the fields provided. 5. If your OTP code is correct, your payment will be processed immediately. 6. Once the payment is completed, success status will appear on the transaction screen and you will receive a notification e-mail.</string>
+    <string name="bca_klik_pay_cta">Pay now</string>
 
 
-    <string name ="indomaret_instruction" >Show barcode to the cashier or enter payment code on i.saku app.</string>
+    <string name="klik_bca_instruction">Please provide your KlikBCA User ID on the field below for us to verify your transaction.</string>
+    <string name="klik_bca_id_field_label">Enter KlikBCA User ID</string>
+    <string name="klik_bca_placeholder">Your KlikBCA ID</string>
+    <string name="klik_bca_validation_error">KlikBCA ID can\'t be empty</string>
 
-    <string name ="indomaret_payment_code_title" >Payment code</string>
-    <string name ="indomaret_loading_payment_code" >Loading...</string>
-    <string name ="indomaret_failed_to_load_payment_code" >Failed to load</string>
-    <string name ="indomaret_cta_reload" >Reload</string>
+    <string name="klik_bca_how_to_pay">1.Tap Pay Now and you will be redirected to KlikBCA page. 2. Login to your KlikBCA account. 3. Choose e-commerce Payment menu. 4. Choose Others category. 5. Choose Company Name. 6. Click Continue. 7. Choose the transaction that you want to pay and tap Continue. 8. Confirm the payment by entering the token key and choose Submit/Continue.</string>
+    <string name="klik_bca_cta">Pay now</string>
 
 
-    <string name ="indomaret_how_to_pay" >1. Tap Download payment info to get a copy of your unique payment details. 2. If you’re going to pay on the counter, go to the nearest Indomaret store and show your payment code/barcode to the cashier. 3. The cashier will confirm your transaction details. Once your transaction is successful, you’ll receive the payment confirmation e-mail. 4. If you’re going to pay via i.saku, open the app and tap Bayar. 5. Choose the merchant you’d like to pay to, and enter your payment code. 6. Tap Selanjutnya and check your transaction details. 7. Tap Bayar sekarang to confirm your payment. 8. Please keep your Indomaret payment receipt in case you’ll need further help via support.</string>
+    <string name="octo_click_instruction">Please complete OCTO Clicks payment through OCTO Clicks app/website.</string>
+    <string name="octo_click_how_to_pay">1. Tap Pay now and you will be redirected to OCTO Clicks page. 2. Login to your Octo Clicks account. 3. Follow the instruction on the website and complete your payment. 4. Once confirmed, your transaction will be processed online and your CIMB account balance will be deducted automatically. 5. Transaction will be cancelled if the payment is not completed within 2 hours. 6. Please make sure that there is no pop-up blocker on your browser.</string>
+    <string name="octo_click_cta">Pay now</string>
 
-    <string name ="indomaret_cta_1" >Download payment info</string>
-    <string name ="indomaret_cta_2" >Close this page</string>
 
+    <string name="brimo_instruction">Please complete BRImo payment through BRI app/website.</string>
+    <string name="brimo_how_to_pay">Please complete BRImo payment through BRI app/website.</string>
+    <string name="brimo_cta">Pay now</string>
 
 
-    <string name ="alfa_group_instruction" >Please go to nearest Alfa Group store and show the barcode/payment code to the cashier.</string>
+    <string name="kredivo_instruction">Please complete the payment through Kredivo app/website.</string>
 
-    <string name ="alfa_group_payment_code_title" >Payment code</string>
-    <string name ="alfa_group_loading_payment_code" >Loading...</string>
-    <string name ="alfa_group_failed_to_load_payment_code" >Failed to load</string>
-    <string name ="alfa_group_cta_reload" >Reload</string>
+    <string name="kredivo_how_to_pay_title">How to pay</string>
+    <string name="kredivo_step_by_step">1. Tap Pay now and you will be redirected to Kredivo page. 2. Login to your Kredivo account. 3. Choose the installment term. 4. Enter the OTP code that has been sent to your mobile number. 5. Tap Pay. 6. You\'ll get confirmation message on the screen once transaction is successful.</string>
 
-    <string name ="alfa_group_how_to_pay" >1. Tap Download payment info to get a copy of your unique payment details. 2. Go to the nearest Alfamart/Alfamidi/Dan+Dan store near you and show your barcode/payment code to the cashier. 3. The cashier will confirm your transaction details. 4. Confirm your payment with the cashier. 5. Once your transaction is successful, you’ll receive the payment confirmation e-mail. 6. Please keep your Indomaret payment receipt in case you’ll need further help via support.</string>
+    <string name="kredivo_cta">Pay now</string>
 
-    <string name ="alfa_group_cta_1" >Download payment info</string>
-    <string name ="alfa_group_cta_2" >Close this page</string>
 
+    <string name="kredivo_redirection_main_message">Redirecting to Kredivo…</string>
+    <string name="kredivo_redirection_cta">Open now</string>
 
 
-    <string name ="akulaku_instruction" >Akulaku allows you to shop in installments without using a credit card.</string>
-    <string name ="akulaku_how_to_pay" >1. Click Pay Now, then you will be directed to the Akulaku Payment Center page. 2. Select the desired installment tenor. 3. Login to your Akulaku account. 4. Enter the verification code (OTP) that has been sent to your mobile number, then click Next. 5. Confirm and finish your payment.</string>
-    <string name ="akulaku_cta" >Pay now</string>
+    <string name="uob_method_name">UOB EZ Pay via web</string>
+    <string name="uob_desc">Please make sure that you have registered ID and complete your payment via UOB EZ Pay.</string>
+    <string name="uob_desc_detail">1. Click Pay now and you will be redirected to UOB EZ Pay website.  2. Login using your userID &amp; password. 3. Enter OTP you\'ll receive via SMS when prompted. 4. Select the account that you would like to pay from and choose \"Continue\". 5. Review your transaction details, enter the OTP you\'ll receive via SMS. 6 Choose \"Confirm\" to complete the payment.</string>
 
 
+    <string name="tmrw_method_name">UOB TMRW app</string>
+    <string name="tmrw_desc">Please make sure that you have registered ID and complete your payment via UOB TMRW app.</string>
+    <string name="tmrw_instruction">1. Click Pay now and you will be redirected to TMRW app. 2. Login using your userID &amp; password. 3. Select the account that you would like to pay from and choose "Next". 4. Review your transaction details, swipe right to confirm. 5. Enter your Secure PIN for verification to complete the payment.</string>
 
-    <string name ="danamon_instruction" >Make sure you already have Danamon Online Banking account to complete payment through Danamon’s app/website.</string>
-    <string name ="danamon_how_to_pay" >1. Tap Pay Now and you will be redirected to Danamon Online Banking page. 2. Login and select the source of fund you’d like to use. 3. Recheck your transaction details. 4. Confirm your payment by entering the token code, and click Next. 5. Keep the merchant reference and payment reference number, then click Next to return to the merchant’s page.</string>
-    <string name ="danamon_cta" >Pay now</string>
 
+    <string name="mandiri_description">Complete payment from Mandiri to the virtual account number below.</string>
 
+    <string name="mandiri_kode_perusahaan">Company code</string>
+    <string name="mandiri_nomor_tagihan">Virtual account number</string>
 
-    <string name ="bca_klik_pay_instruction" >Please complete BCA KlikPay through BCA KlikPay app/website.</string>
-    <string name ="bca_klik_pay_how_to_pay" >1. Tap Pay Now and you will be redirected to BCA KlikPay page. 2. Login and check your payment details. 3. Choose KlikBCA or BCA Card to pay for your transaction. 4. To authorize payment with BCA KlikPay, tap the Send OTP button to receive an OTP code via SMS, then enter code in the fields provided. 5. If your OTP code is correct, your payment will be processed immediately. 6. Once the payment is completed, success status will appear on the transaction screen and you will receive a notification e-mail.</string>
-    <string name ="bca_klik_pay_cta" >Pay now</string>
+    <string name="mandiri_instruction_atm">1. Select Pay/Buy on the main menu. 2. Select Others. 3. Select Multi Payment. 4. Insert company code 70012. 5. Insert virtual account number, then confirm. 6. Payment complete.</string>
 
-
-
-    <string name ="klik_bca_instruction" >Please provide your KlikBCA User ID on the field below for us to verify your transaction.</string>
-    <string name ="klik_bca_id_field_label" >Enter KlikBCA User ID</string>
-    <string name ="klik_bca_placeholder" >Your KlikBCA ID</string>
-    <string name ="klik_bca_validation_error" >KlikBCA ID can\'t be empty</string>
-
-    <string name ="klik_bca_how_to_pay" >1.Tap Pay Now and you will be redirected to KlikBCA page. 2. Login to your KlikBCA account. 3. Choose e-commerce Payment menu. 4. Choose Others category. 5. Choose Company Name. 6. Click Continue. 7. Choose the transaction that you want to pay and tap Continue. 8. Confirm the payment by entering the token key and choose Submit/Continue.</string>
-    <string name ="klik_bca_cta" >Pay now</string>
-
-
-
-    <string name ="octo_click_instruction" >Please complete OCTO Clicks payment through OCTO Clicks app/website.</string>
-    <string name ="octo_click_how_to_pay" >1. Tap Pay now and you will be redirected to OCTO Clicks page. 2. Login to your Octo Clicks account. 3. Follow the instruction on the website and complete your payment. 4. Once confirmed, your transaction will be processed online and your CIMB account balance will be deducted automatically. 5. Transaction will be cancelled if the payment is not completed within 2 hours. 6. Please make sure that there is no pop-up blocker on your browser.</string>
-    <string name ="octo_click_cta" >Pay now</string>
-
-
-
-    <string name ="brimo_instruction" >Please complete BRImo payment through BRI app/website.</string>
-    <string name ="brimo_how_to_pay" >Please complete BRImo payment through BRI app/website.</string>
-    <string name ="brimo_cta" >Pay now</string>
-
-
-    <string name ="kredivo_instruction" >Please complete the payment through Kredivo app/website.</string>
-
-    <string name ="kredivo_how_to_pay_title" >How to pay</string>
-    <string name ="kredivo_step_by_step" >1. Tap Pay now and you will be redirected to Kredivo page. 2. Login to your Kredivo account. 3. Choose the installment term. 4. Enter the OTP code that has been sent to your mobile number. 5. Tap Pay. 6. You\'ll get confirmation message on the screen once transaction is successful.</string>
-
-    <string name ="kredivo_cta" >Pay now</string>
-
-
-
-    <string name ="kredivo_redirection_main_message" >Redirecting to Kredivo...</string>
-    <string name ="kredivo_redirection_cta" >Open now</string>
-
-
-    <string name ="uob_method_name" >UOB EZ Pay via web</string>
-    <string name ="uob_desc" >Please make sure that you have registered ID and complete your payment via UOB EZ Pay.</string>
-    <string name ="uob_desc_detail" >1. Click Pay now and you will be redirected to UOB EZ Pay website.  2. Login using your userID &amp; password. 3. Enter OTP you\'ll receive via SMS when prompted. 4. Select the account that you would like to pay from and choose "Continue". 5. Review your transaction details, enter the OTP you'll receive via SMS. 6 Choose "Confirm" to complete the payment.</string>
-
-
-
-    <string name ="tmrw_method_name" >UOB TMRW app</string>
-    <string name ="tmrw_desc" >Please make sure that you have registered ID and complete your payment via UOB TMRW app.</string>
-    <string name ="tmrw_instruction" >1. Click Pay now and you will be redirected to TMRW app. 2. Login using your userID &amp; password. 3. Select the account that you would like to pay from and choose "Next". 4. Review your transaction details, swipe right to confirm. 5. Enter your Secure PIN for verification to complete the payment.</string>
-
-
-
-    <string name ="mandiri_description" >Complete payment from Mandiri to the virtual account number below.</string>
-
-    <string name ="mandiri_kode_perusahaan" >Company code</string>
-    <string name ="mandiri_nomor_tagihan" >Virtual account number</string>
-
-    <string name ="mandiri_instruction_atm" >1. Select Pay/Buy on the main menu. 2. Select Others. 3. Select Multi Payment. 4. Insert company code 70012. 5. Insert virtual account number, then confirm. 6. Payment complete.</string>
-
-    <string name ="mandiri_instruction_internet_banking" >1. Select Payment on the main menu. 2. Select Multi Payment. 3. Select From account. 4. Select Midtrans in the Service provider field. 5. Insert virtual account number, then confirm. 6. Payment complete</string>
+    <string name="mandiri_instruction_internet_banking">1. Select Payment on the main menu. 2. Select Multi Payment. 3. Select From account. 4. Select Midtrans in the Service provider field. 5. Insert virtual account number, then confirm. 6. Payment complete</string>
 
 </resources>

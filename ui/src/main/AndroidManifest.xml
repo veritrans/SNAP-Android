@@ -13,6 +13,16 @@
             android:name=".internal.presentation.ErrorScreenActivity"
             android:theme="@style/Theme.AppCompat.Light"
             android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".internal.presentation.BankTransferActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".internal.presentation.BankTransfer2"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

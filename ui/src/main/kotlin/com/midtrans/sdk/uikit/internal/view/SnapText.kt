@@ -3,6 +3,7 @@ package com.midtrans.sdk.uikit.internal.view
 import android.text.Html
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 
 object SnapText {
@@ -17,11 +18,13 @@ object SnapText {
 @Composable
 fun SnapText(
     text: String,
-    style: SnapText.Style = SnapText.Style.MEDIUM
+    style: SnapText.Style = SnapText.Style.MEDIUM,
+    modifier: Modifier = Modifier
 ) {
     Text(
         text = Html.fromHtml(text).toAnnotatedString(),
-        style = getTextStyle(style)
+        style = getTextStyle(style),
+        modifier = modifier
     )
 }
 

@@ -1,307 +1,281 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name ="payment_details_subtotal" >Subtotal</string>
+    <string name="payment_details_subtotal">Subtotal</string>
 
-    <string name ="payment_details_promo_title" >Promo</string>
+    <string name="payment_details_promo_title">Promo</string>
 
-    <string name ="payment_details_point_redemption_title" >Poin</string>
+    <string name="payment_details_point_redemption_title">Poin</string>
 
-    <string name ="payment_details_total" >Total</string>
+    <string name="payment_details_total">Total</string>
 
-    <string name ="payment_details_customer_detail_title" >Detail pelanggan</string>
+    <string name="payment_details_customer_detail_title">Detail pelanggan</string>
 
 
+    <string name="payment_summary_total">Total</string>
+    <string name="payment_summary_order_id">Order ID %s</string>
 
+    <string name="payment_summary_pay_method_selection_timer">Pilih dalam</string>
 
-    <string name ="payment_summary_total" >Total</string>
-    <string name ="payment_summary_order_id" >Order ID %s</string>
+    <string name="payment_summary_select_method">Metode pembayaran</string>
+    <string name="payment_summary_bank_transfer">Transfer bank</string>
+    <string name="payment_summary_cc_dc">Kartu kredit/debit</string>
+    <string name="payment_summary_saved_card">card(s) saved</string>
+    <string name="payment_summary_promo_available">Promo tersedia</string>
+    <string name="payment_summary_gopay">GoPay</string>
+    <string name="payment_summary_shopeepay">ShopeePay</string>
+    <string name="payment_summary_alfamart">Alfa Group</string>
+    <string name="payment_summary_indomaret">Indomaret</string>
 
-    <string name ="payment_summary_pay_method_selection_timer" >Pilih dalam</string>
 
-    <string name ="payment_summary_select_method" >Metode pembayaran</string>
-    <string name ="payment_summary_bank_transfer" >Transfer bank</string>
-    <string name ="payment_summary_cc_dc" >Kartu kredit/debit</string>
-    <string name ="payment_summary_saved_card" >card(s) saved</string>
-    <string name ="payment_summary_promo_available" >Promo tersedia</string>
-    <string name ="payment_summary_gopay" >GoPay</string>
-    <string name ="payment_summary_shopeepay" >ShopeePay</string>
-    <string name ="payment_summary_alfamart" >Alfa Group</string>
-    <string name ="payment_summary_indomaret" >Indomaret</string>
+    <string name="success_screen_v1_status">Pembayaran berhasil</string>
+    <string name="success_screen_v1_order_id">Order ID %s</string>
+    <string name="success_screen_v1_redirecting_c_d">Kembali otomatis dalam %s detik</string>
+    <string name="success_screen_v1_cta">Kembali ke web %s</string>
 
 
+    <string name="success_screen_v2_status">Pembayaran berhasil</string>
+    <string name="success_screen_v2_info">Anda dapat menutup halaman ini</string>
 
-    <string name ="success_screen_v1_status" >Pembayaran berhasil</string>
-    <string name ="success_screen_v1_order_id" >Order ID %s</string>
-    <string name ="success_screen_v1_redirecting_c_d" >Kembali otomatis dalam %s detik</string>
-    <string name ="success_screen_v1_cta" >Kembali ke web %s</string>
 
+    <string name="expired_title">Transaksi sudah kedaluwarsa</string>
+    <string name="expired_desc">Transaksi gagal diproses karena sudah melewati batas waktu pembayaran. Silakan lakukan pemesanan ulang.</string>
+    <string name="expired_bottom_message">Anda dapat menutup halaman ini</string>
 
+    <string name="expired_double_tab_title">Transaksi sudah kedaluwarsa</string>
+    <string name="expired_double_tab_desc">Transaksimu gagal diproses. Silakan lakukan pemesanan ulang.</string>
 
-    <string name ="success_screen_v2_status" >Pembayaran berhasil</string>
-    <string name ="success_screen_v2_info" >Anda dapat menutup halaman ini</string>
+    <string name="no_record_wrong_url_title">Transaksi tidak ditemukan</string>
+    <string name="no_record_wrong_url_desc">Pastikan URL transaksi sudah benar atau silakan hubungi merchant.</string>
+    <string name="no_record_wrong_url_bottom_message">Anda dapat menutup halaman ini</string>
 
+    <string name="cancelled_title">Transaksi Anda telah dibatalkan</string>
+    <string name="cancelled_desc">Anda belum dikenakan biaya apa pun. Silakan coba lakukan pemesanan kembali.</string>
+    <string name="cancelled_bottom_message">Anda dapat menutup halaman ini</string>
 
+    <string name="pl_error_title">Tidak bisa melanjutkan transaksi</string>
+    <string name="pl_error_desc">Tautan transaksi ini sudah terpakai atau kedaluwarsa. Silakan buat pesanan baru dan selesaikan transaksinya.</string>
+    <string name="pl_error_bottom_message">Anda dapat menutup halaman ini</string>
 
 
+    <string name="cc_dc_main_screen_remaining_payment_time">Bayar dalam %s</string>
+    <string name="cc_dc_main_screen_format_not_placeholder">0</string>
 
-    <string name ="expired_title" >Transaksi sudah kedaluwarsa</string>
-    <string name ="expired_desc" >Transaksi gagal diproses karena sudah melewati batas waktu pembayaran. Silakan lakukan pemesanan ulang.</string>
-    <string name ="expired_bottom_message" >Anda dapat menutup halaman ini</string>
+    <string name="cc_dc_main_screen_tlp">Telepon</string>
+    <string name="cc_dc_main_screen_placeholder_phone">1234567890</string>
 
-    <string name ="expired_double_tab_title" >Transaksi sudah kedaluwarsa</string>
-    <string name ="expired_double_tab_desc" >Transaksimu gagal diproses. Silakan lakukan pemesanan ulang.</string>
+    <string name="cc_dc_main_screen_email">E-mail</string>
+    <string name="cc_dc_main_screen_placeholder_email">emailanda@email.com</string>
 
-    <string name ="no_record_wrong_url_title" >Transaksi tidak ditemukan</string>
-    <string name ="no_record_wrong_url_desc" >Pastikan URL transaksi sudah benar atau silakan hubungi merchant.</string>
-    <string name ="no_record_wrong_url_bottom_message" >Anda dapat menutup halaman ini</string>
+    <string name="cc_dc_main_screen_card_number">Nomor kartu</string>
+    <string name="cc_dc_main_screen_placeholder_card_number">0000–0000–0000–0000</string>
 
-    <string name ="cancelled_title" >Transaksi Anda telah dibatalkan</string>
-    <string name ="cancelled_desc" >Anda belum dikenakan biaya apa pun. Silakan coba lakukan pemesanan kembali.</string>
-    <string name ="cancelled_bottom_message" >Anda dapat menutup halaman ini</string>
+    <string name="cc_dc_main_screen_expiry">Masa berlaku</string>
+    <string name="cc_dc_main_screen_placeholder_expiry">BB/TT</string>
 
-    <string name ="pl_error_title" >Tidak bisa melanjutkan transaksi</string>
-    <string name ="pl_error_desc" >Tautan transaksi ini sudah terpakai atau kedaluwarsa. Silakan buat pesanan baru dan selesaikan transaksinya.</string>
-    <string name ="pl_error_bottom_message" >Anda dapat menutup halaman ini</string>
+    <string name="cc_dc_main_screen_cvv">CVV</string>
+    <string name="cc_dc_main_screen_placeholder_cvv">---</string>
 
+    <string name="cc_dc_main_screen_save_this_card">Simpan kartu ini</string>
 
+    <string name="cc_dc_main_screen_security_disclaimer">Pembayaran aman dengan Midtrans</string>
 
-    <string name ="cc_dc_main_screen_remaining_payment_time" >Bayar dalam %s</string>
-    <string name ="cc_dc_main_screen_format_not_placeholder" >0</string>
+    <string name="cc_dc_main_screen_cta">Bayar sekarang</string>
 
-    <string name ="cc_dc_main_screen_tlp" >Telepon</string>
-    <string name ="cc_dc_main_screen_placeholder_phone" >1234567890</string>
 
-    <string name ="cc_dc_main_screen_email" >E-mail</string>
-    <string name ="cc_dc_main_screen_placeholder_email" >emailanda@email.com</string>
+    <string name="promo_select_promo_title">Pilih promo</string>
 
-    <string name ="cc_dc_main_screen_card_number" >Nomor kartu</string>
-    <string name ="cc_dc_main_screen_placeholder_card_number" >0000-0000-0000-0000</string>
 
-    <string name ="cc_dc_main_screen_expiry" >Masa berlaku</string>
-    <string name ="cc_dc_main_screen_placeholder_expiry" >BB/TT</string>
+    <string name="cant_continue_promo_dont_want_to_use_promo">Lanjut tanpa promo</string>
+    <string name="cant_continue_promo_card_not_eligible">Tidak berlaku untuk kartu yang digunakan</string>
+    <string name="cant_continue_promo_not_available_with_installment">Promo tidak laku untuk skema cicilan</string>
+    <string name="cant_continue_promo_installment_condition">Hanya berlaku untuk cicilan %s</string>
+    <string name="cant_continue_promo_limited_card_condition">Hanya berlaku untuk kartu %s</string>
 
-    <string name ="cc_dc_main_screen_cvv" >CVV</string>
-    <string name ="cc_dc_main_screen_placeholder_cvv" >---</string>
 
-    <string name ="cc_dc_main_screen_save_this_card" >Simpan kartu ini</string>
+    <string name="promo_exhausted_title">Kuota promo sudah terpakai</string>
+    <string name="promo_exhausted_desc">Apakah Anda ingin melanjutkan transaksi tanpa menggunakan promo?</string>
+    <string name="promo_exhausted_cta_1">Lanjut</string>
+    <string name="promo_exhausted_cta_2">Kembali</string>
 
-    <string name ="cc_dc_main_screen_security_disclaimer" >Pembayaran aman dengan Midtrans</string>
 
-    <string name ="cc_dc_main_screen_cta" >Bayar sekarang</string>
+    <string name="installment_title">Pilih cicilan</string>
+    <string name="installment_full_payment">Bayar penuh</string>
+    <string name="installment_3x_installment">3 bulan</string>
+    <string name="installment_6x_installment">6 bulan</string>
 
 
+    <string name="point_loading">Memuat poin...</string>
+    <string name="point_title">Tukar poin</string>
+    <string name="point_amount_of_points">%s poin</string>
+    <string name="point_failed_title">Gagal memuat poin</string>
+    <string name="point_desc">Silakan muat ulang halaman atau lanjutkan pembayaran tanpa menukarkan poin.</string>
 
-    <string name ="promo_select_promo_title" >Pilih promo</string>
 
+    <string name="failed_otp_title">OTP gagal/dibatalkan</string>
+    <string name="failed_otp_desc">Silakan coba kembali.</string>
+    <string name="failed_otp_cta">Oke</string>
 
-    <string name ="cant_continue_promo_dont_want_to_use_promo" >Lanjut tanpa promo</string>
-    <string name ="cant_continue_promo_card_not_eligible" >Tidak berlaku untuk kartu yang digunakan</string>
-    <string name ="cant_continue_promo_not_available_with_installment" >Promo tidak laku untuk skema cicilan</string>
-    <string name ="cant_continue_promo_installment_condition" >Hanya berlaku untuk cicilan %s</string>
-    <string name ="cant_continue_promo_limited_card_condition" >Hanya berlaku untuk kartu %s</string>
 
+    <string name="card_error_invalid_card_number">Pastikan nomor kartu Anda sudah benar.</string>
+    <string name="card_error_empty_card_number">Nomor kartu harus diisi.</string>
+    <string name="card_error_blocked">Kartu ini telah diblokir.</string>
+    <string name="card_error_insufficient_fund">Dana tidak cukup. Silakan coba kartu/metode pembayaran lainnya.</string>
+    <string name="card_error_declined_by_bank_allowed_to_retry">Kartu ini ditolak oleh bank. Silakan coba kartu/metode pembayaran lainnya.</string>
+    <string name="card_error_missing_stollen_card">Kartu ini ditolak oleh bank. Silakan coba kartu/metode pembayaran lainnya.</string>
+    <string name="card_error_exceeding_limit">Limit kartu sudah terlampaui.</string>
+    <string name="card_error_cant_be_used_for_online_payments">Kartu ini tidak bisa digunakan untuk transaksi online.</string>
+    <string name="card_error_hasnt_been_registered_for_online_payments">Kartu ini belum didaftarkan untuk transaksi online.</string>
 
-    <string name ="promo_exhausted_title" >Kuota promo sudah terpakai</string>
-    <string name ="promo_exhausted_desc" >Apakah Anda ingin melanjutkan transaksi tanpa menggunakan promo?</string>
-    <string name ="promo_exhausted_cta_1" >Lanjut</string>
-    <string name ="promo_exhausted_cta_2" >Kembali</string>
+    <string name="card_error_invalid_expiry">Masa berlaku tidak valid.</string>
+    <string name="card_error_empty_expiry">Masa berlaku wajib diisi.</string>
+    <string name="card_error_invalid_cvv">Nomor CVV tidak valid.</string>
+    <string name="card_error_empty_cvv">CVV wajib diisi.</string>
+    <string name="card_error_declined_not_allowed_to_retry">Kartu ditolak oleh bank</string>
+    <string name="card_error_failed_to_process">Pembayaran gagal diproses. Silakan lakukan pemesanan ulang.</string>
 
+    <string name="cc_dc_saved_card_enter_cvv">Masukkan CVV</string>
+    <string name="cc_dc_saved_card_use_another_card">Gunakan kartu lain</string>
 
-    <string name ="installment_title" >Pilih cicilan</string>
-    <string name ="installment_full_payment" >Bayar penuh</string>
-    <string name ="installment_3x_installment" >3 bulan</string>
-    <string name ="installment_6x_installment" >6 bulan</string>
 
+    <string name="remove_card_title">Hapus kartu ini?</string>
+    <string name="remove_card_desc">Kartu ini akan dihapus dari daftar kartu yang tersimpan.</string>
+    <string name="remove_card_cta_1">Batal</string>
+    <string name="remove_card_cta_2">Ya, hapus</string>
 
-    <string name ="point_loading" >Memuat poin...</string>
-    <string name ="point_title" >Tukar poin</string>
-    <string name ="point_amount_of_points" >%s poin</string>
-    <string name ="point_title" >Gagal memuat poin</string>
-    <string name ="point_desc" >Silakan muat ulang halaman atau lanjutkan pembayaran tanpa menukarkan poin.</string>
 
+    <string name="general_instruction_bca">Lakukan pembayaran dari rekening bank BCA ke nomor virtual account berikut.</string>
+    <string name="general_instruction_mandiri">Lakukan pembayaran dari rekening bank Mandiri ke nomor virtual account berikut.</string>
+    <string name="general_instruction_bni_bri_permata_other_bank">Lakukan pembayaran dari bank apa saja ke nomor virtual account berikut.</string>
 
-    <string name ="failed_otp_title" >OTP gagal/dibatalkan</string>
-    <string name ="failed_otp_desc" >Silakan coba kembali.</string>
-    <string name ="failed_otp_cta" >Oke</string>
+    <string name="general_instruction_company_code_mandiri_only">Kode perusahan</string>
+    <string name="general_instruction_billing_number_mandiri_only">Nomor tagihan</string>
+    <string name="general_instruction_destination_bank_code_permata_only">Kode bank tujuan</string>
 
+    <string name="general_instruction_va_number_title">Nomor virtual account</string>
+    <string name="general_instruction_copy_icon_text">Salin</string>
 
 
-    <string name ="card_error_invalid_card_number" >Pastikan nomor kartu Anda sudah benar.</string>
-    <string name ="card_error_empty_card_number" >Nomor kartu harus diisi.</string>
-    <string name ="card_error_blocked" >Kartu ini telah diblokir.</string>
-    <string name ="card_error_insufficient_fund" >Dana tidak cukup. Silakan coba kartu/metode pembayaran lainnya.</string>
-    <string name ="card_error_declined_by_bank_allowed_to_retry" >Kartu ini ditolak oleh bank. Silakan coba kartu/metode pembayaran lainnya.</string>
-    <string name ="card_error_missing_stollen_card" >Kartu ini ditolak oleh bank. Silakan coba kartu/metode pembayaran lainnya.</string>
-    <string name ="card_error_exceeding_limit" >Limit kartu sudah terlampaui.</string>
-    <string name ="card_error_cant_be_used_for_online_payments" >Kartu ini tidak bisa digunakan untuk transaksi online.</string>
-    <string name ="card_error_hasnt_been_registered_for_online_payments" >Kartu ini belum didaftarkan untuk transaksi online.</string>
+    <string name="redirection_instruction_gopay_message">1. Klik Bayar sekarang. 2. Aplikasi Gojek akan terbuka. 3. Konfirmasi pembayaran di aplikasi Gojek. 4. Pembayaran selesai.</string>
+    <string name="redirection_instruction_gopay_cta">Bayar sekarang</string>
 
-    <string name ="card_error_invalid_expiry" >Masa berlaku tidak valid.</string>
-    <string name ="card_error_empty_expiry" >Masa berlaku wajib diisi.</string>
-    <string name ="card_error_invalid_cvv" >Nomor CVV tidak valid.</string>
-    <string name ="card_error_empty_cvv" >CVV wajib diisi.</string>
-    <string name ="card_error_declined_not_allowed_to_retry" >Kartu ditolak oleh bank</string>
-    <string name ="card_error_failed_to_process" >Pembayaran gagal diproses. Silakan lakukan pemesanan ulang.</string>
 
-    <string name ="cc_dc_saved_card_enter_cvv" >Masukkan CVV</string>
-    <string name ="cc_dc_saved_card_use_another_card" >Gunakan kartu lain</string>
+    <string name="redirection_screen_gopay_main_message">Mengalihkan ke Gojek…</string>
+    <string name="redirection_screen_gopay_coundown_message">Membuka otomatis dalam %s detik.</string>
+    <string name="redirection_screen_gopay_cta">Buka sekarang</string>
 
 
+    <string name="transaction_denied_gopay_title">Gagal memproses ke GoPay</string>
+    <string name="transaction_denied_gopay_desc">Silakan coba metode pembayaran lainnya.</string>
+    <string name="transaction_denied_gopay_cta">Oke</string>
 
-    <string name ="remove_card_title" >Hapus kartu ini?</string>
-    <string name ="remove_card_desc" >Kartu ini akan dihapus dari daftar kartu yang tersimpan.</string>
-    <string name ="remove_card_cta_1" >Batal</string>
-    <string name ="remove_card_cta_2" >Ya, hapus</string>
 
+    <string name="scan_qr_instruction_gopay">1. Buka aplikasi Gojek atau e-wallet lain Anda. 2. Pindai kode QR pada monitor. 3. Konfirmasi pembayaran pada aplikasi. 4. Pembayaran selesai.</string>
 
-    <string name ="general_instruction_bca" >Lakukan pembayaran dari rekening bank BCA ke nomor virtual account berikut.</string>
-    <string name ="general_instruction_mandiri" >Lakukan pembayaran dari rekening bank Mandiri ke nomor virtual account berikut.</string>
-    <string name ="general_instruction_bni_bri_permata_other_bank" >Lakukan pembayaran dari bank apa saja ke nomor virtual account berikut.</string>
 
-    <string name ="general_instruction_company_code_mandiri_only" >Kode perusahan</string>
-    <string name ="general_instruction_billing_number_mandiri_only" >Nomor tagihan</string>
-    <string name ="general_instruction_destination_bank_code_permata_only" >Kode bank tujuan</string>
+    <string name="redirection_instruction_shopeepay_message">1. Klik Bayar sekarang. 2. Aplikasi Shopee akan terbuka. 3. Konfirmasi pembayaran di aplikasi Shopee. 4. Pembayaran selesai.</string>
+    <string name="redirection_instruction_shopeepay_cta">Bayar sekarang</string>
 
-    <string name ="general_instruction_va_number_title" >Nomor virtual account</string>
-    <string name ="general_instruction_copy_icon_text" >Salin</string>
 
+    <string name="redirection_screen_shopeepay_main_message">Mengalihkan ke Shopee…</string>
+    <string name="redirection_screen_shopeepay_coundown_message">Membuka otomatis dalam %s detik.</string>
+    <string name="redirection_screen_shopeepay_cta">Buka sekarang</string>
 
 
-    <string name ="redirection_instruction_gopay_message" >1. Klik Bayar sekarang. 2. Aplikasi Gojek akan terbuka. 3. Konfirmasi pembayaran di aplikasi Gojek. 4. Pembayaran selesai.</string>
-    <string name ="redirection_instruction_gopay_cta" >Bayar sekarang</string>
+    <string name="rejected_transaction_shopeepay_title">Gagal memproses ke Shopee</string>
+    <string name="rejected_transaction_shopeepay_desc">Silakan coba metode pembayaran lainnya.</string>
+    <string name="rejected_transaction_shopeepay_cta">Oke</string>
 
 
-    <string name ="redirection_screen_gopay_main_message" >Mengalihkan ke Gojek...</string>
-    <string name ="redirection_screen_gopay_coundown_message" >Membuka otomatis dalam %s detik.</string>
-    <string name ="redirection_screen_gopay_cta" >Buka sekarang</string>
+    <string name="scan_qr_instruction_shopeepay_message">1. Buka aplikasi Shopee atau e-wallet lain Anda. 2. Pindai kode QR pada monitor. 3. Konfirmasi pembayaran pada aplikasi. 4. Pembayaran selesai.</string>
 
 
-    <string name ="transaction_denied_gopay_title" >Gagal memproses ke GoPay</string>
-    <string name ="transaction_denied_gopay_desc" >Silakan coba metode pembayaran lainnya.</string>
-    <string name ="transaction_denied_gopay_cta" >Oke</string>
+    <string name="indomaret_instruction">Tunjukkan barcode ke kasir atau masukkan kode bayar ke aplikasi i.saku.</string>
 
+    <string name="indomaret_payment_code_title">Kode pembayaran</string>
+    <string name="indomaret_loading_payment_code">Memuat…</string>
+    <string name="indomaret_failed_to_load_payment_code">Gagal memuat</string>
+    <string name="indomaret_cta_reload">Muat ulang</string>
 
 
-    <string name ="scan_qr_instruction_gopay" >1. Buka aplikasi Gojek atau e-wallet lain Anda. 2. Pindai kode QR pada monitor. 3. Konfirmasi pembayaran pada aplikasi. 4. Pembayaran selesai.</string>
+    <string name="indomaret_how_to_pay">1. Klik Unduh info pembayaran untuk menyimpan detail pembayaran Anda. 2. Jika Anda hendak membayar melalui konter, datangi gerai Indomaret terdekat dan tunjukkan kode bayar/barcode Anda ke kasir. 3. Kasir akan mengonfirmasi detail transaksi Anda. Anda akan mendapatkan e-mail berisi konfirmasi pembayaran jika transaksi Anda berhasil diproses. 4. Jika Anda hendak membayar melalui i.saku, silakan buka aplikasinya dan klik Bayar. 5. Pilih nama toko yang ingin Anda bayar, lalu masukkan Kode Bayar Anda. 6. Klik Selanjutnya dan periksa kembali detail transaksi Anda. 7. Klik Bayar sekarang untuk mengonfirmasi pembayaran. 8. Mohon menyimpan bukti pembayaran untuk berjaga-jaga jika Anda membutuhkan bantuan lebih lanjut.</string>
 
+    <string name="indomaret_cta_1">Unduh info pembayaran</string>
+    <string name="indomaret_cta_2">Tutup halaman ini</string>
 
 
-    <string name ="redirection_instruction_shopeepay_message" >1. Klik Bayar sekarang. 2. Aplikasi Shopee akan terbuka. 3. Konfirmasi pembayaran di aplikasi Shopee. 4. Pembayaran selesai.</string>
-    <string name ="redirection_instruction_shopeepay_cta" >Bayar sekarang</string>
+    <string name="alfa_group_instruction">Silakan tunjukan barcode/kode bayar ke kasir di gerai Alfa Group terdekat.</string>
 
+    <string name="alfa_group_payment_code_title">Kode pembayaran</string>
+    <string name="alfa_group_loading_payment_code">Memuat…</string>
+    <string name="alfa_group_failed_to_load_payment_code">Gagal memuat</string>
+    <string name="alfa_group_cta_reload">Muat ulang</string>
 
-    <string name ="redirection_screen_shopeepay_main_message" >Mengalihkan ke Shopee...</string>
-    <string name ="redirection_screen_shopeepay_coundown_message" >Membuka otomatis dalam %s detik.</string>
-    <string name ="redirection_screen_shopeepay_cta" >Buka sekarang</string>
+    <string name="alfa_group_how_to_pay">1. Klik Unduh info pembayaran untuk menyimpan detail pembayaran Anda. 2. Datangi gerai Alfamart/Alfamidi/Dan+Dan terdekat dan tunjukkan barcode/kode pembayaran Anda ke kasir. 3. Kasir akan mengonfirmasi detail transaksi Anda. 4. Konfirmasi detail pembayaran Anda ke kasir. 5. Anda akan mendapatkan e-mail berisi konfirmasi pembayaran jika transaksi Anda berhasil diproses. 6. Mohon menyimpan bukti pembayaran untuk berjaga-jaga jika Anda membutuhkan bantuan lebih lanjut.</string>
+    <string name="alfa_group_cta_1">Unduh info pembayaran</string>
+    <string name="alfa_group_cta_2">Tutup halaman ini</string>
 
 
+    <string name="akulaku_instruction">Akulaku memungkinkan Anda untuk berbelanja dengan angsuran tanpa menggunakan kartu kredit.</string>
+    <string name="akulaku_how_to_pay">1. Klik Bayar sekarang, lalu Anda akan dialihkan ke halaman pembayaran Akulaku. 2. Tentukan pilihan angsuran yang ingin dipakai. 3. Login ke akun Akulaku Anda. 4. Masukkan kode OTP yang dikirimkan ke nomor ponsel Anda, lalu klik Lanjut. 5. Konfirmasi dan selesaikan pembayaran Anda.</string>
+    <string name="akulaku_cta">Bayar sekarang</string>
 
-    <string name ="rejected_transaction_shopeepay_title" >Gagal memproses ke Shopee</string>
-    <string name ="rejected_transaction_shopeepay_desc" >Silakan coba metode pembayaran lainnya.</string>
-    <string name ="rejected_transaction_shopeepay_cta" >Oke</string>
 
+    <string name="danamon_instruction">Pastikan Anda memiliki akun Danamon Online Banking untuk menyelesaikan pembayaran melalui aplikasi/situs web Danamon.</string>
+    <string name="danamon_how_to_pay">1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman Danamon Online Banking. 2. Login lalu pilih sumber dana yang digunakan. 3. Periksa kembali rincian transaksi Anda. 4. Konfirmasi pembayaran dengan masukkan kode token, lalu klik Lanjut. 5. Simpan referensi nomor pembayaran dan toko, lalu klik Lanjut untuk kembali ke halaman toko.</string>
+    <string name="danamon_cta">Bayar sekarang</string>
 
 
-    <string name ="scan_qr_instruction_shopeepay_message" >1. Buka aplikasi Shopee atau e-wallet lain Anda. 2. Pindai kode QR pada monitor. 3. Konfirmasi pembayaran pada aplikasi. 4. Pembayaran selesai.</string>
+    <string name="bca_klik_pay_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web BCA KlikPay.</string>
+    <string name="bca_klik_pay_how_to_pay">1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman BCA KlikPay. 2. Login dan periksa kembali detail pembayaran Anda. 3. Pilih KlikBCA atau BCA Card untuk membayar transaksi. 4. Untuk mengotorisasi pembayaran via BCA KlikPay, klik tombol Kirim OTP untuk menerima kode OTP melalui SMS, lalu masukkan kode tersebut ke kolom yang sudah disediakan. 5. Jika kode OTP yang Anda masukkan benar, transaksi Anda akan segera diproses. 6. Setelah pembayaran selesai, halaman situs akan mengindikasikan bahwa transaksi berhasil diproses dan Anda akan mendapat notifikasi via e-mail.</string>
+    <string name="bca_klik_pay_cta">Bayar sekarang</string>
 
 
+    <string name="klik_bca_instruction">Mohon cantumkan UserID Klik BCA Anda agar kami dapat memverifikasi transaksi.</string>
+    <string name="klik_bca_id_field_label">Masukkan user ID KlikBCA</string>
+    <string name="klik_bca_placeholder">ID KlikBCA Anda</string>
+    <string name="klik_bca_validation_error">ID KlikBCA wajib diisi</string>
 
-    <string name ="indomaret_instruction" >Tunjukkan barcode ke kasir atau masukkan kode bayar ke aplikasi i.saku.</string>
+    <string name="klik_bca_how_to_pay">1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman BCA KlikPay. 2. Login ke akun KlikBCA Anda. 3. Pilih menu Pembayaran e-commerce. 4. Pilih kategori Lainnya. 5. Pilih Nama Perusahaan. 6. Klik Lanjut. 7. Pilih transaksi yang ingin Anda bayar, lalu klik Lanjut. 8. Konfirmasi pembayaran dengan memasukkan kode token, lalu pilih Kirim/Lanjut.</string>
+    <string name="klik_bca_cta">Bayar sekarang</string>
+    <string name="octo_click_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web OCTO Clicks.</string>
+    <string name="octo_click_how_to_pay">1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman Octo Clicks. 2. Login ke akun Octo Clicks Anda. 3. Ikuti petunjuk yang ada di situs web untuk menyelesaikan pembayaran. 4. Setelah terkonfirmasi, transaksi Anda akan diproses secara online dan saldo rekening CIMB Anda akan dipotong secara otomatis. 5. Transaksi akan dibatalkan jika Anda tidak menyelesaikan pembayaran dalam waktu 2 jam. 6. Pastikan pop-up blocker tidak terpasang pada browser yang Anda gunakan.</string>
+    <string name="octo_click_cta">Bayar sekarang</string>
 
-    <string name ="indomaret_payment_code_title" >Kode pembayaran</string>
-    <string name ="indomaret_loading_payment_code" >Memuat...</string>
-    <string name ="indomaret_failed_to_load_payment_code" >Gagal memuat</string>
-    <string name ="indomaret_cta_reload" >Muat ulang</string>
 
+    <string name="brimo_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web BRI.</string>
+    <string name="brimo_how_to_pay">1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman BRImo. 2. Login ke akun BRImo Anda. 3. Ikuti petunjuk yang ada di situs web untuk menyelesaikan pembayaran. 4. Setelah terkonfirmasi, transaksi Anda akan diproses secara online dan saldo rekening BRI Anda akan dipotong secara otomatis. 5. Transaksi akan dibatalkan jika Anda tidak menyelesaikan pembayaran dalam waktu 2 jam.</string>
+    <string name="brimo_cta">Bayar sekarang</string>
 
-    <string name ="indomaret_how_to_pay" >1. Klik Unduh info pembayaran untuk menyimpan detail pembayaran Anda. 2. Jika Anda hendak membayar melalui konter, datangi gerai Indomaret terdekat dan tunjukkan kode bayar/barcode Anda ke kasir. 3. Kasir akan mengonfirmasi detail transaksi Anda. Anda akan mendapatkan e-mail berisi konfirmasi pembayaran jika transaksi Anda berhasil diproses. 4. Jika Anda hendak membayar melalui i.saku, silakan buka aplikasinya dan klik Bayar. 5. Pilih nama toko yang ingin Anda bayar, lalu masukkan Kode Bayar Anda. 6. Klik Selanjutnya dan periksa kembali detail transaksi Anda. 7. Klik Bayar sekarang untuk mengonfirmasi pembayaran. 8. Mohon menyimpan bukti pembayaran untuk berjaga-jaga jika Anda membutuhkan bantuan lebih lanjut.</string>
 
-    <string name ="indomaret_cta_1" >Unduh info pembayaran</string>
-    <string name ="indomaret_cta_2" >Tutup halaman ini</string>
+    <string name="kredivo_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/website Krevido.</string>
 
+    <string name="kredivo_how_to_pay_title">Cara bayar</string>
+    <string name="kredivo_step_by_step">1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman Kredivo. 2. Login ke akun Kredivo Anda. 3. Pilih jangka waktu cicilan yang diinginkan. 4. Masukkan kode OTP yang telah dikirimkan ke nomor HP-mu. 4. Klik Bayar. 5. Anda akan mendapatkan konfirmasi pada layar jika transaksi berhasil.</string>
 
+    <string name="kredivo_cta">Bayar sekarang</string>
 
-    <string name ="alfa_group_instruction" >Silakan tunjukan barcode/kode bayar ke kasir di gerai Alfa Group terdekat.</string>
 
-    <string name ="alfa_group_payment_code_title" >Kode pembayaran</string>
-    <string name ="alfa_group_loading_payment_code" >Memuat...</string>
-    <string name ="alfa_group_failed_to_load_payment_code" >Gagal memuat</string>
-    <string name ="alfa_group_cta_reload" >Muat ulang</string>
+    <string name="kredivo_redirection_main_message">Mengalihkan ke Kredivo…</string>
+    <string name="kredivo_redirection_cta">Buka sekarang</string>
 
-    <string name ="alfa_group_how_to_pay" >1. Klik Unduh info pembayaran untuk menyimpan detail pembayaran Anda. 2. Datangi gerai Alfamart/Alfamidi/Dan+Dan terdekat dan tunjukkan barcode/kode pembayaran Anda ke kasir. 3. Kasir akan mengonfirmasi detail transaksi Anda. 4. Konfirmasi detail pembayaran Anda ke kasir. 5. Anda akan mendapatkan e-mail berisi konfirmasi pembayaran jika transaksi Anda berhasil diproses. 6. Mohon menyimpan bukti pembayaran untuk berjaga-jaga jika Anda membutuhkan bantuan lebih lanjut.</string>
-    <string name ="alfa_group_cta_1" >Unduh info pembayaran</string>
-    <string name ="alfa_group_cta_2" >Tutup halaman ini</string>
 
+    <string name="uob_method_name">UOB EZ Pay via web</string>
+    <string name="uob_desc">Pastikan Anda sudah memiliki ID terdaftar dan silakan selesaikan pembayaran melalui UOB EZ Pay.</string>
+    <string name="uob_desc_detail">1. Klik Bayar sekarang dan Anda akan diarahkan ke situs web UOB EZ Pay. 2. Masuk menggunakan userID &amp; password Anda. 3. Masukkan OTP yang dikirim via SMS ketika diminta. 4. Pilih akun untuk melakukan pembayaran, lalu pilih \"Lanjutkan\". 5. Periksa detail pembayaran, lalu masukkan OTP yang dikirim via SMS. 6. Konfirmasi pembayaran.</string>
 
 
-    <string name ="akulaku_instruction" >Akulaku memungkinkan Anda untuk berbelanja dengan angsuran tanpa menggunakan kartu kredit.</string>
-    <string name ="akulaku_how_to_pay" >1. Klik Bayar sekarang, lalu Anda akan dialihkan ke halaman pembayaran Akulaku. 2. Tentukan pilihan angsuran yang ingin dipakai. 3. Login ke akun Akulaku Anda. 4. Masukkan kode OTP yang dikirimkan ke nomor ponsel Anda, lalu klik Lanjut. 5. Konfirmasi dan selesaikan pembayaran Anda.</string>
-    <string name ="akulaku_cta" >Bayar sekarang</string>
+    <string name="tmrw_method_name">UOB TMRW app</string>
+    <string name="tmrw_desc">Pastikan Anda sudah memiliki ID terdaftar dan silakan selesaikan pembayaran melalui aplikasi UOB TMRW.</string>
+    <string name="tmrw_instruction">1. Klik Bayar sekarang dan Anda akan diarahkan ke aplikasi TMRW. 2. Masuk menggunakan userID &amp; password Anda. 3. Pilih akun untuk melanjutkan pembayaran, lalu klik "Lanjutkan". 4. Periksa detail pembayaran, lalu swipe kanan untuk mengkonfirmasi detail. 5. Masukkan Secure PIN untuk menyelesaikan pembayaran.</string>
 
 
+    <string name="mandiri_description">Lakukan pembayaran dari rekening bank Mandiri ke nomor virtual account berikut.</string>
 
-    <string name ="danamon_instruction" >Pastikan Anda memiliki akun Danamon Online Banking untuk menyelesaikan pembayaran melalui aplikasi/situs web Danamon.</string>
-    <string name ="danamon_how_to_pay" >1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman Danamon Online Banking. 2. Login lalu pilih sumber dana yang digunakan. 3. Periksa kembali rincian transaksi Anda. 4. Konfirmasi pembayaran dengan masukkan kode token, lalu klik Lanjut. 5. Simpan referensi nomor pembayaran dan toko, lalu klik Lanjut untuk kembali ke halaman toko.</string>
-    <string name ="danamon_cta" >Bayar sekarang</string>
+    <string name="mandiri_kode_perusahaan">Kode perusahaan</string>
+    <string name="mandiri_nomor_tagihan">Nomor virtual account</string>
 
+    <string name="mandiri_instruction_atm">1. Pilih Bayar/Beli pada menu utama. 2. Pilih Lainnya. 3. Pilih Multi Payment. 4. Masukkan kode perusahaan 70012. 5. Masukkan nomor virtual account, lalu konfirmasi. 6. Pembayaran selesai.</string>
 
-
-    <string name ="bca_klik_pay_instruction" >Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web BCA KlikPay.</string>
-    <string name ="bca_klik_pay_how_to_pay" >1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman BCA KlikPay. 2. Login dan periksa kembali detail pembayaran Anda. 3. Pilih KlikBCA atau BCA Card untuk membayar transaksi. 4. Untuk mengotorisasi pembayaran via BCA KlikPay, klik tombol Kirim OTP untuk menerima kode OTP melalui SMS, lalu masukkan kode tersebut ke kolom yang sudah disediakan. 5. Jika kode OTP yang Anda masukkan benar, transaksi Anda akan segera diproses. 6. Setelah pembayaran selesai, halaman situs akan mengindikasikan bahwa transaksi berhasil diproses dan Anda akan mendapat notifikasi via e-mail.</string>
-    <string name ="bca_klik_pay_cta" >Bayar sekarang</string>
-
-
-
-    <string name ="klik_bca_instruction" >Mohon cantumkan UserID Klik BCA Anda agar kami dapat memverifikasi transaksi.</string>
-    <string name ="klik_bca_id_field_label" >Masukkan user ID KlikBCA</string>
-    <string name ="klik_bca_placeholder" >ID KlikBCA Anda</string>
-    <string name ="klik_bca_validation_error" >ID KlikBCA wajib diisi</string>
-
-    <string name ="klik_bca_how_to_pay" >1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman BCA KlikPay. 2. Login ke akun KlikBCA Anda. 3. Pilih menu Pembayaran e-commerce. 4. Pilih kategori Lainnya. 5. Pilih Nama Perusahaan. 6. Klik Lanjut. 7. Pilih transaksi yang ingin Anda bayar, lalu klik Lanjut. 8. Konfirmasi pembayaran dengan memasukkan kode token, lalu pilih Kirim/Lanjut.</string>
-    <string name ="klik_bca_cta" >Bayar sekarang</string>
-    <string name ="octo_click_instruction" >Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web OCTO Clicks.</string>
-    <string name ="octo_click_how_to_pay" >1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman Octo Clicks. 2. Login ke akun Octo Clicks Anda. 3. Ikuti petunjuk yang ada di situs web untuk menyelesaikan pembayaran. 4. Setelah terkonfirmasi, transaksi Anda akan diproses secara online dan saldo rekening CIMB Anda akan dipotong secara otomatis. 5. Transaksi akan dibatalkan jika Anda tidak menyelesaikan pembayaran dalam waktu 2 jam. 6. Pastikan pop-up blocker tidak terpasang pada browser yang Anda gunakan.</string>
-    <string name ="octo_click_cta" >Bayar sekarang</string>
-
-
-
-    <string name ="brimo_instruction" >Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web BRI.</string>
-    <string name ="brimo_how_to_pay" >1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman BRImo. 2. Login ke akun BRImo Anda. 3. Ikuti petunjuk yang ada di situs web untuk menyelesaikan pembayaran. 4. Setelah terkonfirmasi, transaksi Anda akan diproses secara online dan saldo rekening BRI Anda akan dipotong secara otomatis. 5. Transaksi akan dibatalkan jika Anda tidak menyelesaikan pembayaran dalam waktu 2 jam.</string>
-    <string name ="brimo_cta" >Bayar sekarang</string>
-
-
-    <string name ="kredivo_instruction" >Mohon untuk menyelesaikan pembayaran melalui aplikasi/website Krevido.</string>
-
-    <string name ="kredivo_how_to_pay_title" >Cara bayar</string>
-    <string name ="kredivo_step_by_step" >1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman Kredivo. 2. Login ke akun Kredivo Anda. 3. Pilih jangka waktu cicilan yang diinginkan. 4. Masukkan kode OTP yang telah dikirimkan ke nomor HP-mu. 4. Klik Bayar. 5. Anda akan mendapatkan konfirmasi pada layar jika transaksi berhasil.</string>
-
-    <string name ="kredivo_cta" >Bayar sekarang</string>
-
-
-
-    <string name ="kredivo_redirection_main_message" >Mengalihkan ke Kredivo...</string>
-    <string name ="kredivo_redirection_cta" >Buka sekarang</string>
-
-
-    <string name ="uob_method_name" >UOB EZ Pay via web</string>
-    <string name ="uob_desc" >Pastikan Anda sudah memiliki ID terdaftar dan silakan selesaikan pembayaran melalui UOB EZ Pay.</string>
-    <string name ="uob_desc_detail" >1. Klik Bayar sekarang dan Anda akan diarahkan ke situs web UOB EZ Pay. 2. Masuk menggunakan userID &amp; password Anda. 3. Masukkan OTP yang dikirim via SMS ketika diminta. 4. Pilih akun untuk melakukan pembayaran, lalu pilih "Lanjutkan". 5. Periksa detail pembayaran, lalu masukkan OTP yang dikirim via SMS. 6. Konfirmasi pembayaran.</string>
-
-
-
-    <string name ="tmrw_method_name" >UOB TMRW app</string>
-    <string name ="tmrw_desc" >Pastikan Anda sudah memiliki ID terdaftar dan silakan selesaikan pembayaran melalui aplikasi UOB TMRW.</string>
-    <string name ="tmrw_instruction" >1. Klik Bayar sekarang dan Anda akan diarahkan ke aplikasi TMRW. 2. Masuk menggunakan userID &amp; password Anda. 3. Pilih akun untuk melanjutkan pembayaran, lalu klik "Lanjutkan". 4. Periksa detail pembayaran, lalu swipe kanan untuk mengkonfirmasi detail. 5. Masukkan Secure PIN untuk menyelesaikan pembayaran.</string>
-
-
-
-    <string name ="mandiri_description" >Lakukan pembayaran dari rekening bank Mandiri ke nomor virtual account berikut.</string>
-
-    <string name ="mandiri_kode_perusahaan" >Kode perusahaan</string>
-    <string name ="mandiri_nomor_tagihan" >Nomor virtual account</string>
-
-    <string name ="mandiri_instruction_atm" >1. Pilih Bayar/Beli pada menu utama. 2. Pilih Lainnya. 3. Pilih Multi Payment. 4. Masukkan kode perusahaan 70012. 5. Masukkan nomor virtual account, lalu konfirmasi. 6. Pembayaran selesai.</string>
-
-    <string name ="mandiri_instruction_internet_banking" >1. Pilih Bayar pada menu utama. 2. Pilih Multi Payment. 3. Pilih Dari rekening. 4. Pilih Midtrans di bagian Penyedia jasa. 5. Masukkan nomor virtual account, lalu konfirmasi. 6. Pembayaran selesai.</string>
+    <string name="mandiri_instruction_internet_banking">1. Pilih Bayar pada menu utama. 2. Pilih Multi Payment. 3. Pilih Dari rekening. 4. Pilih Midtrans di bagian Penyedia jasa. 5. Masukkan nomor virtual account, lalu konfirmasi. 6. Pembayaran selesai.</string>
 
 </resources>

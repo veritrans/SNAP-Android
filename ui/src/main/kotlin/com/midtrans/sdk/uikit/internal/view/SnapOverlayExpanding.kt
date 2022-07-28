@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.midtrans.sdk.uikit.R
 
 @Composable
@@ -22,11 +23,14 @@ import com.midtrans.sdk.uikit.R
 fun SnapOverlayExpandingBox(
     isExpanded: Boolean = true,
     mainContent: @Composable (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
     expandingContent: @Composable (() -> Unit)? = null,
     followingContent: @Composable (() -> Unit)? = null
 ) {
 
-    ConstraintLayout {
+    ConstraintLayout(
+        modifier = modifier
+    ) {
         val main = createRef()
         val expanding = createRef()
         val following = createRef()
@@ -51,6 +55,8 @@ fun SnapOverlayExpandingBox(
 
         Box(modifier = Modifier.constrainAs(following) {
             top.linkTo(main.bottom)
+            bottom.linkTo(parent.bottom)
+            height = Dimension.fillToConstraints
         }) {
             followingContent?.invoke()
         }

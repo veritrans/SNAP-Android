@@ -18,6 +18,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.SnapCore
+import com.midtrans.sdk.uikit.internal.presentation.BankTransfer2
+import com.midtrans.sdk.uikit.internal.presentation.BankTransferActivity
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 
 class SampleActivity : AppCompatActivity() {
@@ -151,7 +153,7 @@ class SampleActivity : AppCompatActivity() {
                 text = "To Sample UI",
                 style = SnapButton.Style.PRIMARY
             ) {
-                startActivity(Intent(this@SampleActivity, SampleUiActivity::class.java))
+                startActivity(Intent(this@SampleActivity, BankTransfer2::class.java))
             }
         }
     }

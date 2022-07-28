@@ -2,23 +2,18 @@ package com.midtrans.sdk.uikit.internal.presentation
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
-import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
-import com.midtrans.sdk.uikit.internal.view.SnapOverlayExpandingBox
-import com.midtrans.sdk.uikit.internal.view.SnapTotal
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.uikit.internal.view.SnapSingleIconListItem
+import com.midtrans.sdk.uikit.internal.view.*
 
-class BankTransferActivity: BaseActivity() {
+class BankTransfer2 : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,13 +25,16 @@ class BankTransferActivity: BaseActivity() {
 
     @Composable
     fun Content(
-        bankList: List<Pair<String, Int>>
     ) {
         var expanding by remember {
             mutableStateOf(false)
         }
-        Box(modifier = Modifier.padding(16.dp).fillMaxHeight(1f)) {
+
+        Column(modifier = Modifier
+            .padding(16.dp)
+            .fillMaxHeight(1f)) {
             SnapOverlayExpandingBox(
+                modifier = Modifier.weight(1f),
                 isExpanded = expanding,
                 mainContent = {
                     SnapTotal(
@@ -59,14 +57,27 @@ class BankTransferActivity: BaseActivity() {
                     )
                 }
             ) {
-                LazyColumn() {
-                    bankList.forEachIndexed { index, s ->
-                        item {
-                            SnapSingleIconListItem(title = s.first, iconResId = s.second)
-                        }
-                    }
+                Column(
+                    modifier = Modifier.padding(top = 28.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text(text = "lakukan pembayaran dari rekening bank mandiri")
+                    SnapCopyableInfoListItem(
+                        title = "kode prerusahaan",
+                        info = "70012"
+                    )
+
+                    SnapCopyableInfoListItem(
+                        title = resources.getString(R.string.general_instruction_billing_number_mandiri_only),
+                        info = "8098038r0qrerq"
+                    )
                 }
-            }.apply {
+            }
+
+            SnapButton(
+                text = "Saya sudah bayar",
+                modifier = Modifier.fillMaxWidth(1f)
+            ) {
 
             }
         }
@@ -76,18 +87,8 @@ class BankTransferActivity: BaseActivity() {
     @Preview
     fun ForPreview() {
         Content(
-            bankList = listOf(
-                Pair("Mandiri", R.drawable.ic_bank_mandiri_40),
-                Pair("Permata", R.drawable.ic_bank_permata_40),
-                Pair("BCA", R.drawable.ic_bank_bca_40),
-                Pair("Mandiri", R.drawable.ic_bank_mandiri_40),
-                Pair("Permata", R.drawable.ic_bank_permata_40),
-                Pair("BCA", R.drawable.ic_bank_bca_40),
-                Pair("Mandiri", R.drawable.ic_bank_mandiri_40),
-                Pair("Permata", R.drawable.ic_bank_permata_40),
-                Pair("BCA", R.drawable.ic_bank_bca_40),
-                Pair("BCA", R.drawable.ic_bank_bca_40)
-            )
+
         )
+
     }
 }
