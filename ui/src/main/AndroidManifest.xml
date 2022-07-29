@@ -15,12 +15,12 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".internal.presentation.banktransfer.BankTransferActivity"
+            android:name=".internal.presentation.banktransfer.BankTransferListActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".internal.presentation.banktransfer.BankTransfer2"
+            android:name=".internal.presentation.banktransfer.BankTransferDetailActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 

@@ -46,10 +46,10 @@ fun SnapCopyableInfoListItem(
             )
         }
 
-        Row() {
+        Row {
             info?.let {
                 Text(
-                    text = "1234456454324123",
+                    text = it,
                     modifier = Modifier.weight(1f),
                     color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY),
                     style = SnapTypography.STYLES.snapTextMediumRegular
@@ -61,11 +61,12 @@ fun SnapCopyableInfoListItem(
                 visible = copied,
                 enter = fadeIn(),
             ) {
-                Row() {
+                Row {
                     Text(
                         text = stringResource(id = R.string.general_instruction_copied_icon_text),
                         modifier = Modifier.clickable(onClick = { onCopyClicked(info.orEmpty()) }),
-                        color = SnapColors.getARGBColor(SnapColors.INTERACTIVE_FILL_BRAND_DEFAULT)
+                        color = SnapColors.getARGBColor(SnapColors.INTERACTIVE_FILL_BRAND_DEFAULT),
+                        style = SnapTypography.STYLES.snapTextMediumMedium
                     )
 
                     Icon(
@@ -81,7 +82,8 @@ fun SnapCopyableInfoListItem(
                 Text(
                     text = stringResource(id = R.string.general_instruction_copy_icon_text),
                     modifier = Modifier.clickable(onClick = { onCopyClicked(info.orEmpty()) }),
-                    color = SnapColors.getARGBColor(SnapColors.LINK)
+                    color = SnapColors.getARGBColor(SnapColors.LINK),
+                    style = SnapTypography.STYLES.snapTextMediumMedium
                 )
             }
 

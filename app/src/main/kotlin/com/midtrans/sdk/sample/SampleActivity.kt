@@ -18,8 +18,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.SnapCore
-import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransfer2
-import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferActivity
+import com.midtrans.sdk.uikit.external.model.PaymentList
+import com.midtrans.sdk.uikit.external.model.PaymentMethod
+import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
+import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity.Companion.openPaymentOptionPage
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 
 class SampleActivity : AppCompatActivity() {
@@ -162,86 +164,75 @@ class SampleActivity : AppCompatActivity() {
                 text = "To Sample UI",
                 style = SnapButton.Style.PRIMARY
             ) {
-//                startActivity(Intent(this@SampleActivity, SampleUiActivity::class.java))
-//                val intent = openPaymentOptionPage(
-//                    this@SampleActivity,
-//                    "Rp33.990",
-//                    "#00-11-22-33",
-//                    PaymentList(
-//                        listOf(
-//                            PaymentMethod(
-//                                type = "shopeepay",
-//                                status = "up"
-//                            ),
-//                            PaymentMethod(
-//                                type = "qris",
-//                                acquirer = "shopeepay",
-//                                status = "up"
-//                            ),
-//                            PaymentMethod(
-//                                type = "uob_ezpay",
-//                                mode = listOf(
-//                                    "uob_ezpay_web",
-//                                    "uob_ezpay_deeplink"
-//                                ),
-//                                status = "up"
-//                            ),
-//                            PaymentMethod(
-//                                type = "cimb_clicks",
-//                                status = "up"
-//                            ),
-//                            PaymentMethod(
-//                                type = "bca_klikbca",
-//                                status = "up"
-//                            ),
-//                            PaymentMethod(
-//                                type = "bri_epay",
-//                                status = "up"
-//                            ),
-//                            PaymentMethod(
-//                                type = "bca_klikpay",
-//                                status = "up"
-//                            ),
-//                            PaymentMethod(
-//                                type = "credit_card",
-//                                status = "up"
-//                            ),
-//                            PaymentMethod(
-//                                type = "bca_va",
-//                                category = "bank_transfer",
-//                                status = "up"
-//                            ),
-//                            PaymentMethod(
-//                                type = "bni_va",
-//                                category = "bank_transfer",
-//                                status = "up"
-//                            ),
-//                            PaymentMethod(
-//                                type = "echannel",
-//                                category = "bank_transfer",
-//                                status = "up"
-//                            )
-//                        )
-//                    ),
-//                    "Ari Bhakti",
-//                    "087788778212",
-//                    listOf("Jl. ABC", "Rumah DEF")
-//                )
-//                startActivity(
-//                    intent
-//                )
-                startActivity(BankTransferActivity.getIntent(
-                    activityContext = this@SampleActivity,
-                    customerName = "ari",
-                    customerPhone = "123455",
-                    addressLines = listOf("jalan", "jalan", "jalan"),
-                    orderId = "#2141241234",
-                    totalAmount = "Rp.123.456",
-                    companyCode = "7777",
-                    billingNumber = "84034832048",
-                    vaNumber = "439403943094039"
+                startActivity(Intent(this@SampleActivity, SampleUiActivity::class.java))
+                val intent = openPaymentOptionPage(
+                    this@SampleActivity,
+                    "Rp33.990",
+                    "#00-11-22-33",
+                    PaymentList(
+                        listOf(
+                            PaymentMethod(
+                                type = "shopeepay",
+                                status = "up"
+                            ),
+                            PaymentMethod(
+                                type = "qris",
+                                acquirer = "shopeepay",
+                                status = "up"
+                            ),
+                            PaymentMethod(
+                                type = "uob_ezpay",
+                                mode = listOf(
+                                    "uob_ezpay_web",
+                                    "uob_ezpay_deeplink"
+                                ),
+                                status = "up"
+                            ),
+                            PaymentMethod(
+                                type = "cimb_clicks",
+                                status = "up"
+                            ),
+                            PaymentMethod(
+                                type = "bca_klikbca",
+                                status = "up"
+                            ),
+                            PaymentMethod(
+                                type = "bri_epay",
+                                status = "up"
+                            ),
+                            PaymentMethod(
+                                type = "bca_klikpay",
+                                status = "up"
+                            ),
+                            PaymentMethod(
+                                type = "credit_card",
+                                status = "up"
+                            ),
+                            PaymentMethod(
+                                type = "bca_va",
+                                category = "bank_transfer",
+                                status = "up"
+                            ),
+                            PaymentMethod(
+                                type = "bni_va",
+                                category = "bank_transfer",
+                                status = "up"
+                            ),
+                            PaymentMethod(
+                                type = "echannel",
+                                category = "bank_transfer",
+                                status = "up"
+                            )
+                        )
+                    ),
+                    "Ari Bhakti",
+                    "087788778212",
+                    listOf("Jl. ABC", "Rumah DEF")
+                )
+                startActivity(
+                    intent
+                )
 
-                ))
             }
         }
     }

@@ -26,12 +26,20 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.*
 import kotlinx.android.parcel.Parcelize
 
-class BankTransfer2 : BaseActivity() {
+class BankTransferDetailActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ForPreview()
+            Content(
+                totalAmount = totalAmount,
+                orderId = orderId,
+                customerDetail = customerDetail,
+                vaNumber = vaNumber,
+                billingNumber = billingNumber,
+                bankName = bankName,
+                companyCode = companyCode
+            )
         }
     }
 
@@ -39,7 +47,11 @@ class BankTransfer2 : BaseActivity() {
     private fun Content(
         totalAmount: String,
         orderId: String,
-        customerDetail: CustomerDetail
+        bankName: String,
+        customerDetail: CustomerDetail,
+        vaNumber: String?,
+        billingNumber: String?,
+        companyCode: String?
     ) {
         var expanding by remember {
             mutableStateOf(false)
@@ -80,9 +92,17 @@ class BankTransfer2 : BaseActivity() {
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     generalInstruction[bankName]?.let {
-                        Text(text = stringResource(id = it))
+                        Text(
+                            text = stringResource(id = it),
+                            style = SnapTypography.STYLES.snapTextBigRegular,
+                            color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY)
+                        )
                     }
-                    getInfoField()[bankName]?.invoke()
+                    getInfoField(
+                        vaNumber = vaNumber,
+                        companyCode = companyCode,
+                        billingNumber = billingNumber
+                    )[bankName]?.invoke()
 
                     var isExpanded by remember { mutableStateOf(false) }
                     SnapInstructionButton(
@@ -96,7 +116,7 @@ class BankTransfer2 : BaseActivity() {
                                 verticalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
                                 paymentInstruction[bankName]?.forEach { item ->
-                                    var selected = item.first == selectedOption
+                                    val selected = item.first == selectedOption
                                     Column(
                                         modifier = Modifier.selectable(
                                             selected = selected,
@@ -106,7 +126,7 @@ class BankTransfer2 : BaseActivity() {
                                             role = Role.RadioButton
                                         )
                                     ) {
-                                        Row() {
+                                        Row {
                                             Text(
                                                 text = stringResource(id = item.first),
                                                 modifier = Modifier.weight(1f)
@@ -137,13 +157,17 @@ class BankTransfer2 : BaseActivity() {
                 text = stringResource(id = R.string.i_have_already_paid),
                 modifier = Modifier.fillMaxWidth(1f)
             ) {
-
+                //TODO: Click action
             }
         }
     }
 
     @Composable
-    private fun getInfoField(): Map<String, @Composable (() -> Unit)> {
+    private fun getInfoField(
+        vaNumber: String?,
+        billingNumber: String?,
+        companyCode: String?
+    ): Map<String, @Composable (() -> Unit)> {
         return mapOf(
             Pair(BANK_BCA) {
                 var copied by remember {
@@ -154,7 +178,7 @@ class BankTransfer2 : BaseActivity() {
                         title = stringResource(id = R.string.general_instruction_va_number_title),
                         info = it,
                         copied = copied,
-                        onCopyClicked = { label -> copied = true }
+                        onCopyClicked = { copied = true }
                     )
                 }
             },
@@ -205,11 +229,15 @@ class BankTransfer2 : BaseActivity() {
         Content(
             totalAmount = "Rp.199.000",
             orderId = "#1231231233121",
-            CustomerDetail(
+            customerDetail = CustomerDetail(
                 name = "ari bakti",
                 phone = "4123123123123",
                 addressLines = listOf("jalan", "jalan", "jalan")
-            )
+            ),
+            vaNumber = "23421312",
+            companyCode = "32323",
+            bankName = "bni",
+            billingNumber = "2323222222"
         )
 
     }
@@ -271,7 +299,7 @@ class BankTransfer2 : BaseActivity() {
             customerPhone: String,
             addressLines: List<String>
         ): Intent {
-            return Intent(activityContext, BankTransfer2::class.java).apply {
+            return Intent(activityContext, BankTransferDetailActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(

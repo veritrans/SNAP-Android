@@ -28,6 +28,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.model.PaymentList
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
+import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapColors
 import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
@@ -209,48 +210,82 @@ class PaymentOptionActivity : BaseActivity() {
             SnapAppBar(title = "Payment Methods", iconResId = R.drawable.ic_arrow_left) {
                 onBackPressed()
             }
-                SnapOverlayExpandingBox(
-                    isExpanded = isExpand,
-                    mainContent = {
-                        SnapTotal(
-                            amount = totalAmount,
-                            orderId = orderId,
-                            remainingTime = null
-                        ) {
-                            isExpand = it
-                        }
-                    },
-                    expandingContent = {
-                        SnapCustomerDetail(
-                            name = customerDetail.name,
-                            phone = customerDetail.phone,
-                            addressLines = customerDetail.addressLines
-                        )
-                    },
-                    followingContent = {
-                        LazyColumn {
-                            items(
-                                items = paymentMethods.paymentMethods,
-                                key = {
-                                    it.type
-                                }
-                            ) { payment ->
-                                SnapMultiIconListItem(
-                                    title = stringResource(payment.titleId),
-                                    iconList = payment.icons
-                                ) {
-                                    //TODO create intent to go to selected payment method page
-                                    Toast.makeText(this@PaymentOptionActivity, "${payment.type}", Toast.LENGTH_LONG).show()
-                                }
+            SnapOverlayExpandingBox(
+                isExpanded = isExpand,
+                mainContent = {
+                    SnapTotal(
+                        amount = totalAmount,
+                        orderId = orderId,
+                        remainingTime = null
+                    ) {
+                        isExpand = it
+                    }
+                },
+                expandingContent = {
+                    SnapCustomerDetail(
+                        name = customerDetail.name,
+                        phone = customerDetail.phone,
+                        addressLines = customerDetail.addressLines
+                    )
+                },
+                followingContent = {
+                    LazyColumn {
+                        items(
+                            items = paymentMethods.paymentMethods,
+                            key = {
+                                it.type
+                            }
+                        ) { payment ->
+                            SnapMultiIconListItem(
+                                title = stringResource(payment.titleId),
+                                iconList = payment.icons
+                            ) {
+                                //TODO create intent to go to selected payment method page
+                                Toast.makeText(
+                                    this@PaymentOptionActivity,
+                                    "${payment.type}",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                getOnPaymentItemClick(
+                                    customerDetail = customerDetail,
+                                    totalAmount = totalAmount,
+                                    orderId = orderId
+                                )[payment.type]?.invoke()
                             }
                         }
-                    },
-                    modifier = Modifier
-                        .fillMaxHeight(1f)
-                        .padding(all = 16.dp)
-                        .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
-                )
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxHeight(1f)
+                    .padding(all = 16.dp)
+                    .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
+            )
         }
+    }
+
+    private fun getOnPaymentItemClick(
+        totalAmount: String,
+        orderId: String,
+        customerDetail: CustomerDetail,
+    ): Map<String, () -> Unit> {
+        return mapOf(
+            Pair("bank_transfer") {
+                startActivity(
+                    BankTransferListActivity.getIntent(
+                        activityContext = this,
+                        customerName = customerDetail.name,
+                        customerPhone = customerDetail.phone,
+                        addressLines = customerDetail.addressLines,
+                        orderId = orderId,
+                        totalAmount = totalAmount,
+                        companyCode = "7777",
+                        billingNumber = "84034832048",
+                        vaNumber = "439403943094039"
+
+                    )
+                )
+            }
+        )
     }
 
     @Parcelize

@@ -5,16 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toLowerCase
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
@@ -24,7 +21,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.SnapSingleIconListItem
 import kotlinx.android.parcel.Parcelize
 
-class BankTransferActivity : BaseActivity() {
+class BankTransferListActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,28 +80,21 @@ class BankTransferActivity : BaseActivity() {
         }
     }
 
-
+//TODO: bank list from payment method list
     @Composable
     fun setupView() {
         Content(
             bankList = listOf(
                 Pair("Mandiri", R.drawable.ic_bank_mandiri_40),
-                Pair("Permata", R.drawable.ic_bank_permata_40),
                 Pair("BCA", R.drawable.ic_bank_bca_40),
-                Pair("Mandiri", R.drawable.ic_bank_mandiri_40),
-                Pair("Permata", R.drawable.ic_bank_permata_40),
-                Pair("BCA", R.drawable.ic_bank_bca_40),
-                Pair("Mandiri", R.drawable.ic_bank_mandiri_40),
-                Pair("Permata", R.drawable.ic_bank_permata_40),
-                Pair("BCA", R.drawable.ic_bank_bca_40),
-                Pair("BCA", R.drawable.ic_bank_bca_40)
+                Pair("BNI", R.drawable.ic_bank_bni_40)
             )
         )
     }
 
     private fun toBankTransfer2(bank: String) {
         startActivity(
-            BankTransfer2.getIntent(
+            BankTransferDetailActivity.getIntent(
                 activityContext = this,
                 bankName = bank.toLowerCase(Locale.current),
                 customerName = customerDetail.name,
@@ -167,7 +157,7 @@ class BankTransferActivity : BaseActivity() {
             customerPhone: String,
             addressLines: List<String>
         ): Intent {
-            return Intent(activityContext, BankTransferActivity::class.java).apply {
+            return Intent(activityContext, BankTransferListActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(
