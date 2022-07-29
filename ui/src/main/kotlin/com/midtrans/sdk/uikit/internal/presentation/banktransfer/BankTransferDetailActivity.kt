@@ -129,7 +129,9 @@ class BankTransferDetailActivity : BaseActivity() {
                                         Row {
                                             Text(
                                                 text = stringResource(id = item.first),
-                                                modifier = Modifier.weight(1f)
+                                                modifier = Modifier.weight(1f),
+                                                style = SnapTypography.STYLES.snapTextMediumMedium,
+                                                color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY)
                                             )
                                             Icon(
                                                 painter = painterResource(id = if (selected) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down),
