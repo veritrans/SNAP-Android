@@ -233,6 +233,7 @@
     <string name="danamon_cta">Bayar sekarang</string>
 
 
+    <string name="bca_klik_pay_title">BCA KlikPay</string>
     <string name="bca_klik_pay_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web BCA KlikPay.</string>
     <string name="bca_klik_pay_how_to_pay_1">1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman BCA KlikPay.</string>
     <string name="bca_klik_pay_how_to_pay_2">2. Login dan periksa kembali detail pembayaran Anda.</string>

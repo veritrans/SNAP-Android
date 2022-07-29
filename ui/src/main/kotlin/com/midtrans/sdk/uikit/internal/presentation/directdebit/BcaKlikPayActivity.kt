@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -52,7 +51,7 @@ class BcaKlikPayActivity : BaseActivity() {
     private fun BCAKlikPayContent(data: BcaKlikPayData) {
         var isExpanded by remember { mutableStateOf(false) }
         Column {
-            SnapAppBar(title = "BCA KlikPay", iconResId = R.drawable.ic_cross) {
+            SnapAppBar(title = stringResource(R.string.bca_klik_pay_title), iconResId = R.drawable.ic_cross) {
                 onBackPressed()
             }
             SnapOverlayExpandingBox(

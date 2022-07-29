@@ -236,6 +236,7 @@
     <string name="danamon_cta">Pay now</string>
 
 
+    <string name="bca_klik_pay_title">BCA KlikPay</string>
     <string name="bca_klik_pay_instruction">Please complete BCA KlikPay through BCA KlikPay app/website.</string>
     <string name="bca_klik_pay_how_to_pay_1">1. Tap Pay Now and you will be redirected to BCA KlikPay page.</string>
     <string name="bca_klik_pay_how_to_pay_2">2. Login and check your payment details.</string>
