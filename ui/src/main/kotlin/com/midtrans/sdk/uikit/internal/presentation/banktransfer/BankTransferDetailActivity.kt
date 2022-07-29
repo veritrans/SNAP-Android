@@ -275,62 +275,6 @@ class BankTransferDetailActivity : BaseActivity() {
         intent.getStringExtra(EXTRA_BILLINGNUMBER)
     }
 
-    companion object {
-        private const val EXTRA_TOTAL_AMOUNT = "bankTransfer.extra.total_amount"
-        private const val EXTRA_ORDER_ID = "bankTransfer.extra.order_id"
-        private const val EXTRA_CUSTOMER_DETAIL = "bankTransfer.extra.customer_detail"
-        private const val EXTRA_BANK = "bankTransfer.extra.bank"
-        private const val EXTRA_VANUMBER = "bankTransfer.extra.vanumber"
-        private const val EXTRA_COMPANYCODE = "bankTransfer.extra.companycode"
-        private const val EXTRA_BILLINGNUMBER = "bankTransfer.extra.billingnumber"
-
-        const val BANK_BCA = "bca"
-        const val BANK_BNI = "bni"
-        const val BANK_MANDIRI = "mandiri"
-
-        fun getIntent(
-            activityContext: Context,
-            bankName: String,
-            totalAmount: String,
-            orderId: String,
-            vaNumber: String? = null,
-            companyCode: String? = null,
-            billingNumber: String? = null,
-
-            customerName: String,
-            customerPhone: String,
-            addressLines: List<String>
-        ): Intent {
-            return Intent(activityContext, BankTransferDetailActivity::class.java).apply {
-                putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
-                putExtra(EXTRA_ORDER_ID, orderId)
-                putExtra(
-                    EXTRA_CUSTOMER_DETAIL,
-                    CustomerDetail(customerName, customerPhone, addressLines)
-                )
-                putExtra(EXTRA_BANK, bankName)
-                vaNumber?.let {
-                    putExtra(EXTRA_VANUMBER, it)
-
-                }
-                companyCode?.let {
-                    putExtra(EXTRA_COMPANYCODE, it)
-                }
-                billingNumber?.let {
-                    putExtra(EXTRA_BILLINGNUMBER, it)
-                }
-            }
-        }
-    }
-
-
-    @Parcelize
-    private data class CustomerDetail(
-        val name: String,
-        val phone: String,
-        val addressLines: List<String>
-    ) : Parcelable
-
     private val paymentInstruction by lazy {
         mapOf(
             Pair(BANK_BCA, bcaPaymentInstruction),
@@ -397,4 +341,60 @@ class BankTransferDetailActivity : BaseActivity() {
             )
         )
     }
+
+    companion object {
+        private const val EXTRA_TOTAL_AMOUNT = "bankTransfer.extra.total_amount"
+        private const val EXTRA_ORDER_ID = "bankTransfer.extra.order_id"
+        private const val EXTRA_CUSTOMER_DETAIL = "bankTransfer.extra.customer_detail"
+        private const val EXTRA_BANK = "bankTransfer.extra.bank"
+        private const val EXTRA_VANUMBER = "bankTransfer.extra.vanumber"
+        private const val EXTRA_COMPANYCODE = "bankTransfer.extra.companycode"
+        private const val EXTRA_BILLINGNUMBER = "bankTransfer.extra.billingnumber"
+
+        const val BANK_BCA = "bca"
+        const val BANK_BNI = "bni"
+        const val BANK_MANDIRI = "mandiri"
+
+        fun getIntent(
+            activityContext: Context,
+            bankName: String,
+            totalAmount: String,
+            orderId: String,
+            vaNumber: String? = null,
+            companyCode: String? = null,
+            billingNumber: String? = null,
+
+            customerName: String,
+            customerPhone: String,
+            addressLines: List<String>
+        ): Intent {
+            return Intent(activityContext, BankTransferDetailActivity::class.java).apply {
+                putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
+                putExtra(EXTRA_ORDER_ID, orderId)
+                putExtra(
+                    EXTRA_CUSTOMER_DETAIL,
+                    CustomerDetail(customerName, customerPhone, addressLines)
+                )
+                putExtra(EXTRA_BANK, bankName)
+                vaNumber?.let {
+                    putExtra(EXTRA_VANUMBER, it)
+
+                }
+                companyCode?.let {
+                    putExtra(EXTRA_COMPANYCODE, it)
+                }
+                billingNumber?.let {
+                    putExtra(EXTRA_BILLINGNUMBER, it)
+                }
+            }
+        }
+    }
+
+
+    @Parcelize
+    private data class CustomerDetail(
+        val name: String,
+        val phone: String,
+        val addressLines: List<String>
+    ) : Parcelable
 }

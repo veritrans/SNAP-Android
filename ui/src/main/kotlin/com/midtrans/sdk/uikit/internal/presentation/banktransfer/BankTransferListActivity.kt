@@ -70,7 +70,7 @@ class BankTransferListActivity : BaseActivity() {
                         item {
                             SnapSingleIconListItem(title = s.first, iconResId = s.second,
                                 modifier = Modifier.clickable {
-                                    toBankTransfer2(s.first)
+                                    toBankTransferDetail(s.first)
                                 }
                             )
                         }
@@ -92,7 +92,7 @@ class BankTransferListActivity : BaseActivity() {
         )
     }
 
-    private fun toBankTransfer2(bank: String) {
+    private fun toBankTransferDetail(bank: String) {
         startActivity(
             BankTransferDetailActivity.getIntent(
                 activityContext = this,
