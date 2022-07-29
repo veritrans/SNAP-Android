@@ -237,7 +237,12 @@
 
 
     <string name="bca_klik_pay_instruction">Please complete BCA KlikPay through BCA KlikPay app/website.</string>
-    <string name="bca_klik_pay_how_to_pay">1. Tap Pay Now and you will be redirected to BCA KlikPay page. 2. Login and check your payment details. 3. Choose KlikBCA or BCA Card to pay for your transaction. 4. To authorize payment with BCA KlikPay, tap the Send OTP button to receive an OTP code via SMS, then enter code in the fields provided. 5. If your OTP code is correct, your payment will be processed immediately. 6. Once the payment is completed, success status will appear on the transaction screen and you will receive a notification e-mail.</string>
+    <string name="bca_klik_pay_how_to_pay_1">1. Tap Pay Now and you will be redirected to BCA KlikPay page.</string>
+    <string name="bca_klik_pay_how_to_pay_2">2. Login and check your payment details.</string>
+    <string name="bca_klik_pay_how_to_pay_3">3. Choose KlikBCA or BCA Card to pay for your transaction.</string>
+    <string name="bca_klik_pay_how_to_pay_4">4. To authorize payment with BCA KlikPay, tap the Send OTP button to receive an OTP code via SMS, then enter code in the fields provided.</string>
+    <string name="bca_klik_pay_how_to_pay_5">5. If your OTP code is correct, your payment will be processed immediately.</string>
+    <string name="bca_klik_pay_how_to_pay_6">6. Once the payment is completed, success status will appear on the transaction screen and you will receive a notification e-mail.</string>
     <string name="bca_klik_pay_cta">Pay now</string>
 
 

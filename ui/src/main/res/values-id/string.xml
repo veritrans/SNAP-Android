@@ -234,7 +234,12 @@
 
 
     <string name="bca_klik_pay_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web BCA KlikPay.</string>
-    <string name="bca_klik_pay_how_to_pay">1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman BCA KlikPay. 2. Login dan periksa kembali detail pembayaran Anda. 3. Pilih KlikBCA atau BCA Card untuk membayar transaksi. 4. Untuk mengotorisasi pembayaran via BCA KlikPay, klik tombol Kirim OTP untuk menerima kode OTP melalui SMS, lalu masukkan kode tersebut ke kolom yang sudah disediakan. 5. Jika kode OTP yang Anda masukkan benar, transaksi Anda akan segera diproses. 6. Setelah pembayaran selesai, halaman situs akan mengindikasikan bahwa transaksi berhasil diproses dan Anda akan mendapat notifikasi via e-mail.</string>
+    <string name="bca_klik_pay_how_to_pay_1">1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman BCA KlikPay.</string>
+    <string name="bca_klik_pay_how_to_pay_2">2. Login dan periksa kembali detail pembayaran Anda.</string>
+    <string name="bca_klik_pay_how_to_pay_3">3. Pilih KlikBCA atau BCA Card untuk membayar transaksi.</string>
+    <string name="bca_klik_pay_how_to_pay_4">4. Untuk mengotorisasi pembayaran via BCA KlikPay, klik tombol Kirim OTP untuk menerima kode OTP melalui SMS, lalu masukkan kode tersebut ke kolom yang sudah disediakan.</string>
+    <string name="bca_klik_pay_how_to_pay_5">5. Jika kode OTP yang Anda masukkan benar, transaksi Anda akan segera diproses.</string>
+    <string name="bca_klik_pay_how_to_pay_6">6. Setelah pembayaran selesai, halaman situs akan mengindikasikan bahwa transaksi berhasil diproses dan Anda akan mendapat notifikasi via e-mail.</string>
     <string name="bca_klik_pay_cta">Bayar sekarang</string>
 
 
