@@ -41,7 +41,6 @@ class BankTransferListActivity : BaseActivity() {
         Box(
             modifier = Modifier
                 .padding(16.dp)
-                .height(600.dp)
         ) {
             SnapOverlayExpandingBox(
                 modifier = Modifier.fillMaxHeight(1f),
@@ -80,7 +79,7 @@ class BankTransferListActivity : BaseActivity() {
         }
     }
 
-//TODO: bank list from payment method list
+    //TODO: bank list from payment method list
     @Composable
     fun setupView() {
         Content(
