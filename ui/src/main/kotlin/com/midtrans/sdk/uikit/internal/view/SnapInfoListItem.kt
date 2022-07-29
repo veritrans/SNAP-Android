@@ -70,7 +70,7 @@ fun SnapCopyableInfoListItem(
                     )
 
                     Icon(
-                        painter = painterResource(id = androidx.appcompat.R.drawable.abc_ic_menu_copy_mtrl_am_alpha),
+                        painter = painterResource(id = R.drawable.ic_tick_circle),
                         contentDescription = null,
                         tint = SnapColors.getARGBColor(SnapColors.INTERACTIVE_FILL_BRAND_DEFAULT)
                     )
