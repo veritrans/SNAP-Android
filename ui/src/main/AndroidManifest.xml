@@ -15,14 +15,18 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".internal.presentation.BankTransferActivity"
+            android:name=".internal.presentation.banktransfer.BankTransferActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".internal.presentation.BankTransfer2"
+            android:name=".internal.presentation.banktransfer.BankTransfer2"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".internal.presentation.paymentoption.PaymentOptionActivity"
+            android:theme="@style/Theme.AppCompat.Light" />
     </application>
 
 </manifest>

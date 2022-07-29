@@ -1,10 +1,9 @@
-package com.midtrans.sdk.uikit.internal.presentation
+package com.midtrans.sdk.uikit.internal.presentation.banktransfer
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.*

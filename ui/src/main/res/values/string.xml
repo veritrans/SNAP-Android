@@ -22,8 +22,15 @@
     <string name="payment_summary_cc_dc">Credit/debit card</string>
     <string name="payment_summary_saved_card">card(s) saved</string>
     <string name="payment_summary_promo_available">Promo available</string>
-    <string name="payment_summary_gopay">GoPay</string>
-    <string name="payment_summary_shopeepay">ShopeePay</string>
+    <string name="payment_summary_gopay">Gopay/QRIS</string>
+    <string name="payment_summary_klikbca">KlikBCA</string>
+    <string name="payment_summary_bcaklikpay">BCA KlikPay</string>
+    <string name="payment_summary_octoclicks">OctoClicks</string>
+    <string name="payment_summary_brimo">BRIMo</string>
+    <string name="payment_summary_danamonob">Danamon Online Banking</string>
+    <string name="payment_summary_uobezpay">UOB EZ Pay</string>
+    <string name="payment_summary_akulaku">Akulaku</string>
+    <string name="payment_summary_shopeepay">ShopeePay/QRIS</string>
     <string name="payment_summary_alfamart">Alfa Group</string>
     <string name="payment_summary_indomaret">Indomaret</string>
 
@@ -155,6 +162,7 @@
 
     <string name="general_instruction_va_number_title">Virtual account number</string>
     <string name="general_instruction_copy_icon_text">Copy</string>
+    <string name="general_instruction_copied_icon_text">Copied</string>
 
 
     <string name="redirection_instruction_gopay_message">1. Tap Pay now. 2. Gojek app will open. 3. Confirm payment in the Gojek app. 4. Payment complete.</string>
@@ -266,7 +274,7 @@
 
     <string name="uob_method_name">UOB EZ Pay via web</string>
     <string name="uob_desc">Please make sure that you have registered ID and complete your payment via UOB EZ Pay.</string>
-    <string name="uob_desc_detail">1. Click Pay now and you will be redirected to UOB EZ Pay website.  2. Login using your userID &amp; password. 3. Enter OTP you\'ll receive via SMS when prompted. 4. Select the account that you would like to pay from and choose \"Continue\". 5. Review your transaction details, enter the OTP you\'ll receive via SMS. 6 Choose \"Confirm\" to complete the payment.</string>
+    <string name="uob_desc_detail">1. Click Pay now and you will be redirected to UOB EZ Pay website.  2. Login using your userID &amp; password. 3. Enter OTP you\'ll receive via SMS when prompted. 4. Select the account that you would like to pay from and choose "Continue". 5. Review your transaction details, enter the OTP you\'ll receive via SMS. 6 Choose "Confirm" to complete the payment.</string>
 
 
     <string name="tmrw_method_name">UOB TMRW app</string>
@@ -279,8 +287,70 @@
     <string name="mandiri_kode_perusahaan">Company code</string>
     <string name="mandiri_nomor_tagihan">Virtual account number</string>
 
-    <string name="mandiri_instruction_atm">1. Select Pay/Buy on the main menu. 2. Select Others. 3. Select Multi Payment. 4. Insert company code 70012. 5. Insert virtual account number, then confirm. 6. Payment complete.</string>
+    <string name="mandiri_instruction_atm_title">ATM Mandiri</string>
 
-    <string name="mandiri_instruction_internet_banking">1. Select Payment on the main menu. 2. Select Multi Payment. 3. Select From account. 4. Select Midtrans in the Service provider field. 5. Insert virtual account number, then confirm. 6. Payment complete</string>
+    <string-array name="mandiri_instruction_atm">
+        <item><data><![CDATA[Select <b>Pay/Buy</b> on the main menu.]]></data></item>
+        <item><data><![CDATA[Select <b>Others</b>.]]></data></item>
+        <item><data><![CDATA[Select Multi Payment.]]></data></item>
+        <item><data><![CDATA[Insert company code <b>70012</b>.]]></data></item>
+        <item><data><![CDATA[Insert <b>payment code</b>, then <b>confirm</b>.]]></data></item>
+        <item>Payment complete.</item>
+    </string-array>
+
+    <string name="mandiri_instruction_internet_banking_title">Internet Banking</string>
+
+    <string-array name="mandiri_instruction_internet_banking">
+        <item><data><![CDATA[Select <b>payment</b> on the main menu]]></data>.</item>
+        <item><data><![CDATA[Select <b>multi payment</b>.]]></data></item>
+        <item><data><![CDATA[Select <b>from account</b>.]]></data></item>
+        <item><data><![CDATA[Select <b>Midtrans</b> in the <b>service provider</b> field.]]></data></item>
+        <item><data><![CDATA[Insert <b>payment code</b>, then <b>confirm</b>.]]></data></item>
+        <item><data><![CDATA[Payment complete.]]></data></item>
+    </string-array>
+
+
+    <string name="bni_instruction_atm_title">ATM BNI</string>
+
+    <string-array name="bni_instruction_atm">
+        <item><data><![CDATA[ Select <b>others</b> on the main menu.]]></data></item>
+        <item><data><![CDATA[ Select <b>transfer</b>.]]></data></item>
+        <item><data><![CDATA[Select to <b>BNI account</b>.]]></data></item>
+        <item><data><![CDATA[Insert the <b>payment account number</b>.]]></data></item>
+        <item><data><![CDATA[Insert the <b>payable amount</b>, then <b>confirm</b>.]]></data></item>
+        <item>Payment complete.</item>
+    </string-array>
+
+
+    <string name="bni_instruction_internet_banking_title">BNI Internet Banking</string>
+
+    <string-array name="bni_instruction_internet_banking">
+        <item><data><![CDATA[Select <b>transaction</b>, then transfer administration Info.]]></data>.</item>
+        <item><data><![CDATA[Select <b>set destination account</b>.]]></data></item>
+        <item><data><![CDATA[Insert <b>account info</b>, then <b>confirm</b>]]></data></item>
+        <item><data><![CDATA[Select <b>transfer</b>, then transfer to <b>BNI account</b>.]]></data></item>
+        <item><data><![CDATA[Insert <b>payment details</b>, then <b>confirm</b>.]]></data></item>
+        <item><data><![CDATA[Payment complete.]]></data></item>
+    </string-array>
+
+    <string name="bni_instruction_mobile_banking_title">BNI Internet Banking</string>
+
+    <string-array name="bni_instruction_mobile_banking">
+    <item><data><![CDATA[Select <b>transfer</b>.]]></data>.</item>
+    <item><data><![CDATA[Select <b>virtual account billing</b>.]]></data>.</item>
+    <item><data><![CDATA[Select the <b>debit account</b> you want to use.]]></data>.</item>
+    <item><data><![CDATA[Insert <b>virtual account number</b>, then <b>confirm</b>.]]></data>.</item>
+    <item><data><![CDATA[Payment complete.]]></data>.</item>
+    </string-array>
+
+    <string name="bni_instruction_other_banks_title">Via other banks</string>
+
+    <string-array name="bni_instruction_other_banks">
+    <item><data><![CDATA[Select your <b>preferred bank & payment channel</b> (ATM/internet/mobile banking).]]></data>.</item>
+    <item><data><![CDATA[Select <b>transfer to other bank</b>.]]></data>.</item>
+    <item><data><![CDATA[Insert <b>BNI virtual account number</b>.]]></data>.</item>
+    <item><data><![CDATA[Insert <b>the payable amount</b>, then <b>confirm</b>.]]></data>.</item>
+    <item><data><![CDATA[Payment complete.]]></data>.</item>
+    </string-array>
 
 </resources>

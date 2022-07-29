@@ -146,20 +146,16 @@ fun InputNewCardItem(
     onExpiryDateValueChange: (String) -> Unit,
     onCvvValueChange: (String) -> Unit
 ) {
-    val principalIconId by remember { data.principalIconId }
+    val principalIconId by data.principalIconId
     val iconIdList by remember {
-        if (principalIconId == null) {
-            mutableStateOf(
-                listOf(
-                    R.drawable.ic_bri,
-                    R.drawable.ic_bri,
-                    R.drawable.ic_bri,
-                    R.drawable.ic_bri
-                )
+        mutableStateOf(
+            listOf(
+                R.drawable.ic_bri,
+                R.drawable.ic_bri,
+                R.drawable.ic_bri,
+                R.drawable.ic_bri
             )
-        } else {
-            mutableStateOf(listOf(principalIconId!!))
-        }
+        )
     }
 
     Column(
@@ -188,13 +184,22 @@ fun InputNewCardItem(
                             style = SnapTypography.STYLES.snapTextSmallRegular
                         )
 
-                        iconIdList.forEach {
+                        if (principalIconId != null) {
                             Icon(
-                                painter = painterResource(id = it),
+                                painter = painterResource(id = principalIconId!!),
                                 contentDescription = null,
                                 tint = Color.Unspecified
                             )
+                        } else {
+                            iconIdList.forEach {
+                                Icon(
+                                    painter = painterResource(id = it),
+                                    contentDescription = null,
+                                    tint = Color.Unspecified
+                                )
+                            }
                         }
+
                     }
 
                     var newCardNumberText by remember { mutableStateOf(TextFieldValue()) }

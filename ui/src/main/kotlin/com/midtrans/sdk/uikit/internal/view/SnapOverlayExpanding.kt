@@ -34,7 +34,9 @@ fun SnapOverlayExpandingBox(
         val main = createRef()
         val expanding = createRef()
         val following = createRef()
-        Box(modifier = Modifier.constrainAs(main) {}) {
+        Box(modifier = Modifier.constrainAs(main) {
+            top.linkTo(parent.top)
+        }) {
             mainContent?.invoke()
         }
 
@@ -42,6 +44,7 @@ fun SnapOverlayExpandingBox(
             .constrainAs(expanding) {
                 top.linkTo(main.bottom)
             }
+            .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
             .padding(top = 24.dp)
             .zIndex(2f)) {
             AnimatedVisibility(
@@ -75,7 +78,7 @@ fun SnapTotal(
     Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(
-                text = "total",
+                text = "Total",
                 style = SnapTypography.STYLES.snapTextMediumMedium,
                 modifier = Modifier.weight(1f),
                 color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)

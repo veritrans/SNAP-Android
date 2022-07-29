@@ -21,8 +21,15 @@
     <string name="payment_summary_cc_dc">Kartu kredit/debit</string>
     <string name="payment_summary_saved_card">card(s) saved</string>
     <string name="payment_summary_promo_available">Promo tersedia</string>
-    <string name="payment_summary_gopay">GoPay</string>
-    <string name="payment_summary_shopeepay">ShopeePay</string>
+    <string name="payment_summary_gopay">Gopay/QRIS</string>
+    <string name="payment_summary_klikbca">KlikBCA</string>
+    <string name="payment_summary_bcaklikpay">BCA KlikPay</string>
+    <string name="payment_summary_octoclicks">OctoClicks</string>
+    <string name="payment_summary_brimo">BRIMo</string>
+    <string name="payment_summary_danamonob">Danamon Online Banking</string>
+    <string name="payment_summary_uobezpay">UOB EZ Pay</string>
+    <string name="payment_summary_akulaku">Akulaku</string>
+    <string name="payment_summary_shopeepay">ShopeePay/QRIS</string>
     <string name="payment_summary_alfamart">Alfa Group</string>
     <string name="payment_summary_indomaret">Indomaret</string>
 
@@ -104,7 +111,7 @@
     <string name="installment_6x_installment">6 bulan</string>
 
 
-    <string name="point_loading">Memuat poin...</string>
+    <string name="point_loading">Memuat poin…</string>
     <string name="point_title">Tukar poin</string>
     <string name="point_amount_of_points">%s poin</string>
     <string name="point_failed_title">Gagal memuat poin</string>
@@ -153,6 +160,7 @@
 
     <string name="general_instruction_va_number_title">Nomor virtual account</string>
     <string name="general_instruction_copy_icon_text">Salin</string>
+    <string name="general_instruction_copied_icon_text">Disalin</string>
 
 
     <string name="redirection_instruction_gopay_message">1. Klik Bayar sekarang. 2. Aplikasi Gojek akan terbuka. 3. Konfirmasi pembayaran di aplikasi Gojek. 4. Pembayaran selesai.</string>
@@ -273,9 +281,72 @@
 
     <string name="mandiri_kode_perusahaan">Kode perusahaan</string>
     <string name="mandiri_nomor_tagihan">Nomor virtual account</string>
+    <string name="mandiri_instruction_atm_title">ATM Mandiri</string>
 
-    <string name="mandiri_instruction_atm">1. Pilih Bayar/Beli pada menu utama. 2. Pilih Lainnya. 3. Pilih Multi Payment. 4. Masukkan kode perusahaan 70012. 5. Masukkan nomor virtual account, lalu konfirmasi. 6. Pembayaran selesai.</string>
+    <string-array name="mandiri_instruction_atm">
+        <item><data><![CDATA[Pilih <b>Bayar/Beli</b> pada menu utama.]]></data></item>
+        <item><data><![CDATA[Pilih <b>Lainnya</b>.]]></data></item>
+        <item><data><![CDATA[Pilih <b>Multi Payment</b>.]]></data></item>
+        <item><data><![CDATA[Masukkan kode perusahaan <b>70012</b>.]]></data></item>
+        <item><data><![CDATA[Masukkan <b>kode pembayaran</b>, lalu <b>konfirmasi</b>.]]></data></item>
+        <item><data><![CDATA[Pembayaran selesai.]]></data></item>
+    </string-array>
 
-    <string name="mandiri_instruction_internet_banking">1. Pilih Bayar pada menu utama. 2. Pilih Multi Payment. 3. Pilih Dari rekening. 4. Pilih Midtrans di bagian Penyedia jasa. 5. Masukkan nomor virtual account, lalu konfirmasi. 6. Pembayaran selesai.</string>
+    <string name="mandiri_instruction_internet_banking_title">Internet Banking</string>
+    <string-array name="mandiri_instruction_internet_banking">
+        <item><data><![CDATA[Pilih <b>Bayar</b> pada menu utama.]]></data></item>
+        <item><data><![CDATA[Pilih <b>multi payment</b>.]]></data></item>
+        <item><data><![CDATA[Pilih <b>dari rekening</b>.]]></data> </item>
+        <item><data><![CDATA[Pilih <b>Midtrans</b> di bagian <b>penyedia jasa<b>.]]></data> </item>
+        <item><data><![CDATA[Masukkan <b>kode pembayaran</b>, lalu <b>konfirmasi</b>.]]></data> </item>
+        <item><data><![CDATA[Pembayaran selesai.]]></data></item>
+    </string-array>
+
+    <string name="bni_instruction_atm_title">ATM BNI</string>
+
+    <string-array name="bni_instruction_atm">
+        <item><data><![CDATA[Pilih <b>menu lain</b> pada menu utama.]]></data></item>
+        <item><data><![CDATA[Pilih <b>transfer</b>.]]></data></item>
+        <item><data><![CDATA[Pilih <b>ke rekening BNI</b>.]]></data></item>
+        <item><data><![CDATA[Masukkan <b>nomor rekening pembayaran</b>.]]></data></item>
+        <item><data><![CDATA[Masukkan <b>jumlah yang akan dibayar</b>, lalu <b>konfirmasi</b>.]]></data></item>
+        <item><data><![CDATA[Pembayaran selesai.]]></data></item>
+    </string-array>
+
+
+    <string name="bni_instruction_internet_banking_title">BNI Internet Banking</string>
+
+
+    <string-array name="bni_instruction_internet_banking">
+        <item><data><![CDATA[Pilih <b>transaksi</b>, lalu <b>info & administrasi transfer</b>.]]></data>.</item>
+        <item><data><![CDATA[Pilih <b>atur rekening tujuan</b>.]]></data>.</item>
+        <item><data><![CDATA[Masukkan <b>informasi rekening</b>, lalu <b>konfirmasi</b>.]]></data>.</item>
+        <item><data><![CDATA[Pilih <b>transfer</b>, lalu <b>transfer ke rekening BNI</b>.]]></data>.</item>
+        <item><data><![CDATA[Masukkan <b>detail pembayaran</b>, lalu <b>konfirmasi</b>.]]></data>.</item>
+        <item><data><![CDATA[Pembayaran selesai.]]></data>.</item>
+    </string-array>
+
+    <string name="bni_instruction_mobile_banking_title">BNI Internet Banking</string>
+
+
+    <string-array name="bni_instruction_mobile_banking">
+        <item><data><![CDATA[Pilih <b>transfer</b>.]]></data>.</item>
+        <item><data><![CDATA[Pilih <b>virtual account billing</b>.]]></data>.</item>
+        <item><data><![CDATA[Pilih <b>rekening debit/<b> yang akan digunakan.]]></data>.</item>
+        <item><data><![CDATA[Masukkan <b>nomor virtual account</b>, lalu <b>konfirmasi</b>.]]></data>.</item>
+        <item><data><![CDATA[Pembayaran selesai.]]></data>.</item>
+    </string-array>
+
+    <string name="bni_instruction_other_banks_title">Via other banks</string>
+
+
+    <string-array name="bni_instruction_other_banks">
+        <item><data><![CDATA[Pilih <b>bank &amp; cara bayar</b> (ATM/internet/mobile banking) <b>yang Anda inginkan</b>.]]></data>.</item>
+        <item><data><![CDATA[Pilih <b>transfer ke bank lain</b>.]]></data>.</item>
+        <item><data><![CDATA[Masukkan <b>nomor virtual account BNI</b>.]]></data>.</item>
+        <item><data><![CDATA[Masukkan <b>jumlah yang akan dibayar</b>, lalu <b>konfirmasi</b>.]]></data>.</item>
+        <item><data><![CDATA[Pembayaran selesai.]]></data>.</item>
+    </string-array>
+
 
 </resources>
