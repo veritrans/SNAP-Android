@@ -6,13 +6,18 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.*
@@ -45,54 +50,59 @@ class BcaKlikPayActivity : BaseActivity() {
 
     @Composable
     private fun BCAKlikPayContent(data: BcaKlikPayData) {
-        Column(
-            modifier = Modifier.verticalScroll(state = rememberScrollState())
-        ) {
+        var isExpanded by remember { mutableStateOf(false) }
+        Column {
             SnapAppBar(title = "BCA KlikPay", iconResId = R.drawable.ic_cross) {
                 onBackPressed()
             }
-            var isExpanded by remember { mutableStateOf(false) }
             SnapOverlayExpandingBox(
                 isExpanded = isExpanded,
                 mainContent = {
                     SnapTotal(
                         amount = data.amount,
                         orderId = data.orderId,
-                        remainingTime = "22:22:22" //TODO get remaining time?
+                        remainingTime = null
                     ) {
                         isExpanded = it
                     }
                 },
                 expandingContent = {
-                    SnapCustomerDetail( //TODO check if customer detail is mandatory
+                    SnapCustomerDetail(
                         name = data.name.orEmpty(),
                         phone = data.phone.orEmpty(),
                         addressLines = data.addressLines.orEmpty()
                     )
                 },
                 followingContent = {
-                    Column() {
-                        SnapText(stringResource(R.string.bca_klik_pay_instruction))
-                        
-                        val words = listOf<String>(
-                            "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad lasldasdla halo halo bandung ibukkota priangan, kokwaowkeaowkeo awas pusing",
-                            "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad, ga tau mau nulis apa, bingung semuanya",
-                            "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad, halo hallo lagi, kamu lagi ngapain",
-                            "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad",
-                            "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad",
-                            "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad",
-                        )
-                        SnapNumberedList(list = words)
-
+                    Column {
+                        Column(
+                            Modifier.verticalScroll(enabled = true, state = rememberScrollState())
+                        ) {
+                            SnapText(stringResource(R.string.bca_klik_pay_instruction))
+                            SnapNumberedList(
+                                list = listOf(
+                                    stringResource(R.string.bca_klik_pay_how_to_pay_1),
+                                    stringResource(R.string.bca_klik_pay_how_to_pay_2),
+                                    stringResource(R.string.bca_klik_pay_how_to_pay_3),
+                                    stringResource(R.string.bca_klik_pay_how_to_pay_4),
+                                    stringResource(R.string.bca_klik_pay_how_to_pay_5),
+                                    stringResource(R.string.bca_klik_pay_how_to_pay_6),
+                                )
+                            )
+                        }
                         SnapButton(
                             enabled = true,
-                            text = "Bayar sekarang",
+                            text = stringResource(R.string.bca_klik_pay_cta),
                             style = SnapButton.Style.PRIMARY
                         ) {
                             Log.d("SnapButton", "Clicked")
                         }
                     }
-                }
+                },
+                modifier = Modifier
+                    .fillMaxHeight(1f)
+                    .padding(all = 16.dp)
+                    .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
             )
         }
     }

@@ -40,7 +40,7 @@
 
         <activity
             android:name=".internal.presentation.directdebit.BcaKlikPayActivity"
-            android:theme="@style/Theme.AppCompat.Light" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>
