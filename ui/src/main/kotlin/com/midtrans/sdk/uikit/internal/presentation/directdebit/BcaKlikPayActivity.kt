@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.text.style.BackgroundColorSpan
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -12,16 +11,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.*
 import kotlinx.android.parcel.Parcelize
 
-class BCAKlikPayActivity : BaseActivity() {
-
-    private val data: BCAKlikPayData by lazy {
-        intent.getParcelableExtra(EXTRA_BCA_KLIK_PAY_DATA) as? BCAKlikPayData
+class BcaKlikPayActivity : BaseActivity() {
+    private val data: BcaKlikPayData by lazy {
+        intent.getParcelableExtra(EXTRA_BCA_KLIK_PAY_DATA) as? BcaKlikPayData
             ?: throw RuntimeException("Input data must not be empty")
     }
 
@@ -33,11 +32,19 @@ class BCAKlikPayActivity : BaseActivity() {
     @Composable
     @Preview(showBackground = true)
     fun PreviewOnly() {
-        BCAKlikPayContent(data = data)
+        BCAKlikPayContent(
+            data = BcaKlikPayData(
+                amount = "999",
+                orderId = "order",
+                name = "saya",
+                phone = "08123456789",
+                addressLines = listOf("Ini Alamat 1")
+            )
+        )
     }
 
     @Composable
-    private fun BCAKlikPayContent(data: BCAKlikPayData) {
+    private fun BCAKlikPayContent(data: BcaKlikPayData) {
         Column(
             modifier = Modifier.verticalScroll(state = rememberScrollState())
         ) {
@@ -60,12 +67,12 @@ class BCAKlikPayActivity : BaseActivity() {
                     SnapCustomerDetail( //TODO check if customer detail is mandatory
                         name = data.name.orEmpty(),
                         phone = data.phone.orEmpty(),
-                        addressLines = data.address.orEmpty()
+                        addressLines = data.addressLines.orEmpty()
                     )
                 },
                 followingContent = {
                     Column() {
-                        SnapText("Mohon untuk menyelesaikan pembayaran melalui situs web BCA KlikPay")
+                        SnapText(stringResource(R.string.bca_klik_pay_instruction))
                         
                         val words = listOf<String>(
                             "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad lasldasdla halo halo bandung ibukkota priangan, kokwaowkeaowkeo awas pusing",
@@ -99,17 +106,17 @@ class BCAKlikPayActivity : BaseActivity() {
             orderId: String,
             name: String?,
             phone: String?,
-            address: List<String>?
+            addressLines: List<String>?
         ): Intent {
-            return Intent(activityContext, BCAKlikPayActivity::class.java).apply {
+            return Intent(activityContext, BcaKlikPayActivity::class.java).apply {
                 putExtra(
                     EXTRA_BCA_KLIK_PAY_DATA,
-                    BCAKlikPayData(
+                    BcaKlikPayData(
                         amount = amount,
                         orderId = orderId,
                         name = name,
                         phone = phone,
-                        address = address
+                        addressLines = addressLines
                     )
                 )
             }
@@ -117,11 +124,11 @@ class BCAKlikPayActivity : BaseActivity() {
     }
 
     @Parcelize
-    private data class BCAKlikPayData(
+    private data class BcaKlikPayData(
         val amount: String,
         val orderId: String,
         val name: String?,
         val phone: String?,
-        val address: List<String>?
+        val addressLines: List<String>?
     ) : Parcelable
 }
