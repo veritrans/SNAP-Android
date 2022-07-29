@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransfer2
+import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferActivity
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 
 class SampleActivity : AppCompatActivity() {
@@ -229,7 +230,18 @@ class SampleActivity : AppCompatActivity() {
 //                startActivity(
 //                    intent
 //                )
-                startActivity(Intent(this@SampleActivity, BankTransfer2::class.java))
+                startActivity(BankTransferActivity.getIntent(
+                    activityContext = this@SampleActivity,
+                    customerName = "ari",
+                    customerPhone = "123455",
+                    addressLines = listOf("jalan", "jalan", "jalan"),
+                    orderId = "#2141241234",
+                    totalAmount = "Rp.123.456",
+                    companyCode = "7777",
+                    billingNumber = "84034832048",
+                    vaNumber = "439403943094039"
+
+                ))
             }
         }
     }

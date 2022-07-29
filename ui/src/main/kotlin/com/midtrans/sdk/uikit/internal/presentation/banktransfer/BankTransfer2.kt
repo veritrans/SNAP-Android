@@ -21,10 +21,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.midtrans.sdk.corekit.api.model.VaNumber
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity
 import com.midtrans.sdk.uikit.internal.view.*
 import kotlinx.android.parcel.Parcelize
 
@@ -81,26 +79,10 @@ class BankTransfer2 : BaseActivity() {
                         .verticalScroll(state),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Text(text = "lakukan pembayaran dari rekening bank mandiri")
-                    SnapCopyableInfoListItem(
-                        title = stringResource(id = R.string.general_instruction_company_code_mandiri_only),
-                        info = "70012"
-                    )
-
-                    SnapCopyableInfoListItem(
-                        title = stringResource(R.string.general_instruction_billing_number_mandiri_only),
-                        info = "8098038r0qrerq"
-                    )
-
-                    var copied by remember {
-                        mutableStateOf(false)
+                    generalInstruction[bankName]?.let {
+                        Text(text = stringResource(id = it))
                     }
-                    SnapCopyableInfoListItem(
-                        title = "ada info apa",
-                        info = "inilah infonya",
-                        copied = copied,
-                        onCopyClicked = { label -> copied = true }
-                    )
+                    getInfoField()[bankName]?.invoke()
 
                     var isExpanded by remember { mutableStateOf(false) }
                     SnapInstructionButton(
@@ -113,7 +95,7 @@ class BankTransfer2 : BaseActivity() {
                             Column(
                                 verticalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
-                                mandiriPaymentInstruction.forEach { item ->
+                                paymentInstruction[bankName]?.forEach { item ->
                                     var selected = item.first == selectedOption
                                     Column(
                                         modifier = Modifier.selectable(
@@ -152,12 +134,69 @@ class BankTransfer2 : BaseActivity() {
             }
 
             SnapButton(
-                text = "Saya sudah bayar",
+                text = stringResource(id = R.string.i_have_already_paid),
                 modifier = Modifier.fillMaxWidth(1f)
             ) {
 
             }
         }
+    }
+
+    @Composable
+    private fun getInfoField(): Map<String, @Composable (() -> Unit)> {
+        return mapOf(
+            Pair(BANK_BCA) {
+                var copied by remember {
+                    mutableStateOf(false)
+                }
+                vaNumber?.let {
+                    SnapCopyableInfoListItem(
+                        title = stringResource(id = R.string.general_instruction_va_number_title),
+                        info = it,
+                        copied = copied,
+                        onCopyClicked = { label -> copied = true }
+                    )
+                }
+            },
+            Pair(BANK_MANDIRI) {
+                var companyCodeCopied by remember {
+                    mutableStateOf(false)
+                }
+
+                var billingNumberCopied by remember {
+                    mutableStateOf(false)
+                }
+                companyCode?.let {
+                    SnapCopyableInfoListItem(
+                        title = stringResource(id = R.string.general_instruction_company_code_mandiri_only),
+                        info = it,
+                        copied = companyCodeCopied,
+                        onCopyClicked = { label -> companyCodeCopied = true }
+                    )
+                }
+                billingNumber?.let {
+                    SnapCopyableInfoListItem(
+                        title = stringResource(id = R.string.general_instruction_billing_number_mandiri_only),
+                        info = it,
+                        copied = billingNumberCopied,
+                        onCopyClicked = { label -> billingNumberCopied = true }
+                    )
+                }
+            },
+            Pair(BANK_BNI) {
+                var copied by remember {
+                    mutableStateOf(false)
+                }
+                vaNumber?.let {
+                    SnapCopyableInfoListItem(
+                        title = stringResource(id = R.string.general_instruction_va_number_title),
+                        info = it,
+                        copied = copied,
+                        onCopyClicked = { label -> copied = true }
+                    )
+                }
+            }
+        )
     }
 
     @Composable
@@ -193,7 +232,17 @@ class BankTransfer2 : BaseActivity() {
 
     private val bankName: String by lazy {
         intent.getStringExtra(EXTRA_BANK)
-            ?: throw RuntimeException("Bank detail must not be empty")
+            ?: throw RuntimeException("Bank name must not be empty")
+    }
+
+    private val vaNumber: String? by lazy {
+        intent.getStringExtra(EXTRA_VANUMBER)
+    }
+    private val companyCode: String? by lazy {
+        intent.getStringExtra(EXTRA_COMPANYCODE)
+    }
+    private val billingNumber: String? by lazy {
+        intent.getStringExtra(EXTRA_BILLINGNUMBER)
     }
 
     companion object {
@@ -201,19 +250,28 @@ class BankTransfer2 : BaseActivity() {
         private const val EXTRA_ORDER_ID = "bankTransfer.extra.order_id"
         private const val EXTRA_CUSTOMER_DETAIL = "bankTransfer.extra.customer_detail"
         private const val EXTRA_BANK = "bankTransfer.extra.bank"
+        private const val EXTRA_VANUMBER = "bankTransfer.extra.vanumber"
+        private const val EXTRA_COMPANYCODE = "bankTransfer.extra.companycode"
+        private const val EXTRA_BILLINGNUMBER = "bankTransfer.extra.billingnumber"
 
-        fun openPaymentOptionPage(
+        const val BANK_BCA = "bca"
+        const val BANK_BNI = "bni"
+        const val BANK_MANDIRI = "mandiri"
+
+        fun getIntent(
             activityContext: Context,
             bankName: String,
             totalAmount: String,
             orderId: String,
-            vaNumber: VaNumber,
+            vaNumber: String? = null,
+            companyCode: String? = null,
+            billingNumber: String? = null,
 
             customerName: String,
             customerPhone: String,
             addressLines: List<String>
         ): Intent {
-            return Intent(activityContext, PaymentOptionActivity::class.java).apply {
+            return Intent(activityContext, BankTransfer2::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(
@@ -221,9 +279,20 @@ class BankTransfer2 : BaseActivity() {
                     CustomerDetail(customerName, customerPhone, addressLines)
                 )
                 putExtra(EXTRA_BANK, bankName)
+                vaNumber?.let {
+                    putExtra(EXTRA_VANUMBER, it)
+
+                }
+                companyCode?.let {
+                    putExtra(EXTRA_COMPANYCODE, it)
+                }
+                billingNumber?.let {
+                    putExtra(EXTRA_BILLINGNUMBER, it)
+                }
             }
         }
     }
+
 
     @Parcelize
     private data class CustomerDetail(
@@ -232,12 +301,69 @@ class BankTransfer2 : BaseActivity() {
         val addressLines: List<String>
     ) : Parcelable
 
+    private val paymentInstruction by lazy {
+        mapOf(
+            Pair(BANK_BCA, bcaPaymentInstruction),
+            Pair(BANK_MANDIRI, mandiriPaymentInstruction),
+            Pair(BANK_BNI, bniPaymentInstruction)
+        )
+    }
+
+    private val generalInstruction by lazy {
+        mapOf(
+            Pair(BANK_BCA, R.string.general_instruction_bca),
+            Pair(BANK_MANDIRI, R.string.general_instruction_mandiri),
+            Pair(BANK_BNI, R.string.general_instruction_bni_bri_permata_other_bank)
+        )
+    }
+
+    private val bcaPaymentInstruction by lazy {
+        listOf(
+            Pair(
+                R.string.bca_instruction_atm_title,
+                R.array.mandiri_instruction_atm
+            ),
+            Pair(
+                R.string.bca_instruction_klikbca_title,
+                R.array.bca_instruction_klikbca
+            ),
+            Pair(
+                R.string.bca_instruction_mbca_titel,
+                R.array.bca_instruction_mbca
+            )
+        )
+    }
+
     private val mandiriPaymentInstruction by lazy {
         listOf(
-            Pair<Int, Int>(R.string.mandiri_instruction_atm_title, R.array.mandiri_instruction_atm),
+            Pair(
+                R.string.mandiri_instruction_atm_title,
+                R.array.mandiri_instruction_atm
+            ),
             Pair(
                 R.string.mandiri_instruction_internet_banking_title,
                 R.array.mandiri_instruction_internet_banking
+            )
+        )
+    }
+
+    private val bniPaymentInstruction by lazy {
+        listOf(
+            Pair(
+                R.string.bni_instruction_atm_title,
+                R.array.bni_instruction_atm
+            ),
+            Pair(
+                R.string.bni_instruction_internet_banking_title,
+                R.array.bni_instruction_internet_banking
+            ),
+            Pair(
+                R.string.bni_instruction_mobile_banking_title,
+                R.array.bni_instruction_mobile_banking
+            ),
+            Pair(
+                R.string.bni_instruction_other_banks_title,
+                R.array.bni_instruction_other_banks
             )
         )
     }

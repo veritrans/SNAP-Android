@@ -302,7 +302,7 @@
         <item><data><![CDATA[Pembayaran selesai.]]></data></item>
     </string-array>
 
-    <string name="bni_instruction_atm_title">ATM BNI</string>
+    <string name="bni_instruction_atm_title">ATM BNI46</string>
 
     <string-array name="bni_instruction_atm">
         <item><data><![CDATA[Pilih <b>menu lain</b> pada menu utama.]]></data></item>
@@ -314,7 +314,7 @@
     </string-array>
 
 
-    <string name="bni_instruction_internet_banking_title">BNI Internet Banking</string>
+    <string name="bni_instruction_internet_banking_title">Internet Banking</string>
 
 
     <string-array name="bni_instruction_internet_banking">
@@ -326,7 +326,7 @@
         <item><data><![CDATA[Pembayaran selesai.]]></data>.</item>
     </string-array>
 
-    <string name="bni_instruction_mobile_banking_title">BNI Internet Banking</string>
+    <string name="bni_instruction_mobile_banking_title">Mobile Banking</string>
 
 
     <string-array name="bni_instruction_mobile_banking">
@@ -337,7 +337,7 @@
         <item><data><![CDATA[Pembayaran selesai.]]></data>.</item>
     </string-array>
 
-    <string name="bni_instruction_other_banks_title">Via other banks</string>
+    <string name="bni_instruction_other_banks_title">Via bank lainnya</string>
 
 
     <string-array name="bni_instruction_other_banks">
@@ -348,5 +348,33 @@
         <item><data><![CDATA[Pembayaran selesai.]]></data>.</item>
     </string-array>
 
+    <string name="bca_instruction_atm_title">ATM BCA</string>
 
+    <string-array name="bca_instruction_atm">
+        <item><data><![CDATA[Pilih <b>transaksi lainnya</b> pada menu utama.]]></data>.</item>
+        <item><data><![CDATA[Pilih <b>transfer</b>.]]></data>.</item>
+        <item><data><![CDATA[Pilih <b>ke rekening BCA virtual account</b>.]]></data>.</item>
+        <item><data><![CDATA[Masukkan nomor <b>BCA virtual account</b>.]]></data>.</item>
+        <item><data><![CDATA[Masukkan <b>jumlah yang akan dibayar</b>, lalu <b>konfirmasi</b>.]]></data>.</item>
+        <item><data><![CDATA[Pembayaran selesai.]]></data>.</item>
+    </string-array>
+    <string name="bca_instruction_klikbca_title">KlikBCA</string>
+    <string-array name="bca_instruction_klikbca">
+        <item><data><![CDATA[Pilih <b>Transfer Dana</b>.]]></data>.</item>
+        <item><data><![CDATA[Pilih <b>Transfer ke BCA virtual account</b>.]]></data>.</item>
+        <item><data><![CDATA[Masukkan <b>nomor BCA virtual account</b>.]]></data>.</item>
+        <item><data><![CDATA[Masukkan <b>jumlah yang akan dibayar</b>, lalu <b>konfirmasi</b>.]]></data>.</item>
+        <item><data><![CDATA[Pembayaran selesai.]]></data>.</item>
+    </string-array>
+    <string name="bca_instruction_mbca_titel">m-BCA</string>
+
+    <string-array name="bca_instruction_mbca">
+        <item><data><![CDATA[Pilih <b>m-Transfer</b>.]]></data>.</item>
+        <item><data><![CDATA[Pilih <b>BCA virtual account.</b>]]></data>.</item>
+        <item><data><![CDATA[Masukkan <b>nomor BCA virtual account/b>.]]></data>.</item>
+        <item><data><![CDATA[Masukkan <b>jumlah yang akan dibayar</b>, lalu <b>konfirmasi</b>.]]></data>.</item>
+        <item><data><![CDATA[Pembayaran selesai.]]></data>.</item>
+    </string-array>
+
+    <string name="i_have_already_paid">Saya sudah bayar</string>
 </resources>
