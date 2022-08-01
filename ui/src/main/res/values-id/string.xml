@@ -229,19 +229,27 @@
 
 
     <string name="danamon_instruction">Pastikan Anda memiliki akun Danamon Online Banking untuk menyelesaikan pembayaran melalui aplikasi/situs web Danamon.</string>
-    <string name="danamon_how_to_pay">1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman Danamon Online Banking. 2. Login lalu pilih sumber dana yang digunakan. 3. Periksa kembali rincian transaksi Anda. 4. Konfirmasi pembayaran dengan masukkan kode token, lalu klik Lanjut. 5. Simpan referensi nomor pembayaran dan toko, lalu klik Lanjut untuk kembali ke halaman toko.</string>
+    <string-array name="danamon_how_to_pay">
+        <item><data>Klik Bayar sekarang dan Anda akan diarahkan ke halaman Danamon Online Banking.</data></item>
+        <item><data>Login lalu pilih sumber dana yang digunakan.</data></item>
+        <item><data>Periksa kembali rincian transaksi Anda.</data>.</item>
+        <item><data>Konfirmasi pembayaran dengan masukkan kode token, lalu klik Lanjut.</data></item>
+        <item><data>Simpan referensi nomor pembayaran dan toko, lalu klik Lanjut untuk kembali ke halaman toko.</data></item>
+    </string-array>
     <string name="danamon_cta">Bayar sekarang</string>
 
 
     <string name="bca_klik_pay_title">BCA KlikPay</string>
     <string name="bca_klik_pay_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web BCA KlikPay.</string>
     <string name="bca_klik_pay_how_to_pay_title">Cara bayar</string>
-    <string name="bca_klik_pay_how_to_pay_1">Klik Bayar sekarang dan Anda akan diarahkan ke halaman BCA KlikPay.</string>
-    <string name="bca_klik_pay_how_to_pay_2">Login dan periksa kembali detail pembayaran Anda.</string>
-    <string name="bca_klik_pay_how_to_pay_3">Pilih KlikBCA atau BCA Card untuk membayar transaksi.</string>
-    <string name="bca_klik_pay_how_to_pay_4">Untuk mengotorisasi pembayaran via BCA KlikPay, klik tombol Kirim OTP untuk menerima kode OTP melalui SMS, lalu masukkan kode tersebut ke kolom yang sudah disediakan.</string>
-    <string name="bca_klik_pay_how_to_pay_5">Jika kode OTP yang Anda masukkan benar, transaksi Anda akan segera diproses.</string>
-    <string name="bca_klik_pay_how_to_pay_6">Setelah pembayaran selesai, halaman situs akan mengindikasikan bahwa transaksi berhasil diproses dan Anda akan mendapat notifikasi via e-mail.</string>
+    <string-array name="bca_klik_pay_how_to_pay">
+        <item><data>Klik Bayar sekarang dan Anda akan diarahkan ke halaman BCA KlikPay.</data></item>
+        <item><data>Login dan periksa kembali detail pembayaran Anda.</data></item>
+        <item><data>Pilih KlikBCA atau BCA Card untuk membayar transaksi.</data>.</item>
+        <item><data>Untuk mengotorisasi pembayaran via BCA KlikPay, klik tombol Kirim OTP untuk menerima kode OTP melalui SMS, lalu masukkan kode tersebut ke kolom yang sudah disediakan.</data></item>
+        <item><data>Jika kode OTP yang Anda masukkan benar, transaksi Anda akan segera diproses.</data></item>
+        <item><data>Setelah pembayaran selesai, halaman situs akan mengindikasikan bahwa transaksi berhasil diproses dan Anda akan mendapat notifikasi via e-mail.</data></item>
+    </string-array>
     <string name="bca_klik_pay_cta">Bayar sekarang</string>
 
 

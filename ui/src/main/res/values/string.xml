@@ -232,19 +232,27 @@
 
 
     <string name="danamon_instruction">Make sure you already have Danamon Online Banking account to complete payment through Danamon’s app/website.</string>
-    <string name="danamon_how_to_pay">1. Tap Pay Now and you will be redirected to Danamon Online Banking page. 2. Login and select the source of fund you’d like to use. 3. Recheck your transaction details. 4. Confirm your payment by entering the token code, and click Next. 5. Keep the merchant reference and payment reference number, then click Next to return to the merchant’s page.</string>
+    <string-array name="danamon_how_to_pay">
+        <item><data>Tap Pay Now and you will be redirected to Danamon Online Banking page.</data></item>
+        <item><data>Login and select the source of fund you’d like to use.</data></item>
+        <item><data>Recheck your transaction details.</data>.</item>
+        <item><data>Confirm your payment by entering the token code, and click Next.</data></item>
+        <item><data>Keep the merchant reference and payment reference number, then click Next to return to the merchant’s page.</data></item>
+    </string-array>
     <string name="danamon_cta">Pay now</string>
 
 
     <string name="bca_klik_pay_title">BCA KlikPay</string>
     <string name="bca_klik_pay_instruction">Please complete BCA KlikPay through BCA KlikPay app/website.</string>
     <string name="bca_klik_pay_how_to_pay_title">How to pay</string>
-    <string name="bca_klik_pay_how_to_pay_1">Tap Pay Now and you will be redirected to BCA KlikPay page.</string>
-    <string name="bca_klik_pay_how_to_pay_2">Login and check your payment details.</string>
-    <string name="bca_klik_pay_how_to_pay_3">Choose KlikBCA or BCA Card to pay for your transaction.</string>
-    <string name="bca_klik_pay_how_to_pay_4">To authorize payment with BCA KlikPay, tap the Send OTP button to receive an OTP code via SMS, then enter code in the fields provided.</string>
-    <string name="bca_klik_pay_how_to_pay_5">If your OTP code is correct, your payment will be processed immediately.</string>
-    <string name="bca_klik_pay_how_to_pay_6">Once the payment is completed, success status will appear on the transaction screen and you will receive a notification e-mail.</string>
+    <string-array name="bca_klik_pay_how_to_pay">
+        <item><data>Tap Pay Now and you will be redirected to BCA KlikPay page.</data></item>
+        <item><data>Login and check your payment details.</data></item>
+        <item><data>Choose KlikBCA or BCA Card to pay for your transaction.</data></item>
+        <item><data>To authorize payment with BCA KlikPay, tap the Send OTP button to receive an OTP code via SMS, then enter code in the fields provided.</data></item>
+        <item><data>If your OTP code is correct, your payment will be processed immediately.</data></item>
+        <item><data>Once the payment is completed, success status will appear on the transaction screen and you will receive a notification e-mail.</data></item>
+    </string-array>
     <string name="bca_klik_pay_cta">Pay now</string>
 
 
