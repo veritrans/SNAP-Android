@@ -7,7 +7,10 @@ import android.os.Parcelable
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
@@ -15,27 +18,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.*
 import kotlinx.android.parcel.Parcelize
 
-class BcaKlikPayActivity : BaseActivity() {
-    private val data: BcaKlikPayData by lazy {
-        intent.getParcelableExtra(EXTRA_BCA_KLIK_PAY_DATA) as? BcaKlikPayData
+class DirectDebitActivity : BaseActivity() {
+    private val data: DirectDebitData by lazy {
+        intent.getParcelableExtra(EXTRA_DIRECT_DEBIT_DATA) as? DirectDebitData
             ?: throw RuntimeException("Input data must not be empty")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { BcaKlikPayContent(data) }
+        setContent { DirectDebitContent(data) }
     }
 
     @Composable
     @Preview(showBackground = true)
     fun PreviewOnly() {
-        BcaKlikPayContent(
-            data = BcaKlikPayData(
+        DirectDebitContent(
+            data = DirectDebitData(
+                paymentType = PaymentType.BCA_KLIKPAY,
                 amount = "Rp.123999",
                 orderId = "order-id",
                 name = "Dohn Joe",
@@ -46,7 +51,7 @@ class BcaKlikPayActivity : BaseActivity() {
     }
 
     @Composable
-    private fun BcaKlikPayContent(data: BcaKlikPayData) {
+    private fun DirectDebitContent(data: DirectDebitData) {
         var isCustomerDetailExpanded by remember { mutableStateOf(false) }
         var isInstructionExpanded by remember { mutableStateOf(true) }
         Column(
@@ -127,20 +132,22 @@ class BcaKlikPayActivity : BaseActivity() {
     }
 
     companion object {
-        private const val EXTRA_BCA_KLIK_PAY_DATA = "EXTRA_BCA_KLIK_PAY_DATA"
+        private const val EXTRA_DIRECT_DEBIT_DATA = "EXTRA_BCA_KLIK_PAY_DATA"
 
         fun getIntent(
             activityContext: Context,
+            @PaymentType.Def paymentType: String,
             amount: String,
             orderId: String,
             name: String,
             phone: String,
             addressLines: List<String>?
         ): Intent {
-            return Intent(activityContext, BcaKlikPayActivity::class.java).apply {
+            return Intent(activityContext, DirectDebitActivity::class.java).apply {
                 putExtra(
-                    EXTRA_BCA_KLIK_PAY_DATA,
-                    BcaKlikPayData(
+                    EXTRA_DIRECT_DEBIT_DATA,
+                    DirectDebitData(
+                        paymentType = paymentType,
                         amount = amount,
                         orderId = orderId,
                         name = name,
@@ -153,7 +160,8 @@ class BcaKlikPayActivity : BaseActivity() {
     }
 
     @Parcelize
-    private data class BcaKlikPayData(
+    private data class DirectDebitData(
+        val paymentType: String,
         val amount: String,
         val orderId: String,
         val name: String,
