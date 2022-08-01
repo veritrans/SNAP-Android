@@ -235,6 +235,7 @@
 
     <string name="bca_klik_pay_title">BCA KlikPay</string>
     <string name="bca_klik_pay_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web BCA KlikPay.</string>
+    <string name="bca_klik_pay_how_to_pay_title">Cara bayar</string>
     <string name="bca_klik_pay_how_to_pay_1">Klik Bayar sekarang dan Anda akan diarahkan ke halaman BCA KlikPay.</string>
     <string name="bca_klik_pay_how_to_pay_2">Login dan periksa kembali detail pembayaran Anda.</string>
     <string name="bca_klik_pay_how_to_pay_3">Pilih KlikBCA atau BCA Card untuk membayar transaksi.</string>
