@@ -278,7 +278,7 @@ class PaymentOptionActivity : BaseActivity() {
                         addressLines = customerDetail.addressLines,
                         orderId = orderId,
                         totalAmount = totalAmount,
-                        companyCode = "7777",
+                        companyCode = "7777", //TODO: obtain companyCode, billingNumber, vaNumber from paymentOptions
                         billingNumber = "84034832048",
                         vaNumber = "439403943094039"
 
