@@ -7,9 +7,7 @@ import android.os.Parcelable
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
@@ -30,66 +28,88 @@ class BcaKlikPayActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { BCAKlikPayContent(data) }
+        setContent { BcaKlikPayContent(data) }
     }
 
     @Composable
     @Preview(showBackground = true)
     fun PreviewOnly() {
-        BCAKlikPayContent(
+        BcaKlikPayContent(
             data = BcaKlikPayData(
-                amount = "999",
-                orderId = "order",
-                name = "saya",
-                phone = "08123456789",
-                addressLines = listOf("Ini Alamat 1")
+                amount = "Rp.123999",
+                orderId = "order-id",
+                name = "Dohn Joe",
+                phone = "081234567890",
+                addressLines = listOf("address one", "address two")
             )
         )
     }
 
     @Composable
-    private fun BCAKlikPayContent(data: BcaKlikPayData) {
-        var isExpanded by remember { mutableStateOf(false) }
-        Column {
-            SnapAppBar(title = stringResource(R.string.bca_klik_pay_title), iconResId = R.drawable.ic_cross) {
+    private fun BcaKlikPayContent(data: BcaKlikPayData) {
+        var isCustomerDetailExpanded by remember { mutableStateOf(false) }
+        var isInstructionExpanded by remember { mutableStateOf(true) }
+        Column(
+            modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
+        ) {
+            SnapAppBar(
+                title = stringResource(R.string.bca_klik_pay_title),
+                iconResId = R.drawable.ic_cross
+            ) {
                 onBackPressed()
             }
             SnapOverlayExpandingBox(
-                isExpanded = isExpanded,
+                isExpanded = isCustomerDetailExpanded,
                 mainContent = {
                     SnapTotal(
                         amount = data.amount,
                         orderId = data.orderId,
                         remainingTime = null
                     ) {
-                        isExpanded = it
+                        isCustomerDetailExpanded = it
                     }
                 },
                 expandingContent = {
                     SnapCustomerDetail(
-                        name = data.name.orEmpty(),
-                        phone = data.phone.orEmpty(),
+                        name = data.name,
+                        phone = data.phone,
                         addressLines = data.addressLines.orEmpty()
                     )
                 },
                 followingContent = {
-                    Column {
-                        Column(
-                            Modifier.verticalScroll(enabled = true, state = rememberScrollState())
-                        ) {
-                            SnapText(stringResource(R.string.bca_klik_pay_instruction))
-                            SnapNumberedList(
-                                list = listOf(
-                                    stringResource(R.string.bca_klik_pay_how_to_pay_1),
-                                    stringResource(R.string.bca_klik_pay_how_to_pay_2),
-                                    stringResource(R.string.bca_klik_pay_how_to_pay_3),
-                                    stringResource(R.string.bca_klik_pay_how_to_pay_4),
-                                    stringResource(R.string.bca_klik_pay_how_to_pay_5),
-                                    stringResource(R.string.bca_klik_pay_how_to_pay_6),
-                                )
-                            )
-                        }
+                    Column(
+                        modifier = Modifier
+                            .verticalScroll(state = rememberScrollState())
+                            .padding(top = 16.dp)
+                            .fillMaxWidth()
+
+                    ) {
+                        SnapText(stringResource(R.string.bca_klik_pay_instruction))
+                        SnapInstructionButton(
+                            modifier = Modifier.padding(top = 28.dp),
+                            isExpanded = isInstructionExpanded,
+                            iconResId = R.drawable.ic_help,
+                            title = stringResource(R.string.bca_klik_pay_how_to_pay_title),
+                            onExpandClick = { isInstructionExpanded = !isInstructionExpanded },
+                            expandingContent = {
+                                Column {
+                                    SnapNumberedList(
+                                        list = listOf(
+                                            stringResource(R.string.bca_klik_pay_how_to_pay_1),
+                                            stringResource(R.string.bca_klik_pay_how_to_pay_2),
+                                            stringResource(R.string.bca_klik_pay_how_to_pay_3),
+                                            stringResource(R.string.bca_klik_pay_how_to_pay_4),
+                                            stringResource(R.string.bca_klik_pay_how_to_pay_5),
+                                            stringResource(R.string.bca_klik_pay_how_to_pay_6),
+                                        )
+                                    )
+                                }
+                            }
+                        )
                         SnapButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 40.dp),
                             enabled = true,
                             text = stringResource(R.string.bca_klik_pay_cta),
                             style = SnapButton.Style.PRIMARY
@@ -99,9 +119,9 @@ class BcaKlikPayActivity : BaseActivity() {
                     }
                 },
                 modifier = Modifier
+                    .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
                     .fillMaxHeight(1f)
                     .padding(all = 16.dp)
-                    .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
             )
         }
     }
@@ -113,8 +133,8 @@ class BcaKlikPayActivity : BaseActivity() {
             activityContext: Context,
             amount: String,
             orderId: String,
-            name: String?,
-            phone: String?,
+            name: String,
+            phone: String,
             addressLines: List<String>?
         ): Intent {
             return Intent(activityContext, BcaKlikPayActivity::class.java).apply {
@@ -136,8 +156,8 @@ class BcaKlikPayActivity : BaseActivity() {
     private data class BcaKlikPayData(
         val amount: String,
         val orderId: String,
-        val name: String?,
-        val phone: String?,
+        val name: String,
+        val phone: String,
         val addressLines: List<String>?
     ) : Parcelable
 }
