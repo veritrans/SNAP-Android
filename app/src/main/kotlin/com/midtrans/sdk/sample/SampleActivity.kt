@@ -1,5 +1,6 @@
 package com.midtrans.sdk.sample
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.uikit.external.model.PaymentList
 import com.midtrans.sdk.uikit.external.model.PaymentMethod
+import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity.Companion.openPaymentOptionPage
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 
@@ -162,7 +164,7 @@ class SampleActivity : AppCompatActivity() {
                 text = "To Sample UI",
                 style = SnapButton.Style.PRIMARY
             ) {
-//                startActivity(Intent(this@SampleActivity, SampleUiActivity::class.java))
+                startActivity(Intent(this@SampleActivity, SampleUiActivity::class.java))
                 val intent = openPaymentOptionPage(
                     this@SampleActivity,
                     "Rp33.990",
@@ -230,6 +232,7 @@ class SampleActivity : AppCompatActivity() {
                 startActivity(
                     intent
                 )
+
             }
         }
     }

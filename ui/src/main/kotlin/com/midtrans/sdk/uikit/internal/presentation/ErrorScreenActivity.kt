@@ -24,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapColors
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import kotlinx.android.parcel.Parcelize
@@ -37,8 +36,8 @@ class ErrorScreenActivity : BaseActivity() {
             ?: throw RuntimeException("Input data must not be empty")
     }
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setContent {
             ErrorContent(
                 title = data.title,
@@ -51,8 +50,8 @@ class ErrorScreenActivity : BaseActivity() {
     @Composable
     private fun forPreview() {
         ErrorContent(
-            title = "Transaksi sudah kedaluarsa",
-            content = "Transaksi gagal diproses karena sudah melewati batas waktu pembayaran..."
+            title = resources.getString(R.string.expired_title),
+            content = resources.getString(R.string.expired_desc)
         )
     }
 
@@ -98,7 +97,7 @@ class ErrorScreenActivity : BaseActivity() {
                 )
             }
             Text(
-                text = "Anda dapat menutup halaman ini",
+                text = resources.getString(R.string.success_screen_v2_info),
                 style = SnapTypography.STYLES.snapTextMediumMedium,
                 color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY),
                 modifier = Modifier

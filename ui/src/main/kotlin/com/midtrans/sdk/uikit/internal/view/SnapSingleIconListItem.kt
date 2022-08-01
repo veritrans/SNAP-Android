@@ -18,9 +18,10 @@ object SnapSingleIconListItem {
 @Composable
 fun SnapSingleIconListItem(
     title: String,
-    @DrawableRes iconResId: Int
+    @DrawableRes iconResId: Int,
+    modifier: Modifier = Modifier
 ) {
-    Column(modifier = Modifier.height(88.dp)) {
+    Column(modifier = modifier.then(Modifier.height(88.dp))) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp),
