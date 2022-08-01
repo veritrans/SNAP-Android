@@ -257,11 +257,27 @@
     <string name="klik_bca_id_field_label">Masukkan user ID KlikBCA</string>
     <string name="klik_bca_placeholder">ID KlikBCA Anda</string>
     <string name="klik_bca_validation_error">ID KlikBCA wajib diisi</string>
-
-    <string name="klik_bca_how_to_pay">1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman BCA KlikPay. 2. Login ke akun KlikBCA Anda. 3. Pilih menu Pembayaran e-commerce. 4. Pilih kategori Lainnya. 5. Pilih Nama Perusahaan. 6. Klik Lanjut. 7. Pilih transaksi yang ingin Anda bayar, lalu klik Lanjut. 8. Konfirmasi pembayaran dengan memasukkan kode token, lalu pilih Kirim/Lanjut.</string>
+    <string-array name="klik_bca_how_to_pay">
+        <item><data>Klik Bayar sekarang dan Anda akan diarahkan ke halaman BCA KlikPay.</data></item>
+        <item><data>Login ke akun KlikBCA Anda.</data></item>
+        <item><data>Pilih menu Pembayaran e-commerce.</data></item>
+        <item><data>Pilih kategori Lainnya.</data></item>
+        <item><data>Pilih Nama Perusahaan.</data></item>
+        <item><data>Klik Lanjut.</data></item>
+        <item><data>Pilih transaksi yang ingin Anda bayar, lalu klik Lanjut.</data></item>
+        <item><data>Konfirmasi pembayaran dengan memasukkan kode token, lalu pilih Kirim/Lanjut.</data></item>
+    </string-array>
     <string name="klik_bca_cta">Bayar sekarang</string>
+
     <string name="octo_click_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web OCTO Clicks.</string>
-    <string name="octo_click_how_to_pay">1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman Octo Clicks. 2. Login ke akun Octo Clicks Anda. 3. Ikuti petunjuk yang ada di situs web untuk menyelesaikan pembayaran. 4. Setelah terkonfirmasi, transaksi Anda akan diproses secara online dan saldo rekening CIMB Anda akan dipotong secara otomatis. 5. Transaksi akan dibatalkan jika Anda tidak menyelesaikan pembayaran dalam waktu 2 jam. 6. Pastikan pop-up blocker tidak terpasang pada browser yang Anda gunakan.</string>
+    <string-array name="octo_click_how_to_pay">
+        <item><data>Klik Bayar sekarang dan Anda akan diarahkan ke halaman Octo Clicks.</data></item>
+        <item><data>Login ke akun Octo Clicks Anda.</data></item>
+        <item><data>Ikuti petunjuk yang ada di situs web untuk menyelesaikan pembayaran.</data></item>
+        <item><data>Setelah terkonfirmasi, transaksi Anda akan diproses secara online dan saldo rekening CIMB Anda akan dipotong secara otomatis.</data></item>
+        <item><data>Transaksi akan dibatalkan jika Anda tidak menyelesaikan pembayaran dalam waktu 2 jam.</data></item>
+        <item><data>Pastikan pop-up blocker tidak terpasang pada browser yang Anda gunakan.</data></item>
+    </string-array>
     <string name="octo_click_cta">Bayar sekarang</string>
 
 

@@ -260,13 +260,27 @@
     <string name="klik_bca_id_field_label">Enter KlikBCA User ID</string>
     <string name="klik_bca_placeholder">Your KlikBCA ID</string>
     <string name="klik_bca_validation_error">KlikBCA ID can\'t be empty</string>
-
-    <string name="klik_bca_how_to_pay">1.Tap Pay Now and you will be redirected to KlikBCA page. 2. Login to your KlikBCA account. 3. Choose e-commerce Payment menu. 4. Choose Others category. 5. Choose Company Name. 6. Click Continue. 7. Choose the transaction that you want to pay and tap Continue. 8. Confirm the payment by entering the token key and choose Submit/Continue.</string>
+    <string-array name="klik_bca_how_to_pay">
+        <item><data>Tap Pay Now and you will be redirected to KlikBCA page.</data></item>
+        <item><data>Login to your KlikBCA account.</data></item>
+        <item><data>Choose e-commerce Payment menu.</data></item>
+        <item><data>Choose Others category.</data></item>
+        <item><data>Choose Company Name.</data></item>
+        <item><data>Click Continue.</data></item>
+        <item><data>Choose the transaction that you want to pay and tap Continue.</data></item>
+        <item><data>Confirm the payment by entering the token key and choose Submit/Continue.</data></item>
+    </string-array>
     <string name="klik_bca_cta">Pay now</string>
 
-
     <string name="octo_click_instruction">Please complete OCTO Clicks payment through OCTO Clicks app/website.</string>
-    <string name="octo_click_how_to_pay">1. Tap Pay now and you will be redirected to OCTO Clicks page. 2. Login to your Octo Clicks account. 3. Follow the instruction on the website and complete your payment. 4. Once confirmed, your transaction will be processed online and your CIMB account balance will be deducted automatically. 5. Transaction will be cancelled if the payment is not completed within 2 hours. 6. Please make sure that there is no pop-up blocker on your browser.</string>
+    <string-array name="octo_click_how_to_pay">
+        <item><data>Tap Pay now and you will be redirected to OCTO Clicks page.</data></item>
+        <item><data>Login to your Octo Clicks account.</data></item>
+        <item><data>Follow the instruction on the website and complete your payment.</data></item>
+        <item><data>Once confirmed, your transaction will be processed online and your CIMB account balance will be deducted automatically.</data></item>
+        <item><data>Transaction will be cancelled if the payment is not completed within 2 hours.</data></item>
+        <item><data>Please make sure that there is no pop-up blocker on your browser.</data></item>
+    </string-array>
     <string name="octo_click_cta">Pay now</string>
 
 
