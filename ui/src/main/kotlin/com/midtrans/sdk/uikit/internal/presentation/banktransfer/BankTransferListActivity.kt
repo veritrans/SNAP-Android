@@ -30,7 +30,6 @@ class BankTransferListActivity : BaseActivity() {
         }
     }
 
-
     @Composable
     fun Content(
         bankList: List<Pair<String, Int>>
@@ -104,7 +103,6 @@ class BankTransferListActivity : BaseActivity() {
                 companyCode = companyCode,
                 billingNumber = billingNumber,
                 vaNumber = vaNumber
-
             )
         )
     }
@@ -124,13 +122,14 @@ class BankTransferListActivity : BaseActivity() {
             ?: throw RuntimeException("Customer detail must not be empty")
     }
 
-
     private val vaNumber: String? by lazy {
         intent.getStringExtra(EXTRA_VANUMBER)
     }
+
     private val companyCode: String? by lazy {
         intent.getStringExtra(EXTRA_COMPANYCODE)
     }
+
     private val billingNumber: String? by lazy {
         intent.getStringExtra(EXTRA_BILLINGNUMBER)
     }
@@ -143,7 +142,6 @@ class BankTransferListActivity : BaseActivity() {
         private const val EXTRA_COMPANYCODE = "bankTransfer.extra.companycode"
         private const val EXTRA_BILLINGNUMBER = "bankTransfer.extra.billingnumber"
 
-
         fun getIntent(
             activityContext: Context,
             totalAmount: String,
@@ -151,7 +149,6 @@ class BankTransferListActivity : BaseActivity() {
             vaNumber: String? = null,
             companyCode: String? = null,
             billingNumber: String? = null,
-
             customerName: String,
             customerPhone: String,
             addressLines: List<String>
