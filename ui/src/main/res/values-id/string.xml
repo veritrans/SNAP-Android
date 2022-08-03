@@ -228,6 +228,7 @@
     <string name="akulaku_cta">Bayar sekarang</string>
 
 
+    <string name="danamon_title">Danamon Online Banking</string>
     <string name="danamon_instruction">Pastikan Anda memiliki akun Danamon Online Banking untuk menyelesaikan pembayaran melalui aplikasi/situs web Danamon.</string>
     <string-array name="danamon_how_to_pay">
         <item><data>Klik Bayar sekarang dan Anda akan diarahkan ke halaman Danamon Online Banking.</data></item>
@@ -243,7 +244,7 @@
     <string name="bca_klik_pay_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web BCA KlikPay.</string>
     <string name="bca_klik_pay_how_to_pay_title">Cara bayar</string>
     <string-array name="bca_klik_pay_how_to_pay">
-        <item><data>Klik Bayar sekarang dan Anda akan diarahkan ke halaman BCA KlikPay.</data></item>
+        <item><data>Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke halaman BCA KlikPay.</data></item>
         <item><data>Login dan periksa kembali detail pembayaran Anda.</data></item>
         <item><data>Pilih KlikBCA atau BCA Card untuk membayar transaksi.</data>.</item>
         <item><data>Untuk mengotorisasi pembayaran via BCA KlikPay, klik tombol Kirim OTP untuk menerima kode OTP melalui SMS, lalu masukkan kode tersebut ke kolom yang sudah disediakan.</data></item>
@@ -253,6 +254,7 @@
     <string name="bca_klik_pay_cta">Bayar sekarang</string>
 
 
+    <string name="klik_bca_title">KlikBCA</string>
     <string name="klik_bca_instruction">Mohon cantumkan UserID Klik BCA Anda agar kami dapat memverifikasi transaksi.</string>
     <string name="klik_bca_id_field_label">Masukkan user ID KlikBCA</string>
     <string name="klik_bca_placeholder">ID KlikBCA Anda</string>
@@ -269,9 +271,11 @@
     </string-array>
     <string name="klik_bca_cta">Bayar sekarang</string>
 
+
+    <string name="octo_click_title">OCTOClicks</string>
     <string name="octo_click_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web OCTO Clicks.</string>
     <string-array name="octo_click_how_to_pay">
-        <item><data>Klik Bayar sekarang dan Anda akan diarahkan ke halaman Octo Clicks.</data></item>
+        <item><data>Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke halaman Octo Clicks.</data></item>
         <item><data>Login ke akun Octo Clicks Anda.</data></item>
         <item><data>Ikuti petunjuk yang ada di situs web untuk menyelesaikan pembayaran.</data></item>
         <item><data>Setelah terkonfirmasi, transaksi Anda akan diproses secara online dan saldo rekening CIMB Anda akan dipotong secara otomatis.</data></item>
@@ -281,6 +285,7 @@
     <string name="octo_click_cta">Bayar sekarang</string>
 
 
+    <string name="brimo_title">BRImo</string>
     <string name="brimo_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web BRI.</string>
     <string-array name="brimo_how_to_pay">
         <item><data>Klik Bayar sekarang dan Anda akan diarahkan ke halaman BRImo.</data></item>

@@ -231,6 +231,7 @@
     <string name="akulaku_cta">Pay now</string>
 
 
+    <string name="danamon_title">Danamon Online Banking</string>
     <string name="danamon_instruction">Make sure you already have Danamon Online Banking account to complete payment through Danamon’s app/website.</string>
     <string-array name="danamon_how_to_pay">
         <item><data>Tap Pay Now and you will be redirected to Danamon Online Banking page.</data></item>
@@ -246,7 +247,7 @@
     <string name="bca_klik_pay_instruction">Please complete BCA KlikPay through BCA KlikPay app/website.</string>
     <string name="bca_klik_pay_how_to_pay_title">How to pay</string>
     <string-array name="bca_klik_pay_how_to_pay">
-        <item><data>Tap Pay Now and you will be redirected to BCA KlikPay page.</data></item>
+        <item><data><![CDATA[Tap <b>Pay Now</b> and you will be redirected to BCA KlikPay page.]]></data></item>
         <item><data>Login and check your payment details.</data></item>
         <item><data>Choose KlikBCA or BCA Card to pay for your transaction.</data></item>
         <item><data>To authorize payment with BCA KlikPay, tap the Send OTP button to receive an OTP code via SMS, then enter code in the fields provided.</data></item>
@@ -256,6 +257,7 @@
     <string name="bca_klik_pay_cta">Pay now</string>
 
 
+    <string name="klik_bca_title">KlikBCA</string>
     <string name="klik_bca_instruction">Please provide your KlikBCA User ID on the field below for us to verify your transaction.</string>
     <string name="klik_bca_id_field_label">Enter KlikBCA User ID</string>
     <string name="klik_bca_placeholder">Your KlikBCA ID</string>
@@ -272,6 +274,8 @@
     </string-array>
     <string name="klik_bca_cta">Pay now</string>
 
+
+    <string name="octo_click_title">OCTOClicks</string>
     <string name="octo_click_instruction">Please complete OCTO Clicks payment through OCTO Clicks app/website.</string>
     <string-array name="octo_click_how_to_pay">
         <item><data>Tap Pay now and you will be redirected to OCTO Clicks page.</data></item>
@@ -284,6 +288,7 @@
     <string name="octo_click_cta">Pay now</string>
 
 
+    <string name="brimo_title">BRImo</string>
     <string name="brimo_instruction">Please complete BRImo payment through BRI app/website.</string>
     <string-array name="brimo_how_to_pay">
         <item><data>Tap Pay now and you will be redirected to BRImo page.</data></item>
