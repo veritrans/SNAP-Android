@@ -282,7 +282,13 @@
 
 
     <string name="brimo_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web BRI.</string>
-    <string name="brimo_how_to_pay">1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman BRImo. 2. Login ke akun BRImo Anda. 3. Ikuti petunjuk yang ada di situs web untuk menyelesaikan pembayaran. 4. Setelah terkonfirmasi, transaksi Anda akan diproses secara online dan saldo rekening BRI Anda akan dipotong secara otomatis. 5. Transaksi akan dibatalkan jika Anda tidak menyelesaikan pembayaran dalam waktu 2 jam.</string>
+    <string-array name="brimo_how_to_pay">
+        <item><data>Klik Bayar sekarang dan Anda akan diarahkan ke halaman BRImo.</data></item>
+        <item><data>Login ke akun BRImo Anda.</data></item>
+        <item><data>Ikuti petunjuk yang ada di situs web untuk menyelesaikan pembayaran.</data></item>
+        <item><data>Setelah terkonfirmasi, transaksi Anda akan diproses secara online dan saldo rekening BRI Anda akan dipotong secara otomatis.</data></item>
+        <item><data>Transaksi akan dibatalkan jika Anda tidak menyelesaikan pembayaran dalam waktu 2 jam.</data></item>
+    </string-array>
     <string name="brimo_cta">Bayar sekarang</string>
 
 

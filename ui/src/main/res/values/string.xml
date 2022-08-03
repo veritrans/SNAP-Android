@@ -285,7 +285,13 @@
 
 
     <string name="brimo_instruction">Please complete BRImo payment through BRI app/website.</string>
-    <string name="brimo_how_to_pay">Please complete BRImo payment through BRI app/website.</string>
+    <string-array name="brimo_how_to_pay">
+        <item><data>Tap Pay now and you will be redirected to BRImo page.</data></item>
+        <item><data>Login to your BRImo account.</data></item>
+        <item><data>Follow the instruction on the website and complete your payment.</data></item>
+        <item><data>Once confirmed, your transaction will be processed online and your BRI account balance will be deducted automatically.</data></item>
+        <item><data>Transaction will be cancelled if the payment is not completed within 2 hours.</data></item>
+    </string-array>
     <string name="brimo_cta">Pay now</string>
 
 
