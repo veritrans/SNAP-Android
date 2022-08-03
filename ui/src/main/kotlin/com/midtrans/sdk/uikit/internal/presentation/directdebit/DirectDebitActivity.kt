@@ -15,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,7 +41,7 @@ class DirectDebitActivity : BaseActivity() {
     fun PreviewOnly() {
         DirectDebitContent(
             data = DirectDebitData(
-                paymentType = PaymentType.BCA_KLIKPAY,
+                paymentType = PaymentType.CIMB_CLICKS,
                 amount = "Rp.123999",
                 orderId = "order-id",
                 name = "Dohn Joe",
@@ -58,7 +59,7 @@ class DirectDebitActivity : BaseActivity() {
             modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
         ) {
             SnapAppBar(
-                title = stringResource(R.string.bca_klik_pay_title),
+                title = getTitle(paymentType = data.paymentType),
                 iconResId = R.drawable.ic_cross
             ) {
                 onBackPressed()
@@ -89,7 +90,7 @@ class DirectDebitActivity : BaseActivity() {
                             .fillMaxWidth()
 
                     ) {
-                        SnapText(stringResource(R.string.bca_klik_pay_instruction))
+                        SnapText(getInstruction(paymentType = data.paymentType))
                         SnapInstructionButton(
                             modifier = Modifier.padding(top = 28.dp),
                             isExpanded = isInstructionExpanded,
@@ -99,14 +100,7 @@ class DirectDebitActivity : BaseActivity() {
                             expandingContent = {
                                 Column {
                                     SnapNumberedList(
-                                        list = listOf(
-                                            stringResource(R.string.bca_klik_pay_how_to_pay_1),
-                                            stringResource(R.string.bca_klik_pay_how_to_pay_2),
-                                            stringResource(R.string.bca_klik_pay_how_to_pay_3),
-                                            stringResource(R.string.bca_klik_pay_how_to_pay_4),
-                                            stringResource(R.string.bca_klik_pay_how_to_pay_5),
-                                            stringResource(R.string.bca_klik_pay_how_to_pay_6),
-                                        )
+                                        list = getHowToPayList(paymentType = data.paymentType)
                                     )
                                 }
                             }
@@ -128,6 +122,42 @@ class DirectDebitActivity : BaseActivity() {
                     .fillMaxHeight(1f)
                     .padding(all = 16.dp)
             )
+        }
+    }
+
+    @Composable
+    private fun getTitle(paymentType: String): String {
+        return when (paymentType) {
+            PaymentType.KLIK_BCA -> stringResource(id = R.string.klik_bca_title)
+            PaymentType.BCA_KLIKPAY -> stringResource(id = R.string.bca_klik_pay_title)
+            PaymentType.CIMB_CLICKS -> stringResource(id = R.string.octo_click_title)
+            PaymentType.DANAMON_ONLINE -> stringResource(id = R.string.danamon_title)
+            PaymentType.BRI_EPAY -> stringResource(id = R.string.brimo_title)
+            else -> ""
+        }
+    }
+
+    @Composable
+    private fun getInstruction(paymentType: String): String {
+        return when (paymentType) {
+            PaymentType.KLIK_BCA -> stringResource(id = R.string.klik_bca_instruction)
+            PaymentType.BCA_KLIKPAY -> stringResource(id = R.string.bca_klik_pay_instruction)
+            PaymentType.CIMB_CLICKS -> stringResource(id = R.string.octo_click_instruction)
+            PaymentType.DANAMON_ONLINE -> stringResource(id = R.string.danamon_instruction)
+            PaymentType.BRI_EPAY -> stringResource(id = R.string.brimo_instruction)
+            else -> ""
+        }
+    }
+
+    @Composable
+    private fun getHowToPayList(paymentType: String): List<String> {
+        return when(paymentType) {
+            PaymentType.KLIK_BCA -> stringArrayResource(id = R.array.klik_bca_how_to_pay).toList()
+            PaymentType.BCA_KLIKPAY -> stringArrayResource(id = R.array.bca_klik_pay_how_to_pay).toList()
+            PaymentType.CIMB_CLICKS -> stringArrayResource(id = R.array.octo_click_how_to_pay).toList()
+            PaymentType.DANAMON_ONLINE -> stringArrayResource(id = R.array.danamon_how_to_pay).toList()
+            PaymentType.BRI_EPAY -> stringArrayResource(id = R.array.brimo_how_to_pay).toList()
+            else -> { listOf("") }
         }
     }
 
