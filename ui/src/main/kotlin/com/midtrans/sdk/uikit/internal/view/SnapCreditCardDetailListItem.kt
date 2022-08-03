@@ -6,32 +6,13 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Divider
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.RadioButton
-import androidx.compose.material.RadioButtonDefaults
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -138,166 +119,168 @@ fun SnapCCDetailListItem(
     }
 }
 
-@Composable
-fun InputNewCardItem(
-    shouldReveal: Boolean,
-    data: NewCardFormData,
-    onCardNumberValueChange: (String) -> Unit,
-    onExpiryDateValueChange: (String) -> Unit,
-    onCvvValueChange: (String) -> Unit
-) {
-    val principalIconId by data.principalIconId
-    val iconIdList by remember {
-        mutableStateOf(
-            listOf(
-                R.drawable.ic_bri,
-                R.drawable.ic_bri,
-                R.drawable.ic_bri,
-                R.drawable.ic_bri
-            )
-        )
-    }
+//@Composable
+//fun InputNewCardItem(
+//    shouldReveal: Boolean,
+//    data: NewCardFormData,
+//    onCardNumberValueChange: (String) -> Unit,
+//    onExpiryDateValueChange: (String) -> Unit,
+//    onCvvValueChange: (String) -> Unit
+//) {
+//    val principalIconId by data.principalIconId
+//    val iconIdList by remember {
+//        mutableStateOf(
+//            listOf(
+//                R.drawable.ic_outline_visa_24,
+//                R.drawable.ic_outline_jcb_24,
+//                R.drawable.ic_outline_amex_24,
+//                R.drawable.ic_outline_mastercard_24
+//            )
+//        )
+//    }
+//
+//    Column(
+//        verticalArrangement = Arrangement.spacedBy(space = 16.dp)
+//    ) {
+////        Text(
+////            text = "Gunakan kartu lain",
+////            style = SnapTypography.STYLES.snapTextMediumMedium
+////        )
+//
+//        AnimatedVisibility(
+//            visible = shouldReveal,
+//            enter = expandVertically()
+//        ) {
+//            Column(
+//                verticalArrangement = Arrangement.spacedBy(space = 16.dp)
+//            ) {
+//
+//                Column {
+//                    Row(
+//                        horizontalArrangement = Arrangement.spacedBy(2.dp)
+//                    ) {
+//                        Text(
+//                            text = "Nomor kartu",
+//                            modifier = Modifier.weight(1f),
+//                            style = SnapTypography.STYLES.snapTextSmallRegular
+//                        )
+//
+//                        if (principalIconId != null) {
+//                            Icon(
+//                                painter = painterResource(id = principalIconId!!),
+//                                contentDescription = null,
+//                                tint = Color.Unspecified
+//                            )
+//                        } else {
+//                            iconIdList.forEach {
+//                                Icon(
+//                                    painter = painterResource(id = it),
+//                                    contentDescription = null,
+//                                    tint = Color.Unspecified
+//                                )
+//                            }
+//                        }
+//
+//                    }
+//
+//                    var newCardNumberText by remember { mutableStateOf(TextFieldValue()) }
+//                    val bankIconId by remember { data.bankIconId }
+//                    SnapTextField(
+//                        value = newCardNumberText,
+//                        hint = "0000 0000 0000 0000",
+//                        onValueChange = { value ->
+//                            newCardNumberText = formatForCreditCard(value)
+//                            onCardNumberValueChange(value.text.replace(" ", ""))
+//                        },
+//                        trailingIcon = bankIconId?.let {
+//                            {
+//                                Icon(
+//                                    painter = painterResource(id = it),
+//                                    contentDescription = null,
+//                                    tint = Color.Unspecified
+//                                )
+//                            }
+//                        },
+//                        modifier = Modifier.fillMaxWidth(1.0f),
+//                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+//                    )
+//                    val isCardNumberInvalid by remember { data.isCardNumberInvalid }
+//                    if (isCardNumberInvalid) {
+//                        Text(
+//                            text = "Nomor kartu tidak berlaku",
+//                            style = SnapTypography.STYLES.snapTextSmallRegular,
+//                            color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+//                        )
+//                    }
+//                }
+//
+//                Row(
+//                    horizontalArrangement = Arrangement.spacedBy(space = 28.dp)
+//                ) {
+//                    Column(
+//                        modifier = Modifier.weight(1.0f)
+//                    ) {
+//
+//                        var expiryDate by remember { mutableStateOf(TextFieldValue()) }
+//                        Text(
+//                            text = "Masa berlaku",
+//                            style = SnapTypography.STYLES.snapTextSmallRegular
+//                        )
+//                        SnapTextField(
+//                            hint = "MM/YY",
+//                            value = expiryDate,
+//                            onValueChange = {
+//                                expiryDate = formatExpiryDate(it)
+//                                onExpiryDateValueChange(it.text)
+//                            },
+//                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+//                        )
+//                        val isExpiryDateInvalid by remember { data.isExpiryDateInvalid }
+//                        if (isExpiryDateInvalid) {
+//                            Text(
+//                                text = "Masa berlaku tidak valid",
+//                                style = SnapTypography.STYLES.snapTextSmallRegular,
+//                                color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+//                            )
+//                        }
+//                    }
+//
+//                    Column(
+//                        modifier = Modifier.weight(1.0f)
+//                    ) {
+//                        val isCvvInvalid by remember { data.isCvvInvalid }
+//                        var cardCvv by remember {
+//                            mutableStateOf("")
+//                        }
+//                        Text(
+//                            text = "CVV",
+//                            style = SnapTypography.STYLES.snapTextSmallRegular
+//                        )
+//                        SnapTextField(
+//                            value = cardCvv,
+//                            hint = "***",
+//                            onValueChange = { value ->
+//                                cardCvv = value
+//                                onCvvValueChange(value)
+//                            },
+//                            visualTransformation = PasswordVisualTransformation(),
+//                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+//                        )
+//                        if (isCvvInvalid) {
+//                            Text(
+//                                text = "Nomor CVV tidak valid",
+//                                style = SnapTypography.STYLES.snapTextSmallRegular,
+//                                color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+//                            )
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
-    Column(
-        verticalArrangement = Arrangement.spacedBy(space = 16.dp)
-    ) {
-        Text(
-            text = "Gunakan kartu lain",
-            style = SnapTypography.STYLES.snapTextMediumMedium
-        )
 
-        AnimatedVisibility(
-            visible = shouldReveal,
-            enter = expandVertically()
-        ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(space = 16.dp)
-            ) {
-
-                Column {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
-                        Text(
-                            text = "Nomor kartu",
-                            modifier = Modifier.weight(1f),
-                            style = SnapTypography.STYLES.snapTextSmallRegular
-                        )
-
-                        if (principalIconId != null) {
-                            Icon(
-                                painter = painterResource(id = principalIconId!!),
-                                contentDescription = null,
-                                tint = Color.Unspecified
-                            )
-                        } else {
-                            iconIdList.forEach {
-                                Icon(
-                                    painter = painterResource(id = it),
-                                    contentDescription = null,
-                                    tint = Color.Unspecified
-                                )
-                            }
-                        }
-
-                    }
-
-                    var newCardNumberText by remember { mutableStateOf(TextFieldValue()) }
-                    val bankIconId by remember { data.bankIconId }
-                    SnapTextField(
-                        value = newCardNumberText,
-                        hint = "0000 0000 0000 0000",
-                        onValueChange = { value ->
-                            newCardNumberText = formatForCreditCard(value)
-                            onCardNumberValueChange(value.text.replace(" ", ""))
-                        },
-                        trailingIcon = bankIconId?.let {
-                            {
-                                Icon(
-                                    painter = painterResource(id = it),
-                                    contentDescription = null,
-                                    tint = Color.Unspecified
-                                )
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(1.0f),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                    )
-                    val isCardNumberInvalid by remember { data.isCardNumberInvalid }
-                    if (isCardNumberInvalid) {
-                        Text(
-                            text = "Nomor kartu tidak berlaku",
-                            style = SnapTypography.STYLES.snapTextSmallRegular,
-                            color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
-                        )
-                    }
-                }
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(space = 28.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1.0f)
-                    ) {
-
-                        var expiryDate by remember { mutableStateOf(TextFieldValue()) }
-                        Text(
-                            text = "Masa berlaku",
-                            style = SnapTypography.STYLES.snapTextSmallRegular
-                        )
-                        SnapTextField(
-                            hint = "MM/YY",
-                            value = expiryDate,
-                            onValueChange = {
-                                expiryDate = formatExpiryDate(it)
-                                onExpiryDateValueChange(it.text)
-                            },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                        )
-                        val isExpiryDateInvalid by remember { data.isExpiryDateInvalid }
-                        if (isExpiryDateInvalid) {
-                            Text(
-                                text = "Masa berlaku tidak valid",
-                                style = SnapTypography.STYLES.snapTextSmallRegular,
-                                color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
-                            )
-                        }
-                    }
-
-                    Column(
-                        modifier = Modifier.weight(1.0f)
-                    ) {
-                        val isCvvInvalid by remember { data.isCvvInvalid }
-                        var cardCvv by remember {
-                            mutableStateOf("")
-                        }
-                        Text(
-                            text = "CVV",
-                            style = SnapTypography.STYLES.snapTextSmallRegular
-                        )
-                        SnapTextField(
-                            value = cardCvv,
-                            hint = "***",
-                            onValueChange = { value ->
-                                cardCvv = value
-                                onCvvValueChange(value)
-                            },
-                            visualTransformation = PasswordVisualTransformation(),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                        )
-                        if (isCvvInvalid) {
-                            Text(
-                                text = "Nomor CVV tidak valid",
-                                style = SnapTypography.STYLES.snapTextSmallRegular,
-                                color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
 fun formatExpiryDate(input: TextFieldValue): TextFieldValue {
     var processed = input.text.replace("/", "")
@@ -357,15 +340,16 @@ fun SnapSavedCardRadioGroup(
                             )
                         }
 
-                        is NewCardFormData -> {
-                            InputNewCardItem(
-                                shouldReveal = item.identifier == selectedOption,
-                                data = item,
-                                onCardNumberValueChange = onCardNumberValueChange,
-                                onExpiryDateValueChange = onExpiryDateValueChange,
-                                onCvvValueChange = onCvvValueChange
-                            )
-                        }
+//                        is NewCardFormData -> {
+//                            InputNewCardItem(
+//                                shouldReveal = item.identifier == selectedOption,
+//                                data = item,
+//                                onCardNumberValueChange = onCardNumberValueChange,
+//                                onExpiryDateValueChange = onExpiryDateValueChange,
+//                                onCvvValueChange = onCvvValueChange
+//                            )
+//                        }
+
                     }
                 }
 
@@ -383,6 +367,8 @@ fun SnapSavedCardRadioGroup(
 fun SnapTextField(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
+    isFocused: Boolean,
+    onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     readOnly: Boolean = false,
@@ -395,7 +381,6 @@ fun SnapTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
-    var isFocused by remember { mutableStateOf(false) }
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
@@ -404,7 +389,7 @@ fun SnapTextField(
                 .border(
                     1.dp,
                     when {
-                        isError -> {
+                        isError && !isFocused -> {
                             SnapColors.getARGBColor(INTERACTIVE_BORDER_SUPPORT)
                         }
 
@@ -418,7 +403,7 @@ fun SnapTextField(
                 .height(39.dp)
                 .padding(top = 8.dp, bottom = 8.dp, start = 12.dp, end = 12.dp)
                 .onFocusChanged { focusState ->
-                    isFocused = focusState.isFocused
+                    onFocusChange(focusState.isFocused)
                 }),
         keyboardOptions = keyboardOptions,
         enabled = enabled,
@@ -451,6 +436,7 @@ fun SnapTextField(
         }
     )
 }
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -545,15 +531,276 @@ class NewCardFormData(
     var principalIconId: MutableState<Int?>
 ) : FormData(title)
 
+
 open class FormData(
     public val identifier: String
 )
 
-fun formatForCreditCard(input: TextFieldValue): TextFieldValue {
+class NormalCardItemState(
+    cardNumber: TextFieldValue,
+    expiry: TextFieldValue,
+    cvv: TextFieldValue,
+    isCardNumberInvalid: Boolean,
+    isExpiryInvalid: Boolean,
+    isCvvInvalid: Boolean,
+    isCardTexFieldFocused: Boolean,
+    isExpiryTextFieldFocused: Boolean,
+    isCvvTextFieldFocused: Boolean,
+    principalIconId: Int?,
+    bankIconId: Int?,
+){
+    var cardNumber by mutableStateOf(cardNumber)
+    var expiry by mutableStateOf(expiry)
+    var cvv by mutableStateOf(cvv)
+    var isCardNumberInvalid by mutableStateOf(isCardNumberInvalid)
+    var isExpiryInvalid by mutableStateOf(isExpiryInvalid)
+    var isCvvInvalid by mutableStateOf(isCvvInvalid)
+    var isCardTexFieldFocused by mutableStateOf(isCardTexFieldFocused)
+    var isExpiryTextFieldFocused by mutableStateOf(isExpiryTextFieldFocused)
+    var isCvvTextFieldFocused by mutableStateOf(isCvvTextFieldFocused)
+    var principalIconId by mutableStateOf(principalIconId)
+    var bankIconId by mutableStateOf(bankIconId)
+
+    val iconIdList by mutableStateOf(
+        listOf (
+            R.drawable.ic_outline_visa_24,
+            R.drawable.ic_outline_visa_24,
+            R.drawable.ic_outline_amex_24,
+            R.drawable.ic_outline_mastercard_24
+        )
+    )
+}
+
+fun formatCreditCard(input: TextFieldValue): TextFieldValue {
+
     var processed: String = input.text.replace("\\D", "").replace(" ", "")
     // insert a space after all groups of 4 digits that are followed by another digit
     // insert a space after all groups of 4 digits that are followed by another digit
     processed = processed.replace("(\\d{4})(?=\\d)".toRegex(), "$1 ")
-    val output = input.copy(text = processed, selection = TextRange(processed.length))
+    val length = min(processed.length, 19)
+    val output = input.copy(text = processed.substring(0 until length), selection = TextRange(length))
     return output
 }
+
+fun formatCVV(input: TextFieldValue): TextFieldValue{
+    val length = min(input.text.length, 3)
+    val output = input.copy(input.text.substring(0 until length), TextRange(length))
+    return output
+}
+
+
+@Composable
+fun NormalCardItem(
+    state: NormalCardItemState,
+    onCardNumberValueChange: (TextFieldValue) -> Unit,
+    onExpiryDateValueChange: (TextFieldValue) -> Unit,
+    onCvvValueChange: (TextFieldValue) -> Unit,
+    onCardTextFieldFocusedChange: (Boolean) -> Unit,
+    onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
+    onCvvTextFieldFocusedChange: (Boolean) -> Unit,
+) {
+    val formattedMaxCvvLength = 3
+    val formattedMaxCardNumberLength = 19
+    val formattedMaxExpiryLength = 5
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(space = 16.dp)
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(space = 16.dp)
+        ) {
+
+            Column {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    Text(
+                        text = "Nomor kartu",
+                        modifier = Modifier.weight(1f),
+                        style = SnapTypography.STYLES.snapTextSmallRegular
+                    )
+
+                    if (state.principalIconId != null && state.cardNumber.text.isNotEmpty()) {
+                        Icon(
+                            painter = painterResource(id = state.principalIconId!!),
+                            contentDescription = null,
+                            tint = Color.Unspecified
+                        )
+                    } else if (state.cardNumber.text.isEmpty()){
+                        state.iconIdList.forEach {
+                            Icon(
+                                painter = painterResource(id = it),
+                                contentDescription = null,
+                                tint = Color.Unspecified
+                            )
+                        }
+                    }
+                }
+                SnapTextField(
+                    value = state.cardNumber,
+                    hint = "0000 0000 0000 0000",
+                    isError = state.isCardNumberInvalid,
+                    onValueChange = {
+                        state.principalIconId = getPrincipalIcon(getCardType(it.text))
+                        var cardLength = formatCreditCard(it).text.length
+                        state.bankIconId = getBankIcon(getBankName(it).toString())
+                        state.isCardNumberInvalid = cardLength != formattedMaxCardNumberLength
+                        onCardNumberValueChange(formatCreditCard(it))
+                    },
+                    isFocused = state.isCardTexFieldFocused,
+                    onFocusChange = {
+                        onCardTextFieldFocusedChange(it)
+                    },
+                    trailingIcon = state.bankIconId?.let {
+                        {
+                            Icon(
+                                painter = painterResource(id = it),
+                                contentDescription = null,
+                                tint = Color.Unspecified
+                            )
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(1.0f),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                )
+                if (state.isCardNumberInvalid && !state.isCardTexFieldFocused) {
+                    Text(
+                        text = "Nomor kartu tidak berlaku",
+                        style = SnapTypography.STYLES.snapTextSmallRegular,
+                        color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                    )
+                }
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(space = 28.dp)
+            ) {
+                Column(
+                    modifier = Modifier.weight(1.0f)
+                ) {
+                    Text(
+                        text = "Masa berlaku",
+                        style = SnapTypography.STYLES.snapTextSmallRegular
+                    )
+                    SnapTextField(
+                        hint = "MM/YY",
+                        value = state.expiry,
+                        onValueChange = {
+                            onExpiryDateValueChange(formatExpiryDate(it))
+                            state.isExpiryInvalid = formatExpiryDate(it).text.isNotBlank() && formatExpiryDate(it).text.length != formattedMaxExpiryLength
+                        },
+                        isError = state.isExpiryInvalid,
+                        isFocused = state.isExpiryTextFieldFocused,
+                        onFocusChange = {
+                            onExpiryTextFieldFocusedChange(it)
+                        },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+                    if (state.isExpiryInvalid && !state.isExpiryTextFieldFocused) {
+                        Text(
+                            text = "Masa berlaku tidak valid",
+                            style = SnapTypography.STYLES.snapTextSmallRegular,
+                            color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                        )
+                    }
+                }
+
+                Column(
+                    modifier = Modifier.weight(1.0f)
+                ) {
+                    Text(
+                        text = "CVV",
+                        style = SnapTypography.STYLES.snapTextSmallRegular
+                    )
+                    SnapTextField(
+                        value = state.cvv,
+                        hint = "***",
+                        onValueChange = {
+                            onCvvValueChange(formatCVV(it))
+                            state.isCvvInvalid = formatCVV(it).text.isNotBlank() && formatCVV(it).text.length != formattedMaxCvvLength
+                        },
+                        isError = state.isCvvInvalid,
+                        isFocused = state.isCvvTextFieldFocused,
+                        onFocusChange = {
+                            onCvvTextFieldFocusedChange(it)
+                        },
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+                    if (state.isCvvInvalid && !state.isCvvTextFieldFocused) {
+                        Text(
+                            text = "Nomor CVV tidak valid",
+                            style = SnapTypography.STYLES.snapTextSmallRegular,
+                            color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+//TODO: Need to find better solution about principal icon
+fun getCardType(cardNumber: String): String {
+    return try {
+        if (cardNumber.isEmpty()) {
+            ""
+        } else {
+            if (cardNumber[0] == '4') {
+                "visa"
+            } else if (cardNumber[0] == '5' && (cardNumber[1] == '1' || cardNumber[1] == '2'
+                        || cardNumber[1] == '3' || cardNumber[1] == '4' || cardNumber[1] == '5')
+            ) {
+                "mastercard"
+            } else if (cardNumber[0] == '3' && (cardNumber[1] == '4' || cardNumber[1] == '7')) {
+                "amex"
+            } else if (cardNumber.startsWith("35") || cardNumber.startsWith("2131") || cardNumber.startsWith(
+                    "1800"
+                )
+            ) {
+                "jcb"
+            } else {
+                ""
+            }
+        }
+    } catch (e: RuntimeException) {
+        ""
+    }
+}
+
+fun getPrincipalIcon(cardType: String): Int? {
+    return when (cardType) {
+        "visa" -> R.drawable.ic_outline_visa_24
+        "mastercard" -> R.drawable.ic_outline_mastercard_24
+        "amex" -> R.drawable.ic_outline_amex_24
+        "jcb" -> R.drawable.ic_arrow_left
+        else -> null
+    }
+}
+
+fun getBankName(cardNumber: TextFieldValue): String? {
+    val length = min(cardNumber.text.length, 8)
+    val output = cardNumber.copy(cardNumber.text.substring(0 until length), TextRange(length))
+
+    return when(output.text){
+        "411111" -> "bri"
+        "52" -> "bni"
+        "51" -> "mandiri"
+        "41" -> "cimb"
+        "42" -> "mega"
+        "43" -> "bca"
+        else -> null
+    }
+}
+fun getBankIcon(bank: String): Int? {
+    return when(bank){
+        "bri" -> R.drawable.ic_outline_bri_24
+        "bni" -> R.drawable.ic_bank_bni_24
+        "mandiri" -> R.drawable.ic_bank_mandiri_24
+        "bca" -> R.drawable.ic_bank_bca_24
+        "cimb" -> R.drawable.ic_bank_cimb_24
+        "mega" -> R.drawable.ic_bank_mega_24
+        else -> null
+    }
+}
+

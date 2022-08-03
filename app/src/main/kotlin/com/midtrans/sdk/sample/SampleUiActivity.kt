@@ -144,33 +144,33 @@ class SampleUiActivity : AppCompatActivity() {
 
             ).toMutableStateList()
 
-            SnapSavedCardRadioGroup(states = list, { selected: String, value: String ->
-                Log.e("wahyu", "cardNumber: $selected  cvv: $value")
-
-                list.find { it.identifier == selected }.let { member ->
-                    member?.apply {
-                        if (this is SavedCreditCardFormData) errorText.value =
-                            if (value.length >= 3) "jangan salah" else ""
-                    }
-                }
-            }, onItemRemoveClicked = { title ->
-                list.find { it.identifier == title }.let { member ->
-                    list.remove(member)
-                }
-            },
-                onCardNumberValueChange = {
-                    Toast.makeText(this@SampleUiActivity, "HA${it.length}X", Toast.LENGTH_SHORT)
-                        .show()
-                },
-                onCvvValueChange = {
-                    Toast.makeText(this@SampleUiActivity, "HI${it.length}X", Toast.LENGTH_SHORT)
-                        .show()
-                },
-                onExpiryDateValueChange = {
-                    Toast.makeText(this@SampleUiActivity, "HE${it.length}X", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            )
+//            SnapSavedCardRadioGroup(states = list, { selected: String, value: String ->
+//                Log.e("wahyu", "cardNumber: $selected  cvv: $value")
+//
+//                list.find { it.identifier == selected }.let { member ->
+//                    member?.apply {
+//                        if (this is SavedCreditCardFormData) errorText.value =
+//                            if (value.length >= 3) "jangan salah" else ""
+//                    }
+//                }
+//            }, onItemRemoveClicked = { title ->
+//                list.find { it.identifier == title }.let { member ->
+//                    list.remove(member)
+//                }
+//            },
+//                onCardNumberValueChange = {
+//                    Toast.makeText(this@SampleUiActivity, "HA${it.length}X", Toast.LENGTH_SHORT)
+//                        .show()
+//                },
+//                onCvvValueChange = {
+//                    Toast.makeText(this@SampleUiActivity, "HI${it.length}X", Toast.LENGTH_SHORT)
+//                        .show()
+//                },
+//                onExpiryDateValueChange = {
+//                    Toast.makeText(this@SampleUiActivity, "HE${it.length}X", Toast.LENGTH_SHORT)
+//                        .show()
+//                }
+//            )
 
             SnapNumberedListItem(
                 number = "1.",
