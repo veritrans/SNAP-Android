@@ -35,7 +35,7 @@ internal class RestClientModule {
     @Provides
     @Singleton
     @Named("merchant_retrofit")
-    fun provideRetrofit(
+    fun provideMerchantRetrofit(
         gson: Gson,
         @Named("merchant_client") httpClient: OkHttpClient,
         @Named("merchant_url") merchantUrl: String
@@ -74,7 +74,7 @@ internal class RestClientModule {
     @Provides
     @Singleton
     @Named("snap_retrofit")
-    fun provideRetrofit(
+    fun provideSnapRetrofit(
         gson: Gson,
         @Named("snap_client") httpClient: OkHttpClient
     ): Retrofit {

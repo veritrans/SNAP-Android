@@ -5,6 +5,7 @@ import androidx.annotation.StringDef
 class PaymentType {
     @StringDef(
         CREDIT_CARD,
+        BANK_TRANSFER,
         PERMATA_VA,
         BCA_VA,
         BNI_VA,
@@ -21,6 +22,7 @@ class PaymentType {
         QRIS,
         DANAMON_ONLINE,
         AKULAKU,
+        CSTORE,
         ALFAMART,
         UOB_WEB,
         UOB_APP,
@@ -33,6 +35,7 @@ class PaymentType {
         const val CREDIT_CARD = "credit_card"
 
         //BANK TRANSFER
+        const val BANK_TRANSFER = "bank_transfer"
         const val PERMATA_VA = "permata_va"
         const val BCA_VA = "bca_va"
         const val BNI_VA = "bni_va"
@@ -57,6 +60,7 @@ class PaymentType {
         const val AKULAKU = "akulaku"
 
         //CONVENIENCE STORE
+        const val CSTORE = "cstore"
         const val INDOMARET = "indomaret"
         const val ALFAMART = "alfamart"
 

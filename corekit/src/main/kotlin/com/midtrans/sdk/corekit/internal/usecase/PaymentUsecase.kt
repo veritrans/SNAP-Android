@@ -8,6 +8,7 @@ import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.CreditCardTokenRequ
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.PaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.data.repository.CoreApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.SnapRepository
+import com.midtrans.sdk.corekit.internal.network.model.response.EnabledPayment
 import com.midtrans.sdk.corekit.internal.scheduler.SdkScheduler
 
 internal class PaymentUsecase(
@@ -15,6 +16,78 @@ internal class PaymentUsecase(
     private val snapRepository: SnapRepository,
     private val coreApiRepository: CoreApiRepository
 ) {
+
+    @SuppressLint("CheckResult")
+    fun getPaymentMethods(snapToken: String, callback: Callback<List<PaymentMethod>>) {
+        snapRepository.getTransactionDetail(snapToken)
+            .subscribe(
+                { responseData ->
+                    val methods = mutableListOf<PaymentMethod>()
+                    responseData.enabledPayments?.forEach {
+                        addPaymentMethod(it, methods)
+                    }
+                    callback.onSuccess(methods)
+                },
+                {
+                    deliverError(it, callback)
+                }
+            )
+    }
+
+    private fun addPaymentMethod(payment: EnabledPayment, methods: MutableList<PaymentMethod>) {
+        if (payment.status == EnabledPayment.STATUS_DOWN)
+            return
+
+        if (payment.category == PaymentType.BANK_TRANSFER) {
+            val index = methods.indexOfFirst { method ->
+                method.type == PaymentType.BANK_TRANSFER
+            }
+
+            if (index == -1) {
+                methods.add(
+                    PaymentMethod(
+                        type = PaymentType.BANK_TRANSFER,
+                        channels = listOf(payment.type)
+                    )
+                )
+            } else {
+                methods[index] = PaymentMethod(
+                    type = PaymentType.BANK_TRANSFER,
+                    channels = methods[index]
+                        .channels
+                        .toMutableList()
+                        .apply { add(payment.type) }
+                )
+            }
+        } else if (payment.category == PaymentType.CSTORE) {
+            methods.add(
+                PaymentMethod(
+                    type = payment.type,
+                    channels = emptyList()
+                )
+            )
+        } else if (payment.type == PaymentType.QRIS) {
+            if (payment.acquirer == PaymentType.SHOPEEPAY) {
+                methods.add(
+                    PaymentMethod(
+                        type = PaymentType.SHOPEEPAY_QRIS,
+                        channels = emptyList()
+                    )
+                )
+            }
+        } else {
+            methods.add(
+                PaymentMethod(
+                    type = payment.type,
+                    channels = if (payment.type == PaymentType.UOB_EZPAY) {
+                        payment.mode
+                    } else {
+                        emptyList()
+                    }
+                )
+            )
+        }
+    }
 
     @SuppressLint("CheckResult")
     fun pay(

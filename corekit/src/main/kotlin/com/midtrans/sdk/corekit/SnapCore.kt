@@ -16,7 +16,7 @@ class SnapCore private constructor(builder: Builder) {
     internal lateinit var paymentUsecase: PaymentUsecase
 
     init {
-        buildDaggerComponent(builder.context).inject(this)
+        buildDaggerComponent(builder.context, builder.merchantUrl).inject(this)
     }
 
     fun hello(): String {
@@ -82,9 +82,14 @@ class SnapCore private constructor(builder: Builder) {
 
     class Builder {
         internal lateinit var context: Context
+        internal lateinit var merchantUrl: String
 
         fun withContext(context: Context) = apply {
             this.context = context
+        }
+
+        fun withMerchantUrl(merchantUrl: String) = apply {
+            this.merchantUrl = merchantUrl
         }
 
         @Throws(RuntimeException::class)

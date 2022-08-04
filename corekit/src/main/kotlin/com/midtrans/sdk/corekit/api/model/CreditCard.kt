@@ -11,9 +11,8 @@ data class CreditCard(
     val blacklistBins: List<String>? = null,
     val installment: Installment? = null,
     val type: String? = null,
-    val authentication: String? = null,
-
-    ) {
+    val authentication: String? = null
+) {
     companion object {
         const val MIGS = "migs"
 
