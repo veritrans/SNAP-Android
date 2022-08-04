@@ -18,7 +18,7 @@ internal class PaymentUsecase(
 ) {
 
     @SuppressLint("CheckResult")
-    fun getPaymentMethods(snapToken: String, callback: Callback<List<PaymentMethod>>) {
+    fun getPaymentOption(snapToken: String, callback: Callback<List<PaymentMethod>>) {
         snapRepository.getTransactionDetail(snapToken)
             .subscribe(
                 { responseData ->

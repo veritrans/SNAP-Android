@@ -5,8 +5,10 @@ import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.CreditCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.PaymentRequestBuilder
+import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
 import com.midtrans.sdk.corekit.internal.di.DaggerSnapComponent
 import com.midtrans.sdk.corekit.internal.di.SnapComponent
+import com.midtrans.sdk.corekit.internal.usecase.GetSnapToken
 import com.midtrans.sdk.corekit.internal.usecase.PaymentUsecase
 import javax.inject.Inject
 
@@ -14,6 +16,9 @@ class SnapCore private constructor(builder: Builder) {
 
     @Inject
     internal lateinit var paymentUsecase: PaymentUsecase
+
+    @Inject
+    internal lateinit var getSnapTokenUsecase: GetSnapToken
 
     init {
         buildDaggerComponent(builder.context, builder.merchantUrl).inject(this)
@@ -23,8 +28,18 @@ class SnapCore private constructor(builder: Builder) {
         return "hello snap"
     }
 
-    fun getSnapToken() {
+    fun getSnapToken(
+        builder: SnapTokenRequestBuilder,
+        callback: Callback<String>
+    ) {
+        getSnapTokenUsecase.getSnapToken(builder, callback)
+    }
 
+    fun getPaymentOption(
+        snapToken: String,
+        callback: Callback<List<PaymentMethod>>
+    ) {
+        paymentUsecase.getPaymentOption(snapToken, callback)
     }
 
     fun pay(

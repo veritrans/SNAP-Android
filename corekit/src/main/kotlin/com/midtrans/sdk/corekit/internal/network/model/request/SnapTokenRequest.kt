@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import com.midtrans.sdk.corekit.api.model.*
 
 internal data class SnapTokenRequest(
-    val costumerDetails: CustomerDetails? = null,
+    val customerDetails: CustomerDetails? = null,
     val itemDetails: List<ItemDetails>? = null,
     val transactionDetails: SnapTransactionDetail? = null,
     val creditCard: CreditCard? = null,
