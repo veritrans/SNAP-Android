@@ -231,11 +231,11 @@
     <string name="danamon_title">Danamon Online Banking</string>
     <string name="danamon_instruction">Pastikan Anda memiliki akun Danamon Online Banking untuk menyelesaikan pembayaran melalui aplikasi/situs web Danamon.</string>
     <string-array name="danamon_how_to_pay">
-        <item><data>Klik Bayar sekarang dan Anda akan diarahkan ke halaman Danamon Online Banking.</data></item>
-        <item><data>Login lalu pilih sumber dana yang digunakan.</data></item>
-        <item><data>Periksa kembali rincian transaksi Anda.</data>.</item>
-        <item><data>Konfirmasi pembayaran dengan masukkan kode token, lalu klik Lanjut.</data></item>
-        <item><data>Simpan referensi nomor pembayaran dan toko, lalu klik Lanjut untuk kembali ke halaman toko.</data></item>
+        <item><data><![CDATA[Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke halaman Danamon Online Banking.]]></data></item>
+        <item><data><![CDATA[Login lalu pilih sumber dana yang digunakan.]]></data></item>
+        <item><data><![CDATA[Periksa kembali rincian transaksi Anda.]]></data></item>
+        <item><data><![CDATA[Konfirmasi pembayaran dengan masukkan kode token, lalu klik <b>Lanjut</b>.]]></data></item>
+        <item><data><![CDATA[Simpan referensi nomor pembayaran dan toko, lalu klik <b>Lanjut</b> untuk kembali ke halaman toko.]]></data></item>
     </string-array>
     <string name="danamon_cta">Bayar sekarang</string>
 
@@ -244,12 +244,12 @@
     <string name="bca_klik_pay_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web BCA KlikPay.</string>
     <string name="bca_klik_pay_how_to_pay_title">Cara bayar</string>
     <string-array name="bca_klik_pay_how_to_pay">
-        <item><data>Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke halaman BCA KlikPay.</data></item>
-        <item><data>Login dan periksa kembali detail pembayaran Anda.</data></item>
-        <item><data>Pilih KlikBCA atau BCA Card untuk membayar transaksi.</data>.</item>
-        <item><data>Untuk mengotorisasi pembayaran via BCA KlikPay, klik tombol Kirim OTP untuk menerima kode OTP melalui SMS, lalu masukkan kode tersebut ke kolom yang sudah disediakan.</data></item>
-        <item><data>Jika kode OTP yang Anda masukkan benar, transaksi Anda akan segera diproses.</data></item>
-        <item><data>Setelah pembayaran selesai, halaman situs akan mengindikasikan bahwa transaksi berhasil diproses dan Anda akan mendapat notifikasi via e-mail.</data></item>
+        <item><data><![CDATA[Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke halaman BCA KlikPay.]]></data></item>
+        <item><data><![CDATA[Login dan periksa kembali detail pembayaran Anda.]]></data></item>
+        <item><data><![CDATA[Pilih KlikBCA atau BCA Card untuk membayar transaksi.]]></data></item>
+        <item><data><![CDATA[Untuk mengotorisasi pembayaran via BCA KlikPay, klik tombol <b>Kirim OTP</b> untuk menerima kode OTP melalui SMS, lalu masukkan kode tersebut ke kolom yang sudah disediakan.]]></data></item>
+        <item><data><![CDATA[Jika kode OTP yang Anda masukkan benar, transaksi Anda akan segera diproses.]]></data></item>
+        <item><data><![CDATA[Setelah pembayaran selesai, halaman situs akan mengindikasikan bahwa transaksi berhasil diproses dan Anda akan mendapat notifikasi via e-mail.]]></data></item>
     </string-array>
     <string name="bca_klik_pay_cta">Bayar sekarang</string>
 
@@ -260,14 +260,14 @@
     <string name="klik_bca_placeholder">ID KlikBCA Anda</string>
     <string name="klik_bca_validation_error">ID KlikBCA wajib diisi</string>
     <string-array name="klik_bca_how_to_pay">
-        <item><data>Klik Bayar sekarang dan Anda akan diarahkan ke halaman BCA KlikPay.</data></item>
-        <item><data>Login ke akun KlikBCA Anda.</data></item>
-        <item><data>Pilih menu Pembayaran e-commerce.</data></item>
-        <item><data>Pilih kategori Lainnya.</data></item>
-        <item><data>Pilih Nama Perusahaan.</data></item>
-        <item><data>Klik Lanjut.</data></item>
-        <item><data>Pilih transaksi yang ingin Anda bayar, lalu klik Lanjut.</data></item>
-        <item><data>Konfirmasi pembayaran dengan memasukkan kode token, lalu pilih Kirim/Lanjut.</data></item>
+        <item><data><![CDATA[Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke halaman BCA KlikPay.]]></data></item>
+        <item><data><![CDATA[Login ke akun KlikBCA Anda.]]></data></item>
+        <item><data><![CDATA[Pilih menu <b>Pembayaran e-commerce</b>.]]></data></item>
+        <item><data><![CDATA[Pilih kategori <b>Lainnya</b>.]]></data></item>
+        <item><data><![CDATA[Pilih <b>Nama Perusahaan</b>.]]></data></item>
+        <item><data><![CDATA[Klik <b>Lanjut</b>.]]></data></item>
+        <item><data><![CDATA[Pilih transaksi yang ingin Anda bayar, lalu klik <b>Lanjut</b>.]]></data></item>
+        <item><data><![CDATA[Konfirmasi pembayaran dengan memasukkan kode token, lalu pilih <b>Kirim/Lanjut</b>.]]></data></item>
     </string-array>
     <string name="klik_bca_cta">Bayar sekarang</string>
 
@@ -275,12 +275,12 @@
     <string name="octo_click_title">OCTOClicks</string>
     <string name="octo_click_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web OCTO Clicks.</string>
     <string-array name="octo_click_how_to_pay">
-        <item><data>Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke halaman Octo Clicks.</data></item>
-        <item><data>Login ke akun Octo Clicks Anda.</data></item>
-        <item><data>Ikuti petunjuk yang ada di situs web untuk menyelesaikan pembayaran.</data></item>
-        <item><data>Setelah terkonfirmasi, transaksi Anda akan diproses secara online dan saldo rekening CIMB Anda akan dipotong secara otomatis.</data></item>
-        <item><data>Transaksi akan dibatalkan jika Anda tidak menyelesaikan pembayaran dalam waktu 2 jam.</data></item>
-        <item><data>Pastikan pop-up blocker tidak terpasang pada browser yang Anda gunakan.</data></item>
+        <item><data><![CDATA[Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke halaman Octo Clicks.]]></data></item>
+        <item><data><![CDATA[Login ke akun Octo Clicks Anda.]]></data></item>
+        <item><data><![CDATA[Ikuti petunjuk yang ada di situs web untuk menyelesaikan pembayaran.]]></data></item>
+        <item><data><![CDATA[Setelah terkonfirmasi, transaksi Anda akan diproses secara online dan saldo rekening CIMB Anda akan dipotong secara otomatis.]]></data></item>
+        <item><data><![CDATA[Transaksi akan dibatalkan jika Anda tidak menyelesaikan pembayaran dalam waktu 2 jam.]]></data></item>
+        <item><data><![CDATA[Pastikan pop-up blocker tidak terpasang pada browser yang Anda gunakan.]]></data></item>
     </string-array>
     <string name="octo_click_cta">Bayar sekarang</string>
 
@@ -288,11 +288,11 @@
     <string name="brimo_title">BRImo</string>
     <string name="brimo_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web BRI.</string>
     <string-array name="brimo_how_to_pay">
-        <item><data>Klik Bayar sekarang dan Anda akan diarahkan ke halaman BRImo.</data></item>
-        <item><data>Login ke akun BRImo Anda.</data></item>
-        <item><data>Ikuti petunjuk yang ada di situs web untuk menyelesaikan pembayaran.</data></item>
-        <item><data>Setelah terkonfirmasi, transaksi Anda akan diproses secara online dan saldo rekening BRI Anda akan dipotong secara otomatis.</data></item>
-        <item><data>Transaksi akan dibatalkan jika Anda tidak menyelesaikan pembayaran dalam waktu 2 jam.</data></item>
+        <item><data><![CDATA[Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke halaman BRImo.]]></data></item>
+        <item><data><![CDATA[Login ke akun BRImo Anda.]]></data></item>
+        <item><data><![CDATA[Ikuti petunjuk yang ada di situs web untuk menyelesaikan pembayaran.]]></data></item>
+        <item><data><![CDATA[Setelah terkonfirmasi, transaksi Anda akan diproses secara online dan saldo rekening BRI Anda akan dipotong secara otomatis.]]></data></item>
+        <item><data><![CDATA[Transaksi akan dibatalkan jika Anda tidak menyelesaikan pembayaran dalam waktu 2 jam.]]></data></item>
     </string-array>
     <string name="brimo_cta">Bayar sekarang</string>
 
