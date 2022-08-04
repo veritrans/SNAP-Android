@@ -101,7 +101,8 @@ class BankTransferDetailActivity : BaseActivity() {
                     getInfoField(
                         vaNumber = vaNumber,
                         companyCode = companyCode,
-                        billingNumber = billingNumber
+                        billingNumber = billingNumber,
+                        destinationBankCode = destinationBankCode
                     )[bankName]?.invoke()
 
                     var isExpanded by remember { mutableStateOf(false) }
@@ -165,25 +166,31 @@ class BankTransferDetailActivity : BaseActivity() {
     }
 
     @Composable
+    fun getDetailWithVaNumber(vaNumber: String?): @Composable (() -> Unit) {
+        return {
+            var copied by remember {
+                mutableStateOf(false)
+            }
+            vaNumber?.let {
+                SnapCopyableInfoListItem(
+                    title = stringResource(id = R.string.general_instruction_va_number_title),
+                    info = it,
+                    copied = copied,
+                    onCopyClicked = { copied = true }
+                )
+            }
+        }
+    }
+
+    @Composable
     private fun getInfoField(
         vaNumber: String?,
         billingNumber: String?,
+        destinationBankCode: String?,
         companyCode: String?
     ): Map<String, @Composable (() -> Unit)> {
         return mapOf(
-            Pair(BANK_BCA) {
-                var copied by remember {
-                    mutableStateOf(false)
-                }
-                vaNumber?.let {
-                    SnapCopyableInfoListItem(
-                        title = stringResource(id = R.string.general_instruction_va_number_title),
-                        info = it,
-                        copied = copied,
-                        onCopyClicked = { copied = true }
-                    )
-                }
-            },
+            Pair(BANK_BCA, getDetailWithVaNumber(vaNumber = vaNumber)),
             Pair(BANK_MANDIRI) {
                 var companyCodeCopied by remember {
                     mutableStateOf(false)
@@ -209,16 +216,31 @@ class BankTransferDetailActivity : BaseActivity() {
                     )
                 }
             },
-            Pair(BANK_BNI) {
-                var copied by remember {
+            Pair(BANK_BNI, getDetailWithVaNumber(vaNumber = vaNumber)),
+            Pair(BANK_BRI, getDetailWithVaNumber(vaNumber = vaNumber)),
+            Pair(BANK_PERMATA, getDetailWithVaNumber(vaNumber = vaNumber)),
+            Pair(BANK_OTHERS) {
+                var copiedBankCode by remember {
                     mutableStateOf(false)
                 }
+                var copiedVa by remember {
+                    mutableStateOf(false)
+                }
+                destinationBankCode?.let {
+                    SnapCopyableInfoListItem(
+                        title = stringResource(id = R.string.general_instruction_destination_bank_code_permata_only),
+                        info = it,
+                        copied = copiedBankCode,
+                        onCopyClicked = { label -> copiedBankCode = true }
+                    )
+                }
+
                 vaNumber?.let {
                     SnapCopyableInfoListItem(
                         title = stringResource(id = R.string.general_instruction_va_number_title),
                         info = it,
-                        copied = copied,
-                        onCopyClicked = { label -> copied = true }
+                        copied = copiedVa,
+                        onCopyClicked = { copiedVa = true }
                     )
                 }
             }
@@ -274,12 +296,18 @@ class BankTransferDetailActivity : BaseActivity() {
     private val billingNumber: String? by lazy {
         intent.getStringExtra(EXTRA_BILLINGNUMBER)
     }
+    private val destinationBankCode: String? by lazy {
+        intent.getStringExtra(EXTRA_DESTINATIONBANKCODE)
+    }
 
     private val paymentInstruction by lazy {
         mapOf(
             Pair(BANK_BCA, bcaPaymentInstruction),
             Pair(BANK_MANDIRI, mandiriPaymentInstruction),
-            Pair(BANK_BNI, bniPaymentInstruction)
+            Pair(BANK_BNI, bniPaymentInstruction),
+            Pair(BANK_BRI, briPaymentInstruction),
+            Pair(BANK_PERMATA, permataPaymentInstruction),
+            Pair(BANK_OTHERS, otherBankPaymentInstruction)
         )
     }
 
@@ -287,7 +315,10 @@ class BankTransferDetailActivity : BaseActivity() {
         mapOf(
             Pair(BANK_BCA, R.string.general_instruction_bca),
             Pair(BANK_MANDIRI, R.string.general_instruction_mandiri),
-            Pair(BANK_BNI, R.string.general_instruction_bni_bri_permata_other_bank)
+            Pair(BANK_BNI, R.string.general_instruction_bni_bri_permata_other_bank),
+            Pair(BANK_BRI, R.string.general_instruction_bni_bri_permata_other_bank),
+            Pair(BANK_PERMATA, R.string.general_instruction_bni_bri_permata_other_bank),
+            Pair(BANK_OTHERS, R.string.general_instruction_bni_bri_permata_other_bank)
         )
     }
 
@@ -342,6 +373,57 @@ class BankTransferDetailActivity : BaseActivity() {
         )
     }
 
+    private val permataPaymentInstruction by lazy {
+        listOf(
+            Pair(
+                R.string.permata_instruction_permata_title,
+                R.array.permata_instruction_permata
+            ),
+            Pair(
+                R.string.permata_instruction_other_bank_title,
+                R.array.permata_instruction_other_bank
+            )
+        )
+    }
+
+    private val briPaymentInstruction by lazy {
+        listOf(
+            Pair(
+                R.string.bri_instruction_atm_title,
+                R.array.bri_instruction_atm
+            ),
+            Pair(
+                R.string.bri_instruction_ib_title,
+                R.array.bri_instruction_ib
+            ),
+            Pair(
+                R.string.bri_instruction_brimo_title,
+                R.array.bri_instruction_brimo
+            ),
+            Pair(
+                R.string.bri_instruction_other_bank_title,
+                R.array.bri_instruction_other_bank
+            )
+        )
+    }
+
+    private val otherBankPaymentInstruction by lazy {
+        listOf(
+            Pair(
+                R.string.other_bank_instruction_prima_title,
+                R.array.other_bank_instruction_prima
+            ),
+            Pair(
+                R.string.other_bank_instruction_atm_bersama_title,
+                R.array.other_bank_instruction_atm_bersama
+            ),
+            Pair(
+                R.string.other_bank_instruction_alto_title,
+                R.array.other_bank_instruction_alto
+            )
+        )
+    }
+
     companion object {
         private const val EXTRA_TOTAL_AMOUNT = "bankTransfer.extra.total_amount"
         private const val EXTRA_ORDER_ID = "bankTransfer.extra.order_id"
@@ -350,10 +432,14 @@ class BankTransferDetailActivity : BaseActivity() {
         private const val EXTRA_VANUMBER = "bankTransfer.extra.vanumber"
         private const val EXTRA_COMPANYCODE = "bankTransfer.extra.companycode"
         private const val EXTRA_BILLINGNUMBER = "bankTransfer.extra.billingnumber"
+        private const val EXTRA_DESTINATIONBANKCODE = "bankTransfer.extra.destinationbankcode"
 
         const val BANK_BCA = "bca"
         const val BANK_BNI = "bni"
         const val BANK_MANDIRI = "mandiri"
+        const val BANK_PERMATA = "permata"
+        const val BANK_BRI = "bri"
+        const val BANK_OTHERS = "other banks"
 
         fun getIntent(
             activityContext: Context,
@@ -363,7 +449,7 @@ class BankTransferDetailActivity : BaseActivity() {
             vaNumber: String? = null,
             companyCode: String? = null,
             billingNumber: String? = null,
-
+            destinationBankCode: String? = null,
             customerName: String,
             customerPhone: String,
             addressLines: List<String>
@@ -385,6 +471,9 @@ class BankTransferDetailActivity : BaseActivity() {
                 }
                 billingNumber?.let {
                     putExtra(EXTRA_BILLINGNUMBER, it)
+                }
+                destinationBankCode?.let {
+                    putExtra(EXTRA_DESTINATIONBANKCODE, it)
                 }
             }
         }

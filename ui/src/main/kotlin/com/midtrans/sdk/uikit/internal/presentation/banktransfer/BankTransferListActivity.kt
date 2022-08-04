@@ -85,7 +85,10 @@ class BankTransferListActivity : BaseActivity() {
             bankList = listOf(
                 Pair("Mandiri", R.drawable.ic_bank_mandiri_40),
                 Pair("BCA", R.drawable.ic_bank_bca_40),
-                Pair("BNI", R.drawable.ic_bank_bni_40)
+                Pair("BNI", R.drawable.ic_bank_bni_40),
+                Pair("BRI", R.drawable.ic_bank_bri_40),
+                Pair("Permata", R.drawable.ic_bank_permata_40),
+                Pair("Other banks", R.drawable.ic_bank_others_40)
             )
         )
     }
@@ -102,7 +105,8 @@ class BankTransferListActivity : BaseActivity() {
                 totalAmount = totalAmount,
                 companyCode = companyCode,
                 billingNumber = billingNumber,
-                vaNumber = vaNumber
+                vaNumber = vaNumber,
+                destinationBankCode = destinationBankCode
             )
         )
     }
@@ -134,6 +138,10 @@ class BankTransferListActivity : BaseActivity() {
         intent.getStringExtra(EXTRA_BILLINGNUMBER)
     }
 
+    private val destinationBankCode: String? by lazy {
+        intent.getStringExtra(EXTRA_DESTINATIONBANKCODE)
+    }
+
     companion object {
         private const val EXTRA_TOTAL_AMOUNT = "bankTransfer.extra.total_amount"
         private const val EXTRA_ORDER_ID = "bankTransfer.extra.order_id"
@@ -141,6 +149,7 @@ class BankTransferListActivity : BaseActivity() {
         private const val EXTRA_VANUMBER = "bankTransfer.extra.vanumber"
         private const val EXTRA_COMPANYCODE = "bankTransfer.extra.companycode"
         private const val EXTRA_BILLINGNUMBER = "bankTransfer.extra.billingnumber"
+        private const val EXTRA_DESTINATIONBANKCODE = "bankTransfer.extra.destinationbankcode"
 
         fun getIntent(
             activityContext: Context,
@@ -149,6 +158,7 @@ class BankTransferListActivity : BaseActivity() {
             vaNumber: String? = null,
             companyCode: String? = null,
             billingNumber: String? = null,
+            destinationBankCode: String? = null,
             customerName: String,
             customerPhone: String,
             addressLines: List<String>
@@ -169,6 +179,9 @@ class BankTransferListActivity : BaseActivity() {
                 }
                 billingNumber?.let {
                     putExtra(EXTRA_BILLINGNUMBER, it)
+                }
+                destinationBankCode?.let {
+                    putExtra(EXTRA_DESTINATIONBANKCODE, it)
                 }
             }
         }
