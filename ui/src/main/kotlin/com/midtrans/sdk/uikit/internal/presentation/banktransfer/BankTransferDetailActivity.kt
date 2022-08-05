@@ -14,6 +14,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
@@ -39,12 +40,17 @@ class BankTransferDetailActivity : BaseActivity() {
                 totalAmount = totalAmount,
                 orderId = orderId,
                 customerDetail = customerDetail,
-                vaNumber = vaNumber,
-                billingNumber = billingNumber,
-                bankName = bankName,
-                companyCode = companyCode
+                vaNumberState = viewModel.vaNumberLiveData.observeAsState(),
+                billingNumberState = viewModel.billingNumberLiveData.observeAsState(),
+                bankName = paymentType,
+                companyCodeState = viewModel.companyCodeLiveData.observeAsState()
             )
         }
+        viewModel.chargeBankTransfer(
+            snapToken = snapToken,
+            paymentType = paymentType,
+            customerEmail = null
+        )
     }
 
     @Composable
@@ -53,10 +59,13 @@ class BankTransferDetailActivity : BaseActivity() {
         orderId: String,
         bankName: String,
         customerDetail: CustomerDetail,
-        vaNumber: String?,
-        billingNumber: String?,
-        companyCode: String?
+        vaNumberState: State<String?>,
+        billingNumberState: State<String?>,
+        companyCodeState: State<String?>
     ) {
+        val vaNumber by remember { vaNumberState }
+        val billingNumber by remember { billingNumberState }
+        val companyCode by remember { companyCodeState }
         var expanding by remember {
             mutableStateOf(false)
         }
@@ -262,10 +271,10 @@ class BankTransferDetailActivity : BaseActivity() {
                 phone = "4123123123123",
                 addressLines = listOf("jalan", "jalan", "jalan")
             ),
-            vaNumber = "23421312",
-            companyCode = "32323",
+            vaNumberState = remember { mutableStateOf("23421312") },
+            companyCodeState = remember { mutableStateOf("32323") },
             bankName = "bni",
-            billingNumber = "2323222222"
+            billingNumberState = remember { mutableStateOf("2323222222") }
         )
 
     }
@@ -286,22 +295,15 @@ class BankTransferDetailActivity : BaseActivity() {
             ?: throw RuntimeException("Customer detail must not be empty")
     }
 
-    private val bankName: String by lazy {
-        intent.getStringExtra(EXTRA_BANK)
+    private val paymentType: String by lazy {
+        intent.getStringExtra(EXTRA_PAYMENTTYPE)
             ?: throw RuntimeException("Bank name must not be empty")
-    }
-
-    private val vaNumber: String? by lazy {
-        intent.getStringExtra(EXTRA_VANUMBER)
-    }
-    private val companyCode: String? by lazy {
-        intent.getStringExtra(EXTRA_COMPANYCODE)
-    }
-    private val billingNumber: String? by lazy {
-        intent.getStringExtra(EXTRA_BILLINGNUMBER)
     }
     private val destinationBankCode: String? by lazy {
         intent.getStringExtra(EXTRA_DESTINATIONBANKCODE)
+    }
+    private val snapToken: String by lazy {
+        intent.getStringExtra(EXTRA_SNAPTOKEN).orEmpty()
     }
 
     private val paymentInstruction by lazy {
@@ -432,10 +434,8 @@ class BankTransferDetailActivity : BaseActivity() {
         private const val EXTRA_TOTAL_AMOUNT = "bankTransfer.extra.total_amount"
         private const val EXTRA_ORDER_ID = "bankTransfer.extra.order_id"
         private const val EXTRA_CUSTOMER_DETAIL = "bankTransfer.extra.customer_detail"
-        private const val EXTRA_BANK = "bankTransfer.extra.bank"
-        private const val EXTRA_VANUMBER = "bankTransfer.extra.vanumber"
-        private const val EXTRA_COMPANYCODE = "bankTransfer.extra.companycode"
-        private const val EXTRA_BILLINGNUMBER = "bankTransfer.extra.billingnumber"
+        private const val EXTRA_PAYMENTTYPE = "bankTransfer.extra.paymenttype"
+        private const val EXTRA_SNAPTOKEN = "bankTransfer.extra.snaptoken"
         private const val EXTRA_DESTINATIONBANKCODE = "bankTransfer.extra.destinationbankcode"
 
         const val BANK_BCA = "bca"
@@ -447,12 +447,10 @@ class BankTransferDetailActivity : BaseActivity() {
 
         fun getIntent(
             activityContext: Context,
-            bankName: String,
+            snapToken: String,
+            paymentType: String,
             totalAmount: String,
             orderId: String,
-            vaNumber: String? = null,
-            companyCode: String? = null,
-            billingNumber: String? = null,
             destinationBankCode: String? = null,
             customerName: String,
             customerPhone: String,
@@ -461,21 +459,13 @@ class BankTransferDetailActivity : BaseActivity() {
             return Intent(activityContext, BankTransferDetailActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
+                putExtra(EXTRA_SNAPTOKEN, snapToken)
                 putExtra(
                     EXTRA_CUSTOMER_DETAIL,
                     CustomerDetail(customerName, customerPhone, addressLines)
                 )
-                putExtra(EXTRA_BANK, bankName)
-                vaNumber?.let {
-                    putExtra(EXTRA_VANUMBER, it)
+                putExtra(EXTRA_PAYMENTTYPE, paymentType)
 
-                }
-                companyCode?.let {
-                    putExtra(EXTRA_COMPANYCODE, it)
-                }
-                billingNumber?.let {
-                    putExtra(EXTRA_BILLINGNUMBER, it)
-                }
                 destinationBankCode?.let {
                     putExtra(EXTRA_DESTINATIONBANKCODE, it)
                 }
