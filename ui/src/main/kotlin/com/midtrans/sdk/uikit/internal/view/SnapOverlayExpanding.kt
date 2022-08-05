@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -23,9 +24,9 @@ import com.midtrans.sdk.uikit.R
 fun SnapOverlayExpandingBox(
     isExpanded: Boolean = true,
     mainContent: @Composable (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
     expandingContent: @Composable (() -> Unit)? = null,
-    followingContent: @Composable (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    followingContent: @Composable (() -> Unit)? = null
 ) {
 
     ConstraintLayout(
@@ -137,7 +138,7 @@ fun SnapCustomerDetail(
         modifier = Modifier.background(color = SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY))
     ) {
         Text(
-            text = "Detail pelanggan",
+            text = stringResource(id = R.string.payment_details_customer_detail_title),
             style = SnapTypography.STYLES.snapTextSmallRegular,
             color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY)
         )

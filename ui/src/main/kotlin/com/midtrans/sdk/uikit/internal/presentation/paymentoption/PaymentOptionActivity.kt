@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -18,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
@@ -28,6 +28,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
+import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapColors
 import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
@@ -57,8 +58,7 @@ class PaymentOptionActivity : BaseActivity() {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
-                val toTypedArray = ArrayList(paymentList)
-                putParcelableArrayListExtra(EXTRA_PAYMENT_LIST, toTypedArray)
+                putParcelableArrayListExtra(EXTRA_PAYMENT_LIST, ArrayList(paymentList))
                 putExtra(EXTRA_CUSTOMER_DETAILS, customerDetails)
             }
         }
@@ -230,10 +230,10 @@ class PaymentOptionActivity : BaseActivity() {
                     {
                         SnapCustomerDetail(
                             name = it.name,
-                            phone = it.phone,
-                            addressLines = it.addressLines
-                        )
-                    }
+                        phone = it.phone,
+                        addressLines = it.addressLines
+                    )
+                }
                 },
                 followingContent = {
                     LazyColumn {
@@ -244,15 +244,14 @@ class PaymentOptionActivity : BaseActivity() {
                             }
                         ) { payment ->
                             SnapMultiIconListItem(
-                                title = resources.getString(payment.titleId),
+                                title = stringResource(payment.titleId),
                                 iconList = payment.icons
                             ) {
-                                //TODO create intent to go to selected payment method page
-                                Toast.makeText(
-                                    this@PaymentOptionActivity,
-                                    "${payment.type}",
-                                    Toast.LENGTH_LONG
-                                ).show()
+                                getOnPaymentItemClick(
+                                    customerInfo = customerInfo,
+                                    totalAmount = totalAmount,
+                                    orderId = orderId
+                                )[payment.type]?.invoke()
                             }
                         }
                     }
@@ -263,5 +262,28 @@ class PaymentOptionActivity : BaseActivity() {
                     .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
             )
         }
+    }
+
+    private fun getOnPaymentItemClick(
+        totalAmount: String,
+        orderId: String,
+        customerInfo: CustomerInfo?,
+    ): Map<String, () -> Unit> {
+        return mapOf(
+            Pair("bank_transfer") {
+                startActivity(
+                    BankTransferListActivity.getIntent(
+                        activityContext = this,
+                        snapToken = snapToken,
+                        orderId = orderId,
+                        totalAmount = totalAmount,
+                        customerInfo = customerInfo,
+                        companyCode = "7777", //TODO: obtain companyCode, billingNumber, vaNumber from paymentOptions
+                        billingNumber = "84034832048",
+                        vaNumber = "439403943094039"
+                    )
+                )
+            }
+        )
     }
 }

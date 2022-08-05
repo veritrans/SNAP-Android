@@ -6,13 +6,19 @@
 
         <activity
             android:name=".internal.presentation.SuccessScreenActivity"
-            android:theme="@style/Theme.AppCompat.Light"
-            android:windowSoftInputMode="adjustResize" />
+            android:theme="@style/Theme.AppCompat.Light" />
 
         <activity
             android:name=".internal.presentation.ErrorScreenActivity"
-            android:theme="@style/Theme.AppCompat.Light"
-            android:windowSoftInputMode="adjustResize" />
+            android:theme="@style/Theme.AppCompat.Light" />
+
+        <activity
+            android:name=".internal.presentation.banktransfer.BankTransferListActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity
+            android:name=".internal.presentation.banktransfer.BankTransferDetailActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <activity
             android:name=".internal.presentation.loadingpayment.LoadingPaymentActivity"

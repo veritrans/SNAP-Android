@@ -194,11 +194,12 @@ class LoadingPaymentActivity : BaseActivity() {
     private fun initObserver() {
         viewModel.getPaymentOptionLiveData().observe(this, Observer {
             val intent = PaymentOptionActivity.openPaymentOptionPage(
-                this,
-                viewModel.getAmountInString(transactionDetails),
-                viewModel.getOrderId(transactionDetails),
-                it.options,
-                customerDetails
+                activityContext = this,
+                snapToken = it.token,
+                totalAmount = viewModel.getAmountInString(transactionDetails),
+                orderId = viewModel.getOrderId(transactionDetails),
+                paymentList = it.options,
+                customerDetails = customerDetails
             )
             startActivity(intent)
             finish()
