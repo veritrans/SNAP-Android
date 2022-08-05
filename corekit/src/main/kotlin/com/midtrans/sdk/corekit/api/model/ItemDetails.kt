@@ -1,9 +1,13 @@
 package com.midtrans.sdk.corekit.api.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class ItemDetails(
     val id: String? = null,
     val price: Double? = null,
     val quantity: Int = 0,
     val name: String? = null,
-)
+) : Parcelable
  

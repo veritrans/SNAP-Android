@@ -79,14 +79,14 @@ class LoadingPaymentActivity : BaseActivity() {
                 putExtra(EXTRA_TRANSACTION_DETAIL, transactionDetails)
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
                 putExtra(EXTRA_CUSTOMER_DETAILS, customerDetails)
-                putExtra(EXTRA_ITEM_DETAILS, itemDetails?.toTypedArray())
+                putExtra(EXTRA_ITEM_DETAILS, itemDetails?.let { ArrayList(it) })
                 putExtra(EXTRA_CREDIT_CARD, creditCard)
                 putExtra(EXTRA_USER_ID, userId)
                 putExtra(EXTRA_PERMATA_VA, permataVa)
                 putExtra(EXTRA_BCA_VA, bcaVa)
                 putExtra(EXTRA_BNI_VA, bniVa)
                 putExtra(EXTRA_BRI_VA, briVa)
-                putExtra(EXTRA_ENABLED_PAYMENTS, enabledPayments?.toTypedArray())
+                putStringArrayListExtra(EXTRA_ENABLED_PAYMENTS, enabledPayments?.let { ArrayList(it) })
                 putExtra(EXTRA_EXPIRY, expiry)
                 putExtra(EXTRA_PROMO, promo)
                 putExtra(EXTRA_CUSTOM_FIELD1, customField1)
@@ -110,7 +110,7 @@ class LoadingPaymentActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_CUSTOMER_DETAILS) as? CustomerDetails
     }
     private val itemDetails: List<ItemDetails>? by lazy {
-        intent.getParcelableExtra(EXTRA_ITEM_DETAILS)
+        intent.getParcelableArrayListExtra(EXTRA_ITEM_DETAILS)
     }
     private val creditCard: CreditCard? by lazy {
         intent.getParcelableExtra(EXTRA_CREDIT_CARD) as? CreditCard
