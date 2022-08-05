@@ -256,6 +256,7 @@
 
     <string name="klik_bca_title">KlikBCA</string>
     <string name="klik_bca_instruction">Mohon cantumkan UserID Klik BCA Anda agar kami dapat memverifikasi transaksi.</string>
+    <string name="klik_bca_id_field_title">User ID KlikBCA</string>
     <string name="klik_bca_id_field_label">Masukkan user ID KlikBCA</string>
     <string name="klik_bca_placeholder">ID KlikBCA Anda</string>
     <string name="klik_bca_validation_error">ID KlikBCA wajib diisi</string>
