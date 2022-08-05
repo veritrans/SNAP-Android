@@ -7,22 +7,24 @@ import android.os.Parcelable
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.*
+import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
 import kotlinx.android.parcel.Parcelize
 
 class DirectDebitActivity : BaseActivity() {
@@ -37,7 +39,7 @@ class DirectDebitActivity : BaseActivity() {
     }
 
     @Composable
-    @Preview(showBackground = true)
+//    @Preview(showBackground = true)
     fun PreviewOnly() {
         DirectDebitContent(
             data = DirectDebitData(
@@ -91,6 +93,7 @@ class DirectDebitActivity : BaseActivity() {
 
                     ) {
                         SnapText(getInstruction(paymentType = data.paymentType))
+
                         SnapInstructionButton(
                             modifier = Modifier.padding(top = 28.dp),
                             isExpanded = isInstructionExpanded,
@@ -126,6 +129,43 @@ class DirectDebitActivity : BaseActivity() {
     }
 
     @Composable
+    @Preview(showBackground = true)
+    private fun KlikBcaUserIdTextField(paymentType: String = PaymentType.KLIK_BCA) {
+        if (paymentType == PaymentType.KLIK_BCA) {
+            var userId by remember { mutableStateOf(TextFieldValue()) }
+
+            Column(modifier = Modifier
+                .fillMaxWidth(1f)
+                .padding(top = 12.dp)
+                .background(color = SnapColors.getARGBColor(SnapColors.SUPPORT_NEUTRAL_FILL))) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier
+                        .padding(top = 8.dp, bottom = 12.dp, start = 16.dp, end = 16.dp)
+                ) {
+                    SnapText(
+                        text = stringResource(id = R.string.klik_bca_id_field_title),
+                        style = SnapText.Style.SMALL
+                    )
+                    SnapTextField(
+                        value = userId,
+                        hint = stringResource(id = R.string.klik_bca_id_field_label),
+                        onValueChange = { userId = it },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                    )
+                    if (userId.text.isEmpty()) {
+                        Text(
+                            text = stringResource(id = R.string.klik_bca_validation_error),
+                            style = SnapTypography.STYLES.snapTextSmallRegular,
+                            color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
     private fun getTitle(paymentType: String): String {
         return when (paymentType) {
             PaymentType.KLIK_BCA -> stringResource(id = R.string.klik_bca_title)
@@ -151,18 +191,20 @@ class DirectDebitActivity : BaseActivity() {
 
     @Composable
     private fun getHowToPayList(paymentType: String): List<String> {
-        return when(paymentType) {
+        return when (paymentType) {
             PaymentType.KLIK_BCA -> stringArrayResource(id = R.array.klik_bca_how_to_pay).toList()
             PaymentType.BCA_KLIKPAY -> stringArrayResource(id = R.array.bca_klik_pay_how_to_pay).toList()
             PaymentType.CIMB_CLICKS -> stringArrayResource(id = R.array.octo_click_how_to_pay).toList()
             PaymentType.DANAMON_ONLINE -> stringArrayResource(id = R.array.danamon_how_to_pay).toList()
             PaymentType.BRI_EPAY -> stringArrayResource(id = R.array.brimo_how_to_pay).toList()
-            else -> { listOf("") }
+            else -> {
+                listOf("")
+            }
         }
     }
 
     companion object {
-        private const val EXTRA_DIRECT_DEBIT_DATA = "EXTRA_BCA_KLIK_PAY_DATA"
+        private const val EXTRA_DIRECT_DEBIT_DATA = "EXTRA_DIRECT_DEBIT_DATA"
 
         fun getIntent(
             activityContext: Context,
