@@ -1,7 +1,9 @@
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-android-extensions")
+    id("kotlin-kapt")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -77,4 +79,16 @@ dependencies {
     debugImplementation("androidx.customview:customview:1.2.0-alpha01")
     debugImplementation("androidx.customview:customview-poolingcontainer:1.0.0-alpha01")
     implementation(project(":corekit"))
+
+    //dagger
+    implementation(com.gtf.snap.DaggerLibraries.dagger)
+    kapt(com.gtf.snap.DaggerLibraries.daggerCompiler)
+    implementation(com.gtf.snap.DaggerLibraries.daggerAndroid)
+    kapt(com.gtf.snap.DaggerLibraries.daggerAndroidCompiler)
+
+    testImplementation(com.gtf.snap.DaggerLibraries.dagger)
+    kaptTest(com.gtf.snap.DaggerLibraries.daggerCompiler)
+    testImplementation(com.gtf.snap.DaggerLibraries.daggerAndroid)
+    kaptTest(com.gtf.snap.DaggerLibraries.daggerAndroidCompiler)
+
 }

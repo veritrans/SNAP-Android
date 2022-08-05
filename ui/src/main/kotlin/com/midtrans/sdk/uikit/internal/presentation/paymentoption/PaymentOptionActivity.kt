@@ -35,7 +35,7 @@ import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
 import com.midtrans.sdk.uikit.internal.view.SnapMultiIconListItem
 import com.midtrans.sdk.uikit.internal.view.SnapOverlayExpandingBox
 import com.midtrans.sdk.uikit.internal.view.SnapTotal
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import kotlin.math.sqrt
 
 class PaymentOptionActivity : BaseActivity() {
@@ -278,10 +278,8 @@ class PaymentOptionActivity : BaseActivity() {
                         addressLines = customerDetail.addressLines,
                         orderId = orderId,
                         totalAmount = totalAmount,
-                        companyCode = "7777", //TODO: obtain companyCode, billingNumber, vaNumber from paymentOptions
-                        billingNumber = "84034832048",
-                        vaNumber = "439403943094039"
-
+                        snapToken = "7777", //TODO: obtain snap token paymentOptions
+                        destinationBankCode = "009 - Permata"
                     )
                 )
             }

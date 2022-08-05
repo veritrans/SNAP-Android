@@ -19,7 +19,7 @@ import com.midtrans.sdk.uikit.internal.view.SnapOverlayExpandingBox
 import com.midtrans.sdk.uikit.internal.view.SnapTotal
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.SnapSingleIconListItem
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 class BankTransferListActivity : BaseActivity() {
 
@@ -85,7 +85,10 @@ class BankTransferListActivity : BaseActivity() {
             bankList = listOf(
                 Pair("Mandiri", R.drawable.ic_bank_mandiri_40),
                 Pair("BCA", R.drawable.ic_bank_bca_40),
-                Pair("BNI", R.drawable.ic_bank_bni_40)
+                Pair("BNI", R.drawable.ic_bank_bni_40),
+                Pair("BRI", R.drawable.ic_bank_bri_40),
+                Pair("Permata", R.drawable.ic_bank_permata_40),
+                Pair("Other banks", R.drawable.ic_bank_others_40)
             )
         )
     }
@@ -94,15 +97,14 @@ class BankTransferListActivity : BaseActivity() {
         startActivity(
             BankTransferDetailActivity.getIntent(
                 activityContext = this,
-                bankName = bank.toLowerCase(Locale.current),
+                paymentType = bank.toLowerCase(Locale.current),
                 customerName = customerDetail.name,
                 customerPhone = customerDetail.phone,
                 addressLines = customerDetail.addressLines,
                 orderId = orderId,
                 totalAmount = totalAmount,
-                companyCode = companyCode,
-                billingNumber = billingNumber,
-                vaNumber = vaNumber
+                destinationBankCode = destinationBankCode,
+                snapToken = snapToken
             )
         )
     }
@@ -122,33 +124,28 @@ class BankTransferListActivity : BaseActivity() {
             ?: throw RuntimeException("Customer detail must not be empty")
     }
 
-    private val vaNumber: String? by lazy {
-        intent.getStringExtra(EXTRA_VANUMBER)
+    private val destinationBankCode: String? by lazy {
+        intent.getStringExtra(EXTRA_DESTINATIONBANKCODE)
     }
 
-    private val companyCode: String? by lazy {
-        intent.getStringExtra(EXTRA_COMPANYCODE)
+    private val snapToken: String by lazy {
+        intent.getStringExtra(EXTRA_SNAPTOKEN)?: throw RuntimeException("Snap token must not be empty")
     }
 
-    private val billingNumber: String? by lazy {
-        intent.getStringExtra(EXTRA_BILLINGNUMBER)
-    }
 
     companion object {
         private const val EXTRA_TOTAL_AMOUNT = "bankTransfer.extra.total_amount"
         private const val EXTRA_ORDER_ID = "bankTransfer.extra.order_id"
         private const val EXTRA_CUSTOMER_DETAIL = "bankTransfer.extra.customer_detail"
-        private const val EXTRA_VANUMBER = "bankTransfer.extra.vanumber"
-        private const val EXTRA_COMPANYCODE = "bankTransfer.extra.companycode"
-        private const val EXTRA_BILLINGNUMBER = "bankTransfer.extra.billingnumber"
+        private const val EXTRA_DESTINATIONBANKCODE = "bankTransfer.extra.destinationbankcode"
+        private const val EXTRA_SNAPTOKEN = "bankTransfer.extra.snaptoken"
 
         fun getIntent(
             activityContext: Context,
+            snapToken: String,
             totalAmount: String,
             orderId: String,
-            vaNumber: String? = null,
-            companyCode: String? = null,
-            billingNumber: String? = null,
+            destinationBankCode: String? = null,
             customerName: String,
             customerPhone: String,
             addressLines: List<String>
@@ -156,19 +153,13 @@ class BankTransferListActivity : BaseActivity() {
             return Intent(activityContext, BankTransferListActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
+                putExtra(EXTRA_SNAPTOKEN, snapToken)
                 putExtra(
                     EXTRA_CUSTOMER_DETAIL,
                     CustomerDetail(customerName, customerPhone, addressLines)
                 )
-                vaNumber?.let {
-                    putExtra(EXTRA_VANUMBER, it)
-
-                }
-                companyCode?.let {
-                    putExtra(EXTRA_COMPANYCODE, it)
-                }
-                billingNumber?.let {
-                    putExtra(EXTRA_BILLINGNUMBER, it)
+                destinationBankCode?.let {
+                    putExtra(EXTRA_DESTINATIONBANKCODE, it)
                 }
             }
         }
