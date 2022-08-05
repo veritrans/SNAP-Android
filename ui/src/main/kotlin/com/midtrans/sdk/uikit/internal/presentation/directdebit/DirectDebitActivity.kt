@@ -39,11 +39,11 @@ class DirectDebitActivity : BaseActivity() {
     }
 
     @Composable
-//    @Preview(showBackground = true)
+    @Preview(showBackground = true)
     fun PreviewOnly() {
         DirectDebitContent(
             data = DirectDebitData(
-                paymentType = PaymentType.CIMB_CLICKS,
+                paymentType = PaymentType.KLIK_BCA,
                 amount = "Rp.123999",
                 orderId = "order-id",
                 name = "Dohn Joe",
@@ -56,7 +56,7 @@ class DirectDebitActivity : BaseActivity() {
     @Composable
     private fun DirectDebitContent(data: DirectDebitData) {
         var isCustomerDetailExpanded by remember { mutableStateOf(false) }
-        var isInstructionExpanded by remember { mutableStateOf(true) }
+        var isInstructionExpanded by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
         ) {
@@ -92,8 +92,10 @@ class DirectDebitActivity : BaseActivity() {
                             .fillMaxWidth()
 
                     ) {
-                        SnapText(getInstruction(paymentType = data.paymentType))
+                        var userId by remember { mutableStateOf("") }
 
+                        SnapText(getInstruction(paymentType = data.paymentType))
+                        KlikBcaUserIdTextField(paymentType = data.paymentType) { userId = it }
                         SnapInstructionButton(
                             modifier = Modifier.padding(top = 28.dp),
                             isExpanded = isInstructionExpanded,
@@ -116,7 +118,7 @@ class DirectDebitActivity : BaseActivity() {
                             text = stringResource(R.string.bca_klik_pay_cta),
                             style = SnapButton.Style.PRIMARY
                         ) {
-                            Log.d("SnapButton", "Clicked")
+                            Log.d("SnapButton", "Clicked $userId ${data.paymentType}")
                         }
                     }
                 },
@@ -129,18 +131,24 @@ class DirectDebitActivity : BaseActivity() {
     }
 
     @Composable
-    @Preview(showBackground = true)
-    private fun KlikBcaUserIdTextField(paymentType: String = PaymentType.KLIK_BCA) {
+    private fun KlikBcaUserIdTextField(
+        paymentType: String,
+        onUserIdChanged: (String) -> Unit
+    ) {
         if (paymentType == PaymentType.KLIK_BCA) {
             var userId by remember { mutableStateOf(TextFieldValue()) }
+            var isError by remember { mutableStateOf(false) }
 
-            Column(modifier = Modifier
-                .fillMaxWidth(1f)
-                .padding(top = 12.dp)
-                .background(color = SnapColors.getARGBColor(SnapColors.SUPPORT_NEUTRAL_FILL))) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .padding(top = 12.dp)
+                    .background(color = SnapColors.getARGBColor(SnapColors.SUPPORT_NEUTRAL_FILL))
+            ) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                     modifier = Modifier
+                        .fillMaxWidth(1f)
                         .padding(top = 8.dp, bottom = 12.dp, start = 16.dp, end = 16.dp)
                 ) {
                     SnapText(
@@ -148,9 +156,15 @@ class DirectDebitActivity : BaseActivity() {
                         style = SnapText.Style.SMALL
                     )
                     SnapTextField(
+                        modifier = Modifier.fillMaxWidth(1f),
                         value = userId,
                         hint = stringResource(id = R.string.klik_bca_id_field_label),
-                        onValueChange = { userId = it },
+                        onValueChange = {
+                            userId = it
+                            onUserIdChanged(userId.text)
+                            isError = userId.text.isEmpty()
+                        },
+                        isError = isError,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                     )
                     if (userId.text.isEmpty()) {
