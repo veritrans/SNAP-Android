@@ -1,10 +1,14 @@
 package com.midtrans.sdk.corekit.api.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class Expiry(
     val startTime: String,
     val unit: String,
     val duration: Int
-) {
+) : Parcelable {
 
     companion object {
         val UNIT_HOUR = "hours"

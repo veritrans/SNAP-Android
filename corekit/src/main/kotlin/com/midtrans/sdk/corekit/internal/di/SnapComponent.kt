@@ -24,6 +24,8 @@ interface SnapComponent {
         fun applicationContext(context: Context): Builder
         @BindsInstance
         fun merchantUrl(@Named("merchant_url") url: String): Builder
+        @BindsInstance
+        fun merchantClientKey(@Named("merchant_client_key") clientKey: String): Builder
         fun build(): SnapComponent
     }
 

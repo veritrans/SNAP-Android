@@ -15,6 +15,10 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".internal.presentation.loadingpayment.LoadingPaymentActivity"
+            android:theme="@style/Theme.AppCompat.Light" />
+
+        <activity
             android:name=".internal.presentation.paymentoption.PaymentOptionActivity"
             android:theme="@style/Theme.AppCompat.Light" />
     </application>

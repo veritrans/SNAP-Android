@@ -19,7 +19,7 @@ internal data class SnapTokenRequest(
     @SerializedName("custom_field1") val customField1: String? = null,
     @SerializedName("custom_field2") val customField2: String? = null,
     @SerializedName("custom_field3") val customField3: String? = null,
-    val gopay: PaymentCallback? = null,
+    val gopay: GopayPaymentCallback? = null,
     val shopeepay: PaymentCallback? = null,
     val uobEzpay: PaymentCallback? = null
 )
