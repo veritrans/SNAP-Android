@@ -35,7 +35,7 @@ import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
 import com.midtrans.sdk.uikit.internal.view.SnapMultiIconListItem
 import com.midtrans.sdk.uikit.internal.view.SnapOverlayExpandingBox
 import com.midtrans.sdk.uikit.internal.view.SnapTotal
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import kotlin.math.sqrt
 
 class PaymentOptionActivity : BaseActivity() {

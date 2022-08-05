@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.uikit.external.model.PaymentList
 import com.midtrans.sdk.uikit.external.model.PaymentMethod
+import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity.Companion.openPaymentOptionPage
 import com.midtrans.sdk.uikit.internal.view.SnapButton
@@ -34,6 +35,8 @@ class SampleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         SnapCore.Builder().withContext(this.applicationContext).build()
         viewModel.getHelloFromSnap()
+        //TODO: move to ui kit
+        DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build()
         setContent { Greeting() }
     }
 

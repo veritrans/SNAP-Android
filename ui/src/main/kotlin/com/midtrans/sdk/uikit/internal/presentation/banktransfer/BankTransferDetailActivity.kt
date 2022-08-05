@@ -24,9 +24,13 @@ import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.*
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
+import javax.inject.Inject
 
 class BankTransferDetailActivity : BaseActivity() {
+
+    @Inject
+    lateinit var viewModel: BankTransferDetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
