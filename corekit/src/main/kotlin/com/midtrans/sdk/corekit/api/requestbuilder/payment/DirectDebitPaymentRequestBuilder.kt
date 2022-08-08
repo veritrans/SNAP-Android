@@ -15,7 +15,9 @@ class DirectDebitPaymentRequestBuilder : PaymentRequestBuilder() {
     }
 
     fun withKlikBcaUserId(value: String): DirectDebitPaymentRequestBuilder = apply {
-        userId = value
+        if (value.isNotEmpty()) {
+            userId = value
+        }
     }
 
     override fun build(): PaymentRequest {
