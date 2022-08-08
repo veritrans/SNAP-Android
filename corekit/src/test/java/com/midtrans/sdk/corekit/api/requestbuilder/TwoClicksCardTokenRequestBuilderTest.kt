@@ -45,7 +45,11 @@ class TwoClicksCardTokenRequestBuilderTest {
             .withCardCvv(cvv)
             .withOrderId(orderId)
             .withCurrency(currency)
-            .withInstallment(installment)
+            .withInstallment(
+                value = installment.installment,
+                installmentTerm = installment.installmentTerm,
+                bank = installment.bank
+            )
             .build()
 
         Assert.assertEquals(tokenId, request.getValue(CreditCardTokenRequestBuilder.TOKEN_ID))

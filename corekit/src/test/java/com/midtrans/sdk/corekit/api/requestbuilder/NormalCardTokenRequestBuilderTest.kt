@@ -52,7 +52,11 @@ internal class NormalCardTokenRequestBuilderTest {
             .withCardCvv(cvv)
             .withOrderId(orderId)
             .withCurrency(currency)
-            .withInstallment(installment)
+            .withInstallment(
+                value = installment.installment,
+                installmentTerm = installment.installmentTerm,
+                bank = installment.bank
+            )
             .build()
 
         Assert.assertEquals(clientKey, request.getValue(CreditCardTokenRequestBuilder.CLIENT_KEY))
