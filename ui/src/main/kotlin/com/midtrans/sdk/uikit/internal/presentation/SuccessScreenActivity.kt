@@ -27,7 +27,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapColors
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 
 class SuccessScreenActivity : BaseActivity() {

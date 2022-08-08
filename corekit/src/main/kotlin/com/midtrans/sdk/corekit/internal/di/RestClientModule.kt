@@ -7,7 +7,9 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.internal.bind.DateTypeAdapter
 import com.midtrans.sdk.corekit.BuildConfig
+import com.midtrans.sdk.corekit.internal.network.MerchantInterceptor
 import com.midtrans.sdk.corekit.internal.network.restapi.CoreApi
+import com.midtrans.sdk.corekit.internal.network.restapi.MerchantApi
 import com.midtrans.sdk.corekit.internal.network.restapi.SnapApi
 import dagger.Module
 import dagger.Provides
@@ -25,6 +27,53 @@ internal class RestClientModule {
 
     @Provides
     @Singleton
+    fun provideMerchantApi(
+        @Named("merchant_retrofit") retrofit: Retrofit
+    ): MerchantApi {
+        return retrofit.create(MerchantApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    @Named("merchant_retrofit")
+    fun provideMerchantRetrofit(
+        gson: Gson,
+        @Named("merchant_client") httpClient: OkHttpClient,
+        @Named("merchant_url") merchantUrl: String
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(merchantUrl)
+            .client(httpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("merchant_client")
+    fun provideMerchantOkHttpClient(
+        chuckInterceptor: ChuckerInterceptor,
+        merchantInterceptor: MerchantInterceptor
+    ): OkHttpClient {
+        return OkHttpClient.Builder()
+            .readTimeout(READ_TIME_OUT.toLong(), TimeUnit.SECONDS)
+            .writeTimeout(WRITE_TIME_OUT.toLong(), TimeUnit.SECONDS)
+            .connectTimeout(CONNECTION_TIME_OUT.toLong(), TimeUnit.SECONDS)
+            .addInterceptor(merchantInterceptor)
+            .addInterceptor(chuckInterceptor)
+            .build()
+    }
+
+    @Provides
+    fun provideMerchantInterceptor(
+        @Named("merchant_client_key") clientKey: String
+    ): MerchantInterceptor {
+        return MerchantInterceptor(clientKey)
+    }
+
+    @Provides
+    @Singleton
     fun provideSnapApi(
         @Named("snap_retrofit") retrofit: Retrofit
     ): SnapApi {
@@ -34,7 +83,7 @@ internal class RestClientModule {
     @Provides
     @Singleton
     @Named("snap_retrofit")
-    fun provideRetrofit(
+    fun provideSnapRetrofit(
         gson: Gson,
         @Named("snap_client") httpClient: OkHttpClient
     ): Retrofit {
@@ -46,14 +95,12 @@ internal class RestClientModule {
             .build()
     }
 
-
     @Provides
     @Singleton
     @Named("snap_client")
     fun provideSnapOkHttpClient(
         chuckInterceptor: ChuckerInterceptor
     ): OkHttpClient {
-
         return OkHttpClient.Builder()
             .readTimeout(READ_TIME_OUT.toLong(), TimeUnit.SECONDS)
             .writeTimeout(WRITE_TIME_OUT.toLong(), TimeUnit.SECONDS)

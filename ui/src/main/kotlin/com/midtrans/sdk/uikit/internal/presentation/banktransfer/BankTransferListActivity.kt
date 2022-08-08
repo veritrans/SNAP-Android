@@ -3,23 +3,28 @@ package com.midtrans.sdk.uikit.internal.presentation.banktransfer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
+import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
 import com.midtrans.sdk.uikit.internal.view.SnapOverlayExpandingBox
-import com.midtrans.sdk.uikit.internal.view.SnapTotal
-import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.SnapSingleIconListItem
-import kotlinx.android.parcel.Parcelize
+import com.midtrans.sdk.uikit.internal.view.SnapTotal
 
 class BankTransferListActivity : BaseActivity() {
 
@@ -48,13 +53,14 @@ class BankTransferListActivity : BaseActivity() {
                     SnapTotal(
                         amount = totalAmount,
                         orderId = orderId,
+                        canExpand = customerInfo != null,
                         remainingTime = null
                     ) {
                         expanding = it
                     }
                 },
                 expandingContent = {
-                    customerDetail.run {
+                    customerInfo?.run {
                         SnapCustomerDetail(
                             name = name,
                             phone = phone,
@@ -95,9 +101,7 @@ class BankTransferListActivity : BaseActivity() {
             BankTransferDetailActivity.getIntent(
                 activityContext = this,
                 bankName = bank.toLowerCase(Locale.current),
-                customerName = customerDetail.name,
-                customerPhone = customerDetail.phone,
-                addressLines = customerDetail.addressLines,
+                customerInfo = customerInfo,
                 orderId = orderId,
                 totalAmount = totalAmount,
                 companyCode = companyCode,
@@ -105,6 +109,11 @@ class BankTransferListActivity : BaseActivity() {
                 vaNumber = vaNumber
             )
         )
+    }
+
+    private val snapToken: String by lazy {
+        intent.getStringExtra(EXTRA_SNAP_TOKEN)
+            ?: throw RuntimeException("Snap token must not be empty")
     }
 
     private val totalAmount: String by lazy {
@@ -117,9 +126,8 @@ class BankTransferListActivity : BaseActivity() {
             ?: throw RuntimeException("Order ID must not be empty")
     }
 
-    private val customerDetail: CustomerDetail by lazy {
-        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerDetail
-            ?: throw RuntimeException("Customer detail must not be empty")
+    private val customerInfo: CustomerInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
     }
 
     private val vaNumber: String? by lazy {
@@ -135,34 +143,31 @@ class BankTransferListActivity : BaseActivity() {
     }
 
     companion object {
+        private const val EXTRA_SNAP_TOKEN = "bankTransfer.extra.snap_token"
         private const val EXTRA_TOTAL_AMOUNT = "bankTransfer.extra.total_amount"
         private const val EXTRA_ORDER_ID = "bankTransfer.extra.order_id"
-        private const val EXTRA_CUSTOMER_DETAIL = "bankTransfer.extra.customer_detail"
+        private const val EXTRA_CUSTOMER_INFO = "bankTransfer.extra.customer_info"
         private const val EXTRA_VANUMBER = "bankTransfer.extra.vanumber"
         private const val EXTRA_COMPANYCODE = "bankTransfer.extra.companycode"
         private const val EXTRA_BILLINGNUMBER = "bankTransfer.extra.billingnumber"
 
         fun getIntent(
             activityContext: Context,
+            snapToken: String,
             totalAmount: String,
             orderId: String,
             vaNumber: String? = null,
             companyCode: String? = null,
             billingNumber: String? = null,
-            customerName: String,
-            customerPhone: String,
-            addressLines: List<String>
+            customerInfo: CustomerInfo? = null
         ): Intent {
             return Intent(activityContext, BankTransferListActivity::class.java).apply {
+                putExtra(snapToken, EXTRA_SNAP_TOKEN)
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
-                putExtra(
-                    EXTRA_CUSTOMER_DETAIL,
-                    CustomerDetail(customerName, customerPhone, addressLines)
-                )
+                putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
                 vaNumber?.let {
                     putExtra(EXTRA_VANUMBER, it)
-
                 }
                 companyCode?.let {
                     putExtra(EXTRA_COMPANYCODE, it)
@@ -173,11 +178,4 @@ class BankTransferListActivity : BaseActivity() {
             }
         }
     }
-
-    @Parcelize
-    private data class CustomerDetail(
-        val name: String,
-        val phone: String,
-        val addressLines: List<String>
-    ) : Parcelable
 }

@@ -11,7 +11,7 @@ internal class AssetReader(private val context: Context) {
         var input: InputStream? = null
         try {
             input = context.assets.open(fileName)
-            val buffer = ByteArray(input!!.available())
+            val buffer = ByteArray(input.available())
             val size = input.read(buffer)
             if (size == -1) {
                 throw RemoteException("Read File Failed")

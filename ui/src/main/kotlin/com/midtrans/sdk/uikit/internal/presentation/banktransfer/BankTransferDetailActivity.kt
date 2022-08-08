@@ -3,17 +3,25 @@ package com.midtrans.sdk.uikit.internal.presentation.banktransfer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
@@ -23,8 +31,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.uikit.internal.view.*
-import kotlinx.android.parcel.Parcelize
+import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.view.SnapButton
+import com.midtrans.sdk.uikit.internal.view.SnapColors
+import com.midtrans.sdk.uikit.internal.view.SnapCopyableInfoListItem
+import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
+import com.midtrans.sdk.uikit.internal.view.SnapInstructionButton
+import com.midtrans.sdk.uikit.internal.view.SnapNumberedList
+import com.midtrans.sdk.uikit.internal.view.SnapOverlayExpandingBox
+import com.midtrans.sdk.uikit.internal.view.SnapTotal
+import com.midtrans.sdk.uikit.internal.view.SnapTypography
 
 class BankTransferDetailActivity : BaseActivity() {
 
@@ -34,7 +50,7 @@ class BankTransferDetailActivity : BaseActivity() {
             Content(
                 totalAmount = totalAmount,
                 orderId = orderId,
-                customerDetail = customerDetail,
+                customerInfo = customerInfo,
                 vaNumber = vaNumber,
                 billingNumber = billingNumber,
                 bankName = bankName,
@@ -48,7 +64,7 @@ class BankTransferDetailActivity : BaseActivity() {
         totalAmount: String,
         orderId: String,
         bankName: String,
-        customerDetail: CustomerDetail,
+        customerInfo: CustomerInfo?,
         vaNumber: String?,
         billingNumber: String?,
         companyCode: String?
@@ -70,13 +86,14 @@ class BankTransferDetailActivity : BaseActivity() {
                     SnapTotal(
                         amount = totalAmount,
                         orderId = orderId,
+                        canExpand = customerInfo != null,
                         remainingTime = null
                     ) {
                         expanding = it
                     }
                 },
                 expandingContent = {
-                    customerDetail.run {
+                    customerInfo?.run {
                         SnapCustomerDetail(
                             name = name,
                             phone = phone,
@@ -231,7 +248,7 @@ class BankTransferDetailActivity : BaseActivity() {
         Content(
             totalAmount = "Rp.199.000",
             orderId = "#1231231233121",
-            customerDetail = CustomerDetail(
+            customerInfo = CustomerInfo(
                 name = "ari bakti",
                 phone = "4123123123123",
                 addressLines = listOf("jalan", "jalan", "jalan")
@@ -255,9 +272,8 @@ class BankTransferDetailActivity : BaseActivity() {
             ?: throw RuntimeException("Order ID must not be empty")
     }
 
-    private val customerDetail: CustomerDetail by lazy {
-        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerDetail
-            ?: throw RuntimeException("Customer detail must not be empty")
+    private val customerInfo: CustomerInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
     }
 
     private val bankName: String by lazy {
@@ -363,18 +379,12 @@ class BankTransferDetailActivity : BaseActivity() {
             vaNumber: String? = null,
             companyCode: String? = null,
             billingNumber: String? = null,
-
-            customerName: String,
-            customerPhone: String,
-            addressLines: List<String>
+            customerInfo: CustomerInfo? = null
         ): Intent {
             return Intent(activityContext, BankTransferDetailActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
-                putExtra(
-                    EXTRA_CUSTOMER_DETAIL,
-                    CustomerDetail(customerName, customerPhone, addressLines)
-                )
+                putExtra(EXTRA_CUSTOMER_DETAIL, customerInfo)
                 putExtra(EXTRA_BANK, bankName)
                 vaNumber?.let {
                     putExtra(EXTRA_VANUMBER, it)
@@ -389,12 +399,4 @@ class BankTransferDetailActivity : BaseActivity() {
             }
         }
     }
-
-
-    @Parcelize
-    private data class CustomerDetail(
-        val name: String,
-        val phone: String,
-        val addressLines: List<String>
-    ) : Parcelable
 }

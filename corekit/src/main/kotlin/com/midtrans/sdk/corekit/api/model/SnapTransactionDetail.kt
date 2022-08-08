@@ -4,7 +4,8 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Installment(
-    val isRequired: Boolean = false,
-    val terms: Map<String, List<Int>>? = null,
+data class SnapTransactionDetail(
+    val orderId: String,
+    val grossAmount: Double,
+    val currency: String = "IDR"
 ) : Parcelable
