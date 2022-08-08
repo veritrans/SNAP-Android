@@ -20,6 +20,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
@@ -31,6 +32,10 @@ class DirectDebitActivity : BaseActivity() {
     private val data: DirectDebitData by lazy {
         intent.getParcelableExtra(EXTRA_DIRECT_DEBIT_DATA) as? DirectDebitData
             ?: throw RuntimeException("Input data must not be empty")
+    }
+
+    private val viewModel: DirectDebitViewModel by lazy {
+        ViewModelProvider(this).get(DirectDebitViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
