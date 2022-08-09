@@ -14,7 +14,8 @@ class TwoClicksCardTokenRequestBuilderTest {
     private val cvv = "123"
     private val orderId = "orderId"
     private val currency = "IDR"
-    private val installment = InstallmentRequest(installment = true, bank = "offline", installmentTerm = 3)
+    private val installment =
+        InstallmentRequest(installment = true, bank = "offline", installmentTerm = 3)
 
     @Test
     fun shouldConstructCardTokenRequestBasic() {
@@ -29,8 +30,11 @@ class TwoClicksCardTokenRequestBuilderTest {
 
         Assert.assertEquals(tokenId, request.getValue(CreditCardTokenRequestBuilder.TOKEN_ID))
         Assert.assertEquals(clientKey, request.getValue(CreditCardTokenRequestBuilder.CLIENT_KEY))
-        Assert.assertEquals(grossAmount?.let { NumberUtil.formatDoubleToString(it) }, request.getValue(
-            CreditCardTokenRequestBuilder.GROSS_AMOUNT))
+        Assert.assertEquals(
+            NumberUtil.formatDoubleToString(grossAmount), request.getValue(
+                CreditCardTokenRequestBuilder.GROSS_AMOUNT
+            )
+        )
         Assert.assertEquals(cvv, request.getValue(CreditCardTokenRequestBuilder.CARD_CVV))
         Assert.assertEquals(orderId, request.getValue(CreditCardTokenRequestBuilder.ORDER_ID))
         Assert.assertEquals(currency, request.getValue(CreditCardTokenRequestBuilder.CURRENCY))
@@ -54,12 +58,18 @@ class TwoClicksCardTokenRequestBuilderTest {
 
         Assert.assertEquals(tokenId, request.getValue(CreditCardTokenRequestBuilder.TOKEN_ID))
         Assert.assertEquals(clientKey, request.getValue(CreditCardTokenRequestBuilder.CLIENT_KEY))
-        Assert.assertEquals(grossAmount?.let { NumberUtil.formatDoubleToString(it) }, request.getValue(
-            CreditCardTokenRequestBuilder.GROSS_AMOUNT))
+        Assert.assertEquals(
+            NumberUtil.formatDoubleToString(grossAmount), request.getValue(
+                CreditCardTokenRequestBuilder.GROSS_AMOUNT
+            )
+        )
         Assert.assertEquals(cvv, request.getValue(CreditCardTokenRequestBuilder.CARD_CVV))
         Assert.assertEquals(orderId, request.getValue(CreditCardTokenRequestBuilder.ORDER_ID))
         Assert.assertEquals(currency, request.getValue(CreditCardTokenRequestBuilder.CURRENCY))
-        Assert.assertEquals(installment.installmentTerm.toString(), request.getValue(
-            CreditCardTokenRequestBuilder.INSTALLMENT_TERM))
+        Assert.assertEquals(
+            installment.installmentTerm.toString(), request.getValue(
+                CreditCardTokenRequestBuilder.INSTALLMENT_TERM
+            )
+        )
     }
 }
