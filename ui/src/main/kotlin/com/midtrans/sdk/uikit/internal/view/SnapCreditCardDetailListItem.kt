@@ -52,7 +52,13 @@ fun SnapCCDetailListItem(
     isInputError: Boolean,
     errorTitle: String,
     onValueChange: (String) -> Unit,
-    onEndIconClicked: () -> Unit
+    onEndIconClicked: () -> Unit,
+    onCardNumberValueChange: (TextFieldValue) -> Unit,
+    onExpiryDateValueChange: (TextFieldValue) -> Unit,
+    onCvvValueChange: (TextFieldValue) -> Unit,
+    onCardTextFieldFocusedChange: (Boolean) -> Unit,
+    onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
+    onCvvTextFieldFocusedChange: (Boolean) -> Unit
 ) {
     Column {
         Row(
@@ -95,7 +101,7 @@ fun SnapCCDetailListItem(
                     .padding(start = 16.dp, bottom = 8.dp, top = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                var text by remember { mutableStateOf("") }
+                var text by remember { mutableStateOf(TextFieldValue()) }
                 Text(
                     text = inputTitle,
                     style = SnapTypography.STYLES.snapTextSmallRegular
@@ -103,14 +109,18 @@ fun SnapCCDetailListItem(
                 SnapTextField(
                     value = text,
                     onValueChange = { value ->
-                        if (value.length <= 3) {
-                            text = value.filter { it.isDigit() }
-                            onValueChange(value.filter { it.isDigit() })
+                        if (value.text.length <= 3) {
+                            text = value
+                            onValueChange(value.text.filter { it.isDigit() })
                         }
                     },
                     modifier = Modifier.width(69.dp),
                     visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    isFocused = false,
+                    onFocusChange = {
+                        onCardTextFieldFocusedChange(it)
+                    },
                 )
                 if (isInputError)
                     Text(
@@ -123,166 +133,62 @@ fun SnapCCDetailListItem(
     }
 }
 
-//@Composable
-//fun InputNewCardItem(
-//    shouldReveal: Boolean,
-//    data: NewCardFormData,
-//    onCardNumberValueChange: (String) -> Unit,
-//    onExpiryDateValueChange: (String) -> Unit,
-//    onCvvValueChange: (String) -> Unit
-//) {
-//    val principalIconId by data.principalIconId
-//    val iconIdList by remember {
-//        mutableStateOf(
-//            listOf(
-//                R.drawable.ic_outline_visa_24,
-//                R.drawable.ic_outline_jcb_24,
-//                R.drawable.ic_outline_amex_24,
-//                R.drawable.ic_outline_mastercard_24
-//            )
-//        )
-//    }
-//
-//    Column(
-//        verticalArrangement = Arrangement.spacedBy(space = 16.dp)
-//    ) {
-////        Text(
-////            text = "Gunakan kartu lain",
-////            style = SnapTypography.STYLES.snapTextMediumMedium
-////        )
-//
-//        AnimatedVisibility(
-//            visible = shouldReveal,
-//            enter = expandVertically()
-//        ) {
-//            Column(
-//                verticalArrangement = Arrangement.spacedBy(space = 16.dp)
-//            ) {
-//
-//                Column {
-//                    Row(
-//                        horizontalArrangement = Arrangement.spacedBy(2.dp)
-//                    ) {
-//                        Text(
-//                            text = "Nomor kartu",
-//                            modifier = Modifier.weight(1f),
-//                            style = SnapTypography.STYLES.snapTextSmallRegular
-//                        )
-//
-//                        if (principalIconId != null) {
-//                            Icon(
-//                                painter = painterResource(id = principalIconId!!),
-//                                contentDescription = null,
-//                                tint = Color.Unspecified
-//                            )
-//                        } else {
-//                            iconIdList.forEach {
-//                                Icon(
-//                                    painter = painterResource(id = it),
-//                                    contentDescription = null,
-//                                    tint = Color.Unspecified
-//                                )
-//                            }
-//                        }
-//
-//                    }
-//
-//                    var newCardNumberText by remember { mutableStateOf(TextFieldValue()) }
-//                    val bankIconId by remember { data.bankIconId }
-//                    SnapTextField(
-//                        value = newCardNumberText,
-//                        hint = "0000 0000 0000 0000",
-//                        onValueChange = { value ->
-//                            newCardNumberText = formatForCreditCard(value)
-//                            onCardNumberValueChange(value.text.replace(" ", ""))
-//                        },
-//                        trailingIcon = bankIconId?.let {
-//                            {
-//                                Icon(
-//                                    painter = painterResource(id = it),
-//                                    contentDescription = null,
-//                                    tint = Color.Unspecified
-//                                )
-//                            }
-//                        },
-//                        modifier = Modifier.fillMaxWidth(1.0f),
-//                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-//                    )
-//                    val isCardNumberInvalid by remember { data.isCardNumberInvalid }
-//                    if (isCardNumberInvalid) {
-//                        Text(
-//                            text = "Nomor kartu tidak berlaku",
-//                            style = SnapTypography.STYLES.snapTextSmallRegular,
-//                            color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
-//                        )
-//                    }
-//                }
-//
-//                Row(
-//                    horizontalArrangement = Arrangement.spacedBy(space = 28.dp)
-//                ) {
-//                    Column(
-//                        modifier = Modifier.weight(1.0f)
-//                    ) {
-//
-//                        var expiryDate by remember { mutableStateOf(TextFieldValue()) }
-//                        Text(
-//                            text = "Masa berlaku",
-//                            style = SnapTypography.STYLES.snapTextSmallRegular
-//                        )
-//                        SnapTextField(
-//                            hint = "MM/YY",
-//                            value = expiryDate,
-//                            onValueChange = {
-//                                expiryDate = formatExpiryDate(it)
-//                                onExpiryDateValueChange(it.text)
-//                            },
-//                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-//                        )
-//                        val isExpiryDateInvalid by remember { data.isExpiryDateInvalid }
-//                        if (isExpiryDateInvalid) {
-//                            Text(
-//                                text = "Masa berlaku tidak valid",
-//                                style = SnapTypography.STYLES.snapTextSmallRegular,
-//                                color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
-//                            )
-//                        }
-//                    }
-//
-//                    Column(
-//                        modifier = Modifier.weight(1.0f)
-//                    ) {
-//                        val isCvvInvalid by remember { data.isCvvInvalid }
-//                        var cardCvv by remember {
-//                            mutableStateOf("")
-//                        }
-//                        Text(
-//                            text = "CVV",
-//                            style = SnapTypography.STYLES.snapTextSmallRegular
-//                        )
-//                        SnapTextField(
-//                            value = cardCvv,
-//                            hint = "***",
-//                            onValueChange = { value ->
-//                                cardCvv = value
-//                                onCvvValueChange(value)
-//                            },
-//                            visualTransformation = PasswordVisualTransformation(),
-//                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-//                        )
-//                        if (isCvvInvalid) {
-//                            Text(
-//                                text = "Nomor CVV tidak valid",
-//                                style = SnapTypography.STYLES.snapTextSmallRegular,
-//                                color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
-//                            )
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
+@Composable
+fun InputNewCardItem(
+    shouldReveal: Boolean,
+    state: NormalCardItemState,
+    onCardNumberValueChange: (TextFieldValue) -> Unit,
+    onExpiryDateValueChange: (TextFieldValue) -> Unit,
+    onCvvValueChange: (TextFieldValue) -> Unit,
+    onCardTextFieldFocusedChange: (Boolean) -> Unit,
+    onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
+    onCvvTextFieldFocusedChange: (Boolean) -> Unit
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(space = 16.dp)
+    ) {
+        Text(
+            text = "Gunakan kartu lain",
+            style = SnapTypography.STYLES.snapTextMediumMedium
+        )
+
+        AnimatedVisibility(
+            visible = shouldReveal,
+            enter = expandVertically()
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(space = 16.dp)
+            ) {
+                NormalCardItem(
+                    state = state,
+                    onCardNumberValueChange = {
+                        state.cardNumber = it
+
+                        var cardNumber = it.text.replace(" ", "")
+
+                        if(cardNumber.length >= 8){
+                            var eightDigitNumber = cardNumber.substring(8)
+
+                            //TODO: Fix when corekit available
+                            state.bankIconId = getBankIcon(getBankName(it).toString())
+//                                    viewModel.updateBankIcon(eightDigitNumber)
+                        }
+                    },
+                    onExpiryDateValueChange = {
+                        state.expiry = it
+                    },
+                    onCvvValueChange = {
+                        state.cvv = it
+                    },
+                    onCardTextFieldFocusedChange = { state.isCardTexFieldFocused = it},
+                    onExpiryTextFieldFocusedChange = { state.isExpiryTextFieldFocused = it},
+                    onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it},
+                    onSavedCardCheckedChange = { state.isSavedCardChecked = it }
+                )
+            }
+        }
+    }
+}
 
 
 
@@ -296,12 +202,17 @@ fun formatExpiryDate(input: TextFieldValue): TextFieldValue {
 
 @Composable
 fun SnapSavedCardRadioGroup(
+    modifier: Modifier,
     states: List<FormData>,
+    state: NormalCardItemState,
     onValueChange: (item: String, cvv: String) -> Unit,
     onItemRemoveClicked: (item: String) -> Unit,
-    onCardNumberValueChange: (String) -> Unit,
-    onExpiryDateValueChange: (String) -> Unit,
-    onCvvValueChange: (String) -> Unit
+    onCvvValueChange: (String) -> Unit,
+    onCardNumberValueChange: (TextFieldValue) -> Unit,
+    onExpiryDateValueChange: (TextFieldValue) -> Unit,
+    onCardTextFieldFocusedChange: (Boolean) -> Unit,
+    onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
+    onCvvTextFieldFocusedChange: (Boolean) -> Unit,
 ) {
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(states[0].identifier) }
 
@@ -340,20 +251,28 @@ fun SnapSavedCardRadioGroup(
                                 isInputError = errorText.isNotBlank(),
                                 errorTitle = errorText,
                                 onValueChange = { onValueChange(selectedOption, it) },
-                                onEndIconClicked = { onItemRemoveClicked(item.identifier) }
+                                onEndIconClicked = { onItemRemoveClicked(item.identifier) },
+                                onCardNumberValueChange ={},
+                                onExpiryDateValueChange ={},
+                                onCvvValueChange = {},
+                                onCardTextFieldFocusedChange = {},
+                                onExpiryTextFieldFocusedChange = {},
+                                onCvvTextFieldFocusedChange = {},
                             )
                         }
 
-//                        is NewCardFormData -> {
-//                            InputNewCardItem(
-//                                shouldReveal = item.identifier == selectedOption,
-//                                data = item,
-//                                onCardNumberValueChange = onCardNumberValueChange,
-//                                onExpiryDateValueChange = onExpiryDateValueChange,
-//                                onCvvValueChange = onCvvValueChange
-//                            )
-//                        }
-
+                        is NewCardFormData -> {
+                            InputNewCardItem(
+                                shouldReveal = item.identifier == selectedOption,
+                                state = state,
+                                onCardNumberValueChange ={},
+                                onExpiryDateValueChange ={},
+                                onCvvValueChange = {},
+                                onCardTextFieldFocusedChange = {},
+                                onExpiryTextFieldFocusedChange = {},
+                                onCvvTextFieldFocusedChange = {},
+                            )
+                        }
                     }
                 }
 
@@ -442,79 +361,79 @@ fun SnapTextField(
 }
 
 
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun SnapTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    readOnly: Boolean = false,
-    textStyle: TextStyle = SnapTypography.STYLES.snapTextMediumRegular,
-    hint: String? = null,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
-    isError: Boolean = false,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-) {
-    val interactionSource = remember { MutableInteractionSource() }
-    var isFocused by remember { mutableStateOf(false) }
-    BasicTextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = modifier.then(
-            Modifier
-                .border(
-                    1.dp,
-                    when {
-                        isError -> {
-                            SnapColors.getARGBColor(INTERACTIVE_BORDER_SUPPORT)
-                        }
-
-                        isFocused -> SnapColors.getARGBColor(LINK_HOVER)
-                        else -> SnapColors.getARGBColor(INTERACTIVE_BORDER_INPUT)
-                    },
-                    RoundedCornerShape(4.dp)
-                )
-                .background(Color.White, RoundedCornerShape(4.dp))
-                .width(200.dp)
-                .height(39.dp)
-                .padding(top = 8.dp, bottom = 8.dp, start = 12.dp, end = 12.dp)
-                .onFocusChanged { focusState ->
-                    isFocused = focusState.isFocused
-                }),
-        keyboardOptions = keyboardOptions,
-        enabled = enabled,
-        readOnly = readOnly,
-        textStyle = textStyle,
-        visualTransformation = visualTransformation,
-        decorationBox = {
-            TextFieldDefaults.TextFieldDecorationBox(
-                value = value,
-                innerTextField = it,
-                singleLine = true,
-                enabled = true,
-                placeholder = hint?.let {
-                    {
-                        Text(text = it, style = SnapTypography.STYLES.snapTextMediumRegular)
-                    }
-                },
-                visualTransformation = visualTransformation,
-                // same interaction source as the one passed to BasicTextField to read focus state
-                // for text field styling
-
-                interactionSource = interactionSource,
-                leadingIcon = leadingIcon,
-                trailingIcon = trailingIcon,
-                // keep vertical paddings but change the horizontal
-                contentPadding = TextFieldDefaults.textFieldWithoutLabelPadding(
-                    start = 0.dp, end = 0.dp, top = 0.dp, bottom = 0.dp
-                )
-            )
-        }
-    )
-}
+//@OptIn(ExperimentalMaterialApi::class)
+//@Composable
+//fun SnapTextField(
+//    value: String,
+//    onValueChange: (String) -> Unit,
+//    modifier: Modifier = Modifier,
+//    enabled: Boolean = true,
+//    readOnly: Boolean = false,
+//    textStyle: TextStyle = SnapTypography.STYLES.snapTextMediumRegular,
+//    hint: String? = null,
+//    leadingIcon: @Composable (() -> Unit)? = null,
+//    trailingIcon: @Composable (() -> Unit)? = null,
+//    isError: Boolean = false,
+//    visualTransformation: VisualTransformation = VisualTransformation.None,
+//    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+//) {
+//    val interactionSource = remember { MutableInteractionSource() }
+//    var isFocused by remember { mutableStateOf(false) }
+//    BasicTextField(
+//        value = value,
+//        onValueChange = onValueChange,
+//        modifier = modifier.then(
+//            Modifier
+//                .border(
+//                    1.dp,
+//                    when {
+//                        isError -> {
+//                            SnapColors.getARGBColor(INTERACTIVE_BORDER_SUPPORT)
+//                        }
+//
+//                        isFocused -> SnapColors.getARGBColor(LINK_HOVER)
+//                        else -> SnapColors.getARGBColor(INTERACTIVE_BORDER_INPUT)
+//                    },
+//                    RoundedCornerShape(4.dp)
+//                )
+//                .background(Color.White, RoundedCornerShape(4.dp))
+//                .width(200.dp)
+//                .height(39.dp)
+//                .padding(top = 8.dp, bottom = 8.dp, start = 12.dp, end = 12.dp)
+//                .onFocusChanged { focusState ->
+//                    isFocused = focusState.isFocused
+//                }),
+//        keyboardOptions = keyboardOptions,
+//        enabled = enabled,
+//        readOnly = readOnly,
+//        textStyle = textStyle,
+//        visualTransformation = visualTransformation,
+//        decorationBox = {
+//            TextFieldDefaults.TextFieldDecorationBox(
+//                value = value,
+//                innerTextField = it,
+//                singleLine = true,
+//                enabled = true,
+//                placeholder = hint?.let {
+//                    {
+//                        Text(text = it, style = SnapTypography.STYLES.snapTextMediumRegular)
+//                    }
+//                },
+//                visualTransformation = visualTransformation,
+//                // same interaction source as the one passed to BasicTextField to read focus state
+//                // for text field styling
+//
+//                interactionSource = interactionSource,
+//                leadingIcon = leadingIcon,
+//                trailingIcon = trailingIcon,
+//                // keep vertical paddings but change the horizontal
+//                contentPadding = TextFieldDefaults.textFieldWithoutLabelPadding(
+//                    start = 0.dp, end = 0.dp, top = 0.dp, bottom = 0.dp
+//                )
+//            )
+//        }
+//    )
+//}
 
 
 data class SavedCreditCardFormData(
@@ -550,6 +469,7 @@ class NormalCardItemState(
     isCardTexFieldFocused: Boolean,
     isExpiryTextFieldFocused: Boolean,
     isCvvTextFieldFocused: Boolean,
+    isSavedCardChecked: Boolean,
     principalIconId: Int?,
     bankIconId: Int?,
 ){
@@ -564,6 +484,7 @@ class NormalCardItemState(
     var isCvvTextFieldFocused by mutableStateOf(isCvvTextFieldFocused)
     var principalIconId by mutableStateOf(principalIconId)
     var bankIconId by mutableStateOf(bankIconId)
+    var isSavedCardChecked by mutableStateOf(isSavedCardChecked)
 
     val iconIdList by mutableStateOf(
         listOf (
@@ -596,20 +517,19 @@ fun formatCVV(input: TextFieldValue): TextFieldValue{
 @Composable
 fun NormalCardItem(
     state: NormalCardItemState,
-    modifier: Modifier,
     onCardNumberValueChange: (TextFieldValue) -> Unit,
     onExpiryDateValueChange: (TextFieldValue) -> Unit,
     onCvvValueChange: (TextFieldValue) -> Unit,
     onCardTextFieldFocusedChange: (Boolean) -> Unit,
     onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
     onCvvTextFieldFocusedChange: (Boolean) -> Unit,
+    onSavedCardCheckedChange: (Boolean) -> Unit
 ) {
     val formattedMaxCvvLength = 3
     val formattedMaxCardNumberLength = 19
     val formattedMaxExpiryLength = 5
 
     Column(
-        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(space = 16.dp)
     ) {
         Column(
@@ -741,6 +661,13 @@ fun NormalCardItem(
                         )
                     }
                 }
+            }
+            Row(
+            ) {
+                LabelledCheckBox(checked = state.isSavedCardChecked,
+                    onCheckedChange = { onSavedCardCheckedChange(it) },
+                    label = "Save this card"
+                )
             }
         }
     }
