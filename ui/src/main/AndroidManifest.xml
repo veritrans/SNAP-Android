@@ -25,7 +25,7 @@
             android:theme="@style/Theme.AppCompat.Light" />
 
         <activity
-            android:name=".internal.presentation.CreditCardActivity"
+            android:name=".internal.presentation.creditcard.CreditCardActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
