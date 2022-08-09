@@ -2,9 +2,15 @@ package com.midtrans.sdk.corekit
 
 import android.content.Context
 import com.midtrans.sdk.corekit.api.callback.Callback
-import com.midtrans.sdk.corekit.api.model.*
+import com.midtrans.sdk.corekit.api.model.BankPointResponse
+import com.midtrans.sdk.corekit.api.model.BinResponse
+import com.midtrans.sdk.corekit.api.model.CardTokenResponse
+import com.midtrans.sdk.corekit.api.model.DeleteSavedCardResponse
+import com.midtrans.sdk.corekit.api.model.PaymentOption
+import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.CreditCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.PaymentRequestBuilder
+import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
 import com.midtrans.sdk.corekit.internal.di.DaggerSnapComponent
 import com.midtrans.sdk.corekit.internal.di.SnapComponent
 import com.midtrans.sdk.corekit.internal.usecase.PaymentUsecase
@@ -16,11 +22,23 @@ class SnapCore private constructor(builder: Builder) {
     internal lateinit var paymentUsecase: PaymentUsecase
 
     init {
-        buildDaggerComponent(builder.context).inject(this)
+        buildDaggerComponent(
+            builder.context,
+            builder.merchantUrl,
+            builder.merchantClientKey
+        ).inject(this)
     }
 
     fun hello(): String {
         return "hello snap"
+    }
+
+    fun getPaymentOption(
+        snapToken: String?,
+        builder: SnapTokenRequestBuilder,
+        callback: Callback<PaymentOption>
+    ) {
+        paymentUsecase.getPaymentOption(snapToken, builder, callback)
     }
 
     fun pay(
@@ -42,7 +60,7 @@ class SnapCore private constructor(builder: Builder) {
         snapToken: String,
         maskedCard: String,
         callback: Callback<DeleteSavedCardResponse>
-    ){
+    ) {
         paymentUsecase.deleteSavedCard(snapToken, maskedCard, callback)
     }
 
@@ -50,7 +68,7 @@ class SnapCore private constructor(builder: Builder) {
         binNumber: String,
         clientKey: String,
         callback: Callback<BinResponse>
-    ){
+    ) {
         paymentUsecase.getBinData(binNumber, clientKey, callback)
     }
 
@@ -59,16 +77,22 @@ class SnapCore private constructor(builder: Builder) {
         cardToken: String,
         grossAmount: Double,
         callback: Callback<BankPointResponse>
-    ){
+    ) {
         paymentUsecase.getBankPoint(snapToken, cardToken, grossAmount, callback)
     }
 
     companion object {
         private var INSTANCE: SnapCore? = null
 
-        internal fun buildDaggerComponent(applicationContext: Context): SnapComponent {
+        internal fun buildDaggerComponent(
+            applicationContext: Context,
+            merchantUrl: String,
+            merchantClientKey: String
+        ): SnapComponent {
             return DaggerSnapComponent.builder()
                 .applicationContext(applicationContext)
+                .merchantUrl(merchantUrl)
+                .merchantClientKey(merchantClientKey)
                 .build()
         }
 
@@ -77,9 +101,19 @@ class SnapCore private constructor(builder: Builder) {
 
     class Builder {
         internal lateinit var context: Context
+        internal lateinit var merchantUrl: String
+        internal lateinit var merchantClientKey: String
 
         fun withContext(context: Context) = apply {
             this.context = context
+        }
+
+        fun withMerchantUrl(merchantUrl: String) = apply {
+            this.merchantUrl = merchantUrl
+        }
+
+        fun withMerchantClientKey(merchantClientKey: String) = apply {
+            this.merchantClientKey = merchantClientKey
         }
 
         @Throws(RuntimeException::class)

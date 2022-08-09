@@ -1,9 +1,9 @@
 package com.midtrans.sdk.uikit.internal.presentation.banktransfer
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
@@ -16,16 +16,21 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
+import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.view.*
-import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
 class BankTransferDetailActivity : BaseActivity() {
@@ -35,15 +40,18 @@ class BankTransferDetailActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build()
+            .inject(this)
         setContent {
             Content(
                 totalAmount = totalAmount,
                 orderId = orderId,
-                customerDetail = customerDetail,
-                vaNumberState = viewModel.vaNumberLiveData.observeAsState(),
-                billingNumberState = viewModel.billingNumberLiveData.observeAsState(),
+                customerInfo = customerInfo,
+                vaNumberState = viewModel.vaNumberLiveData.observeAsState(initial = ""),
+                billingNumberState = viewModel.billingNumberLiveData.observeAsState(initial = ""),
                 bankName = paymentType,
-                companyCodeState = viewModel.companyCodeLiveData.observeAsState()
+                companyCodeState = viewModel.companyCodeLiveData.observeAsState(initial = ""),
+                destinationBankCode = destinationBankCode
             )
         }
         viewModel.chargeBankTransfer(
@@ -51,6 +59,7 @@ class BankTransferDetailActivity : BaseActivity() {
             paymentType = paymentType,
             customerEmail = null
         )
+        setResult(RESULT_OK)
     }
 
     @Composable
@@ -58,12 +67,12 @@ class BankTransferDetailActivity : BaseActivity() {
         totalAmount: String,
         orderId: String,
         bankName: String,
-        customerDetail: CustomerDetail,
-        vaNumberState: State<String?>,
-        billingNumberState: State<String?>,
-        companyCodeState: State<String?>
+        customerInfo: CustomerInfo?,
+        vaNumberState: State<String>,
+        billingNumberState: State<String>,
+        companyCodeState: State<String>,
+        destinationBankCode: String?
     ) {
-        val vaNumber by remember { vaNumberState }
         val billingNumber by remember { billingNumberState }
         val companyCode by remember { companyCodeState }
         var expanding by remember {
@@ -83,13 +92,14 @@ class BankTransferDetailActivity : BaseActivity() {
                     SnapTotal(
                         amount = totalAmount,
                         orderId = orderId,
+                        canExpand = customerInfo != null,
                         remainingTime = null
                     ) {
                         expanding = it
                     }
                 },
                 expandingContent = {
-                    customerDetail.run {
+                    customerInfo?.run {
                         SnapCustomerDetail(
                             name = name,
                             phone = phone,
@@ -112,7 +122,7 @@ class BankTransferDetailActivity : BaseActivity() {
                         )
                     }
                     getInfoField(
-                        vaNumber = vaNumber,
+                        vaNumber = vaNumberState.value,
                         companyCode = companyCode,
                         billingNumber = billingNumber,
                         destinationBankCode = destinationBankCode
@@ -180,6 +190,7 @@ class BankTransferDetailActivity : BaseActivity() {
 
     @Composable
     fun getDetailWithVaNumber(vaNumber: String?): @Composable (() -> Unit) {
+        val clipboardManager: ClipboardManager = LocalClipboardManager.current
         return {
             var copied by remember {
                 mutableStateOf(false)
@@ -189,12 +200,16 @@ class BankTransferDetailActivity : BaseActivity() {
                     title = stringResource(id = R.string.general_instruction_va_number_title),
                     info = it,
                     copied = copied,
-                    onCopyClicked = { copied = true }
+                    onCopyClicked = { label ->
+                        copied = true
+                        clipboardManager.setText(AnnotatedString(text = label))
+                    }
                 )
             }
         }
     }
 
+    @SuppressLint("ServiceCast")
     @Composable
     private fun getInfoField(
         vaNumber: String?,
@@ -202,9 +217,10 @@ class BankTransferDetailActivity : BaseActivity() {
         destinationBankCode: String?,
         companyCode: String?
     ): Map<String, @Composable (() -> Unit)> {
+        val clipboardManager: ClipboardManager = LocalClipboardManager.current
         return mapOf(
-            Pair(BANK_BCA, getDetailWithVaNumber(vaNumber = vaNumber)),
-            Pair(BANK_MANDIRI) {
+            Pair(PaymentType.BCA_VA, getDetailWithVaNumber(vaNumber = vaNumber)),
+            Pair(PaymentType.E_CHANNEL) {
                 var companyCodeCopied by remember {
                     mutableStateOf(false)
                 }
@@ -217,7 +233,10 @@ class BankTransferDetailActivity : BaseActivity() {
                         title = stringResource(id = R.string.general_instruction_company_code_mandiri_only),
                         info = it,
                         copied = companyCodeCopied,
-                        onCopyClicked = { label -> companyCodeCopied = true }
+                        onCopyClicked = { label ->
+                            companyCodeCopied = true
+                            clipboardManager.setText(AnnotatedString(text = label))
+                        }
                     )
                 }
                 billingNumber?.let {
@@ -225,14 +244,17 @@ class BankTransferDetailActivity : BaseActivity() {
                         title = stringResource(id = R.string.general_instruction_billing_number_mandiri_only),
                         info = it,
                         copied = billingNumberCopied,
-                        onCopyClicked = { label -> billingNumberCopied = true }
+                        onCopyClicked = { label ->
+                            billingNumberCopied = true
+                            clipboardManager.setText(AnnotatedString(text = label))
+                        }
                     )
                 }
             },
-            Pair(BANK_BNI, getDetailWithVaNumber(vaNumber = vaNumber)),
-            Pair(BANK_BRI, getDetailWithVaNumber(vaNumber = vaNumber)),
-            Pair(BANK_PERMATA, getDetailWithVaNumber(vaNumber = vaNumber)),
-            Pair(BANK_OTHERS) {
+            Pair(PaymentType.BNI_VA, getDetailWithVaNumber(vaNumber = vaNumber)),
+            Pair(PaymentType.BRI_VA, getDetailWithVaNumber(vaNumber = vaNumber)),
+            Pair(PaymentType.PERMATA_VA, getDetailWithVaNumber(vaNumber = vaNumber)),
+            Pair(PaymentType.ALL_VA) {
                 var copiedBankCode by remember {
                     mutableStateOf(false)
                 }
@@ -244,7 +266,10 @@ class BankTransferDetailActivity : BaseActivity() {
                         title = stringResource(id = R.string.general_instruction_destination_bank_code_permata_only),
                         info = it,
                         copied = copiedBankCode,
-                        onCopyClicked = { label -> copiedBankCode = true }
+                        onCopyClicked = { label ->
+                            copiedBankCode = true
+                            clipboardManager.setText(AnnotatedString(text = label))
+                        }
                     )
                 }
 
@@ -266,15 +291,16 @@ class BankTransferDetailActivity : BaseActivity() {
         Content(
             totalAmount = "Rp.199.000",
             orderId = "#1231231233121",
-            customerDetail = CustomerDetail(
+            customerInfo = CustomerInfo(
                 name = "ari bakti",
                 phone = "4123123123123",
                 addressLines = listOf("jalan", "jalan", "jalan")
             ),
-            vaNumberState = remember { mutableStateOf("23421312") },
+            vaNumberState = remember { mutableStateOf("32323") },
             companyCodeState = remember { mutableStateOf("32323") },
             bankName = "bni",
-            billingNumberState = remember { mutableStateOf("2323222222") }
+            billingNumberState = remember { mutableStateOf("2323222222") },
+            destinationBankCode = "111"
         )
 
     }
@@ -290,9 +316,8 @@ class BankTransferDetailActivity : BaseActivity() {
             ?: throw RuntimeException("Order ID must not be empty")
     }
 
-    private val customerDetail: CustomerDetail by lazy {
-        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerDetail
-            ?: throw RuntimeException("Customer detail must not be empty")
+    private val customerInfo: CustomerInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
     }
 
     private val paymentType: String by lazy {
@@ -308,23 +333,23 @@ class BankTransferDetailActivity : BaseActivity() {
 
     private val paymentInstruction by lazy {
         mapOf(
-            Pair(BANK_BCA, bcaPaymentInstruction),
-            Pair(BANK_MANDIRI, mandiriPaymentInstruction),
-            Pair(BANK_BNI, bniPaymentInstruction),
-            Pair(BANK_BRI, briPaymentInstruction),
-            Pair(BANK_PERMATA, permataPaymentInstruction),
-            Pair(BANK_OTHERS, otherBankPaymentInstruction)
+            Pair(PaymentType.BCA_VA, bcaPaymentInstruction),
+            Pair(PaymentType.E_CHANNEL, mandiriPaymentInstruction),
+            Pair(PaymentType.BNI_VA, bniPaymentInstruction),
+            Pair(PaymentType.BRI_VA, briPaymentInstruction),
+            Pair(PaymentType.PERMATA_VA, permataPaymentInstruction),
+            Pair(PaymentType.ALL_VA, otherBankPaymentInstruction)
         )
     }
 
     private val generalInstruction by lazy {
         mapOf(
-            Pair(BANK_BCA, R.string.general_instruction_bca),
-            Pair(BANK_MANDIRI, R.string.general_instruction_mandiri),
-            Pair(BANK_BNI, R.string.general_instruction_bni_bri_permata_other_bank),
-            Pair(BANK_BRI, R.string.general_instruction_bni_bri_permata_other_bank),
-            Pair(BANK_PERMATA, R.string.general_instruction_bni_bri_permata_other_bank),
-            Pair(BANK_OTHERS, R.string.general_instruction_bni_bri_permata_other_bank)
+            Pair(PaymentType.BCA_VA, R.string.general_instruction_bca),
+            Pair(PaymentType.E_CHANNEL, R.string.general_instruction_mandiri),
+            Pair(PaymentType.BNI_VA, R.string.general_instruction_bni_bri_permata_other_bank),
+            Pair(PaymentType.BRI_VA, R.string.general_instruction_bni_bri_permata_other_bank),
+            Pair(PaymentType.PERMATA_VA, R.string.general_instruction_bni_bri_permata_other_bank),
+            Pair(PaymentType.ALL_VA, R.string.general_instruction_bni_bri_permata_other_bank)
         )
     }
 
@@ -438,13 +463,6 @@ class BankTransferDetailActivity : BaseActivity() {
         private const val EXTRA_SNAPTOKEN = "bankTransfer.extra.snaptoken"
         private const val EXTRA_DESTINATIONBANKCODE = "bankTransfer.extra.destinationbankcode"
 
-        const val BANK_BCA = "bca"
-        const val BANK_BNI = "bni"
-        const val BANK_MANDIRI = "mandiri"
-        const val BANK_PERMATA = "permata"
-        const val BANK_BRI = "bri"
-        const val BANK_OTHERS = "other banks"
-
         fun getIntent(
             activityContext: Context,
             snapToken: String,
@@ -452,9 +470,8 @@ class BankTransferDetailActivity : BaseActivity() {
             totalAmount: String,
             orderId: String,
             destinationBankCode: String? = null,
-            customerName: String,
-            customerPhone: String,
-            addressLines: List<String>
+            customerInfo: CustomerInfo? = null
+
         ): Intent {
             return Intent(activityContext, BankTransferDetailActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
@@ -462,7 +479,7 @@ class BankTransferDetailActivity : BaseActivity() {
                 putExtra(EXTRA_SNAPTOKEN, snapToken)
                 putExtra(
                     EXTRA_CUSTOMER_DETAIL,
-                    CustomerDetail(customerName, customerPhone, addressLines)
+                    customerInfo
                 )
                 putExtra(EXTRA_PAYMENTTYPE, paymentType)
 
@@ -472,12 +489,4 @@ class BankTransferDetailActivity : BaseActivity() {
             }
         }
     }
-
-
-    @Parcelize
-    private data class CustomerDetail(
-        val name: String,
-        val phone: String,
-        val addressLines: List<String>
-    ) : Parcelable
 }

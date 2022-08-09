@@ -56,6 +56,7 @@ class SampleUiActivity : AppCompatActivity() {
                     SnapTotal(
                         amount = "Rp399.000",
                         orderId = "#121231231231",
+                        canExpand = true,
                         remainingTime = "22:22:22"
                     ) {
                         expanding = it
