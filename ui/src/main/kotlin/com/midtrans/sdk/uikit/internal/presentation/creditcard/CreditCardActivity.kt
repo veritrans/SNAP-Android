@@ -79,34 +79,31 @@ class CreditCardActivity : BaseActivity() {
                 bankIconId = null
             )
         }
-        var isExpandingState by remember { mutableStateOf(false) }
+
+        var isExpanding by remember { mutableStateOf(false) }
         var isCheckedState by remember { mutableStateOf(true) }
 
         CreditCardPageStateLess(
-            normalCardItemState = state,
-            isSnapOverlayExpandingState = isExpandingState,
+            state = state,
+            isExpandingState = isExpanding,
             isCheckedState = isCheckedState,
             totalAmount = totalAmount,
             orderId = orderId,
             customerDetail = customerDetail,
-            onExpandingChange = {
-                isExpandingState = it
-            },
-            onCheckedChange = {
-                isCheckedState = it
-            }
+            onExpand = { isExpanding = it },
+            onCheckedChange = { isCheckedState = it}
         )
     }
 
     @Composable
     private fun CreditCardPageStateLess(
-        normalCardItemState: NormalCardItemState,
-        isSnapOverlayExpandingState: Boolean,
+        state: NormalCardItemState,
+        isExpandingState: Boolean,
         isCheckedState: Boolean,
         totalAmount: String,
         orderId: String,
         customerDetail: CustomerDetail,
-        onExpandingChange: (Boolean) -> Unit,
+        onExpand: (Boolean) -> Unit,
         onCheckedChange: (Boolean) -> Unit
     ){
         Column(
@@ -117,14 +114,14 @@ class CreditCardActivity : BaseActivity() {
                 onBackPressed()
             }
             SnapOverlayExpandingBox(
-                isExpanded = isSnapOverlayExpandingState,
+                isExpanded = isExpandingState,
                 mainContent = {
                     SnapTotal(
                         amount = totalAmount,
                         orderId = orderId,
                         remainingTime = null
                     ) {
-                        onExpandingChange(it)
+                        onExpand(it)
                     }
                 },
                 expandingContent = {
@@ -146,30 +143,30 @@ class CreditCardActivity : BaseActivity() {
                             modifier = Modifier
                                 .padding(top = 24.dp)
                                 .constrainAs(normalCardItem){
-                                    top.linkTo(parent.top)
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                },
-                            state = normalCardItemState,
+                                top.linkTo(parent.top)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                            },
+                            state = state,
                             onCardNumberValueChange = {
-                                normalCardItemState.cardNumber = it
+                                state.cardNumber = it
                                 var cardNumber = it.text.replace(" ", "")
                                 if(cardNumber.length >= 8){
                                     var eightDigitNumber = cardNumber.substring(8)
 
                                     //TODO: Fix when corekit available
-                                    normalCardItemState.bankIconId = getBankIcon(getBankName(it).toString())
+                                    state.bankIconId = getBankIcon(getBankName(it).toString())
 //                                    viewModel.getBankName(
 //                                        binNumber = eightDigitNumber,
 //                                        clientKet = "VT-client-yrHf-c8Sxr-ck8tx"
 //                                    )
                                 }
                             },
-                            onExpiryDateValueChange = { normalCardItemState.expiry = it },
-                            onCvvValueChange = { normalCardItemState.cvv = it },
-                            onCardTextFieldFocusedChange = { normalCardItemState.isCardTexFieldFocused = it },
-                            onExpiryTextFieldFocusedChange = { normalCardItemState.isExpiryTextFieldFocused = it },
-                            onCvvTextFieldFocusedChange = { normalCardItemState.isCvvTextFieldFocused = it }
+                            onExpiryDateValueChange = { state.expiry = it },
+                            onCvvValueChange = { state.cvv = it },
+                            onCardTextFieldFocusedChange = { state.isCardTexFieldFocused = it },
+                            onExpiryTextFieldFocusedChange = { state.isExpiryTextFieldFocused = it },
+                            onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it }
                         )
                         Row(
                             modifier = Modifier
@@ -180,13 +177,11 @@ class CreditCardActivity : BaseActivity() {
                                 }
                         ) {
                             LabelledCheckBox(checked = isCheckedState,
-                                onCheckedChange = {
-                                    onCheckedChange(it)
-                                },
+                                onCheckedChange = { onCheckedChange(it) },
                                 label = "Save this card"
                             )
                         }
-
+                        
                         SnapButton(
                             text = "Bayar",
                             style = SnapButton.Style.PRIMARY,
@@ -197,12 +192,12 @@ class CreditCardActivity : BaseActivity() {
                                     start.linkTo(parent.start)
                                     end.linkTo(parent.end)
                                 },
-                            enabled = !(normalCardItemState.isCardNumberInvalid ||
-                                    normalCardItemState.isExpiryInvalid ||
-                                    normalCardItemState.isCvvInvalid ||
-                                    normalCardItemState.cardNumber.text.isEmpty() ||
-                                    normalCardItemState.expiry.text.isEmpty() ||
-                                    normalCardItemState.cvv.text.isEmpty()),
+                            enabled = !(state.isCardNumberInvalid ||
+                                    state.isExpiryInvalid ||
+                                    state.isCvvInvalid ||
+                                    state.cardNumber.text.isEmpty() ||
+                                    state.expiry.text.isEmpty() ||
+                                    state.cvv.text.isEmpty()),
                             onClick = {
                                 Toast.makeText(
                                     this@CreditCardActivity,
@@ -228,7 +223,7 @@ class CreditCardActivity : BaseActivity() {
 //    }
 
 
-    //TODO: Might need to move this to viewmodel
+    //TODO:Move to viewmodel
     fun getBankName(cardNumber: TextFieldValue): String? {
         val length = min(cardNumber.text.length, 8)
         val output = cardNumber.copy(cardNumber.text.substring(0 until length), TextRange(length))
@@ -244,7 +239,6 @@ class CreditCardActivity : BaseActivity() {
         }
     }
 
-    //TODO: Might need to move this to viewmodel
     fun getBankIcon(bank: String): Int? {
         return when (bank) {
             "bri" -> R.drawable.ic_outline_bri_24

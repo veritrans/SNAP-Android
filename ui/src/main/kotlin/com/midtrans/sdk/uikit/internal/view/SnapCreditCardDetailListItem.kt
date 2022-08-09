@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
@@ -12,9 +13,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -592,6 +596,7 @@ fun formatCVV(input: TextFieldValue): TextFieldValue{
 @Composable
 fun NormalCardItem(
     state: NormalCardItemState,
+    modifier: Modifier,
     onCardNumberValueChange: (TextFieldValue) -> Unit,
     onExpiryDateValueChange: (TextFieldValue) -> Unit,
     onCvvValueChange: (TextFieldValue) -> Unit,
@@ -604,6 +609,7 @@ fun NormalCardItem(
     val formattedMaxExpiryLength = 5
 
     Column(
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(space = 16.dp)
     ) {
         Column(
@@ -612,14 +618,14 @@ fun NormalCardItem(
 
             Column {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(2.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.Bottom
                 ) {
                     Text(
                         text = "Nomor kartu",
                         modifier = Modifier.weight(1f),
                         style = SnapTypography.STYLES.snapTextSmallRegular
                     )
-
                     if (state.principalIconId != null && state.cardNumber.text.isNotEmpty()) {
                         Icon(
                             painter = painterResource(id = state.principalIconId!!),
@@ -765,6 +771,38 @@ fun getCardType(cardNumber: String): String {
         }
     } catch (e: RuntimeException) {
         ""
+    }
+}
+
+@Composable
+fun LabelledCheckBox(
+    checked: Boolean,
+    onCheckedChange: ((Boolean) -> Unit),
+    label: String,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .clip(MaterialTheme.shapes.small)
+            .clickable(
+                indication = rememberRipple(color = Color.LightGray),
+                interactionSource = remember { MutableInteractionSource() },
+                onClick = { onCheckedChange(!checked) }
+            )
+            .requiredHeight(ButtonDefaults.MinHeight)
+    ) {
+        Checkbox(
+            checked = checked,
+            colors = CheckboxDefaults.colors(checkmarkColor = Color.White, uncheckedColor = Color.Black, checkedColor = Color.Black ),
+            onCheckedChange = null
+        )
+
+        Spacer(Modifier.size(6.dp))
+
+        Text(
+            text = label,
+        )
     }
 }
 
