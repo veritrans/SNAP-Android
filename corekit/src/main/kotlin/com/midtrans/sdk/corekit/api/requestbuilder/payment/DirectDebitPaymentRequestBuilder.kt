@@ -14,14 +14,12 @@ class DirectDebitPaymentRequestBuilder : PaymentRequestBuilder() {
         paymentType = value
     }
 
-    fun withKlikBcaUserId(value: String): DirectDebitPaymentRequestBuilder = apply {
-        if (value.isNotEmpty()) {
-            userId = value
-        }
+    fun withKlikBcaUserId(value: String?): DirectDebitPaymentRequestBuilder = apply {
+        userId = value
     }
 
     override fun build(): PaymentRequest {
-        return when(paymentType) {
+        return when (paymentType) {
             PaymentType.KLIK_BCA -> {
                 if (userId == null)
                     throw MissingParameterException("userId required")
