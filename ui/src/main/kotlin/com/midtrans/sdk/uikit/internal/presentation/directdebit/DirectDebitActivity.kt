@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -32,6 +31,10 @@ class DirectDebitActivity : BaseActivity() {
     private val data: DirectDebitData by lazy {
         intent.getParcelableExtra(EXTRA_DIRECT_DEBIT_DATA) as? DirectDebitData
             ?: throw RuntimeException("Input data must not be empty")
+    }
+
+    private val snapToken: String by lazy {
+        intent.getStringExtra(EXTRA_SNAP_TOKEN) ?: throw RuntimeException("Snap token must exist")
     }
 
     private val viewModel: DirectDebitViewModel by lazy {
@@ -124,7 +127,11 @@ class DirectDebitActivity : BaseActivity() {
                             text = stringResource(R.string.bca_klik_pay_cta),
                             style = SnapButton.Style.PRIMARY
                         ) {
-                            viewModel.pay(data.paymentType, userId)
+                            viewModel.pay(
+                                snapToken = snapToken,
+                                paymentType = data.paymentType,
+                                userId = userId
+                            )
                         }
                     }
                 },
@@ -225,9 +232,11 @@ class DirectDebitActivity : BaseActivity() {
 
     companion object {
         private const val EXTRA_DIRECT_DEBIT_DATA = "EXTRA_DIRECT_DEBIT_DATA"
+        private const val EXTRA_SNAP_TOKEN = "EXTRA_SNAP_TOKEN"
 
         fun getIntent(
             activityContext: Context,
+            snapToken: String,
             @PaymentType.Def paymentType: String,
             amount: String,
             orderId: String,
@@ -236,6 +245,7 @@ class DirectDebitActivity : BaseActivity() {
             addressLines: List<String>?
         ): Intent {
             return Intent(activityContext, DirectDebitActivity::class.java).apply {
+                putExtra(EXTRA_SNAP_TOKEN, snapToken)
                 putExtra(
                     EXTRA_DIRECT_DEBIT_DATA,
                     DirectDebitData(
