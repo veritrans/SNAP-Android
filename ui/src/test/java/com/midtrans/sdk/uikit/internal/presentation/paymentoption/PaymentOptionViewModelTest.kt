@@ -2,10 +2,16 @@ package com.midtrans.sdk.uikit.internal.presentation.paymentoption
 
 import com.midtrans.sdk.corekit.api.model.Address
 import com.midtrans.sdk.corekit.api.model.CustomerDetails
-import com.midtrans.sdk.uikit.external.model.PaymentList
-import com.midtrans.sdk.uikit.external.model.PaymentMethod
+import com.midtrans.sdk.corekit.api.model.PaymentMethod
+import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.BANK_TRANSFER
+import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.CREDIT_CARD
+import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.KLIK_BCA
+import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY
+import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY_QRIS
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
+import org.hamcrest.beans.HasPropertyWithValue
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -157,10 +163,101 @@ internal class PaymentOptionViewModelTest {
 
     @Test
     fun getCustomerInfoWhenPhoneNumberIsProvidedShouldReturnPhoneNumber() {
-        val result = viewModel.getCustomerInfo(CustomerDetails(
-            phone = "0888887777777"
-        ))
+        var result = viewModel.getCustomerInfo(
+            CustomerDetails(
+                phone = "0888887777777"
+            )
+        )
         assertNotNull(result)
         assertEquals("0888887777777", result!!.phone)
+
+        result = viewModel.getCustomerInfo(CustomerDetails())
+        assertNotNull(result)
+        assertEquals("", result!!.phone)
+    }
+
+    @Test
+    fun initiateListWhenPaymentListIsEmptyShouldReturnEmptyList() {
+        val result = viewModel.initiateList(emptyList(), true)
+        assertTrue(result.paymentMethods.isEmpty())
+    }
+
+    @Test
+    fun initiateListWhenDeviceIsTabletShouldReturnListForTablet() {
+        val result = viewModel.initiateList(providePaymentMethodList(), true).paymentMethods
+        assertTrue(result.size == 4)
+        assertThat(
+            result,
+            hasItems(
+                allOf(
+                    HasPropertyWithValue.hasProperty("type", equalTo(BANK_TRANSFER)),
+                    HasPropertyWithValue.hasProperty("icons", hasSize<String>(5))
+                ),
+                allOf(
+                    HasPropertyWithValue.hasProperty("type", equalTo(KLIK_BCA)),
+                    HasPropertyWithValue.hasProperty("icons", hasSize<String>(1))
+                ),
+                allOf(
+                    HasPropertyWithValue.hasProperty("type", equalTo(CREDIT_CARD)),
+                    HasPropertyWithValue.hasProperty("icons", hasSize<String>(4))
+                ),
+                allOf(
+                    HasPropertyWithValue("type", equalTo(SHOPEEPAY_QRIS)),
+                    HasPropertyWithValue.hasProperty("icons", hasSize<String>(2))
+                )
+            )
+        )
+    }
+
+    @Test
+    fun initiateListWhenDeviceIsPhoneShouldReturnListForPhone() {
+        val result = viewModel.initiateList(providePaymentMethodList(), false).paymentMethods
+        assertTrue(result.size == 4)
+        assertThat(
+            result,
+            hasItems(
+                allOf(
+                    HasPropertyWithValue.hasProperty("type", equalTo(BANK_TRANSFER)),
+                    HasPropertyWithValue.hasProperty("icons", hasSize<String>(5))
+                ),
+                allOf(
+                    HasPropertyWithValue.hasProperty("type", equalTo(KLIK_BCA)),
+                    HasPropertyWithValue.hasProperty("icons", hasSize<String>(1))
+                ),
+                allOf(
+                    HasPropertyWithValue.hasProperty("type", equalTo(CREDIT_CARD)),
+                    HasPropertyWithValue.hasProperty("icons", hasSize<String>(4))
+                ),
+                allOf(
+                    HasPropertyWithValue("type", equalTo(SHOPEEPAY)),
+                    HasPropertyWithValue.hasProperty("icons", hasSize<String>(2))
+                )
+            )
+        )
+    }
+
+    private fun providePaymentMethodList(): List<PaymentMethod> {
+        return listOf(
+            PaymentMethod(
+                type = BANK_TRANSFER,
+                channels = listOf(PaymentType.PERMATA_VA, PaymentType.E_CHANNEL, PaymentType.ALL_VA)
+            ),
+            PaymentMethod(
+                type = KLIK_BCA,
+                channels = emptyList()
+            ),
+            PaymentMethod(
+                type = CREDIT_CARD,
+                channels = emptyList()
+            ),
+            PaymentMethod(
+                type = SHOPEEPAY_QRIS,
+                channels = emptyList()
+            ),
+            PaymentMethod(
+                type = SHOPEEPAY,
+                channels = emptyList()
+            )
+        )
     }
 }
