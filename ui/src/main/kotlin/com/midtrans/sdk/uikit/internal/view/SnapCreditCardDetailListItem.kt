@@ -564,7 +564,7 @@ class NormalCardItemState(
     val iconIdList by mutableStateOf(
         listOf (
             R.drawable.ic_outline_visa_24,
-            R.drawable.ic_outline_visa_24,
+            R.drawable.ic_outline_jcb_24,
             R.drawable.ic_outline_amex_24,
             R.drawable.ic_outline_mastercard_24
         )

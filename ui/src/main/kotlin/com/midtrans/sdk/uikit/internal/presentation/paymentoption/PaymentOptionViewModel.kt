@@ -163,7 +163,7 @@ class PaymentOptionViewModel : ViewModel() {
             CREDIT_CARD -> listOf(
                 R.drawable.ic_outline_visa_40,
                 R.drawable.ic_outline_mastercard_40,
-                R.drawable.ic_outline_jcb_40_2,
+                R.drawable.ic_outline_jcb_40,
                 R.drawable.ic_outline_amex_40
             )
             AKULAKU -> listOf(R.drawable.ic_outline_akulaku_40)
