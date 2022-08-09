@@ -173,7 +173,7 @@ class PaymentOptionViewModel : ViewModel() {
     }
 
     private fun isAddressProvided(address: Address?): Boolean {
-        return address != null && (address.address != null || address.city != null || address.postalCode != null)
+        return address != null && (!address.address.isNullOrBlank() || !address.city.isNullOrBlank() || !address.postalCode.isNullOrBlank())
     }
 
     private fun createAddressLines(address: Address): MutableList<String> {

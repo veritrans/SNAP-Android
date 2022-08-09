@@ -77,9 +77,12 @@ internal class PaymentOptionViewModelTest {
         )
         assertNotNull(result)
         assertThat(
-            result!!.addressLines, hasItems("street name", "city name", "postal code")
+            result!!.addressLines,
+            allOf(
+                hasItems("street name", "city name", "postal code"),
+                hasSize(3)
+            )
         )
-        assertTrue(result.addressLines.size == 3)
 
         result = viewModel.getCustomerInfo(
             CustomerDetails(
@@ -91,9 +94,12 @@ internal class PaymentOptionViewModelTest {
         )
         assertNotNull(result)
         assertThat(
-            result!!.addressLines, hasItems("city name", "postal code")
+            result!!.addressLines,
+            allOf(
+                hasItems("city name", "postal code"),
+                hasSize(2)
+            )
         )
-        assertTrue(result.addressLines.size == 2)
 
         result = viewModel.getCustomerInfo(
             CustomerDetails(
@@ -104,9 +110,24 @@ internal class PaymentOptionViewModelTest {
         )
         assertNotNull(result)
         assertThat(
-            result!!.addressLines, hasItems("postal code")
+            result!!.addressLines,
+            allOf(
+                hasItems("postal code"),
+                hasSize(1)
+            )
         )
-        assertTrue(result.addressLines.size == 1)
+
+        result = viewModel.getCustomerInfo(
+            CustomerDetails(
+                shippingAddress = Address(
+                    postalCode = ""
+                )
+            )
+        )
+        assertNotNull(result)
+        assertThat(
+            result!!.addressLines, hasSize(0)
+        )
     }
 
     @Test
@@ -122,13 +143,16 @@ internal class PaymentOptionViewModelTest {
         )
         assertNotNull(result)
         assertThat(
-            result!!.addressLines, hasItems("street name", "city name", "postal code")
+            result!!.addressLines,
+            allOf(
+                hasItems("street name", "city name", "postal code"),
+                hasSize(3)
+            )
         )
-        assertTrue(result.addressLines.size == 3)
 
         result = viewModel.getCustomerInfo(
             CustomerDetails(
-                shippingAddress = Address(
+                billingAddress = Address(
                     city = "city name",
                     postalCode = "postal code"
                 )
@@ -136,22 +160,40 @@ internal class PaymentOptionViewModelTest {
         )
         assertNotNull(result)
         assertThat(
-            result!!.addressLines, hasItems("city name", "postal code")
+            result!!.addressLines,
+            allOf(
+                hasItems("city name", "postal code"),
+                hasSize(2)
+            )
         )
-        assertTrue(result.addressLines.size == 2)
 
         result = viewModel.getCustomerInfo(
             CustomerDetails(
-                shippingAddress = Address(
+                billingAddress = Address(
                     postalCode = "postal code"
                 )
             )
         )
         assertNotNull(result)
         assertThat(
-            result!!.addressLines, hasItems("postal code")
+            result!!.addressLines,
+            allOf(
+                hasItems("postal code"),
+                hasSize(1)
+            )
         )
-        assertTrue(result.addressLines.size == 1)
+
+        result = viewModel.getCustomerInfo(
+            CustomerDetails(
+                billingAddress = Address(
+                    postalCode = ""
+                )
+            )
+        )
+        assertNotNull(result)
+        assertThat(
+            result!!.addressLines, hasSize(0)
+        )
     }
 
     @Test
