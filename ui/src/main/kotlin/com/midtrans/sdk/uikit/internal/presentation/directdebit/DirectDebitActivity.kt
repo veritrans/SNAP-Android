@@ -77,6 +77,7 @@ class DirectDebitActivity : BaseActivity() {
                     SnapTotal(
                         amount = data.amount,
                         orderId = data.orderId,
+                        canExpand = true,
                         remainingTime = null
                     ) {
                         isCustomerDetailExpanded = it
@@ -123,7 +124,7 @@ class DirectDebitActivity : BaseActivity() {
                             text = stringResource(R.string.bca_klik_pay_cta),
                             style = SnapButton.Style.PRIMARY
                         ) {
-                            Log.d("SnapButton", "Clicked $userId ${data.paymentType}")
+                            viewModel.pay(data.paymentType, userId)
                         }
                     }
                 },
