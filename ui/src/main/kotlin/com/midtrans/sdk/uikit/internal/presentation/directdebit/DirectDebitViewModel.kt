@@ -19,7 +19,7 @@ class DirectDebitViewModel : ViewModel() {
             .withPaymentType(paymentType)
             .withKlikBcaUserId(userId)
 
-        SnapCore.getInstance()?.pay(
+        SnapCore.getInstance()?.pay(//TODO integrate with DI from pak wahyu
             snapToken = snapToken,
             paymentRequestBuilder = builder,
             callback = object : Callback<TransactionResponse> {
