@@ -45,6 +45,7 @@ class DirectDebitActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initObserver()
         setContent {
             DirectDebitContent(
                 paymentType = data.paymentType,
@@ -52,6 +53,12 @@ class DirectDebitActivity : BaseActivity() {
                 orderId = data.orderId,
                 customerInfo = data.customerInfo
             )
+        }
+    }
+
+    private fun initObserver() {
+        viewModel.getRedirectUrl().observe(this) {
+            //TODO integrate with webview here
         }
     }
 
