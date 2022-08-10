@@ -52,6 +52,7 @@ dependencies {
     testImplementation(com.gtf.snap.TestLibraries.junit)
     testImplementation(com.gtf.snap.TestLibraries.hamcrest)
     implementation(com.gtf.snap.JodaTimeLibraries.jodaTime)
+    testImplementation(com.gtf.snap.TestLibraries.jodaTime)
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 

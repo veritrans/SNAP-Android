@@ -9,9 +9,6 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.BankTransferPaymentRequestBuilder
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
-import org.joda.time.DateTimeZone
-import org.joda.time.Years
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
