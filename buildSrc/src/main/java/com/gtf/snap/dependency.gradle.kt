@@ -7,7 +7,7 @@ object Dependencies {
     const val navigationFragmentKtxVersion = "2.3.1"
     const val junitVersion = "4.13.1"
     const val androidxJunitVersion = "1.1.2"
-    const val androidxArchTestingVersion = "2.1.0"
+    const val androidxArchTestingVersion = "2.0.0"
     const val espressoCoreVersion = "3.3.0"
     const val appCompatVersion = "1.2.0"
     const val materialDesignComponentVersion = "1.2.1"
