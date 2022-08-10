@@ -44,6 +44,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //TODO: create Dagger component holder for global access
         DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build()
             .inject(this)
         setContent {
