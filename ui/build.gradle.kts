@@ -51,6 +51,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.4.1")
     testImplementation(com.gtf.snap.TestLibraries.junit)
     testImplementation(com.gtf.snap.TestLibraries.hamcrest)
+    implementation(com.gtf.snap.JodaTimeLibraries.jodaTime)
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 
@@ -69,11 +70,17 @@ dependencies {
     implementation(com.gtf.snap.ComposeUiLibraries.composeConstraintLayout)
     implementation(com.gtf.snap.ComposeUiLibraries.composeAnimatedDrawable)
     implementation(com.gtf.snap.ComposeUiLibraries.composeAnimation)
+    implementation(com.gtf.snap.ComposeUiLibraries.composeRxjava)
 
     //TODO: work around, remove when google fix compose tooling
     debugImplementation("androidx.customview:customview:1.2.0-alpha01")
     debugImplementation("androidx.customview:customview-poolingcontainer:1.0.0-alpha01")
     implementation(project(":corekit"))
+
+    //rx android
+    implementation(com.gtf.snap.RxLibraries.rxAndroid2)
+    implementation(com.gtf.snap.RxLibraries.rxJava2)
+    implementation(com.gtf.snap.RxLibraries.rxBinding)
 
     //dagger
     implementation(com.gtf.snap.DaggerLibraries.dagger)

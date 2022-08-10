@@ -172,7 +172,7 @@ object ComposeUiLibraries {
     const val composeConstraintLayout = "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha03"
     const val composeAnimatedDrawable = "androidx.compose.animation:animation-graphics:${Dependencies.composeVersion}"
     const val composeAnimation = "androidx.compose.animation:animation:${Dependencies.composeVersion}"
-
+    const val composeRxjava = "androidx.compose.runtime:runtime-rxjava2:${Dependencies.composeVersion}"
 }
 
 object TestLibraries {

@@ -1,6 +1,7 @@
 package com.midtrans.sdk.uikit.internal.di
 
 import android.content.Context
+import com.midtrans.sdk.uikit.internal.di.viewmodel.UtilModule
 import com.midtrans.sdk.uikit.internal.di.viewmodel.ViewModelFactoryModule
 import com.midtrans.sdk.uikit.internal.di.viewmodel.ViewModelModule
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDetailActivity
@@ -15,10 +16,11 @@ import javax.inject.Singleton
         AndroidInjectionModule::class,
         ViewModelFactoryModule::class,
         ViewModelModule::class,
-        CoreModule::class
+        CoreModule::class,
+        UtilModule::class
     ]
 )
-interface UiKitComponent {
+internal interface UiKitComponent {
     @Component.Builder
     interface Builder {
         @BindsInstance

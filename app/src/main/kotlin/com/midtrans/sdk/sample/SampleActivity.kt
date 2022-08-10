@@ -45,8 +45,6 @@ class SampleActivity : AppCompatActivity() {
             .withMerchantClientKey("SB-Mid-client-zt7XrRxPQXZNvuBY")
             .build()
         viewModel.getHelloFromSnap()
-        //TODO: move to ui kit
-        DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build()
         setContent { Greeting() }
     }
 

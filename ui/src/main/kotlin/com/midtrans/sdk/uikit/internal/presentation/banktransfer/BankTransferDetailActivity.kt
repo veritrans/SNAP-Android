@@ -15,6 +15,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rxjava2.subscribeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -31,9 +32,12 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.view.*
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class BankTransferDetailActivity : BaseActivity() {
+internal class BankTransferDetailActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModel: BankTransferDetailViewModel
@@ -51,7 +55,8 @@ class BankTransferDetailActivity : BaseActivity() {
                 billingNumberState = viewModel.billingNumberLiveData.observeAsState(initial = ""),
                 bankName = paymentType,
                 companyCodeState = viewModel.companyCodeLiveData.observeAsState(initial = ""),
-                destinationBankCode = destinationBankCode
+                destinationBankCode = destinationBankCode,
+                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
             )
         }
         viewModel.chargeBankTransfer(
@@ -60,6 +65,13 @@ class BankTransferDetailActivity : BaseActivity() {
             customerEmail = null
         )
         setResult(RESULT_OK)
+    }
+
+    private fun updateExpiredTime(): Observable<String> {
+        return Observable
+            .interval(1L, TimeUnit.SECONDS)
+            .map { viewModel.getExpiredHour() }
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     @Composable
@@ -71,10 +83,12 @@ class BankTransferDetailActivity : BaseActivity() {
         vaNumberState: State<String>,
         billingNumberState: State<String>,
         companyCodeState: State<String>,
-        destinationBankCode: String?
+        destinationBankCode: String?,
+        remainingTimeState: State<String>
     ) {
         val billingNumber by remember { billingNumberState }
         val companyCode by remember { companyCodeState }
+        val remainingTime by remember {remainingTimeState}
         var expanding by remember {
             mutableStateOf(false)
         }
@@ -93,7 +107,7 @@ class BankTransferDetailActivity : BaseActivity() {
                         amount = totalAmount,
                         orderId = orderId,
                         canExpand = customerInfo != null,
-                        remainingTime = null
+                        remainingTime = remainingTime
                     ) {
                         expanding = it
                     }
@@ -300,7 +314,8 @@ class BankTransferDetailActivity : BaseActivity() {
             companyCodeState = remember { mutableStateOf("32323") },
             bankName = "bni",
             billingNumberState = remember { mutableStateOf("2323222222") },
-            destinationBankCode = "111"
+            destinationBankCode = "111",
+            remainingTimeState = remember { mutableStateOf("00:00")}
         )
 
     }
