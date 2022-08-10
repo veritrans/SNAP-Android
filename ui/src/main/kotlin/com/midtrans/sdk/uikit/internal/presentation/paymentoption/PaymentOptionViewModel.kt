@@ -1,6 +1,7 @@
 package com.midtrans.sdk.uikit.internal.presentation.paymentoption
 
 import androidx.lifecycle.ViewModel
+import com.midtrans.sdk.corekit.api.model.Address
 import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.PaymentMethod
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.AKULAKU
@@ -147,15 +148,39 @@ class PaymentOptionViewModel : ViewModel() {
         if (customerDetails == null)
             return null
 
-        val name = customerDetails.firstName.orEmpty() + customerDetails.lastName.orEmpty()
+        val nameList = mutableListOf<String>()
+        customerDetails.firstName?.run { nameList.add(this) }
+        customerDetails.lastName?.run { nameList.add(this) }
+        val name = nameList.joinToString(separator = " ")
+
         val phone = customerDetails.phone.orEmpty()
-        val addressLines = if (customerDetails.shippingAddress != null) {
-            val address = customerDetails.shippingAddress!!
-            mutableListOf(address.address.orEmpty(), address.city.orEmpty(), address.postalCode.orEmpty())
-        } else {
-            val address = customerDetails.billingAddress!!
-            mutableListOf(address.address.orEmpty(), address.city.orEmpty(), address.postalCode.orEmpty())
-        }
+
+        val addressLines =
+            if (
+                isAddressProvided(customerDetails.shippingAddress)
+                || isAddressProvided(customerDetails.billingAddress)
+            ) {
+                if (isAddressProvided(customerDetails.shippingAddress)) {
+                    createAddressLines(customerDetails.shippingAddress!!)
+                } else {
+                    createAddressLines(customerDetails.billingAddress!!)
+                }
+            } else {
+                emptyList()
+            }
+
         return CustomerInfo(name = name, phone = phone, addressLines = addressLines)
+    }
+
+    private fun isAddressProvided(address: Address?): Boolean {
+        return address != null && (!address.address.isNullOrBlank() || !address.city.isNullOrBlank() || !address.postalCode.isNullOrBlank())
+    }
+
+    private fun createAddressLines(address: Address): MutableList<String> {
+        val addresses = mutableListOf<String>()
+        address.address?.run { addresses.add(this) }
+        address.city?.run { addresses.add(this) }
+        address.postalCode?.run { addresses.add(this) }
+        return addresses
     }
 }
