@@ -23,11 +23,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.view.*
 import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
 import kotlinx.android.parcel.Parcelize
 
 class DirectDebitActivity : BaseActivity() {
+
     private val data: DirectDebitData by lazy {
         intent.getParcelableExtra(EXTRA_DIRECT_DEBIT_DATA) as? DirectDebitData
             ?: throw RuntimeException("Input data must not be empty")
@@ -43,17 +45,24 @@ class DirectDebitActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { DirectDebitContent(data) }
+        setContent {
+            DirectDebitContent(
+                paymentType = data.paymentType,
+                amount = data.amount,
+                orderId = data.orderId,
+                customerInfo = data.customerInfo
+            )
+        }
     }
 
     @Composable
     @Preview(showBackground = true)
     fun PreviewOnly() {
         DirectDebitContent(
-            data = DirectDebitData(
-                paymentType = PaymentType.KLIK_BCA,
-                amount = "Rp.123999",
-                orderId = "order-id",
+            paymentType = PaymentType.KLIK_BCA,
+            amount = "Rp.123999",
+            orderId = "order-id",
+            customerInfo = CustomerInfo(
                 name = "Dohn Joe",
                 phone = "081234567890",
                 addressLines = listOf("address one", "address two")
@@ -62,14 +71,19 @@ class DirectDebitActivity : BaseActivity() {
     }
 
     @Composable
-    private fun DirectDebitContent(data: DirectDebitData) {
+    private fun DirectDebitContent(
+        paymentType: String,
+        amount: String,
+        orderId: String,
+        customerInfo: CustomerInfo?
+    ) {
         var isCustomerDetailExpanded by remember { mutableStateOf(false) }
         var isInstructionExpanded by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
         ) {
             SnapAppBar(
-                title = getTitle(paymentType = data.paymentType),
+                title = stringResource(getTitleId(paymentType = data.paymentType)),
                 iconResId = R.drawable.ic_cross
             ) {
                 onBackPressed()
@@ -78,20 +92,22 @@ class DirectDebitActivity : BaseActivity() {
                 isExpanded = isCustomerDetailExpanded,
                 mainContent = {
                     SnapTotal(
-                        amount = data.amount,
-                        orderId = data.orderId,
-                        canExpand = true,
+                        amount = amount,
+                        orderId = orderId,
+                        canExpand = customerInfo != null,
                         remainingTime = null
                     ) {
                         isCustomerDetailExpanded = it
                     }
                 },
-                expandingContent = {
-                    SnapCustomerDetail(
-                        name = data.name,
-                        phone = data.phone,
-                        addressLines = data.addressLines.orEmpty()
-                    )
+                expandingContent = customerInfo?.let {
+                    {
+                        SnapCustomerDetail(
+                            name = customerInfo.name,
+                            phone = customerInfo.phone,
+                            addressLines = customerInfo.addressLines
+                        )
+                    }
                 },
                 followingContent = {
                     Column(
@@ -103,8 +119,8 @@ class DirectDebitActivity : BaseActivity() {
                     ) {
                         var userId by remember { mutableStateOf("") }
 
-                        SnapText(getInstruction(paymentType = data.paymentType))
-                        KlikBcaUserIdTextField(paymentType = data.paymentType) { userId = it }
+                        SnapText(stringResource(getInstructionId(paymentType = paymentType)))
+                        KlikBcaUserIdTextField(paymentType = paymentType) { userId = it }
                         SnapInstructionButton(
                             modifier = Modifier.padding(top = 28.dp),
                             isExpanded = isInstructionExpanded,
@@ -114,7 +130,7 @@ class DirectDebitActivity : BaseActivity() {
                             expandingContent = {
                                 Column {
                                     SnapNumberedList(
-                                        list = getHowToPayList(paymentType = data.paymentType)
+                                        list = stringArrayResource(getHowToPayId(paymentType = paymentType)).toList()
                                     )
                                 }
                             }
@@ -193,40 +209,38 @@ class DirectDebitActivity : BaseActivity() {
     }
 
     @Composable
-    private fun getTitle(paymentType: String): String {
+    private fun getTitleId(paymentType: String): Int {
         return when (paymentType) {
-            PaymentType.KLIK_BCA -> stringResource(id = R.string.klik_bca_title)
-            PaymentType.BCA_KLIKPAY -> stringResource(id = R.string.bca_klik_pay_title)
-            PaymentType.CIMB_CLICKS -> stringResource(id = R.string.octo_click_title)
-            PaymentType.DANAMON_ONLINE -> stringResource(id = R.string.danamon_title)
-            PaymentType.BRI_EPAY -> stringResource(id = R.string.brimo_title)
-            else -> ""
+            PaymentType.KLIK_BCA -> R.string.klik_bca_title
+            PaymentType.BCA_KLIKPAY -> R.string.bca_klik_pay_title
+            PaymentType.CIMB_CLICKS -> R.string.octo_click_title
+            PaymentType.DANAMON_ONLINE -> R.string.danamon_title
+            PaymentType.BRI_EPAY -> R.string.brimo_title
+            else -> 0
         }
     }
 
     @Composable
-    private fun getInstruction(paymentType: String): String {
+    private fun getInstructionId(paymentType: String): Int {
         return when (paymentType) {
-            PaymentType.KLIK_BCA -> stringResource(id = R.string.klik_bca_instruction)
-            PaymentType.BCA_KLIKPAY -> stringResource(id = R.string.bca_klik_pay_instruction)
-            PaymentType.CIMB_CLICKS -> stringResource(id = R.string.octo_click_instruction)
-            PaymentType.DANAMON_ONLINE -> stringResource(id = R.string.danamon_instruction)
-            PaymentType.BRI_EPAY -> stringResource(id = R.string.brimo_instruction)
-            else -> ""
+            PaymentType.KLIK_BCA -> R.string.klik_bca_instruction
+            PaymentType.BCA_KLIKPAY -> R.string.bca_klik_pay_instruction
+            PaymentType.CIMB_CLICKS -> R.string.octo_click_instruction
+            PaymentType.DANAMON_ONLINE -> R.string.danamon_instruction
+            PaymentType.BRI_EPAY -> R.string.brimo_instruction
+            else -> 0
         }
     }
 
     @Composable
-    private fun getHowToPayList(paymentType: String): List<String> {
+    private fun getHowToPayId(paymentType: String): Int {
         return when (paymentType) {
-            PaymentType.KLIK_BCA -> stringArrayResource(id = R.array.klik_bca_how_to_pay).toList()
-            PaymentType.BCA_KLIKPAY -> stringArrayResource(id = R.array.bca_klik_pay_how_to_pay).toList()
-            PaymentType.CIMB_CLICKS -> stringArrayResource(id = R.array.octo_click_how_to_pay).toList()
-            PaymentType.DANAMON_ONLINE -> stringArrayResource(id = R.array.danamon_how_to_pay).toList()
-            PaymentType.BRI_EPAY -> stringArrayResource(id = R.array.brimo_how_to_pay).toList()
-            else -> {
-                listOf("")
-            }
+            PaymentType.KLIK_BCA -> R.array.klik_bca_how_to_pay
+            PaymentType.BCA_KLIKPAY -> R.array.bca_klik_pay_how_to_pay
+            PaymentType.CIMB_CLICKS -> R.array.octo_click_how_to_pay
+            PaymentType.DANAMON_ONLINE -> R.array.danamon_how_to_pay
+            PaymentType.BRI_EPAY -> R.array.brimo_how_to_pay
+            else -> 0
         }
     }
 
@@ -240,9 +254,7 @@ class DirectDebitActivity : BaseActivity() {
             @PaymentType.Def paymentType: String,
             amount: String,
             orderId: String,
-            name: String,
-            phone: String,
-            addressLines: List<String>?
+            customerInfo: CustomerInfo?
         ): Intent {
             return Intent(activityContext, DirectDebitActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -252,9 +264,7 @@ class DirectDebitActivity : BaseActivity() {
                         paymentType = paymentType,
                         amount = amount,
                         orderId = orderId,
-                        name = name,
-                        phone = phone,
-                        addressLines = addressLines
+                        customerInfo = customerInfo
                     )
                 )
             }
@@ -266,8 +276,6 @@ class DirectDebitActivity : BaseActivity() {
         val paymentType: String,
         val amount: String,
         val orderId: String,
-        val name: String,
-        val phone: String,
-        val addressLines: List<String>?
+        val customerInfo: CustomerInfo?
     ) : Parcelable
 }
