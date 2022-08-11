@@ -79,7 +79,8 @@ internal class BankTransferDetailViewModel @Inject constructor(
         )
         return String.format(
             "%02d:%02d:%02d",
-//            duration.toHours(),
+            duration.toHours(),
+            //TODO: Uncomment to build creditcard, Somehow causes error
 //            duration.toMinutesPart(),
 //            duration.toSecondsPart()
         )
