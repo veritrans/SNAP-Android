@@ -1,6 +1,8 @@
 package com.midtrans.sdk.uikit.internal.presentation.creditcard
 
 import android.annotation.SuppressLint
+import android.util.Log
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.corekit.SnapCore
@@ -8,8 +10,9 @@ import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.BinResponse
 import com.midtrans.sdk.corekit.api.model.CardTokenResponse
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
-import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.CreditCardTokenRequestBuilder
+import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.NormalCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
 import com.midtrans.sdk.uikit.R
 import javax.inject.Inject
@@ -20,12 +23,11 @@ class CreditCardViewModel @Inject constructor(
 
     val bankIconId = MutableLiveData<Int>()
 
-    @SuppressLint("CheckResult")
-    fun getBankName(binNumber: String,
-                    clientKey: String) {
+
+    //TODO: should this be move to repository?
+    fun getBankName(binNumber: String) {
         snapCore.getBinData(
             binNumber = binNumber,
-            clientKey = clientKey,
             callback = object : Callback<BinResponse> {
                 override fun onSuccess(result: BinResponse) {
                     result.run {
@@ -34,7 +36,6 @@ class CreditCardViewModel @Inject constructor(
                         }
                     }
                 }
-
                 override fun onError(error: SnapError) {
                     TODO("Not yet implemented")
                 }
@@ -42,30 +43,69 @@ class CreditCardViewModel @Inject constructor(
         )
     }
 
-    fun getCardToken(
-        cardTokenRequestBuilder: CreditCardTokenRequestBuilder,
-        callback: Callback<CardTokenResponse>
+    fun setBankIconToNull(){
+        bankIconId.value = null
+    }
+
+    fun chargeUsingCreditCard(
+        grossAmount: String,
+        cardNumber: TextFieldValue,
+        cardExpiry: TextFieldValue,
+        cardCvv: TextFieldValue,
+        orderId: String,
+        isSavedCard: Boolean,
+        customerEmail: String,
+        snapToken: String
     ){
         snapCore.getCardToken(
-            cardTokenRequestBuilder = cardTokenRequestBuilder,
-            callback = callback
+                cardTokenRequestBuilder = NormalCardTokenRequestBuilder()
+                    .withGrossAmount(grossAmount.toDouble())
+                    .withCardNumber(getCardNumberFromTextField(cardNumber))
+                    .withCardExpMonth(getExpMonthFromTextField(cardExpiry))
+                    .withCardExpYear(getExpYearFromTextField(cardExpiry))
+                    .withCardCvv(cardCvv.text)
+                    .withOrderId(orderId)
+                    .withCurrency("IDR")
+            ,
+            callback = object : Callback<CardTokenResponse>{
+                override fun onSuccess(result: CardTokenResponse) {
+
+                    var ccRequestBuilder = CreditCardPaymentRequestBuilder()
+                        .withSaveCard(isSavedCard)
+                        .withPaymentType(PaymentType.CREDIT_CARD)
+                        .withCustomerEmail(customerEmail)
+
+                    result?.tokenId?.let {
+                        ccRequestBuilder.withCardToken(it)
+                    }
+                    snapCore.pay(
+                        snapToken = snapToken,
+                        paymentRequestBuilder = ccRequestBuilder,
+                        callback = object : Callback<TransactionResponse> {
+                            override fun onSuccess(result: TransactionResponse) {
+                                Log.e("transaction succes", "transaction status ${result.transactionStatus}")
+                            }
+                            override fun onError(error: SnapError) {
+                                Log.e("error, error, error", "error charge ${error.message}")
+                            }
+                        }
+                    )
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("error, error, error", "error get card token ${error.message}")
+                }
+            }
         )
     }
 
-    fun chargeUsingCard(
-        paymentRequestBuilder: CreditCardPaymentRequestBuilder,
-        snapToken: String,
-        callback: Callback<TransactionResponse>
-    ){
-        snapCore.pay(
-            paymentRequestBuilder = paymentRequestBuilder,
-            snapToken = snapToken,
-            callback = callback
-        )
+    private fun getCardNumberFromTextField(value: TextFieldValue) : String{
+        return value.text.replace(" ", "")
     }
-
-    fun setBankIconIdToNull(){
-        bankIconId.value = null
+    private fun getExpMonthFromTextField(value: TextFieldValue) : String{
+        return value.text.substring(0, 2)
+    }
+    private fun getExpYearFromTextField(value: TextFieldValue) : String{
+        return return value.text.substring(3, 5)
     }
 
     private fun getBankIcon(bank: String): Int? {

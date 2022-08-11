@@ -462,7 +462,6 @@ class NormalCardItemState(
     isCvvTextFieldFocused: Boolean,
     isSavedCardChecked: Boolean,
     principalIconId: Int?,
-    bankIconId: Int?,
 ){
     var cardNumber by mutableStateOf(cardNumber)
     var expiry by mutableStateOf(expiry)
@@ -474,7 +473,6 @@ class NormalCardItemState(
     var isExpiryTextFieldFocused by mutableStateOf(isExpiryTextFieldFocused)
     var isCvvTextFieldFocused by mutableStateOf(isCvvTextFieldFocused)
     var principalIconId by mutableStateOf(principalIconId)
-    var bankIconId by mutableStateOf(bankIconId)
     var isSavedCardChecked by mutableStateOf(isSavedCardChecked)
 
     val iconIdList by mutableStateOf(

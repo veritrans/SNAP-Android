@@ -31,6 +31,7 @@ import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
+import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapColors
 import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
@@ -292,7 +293,19 @@ class PaymentOptionActivity : BaseActivity() {
                         destinationBankCode = "009 - Permata"  //TODO: clarify if always permata or something
                     )
                 )
+            },
+            Pair("credit_card") {
+                resultLauncher.launch(
+                    CreditCardActivity.getIntent(
+                        activityContext = this,
+                        snapToken = snapToken,
+                        orderId = orderId,
+                        totalAmount = totalAmount,
+                        customerInfo = customerInfo,
+                    )
+                )
             }
+
         )
     }
 }

@@ -7,6 +7,7 @@ import com.midtrans.sdk.corekit.internal.scheduler.SdkScheduler
 import com.midtrans.sdk.corekit.internal.usecase.PaymentUsecase
 import dagger.Module
 import dagger.Provides
+import javax.inject.Named
 
 @Module
 internal class UsecaseModule {
@@ -14,13 +15,16 @@ internal class UsecaseModule {
     fun providePaymentUsecase(
         snapRepository: SnapRepository,
         coreApiRepository: CoreApiRepository,
-        merchantApiRepository: MerchantApiRepository
+        merchantApiRepository: MerchantApiRepository,
+        @Named("merchant_client_key") clientKey: String
+
     ): PaymentUsecase {
         return PaymentUsecase(
             SdkScheduler(),
             snapRepository,
             coreApiRepository,
-            merchantApiRepository
+            merchantApiRepository,
+            clientKey
         )
     }
 }

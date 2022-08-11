@@ -7,7 +7,7 @@ object Dependencies {
     const val navigationFragmentKtxVersion = "2.3.1"
     const val junitVersion = "4.13.1"
     const val androidxJunitVersion = "1.1.2"
-    const val androidxArchTestingVersion = "2.0.0"
+    const val androidxArchTestingVersion = "2.1.0"
     const val espressoCoreVersion = "3.3.0"
     const val appCompatVersion = "1.2.0"
     const val materialDesignComponentVersion = "1.2.1"
@@ -158,6 +158,7 @@ object ComposeUiLibraries {
     const val composeMaterial = "androidx.compose.material:material:${Dependencies.composeVersion}"
     const val composeActivity = "androidx.activity:activity-compose:1.4.0"
     const val composeFramework = "androidx.ui:ui-framework:${Dependencies.composeVersion}"
+    const val composeLifecycleViewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
 
 
     const val composeRuntime = "androidx.compose.runtime:runtime:${Dependencies.composeVersion}"

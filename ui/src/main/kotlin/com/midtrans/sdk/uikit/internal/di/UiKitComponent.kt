@@ -30,5 +30,5 @@ internal interface UiKitComponent {
         fun build(): UiKitComponent
     }
 
-    fun inject(activity: BankTransferDetailActivity)
+    fun inject(activity: CreditCardActivity)
 }

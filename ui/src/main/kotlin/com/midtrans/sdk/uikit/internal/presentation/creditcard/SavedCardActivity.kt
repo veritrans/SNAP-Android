@@ -60,7 +60,6 @@ class SavedCardActivity: BaseActivity() {
                 isExpiryTextFieldFocused = false,
                 isCvvTextFieldFocused = false,
                 principalIconId = null,
-                bankIconId = null,
                 isSavedCardChecked = true
             )
         }
@@ -164,7 +163,8 @@ class SavedCardActivity: BaseActivity() {
                     SnapTotal(
                         amount = totalAmount,
                         orderId = orderId,
-                        remainingTime = null
+                        remainingTime = null,
+                        canExpand = isExpandingState
                     ) {
                         onExpand(it)
                     }

@@ -1,7 +1,7 @@
-import com.midtrans.sdk.corekit.SnapCore
-
+//import com.midtrans.sdk.corekit.SnapCore
+//
 //package com.midtrans.sdk.uikit.internal.presentation.creditcard
-
+//
 //import com.midtrans.sdk.corekit.SnapCore
 //import com.midtrans.sdk.corekit.api.callback.Callback
 //import com.midtrans.sdk.corekit.api.exception.SnapError
@@ -37,4 +37,4 @@ import com.midtrans.sdk.corekit.SnapCore
 //        return result
 //    }
 //}
-
+//

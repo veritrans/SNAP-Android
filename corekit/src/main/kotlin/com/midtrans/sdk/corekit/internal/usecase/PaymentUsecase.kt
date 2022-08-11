@@ -25,7 +25,8 @@ internal class PaymentUsecase(
     private val scheduler: SdkScheduler,
     private val snapRepository: SnapRepository,
     private val coreApiRepository: CoreApiRepository,
-    private val merchantApiRepository: MerchantApiRepository
+    private val merchantApiRepository: MerchantApiRepository,
+    private val clientKey: String
 ) {
 
     //TODO will add UT after PR, need to PR fast for integration
@@ -191,6 +192,7 @@ internal class PaymentUsecase(
         callback: Callback<CardTokenResponse>
     ) {
         try {
+            cardTokenRequestBuilder.withClientKey(clientKey)
             val cardTokenRequest = cardTokenRequestBuilder.build()
             coreApiRepository.getCardToken(cardTokenRequest)
                 .subscribeOn(scheduler.io())
@@ -212,7 +214,6 @@ internal class PaymentUsecase(
     @SuppressLint("CheckResult")
     fun getBinData(
         binNumber: String,
-        clientKey: String,
         callback: Callback<BinResponse>
     ) {
         try {

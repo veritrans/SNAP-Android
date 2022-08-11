@@ -1,9 +1,8 @@
 package com.midtrans.sdk.uikit.internal.presentation.creditcard
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -18,27 +17,65 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.midtrans.sdk.corekit.api.callback.Callback
-import com.midtrans.sdk.corekit.api.exception.SnapError
-import com.midtrans.sdk.corekit.api.model.CardTokenResponse
-import com.midtrans.sdk.corekit.api.model.PaymentType
-import com.midtrans.sdk.corekit.api.model.TransactionResponse
-import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.NormalCardTokenRequestBuilder
-import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
+//import androidx.lifecycle.viewmodel.compose.viewModel
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
+import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.view.*
-import kotlinx.android.parcel.Parcelize
 import javax.inject.Inject
+import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 
 class CreditCardActivity : BaseActivity() {
 
     @Inject
-    lateinit var viewModel: CreditCardViewModel
+    lateinit var creditCardviewModel: CreditCardViewModel
 
-    var previousEightDigitNumber = ""
-    var cardNumber = ""
+    private var previousEightDigitNumber = ""
+    private var cardNumberWithoutSpace = ""
+    private val supportedMaxBinNumber = 8
+
+    private val totalAmount: String by lazy {
+        intent.getStringExtra(CreditCardActivity.EXTRA_TOTAL_AMOUNT)
+            ?: throw RuntimeException("Total amount must not be empty")
+    }
+
+    private val orderId: String by lazy {
+        intent.getStringExtra(CreditCardActivity.EXTRA_ORDER_ID)
+            ?: throw RuntimeException("Order ID must not be empty")
+    }
+
+    private val customerDetail: CustomerInfo? by lazy {
+        intent.getParcelableExtra(CreditCardActivity.EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
+    }
+
+    private val snapToken: String by lazy {
+        intent.getStringExtra(CreditCardActivity.EXTRA_SNAP_TOKEN).orEmpty()
+    }
+
+    companion object {
+        private const val EXTRA_SNAP_TOKEN = "card.extra.snap_token"
+        private const val EXTRA_TOTAL_AMOUNT = "card.extra.total_amount"
+        private const val EXTRA_ORDER_ID = "card.extra.order_id"
+        private const val EXTRA_CUSTOMER_DETAIL = "card.extra.customer_detail"
+
+        fun getIntent(
+            activityContext: Context,
+            snapToken: String,
+            totalAmount: String,
+            orderId: String,
+            customerInfo: CustomerInfo? = null,
+        ): Intent {
+            return Intent(activityContext, CreditCardActivity::class.java).apply {
+                putExtra(EXTRA_SNAP_TOKEN, snapToken)
+                putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
+                putExtra(EXTRA_ORDER_ID, orderId)
+                putExtra(
+                    EXTRA_CUSTOMER_DETAIL,
+                    customerInfo
+                )
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,23 +83,21 @@ class CreditCardActivity : BaseActivity() {
         //TODO: ViewModel need to be fix later
         DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build().inject(this)
         setContent {
-            CrediCardPageStateFull(
-                totalAmount = "10000",
-                orderId = "Order ID #34345445554",
-                customerDetail = CustomerDetail(
-                    "Ari Bhakti",
-                    "087788778212",
-                    listOf("Jl. ABC", "Rumah DEF")
-                )
+            CreditCardPageStateFull(
+                totalAmount = totalAmount,
+                orderId = orderId,
+                customerDetail = customerDetail,
+                viewModel = creditCardviewModel
             )
         }
     }
 
     @Composable
-    private fun CrediCardPageStateFull(
+    private fun CreditCardPageStateFull(
         totalAmount: String,
         orderId: String,
-        customerDetail: CustomerDetail
+        customerDetail: CustomerInfo? = null,
+        viewModel: CreditCardViewModel
     ) {
         val state = remember {
             NormalCardItemState(
@@ -76,14 +111,11 @@ class CreditCardActivity : BaseActivity() {
                 isExpiryTextFieldFocused = false,
                 isCvvTextFieldFocused = false,
                 isSavedCardChecked = true,
-                principalIconId = null,
-                bankIconId = null,
+                principalIconId = null
             )
         }
 
-//        val bankCode: Int by viewModel.bankIconId.observeAsState(null)
         val bankCodeId by viewModel.bankIconId.observeAsState(null)
-
         var isExpanding by remember { mutableStateOf(false) }
 
         CreditCardPageStateLess(
@@ -94,6 +126,36 @@ class CreditCardActivity : BaseActivity() {
             customerDetail = customerDetail,
             bankCodeState = bankCodeId,
             onExpand = { isExpanding = it },
+            onCardNumberValueChange = {
+
+                //TODO:Find a more elegant logic for exbin and to set/get livedata on viewModel
+                state.cardNumber = it
+                cardNumberWithoutSpace = it.text.replace(" ", "")
+                if(cardNumberWithoutSpace.length >= supportedMaxBinNumber){
+                    var eightDigitNumber = cardNumberWithoutSpace.substring(0, supportedMaxBinNumber)
+                    if (eightDigitNumber != previousEightDigitNumber){
+                        previousEightDigitNumber = eightDigitNumber
+                        viewModel.getBankName(
+                            binNumber = eightDigitNumber
+                        )
+                    }
+                } else {
+                    viewModel.setBankIconToNull()
+                    previousEightDigitNumber = cardNumberWithoutSpace
+                }
+            },
+            onClick = {
+                viewModel.chargeUsingCreditCard(
+                    grossAmount = totalAmount,
+                    cardNumber = state.cardNumber,
+                    cardExpiry = state.expiry,
+                    cardCvv = state.cvv,
+                    orderId = orderId,
+                    isSavedCard = state.isSavedCardChecked,
+                    customerEmail = "johndoe@midtrans.com",
+                    snapToken = snapToken
+                )
+            }
         )
     }
 
@@ -103,9 +165,11 @@ class CreditCardActivity : BaseActivity() {
         isExpandingState: Boolean,
         totalAmount: String,
         orderId: String,
-        customerDetail: CustomerDetail,
+        customerDetail: CustomerInfo? = null,
         bankCodeState: Int?,
-        onExpand: (Boolean) -> Unit
+        onExpand: (Boolean) -> Unit,
+        onCardNumberValueChange: (TextFieldValue) -> Unit,
+        onClick: () -> Unit
     ){
         Column() {
             SnapAppBar(title = "Credit Card", iconResId = R.drawable.ic_arrow_left) {
@@ -119,17 +183,20 @@ class CreditCardActivity : BaseActivity() {
                     SnapTotal(
                         amount = totalAmount,
                         orderId = orderId,
-                        remainingTime = null
+                        remainingTime = null,
+                        canExpand = customerDetail != null,
                     ) {
                         onExpand(it)
                     }
                 },
                 expandingContent = {
-                    SnapCustomerDetail(
-                        name = customerDetail.name,
-                        phone = customerDetail.phone,
-                        addressLines = customerDetail.addressLines
-                    )
+                    customerDetail?.let {
+                        SnapCustomerDetail(
+                            name = customerDetail.name,
+                            phone = customerDetail.phone,
+                            addressLines = customerDetail.addressLines
+                        )
+                    }
                 },
                 followingContent = {
                     Column(
@@ -142,23 +209,7 @@ class CreditCardActivity : BaseActivity() {
                             state = state,
                             bankIcon = bankCodeState,
                             onCardNumberValueChange = {
-                                state.cardNumber = it
-                                cardNumber = it.text.replace(" ", "")
-
-                                //TODO:Find a more elegant logic for exbin and to set/get livedata on viewModel
-                                if(cardNumber.length >= 8){
-                                    var eightDigitNumber = cardNumber.substring(0, 8)
-                                    if (eightDigitNumber != previousEightDigitNumber){
-                                        previousEightDigitNumber = eightDigitNumber
-                                        viewModel.getBankName(
-                                            binNumber = eightDigitNumber,
-                                            clientKey = "VT-client-yrHf-c8Sxr-ck8tx"
-                                        )
-                                    }
-                                } else {
-                                    viewModel.bankIconId.value = null
-                                    previousEightDigitNumber = cardNumber
-                                }
+                                onCardNumberValueChange(it)
                             },
                             onExpiryDateValueChange = { state.expiry = it },
                             onCvvValueChange = { state.cvv = it },
@@ -180,52 +231,7 @@ class CreditCardActivity : BaseActivity() {
                                     state.cardNumber.text.isEmpty() ||
                                     state.expiry.text.isEmpty() ||
                                     state.cvv.text.isEmpty()),
-                            onClick = {
-
-                                viewModel.getCardToken(
-                                    cardTokenRequestBuilder = NormalCardTokenRequestBuilder()
-                                        .withClientKey("VT-client-yrHf-c8Sxr-ck8tx")
-                                        .withGrossAmount(150000.0)
-                                        .withCardNumber(getCardNumberFromTextField(state.cardNumber))
-                                        .withCardExpMonth(getExpMonthFromTextField(state.expiry))
-                                        .withCardExpYear(getExpYearFromTextField(state.expiry))
-                                        .withCardCvv(state.cvv.text)
-                                        .withOrderId("cobacoba-4")
-                                        .withCurrency("IDR"),
-                                    callback = object : Callback<CardTokenResponse>{
-                                        override fun onSuccess(result: CardTokenResponse) {
-
-                                            var ccRequestBuilder = CreditCardPaymentRequestBuilder()
-                                                .withSaveCard(state.isSavedCardChecked)
-                                                .withPaymentType(PaymentType.CREDIT_CARD)
-                                                .withCustomerEmail("belajar@example.com")
-
-                                            result?.tokenId?.let {
-                                                ccRequestBuilder.withCardToken(it)
-                                            }
-                                            viewModel.chargeUsingCard(
-                                                snapToken = "b8e891f7-4515-49be-9b4d-95243e93140e",
-                                                paymentRequestBuilder = ccRequestBuilder,
-                                                callback = object : Callback<TransactionResponse> {
-                                                    override fun onSuccess(result: TransactionResponse) {
-                                                        Toast.makeText(
-                                                            this@CreditCardActivity,
-                                                            "payment is done, and the status is ${result.transactionStatus}",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
-                                                    }
-                                                    override fun onError(error: SnapError) {
-                                                        Log.e("error, error, error", "error, error, error")
-                                                    }
-                                                }
-                                            )
-                                        }
-                                        override fun onError(error: SnapError) {
-                                            Log.e("error, error, error", "error, error, error")
-                                        }
-                                    }
-                                )
-                            }
+                            onClick = { onClick() }
                         )
                     }
                 },
@@ -236,34 +242,18 @@ class CreditCardActivity : BaseActivity() {
         }
     }
 
-    private  fun getCardNumberFromTextField(value: TextFieldValue) : String{
-        return value.text.replace(" ", "")
-    }
-    private  fun getExpMonthFromTextField(value: TextFieldValue) : String{
-        return value.text.substring(0, 2)
-    }
-    private  fun getExpYearFromTextField(value: TextFieldValue) : String{
-        return return value.text.substring(3, 5)
-    }
-
     @Preview
     @Composable
     private fun forPreview() {
-        CrediCardPageStateFull(
-            totalAmount = "10000",
-            orderId = "Order ID #34345445554",
-            customerDetail = CustomerDetail(
+        CreditCardPageStateFull(
+            totalAmount = "15000",
+            orderId = "1234",
+            customerDetail = CustomerInfo(
                 "Ari Bhakti",
                 "087788778212",
                 listOf("Jl. ABC", "Rumah DEF")
-            )
+            ),
+            viewModel = creditCardviewModel
         )
     }
-
-    @Parcelize
-    private data class CustomerDetail(
-        val name: String,
-        val phone: String,
-        val addressLines: List<String>
-    ) : Parcelable
 }
