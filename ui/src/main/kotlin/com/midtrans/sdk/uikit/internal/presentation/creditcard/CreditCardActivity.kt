@@ -135,7 +135,7 @@ class CreditCardActivity : BaseActivity() {
                     var eightDigitNumber = cardNumberWithoutSpace.substring(0, supportedMaxBinNumber)
                     if (eightDigitNumber != previousEightDigitNumber){
                         previousEightDigitNumber = eightDigitNumber
-                        viewModel.getBankName(
+                        viewModel.getBankIconImage(
                             binNumber = eightDigitNumber
                         )
                     }

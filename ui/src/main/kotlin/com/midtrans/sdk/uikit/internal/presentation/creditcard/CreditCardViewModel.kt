@@ -25,7 +25,7 @@ class CreditCardViewModel @Inject constructor(
 
 
     //TODO: should this be move to repository?
-    fun getBankName(binNumber: String) {
+    fun getBankIconImage(binNumber: String) {
         snapCore.getBinData(
             binNumber = binNumber,
             callback = object : Callback<BinResponse> {
