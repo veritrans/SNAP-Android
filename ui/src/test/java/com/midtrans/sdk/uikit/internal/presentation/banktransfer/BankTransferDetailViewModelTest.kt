@@ -61,11 +61,11 @@ internal class BankTransferDetailViewModelTest {
             snapToken = snapToken,
             paymentType = paymentType
         )
-        val callbackCaptor: ArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
+        val callbackCaptor: KArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
         verify(snapCore).pay(
             snapToken = eq(snapToken),
             paymentRequestBuilder = any(),
-            callback = capture(callbackCaptor)
+            callback = callbackCaptor.capture()
         )
     }
 
@@ -97,14 +97,14 @@ internal class BankTransferDetailViewModelTest {
             snapToken = snapToken,
             paymentType = paymentType
         )
-        val callbackCaptor: ArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
+        val callbackCaptor: KArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
         verify(snapCore).pay(
             snapToken = eq(snapToken),
             paymentRequestBuilder = any(),
-            callback = capture(callbackCaptor)
+            callback = callbackCaptor.capture()
         )
         val bniVa = "123456"
-        val callback = callbackCaptor.value
+        val callback = callbackCaptor.firstValue
         callback.onSuccess(
             TransactionResponse(
                 bniVaNumber = bniVa,
@@ -116,8 +116,6 @@ internal class BankTransferDetailViewModelTest {
         Assert.assertEquals("00:00:01", bankTransferDetailViewModel.getExpiredHour())
 
     }
-
-    inline fun <reified T : Any> argumentCaptor() = ArgumentCaptor.forClass(T::class.java)
 
     fun <T> LiveData<T>.getOrAwaitValue(
         time: Long = 2,
