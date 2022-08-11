@@ -21,6 +21,8 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.*
 import kotlinx.android.parcel.Parcelize
 
+
+//TODO: Need to fix this later when implementing Saved Card
 class SavedCardActivity: BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
