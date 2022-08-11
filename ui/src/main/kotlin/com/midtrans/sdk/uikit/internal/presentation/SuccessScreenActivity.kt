@@ -29,7 +29,6 @@ import com.midtrans.sdk.uikit.internal.view.SnapColors
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import kotlinx.parcelize.Parcelize
 
-
 class SuccessScreenActivity : BaseActivity() {
 
     private val data: SuccessData by lazy {

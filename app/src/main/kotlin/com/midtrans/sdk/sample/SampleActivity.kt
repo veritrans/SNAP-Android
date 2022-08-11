@@ -23,7 +23,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
 import com.midtrans.sdk.uikit.internal.presentation.loadingpayment.LoadingPaymentActivity
+import com.midtrans.sdk.uikit.external.model.PaymentList
+import com.midtrans.sdk.uikit.external.model.PaymentMethod
+import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
+import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
+import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity.Companion.openPaymentOptionPage
 import com.midtrans.sdk.uikit.internal.view.SnapButton
+import java.util.*
 
 class SampleActivity : AppCompatActivity() {
 
@@ -237,7 +243,7 @@ class SampleActivity : AppCompatActivity() {
                 val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
                     this@SampleActivity,
                     SnapTransactionDetail(
-                        orderId = "1111-2222-3232",
+                        orderId = UUID.randomUUID().toString(),
                         grossAmount = 15005.00
                     )
                 )

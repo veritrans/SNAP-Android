@@ -1,10 +1,12 @@
 package com.midtrans.sdk.uikit.internal.presentation.paymentoption
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -250,6 +252,7 @@ class PaymentOptionActivity : BaseActivity() {
                                 getOnPaymentItemClick(
                                     customerInfo = customerInfo,
                                     totalAmount = totalAmount,
+                                    paymentMethodItem = payment,
                                     orderId = orderId
                                 )[payment.type]?.invoke()
                             }
@@ -264,23 +267,29 @@ class PaymentOptionActivity : BaseActivity() {
         }
     }
 
+    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            finish()
+        }
+    }
+
     private fun getOnPaymentItemClick(
         totalAmount: String,
         orderId: String,
+        paymentMethodItem: PaymentMethodItem,
         customerInfo: CustomerInfo?,
     ): Map<String, () -> Unit> {
         return mapOf(
             Pair("bank_transfer") {
-                startActivity(
+                resultLauncher.launch(
                     BankTransferListActivity.getIntent(
                         activityContext = this,
                         snapToken = snapToken,
                         orderId = orderId,
                         totalAmount = totalAmount,
+                        paymentMethodItem = paymentMethodItem,
                         customerInfo = customerInfo,
-                        companyCode = "7777", //TODO: obtain companyCode, billingNumber, vaNumber from paymentOptions
-                        billingNumber = "84034832048",
-                        vaNumber = "439403943094039"
+                        destinationBankCode = "009 - Permata"  //TODO: clarify if always permata or something
                     )
                 )
             }

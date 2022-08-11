@@ -4,23 +4,21 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.intl.Locale
-import androidx.compose.ui.text.toLowerCase
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
 import com.midtrans.sdk.uikit.internal.view.SnapOverlayExpandingBox
 import com.midtrans.sdk.uikit.internal.view.SnapSingleIconListItem
@@ -31,13 +29,13 @@ class BankTransferListActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            setupView()
+            setupView(paymentMethodItem = paymentMethodItem)
         }
     }
 
     @Composable
     fun Content(
-        bankList: List<Pair<String, Int>>
+        paymentMethodItem: PaymentMethodItem
     ) {
         var expanding by remember {
             mutableStateOf(false)
@@ -70,13 +68,16 @@ class BankTransferListActivity : BaseActivity() {
                 }
             ) {
                 LazyColumn {
-                    bankList.forEach() { s ->
+                    paymentMethodItem.methods.forEachIndexed { index, method ->
                         item {
-                            SnapSingleIconListItem(title = s.first, iconResId = s.second,
-                                modifier = Modifier.clickable {
-                                    toBankTransferDetail(s.first)
-                                }
-                            )
+                            bankNameMap[method]?.let {
+                                SnapSingleIconListItem(title = stringResource(it.first),
+                                    iconResId = it.second,
+                                    modifier = Modifier.clickable {
+                                        toBankTransferDetail(method)
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -84,31 +85,25 @@ class BankTransferListActivity : BaseActivity() {
         }
     }
 
-    //TODO: bank list from payment method list
     @Composable
-    fun setupView() {
+    fun setupView(paymentMethodItem: PaymentMethodItem) {
         Content(
-            bankList = listOf(
-                Pair("Mandiri", R.drawable.ic_bank_mandiri_40),
-                Pair("BCA", R.drawable.ic_bank_bca_40),
-                Pair("BNI", R.drawable.ic_bank_bni_40)
-            )
+            paymentMethodItem = paymentMethodItem
         )
     }
 
-    private fun toBankTransferDetail(bank: String) {
-        startActivity(
+    private fun toBankTransferDetail(method: String) {
+        val intent =
             BankTransferDetailActivity.getIntent(
                 activityContext = this,
-                bankName = bank.toLowerCase(Locale.current),
+                paymentType = method,
                 customerInfo = customerInfo,
                 orderId = orderId,
                 totalAmount = totalAmount,
-                companyCode = companyCode,
-                billingNumber = billingNumber,
-                vaNumber = vaNumber
+                destinationBankCode = destinationBankCode,
+                snapToken = snapToken
             )
-        )
+        resultLauncher.launch(intent)
     }
 
     private val snapToken: String by lazy {
@@ -130,50 +125,65 @@ class BankTransferListActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
     }
 
-    private val vaNumber: String? by lazy {
-        intent.getStringExtra(EXTRA_VANUMBER)
+    private val destinationBankCode: String? by lazy {
+        intent.getStringExtra(EXTRA_DESTINATIONBANKCODE)
     }
 
-    private val companyCode: String? by lazy {
-        intent.getStringExtra(EXTRA_COMPANYCODE)
+    private val paymentMethodItem: PaymentMethodItem by lazy {
+        intent.getParcelableExtra(EXTRA_PAYMENT_METHOD_ITEM) as? PaymentMethodItem
+            ?: throw RuntimeException("Order ID must not be empty")
     }
 
-    private val billingNumber: String? by lazy {
-        intent.getStringExtra(EXTRA_BILLINGNUMBER)
+    private val bankNameMap by lazy {
+        mapOf(
+            Pair(PaymentType.BCA_VA, Pair(R.string.bank_bca, R.drawable.ic_bank_bca_40)),
+            Pair(
+                PaymentType.PERMATA_VA,
+                Pair(R.string.bank_permata, R.drawable.ic_bank_permata_40)
+            ),
+            Pair(PaymentType.BRI_VA, Pair(R.string.bank_bri, R.drawable.ic_bank_bri_40)),
+            Pair(PaymentType.BNI_VA, Pair(R.string.bank_bni, R.drawable.ic_bank_bni_40)),
+            Pair(PaymentType.E_CHANNEL, Pair(R.string.bank_mandiri, R.drawable.ic_bank_mandiri_40)),
+            Pair(PaymentType.ALL_VA, Pair(R.string.bank_other, R.drawable.ic_bank_others_40))
+        )
     }
+
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                setResult(RESULT_OK)
+                finish()
+            }
+        }
 
     companion object {
         private const val EXTRA_SNAP_TOKEN = "bankTransfer.extra.snap_token"
         private const val EXTRA_TOTAL_AMOUNT = "bankTransfer.extra.total_amount"
         private const val EXTRA_ORDER_ID = "bankTransfer.extra.order_id"
+        private const val EXTRA_DESTINATIONBANKCODE = "bankTransfer.extra.destinationbankcode"
         private const val EXTRA_CUSTOMER_INFO = "bankTransfer.extra.customer_info"
-        private const val EXTRA_VANUMBER = "bankTransfer.extra.vanumber"
-        private const val EXTRA_COMPANYCODE = "bankTransfer.extra.companycode"
-        private const val EXTRA_BILLINGNUMBER = "bankTransfer.extra.billingnumber"
+        private const val EXTRA_PAYMENT_METHOD_ITEM = "bankTransfer.extra.payment_method_item"
 
         fun getIntent(
             activityContext: Context,
             snapToken: String,
             totalAmount: String,
             orderId: String,
-            vaNumber: String? = null,
-            companyCode: String? = null,
-            billingNumber: String? = null,
+            paymentMethodItem: PaymentMethodItem,
+            destinationBankCode: String? = null,
             customerInfo: CustomerInfo? = null
         ): Intent {
             return Intent(activityContext, BankTransferListActivity::class.java).apply {
-                putExtra(snapToken, EXTRA_SNAP_TOKEN)
+                putExtra(EXTRA_SNAP_TOKEN, snapToken)
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
-                putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
-                vaNumber?.let {
-                    putExtra(EXTRA_VANUMBER, it)
-                }
-                companyCode?.let {
-                    putExtra(EXTRA_COMPANYCODE, it)
-                }
-                billingNumber?.let {
-                    putExtra(EXTRA_BILLINGNUMBER, it)
+                putExtra(EXTRA_PAYMENT_METHOD_ITEM, paymentMethodItem)
+                putExtra(
+                    EXTRA_CUSTOMER_INFO,
+                    customerInfo
+                )
+                destinationBankCode?.let {
+                    putExtra(EXTRA_DESTINATIONBANKCODE, it)
                 }
             }
         }
