@@ -7,7 +7,7 @@ object Dependencies {
     const val navigationFragmentKtxVersion = "2.3.1"
     const val junitVersion = "4.13.1"
     const val androidxJunitVersion = "1.1.2"
-    const val androidxArchTestingVersion = "2.1.0"
+    const val androidxArchTestingVersion = "2.0.0"
     const val espressoCoreVersion = "3.3.0"
     const val appCompatVersion = "1.2.0"
     const val materialDesignComponentVersion = "1.2.1"
@@ -45,6 +45,7 @@ object Dependencies {
     const val androidxDatastoreVersion = "1.0.0"
     const val composeVersion = "1.2.0-rc02"
     const val hamcrestVersion = "2.2"
+    const val coreLibraryDesugaringVersion = "1.1.5"
 }
 
 object CommonLibraries {
@@ -63,6 +64,8 @@ object CommonLibraries {
     const val zxing = "com.journeyapps:zxing-android-embedded:${Dependencies.zxingVersion}"
     const val androidxDatastore =
         "androidx.datastore:datastore-preferences:${Dependencies.androidxDatastoreVersion}"
+    const val coreLibraryDesugaring = "com.android.tools:desugar_jdk_libs:${Dependencies.coreLibraryDesugaringVersion}"
+
 
 }
 
@@ -172,7 +175,7 @@ object ComposeUiLibraries {
     const val composeConstraintLayout = "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha03"
     const val composeAnimatedDrawable = "androidx.compose.animation:animation-graphics:${Dependencies.composeVersion}"
     const val composeAnimation = "androidx.compose.animation:animation:${Dependencies.composeVersion}"
-
+    const val composeRxjava = "androidx.compose.runtime:runtime-rxjava2:${Dependencies.composeVersion}"
 }
 
 object TestLibraries {

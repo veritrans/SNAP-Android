@@ -1,12 +1,12 @@
 package com.midtrans.sdk.uikit.internal.presentation.paymentoption
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.DisplayMetrics
-import android.widget.Toast
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -23,9 +23,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
+import com.midtrans.sdk.corekit.api.model.CustomerDetails
+import com.midtrans.sdk.corekit.api.model.PaymentMethod
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.uikit.external.model.PaymentList
+import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
@@ -35,40 +37,42 @@ import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
 import com.midtrans.sdk.uikit.internal.view.SnapMultiIconListItem
 import com.midtrans.sdk.uikit.internal.view.SnapOverlayExpandingBox
 import com.midtrans.sdk.uikit.internal.view.SnapTotal
-import kotlinx.parcelize.Parcelize
 import kotlin.math.sqrt
 
 class PaymentOptionActivity : BaseActivity() {
 
     companion object {
+        const val EXTRA_SNAP_TOKEN = "paymentOptionActivity.extra.snap_token"
         const val EXTRA_TOTAL_AMOUNT = "paymentOptionActivity.extra.total_amount"
         const val EXTRA_ORDER_ID = "paymentOptionActivity.extra.order_id"
         const val EXTRA_PAYMENT_LIST = "paymentOptionActivity.extra.payment_list"
-        const val EXTRA_CUSTOMER_DETAIL = "paymentOptionActivity.extra.customer_detail"
+        const val EXTRA_CUSTOMER_DETAILS = "paymentOptionActivity.extra.customer_details"
 
         fun openPaymentOptionPage(
             activityContext: Context,
+            snapToken: String,
             totalAmount: String,
             orderId: String,
-            paymentList: PaymentList,
-            customerName: String,
-            customerPhone: String,
-            addressLines: List<String>
+            paymentList: List<PaymentMethod>,
+            customerDetails: CustomerDetails?
         ): Intent {
             return Intent(activityContext, PaymentOptionActivity::class.java).apply {
+                putExtra(EXTRA_SNAP_TOKEN, snapToken)
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
-                putExtra(EXTRA_PAYMENT_LIST, paymentList)
-                putExtra(
-                    EXTRA_CUSTOMER_DETAIL,
-                    CustomerDetail(customerName, customerPhone, addressLines)
-                )
+                putParcelableArrayListExtra(EXTRA_PAYMENT_LIST, ArrayList(paymentList))
+                putExtra(EXTRA_CUSTOMER_DETAILS, customerDetails)
             }
         }
     }
 
     private val viewModel: PaymentOptionViewModel by lazy {
         ViewModelProvider(this).get(PaymentOptionViewModel::class.java)
+    }
+
+    private val snapToken: String by lazy {
+        intent.getStringExtra(EXTRA_SNAP_TOKEN)
+            ?: throw RuntimeException("Snap token must not be empty")
     }
 
     private val totalAmount: String by lazy {
@@ -81,15 +85,16 @@ class PaymentOptionActivity : BaseActivity() {
             ?: throw RuntimeException("Order ID must not be empty")
     }
 
-    private val paymentList: PaymentList by lazy {
-        intent.getParcelableExtra(EXTRA_PAYMENT_LIST) as? PaymentList
+    private val paymentList: List<PaymentMethod> by lazy {
+        intent.getParcelableArrayListExtra<PaymentMethod>(EXTRA_PAYMENT_LIST) as? List<PaymentMethod>
             ?: throw RuntimeException("Payment list must not be empty")
     }
 
-    private val customerDetail: CustomerDetail by lazy {
-        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerDetail
-            ?: throw RuntimeException("Customer detail must not be empty")
+    private val customerDetail: CustomerDetails? by lazy {
+        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAILS) as? CustomerDetails
     }
+
+    private var customerInfo: CustomerInfo? = null
 
     private lateinit var paymentMethods: PaymentMethodList
 
@@ -97,12 +102,13 @@ class PaymentOptionActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         paymentMethods = viewModel.initiateList(paymentList, isTabletDevice())
+        customerInfo = viewModel.getCustomerInfo(customerDetail)
 
         setContent {
             PaymentOptionPage(
                 totalAmount = totalAmount,
                 orderId = orderId,
-                customerDetail = customerDetail,
+                customerInfo = customerInfo,
                 paymentMethods = paymentMethods
             )
         }
@@ -126,7 +132,7 @@ class PaymentOptionActivity : BaseActivity() {
         PaymentOptionPage(
             "Rp33.990",
             "#00-11-22-33",
-            CustomerDetail(
+            CustomerInfo(
                 "Ari Bhakti",
                 "087788778212",
                 listOf("Jl. ABC", "Rumah DEF")
@@ -202,7 +208,7 @@ class PaymentOptionActivity : BaseActivity() {
     private fun PaymentOptionPage(
         totalAmount: String,
         orderId: String,
-        customerDetail: CustomerDetail,
+        customerInfo: CustomerInfo?,
         paymentMethods: PaymentMethodList
     ) {
         var isExpand by remember { mutableStateOf(false) }
@@ -216,17 +222,20 @@ class PaymentOptionActivity : BaseActivity() {
                     SnapTotal(
                         amount = totalAmount,
                         orderId = orderId,
+                        canExpand = customerInfo != null,
                         remainingTime = null
                     ) {
                         isExpand = it
                     }
                 },
-                expandingContent = {
-                    SnapCustomerDetail(
-                        name = customerDetail.name,
-                        phone = customerDetail.phone,
-                        addressLines = customerDetail.addressLines
+                expandingContent = customerInfo?.let {
+                    {
+                        SnapCustomerDetail(
+                            name = it.name,
+                        phone = it.phone,
+                        addressLines = it.addressLines
                     )
+                }
                 },
                 followingContent = {
                     LazyColumn {
@@ -240,15 +249,10 @@ class PaymentOptionActivity : BaseActivity() {
                                 title = stringResource(payment.titleId),
                                 iconList = payment.icons
                             ) {
-                                //TODO create intent to go to selected payment method page
-                                Toast.makeText(
-                                    this@PaymentOptionActivity,
-                                    "${payment.type}",
-                                    Toast.LENGTH_LONG
-                                ).show()
                                 getOnPaymentItemClick(
-                                    customerDetail = customerDetail,
+                                    customerInfo = customerInfo,
                                     totalAmount = totalAmount,
+                                    paymentMethodItem = payment,
                                     orderId = orderId
                                 )[payment.type]?.invoke()
                             }
@@ -263,33 +267,32 @@ class PaymentOptionActivity : BaseActivity() {
         }
     }
 
+    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            finish()
+        }
+    }
+
     private fun getOnPaymentItemClick(
         totalAmount: String,
         orderId: String,
-        customerDetail: CustomerDetail,
+        paymentMethodItem: PaymentMethodItem,
+        customerInfo: CustomerInfo?,
     ): Map<String, () -> Unit> {
         return mapOf(
             Pair("bank_transfer") {
-                startActivity(
+                resultLauncher.launch(
                     BankTransferListActivity.getIntent(
                         activityContext = this,
-                        customerName = customerDetail.name,
-                        customerPhone = customerDetail.phone,
-                        addressLines = customerDetail.addressLines,
+                        snapToken = snapToken,
                         orderId = orderId,
                         totalAmount = totalAmount,
-                        snapToken = "7777", //TODO: obtain snap token paymentOptions
-                        destinationBankCode = "009 - Permata"
+                        paymentMethodItem = paymentMethodItem,
+                        customerInfo = customerInfo,
+                        destinationBankCode = "009 - Permata"  //TODO: clarify if always permata or something
                     )
                 )
             }
         )
     }
-
-    @Parcelize
-    private data class CustomerDetail(
-        val name: String,
-        val phone: String,
-        val addressLines: List<String>
-    ) : Parcelable
 }

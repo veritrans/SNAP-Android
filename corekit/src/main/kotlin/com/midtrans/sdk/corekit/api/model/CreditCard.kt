@@ -1,9 +1,13 @@
 package com.midtrans.sdk.corekit.api.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class CreditCard(
     val saveCard: Boolean = false,
     val tokenId: String? = null,
-    val isSecure: Boolean = false,
+    val secure: Boolean = false,
     val channel: String? = null,
     val bank: String? = null,
     val savedTokens: List<SavedToken>? = null,
@@ -11,9 +15,8 @@ data class CreditCard(
     val blacklistBins: List<String>? = null,
     val installment: Installment? = null,
     val type: String? = null,
-    val authentication: String? = null,
-
-    ) {
+    val authentication: String? = null
+) : Parcelable {
     companion object {
         const val MIGS = "migs"
 

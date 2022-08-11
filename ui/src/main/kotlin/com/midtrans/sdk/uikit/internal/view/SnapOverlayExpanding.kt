@@ -72,6 +72,7 @@ fun SnapTotal(
     amount: String,
     orderId: String,
     remainingTime: String?,
+    canExpand: Boolean,
     onExpandClick: (isExpand: Boolean) -> Unit
 ) {
     var isExpand by remember { mutableStateOf(false) }
@@ -104,16 +105,19 @@ fun SnapTotal(
                 color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY),
                 modifier = Modifier.weight(1f)
             )
-            IconButton(onClick = {
-                isExpand = !isExpand
-                iconExpand = if (isExpand) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down
-                onExpandClick.invoke(isExpand)
-            }) {
-                Icon(
-                    painter = painterResource(id = iconExpand),
-                    contentDescription = null
-                )
+            if (canExpand) {
+                IconButton(onClick = {
+                    isExpand = !isExpand
+                    iconExpand =
+                        if (isExpand) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down
+                    onExpandClick.invoke(isExpand)
+                }) {
+                    Icon(
+                        painter = painterResource(id = iconExpand),
+                        contentDescription = null
+                    )
 
+                }
             }
         }
         Text(

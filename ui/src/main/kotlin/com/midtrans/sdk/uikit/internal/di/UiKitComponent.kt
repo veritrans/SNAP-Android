@@ -1,9 +1,11 @@
 package com.midtrans.sdk.uikit.internal.di
 
 import android.content.Context
+import com.midtrans.sdk.uikit.internal.di.viewmodel.UtilModule
 import com.midtrans.sdk.uikit.internal.di.viewmodel.ViewModelFactoryModule
 import com.midtrans.sdk.uikit.internal.di.viewmodel.ViewModelModule
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDetailActivity
+import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDetailViewModel
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
 import dagger.BindsInstance
 import dagger.Component
@@ -17,9 +19,10 @@ import javax.inject.Singleton
         ViewModelFactoryModule::class,
         ViewModelModule::class,
         CoreModule::class,
+        UtilModule::class
     ]
 )
-interface UiKitComponent {
+internal interface UiKitComponent {
     @Component.Builder
     interface Builder {
         @BindsInstance
@@ -27,5 +30,5 @@ interface UiKitComponent {
         fun build(): UiKitComponent
     }
 
-    fun inject(activity: CreditCardActivity)
+    fun inject(activity: BankTransferDetailActivity)
 }

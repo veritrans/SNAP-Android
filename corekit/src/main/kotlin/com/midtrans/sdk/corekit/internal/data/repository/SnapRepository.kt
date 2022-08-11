@@ -4,6 +4,7 @@ import com.midtrans.sdk.corekit.api.model.BankPointResponse
 import com.midtrans.sdk.corekit.api.model.DeleteSavedCardResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.network.model.request.PaymentRequest
+import com.midtrans.sdk.corekit.internal.network.model.response.Transaction
 import com.midtrans.sdk.corekit.internal.network.restapi.SnapApi
 import io.reactivex.Single
 
@@ -21,5 +22,8 @@ internal class SnapRepository(private val snapApi: SnapApi): BaseRepository() {
         grossAmount: Double
     ): Single<BankPointResponse> {
         return snapApi.getBankPoint(snapToken, cardToken, grossAmount)
+    }
+    fun getTransactionDetail(snapToken: String): Single<Transaction> {
+        return snapApi.getPaymentOption(snapToken)
     }
 }

@@ -14,9 +14,4 @@ internal abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(BankTransferDetailViewModel::class)
     abstract fun bindWalletPaymentViewModel(viewModel: BankTransferDetailViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(CreditCardViewModel::class)
-    abstract fun bindCreditCardViewModel(viewModel: CreditCardViewModel): ViewModel
 }

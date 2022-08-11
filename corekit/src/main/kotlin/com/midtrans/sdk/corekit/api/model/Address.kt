@@ -1,6 +1,10 @@
 package com.midtrans.sdk.corekit.api.model
 
-data class BillingAddress(
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class Address(
     val firstName: String? = null,
     val lastName: String? = null,
     val address: String? = null,
@@ -8,4 +12,4 @@ data class BillingAddress(
     val postalCode: String? = null,
     val phone: String? = null,
     val countryCode: String? = null
-)
+) : Parcelable

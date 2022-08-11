@@ -2,7 +2,7 @@ package com.midtrans.sdk.corekit.internal.network.model.response
 
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.CustomerDetails
-import com.midtrans.sdk.corekit.api.model.Gopay
+import com.midtrans.sdk.corekit.api.model.PaymentCallback
 import com.midtrans.sdk.corekit.api.model.ItemDetails
 
 internal data class Transaction(
@@ -16,5 +16,5 @@ internal data class Transaction(
     val promoDetails: PromoDetails? = null,
     val itemDetails: List<ItemDetails>? = null,
     val customerDetails: CustomerDetails? = null,
-    val gopay: Gopay? = null
+    val gopay: PaymentCallback? = null
 )

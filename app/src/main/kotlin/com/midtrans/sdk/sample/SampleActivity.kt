@@ -1,6 +1,5 @@
 package com.midtrans.sdk.sample
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -11,19 +10,26 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.SnapCore
+import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
+import com.midtrans.sdk.uikit.internal.presentation.loadingpayment.LoadingPaymentActivity
 import com.midtrans.sdk.uikit.external.model.PaymentList
 import com.midtrans.sdk.uikit.external.model.PaymentMethod
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity.Companion.openPaymentOptionPage
 import com.midtrans.sdk.uikit.internal.view.SnapButton
+import java.util.*
 
 class SampleActivity : AppCompatActivity() {
 
@@ -33,10 +39,12 @@ class SampleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        SnapCore.Builder().withContext(this.applicationContext).build()
+        SnapCore.Builder()
+            .withContext(this.applicationContext)
+            .withMerchantUrl("https://charmenzy-mid-mobile-sandbox.herokuapp.com/")
+            .withMerchantClientKey("SB-Mid-client-zt7XrRxPQXZNvuBY")
+            .build()
         viewModel.getHelloFromSnap()
-        //TODO: move to ui kit
-        DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build()
         setContent { Greeting() }
     }
 
@@ -167,75 +175,81 @@ class SampleActivity : AppCompatActivity() {
                 text = "To Sample UI",
                 style = SnapButton.Style.PRIMARY
             ) {
-                startActivity(Intent(this@SampleActivity, SampleUiActivity::class.java))
-                val intent = openPaymentOptionPage(
+//                startActivity(Intent(this@SampleActivity, SampleUiActivity::class.java))
+//                val intent = openPaymentOptionPage(
+//                    this@SampleActivity,
+//                    "Rp33.990",
+//                    "#00-11-22-33",
+//                    PaymentList(
+//                        listOf(
+//                            PaymentMethod(
+//                                type = "shopeepay",
+//                                status = "up"
+//                            ),
+//                            PaymentMethod(
+//                                type = "qris",
+//                                acquirer = "shopeepay",
+//                                status = "up"
+//                            ),
+//                            PaymentMethod(
+//                                type = "uob_ezpay",
+//                                mode = listOf(
+//                                    "uob_ezpay_web",
+//                                    "uob_ezpay_deeplink"
+//                                ),
+//                                status = "up"
+//                            ),
+//                            PaymentMethod(
+//                                type = "cimb_clicks",
+//                                status = "up"
+//                            ),
+//                            PaymentMethod(
+//                                type = "bca_klikbca",
+//                                status = "up"
+//                            ),
+//                            PaymentMethod(
+//                                type = "bri_epay",
+//                                status = "up"
+//                            ),
+//                            PaymentMethod(
+//                                type = "bca_klikpay",
+//                                status = "up"
+//                            ),
+//                            PaymentMethod(
+//                                type = "credit_card",
+//                                status = "up"
+//                            ),
+//                            PaymentMethod(
+//                                type = "bca_va",
+//                                category = "bank_transfer",
+//                                status = "up"
+//                            ),
+//                            PaymentMethod(
+//                                type = "bni_va",
+//                                category = "bank_transfer",
+//                                status = "up"
+//                            ),
+//                            PaymentMethod(
+//                                type = "echannel",
+//                                category = "bank_transfer",
+//                                status = "up"
+//                            )
+//                        )
+//                    ),
+//                    "Ari Bhakti",
+//                    "087788778212",
+//                    listOf("Jl. ABC", "Rumah DEF")
+//                )
+                val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
                     this@SampleActivity,
-                    "Rp33.990",
-                    "#00-11-22-33",
-                    PaymentList(
-                        listOf(
-                            PaymentMethod(
-                                type = "shopeepay",
-                                status = "up"
-                            ),
-                            PaymentMethod(
-                                type = "qris",
-                                acquirer = "shopeepay",
-                                status = "up"
-                            ),
-                            PaymentMethod(
-                                type = "uob_ezpay",
-                                mode = listOf(
-                                    "uob_ezpay_web",
-                                    "uob_ezpay_deeplink"
-                                ),
-                                status = "up"
-                            ),
-                            PaymentMethod(
-                                type = "cimb_clicks",
-                                status = "up"
-                            ),
-                            PaymentMethod(
-                                type = "bca_klikbca",
-                                status = "up"
-                            ),
-                            PaymentMethod(
-                                type = "bri_epay",
-                                status = "up"
-                            ),
-                            PaymentMethod(
-                                type = "bca_klikpay",
-                                status = "up"
-                            ),
-                            PaymentMethod(
-                                type = "credit_card",
-                                status = "up"
-                            ),
-                            PaymentMethod(
-                                type = "bca_va",
-                                category = "bank_transfer",
-                                status = "up"
-                            ),
-                            PaymentMethod(
-                                type = "bni_va",
-                                category = "bank_transfer",
-                                status = "up"
-                            ),
-                            PaymentMethod(
-                                type = "echannel",
-                                category = "bank_transfer",
-                                status = "up"
-                            )
-                        )
-                    ),
-                    "Ari Bhakti",
-                    "087788778212",
-                    listOf("Jl. ABC", "Rumah DEF")
+                    SnapTransactionDetail(
+                        orderId = UUID.randomUUID().toString(),
+                        grossAmount = 15005.00
+                    )
                 )
                 startActivity(
                     intent
                 )
-
             }
         }
     }
