@@ -18,18 +18,17 @@ import com.midtrans.sdk.corekit.internal.data.repository.CoreApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.MerchantApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.SnapRepository
 import com.midtrans.sdk.corekit.internal.network.model.response.EnabledPayment
-import com.midtrans.sdk.corekit.internal.scheduler.SdkScheduler
+import com.midtrans.sdk.corekit.internal.scheduler.BaseSdkScheduler
 import io.reactivex.Single
 
 internal class PaymentUsecase(
-    private val scheduler: SdkScheduler,
+    private val scheduler: BaseSdkScheduler,
     private val snapRepository: SnapRepository,
     private val coreApiRepository: CoreApiRepository,
     private val merchantApiRepository: MerchantApiRepository,
     private val clientKey: String
 ) {
 
-    //TODO will add UT after PR, need to PR fast for integration
     @SuppressLint("CheckResult")
     fun getPaymentOption(
         snapToken: String?,
@@ -40,16 +39,12 @@ internal class PaymentUsecase(
             merchantApiRepository
                 .getSnapToken(requestBuilder.build())
                 .onErrorResumeNext {
-                    if (it is SnapError) {
-                        Single.error(it)
-                    } else {
-                        Single.error(
-                            SnapError(
-                                cause = it,
-                                message = "Failed on getting snap token"
-                            )
+                    Single.error(
+                        SnapError(
+                            cause = it,
+                            message = "Failed on getting snap token"
                         )
-                    }
+                    )
                 }
                 .flatMap { response ->
                     snapRepository

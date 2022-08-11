@@ -32,7 +32,7 @@ internal class NormalCardTokenRequestBuilderTest {
             .build()
 
         Assert.assertEquals(clientKey, request.getValue(CreditCardTokenRequestBuilder.CLIENT_KEY))
-        Assert.assertEquals(grossAmount?.let { NumberUtil.formatDoubleToString(it) }, request.getValue(CreditCardTokenRequestBuilder.GROSS_AMOUNT))
+        Assert.assertEquals(NumberUtil.formatDoubleToString(grossAmount), request.getValue(CreditCardTokenRequestBuilder.GROSS_AMOUNT))
         Assert.assertEquals(cardNumber, request.getValue(CreditCardTokenRequestBuilder.CARD_NUMBER))
         Assert.assertEquals(expMonth, request.getValue(CreditCardTokenRequestBuilder.CARD_EXPIRY_MONTH))
         Assert.assertEquals(expYear, request.getValue(CreditCardTokenRequestBuilder.CARD_EXPIRY_YEAR))
@@ -52,11 +52,15 @@ internal class NormalCardTokenRequestBuilderTest {
             .withCardCvv(cvv)
             .withOrderId(orderId)
             .withCurrency(currency)
-            .withInstallment(installment)
+            .withInstallment(
+                value = installment.installment,
+                installmentTerm = installment.installmentTerm,
+                bank = installment.bank
+            )
             .build()
 
         Assert.assertEquals(clientKey, request.getValue(CreditCardTokenRequestBuilder.CLIENT_KEY))
-        Assert.assertEquals(grossAmount?.let { NumberUtil.formatDoubleToString(it) }, request.getValue(CreditCardTokenRequestBuilder.GROSS_AMOUNT))
+        Assert.assertEquals(NumberUtil.formatDoubleToString(grossAmount), request.getValue(CreditCardTokenRequestBuilder.GROSS_AMOUNT))
         Assert.assertEquals(cardNumber, request.getValue(CreditCardTokenRequestBuilder.CARD_NUMBER))
         Assert.assertEquals(expMonth, request.getValue(CreditCardTokenRequestBuilder.CARD_EXPIRY_MONTH))
         Assert.assertEquals(expYear, request.getValue(CreditCardTokenRequestBuilder.CARD_EXPIRY_YEAR))
