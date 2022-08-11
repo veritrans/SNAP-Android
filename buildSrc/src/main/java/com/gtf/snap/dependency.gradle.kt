@@ -45,6 +45,7 @@ object Dependencies {
     const val androidxDatastoreVersion = "1.0.0"
     const val composeVersion = "1.2.0-rc02"
     const val hamcrestVersion = "2.2"
+    const val coreLibraryDesugaringVersion = "1.1.5"
 }
 
 object CommonLibraries {
@@ -63,6 +64,8 @@ object CommonLibraries {
     const val zxing = "com.journeyapps:zxing-android-embedded:${Dependencies.zxingVersion}"
     const val androidxDatastore =
         "androidx.datastore:datastore-preferences:${Dependencies.androidxDatastoreVersion}"
+    const val coreLibraryDesugaring = "com.android.tools:desugar_jdk_libs:${Dependencies.coreLibraryDesugaringVersion}"
+
 
 }
 

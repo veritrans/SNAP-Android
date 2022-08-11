@@ -59,12 +59,6 @@ internal class BankTransferDetailViewModel @Inject constructor(
     }
 
     private fun parseTime(dateString: String): Long {
-        datetimeUtil.getDate(
-            date = dateString,
-            dateFormat = DATE_FORMAT,
-            timeZone = timeZoneUtc,
-            locale = Locale.ENGLISH
-        )
         val expCalendar = Calendar.getInstance()
         expCalendar.time =
             datetimeUtil.getDate(
@@ -82,12 +76,12 @@ internal class BankTransferDetailViewModel @Inject constructor(
                 datetimeUtil.getCurrentMillis(),
                 expiredTime
             )
-        ).toPeriod()
+        )
         return String.format(
             "%02d:%02d:%02d",
-            duration.hours,
-            duration.minutes,
-            duration.seconds
+            duration.toHours(),
+            duration.toMinutesPart(),
+            duration.toSecondsPart()
         )
     }
 

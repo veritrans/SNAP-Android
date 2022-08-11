@@ -8,9 +8,6 @@ import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
-import org.joda.time.DateTimeUtils
-import org.joda.time.DateTimeZone
-import org.joda.time.Duration
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -19,6 +16,9 @@ import org.junit.rules.TestRule
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.*
+import java.time.Clock
+import java.time.Duration
+import java.time.Instant
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -30,11 +30,22 @@ internal class BankTransferDetailViewModelTest {
     var rule: TestRule = InstantTaskExecutorRule()
     val time = 1609866000000L //"Wed Jan 6 2021 11:32:50 +0700"// (Asia/Jakarta)
 
+//    @Before
+//    fun setup() {
+//        val timeZone = TimeZone.getTimeZone("Asia/Jakarta")
+//        DateTimeUtils.setCurrentMillisFixed(time)
+//        DateTimeZone.setDefault(DateTimeZone.forTimeZone(timeZone))
+//        Locale.setDefault(Locale("en", "US"))
+//    }
+
     @Before
     fun setup() {
         val timeZone = TimeZone.getTimeZone("Asia/Jakarta")
-        DateTimeUtils.setCurrentMillisFixed(time)
-        DateTimeZone.setDefault(DateTimeZone.forTimeZone(timeZone))
+        Instant.now(
+            Clock.fixed(
+                Instant.ofEpochMilli(time),
+                timeZone.toZoneId()))
+//        DateTimeZone.setDefault(DateTimeZone.forTimeZone(timeZone))
         Locale.setDefault(Locale("en", "US"))
     }
 
@@ -78,7 +89,7 @@ internal class BankTransferDetailViewModelTest {
         `when`(dateTimeUtil.getCalendar(null)).thenReturn(
             Calendar.getInstance().apply { time = Date(1609907570066L) }
         )
-        `when`(dateTimeUtil.getDuration(any())).thenReturn(Duration.millis(1000L)) //only this matter for final result
+        `when`(dateTimeUtil.getDuration(any())).thenReturn(Duration.ofMillis(1000L)) //only this matter for final result
         `when`(dateTimeUtil.getTimeDiffInMillis(any(), any())).thenReturn(100000L)
         val bankTransferDetailViewModel =
             BankTransferDetailViewModel(snapCore = snapCore, dateTimeUtil)

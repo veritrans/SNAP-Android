@@ -28,6 +28,7 @@ android {
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -51,8 +52,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.4.1")
     testImplementation(com.gtf.snap.TestLibraries.junit)
     testImplementation(com.gtf.snap.TestLibraries.hamcrest)
-    implementation(com.gtf.snap.JodaTimeLibraries.jodaTime)
-    testImplementation(com.gtf.snap.TestLibraries.jodaTime)
+    implementation(com.gtf.snap.CommonLibraries.coreLibraryDesugaring)
     testImplementation(com.gtf.snap.TestLibraries.mockitoKotlin)
     testImplementation(com.gtf.snap.TestLibraries.androidxArchTesting)
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
