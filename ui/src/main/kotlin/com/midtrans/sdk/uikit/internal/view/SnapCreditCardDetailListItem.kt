@@ -161,18 +161,9 @@ fun InputNewCardItem(
             ) {
                 NormalCardItem(
                     state = state,
+                    bankIcon = 12,
                     onCardNumberValueChange = {
                         state.cardNumber = it
-
-                        var cardNumber = it.text.replace(" ", "")
-
-                        if(cardNumber.length >= 8){
-                            var eightDigitNumber = cardNumber.substring(8)
-
-                            //TODO: Fix when corekit available
-                            state.bankIconId = getBankIcon(getBankName(it).toString())
-//                                    viewModel.updateBankIcon(eightDigitNumber)
-                        }
                     },
                     onExpiryDateValueChange = {
                         state.expiry = it
@@ -517,6 +508,7 @@ fun formatCVV(input: TextFieldValue): TextFieldValue{
 @Composable
 fun NormalCardItem(
     state: NormalCardItemState,
+    bankIcon: Int?,
     onCardNumberValueChange: (TextFieldValue) -> Unit,
     onExpiryDateValueChange: (TextFieldValue) -> Unit,
     onCvvValueChange: (TextFieldValue) -> Unit,
@@ -569,7 +561,6 @@ fun NormalCardItem(
                     onValueChange = {
                         state.principalIconId = getPrincipalIcon(getCardType(it.text))
                         var cardLength = formatCreditCard(it).text.length
-                        state.bankIconId = getBankIcon(getBankName(it).toString())
                         state.isCardNumberInvalid = cardLength != formattedMaxCardNumberLength
                         onCardNumberValueChange(formatCreditCard(it))
                     },
@@ -577,7 +568,7 @@ fun NormalCardItem(
                     onFocusChange = {
                         onCardTextFieldFocusedChange(it)
                     },
-                    trailingIcon = state.bankIconId?.let {
+                    trailingIcon = bankIcon?.let {
                         {
                             Icon(
                                 painter = painterResource(id = it),
