@@ -27,7 +27,7 @@ internal class DirectDebitViewModel @Inject constructor(
             .withPaymentType(paymentType)
             .withKlikBcaUserId(userId)
 
-        SnapCore.getInstance()?.pay(//TODO integrate with DI from pak wahyu
+        snapCore.pay(
             snapToken = snapToken,
             paymentRequestBuilder = builder,
             callback = object : Callback<TransactionResponse> {
