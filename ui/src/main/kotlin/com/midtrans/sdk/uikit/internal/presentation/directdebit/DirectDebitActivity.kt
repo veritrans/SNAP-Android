@@ -27,8 +27,11 @@ import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.view.*
 import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
 import kotlinx.android.parcel.Parcelize
+import javax.inject.Inject
 
 class DirectDebitActivity : BaseActivity() {
+    @Inject
+    internal lateinit var vmFactory: ViewModelProvider.Factory
 
     private val data: DirectDebitData by lazy {
         intent.getParcelableExtra(EXTRA_DIRECT_DEBIT_DATA) as? DirectDebitData
@@ -40,7 +43,7 @@ class DirectDebitActivity : BaseActivity() {
     }
 
     private val viewModel: DirectDebitViewModel by lazy {
-        ViewModelProvider(this).get(DirectDebitViewModel::class.java)
+        ViewModelProvider(this, vmFactory).get(DirectDebitViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -150,7 +153,7 @@ class DirectDebitActivity : BaseActivity() {
                             text = stringResource(R.string.bca_klik_pay_cta),
                             style = SnapButton.Style.PRIMARY
                         ) {
-                            viewModel.pay(
+                            viewModel.payDirectDebit(
                                 snapToken = snapToken,
                                 paymentType = data.paymentType,
                                 userId = userId

@@ -9,13 +9,16 @@ import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.DirectDebitPaymentRequestBuilder
+import javax.inject.Inject
 
-class DirectDebitViewModel : ViewModel() {
+internal class DirectDebitViewModel @Inject constructor(
+    private val snapCore: SnapCore
+): ViewModel() {
     private val redirectUrl = MutableLiveData<String>()
 
     fun getRedirectUrl(): LiveData<String> = redirectUrl
 
-    fun pay(
+    fun payDirectDebit(
         snapToken: String,
         paymentType: String,
         userId: String?
