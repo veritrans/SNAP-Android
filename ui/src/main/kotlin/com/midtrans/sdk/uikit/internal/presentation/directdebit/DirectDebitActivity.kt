@@ -3,7 +3,6 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,7 +26,6 @@ import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.view.*
 import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
-import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
 class DirectDebitActivity : BaseActivity() {
@@ -35,13 +33,24 @@ class DirectDebitActivity : BaseActivity() {
     @Inject
     internal lateinit var vmFactory: ViewModelProvider.Factory
 
-    private val data: DirectDebitData by lazy {
-        intent.getParcelableExtra(EXTRA_DIRECT_DEBIT_DATA) as? DirectDebitData
-            ?: throw RuntimeException("Input data must not be empty")
+    private val snapToken: String by lazy {
+        intent.getStringExtra(EXTRA_SNAP_TOKEN) ?: throw RuntimeException("Snap token must not be empty")
     }
 
-    private val snapToken: String by lazy {
-        intent.getStringExtra(EXTRA_SNAP_TOKEN) ?: throw RuntimeException("Snap token must exist")
+    private val paymentType: String by lazy {
+        intent.getStringExtra(EXTRA_PAYMENT_TYPE) ?: throw RuntimeException("Payment type must not be empty")
+    }
+
+    private val amount: String by lazy {
+        intent.getStringExtra(EXTRA_AMOUNT) ?: throw RuntimeException("Total amount must not be empty")
+    }
+
+    private val orderId: String by lazy {
+        intent.getStringExtra(EXTRA_ORDER_ID) ?: throw RuntimeException("Order ID must not be empty")
+    }
+
+    private val customerInfo: CustomerInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
     }
 
     private val viewModel: DirectDebitViewModel by lazy {
@@ -59,10 +68,10 @@ class DirectDebitActivity : BaseActivity() {
         initObserver()
         setContent {
             DirectDebitContent(
-                paymentType = data.paymentType,
-                amount = data.amount,
-                orderId = data.orderId,
-                customerInfo = data.customerInfo
+                paymentType = paymentType,
+                amount = amount,
+                orderId = orderId,
+                customerInfo = customerInfo
             )
         }
     }
@@ -102,7 +111,7 @@ class DirectDebitActivity : BaseActivity() {
             modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
         ) {
             SnapAppBar(
-                title = stringResource(getTitleId(paymentType = data.paymentType)),
+                title = stringResource(getTitleId(paymentType = paymentType)),
                 iconResId = R.drawable.ic_cross
             ) {
                 onBackPressed()
@@ -164,7 +173,7 @@ class DirectDebitActivity : BaseActivity() {
                         ) {
                             viewModel.payDirectDebit(
                                 snapToken = snapToken,
-                                paymentType = data.paymentType,
+                                paymentType = paymentType,
                                 userId = userId
                             )
                         }
@@ -264,8 +273,11 @@ class DirectDebitActivity : BaseActivity() {
     }
 
     companion object {
-        private const val EXTRA_DIRECT_DEBIT_DATA = "EXTRA_DIRECT_DEBIT_DATA"
-        private const val EXTRA_SNAP_TOKEN = "EXTRA_SNAP_TOKEN"
+        private const val EXTRA_SNAP_TOKEN = "directDebit.extra.snap_token"
+        private const val EXTRA_PAYMENT_TYPE = "directDebit.extra.payment_type"
+        private const val EXTRA_AMOUNT = "directDebit.extra.amount"
+        private const val EXTRA_ORDER_ID = "directDebit.extra.order_id"
+        private const val EXTRA_CUSTOMER_INFO = "directDebit.extra.customer_info"
 
         fun getIntent(
             activityContext: Context,
@@ -277,24 +289,11 @@ class DirectDebitActivity : BaseActivity() {
         ): Intent {
             return Intent(activityContext, DirectDebitActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
-                putExtra(
-                    EXTRA_DIRECT_DEBIT_DATA,
-                    DirectDebitData(
-                        paymentType = paymentType,
-                        amount = amount,
-                        orderId = orderId,
-                        customerInfo = customerInfo
-                    )
-                )
+                putExtra(EXTRA_PAYMENT_TYPE, paymentType)
+                putExtra(EXTRA_AMOUNT, amount)
+                putExtra(EXTRA_ORDER_ID, orderId)
+                putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
             }
         }
     }
-
-    @Parcelize
-    private data class DirectDebitData(
-        val paymentType: String,
-        val amount: String,
-        val orderId: String,
-        val customerInfo: CustomerInfo?
-    ) : Parcelable
 }
