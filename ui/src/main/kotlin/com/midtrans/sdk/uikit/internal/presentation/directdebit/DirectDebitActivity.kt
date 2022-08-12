@@ -23,13 +23,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.view.*
 import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
 class DirectDebitActivity : BaseActivity() {
+
     @Inject
     internal lateinit var vmFactory: ViewModelProvider.Factory
 
@@ -48,6 +50,12 @@ class DirectDebitActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        DaggerUiKitComponent.builder()
+            .applicationContext(this.applicationContext)
+            .build()
+            .inject(this)
+
         initObserver()
         setContent {
             DirectDebitContent(
@@ -61,7 +69,8 @@ class DirectDebitActivity : BaseActivity() {
 
     private fun initObserver() {
         viewModel.getRedirectUrl().observe(this) {
-            //TODO integrate with webview here
+            //TODO integrate webview here
+            //TODO set result after webview
         }
     }
 

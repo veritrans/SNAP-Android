@@ -17,6 +17,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.SnapCore
+import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
 import com.midtrans.sdk.uikit.internal.presentation.loadingpayment.LoadingPaymentActivity
 import com.midtrans.sdk.uikit.internal.view.SnapButton
@@ -180,10 +181,16 @@ class SampleActivity : AppCompatActivity() {
                 style = SnapButton.Style.TERTIARY
             ) {
                 val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
-                    this@SampleActivity,
-                    SnapTransactionDetail(
+                    activityContext = this@SampleActivity,
+                    transactionDetails = SnapTransactionDetail(
                         orderId = UUID.randomUUID().toString(),
                         grossAmount = 15005.00
+                    ),
+                    customerDetails = CustomerDetails(
+                        firstName = "Ari",
+                        lastName = "Bhakti",
+                        email = "aribhakti@email.com",
+                        phone = "087788778212"
                     )
                 )
                 startActivity(
