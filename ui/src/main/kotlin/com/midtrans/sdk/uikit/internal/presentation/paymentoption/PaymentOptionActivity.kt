@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.PaymentMethod
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
@@ -32,12 +33,8 @@ import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
-import com.midtrans.sdk.uikit.internal.view.SnapAppBar
-import com.midtrans.sdk.uikit.internal.view.SnapColors
-import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
-import com.midtrans.sdk.uikit.internal.view.SnapMultiIconListItem
-import com.midtrans.sdk.uikit.internal.view.SnapOverlayExpandingBox
-import com.midtrans.sdk.uikit.internal.view.SnapTotal
+import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
+import com.midtrans.sdk.uikit.internal.view.*
 import kotlin.math.sqrt
 
 class PaymentOptionActivity : BaseActivity() {
@@ -233,10 +230,10 @@ class PaymentOptionActivity : BaseActivity() {
                     {
                         SnapCustomerDetail(
                             name = it.name,
-                        phone = it.phone,
-                        addressLines = it.addressLines
-                    )
-                }
+                            phone = it.phone,
+                            addressLines = it.addressLines
+                        )
+                    }
                 },
                 followingContent = {
                     LazyColumn {
@@ -251,6 +248,7 @@ class PaymentOptionActivity : BaseActivity() {
                                 iconList = payment.icons
                             ) {
                                 getOnPaymentItemClick(
+                                    paymentType = payment.type,
                                     customerInfo = customerInfo,
                                     totalAmount = totalAmount,
                                     paymentMethodItem = payment,
@@ -275,6 +273,7 @@ class PaymentOptionActivity : BaseActivity() {
     }
 
     private fun getOnPaymentItemClick(
+        paymentType: String,
         totalAmount: String,
         orderId: String,
         paymentMethodItem: PaymentMethodItem,
@@ -304,7 +303,32 @@ class PaymentOptionActivity : BaseActivity() {
                         customerInfo = customerInfo,
                     )
                 )
+            },
+            checkDirectDebitType(paymentType).let {
+                Pair(it) {
+                    resultLauncher.launch(
+                        DirectDebitActivity.getIntent(
+                            activityContext = this,
+                            snapToken = snapToken,
+                            paymentType = it,
+                            amount = totalAmount,
+                            orderId = orderId,
+                            customerInfo = customerInfo
+                        )
+                    )
+                }
             }
         )
+    }
+
+    private fun checkDirectDebitType(paymentType: String): String {
+        return when (paymentType) {
+            PaymentType.KLIK_BCA,
+            PaymentType.BCA_KLIKPAY,
+            PaymentType.CIMB_CLICKS,
+            PaymentType.BRI_EPAY,
+            PaymentType.DANAMON_ONLINE -> paymentType
+            else -> ""
+        }
     }
 }
