@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
@@ -70,6 +71,10 @@ fun SnapWebView(
     }, update = {
         it.loadUrl(url)
     })
+
+    BackHandler(true) {
+
+    }
 }
 
 private inline fun finishWebView(
