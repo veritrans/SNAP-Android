@@ -305,7 +305,6 @@ class PaymentOptionActivity : BaseActivity() {
                     )
                 )
             }
-
         )
     }
 }

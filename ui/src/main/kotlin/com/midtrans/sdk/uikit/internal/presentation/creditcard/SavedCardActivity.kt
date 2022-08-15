@@ -224,24 +224,24 @@ class SavedCardActivity: BaseActivity() {
         }
     }
 
-@Preview
-@Composable
-private fun forPreview() {
-    CrediCardPageStateFull(
-        totalAmount = "10000",
-        orderId = "Order ID #34345445554",
-        customerDetail = CustomerDetail(
-            "Ari Bhakti",
-            "087788778212",
-            listOf("Jl. ABC", "Rumah DEF")
+    @Preview
+    @Composable
+    private fun forPreview() {
+        CrediCardPageStateFull(
+            totalAmount = "10000",
+            orderId = "Order ID #34345445554",
+            customerDetail = CustomerDetail(
+                "Ari Bhakti",
+                "087788778212",
+                listOf("Jl. ABC", "Rumah DEF")
+            )
         )
-    )
-}
+    }
 
-@Parcelize
-private data class CustomerDetail(
-    val name: String,
-    val phone: String,
-    val addressLines: List<String>
-) : Parcelable
+    @Parcelize
+    private data class CustomerDetail(
+        val name: String,
+        val phone: String,
+        val addressLines: List<String>
+    ) : Parcelable
 }

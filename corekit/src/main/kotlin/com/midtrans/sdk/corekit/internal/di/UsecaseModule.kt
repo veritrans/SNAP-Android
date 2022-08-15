@@ -17,7 +17,6 @@ internal class UsecaseModule {
         coreApiRepository: CoreApiRepository,
         merchantApiRepository: MerchantApiRepository,
         @Named("merchant_client_key") clientKey: String
-
     ): PaymentUsecase {
         return PaymentUsecase(
             SdkScheduler(),
