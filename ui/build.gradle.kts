@@ -74,13 +74,6 @@ dependencies {
     implementation(com.gtf.snap.ComposeUiLibraries.composeAnimatedDrawable)
     implementation(com.gtf.snap.ComposeUiLibraries.composeAnimation)
     implementation(com.gtf.snap.ComposeUiLibraries.composeRxjava)
-//    implementation(com.gtf.snap.ComposeUiLibraries.composeLifecycleViewModel)
-
-    //rx android
-    implementation(com.gtf.snap.RxLibraries.rxAndroid2)
-    implementation(com.gtf.snap.RxLibraries.rxJava2)
-    implementation(com.gtf.snap.RxLibraries.rxBinding)
-
 
     //TODO: work around, remove when google fix compose tooling
     debugImplementation("androidx.customview:customview:1.2.0-alpha01")

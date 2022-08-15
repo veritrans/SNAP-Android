@@ -158,7 +158,6 @@ object ComposeUiLibraries {
     const val composeMaterial = "androidx.compose.material:material:${Dependencies.composeVersion}"
     const val composeActivity = "androidx.activity:activity-compose:1.4.0"
     const val composeFramework = "androidx.ui:ui-framework:${Dependencies.composeVersion}"
-    const val composeLifecycleViewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
 
 
     const val composeRuntime = "androidx.compose.runtime:runtime:${Dependencies.composeVersion}"
