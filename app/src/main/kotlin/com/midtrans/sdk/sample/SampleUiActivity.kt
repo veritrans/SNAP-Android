@@ -145,6 +145,8 @@ class SampleUiActivity : AppCompatActivity() {
 
             ).toMutableStateList()
 
+
+            //TODO: Fix on Save Card
 //            SnapSavedCardRadioGroup(states = list, { selected: String, value: String ->
 //                Log.e("wahyu", "cardNumber: $selected  cvv: $value")
 //
