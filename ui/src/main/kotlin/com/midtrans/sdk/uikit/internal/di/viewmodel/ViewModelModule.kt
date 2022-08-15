@@ -2,6 +2,7 @@ package com.midtrans.sdk.uikit.internal.di.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDetailViewModel
+import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -13,4 +14,9 @@ internal abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(BankTransferDetailViewModel::class)
     abstract fun bindWalletPaymentViewModel(viewModel: BankTransferDetailViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CreditCardViewModel::class)
+    abstract fun bindCreditCardViewModel(viewModel: CreditCardViewModel): ViewModel
 }

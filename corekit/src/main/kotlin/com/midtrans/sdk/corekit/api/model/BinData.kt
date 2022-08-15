@@ -1,10 +1,12 @@
 package com.midtrans.sdk.corekit.api.model
 
 data class BinData(
-    val statusCode: String?,
-    val statusMessage: String?,
-    val bank: String?,
-    val tokenId: String?,
-    val redirectUrl: String?,
-    val hash: String?
+    val registrationRequired: String?,
+    val countryName: String?,
+    val countryCode: String?,
+    val channel: String?,
+    val brand: String?,
+    val bin: String?,
+    val bankCode: String?,
+    val bank: String?
 )

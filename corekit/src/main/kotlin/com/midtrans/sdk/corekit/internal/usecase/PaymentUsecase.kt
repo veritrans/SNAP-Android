@@ -25,7 +25,8 @@ internal class PaymentUsecase(
     private val scheduler: BaseSdkScheduler,
     private val snapRepository: SnapRepository,
     private val coreApiRepository: CoreApiRepository,
-    private val merchantApiRepository: MerchantApiRepository
+    private val merchantApiRepository: MerchantApiRepository,
+    private val clientKey: String
 ) {
 
     @SuppressLint("CheckResult")
@@ -186,6 +187,7 @@ internal class PaymentUsecase(
         callback: Callback<CardTokenResponse>
     ) {
         try {
+            cardTokenRequestBuilder.withClientKey(clientKey)
             val cardTokenRequest = cardTokenRequestBuilder.build()
             coreApiRepository.getCardToken(cardTokenRequest)
                 .subscribeOn(scheduler.io())
@@ -207,7 +209,6 @@ internal class PaymentUsecase(
     @SuppressLint("CheckResult")
     fun getBinData(
         binNumber: String,
-        clientKey: String,
         callback: Callback<BinResponse>
     ) {
         try {

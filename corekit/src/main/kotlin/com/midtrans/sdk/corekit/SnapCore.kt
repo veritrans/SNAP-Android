@@ -66,10 +66,9 @@ class SnapCore private constructor(builder: Builder) {
 
     fun getBinData(
         binNumber: String,
-        clientKey: String,
         callback: Callback<BinResponse>
     ) {
-        paymentUsecase.getBinData(binNumber, clientKey, callback)
+        paymentUsecase.getBinData(binNumber, callback)
     }
 
     fun getBankPoint(

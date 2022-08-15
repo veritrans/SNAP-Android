@@ -50,16 +50,18 @@ fun SnapPointRedeemDialogContent(
                 modifier = Modifier.weight(1f)
             )
             Text(text = "Rp ")
-            SnapTextField(
-                value = textFieldText,
-                onValueChange = { value ->
-                    textFieldText = value.filter { it.isDigit() }
-                    onValueChange(textFieldText.ifEmpty { "0" })
-                },
-                modifier = Modifier.width(117.dp),
-                isError = isError,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
+
+            //TODO: Need to fix using the updated SnapTextField param when implementing card point
+//            SnapTextField(
+//                value = textFieldText,
+//                onValueChange = { value ->
+//                    textFieldText = value.filter { it.isDigit() }
+//                    onValueChange(textFieldText.ifEmpty { "0" })
+//                },
+//                modifier = Modifier.width(117.dp),
+//                isError = isError,
+//                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+//            )
         }
         Text(
             text = info,
