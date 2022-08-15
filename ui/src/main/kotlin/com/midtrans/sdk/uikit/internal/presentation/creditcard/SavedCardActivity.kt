@@ -29,7 +29,6 @@ class SavedCardActivity: BaseActivity() {
         super.onCreate(savedInstanceState)
 
         //TODO: ViewModel need to be fix later
-//        observeBankIconLiveData()
         setContent {
             CrediCardPageStateFull(
                 totalAmount = "10000",
@@ -41,7 +40,6 @@ class SavedCardActivity: BaseActivity() {
                 )
             )
         }
-//        viewModel.getBankName("48111111", clientKet = "VT-client-yrHf-c8Sxr-ck8tx")
     }
 
     @Composable
