@@ -51,7 +51,7 @@ fun SnapPointRedeemDialogContent(
             )
             Text(text = "Rp ")
 
-            //TODO: Need to fix this later when implementing card point
+            //TODO: Need to fix using the updated SnapTextField param when implementing card point
 //            SnapTextField(
 //                value = textFieldText,
 //                onValueChange = { value ->
