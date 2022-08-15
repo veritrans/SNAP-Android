@@ -1,6 +1,5 @@
 package com.midtrans.sdk.uikit.internal.presentation.creditcard
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.MutableLiveData
@@ -19,7 +18,7 @@ import javax.inject.Inject
 
 class CreditCardViewModel @Inject constructor(
     private val snapCore: SnapCore
-) : ViewModel()  {
+) : ViewModel() {
 
     val bankIconId = MutableLiveData<Int>()
 
@@ -36,6 +35,7 @@ class CreditCardViewModel @Inject constructor(
                         }
                     }
                 }
+
                 override fun onError(error: SnapError) {
                     TODO("Not yet implemented")
                 }
@@ -43,7 +43,7 @@ class CreditCardViewModel @Inject constructor(
         )
     }
 
-    fun setBankIconToNull(){
+    fun setBankIconToNull() {
         bankIconId.value = null
     }
 
@@ -56,18 +56,17 @@ class CreditCardViewModel @Inject constructor(
         isSavedCard: Boolean,
         customerEmail: String,
         snapToken: String
-    ){
+    ) {
         snapCore.getCardToken(
-                cardTokenRequestBuilder = NormalCardTokenRequestBuilder()
-                    .withGrossAmount(grossAmount.toDouble())
-                    .withCardNumber(getCardNumberFromTextField(cardNumber))
-                    .withCardExpMonth(getExpMonthFromTextField(cardExpiry))
-                    .withCardExpYear(getExpYearFromTextField(cardExpiry))
-                    .withCardCvv(cardCvv.text)
-                    .withOrderId(orderId)
-                    .withCurrency("IDR")
-            ,
-            callback = object : Callback<CardTokenResponse>{
+            cardTokenRequestBuilder = NormalCardTokenRequestBuilder()
+                .withGrossAmount(grossAmount.toDouble())
+                .withCardNumber(getCardNumberFromTextField(cardNumber))
+                .withCardExpMonth(getExpMonthFromTextField(cardExpiry))
+                .withCardExpYear(getExpYearFromTextField(cardExpiry))
+                .withCardCvv(cardCvv.text)
+                .withOrderId(orderId)
+                .withCurrency("IDR"),
+            callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
 
                     var ccRequestBuilder = CreditCardPaymentRequestBuilder()
@@ -83,14 +82,19 @@ class CreditCardViewModel @Inject constructor(
                         paymentRequestBuilder = ccRequestBuilder,
                         callback = object : Callback<TransactionResponse> {
                             override fun onSuccess(result: TransactionResponse) {
-                                Log.e("transaction succes", "transaction status ${result.transactionStatus}")
+                                Log.e(
+                                    "transaction succes",
+                                    "transaction status ${result.transactionStatus}"
+                                )
                             }
+
                             override fun onError(error: SnapError) {
                                 Log.e("error, error, error", "error charge ${error.message}")
                             }
                         }
                     )
                 }
+
                 override fun onError(error: SnapError) {
                     Log.e("error, error, error", "error get card token ${error.message}")
                 }
@@ -98,13 +102,15 @@ class CreditCardViewModel @Inject constructor(
         )
     }
 
-    private fun getCardNumberFromTextField(value: TextFieldValue) : String{
+    private fun getCardNumberFromTextField(value: TextFieldValue): String {
         return value.text.replace(" ", "")
     }
-    private fun getExpMonthFromTextField(value: TextFieldValue) : String{
+
+    private fun getExpMonthFromTextField(value: TextFieldValue): String {
         return value.text.substring(0, 2)
     }
-    private fun getExpYearFromTextField(value: TextFieldValue) : String{
+
+    private fun getExpYearFromTextField(value: TextFieldValue): String {
         return return value.text.substring(3, 5)
     }
 

@@ -1,8 +1,10 @@
 package com.midtrans.sdk.uikit.internal.presentation.creditcard
 
+//import androidx.lifecycle.viewmodel.compose.viewModel
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -17,13 +19,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-//import androidx.lifecycle.viewmodel.compose.viewModel
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.view.*
 import javax.inject.Inject
-import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 
 class CreditCardActivity : BaseActivity() {
 
@@ -81,9 +82,10 @@ class CreditCardActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         //TODO: ViewModel need to be fix later
-        DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build().inject(this)
+        DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build()
+            .inject(this)
         setContent {
-            CreditCardPageStateFull(
+            WrapCreditCardPage(
                 totalAmount = totalAmount,
                 orderId = orderId,
                 customerDetail = customerDetail,
@@ -93,13 +95,46 @@ class CreditCardActivity : BaseActivity() {
     }
 
     @Composable
-    private fun CreditCardPageStateFull(
+    private fun WrapCreditCardPage(
         totalAmount: String,
         orderId: String,
         customerDetail: CustomerInfo? = null,
         viewModel: CreditCardViewModel
     ) {
-        val state = remember {
+        val observeAsState = viewModel.bankIconId.observeAsState(null)
+        val bankIconId by remember { observeAsState }
+        CreditCardPageStateFull(
+            totalAmount, orderId, customerDetail,
+            bankIconId,
+            {
+                viewModel.getBankIconImage(it)
+            },
+            { viewModel.setBankIconToNull() }
+        ) {
+            viewModel.chargeUsingCreditCard(
+                grossAmount = totalAmount,
+                cardNumber = it.cardNumber,
+                cardExpiry = it.expiry,
+                cardCvv = it.cvv,
+                orderId = orderId,
+                isSavedCard = it.isSavedCardChecked,
+                customerEmail = "johndoe@midtrans.com",
+                snapToken = snapToken
+            )
+        }
+    }
+
+    @Composable
+    private fun CreditCardPageStateFull(
+        totalAmount: String,
+        orderId: String,
+        customerDetail: CustomerInfo? = null,
+        bankIconId: Int?,
+        getBankIconImage: (String) -> Unit,
+        setBankIconToNull: () -> Unit,
+        onClick: (NormalCardItemState) -> Unit
+    ) {
+        val state =
             NormalCardItemState(
                 cardNumber = TextFieldValue(),
                 expiry = TextFieldValue(),
@@ -113,9 +148,9 @@ class CreditCardActivity : BaseActivity() {
                 isSavedCardChecked = true,
                 principalIconId = null
             )
-        }
 
-        val bankCodeId by viewModel.bankIconId.observeAsState(null)
+
+//        val bankCodeId by viewModel.bankIconId.observeAsState(null)
         var isExpanding by remember { mutableStateOf(false) }
 
         CreditCardPageStateLess(
@@ -124,38 +159,30 @@ class CreditCardActivity : BaseActivity() {
             totalAmount = totalAmount,
             orderId = orderId,
             customerDetail = customerDetail,
-            bankCodeState = bankCodeId,
+            bankCodeState = bankIconId,
             onExpand = { isExpanding = it },
             onCardNumberValueChange = {
 
                 //TODO:Find a more elegant logic for exbin and to set/get livedata on viewModel
                 state.cardNumber = it
                 cardNumberWithoutSpace = it.text.replace(" ", "")
-                if(cardNumberWithoutSpace.length >= supportedMaxBinNumber){
-                    var eightDigitNumber = cardNumberWithoutSpace.substring(0, supportedMaxBinNumber)
-                    if (eightDigitNumber != previousEightDigitNumber){
+                if (cardNumberWithoutSpace.length >= supportedMaxBinNumber) {
+                    var eightDigitNumber =
+                        cardNumberWithoutSpace.substring(0, supportedMaxBinNumber)
+                    if (eightDigitNumber != previousEightDigitNumber) {
                         previousEightDigitNumber = eightDigitNumber
-                        viewModel.getBankIconImage(
-                            binNumber = eightDigitNumber
-                        )
+                        getBankIconImage.invoke(eightDigitNumber)
+//                        viewModel.getBankIconImage(
+//                            binNumber = eightDigitNumber
+//                        )
                     }
                 } else {
-                    viewModel.setBankIconToNull()
+                    setBankIconToNull.invoke()
+//                    viewModel.setBankIconToNull()
                     previousEightDigitNumber = cardNumberWithoutSpace
                 }
             },
-            onClick = {
-                viewModel.chargeUsingCreditCard(
-                    grossAmount = totalAmount,
-                    cardNumber = state.cardNumber,
-                    cardExpiry = state.expiry,
-                    cardCvv = state.cvv,
-                    orderId = orderId,
-                    isSavedCard = state.isSavedCardChecked,
-                    customerEmail = "johndoe@midtrans.com",
-                    snapToken = snapToken
-                )
-            }
+            onClick = { onClick.invoke(state) }
         )
     }
 
@@ -170,7 +197,7 @@ class CreditCardActivity : BaseActivity() {
         onExpand: (Boolean) -> Unit,
         onCardNumberValueChange: (TextFieldValue) -> Unit,
         onClick: () -> Unit
-    ){
+    ) {
         Column() {
             SnapAppBar(title = "Credit Card", iconResId = R.drawable.ic_arrow_left) {
                 onBackPressed()
@@ -214,7 +241,9 @@ class CreditCardActivity : BaseActivity() {
                             onExpiryDateValueChange = { state.expiry = it },
                             onCvvValueChange = { state.cvv = it },
                             onCardTextFieldFocusedChange = { state.isCardTexFieldFocused = it },
-                            onExpiryTextFieldFocusedChange = { state.isExpiryTextFieldFocused = it },
+                            onExpiryTextFieldFocusedChange = {
+                                state.isExpiryTextFieldFocused = it
+                            },
                             onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
                             onSavedCardCheckedChange = { state.isSavedCardChecked = it }
                         )
@@ -226,11 +255,11 @@ class CreditCardActivity : BaseActivity() {
                                 .fillMaxWidth(1f)
                                 .padding(16.dp),
                             enabled = !(state.isCardNumberInvalid ||
-                                    state.isExpiryInvalid ||
-                                    state.isCvvInvalid ||
-                                    state.cardNumber.text.isEmpty() ||
-                                    state.expiry.text.isEmpty() ||
-                                    state.cvv.text.isEmpty()),
+                                state.isExpiryInvalid ||
+                                state.isCvvInvalid ||
+                                state.cardNumber.text.isEmpty() ||
+                                state.expiry.text.isEmpty() ||
+                                state.cvv.text.isEmpty()),
                             onClick = { onClick() }
                         )
                     }
@@ -245,6 +274,7 @@ class CreditCardActivity : BaseActivity() {
     @Preview
     @Composable
     private fun forPreview() {
+        var bankIconId: Int? by remember { mutableStateOf(R.drawable.ic_outline_bri_24) }
         CreditCardPageStateFull(
             totalAmount = "15000",
             orderId = "1234",
@@ -253,7 +283,16 @@ class CreditCardActivity : BaseActivity() {
                 "087788778212",
                 listOf("Jl. ABC", "Rumah DEF")
             ),
-            viewModel = creditCardviewModel
+            bankIconId,
+            {
+                bankIconId = R.drawable.ic_bank_bni_24
+            },
+            {
+                bankIconId = null
+            },
+            {
+                Toast.makeText(this, "content ${it.cardNumber}", Toast.LENGTH_LONG).show()
+            }
         )
     }
 }
