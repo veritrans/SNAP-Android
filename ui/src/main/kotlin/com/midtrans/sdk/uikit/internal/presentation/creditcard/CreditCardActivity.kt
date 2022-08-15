@@ -79,8 +79,7 @@ class CreditCardActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        //TODO: ViewModel need to be fix later
+        //TODO: ViewModel might be better be used as parameter following the codelabs to support unidirectional data flow
         DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build().inject(this)
         setContent {
             CreditCardPageStateFull(

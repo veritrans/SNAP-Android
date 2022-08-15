@@ -27,7 +27,6 @@ class SavedCardActivity: BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
         setContent {
             CrediCardPageStateFull(
                 totalAmount = "10000",
