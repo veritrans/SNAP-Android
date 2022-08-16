@@ -72,7 +72,7 @@ fun SnapWebView(
     })
 
     BackHandler(true) {
-        //NOTE: disable back button
+        //NOTE: do nothing to disable back button is handled here instead of onBackPressed
     }
 }
 
@@ -82,41 +82,31 @@ private inline fun finishWebView(
     onWebViewFinished: () -> Unit
 ) {
     when (paymentType) {
-        PaymentType.KLIK_BCA -> containPattern(
-            url = url,
-            pattern = SnapWebViewClient.CALLBACK_KLIK_BCA,
-            onPatternContained = onWebViewFinished
-        )
-        PaymentType.BCA_KLIKPAY -> containPattern(
-            url = url,
-            pattern = SnapWebViewClient.CALLBACK_BCA_KLIK_PAY,
-            onPatternContained = onWebViewFinished
-        )
-        PaymentType.BRI_EPAY -> containPattern(
-            url = url,
-            pattern = SnapWebViewClient.CALLBACK_BRI_EPAY,
-            onPatternContained = onWebViewFinished
-        )
-        PaymentType.CIMB_CLICKS -> containPattern(
-            url = url,
-            pattern = SnapWebViewClient.CALLBACK_CIMB_CLICKS,
-            onPatternContained = onWebViewFinished
-        )
-        PaymentType.DANAMON_ONLINE -> containPattern(
-            url = url,
-            pattern = SnapWebViewClient.CALLBACK_DANAMON_ONLINE,
-            onPatternContained = onWebViewFinished
-        )
-    }
-}
-
-private inline fun containPattern(
-    url: String,
-    pattern: String,
-    onPatternContained: () -> Unit
-) {
-    if (url.contains(pattern, true)) {
-        onPatternContained.invoke()
+        PaymentType.KLIK_BCA -> {
+            if (url.contains(SnapWebViewClient.CALLBACK_KLIK_BCA, true)) {
+                onWebViewFinished.invoke()
+            }
+        }
+        PaymentType.BCA_KLIKPAY -> {
+            if (url.contains(SnapWebViewClient.CALLBACK_BCA_KLIK_PAY, true)) {
+                onWebViewFinished.invoke()
+            }
+        }
+        PaymentType.BRI_EPAY -> {
+            if (url.contains(SnapWebViewClient.CALLBACK_BRI_EPAY, true)) {
+                onWebViewFinished.invoke()
+            }
+        }
+        PaymentType.CIMB_CLICKS -> {
+            if (url.contains(SnapWebViewClient.CALLBACK_CIMB_CLICKS, true)) {
+                onWebViewFinished.invoke()
+            }
+        }
+        PaymentType.DANAMON_ONLINE -> {
+            if (url.contains(SnapWebViewClient.CALLBACK_DANAMON_ONLINE, true)) {
+                onWebViewFinished.invoke()
+            }
+        }
     }
 }
 
