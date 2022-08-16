@@ -12,13 +12,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import com.midtrans.sdk.corekit.api.model.PaymentType
 
-
 @Composable
 @Preview(showBackground = true)
 fun WebViewPreview() {
     SnapWebView(
         paymentType = PaymentType.BCA_KLIKPAY,
-        url = "https://www.geeksforgeeks.org/webview-in-android-using-jetpack-compose/",
+        url = "https://simulator.sandbox.midtrans.com/gopay/ui/index",
         onWebViewStarted = { Log.d("SnapWebView", "Started") },
         onWebViewFinished = { Log.d("SnapWebView", "Finish") }
     )
@@ -73,7 +72,7 @@ fun SnapWebView(
     })
 
     BackHandler(true) {
-
+        //NOTE: disable back button
     }
 }
 
@@ -131,7 +130,7 @@ private class SnapWebViewClient(
     }
 
     companion object {
-        const val CALLBACK_KLIK_BCA = "/inquiry" //TODO check whether klik bca use webview/not
+        const val CALLBACK_KLIK_BCA = "/inquiry" //TODO check what is klik bca pattern
         const val CALLBACK_BCA_KLIK_PAY = "?id="
         const val CALLBACK_CIMB_CLICKS = "cimb-clicks/response"
         const val CALLBACK_DANAMON_ONLINE = "/callback?signature="
