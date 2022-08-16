@@ -32,7 +32,6 @@ internal class DirectDebitViewModel @Inject constructor(
             paymentRequestBuilder = builder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
-                    Log.d("DirectDebitPay", result.redirectUrl.orEmpty())
                     redirectUrl.value = result.redirectUrl
                 }
 
