@@ -167,7 +167,7 @@ class DirectDebitActivity : BaseActivity() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 40.dp),
-                            enabled = true,
+                            enabled = userId.isNotEmpty(),
                             text = stringResource(R.string.bca_klik_pay_cta),
                             style = SnapButton.Style.PRIMARY
                         ) {

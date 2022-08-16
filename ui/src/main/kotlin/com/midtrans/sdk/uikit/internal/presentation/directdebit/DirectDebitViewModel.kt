@@ -25,7 +25,7 @@ internal class DirectDebitViewModel @Inject constructor(
     ) {
         val builder = DirectDebitPaymentRequestBuilder()
             .withPaymentType(paymentType)
-            .withKlikBcaUserId(userId)
+            .withKlikBcaUserId(userId.orEmpty())
 
         snapCore.pay(
             snapToken = snapToken,

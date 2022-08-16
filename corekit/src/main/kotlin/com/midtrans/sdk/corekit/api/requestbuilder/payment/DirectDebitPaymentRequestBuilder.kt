@@ -14,7 +14,7 @@ class DirectDebitPaymentRequestBuilder : PaymentRequestBuilder() {
         paymentType = value
     }
 
-    fun withKlikBcaUserId(value: String?): DirectDebitPaymentRequestBuilder = apply {
+    fun withKlikBcaUserId(value: String): DirectDebitPaymentRequestBuilder = apply {
         userId = value
     }
 
