@@ -167,7 +167,7 @@ class DirectDebitActivity : BaseActivity() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 40.dp),
-                            enabled = userId.isNotEmpty(),
+                            enabled = enableButton(paymentType, userId),
                             text = stringResource(R.string.bca_klik_pay_cta),
                             style = SnapButton.Style.PRIMARY
                         ) {
@@ -184,6 +184,13 @@ class DirectDebitActivity : BaseActivity() {
                     .fillMaxHeight(1f)
                     .padding(all = 16.dp)
             )
+        }
+    }
+
+    private fun enableButton(paymentType: String, userId: String): Boolean {
+        return when (paymentType) {
+            PaymentType.KLIK_BCA -> userId.isNotEmpty()
+            else -> true
         }
     }
 
