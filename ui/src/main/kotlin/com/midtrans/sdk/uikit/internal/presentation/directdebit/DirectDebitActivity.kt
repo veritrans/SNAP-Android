@@ -222,6 +222,8 @@ class DirectDebitActivity : BaseActivity() {
                             isError = userId.text.isEmpty()
                         },
                         isError = isError,
+                        isFocused = true,
+                        onFocusChange = { },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                     )
                     if (userId.text.isEmpty()) {
