@@ -19,7 +19,7 @@ class DirectDebitPaymentRequestBuilder : PaymentRequestBuilder() {
     }
 
     override fun build(): PaymentRequest {
-        return when(paymentType) {
+        return when (paymentType) {
             PaymentType.KLIK_BCA -> {
                 if (userId == null)
                     throw MissingParameterException("userId required")

@@ -5,8 +5,8 @@ import com.midtrans.sdk.uikit.internal.di.viewmodel.UtilModule
 import com.midtrans.sdk.uikit.internal.di.viewmodel.ViewModelFactoryModule
 import com.midtrans.sdk.uikit.internal.di.viewmodel.ViewModelModule
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDetailActivity
-import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDetailViewModel
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
+import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -32,4 +32,5 @@ internal interface UiKitComponent {
 
     fun inject(activity: BankTransferDetailActivity)
     fun inject(activity: CreditCardActivity)
+    fun inject(activity: DirectDebitActivity)
 }
