@@ -7,7 +7,7 @@ import com.midtrans.sdk.corekit.api.model.Expiry
 import com.midtrans.sdk.corekit.api.model.GopayPaymentCallback
 import com.midtrans.sdk.corekit.api.model.ItemDetails
 import com.midtrans.sdk.corekit.api.model.PaymentCallback
-import com.midtrans.sdk.corekit.api.model.Promo
+import com.midtrans.sdk.corekit.api.model.PromoRequest
 import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
 import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferRequest
 import com.midtrans.sdk.corekit.internal.network.model.request.SnapTokenRequest
@@ -24,7 +24,7 @@ class SnapTokenRequestBuilder {
     private var briVa: BankTransferRequest? = null
     private var enabledPayments: List<String>? = null
     private var expiry: Expiry? = null
-    private var promo: Promo? = null
+    private var promoRequest: PromoRequest? = null
     private var customField1: String? = null
     private var customField2: String? = null
     private var customField3: String? = null
@@ -43,7 +43,7 @@ class SnapTokenRequestBuilder {
     fun withBriVa(value: BankTransferRequest?) = apply { briVa = value }
     fun withEnabledPayments(value: List<String>?) = apply { enabledPayments = value }
     fun withExpiry(value: Expiry?) = apply { expiry = value }
-    fun withPromo(value: Promo?) = apply { promo = value }
+    fun withPromo(value: PromoRequest?) = apply { promoRequest = value }
     fun withCustomField1(value: String?) = apply { customField1 = value }
     fun withCustomField2(value: String?) = apply { customField2 = value }
     fun withCustomField3(value: String?) = apply { customField3 = value }
@@ -68,7 +68,7 @@ class SnapTokenRequestBuilder {
             briVa = briVa,
             enabledPayments = enabledPayments,
             expiry = expiry,
-            promo = promo,
+            promoRequest = promoRequest,
             customField1 = customField1,
             customField2 = customField2,
             customField3 = customField3,

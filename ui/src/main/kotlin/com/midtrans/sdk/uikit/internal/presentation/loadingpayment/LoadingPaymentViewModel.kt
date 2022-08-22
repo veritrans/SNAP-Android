@@ -13,7 +13,7 @@ import com.midtrans.sdk.corekit.api.model.GopayPaymentCallback
 import com.midtrans.sdk.corekit.api.model.ItemDetails
 import com.midtrans.sdk.corekit.api.model.PaymentCallback
 import com.midtrans.sdk.corekit.api.model.PaymentOption
-import com.midtrans.sdk.corekit.api.model.Promo
+import com.midtrans.sdk.corekit.api.model.PromoRequest
 import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
 import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferRequest
@@ -39,7 +39,7 @@ class LoadingPaymentViewModel : ViewModel() {
         briVa: BankTransferRequest?,
         enabledPayments: List<String>?,
         expiry: Expiry?,
-        promo: Promo?,
+        promoRequest: PromoRequest?,
         customField1: String?,
         customField2: String?,
         customField3: String?,
@@ -59,7 +59,7 @@ class LoadingPaymentViewModel : ViewModel() {
             .withBriVa(briVa)
             .withEnabledPayments(enabledPayments)
             .withExpiry(expiry)
-            .withPromo(promo)
+            .withPromo(promoRequest)
             .withCustomField1(customField1)
             .withCustomField2(customField2)
             .withCustomField3(customField3)
