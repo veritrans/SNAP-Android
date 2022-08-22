@@ -25,8 +25,8 @@ fun WebViewPreview() {
         title = "Page Title",
         paymentType = PaymentType.BCA_KLIKPAY,
         url = "https://simulator.sandbox.midtrans.com/gopay/ui/index",
-        onWebViewStarted = { Log.d("SnapWebView", "Started") },
-        onWebViewFinished = { Log.d("SnapWebView", "Finish") }
+        onPageStarted = { Log.d("SnapWebView", "Started") },
+        onPageFinished = { Log.d("SnapWebView", "Finish") }
     )
 }
 
@@ -35,8 +35,8 @@ fun SnapWebView(
     title: String,
     @PaymentType.Def paymentType: String,
     url: String,
-    onWebViewStarted: () -> Unit,
-    onWebViewFinished: () -> Unit
+    onPageStarted: () -> Unit,
+    onPageFinished: () -> Unit
 ) {
     Column {
         Column(
@@ -66,7 +66,11 @@ fun SnapWebView(
                     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                         super.onPageStarted(view, url, favicon)
                         Log.d("SnapWebView", "onPageStarted visibility : ${view?.visibility}")
-                        onWebViewStarted.invoke()
+                        finishWebView(
+                            paymentType = paymentType,
+                            url = url.orEmpty(),
+                            onFinishWebView = onPageStarted
+                        )
                     }
 
                     override fun onPageFinished(view: WebView?, url: String?) {
@@ -75,7 +79,7 @@ fun SnapWebView(
                         finishWebView(
                             paymentType = paymentType,
                             url = url.orEmpty(),
-                            onWebViewFinished = onWebViewFinished
+                            onFinishWebView = onPageFinished
                         )
                     }
                 }
@@ -106,32 +110,32 @@ fun SnapWebView(
 private inline fun finishWebView(
     paymentType: String,
     url: String,
-    onWebViewFinished: () -> Unit
+    onFinishWebView: () -> Unit
 ) {
     when (paymentType) {
         PaymentType.KLIK_BCA -> {
             if (url.contains(SnapWebViewClient.CALLBACK_KLIK_BCA, true)) {
-                onWebViewFinished.invoke()
+                onFinishWebView.invoke()
             }
         }
         PaymentType.BCA_KLIKPAY -> {
             if (url.contains(SnapWebViewClient.CALLBACK_BCA_KLIK_PAY, true)) {
-                onWebViewFinished.invoke()
+                onFinishWebView.invoke()
             }
         }
         PaymentType.BRI_EPAY -> {
             if (url.contains(SnapWebViewClient.CALLBACK_BRI_EPAY, true)) {
-                onWebViewFinished.invoke()
+                onFinishWebView.invoke()
             }
         }
         PaymentType.CIMB_CLICKS -> {
             if (url.contains(SnapWebViewClient.CALLBACK_CIMB_CLICKS, true)) {
-                onWebViewFinished.invoke()
+                onFinishWebView.invoke()
             }
         }
         PaymentType.DANAMON_ONLINE -> {
             if (url.contains(SnapWebViewClient.CALLBACK_DANAMON_ONLINE, true)) {
-                onWebViewFinished.invoke()
+                onFinishWebView.invoke()
             }
         }
     }
