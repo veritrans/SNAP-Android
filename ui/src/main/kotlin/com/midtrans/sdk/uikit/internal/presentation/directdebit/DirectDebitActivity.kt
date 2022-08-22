@@ -3,6 +3,7 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -80,6 +81,11 @@ class DirectDebitActivity : BaseActivity() {
         viewModel.getRedirectUrl().observe(this) {
             //TODO integrate webview here
             //TODO set result after webview
+        }
+
+        viewModel.getException().observe(this) {
+            Toast.makeText(this, it.javaClass.name, Toast.LENGTH_LONG).show()
+            //TODO show error dialog later
         }
     }
 
