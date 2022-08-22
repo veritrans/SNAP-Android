@@ -23,21 +23,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
+import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.PaymentMethod
+import com.midtrans.sdk.corekit.api.model.PromoResponse
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
+import com.midtrans.sdk.corekit.internal.network.model.response.MerchantData
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
-import com.midtrans.sdk.uikit.internal.view.SnapAppBar
-import com.midtrans.sdk.uikit.internal.view.SnapColors
-import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
-import com.midtrans.sdk.uikit.internal.view.SnapMultiIconListItem
-import com.midtrans.sdk.uikit.internal.view.SnapOverlayExpandingBox
-import com.midtrans.sdk.uikit.internal.view.SnapTotal
+import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardActivity
+import com.midtrans.sdk.uikit.internal.view.*
 import kotlin.math.sqrt
 
 class PaymentOptionActivity : BaseActivity() {
@@ -48,6 +47,9 @@ class PaymentOptionActivity : BaseActivity() {
         const val EXTRA_ORDER_ID = "paymentOptionActivity.extra.order_id"
         const val EXTRA_PAYMENT_LIST = "paymentOptionActivity.extra.payment_list"
         const val EXTRA_CUSTOMER_DETAILS = "paymentOptionActivity.extra.customer_details"
+        const val EXTRA_CREDIT_CARD = "paymentOptionActivity.extra.credit_card"
+        const val EXTRA_PROMOS = "paymentOptionActivity.extra.promos"
+        const val EXTRA_MERCHANT_DATA = "paymentOptionActivity.extra.merchant_data"
 
         fun openPaymentOptionPage(
             activityContext: Context,
@@ -55,7 +57,10 @@ class PaymentOptionActivity : BaseActivity() {
             totalAmount: String,
             orderId: String,
             paymentList: List<PaymentMethod>,
-            customerDetails: CustomerDetails?
+            customerDetails: CustomerDetails?,
+            creditCard: CreditCard?,
+            promos: List<PromoResponse>?,
+            merchantData: MerchantData?
         ): Intent {
             return Intent(activityContext, PaymentOptionActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -63,6 +68,8 @@ class PaymentOptionActivity : BaseActivity() {
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putParcelableArrayListExtra(EXTRA_PAYMENT_LIST, ArrayList(paymentList))
                 putExtra(EXTRA_CUSTOMER_DETAILS, customerDetails)
+                putExtra(EXTRA_CREDIT_CARD, creditCard)
+                putExtra(EXTRA_MERCHANT_DATA, merchantData)
             }
         }
     }
@@ -93,6 +100,10 @@ class PaymentOptionActivity : BaseActivity() {
 
     private val customerDetail: CustomerDetails? by lazy {
         intent.getParcelableExtra(EXTRA_CUSTOMER_DETAILS) as? CustomerDetails
+    }
+
+    private val creditCard: CreditCard? by lazy {
+        intent.getParcelableExtra(EXTRA_CREDIT_CARD) as? CreditCard
     }
 
     private var customerInfo: CustomerInfo? = null
@@ -233,10 +244,10 @@ class PaymentOptionActivity : BaseActivity() {
                     {
                         SnapCustomerDetail(
                             name = it.name,
-                        phone = it.phone,
-                        addressLines = it.addressLines
-                    )
-                }
+                            phone = it.phone,
+                            addressLines = it.addressLines
+                        )
+                    }
                 },
                 followingContent = {
                     LazyColumn {
@@ -296,13 +307,26 @@ class PaymentOptionActivity : BaseActivity() {
             },
             Pair("credit_card") {
                 resultLauncher.launch(
-                    CreditCardActivity.getIntent(
-                        activityContext = this,
-                        snapToken = snapToken,
-                        orderId = orderId,
-                        totalAmount = totalAmount,
-                        customerInfo = customerInfo,
-                    )
+                    if (creditCard?.savedTokens.isNullOrEmpty()) {
+                        CreditCardActivity.getIntent(
+                            activityContext = this,
+                            snapToken = snapToken,
+                            orderId = orderId,
+                            totalAmount = totalAmount,
+                            customerInfo = customerInfo,
+                            creditCard = creditCard
+                        )
+                    } else {
+                        SavedCardActivity.getIntent(
+                            activityContext = this,
+                            snapToken = snapToken,
+                            orderId = orderId,
+                            totalAmount = totalAmount,
+                            customerInfo = customerInfo,
+                            creditCard = creditCard
+                        )
+                    }
+
                 )
             }
         )
