@@ -13,14 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.midtrans.sdk.corekit.api.model.CreditCard
-import com.midtrans.sdk.corekit.api.model.CustomerDetails
-import com.midtrans.sdk.corekit.api.model.Expiry
-import com.midtrans.sdk.corekit.api.model.GopayPaymentCallback
-import com.midtrans.sdk.corekit.api.model.ItemDetails
-import com.midtrans.sdk.corekit.api.model.PaymentCallback
-import com.midtrans.sdk.corekit.api.model.Promo
-import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
+import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferRequest
 import com.midtrans.sdk.uikit.R
@@ -67,7 +60,7 @@ class LoadingPaymentActivity : BaseActivity() {
             briVa: BankTransferRequest? = null,
             enabledPayments: List<String>? = null,
             expiry: Expiry? = null,
-            promo: Promo? = null,
+            promoRequest: PromoRequest? = null,
             customField1: String? = null,
             customField2: String? = null,
             customField3: String? = null,
@@ -88,7 +81,7 @@ class LoadingPaymentActivity : BaseActivity() {
                 putExtra(EXTRA_BRI_VA, briVa)
                 putStringArrayListExtra(EXTRA_ENABLED_PAYMENTS, enabledPayments?.let { ArrayList(it) })
                 putExtra(EXTRA_EXPIRY, expiry)
-                putExtra(EXTRA_PROMO, promo)
+                putExtra(EXTRA_PROMO, promoRequest)
                 putExtra(EXTRA_CUSTOM_FIELD1, customField1)
                 putExtra(EXTRA_CUSTOM_FIELD2, customField2)
                 putExtra(EXTRA_CUSTOM_FIELD3, customField3)
@@ -136,8 +129,8 @@ class LoadingPaymentActivity : BaseActivity() {
     private val expiry: Expiry? by lazy {
         intent.getParcelableExtra(EXTRA_EXPIRY) as? Expiry
     }
-    private val promo: Promo? by lazy {
-        intent.getParcelableExtra(EXTRA_PROMO) as? Promo
+    private val promoRequest: PromoRequest? by lazy {
+        intent.getParcelableExtra(EXTRA_PROMO) as? PromoRequest
     }
     private val customField1: String? by lazy {
         intent.getStringExtra(EXTRA_CUSTOM_FIELD1)
@@ -181,7 +174,7 @@ class LoadingPaymentActivity : BaseActivity() {
             briVa = briVa,
             enabledPayments = enabledPayments,
             expiry = expiry,
-            promo = promo,
+            promoRequest = promoRequest,
             customField1 = customField1,
             customField2 = customField2,
             customField3 = customField3,
@@ -199,7 +192,10 @@ class LoadingPaymentActivity : BaseActivity() {
                 totalAmount = viewModel.getAmountInString(transactionDetails),
                 orderId = viewModel.getOrderId(transactionDetails),
                 paymentList = it.options,
-                customerDetails = customerDetails
+                customerDetails = customerDetails,
+                creditCard = it.creditCard,
+                promos = it.promos,
+                merchantData = it.merchantData
             )
             startActivity(intent)
             finish()
