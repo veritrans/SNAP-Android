@@ -19,6 +19,9 @@
         <activity
             android:name=".internal.presentation.banktransfer.BankTransferDetailActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".internal.presentation.ewallet.EwalletActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <activity
             android:name=".internal.presentation.loadingpayment.LoadingPaymentActivity"

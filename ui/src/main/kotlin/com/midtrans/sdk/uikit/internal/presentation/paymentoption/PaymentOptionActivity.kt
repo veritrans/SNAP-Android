@@ -25,12 +25,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.PaymentMethod
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
+import com.midtrans.sdk.uikit.internal.presentation.ewallet.EwalletActivity
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapColors
 import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
@@ -273,14 +275,28 @@ class PaymentOptionActivity : BaseActivity() {
         }
     }
 
+
     private fun getOnPaymentItemClick(
         totalAmount: String,
         orderId: String,
         paymentMethodItem: PaymentMethodItem,
         customerInfo: CustomerInfo?,
     ): Map<String, () -> Unit> {
+
+        val eWalletPaymentLauncher = {
+            resultLauncher.launch(
+                EwalletActivity.getIntent(
+                    activityContext = this,
+                    snapToken = snapToken,
+                    orderId = orderId,
+                    totalAmount = totalAmount,
+                    paymentType = paymentMethodItem.type,
+                    customerInfo = customerInfo,
+                )
+            )
+        }
         return mapOf(
-            Pair("bank_transfer") {
+            Pair(PaymentType.BANK_TRANSFER) {
                 resultLauncher.launch(
                     BankTransferListActivity.getIntent(
                         activityContext = this,
@@ -292,7 +308,9 @@ class PaymentOptionActivity : BaseActivity() {
                         destinationBankCode = "009 - Permata"  //TODO: clarify if always permata or something
                     )
                 )
-            }
+            },
+            Pair(PaymentType.SHOPEEPAY, eWalletPaymentLauncher),
+            Pair(PaymentType.GOPAY, eWalletPaymentLauncher)
         )
     }
 }
