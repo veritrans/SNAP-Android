@@ -30,6 +30,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.midtrans.sdk.corekit.api.model.SavedToken
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY
 import com.midtrans.sdk.uikit.internal.view.SnapColors.INTERACTIVE_BORDER_INPUT
@@ -44,8 +45,9 @@ object CreditCardDetailListItem {
 
 @Composable
 fun SnapCCDetailListItem(
-    @DrawableRes startIconId: Int,
+    @DrawableRes startIconId: Int?,
     @DrawableRes endIconId: Int,
+    cvvTextField: TextFieldValue,
     itemTitle: String,
     shouldReveal: Boolean,
     inputTitle: String,
@@ -65,11 +67,13 @@ fun SnapCCDetailListItem(
             verticalAlignment = CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Icon(
-                painter = painterResource(id = startIconId),
-                contentDescription = null,
-                tint = Color.Unspecified
-            )
+            startIconId?.let {
+                Icon(
+                    painter = painterResource(id = it),
+                    contentDescription = null,
+                    tint = Color.Unspecified
+                )
+            }
             Text(
                 text = itemTitle,
                 style = SnapTypography.STYLES.snapTextBigRegular,
@@ -101,16 +105,14 @@ fun SnapCCDetailListItem(
                     .padding(start = 16.dp, bottom = 8.dp, top = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                var text by remember { mutableStateOf(TextFieldValue()) }
                 Text(
                     text = inputTitle,
                     style = SnapTypography.STYLES.snapTextSmallRegular
                 )
                 SnapTextField(
-                    value = text,
+                    value = cvvTextField,
                     onValueChange = { value ->
                         if (value.text.length <= 3) {
-                            text = value
                             onValueChange(value.text.filter { it.isDigit() })
                         }
                     },
@@ -198,12 +200,14 @@ fun SnapSavedCardRadioGroup(
     state: NormalCardItemState,
     onValueChange: (item: String, cvv: String) -> Unit,
     onItemRemoveClicked: (item: String) -> Unit,
-    onCvvValueChange: (String) -> Unit,
+    cvvTextField: TextFieldValue,
+    onCvvValueChange: (TextFieldValue) -> Unit,
     onCardNumberValueChange: (TextFieldValue) -> Unit,
     onExpiryDateValueChange: (TextFieldValue) -> Unit,
     onCardTextFieldFocusedChange: (Boolean) -> Unit,
     onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
     onCvvTextFieldFocusedChange: (Boolean) -> Unit,
+    onRadioButtonSelected: (item: String) -> Unit
 ) {
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(states[0].identifier) }
 
@@ -219,6 +223,7 @@ fun SnapSavedCardRadioGroup(
                         selected = (item.identifier == selectedOption),
                         onClick = {
                             onOptionSelected(item.identifier)
+                            onRadioButtonSelected(item.identifier)
                         },
                         role = Role.RadioButton
                     ),
@@ -230,22 +235,30 @@ fun SnapSavedCardRadioGroup(
                         onClick = null,
                         colors = RadioButtonDefaults.colors(selectedColor = Color.Black)
                     )
+                    var cvvSavedCardTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
                     when (item) {
                         is SavedCreditCardFormData -> {
                             val errorText by item.errorText
+                            if (item.tokenType == SavedToken.ONE_CLICK){
+                                cvvSavedCardTextFieldValue = TextFieldValue("***")
+                            }
                             SnapCCDetailListItem(
                                 startIconId = item.startIcon,
                                 endIconId = item.endIcon,
                                 itemTitle = item.maskedCardNumber,
                                 shouldReveal = item.identifier == selectedOption,
                                 inputTitle = item.inputTitle,
+                                cvvTextField = cvvSavedCardTextFieldValue ,
                                 isInputError = errorText.isNotBlank(),
                                 errorTitle = errorText,
                                 onValueChange = { onValueChange(selectedOption, it) },
                                 onEndIconClicked = { onItemRemoveClicked(item.identifier) },
                                 onCardNumberValueChange ={},
                                 onExpiryDateValueChange ={},
-                                onCvvValueChange = {},
+                                onCvvValueChange = {
+                                    cvvSavedCardTextFieldValue = it
+                                    onCvvValueChange(it)
+                                },
                                 onCardTextFieldFocusedChange = {},
                                 onExpiryTextFieldFocusedChange = {},
                                 onCvvTextFieldFocusedChange = {},
@@ -428,9 +441,10 @@ fun SnapTextField(
 
 
 data class SavedCreditCardFormData(
-    val startIcon: Int,
+    val startIcon: Int?,
     val endIcon: Int,
     val maskedCardNumber: String,
+    val tokenType: String,
     var errorText: MutableState<String>,
     val inputTitle: String,
     var title: String
