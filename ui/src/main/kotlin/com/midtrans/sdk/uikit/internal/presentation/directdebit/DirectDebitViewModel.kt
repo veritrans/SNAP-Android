@@ -15,8 +15,10 @@ internal class DirectDebitViewModel @Inject constructor(
     private val snapCore: SnapCore
 ): ViewModel() {
     private val redirectUrl = MutableLiveData<String>()
+    private val exception = MutableLiveData<SnapError>()
 
     fun getRedirectUrl(): LiveData<String> = redirectUrl
+    fun getException(): LiveData<SnapError> = exception
 
     fun payDirectDebit(
         snapToken: String,
@@ -37,6 +39,7 @@ internal class DirectDebitViewModel @Inject constructor(
 
                 override fun onError(error: SnapError) {
                     Log.e("DirectDebitPay", error.javaClass.name)
+                    exception.value = error
                 }
             }
         )
