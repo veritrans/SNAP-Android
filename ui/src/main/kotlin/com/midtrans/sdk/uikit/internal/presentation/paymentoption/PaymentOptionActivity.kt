@@ -23,11 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
-import com.midtrans.sdk.corekit.api.model.CreditCard
-import com.midtrans.sdk.corekit.api.model.CustomerDetails
-import com.midtrans.sdk.corekit.api.model.PaymentMethod
-import com.midtrans.sdk.corekit.api.model.PromoResponse
-import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.corekit.internal.network.model.response.MerchantData
 import com.midtrans.sdk.uikit.R
@@ -330,7 +326,6 @@ class PaymentOptionActivity : BaseActivity() {
                             creditCard = creditCard
                         )
                     }
-
                 )
             },
             checkDirectDebitType(paymentType).let {
