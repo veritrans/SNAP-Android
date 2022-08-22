@@ -1,6 +1,10 @@
-package com.midtrans.sdk.corekit.internal.network.model.response
+package com.midtrans.sdk.corekit.api.model
 
-internal data class PromoResponse(
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class PromoResponse(
     val id: Int = 0,
     val bins: List<String>? = null,
     val discountAmount: Double = 0.0,
@@ -11,4 +15,4 @@ internal data class PromoResponse(
     val sponsorName: String? = null,
     val sponsorMessageEn: String? = null,
     val sponsorMessageId: String? = null
-)
+): Parcelable
