@@ -1,6 +1,10 @@
 package com.midtrans.sdk.corekit.internal.network.model.response
 
-internal data class MerchantData(
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class MerchantData(
     val preference: MerchantPreferences? = null,
     val clientKey: String? = null,
     val enabledPrinciples: List<String>? = null,
@@ -9,4 +13,4 @@ internal data class MerchantData(
     val acquiringBanks: List<String>? = null,
     val priorityCardFeature: String? = null,
     val recurringMidIsActive: Boolean? = null
-)
+): Parcelable
