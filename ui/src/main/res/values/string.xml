@@ -231,32 +231,73 @@
     <string name="akulaku_cta">Pay now</string>
 
 
+    <string name="danamon_title">Danamon Online Banking</string>
     <string name="danamon_instruction">Make sure you already have Danamon Online Banking account to complete payment through Danamon’s app/website.</string>
-    <string name="danamon_how_to_pay">1. Tap Pay Now and you will be redirected to Danamon Online Banking page. 2. Login and select the source of fund you’d like to use. 3. Recheck your transaction details. 4. Confirm your payment by entering the token code, and click Next. 5. Keep the merchant reference and payment reference number, then click Next to return to the merchant’s page.</string>
+    <string-array name="danamon_how_to_pay">
+        <item><data><![CDATA[Tap <b>Pay Now</b> and you will be redirected to Danamon Online Banking page.]]></data></item>
+        <item><data><![CDATA[Login and select the source of fund you’d like to use.]]></data></item>
+        <item><data><![CDATA[Recheck your transaction details.]]></data></item>
+		<item><data><![CDATA[Confirm your payment by entering the token code, and click <b>Next</b>.]]></data></item>
+        <item><data><![CDATA[Keep the merchant reference and payment reference number, then click <b>Next</b> to return to the merchant’s page.]]></data></item>
+    </string-array>
     <string name="danamon_cta">Pay now</string>
 
 
+    <string name="bca_klik_pay_title">BCA KlikPay</string>
     <string name="bca_klik_pay_instruction">Please complete BCA KlikPay through BCA KlikPay app/website.</string>
-    <string name="bca_klik_pay_how_to_pay">1. Tap Pay Now and you will be redirected to BCA KlikPay page. 2. Login and check your payment details. 3. Choose KlikBCA or BCA Card to pay for your transaction. 4. To authorize payment with BCA KlikPay, tap the Send OTP button to receive an OTP code via SMS, then enter code in the fields provided. 5. If your OTP code is correct, your payment will be processed immediately. 6. Once the payment is completed, success status will appear on the transaction screen and you will receive a notification e-mail.</string>
+    <string name="bca_klik_pay_how_to_pay_title">How to pay</string>
+    <string-array name="bca_klik_pay_how_to_pay">
+        <item><data><![CDATA[Tap <b>Pay Now</b> and you will be redirected to BCA KlikPay page.]]></data></item>
+        <item><data><![CDATA[Login and check your payment details.]]></data></item>
+        <item><data><![CDATA[Choose KlikBCA or BCA Card to pay for your transaction.]]></data></item>
+        <item><data><![CDATA[To authorize payment with BCA KlikPay, tap the <b>Send OTP</b> button to receive an OTP code via SMS, then enter code in the fields provided.]]></data></item>
+        <item><data><![CDATA[If your OTP code is correct, your payment will be processed immediately.]]></data></item>
+        <item><data><![CDATA[Once the payment is completed, success status will appear on the transaction screen and you will receive a notification e-mail.]]></data></item>
+    </string-array>
     <string name="bca_klik_pay_cta">Pay now</string>
 
 
+    <string name="klik_bca_title">KlikBCA</string>
     <string name="klik_bca_instruction">Please provide your KlikBCA User ID on the field below for us to verify your transaction.</string>
+    <string name="klik_bca_id_field_title">User ID KlikBCA</string>
     <string name="klik_bca_id_field_label">Enter KlikBCA User ID</string>
     <string name="klik_bca_placeholder">Your KlikBCA ID</string>
     <string name="klik_bca_validation_error">KlikBCA ID can\'t be empty</string>
-
-    <string name="klik_bca_how_to_pay">1.Tap Pay Now and you will be redirected to KlikBCA page. 2. Login to your KlikBCA account. 3. Choose e-commerce Payment menu. 4. Choose Others category. 5. Choose Company Name. 6. Click Continue. 7. Choose the transaction that you want to pay and tap Continue. 8. Confirm the payment by entering the token key and choose Submit/Continue.</string>
+    <string-array name="klik_bca_how_to_pay">
+        <item><data><![CDATA[Tap <b>Pay now</b> and you will be redirected to KlikBCA page.]]></data></item>
+        <item><data><![CDATA[Login to your KlikBCA account.]]></data></item>
+        <item><data><![CDATA[Choose <b>e-commerce Payment</b> menu.]]></data></item>
+        <item><data><![CDATA[Choose <b>Others</b> category.]]></data></item>
+        <item><data><![CDATA[Choose <b>Company Name</b>.]]></data></item>
+        <item><data><![CDATA[Click <b>Continue</b>.]]></data></item>
+        <item><data><![CDATA[Choose the transaction that you want to pay and tap <b>Continue</b>.]]></data></item>
+        <item><data><![CDATA[Confirm the payment by entering the token key and choose <b>Submit/Continue</b>.]]></data></item>
+    </string-array>
     <string name="klik_bca_cta">Pay now</string>
 
 
+    <string name="octo_click_title">OCTOClicks</string>
     <string name="octo_click_instruction">Please complete OCTO Clicks payment through OCTO Clicks app/website.</string>
-    <string name="octo_click_how_to_pay">1. Tap Pay now and you will be redirected to OCTO Clicks page. 2. Login to your Octo Clicks account. 3. Follow the instruction on the website and complete your payment. 4. Once confirmed, your transaction will be processed online and your CIMB account balance will be deducted automatically. 5. Transaction will be cancelled if the payment is not completed within 2 hours. 6. Please make sure that there is no pop-up blocker on your browser.</string>
+    <string-array name="octo_click_how_to_pay">
+        <item><data><![CDATA[Tap <b>Pay now</b> and you will be redirected to OCTO Clicks page.]]></data></item>
+        <item><data><![CDATA[Login to your Octo Clicks account.]]></data></item>
+        <item><data><![CDATA[Follow the instruction on the website and complete your payment.]]></data></item>
+        <item><data><![CDATA[Once confirmed, your transaction will be processed online and your CIMB account balance will be deducted automatically.]]></data></item>
+        <item><data><![CDATA[Transaction will be cancelled if the payment is not completed within 2 hours.]]></data></item>
+        <item><data><![CDATA[Please make sure that there is no pop-up blocker on your browser.]]></data></item>
+    </string-array>
     <string name="octo_click_cta">Pay now</string>
 
 
+    <string name="brimo_title">BRImo</string>
     <string name="brimo_instruction">Please complete BRImo payment through BRI app/website.</string>
-    <string name="brimo_how_to_pay">Please complete BRImo payment through BRI app/website.</string>
+    <string-array name="brimo_how_to_pay">
+        <item><data><![CDATA[Tap <b>Pay now</b> and you will be redirected to BRImo page.]]></data></item>
+        <item><data><![CDATA[Login to your BRImo account.]]></data></item>
+        <item><data><![CDATA[Follow the instruction on the website and complete your payment.]]></data></item>
+        <item><data><![CDATA[Once confirmed, your transaction will be processed online and your BRI account balance will be deducted automatically.]]></data></item>
+        <item><data><![CDATA[Transaction will be cancelled if the payment is not completed within 2 hours.]]></data></item>
+    </string-array>
     <string name="brimo_cta">Pay now</string>
 
 

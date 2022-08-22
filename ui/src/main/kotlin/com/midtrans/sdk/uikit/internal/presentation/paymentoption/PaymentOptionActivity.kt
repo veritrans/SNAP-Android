@@ -27,6 +27,7 @@ import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.PaymentMethod
 import com.midtrans.sdk.corekit.api.model.PromoResponse
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.corekit.internal.network.model.response.MerchantData
 import com.midtrans.sdk.uikit.R
@@ -36,6 +37,7 @@ import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardActivity
+import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
 import com.midtrans.sdk.uikit.internal.view.*
 import kotlin.math.sqrt
 
@@ -262,6 +264,7 @@ class PaymentOptionActivity : BaseActivity() {
                                 iconList = payment.icons
                             ) {
                                 getOnPaymentItemClick(
+                                    paymentType = payment.type,
                                     customerInfo = customerInfo,
                                     totalAmount = totalAmount,
                                     paymentMethodItem = payment,
@@ -286,6 +289,7 @@ class PaymentOptionActivity : BaseActivity() {
     }
 
     private fun getOnPaymentItemClick(
+        paymentType: String,
         totalAmount: String,
         orderId: String,
         paymentMethodItem: PaymentMethodItem,
@@ -328,7 +332,32 @@ class PaymentOptionActivity : BaseActivity() {
                     }
 
                 )
+            },
+            checkDirectDebitType(paymentType).let {
+                Pair(it) {
+                    resultLauncher.launch(
+                        DirectDebitActivity.getIntent(
+                            activityContext = this,
+                            snapToken = snapToken,
+                            paymentType = it,
+                            amount = totalAmount,
+                            orderId = orderId,
+                            customerInfo = customerInfo
+                        )
+                    )
+                }
             }
         )
+    }
+
+    private fun checkDirectDebitType(paymentType: String): String {
+        return when (paymentType) {
+            PaymentType.KLIK_BCA,
+            PaymentType.BCA_KLIKPAY,
+            PaymentType.CIMB_CLICKS,
+            PaymentType.BRI_EPAY,
+            PaymentType.DANAMON_ONLINE -> paymentType
+            else -> ""
+        }
     }
 }

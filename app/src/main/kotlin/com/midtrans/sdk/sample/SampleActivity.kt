@@ -190,7 +190,13 @@ class SampleActivity : AppCompatActivity() {
                     creditCard = CreditCard(
                         saveCard = true
                     ),
-                    userId = "3A8788CE-B96F-449C-8180-B5901A08B50A"
+                    userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
+                    customerDetails = CustomerDetails(
+                        firstName = "Ari",
+                        lastName = "Bhakti",
+                        email = "aribhakti@email.com",
+                        phone = "087788778212"
+                    )
                 )
                 startActivity(
                     intent
