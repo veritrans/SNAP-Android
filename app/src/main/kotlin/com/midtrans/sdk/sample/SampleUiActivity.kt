@@ -133,7 +133,8 @@ class SampleUiActivity : AppCompatActivity() {
                     endIcon = R.drawable.ic_trash,
                     startIcon = R.drawable.ic_outline_bca_24,
                     errorText = remember { mutableStateOf("") },
-                    maskedCardNumber = "123***********345"
+                    maskedCardNumber = "123***********345",
+                    tokenType = "one_click"
                 ),
                 SavedCreditCardFormData(
                     title = "dua",
@@ -141,7 +142,8 @@ class SampleUiActivity : AppCompatActivity() {
                     endIcon = R.drawable.ic_trash,
                     startIcon = R.drawable.ic_outline_bni_24,
                     errorText = remember { mutableStateOf("") },
-                    maskedCardNumber = "123***********345"
+                    maskedCardNumber = "123***********345",
+                    tokenType = "one_click"
                 ),
                 SavedCreditCardFormData(
                     title = "tiga",
@@ -149,7 +151,8 @@ class SampleUiActivity : AppCompatActivity() {
                     endIcon = R.drawable.ic_trash,
                     startIcon = R.drawable.ic_outline_mandiri_24,
                     errorText = remember { mutableStateOf("") },
-                    maskedCardNumber = "123***********345"
+                    maskedCardNumber = "123***********345",
+                    tokenType = "one_click"
                 ),
                 NewCardFormData(
                     title = "new",
