@@ -17,7 +17,7 @@ class UiKitApi {
     fun startPayment( //TODO revisit this implementation, currently for showing status in Sample App
         activityContext: Context,
         transactionDetails: SnapTransactionDetail,
-        customerDetail: CustomerDetails,
+        customerDetails: CustomerDetails,
         paymentCallback: Callback<TransactionResult>
     ) {
         this.paymentCallback = paymentCallback
@@ -25,7 +25,7 @@ class UiKitApi {
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
             activityContext = activityContext,
             transactionDetails = transactionDetails,
-            customerDetails = customerDetail
+            customerDetails = customerDetails
         )
         activityContext.startActivity(intent)
     }
