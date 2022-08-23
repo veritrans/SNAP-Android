@@ -266,11 +266,13 @@ class PaymentOptionActivity : BaseActivity() {
         }
     }
 
-    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            finish()
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.let { setResult(RESULT_OK, it) } //TODO for now only direct debit returns data
+                finish()
+            }
         }
-    }
 
     private fun getOnPaymentItemClick(
         paymentType: String,
