@@ -2,6 +2,13 @@ package com.midtrans.sdk.corekit.api.requestbuilder.cardtoken
 
 abstract class CreditCardTokenRequestBuilder {
     internal abstract fun build(): Map<String, String>
+    protected lateinit var clientKey: String
+
+
+    //TODO: How to return the subclass
+    internal fun withClientKey(value: String): CreditCardTokenRequestBuilder = apply {
+        clientKey = value
+    }
 
     companion object {
         const val BANK = "bank"

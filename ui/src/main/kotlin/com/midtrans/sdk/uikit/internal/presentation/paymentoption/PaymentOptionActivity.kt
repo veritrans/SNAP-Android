@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.DisplayMetrics
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -26,12 +25,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.PaymentMethod
 import com.midtrans.sdk.corekit.api.model.PaymentType
-import com.midtrans.sdk.corekit.internal.base.BaseActivity
+import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
+import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
+import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.EwalletActivity
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapColors
@@ -39,7 +40,6 @@ import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
 import com.midtrans.sdk.uikit.internal.view.SnapMultiIconListItem
 import com.midtrans.sdk.uikit.internal.view.SnapOverlayExpandingBox
 import com.midtrans.sdk.uikit.internal.view.SnapTotal
-import kotlin.math.sqrt
 
 class PaymentOptionActivity : BaseActivity() {
 
@@ -114,18 +114,6 @@ class PaymentOptionActivity : BaseActivity() {
                 paymentMethods = paymentMethods
             )
         }
-    }
-
-    private fun isTabletDevice(): Boolean {
-        val metrics = DisplayMetrics()
-        this.windowManager.defaultDisplay.getMetrics(metrics)
-
-        val yInches = metrics.heightPixels / metrics.ydpi
-        val xInches = metrics.widthPixels / metrics.xdpi
-        val diagonalInches = sqrt((xInches * xInches + yInches * yInches).toDouble())
-        val hasTabletAttribute = resources.getBoolean(R.bool.isTablet)
-
-        return diagonalInches >= 6.5 && hasTabletAttribute
     }
 
     @Preview
@@ -234,10 +222,10 @@ class PaymentOptionActivity : BaseActivity() {
                     {
                         SnapCustomerDetail(
                             name = it.name,
-                        phone = it.phone,
-                        addressLines = it.addressLines
-                    )
-                }
+                            phone = it.phone,
+                            addressLines = it.addressLines
+                        )
+                    }
                 },
                 followingContent = {
                     LazyColumn {
@@ -252,6 +240,7 @@ class PaymentOptionActivity : BaseActivity() {
                                 iconList = payment.icons
                             ) {
                                 getOnPaymentItemClick(
+                                    paymentType = payment.type,
                                     customerInfo = customerInfo,
                                     totalAmount = totalAmount,
                                     paymentMethodItem = payment,
@@ -275,8 +264,8 @@ class PaymentOptionActivity : BaseActivity() {
         }
     }
 
-
     private fun getOnPaymentItemClick(
+        paymentType: String,
         totalAmount: String,
         orderId: String,
         paymentMethodItem: PaymentMethodItem,
@@ -309,8 +298,44 @@ class PaymentOptionActivity : BaseActivity() {
                     )
                 )
             },
+            Pair("credit_card") {
+                resultLauncher.launch(
+                    CreditCardActivity.getIntent(
+                        activityContext = this,
+                        snapToken = snapToken,
+                        orderId = orderId,
+                        totalAmount = totalAmount,
+                        customerInfo = customerInfo,
+                    )
+                )
+            },
+            checkDirectDebitType(paymentType).let {
+                Pair(it) {
+                    resultLauncher.launch(
+                        DirectDebitActivity.getIntent(
+                            activityContext = this,
+                            snapToken = snapToken,
+                            paymentType = it,
+                            amount = totalAmount,
+                            orderId = orderId,
+                            customerInfo = customerInfo
+                        )
+                    )
+                }
+            },
             Pair(PaymentType.SHOPEEPAY, eWalletPaymentLauncher),
             Pair(PaymentType.GOPAY, eWalletPaymentLauncher)
         )
+    }
+
+    private fun checkDirectDebitType(paymentType: String): String {
+        return when (paymentType) {
+            PaymentType.KLIK_BCA,
+            PaymentType.BCA_KLIKPAY,
+            PaymentType.CIMB_CLICKS,
+            PaymentType.BRI_EPAY,
+            PaymentType.DANAMON_ONLINE -> paymentType
+            else -> ""
+        }
     }
 }

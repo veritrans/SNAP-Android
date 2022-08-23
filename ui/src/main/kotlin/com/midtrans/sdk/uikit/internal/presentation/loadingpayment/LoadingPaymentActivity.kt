@@ -21,7 +21,7 @@ import com.midtrans.sdk.corekit.api.model.ItemDetails
 import com.midtrans.sdk.corekit.api.model.PaymentCallback
 import com.midtrans.sdk.corekit.api.model.Promo
 import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
-import com.midtrans.sdk.corekit.internal.base.BaseActivity
+import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferRequest
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity

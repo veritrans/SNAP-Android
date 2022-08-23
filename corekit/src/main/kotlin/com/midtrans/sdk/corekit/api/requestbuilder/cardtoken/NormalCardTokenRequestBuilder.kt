@@ -6,7 +6,6 @@ import com.midtrans.sdk.corekit.internal.network.model.request.InstallmentReques
 import com.midtrans.sdk.corekit.internal.util.NumberUtil
 
 class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
-    private var clientKey: String? = null
     private var grossAmount: Double? = null
     private var cardNumber: String? = null
     private var cardExpMonth: String? = null
@@ -30,10 +29,6 @@ class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
 
     fun withCardCvv(value: String): NormalCardTokenRequestBuilder = apply {
         cardCvv = value
-    }
-
-    fun withClientKey(value: String): NormalCardTokenRequestBuilder = apply {
-        clientKey = value
     }
 
     fun withGrossAmount(value: Double): NormalCardTokenRequestBuilder = apply {

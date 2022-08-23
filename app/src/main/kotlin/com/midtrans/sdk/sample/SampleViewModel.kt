@@ -47,7 +47,6 @@ class SampleViewModel : ViewModel() {
 
     fun getCardTokenBasic(){
         coreKit.getCardToken(cardTokenRequestBuilder = NormalCardTokenRequestBuilder()
-            .withClientKey(clientKeyForPoint)
             .withGrossAmount(150000.0)
             .withCardNumber(bniCcNumber)
             .withCardExpMonth("12")
@@ -68,7 +67,6 @@ class SampleViewModel : ViewModel() {
 
     fun getTwoClickToken(){
         coreKit.getCardToken(cardTokenRequestBuilder = TwoClickCardTokenRequestBuilder()
-            .withClientKey(clientKeyForPoint)
             .withGrossAmount(150000.0)
             .withCardCvv("123")
             .withTokenId(ccSavedTokenIdBniTwoClickPoint)
@@ -87,7 +85,6 @@ class SampleViewModel : ViewModel() {
 
     fun getCardTokenNormalWithInstallment(){
         coreKit.getCardToken(cardTokenRequestBuilder = NormalCardTokenRequestBuilder()
-            .withClientKey(clientKeyForPoint)
             .withGrossAmount(150000.0)
             .withCardNumber(bniCcNumber)
             .withCardExpMonth("12")
@@ -109,7 +106,6 @@ class SampleViewModel : ViewModel() {
 
     fun getTwoClickTokenWithInstallment(){
         coreKit.getCardToken(cardTokenRequestBuilder = TwoClickCardTokenRequestBuilder()
-            .withClientKey(clientKeyForPoint)
             .withGrossAmount(150000.0)
             .withCardCvv("123")
             .withTokenId(ccSavedTokenIdBniTwoClickPoint)
@@ -325,7 +321,6 @@ class SampleViewModel : ViewModel() {
     fun getBinData(binNumber: String){
         coreKit.getBinData(
             binNumber = binNumber,
-            clientKey = "VT-client-yrHf-c8Sxr-ck8tx",
             callback = object : Callback<BinResponse> {
                 override fun onSuccess(result: BinResponse) {
                 }

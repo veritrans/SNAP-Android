@@ -1,5 +1,7 @@
 package com.midtrans.sdk.sample
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -17,12 +19,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.midtrans.sdk.corekit.SnapCore
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.*
 
 class SampleUiActivity : AppCompatActivity() {
 
+    private val isWebView: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_SAMPLE_WEB_VIEW, false)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            if (isWebView) {
+                SampleWebView()
+            } else {
+                SampleUi()
+                SampleBottomSheet()
+            }
+        }
+    }
 
     @Composable
     @Preview
@@ -109,7 +126,7 @@ class SampleUiActivity : AppCompatActivity() {
                 }
             )
 
-            var list = mutableListOf(
+            val list = mutableListOf(
                 SavedCreditCardFormData(
                     title = "satu",
                     inputTitle = "Masukkan CVV",
@@ -145,33 +162,35 @@ class SampleUiActivity : AppCompatActivity() {
 
             ).toMutableStateList()
 
-            SnapSavedCardRadioGroup(states = list, { selected: String, value: String ->
-                Log.e("wahyu", "cardNumber: $selected  cvv: $value")
 
-                list.find { it.identifier == selected }.let { member ->
-                    member?.apply {
-                        if (this is SavedCreditCardFormData) errorText.value =
-                            if (value.length >= 3) "jangan salah" else ""
-                    }
-                }
-            }, onItemRemoveClicked = { title ->
-                list.find { it.identifier == title }.let { member ->
-                    list.remove(member)
-                }
-            },
-                onCardNumberValueChange = {
-                    Toast.makeText(this@SampleUiActivity, "HA${it.length}X", Toast.LENGTH_SHORT)
-                        .show()
-                },
-                onCvvValueChange = {
-                    Toast.makeText(this@SampleUiActivity, "HI${it.length}X", Toast.LENGTH_SHORT)
-                        .show()
-                },
-                onExpiryDateValueChange = {
-                    Toast.makeText(this@SampleUiActivity, "HE${it.length}X", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            )
+            //TODO: Fix on Save Card
+//            SnapSavedCardRadioGroup(states = list, { selected: String, value: String ->
+//                Log.e("wahyu", "cardNumber: $selected  cvv: $value")
+//
+//                list.find { it.identifier == selected }.let { member ->
+//                    member?.apply {
+//                        if (this is SavedCreditCardFormData) errorText.value =
+//                            if (value.length >= 3) "jangan salah" else ""
+//                    }
+//                }
+//            }, onItemRemoveClicked = { title ->
+//                list.find { it.identifier == title }.let { member ->
+//                    list.remove(member)
+//                }
+//            },
+//                onCardNumberValueChange = {
+//                    Toast.makeText(this@SampleUiActivity, "HA${it.length}X", Toast.LENGTH_SHORT)
+//                        .show()
+//                },
+//                onCvvValueChange = {
+//                    Toast.makeText(this@SampleUiActivity, "HI${it.length}X", Toast.LENGTH_SHORT)
+//                        .show()
+//                },
+//                onExpiryDateValueChange = {
+//                    Toast.makeText(this@SampleUiActivity, "HE${it.length}X", Toast.LENGTH_SHORT)
+//                        .show()
+//                }
+//            )
 
             SnapNumberedListItem(
                 number = "1.",
@@ -202,7 +221,7 @@ class SampleUiActivity : AppCompatActivity() {
                 title = "Cara bayar",
                 onExpandClick = { isExpanded = !isExpanded },
                 expandingContent = {
-                    val words = listOf<String>(
+                    val words = listOf(
                         "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad lasldasdla halo halo bandung ibukkota priangan, kokwaowkeaowkeo awas pusing",
                         "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad, ga tau mau nulis apa, bingung semuanya",
                         "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad, halo hallo lagi, kamu lagi ngapain",
@@ -240,10 +259,10 @@ class SampleUiActivity : AppCompatActivity() {
             SnapText(text = "This is <b>bolt</b> <i>italic</i> <u>underline</u>")
             SnapText(
                 text = "<ol>" +
-                        "  <li>Coffee <b>asldjflasjdfalkdf</b> alsdf ladsfjlkasjdf jasdlf lasjdflk as alsdkjflalaksdf jalskdfj alskdjf ajsdf lalksd jfalkd sfjlaksd jflasdkjf aslkd fjlaksdj falkdsf jalkds jflaksdj falksdfj alksdfj aslkdfj alskdf</li>" +
-                        "  <li>Tea</li>" +
-                        "  <li>Milk</li>" +
-                        "</ol>"
+                    "  <li>Coffee <b>asldjflasjdfalkdf</b> alsdf ladsfjlkasjdf jasdlf lasjdflk as alsdkjflalaksdf jalskdfj alskdjf ajsdf lalksd jfalkd sfjlaksd jflasdkjf aslkd fjlaksdj falkdsf jalkds jflaksdj falksdfj alksdfj aslkdfj alskdf</li>" +
+                    "  <li>Tea</li>" +
+                    "  <li>Milk</li>" +
+                    "</ol>"
             )
 
             val promoList = listOf(
@@ -282,57 +301,81 @@ class SampleUiActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        SnapCore.Builder().withContext(this.applicationContext).build()
-        setContent {
-            SampleUi()
-            var redeemed by remember {
-                mutableStateOf(false)
-            }
-            SnapBottomSheet(
-                content = {
-                    val data = SnapPointRedeemDialogData(
-                        title = "Pakai BNI Reward point",
-                        infoMessage = remember {
-                            mutableStateOf("Anda memiliki poin senilai Rp10.000")
-                        },
-                        isError = remember {
-                            mutableStateOf(false)
-                        },
-                        total = remember {
-                            mutableStateOf("Rp990.000")
-                        }
-                    )
-                    SnapPointRedeemDialogContent(
-                        data = data,
-                        onValueChange = { value ->
-                            data.apply {
-                                if (value.toInt() > 10000) {
-                                    isError.value = true
-                                    infoMessage.value = "Melebihi jumlah point yang tersedia"
+    @Composable
+    fun SampleBottomSheet() {
+        var redeemed by remember {
+            mutableStateOf(false)
+        }
+        SnapBottomSheet(
+            content = {
+                val data = SnapPointRedeemDialogData(
+                    title = "Pakai BNI Reward point",
+                    infoMessage = remember {
+                        mutableStateOf("Anda memiliki poin senilai Rp10.000")
+                    },
+                    isError = remember {
+                        mutableStateOf(false)
+                    },
+                    total = remember {
+                        mutableStateOf("Rp990.000")
+                    }
+                )
+                SnapPointRedeemDialogContent(
+                    data = data,
+                    onValueChange = { value ->
+                        data.apply {
+                            if (value.toInt() > 10000) {
+                                isError.value = true
+                                infoMessage.value = "Melebihi jumlah point yang tersedia"
 
-                                } else {
-                                    isError.value = false
-                                    infoMessage.value = "Anda memiliki poin senilai Rp10.000"
-                                }
+                            } else {
+                                isError.value = false
+                                infoMessage.value = "Anda memiliki poin senilai Rp10.000"
                             }
-
-                        },
-                        onClick = {
-                            Toast.makeText(
-                                this@SampleUiActivity,
-                                "Bayar",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            redeemed = true
                         }
-                    )
-                }
-            ).apply {
-                if (redeemed) {
-                    hide()
-                }
+
+                    },
+                    onClick = {
+                        Toast.makeText(
+                            this@SampleUiActivity,
+                            "Bayar",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        redeemed = true
+                    }
+                )
+            }
+        ).apply {
+            if (redeemed) {
+                hide()
+            }
+        }
+    }
+
+    @Composable
+    fun SampleWebView() {
+        SnapWebView(
+            paymentType = PaymentType.KLIK_BCA,
+            url = "https://simulator.sandbox.midtrans.com/bca/klikbca/index",
+            onWebViewStarted = {
+                Log.d("SnapWebView", "started")
+            },
+            onWebViewFinished = {
+                Log.d("SnapWebView", "finished")
+                finish()
+            }
+        )
+    }
+
+    companion object {
+        const val EXTRA_SAMPLE_WEB_VIEW = "sample.sample_web_view"
+
+        fun getIntent(
+            activityContext: Context,
+            isWebView: Boolean
+        ): Intent {
+            return Intent(activityContext, SampleUiActivity::class.java).apply {
+                putExtra(EXTRA_SAMPLE_WEB_VIEW, isWebView)
             }
         }
     }

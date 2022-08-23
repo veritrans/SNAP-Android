@@ -30,6 +30,20 @@
         <activity
             android:name=".internal.presentation.paymentoption.PaymentOptionActivity"
             android:theme="@style/Theme.AppCompat.Light" />
+
+        <activity
+            android:windowSoftInputMode="adjustPan"
+            android:name=".internal.presentation.creditcard.CreditCardActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity
+            android:windowSoftInputMode="adjustPan"
+            android:name=".internal.presentation.creditcard.SavedCardActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity
+            android:name=".internal.presentation.directdebit.DirectDebitActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>

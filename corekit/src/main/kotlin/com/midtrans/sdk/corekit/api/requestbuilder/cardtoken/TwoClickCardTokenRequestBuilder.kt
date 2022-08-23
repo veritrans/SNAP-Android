@@ -9,7 +9,6 @@ class TwoClickCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
     private var twoClick: Boolean = true
     private var tokenId: String? = null
     private var cardCvv: String? = null
-    private var clientKey: String? = null
     private var grossAmount: Double? = null
     private var currency: String? = null
     private var orderId: String? = null
@@ -17,10 +16,6 @@ class TwoClickCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
 
     fun withCardCvv(value: String): TwoClickCardTokenRequestBuilder = apply {
         cardCvv = value
-    }
-
-    fun withClientKey(value: String): TwoClickCardTokenRequestBuilder = apply {
-        clientKey = value
     }
 
     fun withGrossAmount(value: Double): TwoClickCardTokenRequestBuilder = apply {

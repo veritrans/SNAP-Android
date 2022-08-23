@@ -1,4 +1,4 @@
-package com.midtrans.sdk.corekit.internal.base
+package com.midtrans.sdk.uikit.internal.base
 
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
