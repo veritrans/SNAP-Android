@@ -26,6 +26,7 @@ import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
 import javax.inject.Inject
@@ -196,12 +197,18 @@ class DirectDebitActivity : BaseActivity() {
                 url = url,
                 onPageStarted = {
                     Log.d("WebView", "Started")
-                    setResult(RESULT_OK)
-                    finish()
+                    finishDirectDebitPayment()
                 },
                 onPageFinished = { }
             )
         }
+    }
+
+    private fun finishDirectDebitPayment() { //TODO temporary solution for showing Toast on sample app
+        val data = Intent()
+        data.putExtra(UiKitConstants.KEY_TRANSACTION_RESPONSE, UiKitConstants.STATUS_PENDING)
+        setResult(RESULT_OK, data)
+        finish()
     }
 
     private fun enableButton(paymentType: String, userId: String): Boolean {
