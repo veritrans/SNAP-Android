@@ -193,14 +193,6 @@ class LoadingPaymentActivity : BaseActivity() {
         )
     }
 
-    private val resultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                result.data?.let { setResult(RESULT_OK, it) }
-                finish()
-            }
-        }
-
     private fun initObserver() {
         viewModel.getPaymentOptionLiveData().observe(this, Observer {
             val intent = PaymentOptionActivity.openPaymentOptionPage(
@@ -211,7 +203,7 @@ class LoadingPaymentActivity : BaseActivity() {
                 paymentList = it.options,
                 customerDetails = customerDetails
             )
-            resultLauncher.launch(intent)
+            startActivity(intent)
             finish()
         })
         viewModel.getErrorLiveData().observe(this, Observer {
