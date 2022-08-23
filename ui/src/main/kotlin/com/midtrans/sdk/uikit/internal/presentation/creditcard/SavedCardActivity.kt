@@ -15,22 +15,32 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.view.*
 import kotlinx.android.parcel.Parcelize
+import javax.inject.Inject
 
 
 //TODO: Need to fix the UI implementation later when implementing Saved Card
 class SavedCardActivity: BaseActivity() {
 
+    @Inject
+    lateinit var viewModel: SavedCardViewModel
+
     private val creditCard: CreditCard? by lazy {
         intent.getParcelableExtra(SavedCardActivity.EXTRA_CREDIT_CARD) as? CreditCard
+    }
+
+    private val snapToken: String by lazy {
+        intent.getStringExtra(SavedCardActivity.EXTRA_SNAP_TOKEN).orEmpty()
     }
 
     companion object {
@@ -60,6 +70,7 @@ class SavedCardActivity: BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build().inject(this)
         setContent {
             CrediCardPageStateFull(
                 totalAmount = "10000",
@@ -143,6 +154,8 @@ class SavedCardActivity: BaseActivity() {
         customerDetail: SavedCardActivity.CustomerDetail,
         onExpand: (Boolean) -> Unit,
     ){
+
+        //TODO: Need to find a better way to create the savedTokenListState
         var savedTokenList = mutableListOf<FormData>()
         creditCard?.savedTokens?.forEachIndexed { index, savedToken ->
             savedTokenList.add(
@@ -153,6 +166,7 @@ class SavedCardActivity: BaseActivity() {
                     startIcon = getBankIcon(savedToken.binDetail?.bankCode.toString()),
                     errorText = remember { mutableStateOf("") },
                     maskedCardNumber = formatMaskedCard(savedToken.maskedCard.toString()),
+                    displayedMaskedCard = savedToken.maskedCard.toString(),
                     tokenType = savedToken.tokenType.toString()
                 )
             )
@@ -214,6 +228,9 @@ class SavedCardActivity: BaseActivity() {
                                 ).show()
                             } ,
                             onItemRemoveClicked = {
+
+                                viewModel.deleteSavedCard(snapToken = snapToken, maskedCard = it.displayedMaskedCard)
+                                savedTokenListState.remove(it)
                                 Toast.makeText(
                                     this@SavedCardActivity,
                                     "delete clicked",
@@ -228,16 +245,9 @@ class SavedCardActivity: BaseActivity() {
                             onCardTextFieldFocusedChange = {},
                             onExpiryTextFieldFocusedChange = {},
                             onCvvTextFieldFocusedChange = {},
-                            onRadioButtonSelected = {
-                                Toast.makeText(
-                                    this@SavedCardActivity,
-                                    "radio selected $it",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
                         )
                         SnapButton(
-                            text = "Bayar",
+                            text = stringResource(id = R.string.cc_dc_main_screen_cta),
                             style = SnapButton.Style.PRIMARY,
                             modifier = Modifier
                                 .fillMaxWidth(1f),
