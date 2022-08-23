@@ -1,6 +1,5 @@
 package com.midtrans.sdk.uikit.internal.view
 
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -42,7 +41,6 @@ import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
 import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_NEUTRAL_FILL
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.log
 import kotlin.math.min
 
 object CreditCardDetailListItem {

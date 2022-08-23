@@ -1,6 +1,5 @@
 package com.midtrans.sdk.uikit.internal.presentation.creditcard
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.MutableLiveData
@@ -58,14 +57,14 @@ class CreditCardViewModel @Inject constructor(
         snapToken: String
     ){
         snapCore.getCardToken(
-                cardTokenRequestBuilder = NormalCardTokenRequestBuilder()
-                    .withGrossAmount(grossAmount.toDouble())
-                    .withCardNumber(getCardNumberFromTextField(cardNumber))
-                    .withCardExpMonth(getExpMonthFromTextField(cardExpiry))
-                    .withCardExpYear(getExpYearFromTextField(cardExpiry))
-                    .withCardCvv(cardCvv.text)
-                    .withOrderId(orderId)
-                    .withCurrency("IDR")
+            cardTokenRequestBuilder = NormalCardTokenRequestBuilder()
+                .withGrossAmount(grossAmount.toDouble())
+                .withCardNumber(getCardNumberFromTextField(cardNumber))
+                .withCardExpMonth(getExpMonthFromTextField(cardExpiry))
+                .withCardExpYear(getExpYearFromTextField(cardExpiry))
+                .withCardCvv(cardCvv.text)
+                .withOrderId(orderId)
+                .withCurrency("IDR")
             ,
             callback = object : Callback<CardTokenResponse>{
                 override fun onSuccess(result: CardTokenResponse) {
