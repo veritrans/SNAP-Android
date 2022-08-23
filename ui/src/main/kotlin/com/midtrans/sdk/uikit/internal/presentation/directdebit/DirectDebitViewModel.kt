@@ -14,10 +14,10 @@ import javax.inject.Inject
 internal class DirectDebitViewModel @Inject constructor(
     private val snapCore: SnapCore
 ): ViewModel() {
-    private val redirectUrl = MutableLiveData<String>()
+    private val transactionResponse = MutableLiveData<TransactionResponse>()
     private val exception = MutableLiveData<SnapError>()
 
-    fun getRedirectUrl(): LiveData<String> = redirectUrl
+    fun getTransactionResponse(): LiveData<TransactionResponse> = transactionResponse
     fun getException(): LiveData<SnapError> = exception
 
     fun payDirectDebit(
@@ -34,7 +34,7 @@ internal class DirectDebitViewModel @Inject constructor(
             paymentRequestBuilder = builder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
-                    redirectUrl.value = result.redirectUrl
+                    transactionResponse.value = result
                 }
 
                 override fun onError(error: SnapError) {
