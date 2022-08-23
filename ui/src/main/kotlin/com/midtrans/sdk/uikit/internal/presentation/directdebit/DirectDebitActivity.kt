@@ -22,6 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
@@ -78,7 +80,7 @@ class DirectDebitActivity : BaseActivity() {
                 amount = amount,
                 orderId = orderId,
                 customerInfo = customerInfo,
-                url = viewModel.getRedirectUrl().observeAsState("").value
+                response = viewModel.getTransactionResponse().observeAsState().value
             )
         }
     }
@@ -95,7 +97,10 @@ class DirectDebitActivity : BaseActivity() {
                 phone = "081234567890",
                 addressLines = listOf("address one", "address two")
             ),
-            url = "url"
+            response = TransactionResponse(
+
+                transactionStatus = "pending"
+            )
         )
     }
 
@@ -105,11 +110,12 @@ class DirectDebitActivity : BaseActivity() {
         amount: String,
         orderId: String,
         customerInfo: CustomerInfo?,
-        url: String
+        response: TransactionResponse?
     ) {
         var isCustomerDetailExpanded by remember { mutableStateOf(false) }
         var isInstructionExpanded by remember { mutableStateOf(false) }
         val title = stringResource(getTitleId(paymentType = paymentType))
+        val url = response?.redirectUrl.orEmpty()
 
         if (url.isEmpty()) {
             Column(
@@ -191,22 +197,39 @@ class DirectDebitActivity : BaseActivity() {
                 )
             }
         } else {
+            val status = response?.transactionStatus
+            val transactionId = response?.transactionId
             SnapWebView(
                 title = title,
                 paymentType = paymentType,
                 url = url,
                 onPageStarted = {
                     Log.d("WebView", "Started")
-                    finishDirectDebitPayment()
+                    if (status != null && transactionId != null) {
+                        finishDirectDebitPayment(
+                            status = status,
+                            transactionId = transactionId
+                        )
+                    }
                 },
                 onPageFinished = { }
             )
         }
     }
 
-    private fun finishDirectDebitPayment() { //TODO temporary solution for showing Toast on sample app
+    private fun finishDirectDebitPayment(
+        status: String,
+        transactionId: String
+    ) {
         val data = Intent()
-        data.putExtra(UiKitConstants.KEY_TRANSACTION_RESPONSE, UiKitConstants.STATUS_PENDING)
+        data.putExtra( //TODO temporary solution for direct debit
+            UiKitConstants.KEY_TRANSACTION_RESULT,
+            TransactionResult(
+                status = status,
+                transactionId = transactionId,
+                paymentType = paymentType
+            )
+        )
         setResult(RESULT_OK, data)
         finish()
     }
