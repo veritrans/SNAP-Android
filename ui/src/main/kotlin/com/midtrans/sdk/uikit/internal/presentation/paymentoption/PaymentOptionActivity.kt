@@ -274,8 +274,10 @@ class PaymentOptionActivity : BaseActivity() {
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val transactionResult = result.data?.getSerializableExtra(UiKitConstants.KEY_TRANSACTION_RESULT) as TransactionResult
-                paymentCallback.onSuccess(transactionResult) //TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
+                result?.data?.let {
+                    val transactionResult = it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT) as TransactionResult
+                    paymentCallback.onSuccess(transactionResult) //TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
+                }
                 finish()
             }
         }
