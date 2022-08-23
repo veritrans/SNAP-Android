@@ -64,7 +64,8 @@ internal class BankTransferDetailViewModel @Inject constructor(
             datetimeUtil.getDate(
                 date = dateString.replace(" WIB", ""),
                 dateFormat = DATE_FORMAT,
-                timeZone = timeZoneUtc
+                timeZone = timeZoneUtc,
+                locale = Locale.US
             )
         expCalendar.set(Calendar.YEAR, datetimeUtil.getCalendar().get(Calendar.YEAR))
         return expCalendar.timeInMillis

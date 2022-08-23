@@ -66,7 +66,7 @@
     <string name="pl_error_bottom_message">You can now close this browser</string>
 
 
-    <string name="cc_dc_main_screen_remaining_payment_time">Pay within %s</string>
+    <string name="cc_dc_main_screen_remaining_payment_time">Pay within </string>
     <string name="cc_dc_main_screen_format_not_placeholder">0</string>
 
     <string name="cc_dc_main_screen_tlp">Phone</string>
