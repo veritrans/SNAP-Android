@@ -134,6 +134,7 @@ class SampleUiActivity : AppCompatActivity() {
                     startIcon = R.drawable.ic_outline_bca_24,
                     errorText = remember { mutableStateOf("") },
                     maskedCardNumber = "123***********345",
+                    displayedMaskedCard = "**** **** **** 1234",
                     tokenType = "one_click"
                 ),
                 SavedCreditCardFormData(
@@ -143,6 +144,7 @@ class SampleUiActivity : AppCompatActivity() {
                     startIcon = R.drawable.ic_outline_bni_24,
                     errorText = remember { mutableStateOf("") },
                     maskedCardNumber = "123***********345",
+                    displayedMaskedCard = "**** **** **** 1234",
                     tokenType = "one_click"
                 ),
                 SavedCreditCardFormData(
@@ -152,6 +154,7 @@ class SampleUiActivity : AppCompatActivity() {
                     startIcon = R.drawable.ic_outline_mandiri_24,
                     errorText = remember { mutableStateOf("") },
                     maskedCardNumber = "123***********345",
+                    displayedMaskedCard = "**** **** **** 1234",
                     tokenType = "one_click"
                 ),
                 NewCardFormData(
