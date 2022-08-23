@@ -3,7 +3,7 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -35,19 +36,23 @@ class DirectDebitActivity : BaseActivity() {
     internal lateinit var vmFactory: ViewModelProvider.Factory
 
     private val snapToken: String by lazy {
-        intent.getStringExtra(EXTRA_SNAP_TOKEN) ?: throw RuntimeException("Snap token must not be empty")
+        intent.getStringExtra(EXTRA_SNAP_TOKEN)
+            ?: throw RuntimeException("Snap token must not be empty")
     }
 
     private val paymentType: String by lazy {
-        intent.getStringExtra(EXTRA_PAYMENT_TYPE) ?: throw RuntimeException("Payment type must not be empty")
+        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
+            ?: throw RuntimeException("Payment type must not be empty")
     }
 
     private val amount: String by lazy {
-        intent.getStringExtra(EXTRA_AMOUNT) ?: throw RuntimeException("Total amount must not be empty")
+        intent.getStringExtra(EXTRA_AMOUNT)
+            ?: throw RuntimeException("Total amount must not be empty")
     }
 
     private val orderId: String by lazy {
-        intent.getStringExtra(EXTRA_ORDER_ID) ?: throw RuntimeException("Order ID must not be empty")
+        intent.getStringExtra(EXTRA_ORDER_ID)
+            ?: throw RuntimeException("Order ID must not be empty")
     }
 
     private val customerInfo: CustomerInfo? by lazy {
@@ -66,26 +71,14 @@ class DirectDebitActivity : BaseActivity() {
             .build()
             .inject(this)
 
-        initObserver()
         setContent {
             DirectDebitContent(
                 paymentType = paymentType,
                 amount = amount,
                 orderId = orderId,
-                customerInfo = customerInfo
+                customerInfo = customerInfo,
+                url = viewModel.getRedirectUrl().observeAsState("").value
             )
-        }
-    }
-
-    private fun initObserver() {
-        viewModel.getRedirectUrl().observe(this) {
-            //TODO integrate webview here
-            //TODO set result after webview
-        }
-
-        viewModel.getException().observe(this) {
-            Toast.makeText(this, it.javaClass.name, Toast.LENGTH_LONG).show()
-            //TODO show error dialog later
         }
     }
 
@@ -100,7 +93,8 @@ class DirectDebitActivity : BaseActivity() {
                 name = "Dohn Joe",
                 phone = "081234567890",
                 addressLines = listOf("address one", "address two")
-            )
+            ),
+            url = "url"
         )
     }
 
@@ -109,86 +103,103 @@ class DirectDebitActivity : BaseActivity() {
         paymentType: String,
         amount: String,
         orderId: String,
-        customerInfo: CustomerInfo?
+        customerInfo: CustomerInfo?,
+        url: String
     ) {
         var isCustomerDetailExpanded by remember { mutableStateOf(false) }
         var isInstructionExpanded by remember { mutableStateOf(false) }
-        Column(
-            modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
-        ) {
-            SnapAppBar(
-                title = stringResource(getTitleId(paymentType = paymentType)),
-                iconResId = R.drawable.ic_cross
+        val title = stringResource(getTitleId(paymentType = paymentType))
+
+        if (url.isEmpty()) {
+            Column(
+                modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
             ) {
-                onBackPressed()
-            }
-            SnapOverlayExpandingBox(
-                isExpanded = isCustomerDetailExpanded,
-                mainContent = {
-                    SnapTotal(
-                        amount = amount,
-                        orderId = orderId,
-                        canExpand = customerInfo != null,
-                        remainingTime = null
-                    ) {
-                        isCustomerDetailExpanded = it
-                    }
-                },
-                expandingContent = customerInfo?.let {
-                    {
-                        SnapCustomerDetail(
-                            name = customerInfo.name,
-                            phone = customerInfo.phone,
-                            addressLines = customerInfo.addressLines
-                        )
-                    }
-                },
-                followingContent = {
-                    Column(
-                        modifier = Modifier
-                            .verticalScroll(state = rememberScrollState())
-                            .padding(top = 16.dp)
-                            .fillMaxWidth()
-
-                    ) {
-                        var userId by remember { mutableStateOf("") }
-
-                        SnapText(stringResource(getInstructionId(paymentType = paymentType)))
-                        KlikBcaUserIdTextField(paymentType = paymentType) { userId = it }
-                        SnapInstructionButton(
-                            modifier = Modifier.padding(top = 28.dp),
-                            isExpanded = isInstructionExpanded,
-                            iconResId = R.drawable.ic_help,
-                            title = stringResource(R.string.bca_klik_pay_how_to_pay_title),
-                            onExpandClick = { isInstructionExpanded = !isInstructionExpanded },
-                            expandingContent = {
-                                Column {
-                                    SnapNumberedList(
-                                        list = stringArrayResource(getHowToPayId(paymentType = paymentType)).toList()
-                                    )
-                                }
-                            }
-                        )
-                        SnapButton(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 40.dp),
-                            enabled = enableButton(paymentType, userId),
-                            text = stringResource(R.string.bca_klik_pay_cta),
-                            style = SnapButton.Style.PRIMARY
+                SnapAppBar(
+                    title = title,
+                    iconResId = R.drawable.ic_cross
+                ) {
+                    onBackPressed()
+                }
+                SnapOverlayExpandingBox(
+                    isExpanded = isCustomerDetailExpanded,
+                    mainContent = {
+                        SnapTotal(
+                            amount = amount,
+                            orderId = orderId,
+                            canExpand = customerInfo != null,
+                            remainingTime = null
                         ) {
-                            viewModel.payDirectDebit(
-                                snapToken = snapToken,
-                                paymentType = paymentType,
-                                userId = userId
+                            isCustomerDetailExpanded = it
+                        }
+                    },
+                    expandingContent = customerInfo?.let {
+                        {
+                            SnapCustomerDetail(
+                                name = customerInfo.name,
+                                phone = customerInfo.phone,
+                                addressLines = customerInfo.addressLines
                             )
                         }
-                    }
+                    },
+                    followingContent = {
+                        Column(
+                            modifier = Modifier
+                                .verticalScroll(state = rememberScrollState())
+                                .padding(top = 16.dp)
+                                .fillMaxWidth()
+
+                        ) {
+                            var userId by remember { mutableStateOf("") }
+
+                            SnapText(stringResource(getInstructionId(paymentType = paymentType)))
+                            KlikBcaUserIdTextField(paymentType = paymentType) { userId = it }
+                            SnapInstructionButton(
+                                modifier = Modifier.padding(top = 28.dp),
+                                isExpanded = isInstructionExpanded,
+                                iconResId = R.drawable.ic_help,
+                                title = stringResource(R.string.bca_klik_pay_how_to_pay_title),
+                                onExpandClick = { isInstructionExpanded = !isInstructionExpanded },
+                                expandingContent = {
+                                    Column {
+                                        SnapNumberedList(
+                                            list = stringArrayResource(getHowToPayId(paymentType = paymentType)).toList()
+                                        )
+                                    }
+                                }
+                            )
+                            SnapButton(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 40.dp),
+                                enabled = enableButton(paymentType, userId),
+                                text = stringResource(R.string.bca_klik_pay_cta),
+                                style = SnapButton.Style.PRIMARY
+                            ) {
+                                viewModel.payDirectDebit(
+                                    snapToken = snapToken,
+                                    paymentType = paymentType,
+                                    userId = userId
+                                )
+                            }
+                        }
+                    },
+                    modifier = Modifier
+                        .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
+                        .fillMaxHeight(1f)
+                        .padding(all = 16.dp)
+                )
+            }
+        } else {
+            SnapWebView(
+                title = title,
+                paymentType = paymentType,
+                url = url,
+                onPageStarted = {
+                    Log.d("WebView", "Started")
+                    setResult(RESULT_OK)
+                    finish()
                 },
-                modifier = Modifier
-                    .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
-                    .fillMaxHeight(1f)
-                    .padding(all = 16.dp)
+                onPageFinished = { }
             )
         }
     }
