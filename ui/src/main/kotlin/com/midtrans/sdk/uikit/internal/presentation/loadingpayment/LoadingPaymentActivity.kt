@@ -1,10 +1,12 @@
 package com.midtrans.sdk.uikit.internal.presentation.loadingpayment
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -191,6 +193,14 @@ class LoadingPaymentActivity : BaseActivity() {
         )
     }
 
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.let { setResult(RESULT_OK, it) }
+                finish()
+            }
+        }
+
     private fun initObserver() {
         viewModel.getPaymentOptionLiveData().observe(this, Observer {
             val intent = PaymentOptionActivity.openPaymentOptionPage(
@@ -201,7 +211,7 @@ class LoadingPaymentActivity : BaseActivity() {
                 paymentList = it.options,
                 customerDetails = customerDetails
             )
-            startActivity(intent)
+            resultLauncher.launch(intent)
             finish()
         })
         viewModel.getErrorLiveData().observe(this, Observer {
