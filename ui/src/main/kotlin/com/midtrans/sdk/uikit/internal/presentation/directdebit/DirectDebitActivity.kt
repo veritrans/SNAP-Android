@@ -249,6 +249,7 @@ class DirectDebitActivity : BaseActivity() {
         if (paymentType == PaymentType.KLIK_BCA) {
             var userId by remember { mutableStateOf(TextFieldValue()) }
             var isError by remember { mutableStateOf(false) }
+            var isFocused by remember { mutableStateOf(false) }
 
             Column(
                 modifier = Modifier
@@ -276,11 +277,11 @@ class DirectDebitActivity : BaseActivity() {
                             isError = userId.text.isEmpty()
                         },
                         isError = isError,
-                        isFocused = true,
-                        onFocusChange = { },
+                        isFocused = isFocused,
+                        onFocusChange = { isFocused = it },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                     )
-                    if (userId.text.isEmpty()) {
+                    if (userId.text.isEmpty() && !isFocused) {
                         Text(
                             text = stringResource(id = R.string.klik_bca_validation_error),
                             style = SnapTypography.STYLES.snapTextSmallRegular,
