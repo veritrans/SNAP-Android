@@ -10,6 +10,7 @@ import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.EWalletPaymentRequestBuilder
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 internal class WalletViewModel @Inject constructor(
@@ -20,7 +21,7 @@ internal class WalletViewModel @Inject constructor(
     val qrCodeUrlLiveData = MutableLiveData<String>()
     val deepLinkUrlLiveData = MutableLiveData<String>()
     val billingNumberLiveData = MutableLiveData<String>()
-    var expiredTime = datetimeUtil.plusDateBy(datetimeUtil.getCurrentMillis(), 1)
+    var expiredTime = datetimeUtil.getCurrentMillis() + TimeUnit.MINUTES.toMillis(15)
 
 fun chargeQrPayment(
         snapToken: String,
@@ -36,7 +37,7 @@ fun chargeQrPayment(
                         qrCodeUrl?.let { qrCodeUrlLiveData.value = it }
                         qrisUrl?.let { qrCodeUrlLiveData.value = it }
                         deeplinkUrl?.let { deepLinkUrlLiveData.value = it }
-                       // gopayExpirationRaw?.let { expiredTime.value  }
+                        gopayExpirationRaw?.let { expiredTime = parseTime(it)  }
                     }
                 }
 
@@ -48,15 +49,12 @@ fun chargeQrPayment(
     }
 
     private fun parseTime(dateString: String): Long {
-        val expCalendar = Calendar.getInstance()
-        expCalendar.time =
-            datetimeUtil.getDate(
-                date = dateString.replace(" WIB", ""),
-                dateFormat = DATE_FORMAT,
-                timeZone = timeZoneUtc
-            )
-        expCalendar.set(Calendar.YEAR, datetimeUtil.getCalendar().get(Calendar.YEAR))
-        return expCalendar.timeInMillis
+        val date = datetimeUtil.getDate(
+            date = dateString,
+            dateFormat = DATE_FORMAT,
+            timeZone = timeZoneWib
+        )
+      return date.time
     }
 
     fun getExpiredHour(): String {
@@ -75,7 +73,7 @@ fun chargeQrPayment(
     }
 
     companion object {
-        private const val DATE_FORMAT = "dd MMMM hh:mm"
+        private const val DATE_FORMAT = "yyyy-MM-dd hh:mm Z"
         private const val TIME_FORMAT = "hh:mm:ss"
         private val timeZoneWib = TimeZone.getTimeZone("Asia/Jakarta")
         private val timeZoneUtc = TimeZone.getTimeZone("UTC")

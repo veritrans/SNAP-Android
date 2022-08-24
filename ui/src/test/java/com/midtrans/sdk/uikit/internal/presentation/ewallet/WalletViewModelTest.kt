@@ -1,4 +1,4 @@
-package com.midtrans.sdk.uikit.internal.presentation.banktransfer
+package com.midtrans.sdk.uikit.internal.presentation.ewallet
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
@@ -13,8 +13,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
-import org.mockito.ArgumentCaptor
-import org.mockito.Mockito.`when`
+import org.mockito.Mockito
 import org.mockito.kotlin.*
 import java.time.Clock
 import java.time.Duration
@@ -24,7 +23,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
-internal class BankTransferDetailViewModelTest {
+class WalletViewModelTest {
 
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
@@ -42,14 +41,14 @@ internal class BankTransferDetailViewModelTest {
     }
 
     @Test
-    fun chargeBankTransferShouldInvokeSnapCorePay() {
+    fun chargeQrShouldInvokeSnapCorePay() {
         val snapCore: SnapCore = mock()
         val dateTimeUtil: DateTimeUtil = mock()
         val snapToken = "SnapToken"
         val paymentType = PaymentType.BNI_VA
-        val bankTransferDetailViewModel =
-            BankTransferDetailViewModel(snapCore = snapCore, dateTimeUtil)
-        bankTransferDetailViewModel.chargeBankTransfer(
+        val walletViewModel =
+            WalletViewModel(snapCore = snapCore, dateTimeUtil)
+        walletViewModel.chargeQrPayment(
             snapToken = snapToken,
             paymentType = paymentType
         )
@@ -68,24 +67,24 @@ internal class BankTransferDetailViewModelTest {
         val dateTimeUtil: DateTimeUtil = mock()
         val snapToken = "SnapToken"
         val paymentType = PaymentType.BNI_VA
-        `when`(
+        Mockito.`when`(
             dateTimeUtil.getDate(
-                date = eq("06 January 11:32:50 +0700"),
-                dateFormat = eq("dd MMMM hh:mm Z"),
+                date = eq("2021-01-06 11:32 +0700"),
+                dateFormat = eq("yyyy-MM-dd hh:mm Z"),
                 timeZone = any(),//argThat { timezone -> timezone.id == "Asia/Jakarta" },
                 locale = any()
             )
         ).thenReturn(
             Date(1609907570066L)//"Wed Jan 6 2021 11:32:50 +0700"// (Asia/Jakarta)
         )
-        `when`(dateTimeUtil.getCalendar(null)).thenReturn(
+        Mockito.`when`(dateTimeUtil.getCalendar(null)).thenReturn(
             Calendar.getInstance().apply { time = Date(1609907570066L) }
         )
-        `when`(dateTimeUtil.getDuration(any())).thenReturn(Duration.ofMillis(1000L)) //only this matter for final result
-        `when`(dateTimeUtil.getTimeDiffInMillis(any(), any())).thenReturn(100000L)
-        val bankTransferDetailViewModel =
-            BankTransferDetailViewModel(snapCore = snapCore, dateTimeUtil)
-        bankTransferDetailViewModel.chargeBankTransfer(
+        Mockito.`when`(dateTimeUtil.getDuration(any())).thenReturn(Duration.ofMillis(1000L)) //only this matter for final result
+        Mockito.`when`(dateTimeUtil.getTimeDiffInMillis(any(), any())).thenReturn(100000L)
+        val walletViewModel =
+            WalletViewModel(snapCore = snapCore, dateTimeUtil)
+        walletViewModel.chargeQrPayment(
             snapToken = snapToken,
             paymentType = paymentType
         )
@@ -95,17 +94,17 @@ internal class BankTransferDetailViewModelTest {
             paymentRequestBuilder = any(),
             callback = callbackCaptor.capture()
         )
-        val bniVa = "123456"
+        val qrCodeUrl = "http://qr"
         val callback = callbackCaptor.firstValue
         callback.onSuccess(
             TransactionResponse(
-                bniVaNumber = bniVa,
-                bniExpiration = "06 January 11:32:50 WIB"
+                qrCodeUrl = qrCodeUrl,
+                gopayExpirationRaw = "2021-01-06 11:32 +0700"
             )
         )
 
-        Assert.assertEquals(bniVa, bankTransferDetailViewModel.vaNumberLiveData.getOrAwaitValue())
-        Assert.assertEquals("00:00:01", bankTransferDetailViewModel.getExpiredHour())
+        Assert.assertEquals(qrCodeUrl, walletViewModel.qrCodeUrlLiveData.getOrAwaitValue())
+        Assert.assertEquals("00:00:01", walletViewModel.getExpiredHour())
 
     }
 
