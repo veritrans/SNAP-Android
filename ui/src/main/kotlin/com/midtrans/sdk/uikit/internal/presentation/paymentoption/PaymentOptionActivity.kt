@@ -23,8 +23,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
-import com.midtrans.sdk.corekit.api.callback.Callback
-import com.midtrans.sdk.corekit.api.model.*
+import com.midtrans.sdk.corekit.api.model.CustomerDetails
+import com.midtrans.sdk.corekit.api.model.PaymentMethod
+import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
@@ -91,10 +93,6 @@ class PaymentOptionActivity : BaseActivity() {
 
     private val customerDetail: CustomerDetails? by lazy {
         intent.getParcelableExtra(EXTRA_CUSTOMER_DETAILS) as? CustomerDetails
-    }
-
-    private val paymentCallback: Callback<TransactionResult> by lazy {
-        UiKitApi.getDefaultInstance().paymentCallback
     }
 
     private var customerInfo: CustomerInfo? = null
@@ -276,7 +274,7 @@ class PaymentOptionActivity : BaseActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 result?.data?.let {
                     val transactionResult = it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT) as TransactionResult
-                    paymentCallback.onSuccess(transactionResult) //TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
+                    UiKitApi.getDefaultInstance().paymentCallback.onSuccess(transactionResult) //TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
                 }
                 finish()
             }
