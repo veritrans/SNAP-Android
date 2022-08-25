@@ -98,7 +98,6 @@ class DirectDebitActivity : BaseActivity() {
                 addressLines = listOf("address one", "address two")
             ),
             response = TransactionResponse(
-
                 transactionStatus = "pending"
             )
         )

@@ -7,14 +7,14 @@ import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.internal.presentation.loadingpayment.LoadingPaymentActivity
 
-class UiKitApi {
+class UiKitApi { //TODO revisit this implementation, currently for getting callback in Sample App
     lateinit var paymentCallback: Callback<TransactionResult>
 
     init {
         setInstance(this)
     }
 
-    fun startPayment( //TODO revisit this implementation, currently for showing status in Sample App
+    fun startPayment(
         activityContext: Context,
         transactionDetails: SnapTransactionDetail,
         customerDetails: CustomerDetails,
