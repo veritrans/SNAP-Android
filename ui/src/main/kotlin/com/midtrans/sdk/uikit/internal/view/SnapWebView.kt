@@ -151,7 +151,7 @@ private class SnapWebViewClient(
     }
 
     companion object {
-        const val CALLBACK_KLIK_BCA = "/inquiry" //TODO check what is klik bca pattern
+        const val CALLBACK_KLIK_BCA = "/inquiry" //TODO klik bca behavior is not final yet, this is for simulate web view only
         const val CALLBACK_BCA_KLIK_PAY = "?id="
         const val CALLBACK_CIMB_CLICKS = "cimb-clicks/response"
         const val CALLBACK_DANAMON_ONLINE = "/callback?signature="
