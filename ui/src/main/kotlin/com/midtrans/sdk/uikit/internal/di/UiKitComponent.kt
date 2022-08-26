@@ -5,7 +5,7 @@ import com.midtrans.sdk.uikit.internal.di.viewmodel.UtilModule
 import com.midtrans.sdk.uikit.internal.di.viewmodel.ViewModelFactoryModule
 import com.midtrans.sdk.uikit.internal.di.viewmodel.ViewModelModule
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDetailActivity
-import com.midtrans.sdk.uikit.internal.presentation.ewallet.EwalletActivity
+import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
 import dagger.BindsInstance
@@ -32,7 +32,7 @@ internal interface UiKitComponent {
     }
 
     fun inject(activity: BankTransferDetailActivity)
-    fun inject(activity: EwalletActivity)
+    fun inject(activity: WalletActivity)
 
     fun inject(activity: CreditCardActivity)
     fun inject(activity: DirectDebitActivity)

@@ -23,7 +23,7 @@ internal class WalletViewModel @Inject constructor(
     val billingNumberLiveData = MutableLiveData<String>()
     var expiredTime = datetimeUtil.getCurrentMillis() + TimeUnit.MINUTES.toMillis(15)
 
-fun chargeQrPayment(
+    fun chargeQrPayment(
         snapToken: String,
         @PaymentType.Def paymentType: String
     ) {
@@ -37,7 +37,7 @@ fun chargeQrPayment(
                         qrCodeUrl?.let { qrCodeUrlLiveData.value = it }
                         qrisUrl?.let { qrCodeUrlLiveData.value = it }
                         deeplinkUrl?.let { deepLinkUrlLiveData.value = it }
-                        gopayExpirationRaw?.let { expiredTime = parseTime(it)  }
+                        gopayExpirationRaw?.let { expiredTime = parseTime(it) }
                     }
                 }
 
@@ -54,7 +54,7 @@ fun chargeQrPayment(
             dateFormat = DATE_FORMAT,
             timeZone = timeZoneWib
         )
-      return date.time
+        return date.time
     }
 
     fun getExpiredHour(): String {

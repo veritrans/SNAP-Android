@@ -33,7 +33,7 @@ import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
-import com.midtrans.sdk.uikit.internal.presentation.ewallet.EwalletActivity
+import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapColors
 import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
@@ -274,7 +274,7 @@ class PaymentOptionActivity : BaseActivity() {
 
         val eWalletPaymentLauncher = {
             resultLauncher.launch(
-                EwalletActivity.getIntent(
+                WalletActivity.getIntent(
                     activityContext = this,
                     snapToken = snapToken,
                     orderId = orderId,

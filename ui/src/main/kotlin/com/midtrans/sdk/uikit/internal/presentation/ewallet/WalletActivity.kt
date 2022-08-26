@@ -31,7 +31,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-internal class EwalletActivity : BaseActivity() {
+internal class WalletActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModel: WalletViewModel
@@ -277,7 +277,7 @@ internal class EwalletActivity : BaseActivity() {
             customerInfo: CustomerInfo? = null
 
         ): Intent {
-            return Intent(activityContext, EwalletActivity::class.java).apply {
+            return Intent(activityContext, WalletActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(EXTRA_SNAPTOKEN, snapToken)
