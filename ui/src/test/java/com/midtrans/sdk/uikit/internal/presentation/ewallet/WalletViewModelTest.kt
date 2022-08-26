@@ -70,7 +70,7 @@ class WalletViewModelTest {
             dateTimeUtil.getDate(
                 date = eq("2021-01-06 11:32 +0700"),
                 dateFormat = eq("yyyy-MM-dd hh:mm Z"),
-                timeZone = any(),//argThat { timezone -> timezone.id == "Asia/Jakarta" },
+                timeZone = argThat { timezone -> timezone.id == "Asia/Jakarta" },
                 locale = any()
             )
         ).thenReturn(
