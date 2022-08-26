@@ -36,7 +36,6 @@ class WalletViewModelTest {
             Clock.fixed(
                 Instant.ofEpochMilli(time),
                 timeZone.toZoneId()))
-//        DateTimeZone.setDefault(DateTimeZone.forTimeZone(timeZone))
         Locale.setDefault(Locale("en", "US"))
     }
 
