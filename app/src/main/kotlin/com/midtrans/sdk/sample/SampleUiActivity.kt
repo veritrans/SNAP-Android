@@ -355,12 +355,13 @@ class SampleUiActivity : AppCompatActivity() {
     @Composable
     fun SampleWebView() {
         SnapWebView(
+            title = "Page title",
             paymentType = PaymentType.KLIK_BCA,
             url = "https://simulator.sandbox.midtrans.com/bca/klikbca/index",
-            onWebViewStarted = {
+            onPageStarted = {
                 Log.d("SnapWebView", "started")
             },
-            onWebViewFinished = {
+            onPageFinished = {
                 Log.d("SnapWebView", "finished")
                 finish()
             }
