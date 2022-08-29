@@ -176,9 +176,12 @@
     <string name="transaction_denied_gopay_desc">Silakan coba metode pembayaran lainnya.</string>
     <string name="transaction_denied_gopay_cta">Oke</string>
 
-
-    <string name="scan_qr_instruction_gopay">1. Buka aplikasi Gojek atau e-wallet lain Anda. 2. Pindai kode QR pada monitor. 3. Konfirmasi pembayaran pada aplikasi. 4. Pembayaran selesai.</string>
-
+    <string-array name="scan_qr_instruction_gopay">
+        <item><data><![CDATA[Buka <b>aplikasi Gojek</b> atau <b>e-wallet lain</b> Anda.]]></data>.</item>
+        <item><data><![CDATA[Pindai <b>kode QR</b> pada monitor.]]></data>.</item>
+        <item><data><![CDATA[Konfirmasi pembayaran pada aplikasi.]]></data>.</item>
+        <item><data><![CDATA[Pembayaran selesai.]]></data>.</item>
+    </string-array>
 
     <string name="redirection_instruction_shopeepay_message">1. Klik Bayar sekarang. 2. Aplikasi Shopee akan terbuka. 3. Konfirmasi pembayaran di aplikasi Shopee. 4. Pembayaran selesai.</string>
     <string name="redirection_instruction_shopeepay_cta">Bayar sekarang</string>
@@ -193,11 +196,17 @@
     <string name="rejected_transaction_shopeepay_desc">Silakan coba metode pembayaran lainnya.</string>
     <string name="rejected_transaction_shopeepay_cta">Oke</string>
 
-
-    <string name="scan_qr_instruction_shopeepay_message">1. Buka aplikasi Shopee atau e-wallet lain Anda. 2. Pindai kode QR pada monitor. 3. Konfirmasi pembayaran pada aplikasi. 4. Pembayaran selesai.</string>
-
+    <string-array name="scan_qr_instruction_shopeepay_message">
+        <item><data><![CDATA[Buka <b>aplikasi Shopee</b> atau <b>e-wallet lain</b> Anda.]]></data>.</item>
+        <item><data><![CDATA[Pindai <b>kode QR</b> pada monitor.]]></data>.</item>
+        <item><data><![CDATA[Konfirmasi pembayaran pada aplikasi.]]></data>.</item>
+        <item><data><![CDATA[Pembayaran selesai.]]></data>.</item>
+    </string-array>
 
     <string name="indomaret_instruction">Tunjukkan barcode ke kasir atau masukkan kode bayar ke aplikasi i.saku.</string>
+
+    <string name="qr_reload">Coba lagi</string>
+    <string name="qr_failed_load">Gagal memuat QR</string>
 
     <string name="indomaret_payment_code_title">Kode pembayaran</string>
     <string name="indomaret_loading_payment_code">Memuat…</string>

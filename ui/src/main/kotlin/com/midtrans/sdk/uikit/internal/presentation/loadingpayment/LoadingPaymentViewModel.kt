@@ -17,6 +17,7 @@ import com.midtrans.sdk.corekit.api.model.Promo
 import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
 import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferRequest
+import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 
 //TODO will add UT and SnapCore manager after DI is setup
 class LoadingPaymentViewModel : ViewModel() {
@@ -81,7 +82,7 @@ class LoadingPaymentViewModel : ViewModel() {
     }
 
     fun getAmountInString(transactionDetails: SnapTransactionDetail): String {
-        return transactionDetails.grossAmount.toString()
+        return transactionDetails.grossAmount.currencyFormatRp() //TODO: currency configuration
     }
 
     fun getOrderId(transactionDetails: SnapTransactionDetail): String {

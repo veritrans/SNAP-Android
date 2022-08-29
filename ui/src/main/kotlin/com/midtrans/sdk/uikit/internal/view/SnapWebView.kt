@@ -3,6 +3,7 @@ package com.midtrans.sdk.uikit.internal.view
 import android.graphics.Bitmap
 import android.util.Log
 import android.view.ViewGroup
+import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -36,7 +37,8 @@ fun SnapWebView(
     @PaymentType.Def paymentType: String,
     url: String,
     onPageStarted: () -> Unit,
-    onPageFinished: () -> Unit
+    onPageFinished: () -> Unit,
+    urlLoadingOverride: ((WebView, String) -> Boolean)? = null
 ) {
     Column {
         Column(
@@ -82,6 +84,17 @@ fun SnapWebView(
                             onFinishWebView = onPageFinished
                         )
                     }
+
+                override fun shouldOverrideUrlLoading(
+                    view: WebView,
+                    request: WebResourceRequest
+                ): Boolean {
+                    return if (urlLoadingOverride != null) {
+                        urlLoadingOverride(view, request.url.toString())
+                    } else {
+                        super.shouldOverrideUrlLoading(view, request)
+                    }
+                }
                 }
                 settings.apply { //NOTE: following settings in old midtrans sdk
                     allowFileAccess = false

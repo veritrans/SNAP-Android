@@ -33,7 +33,8 @@
     <string name="payment_summary_shopeepay">ShopeePay/QRIS</string>
     <string name="payment_summary_alfamart">Alfa Group</string>
     <string name="payment_summary_indomaret">Indomaret</string>
-
+    <string name="payment_title_gopay">Gopay</string>
+    <string name="payment_title_shopeepay">ShopeePay</string>
 
     <string name="success_screen_v1_status">Payment successful</string>
     <string name="success_screen_v1_order_id">Order ID %s</string>
@@ -65,7 +66,7 @@
     <string name="pl_error_bottom_message">You can now close this browser</string>
 
 
-    <string name="cc_dc_main_screen_remaining_payment_time">Pay within %s</string>
+    <string name="cc_dc_main_screen_remaining_payment_time">Pay within </string>
     <string name="cc_dc_main_screen_format_not_placeholder">0</string>
 
     <string name="cc_dc_main_screen_tlp">Phone</string>
@@ -117,6 +118,7 @@
     <string name="point_amount_of_points">%s point(s)</string>
     <string name="point_failed_title">Failed to load points</string>
     <string name="point_desc">You can try to refresh or proceed without redeeming points.</string>
+    <string name="qr_failed_load">Failed to load QR</string>
 
 
     <string name="failed_otp_title">Failed/cancelled OTP</string>
@@ -178,9 +180,12 @@
     <string name="transaction_denied_gopay_desc">Please try other payment method.</string>
     <string name="transaction_denied_gopay_cta">Okay</string>
 
-
-    <string name="scan_qr_instruction_gopay">1. Open your Gojek or other e-wallet app. 2. Scan the QR code on your monitor. 3. Confirm payment in the app. 4. Payment complete.</string>
-
+    <string-array name="scan_qr_instruction_gopay">
+        <item><data><![CDATA[Open your <b>Gojek</b> or <b>other e-wallet app</b>.]]></data>.</item>
+        <item><data><![CDATA[Scan the <b>QR code</b> on your monitor.]]></data>.</item>
+        <item><data><![CDATA[Confirm payment in the app.]]></data>.</item>
+        <item><data><![CDATA[Payment complete.]]></data>.</item>
+    </string-array>
 
     <string name="redirection_instruction_shopeepay_message">1. Tap Pay now. 2. Shopee app will open. 3. Confirm payment in the Shopee app. 4. Payment complete.</string>
     <string name="redirection_instruction_shopeepay_cta">Pay now</string>
@@ -196,7 +201,12 @@
     <string name="rejected_transaction_shopeepay_cta">Okay</string>
 
 
-    <string name="scan_qr_instruction_shopeepay_message">1. Open your Shopee or other e-wallet app. 2. Scan the QR code on your monitor. 3. Confirm payment in the app. 4. Payment complete.</string>
+    <string-array name="scan_qr_instruction_shopeepay_message">
+        <item><data><![CDATA[Open your <b>Shopee</b> or <b>other e-wallet app</b>.]]></data>.</item>
+        <item><data><![CDATA[Scan the <b>QR code</b> on your monitor.]]></data>.</item>
+        <item><data><![CDATA[Confirm payment in the app.]]></data>.</item>
+        <item><data><![CDATA[Payment complete.]]></data>.</item>
+    </string-array>
 
 
     <string name="indomaret_instruction">Show barcode to the cashier or enter payment code on i.saku app.</string>
@@ -212,6 +222,7 @@
     <string name="indomaret_cta_1">Download payment info</string>
     <string name="indomaret_cta_2">Close this page</string>
 
+    <string name="qr_reload">Reload</string>
 
     <string name="alfa_group_instruction">Please go to nearest Alfa Group store and show the barcode/payment code to the cashier.</string>
 

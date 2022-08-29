@@ -80,14 +80,14 @@ fun SnapTotal(
     Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(
-                text = "Total",
+                text = stringResource(id = R.string.payment_summary_total),
                 style = SnapTypography.STYLES.snapTextMediumMedium,
                 modifier = Modifier.weight(1f),
                 color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)
             )
             remainingTime?.let {
                 Text(
-                    text = "bayar dalam",
+                    text = stringResource(id = R.string.cc_dc_main_screen_remaining_payment_time),
                     style = SnapTypography.STYLES.snapTextSmallRegular,
                     color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)
                 )
@@ -121,7 +121,7 @@ fun SnapTotal(
             }
         }
         Text(
-            text = orderId,
+            text = String.format(stringResource(id = R.string.payment_summary_order_id), orderId),
             style = SnapTypography.STYLES.snapTextSmallRegular,
             color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)
         )

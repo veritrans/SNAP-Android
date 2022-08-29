@@ -62,9 +62,10 @@ internal class BankTransferDetailViewModel @Inject constructor(
         val expCalendar = Calendar.getInstance()
         expCalendar.time =
             datetimeUtil.getDate(
-                date = dateString.replace(" WIB", ""),
+                date = dateString.replace("WIB", "+0700"),
                 dateFormat = DATE_FORMAT,
-                timeZone = timeZoneUtc
+                timeZone = timeZoneWib,
+                locale = Locale.US
             )
         expCalendar.set(Calendar.YEAR, datetimeUtil.getCalendar().get(Calendar.YEAR))
         return expCalendar.timeInMillis
@@ -80,14 +81,13 @@ internal class BankTransferDetailViewModel @Inject constructor(
         return String.format(
             "%02d:%02d:%02d",
             duration.toHours(),
-            //TODO: Uncomment to build creditcard, Somehow causes error
-//            duration.toMinutesPart(),
-//            duration.toSecondsPart()
+            duration.seconds % 3600 / 60,
+            duration.seconds % 60
         )
     }
 
     companion object {
-        private const val DATE_FORMAT = "dd MMMM hh:mm"
+        private const val DATE_FORMAT = "dd MMMM hh:mm Z"
         private const val TIME_FORMAT = "hh:mm:ss"
         private val timeZoneWib = TimeZone.getTimeZone("Asia/Jakarta")
         private val timeZoneUtc = TimeZone.getTimeZone("UTC")

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.DisplayMetrics
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -27,7 +26,7 @@ import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.PaymentMethod
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResult
-import com.midtrans.sdk.corekit.internal.base.BaseActivity
+import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
@@ -39,6 +38,13 @@ import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActiv
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import kotlin.math.sqrt
+import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
+import com.midtrans.sdk.uikit.internal.view.SnapAppBar
+import com.midtrans.sdk.uikit.internal.view.SnapColors
+import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
+import com.midtrans.sdk.uikit.internal.view.SnapMultiIconListItem
+import com.midtrans.sdk.uikit.internal.view.SnapOverlayExpandingBox
+import com.midtrans.sdk.uikit.internal.view.SnapTotal
 
 class PaymentOptionActivity : BaseActivity() {
 
@@ -113,18 +119,6 @@ class PaymentOptionActivity : BaseActivity() {
                 paymentMethods = paymentMethods
             )
         }
-    }
-
-    private fun isTabletDevice(): Boolean {
-        val metrics = DisplayMetrics()
-        this.windowManager.defaultDisplay.getMetrics(metrics)
-
-        val yInches = metrics.heightPixels / metrics.ydpi
-        val xInches = metrics.widthPixels / metrics.xdpi
-        val diagonalInches = sqrt((xInches * xInches + yInches * yInches).toDouble())
-        val hasTabletAttribute = resources.getBoolean(R.bool.isTablet)
-
-        return diagonalInches >= 6.5 && hasTabletAttribute
     }
 
     @Preview
@@ -287,8 +281,21 @@ class PaymentOptionActivity : BaseActivity() {
         paymentMethodItem: PaymentMethodItem,
         customerInfo: CustomerInfo?,
     ): Map<String, () -> Unit> {
+
+        val eWalletPaymentLauncher = {
+            resultLauncher.launch(
+                WalletActivity.getIntent(
+                    activityContext = this,
+                    snapToken = snapToken,
+                    orderId = orderId,
+                    totalAmount = totalAmount,
+                    paymentType = paymentMethodItem.type,
+                    customerInfo = customerInfo,
+                )
+            )
+        }
         return mapOf(
-            Pair("bank_transfer") {
+            Pair(PaymentType.BANK_TRANSFER) {
                 resultLauncher.launch(
                     BankTransferListActivity.getIntent(
                         activityContext = this,
@@ -325,7 +332,9 @@ class PaymentOptionActivity : BaseActivity() {
                         )
                     )
                 }
-            }
+            },
+            Pair(PaymentType.SHOPEEPAY, eWalletPaymentLauncher),
+            Pair(PaymentType.GOPAY, eWalletPaymentLauncher)
         )
     }
 
