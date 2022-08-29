@@ -166,7 +166,7 @@ class SavedCardActivity: BaseActivity() {
         creditCard?.savedTokens?.forEachIndexed { index, savedToken ->
             savedTokenList.add(
                 SavedCreditCardFormData(
-                    SavedCardidentifier = savedCardIdentifier + index.toString(),
+                    savedCardIdentifier = savedCardIdentifier + index.toString(),
                     inputTitle = stringResource(id = R.string.cc_dc_saved_card_enter_cvv),
                     endIcon = R.drawable.ic_trash,
                     startIcon = getBankIcon(savedToken.binDetail?.bankCode.toString()),
@@ -179,7 +179,7 @@ class SavedCardActivity: BaseActivity() {
             )
         }
         savedTokenList.add(NewCardFormData(
-            NewCardIdentifier = newCardFormIdentifier,
+            newCardIdentifier = newCardFormIdentifier,
             isCardNumberInvalid = remember { mutableStateOf(false) },
             bankIconId = remember { mutableStateOf(R.drawable.ic_outline_bri_24) },
             isCvvInvalid = remember { mutableStateOf(false) },

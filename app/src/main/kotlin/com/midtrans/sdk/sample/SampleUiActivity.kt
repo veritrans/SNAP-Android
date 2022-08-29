@@ -128,7 +128,7 @@ class SampleUiActivity : AppCompatActivity() {
 
             val list = mutableListOf(
                 SavedCreditCardFormData(
-                    SavedCardidentifier = "satu",
+                    savedCardIdentifier = "satu",
                     inputTitle = "Masukkan CVV",
                     endIcon = R.drawable.ic_trash,
                     startIcon = R.drawable.ic_outline_bca_24,
@@ -139,7 +139,7 @@ class SampleUiActivity : AppCompatActivity() {
                     tokenId = "tokenid"
                 ),
                 SavedCreditCardFormData(
-                    SavedCardidentifier = "dua",
+                    savedCardIdentifier = "dua",
                     inputTitle = "Masukkan CVV",
                     endIcon = R.drawable.ic_trash,
                     startIcon = R.drawable.ic_outline_bni_24,
@@ -150,7 +150,7 @@ class SampleUiActivity : AppCompatActivity() {
                     tokenId = "tokenid"
                 ),
                 SavedCreditCardFormData(
-                    SavedCardidentifier = "tiga",
+                    savedCardIdentifier = "tiga",
                     inputTitle = "Masukkan CVV",
                     endIcon = R.drawable.ic_trash,
                     startIcon = R.drawable.ic_outline_mandiri_24,
@@ -161,7 +161,7 @@ class SampleUiActivity : AppCompatActivity() {
                     tokenId = "tokenid"
                 ),
                 NewCardFormData(
-                    NewCardIdentifier = "new",
+                    newCardIdentifier = "new",
                     isCardNumberInvalid = remember { mutableStateOf(false) },
                     bankIconId = remember { mutableStateOf(R.drawable.ic_outline_bri_24) },
                     isCvvInvalid = remember { mutableStateOf(false) },

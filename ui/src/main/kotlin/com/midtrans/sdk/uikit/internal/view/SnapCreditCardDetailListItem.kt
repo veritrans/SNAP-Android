@@ -258,7 +258,7 @@ fun SnapSavedCardRadioGroup(
                                 startIconId = item.startIcon,
                                 endIconId = item.endIcon,
                                 itemTitle = formatMaskedCard(item.maskedCardNumber),
-                                shouldReveal = item.SavedCardidentifier == selectedOption,
+                                shouldReveal = item.savedCardIdentifier == selectedOption,
                                 inputTitle = item.inputTitle,
                                 cvvTextField = cvvSavedCardTextFieldValue ,
                                 isInputError = errorText.isNotBlank(),
@@ -460,18 +460,18 @@ data class SavedCreditCardFormData(
     val tokenType: String,
     var errorText: MutableState<String>,
     val inputTitle: String,
-    var SavedCardidentifier: String,
+    var savedCardIdentifier: String,
     var tokenId: String,
-) : FormData(SavedCardidentifier)
+) : FormData(savedCardIdentifier)
 
 class NewCardFormData(
-    var NewCardIdentifier: String,
+    var newCardIdentifier: String,
     var isCardNumberInvalid: MutableState<Boolean>,
     var isExpiryDateInvalid: MutableState<Boolean>,
     var isCvvInvalid: MutableState<Boolean>,
     var bankIconId: MutableState<Int?>,
     var principalIconId: MutableState<Int?>
-) : FormData(NewCardIdentifier)
+) : FormData(newCardIdentifier)
 
 
 open class FormData(
