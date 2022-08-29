@@ -44,6 +44,7 @@ object Dependencies {
     const val nanolets = "2.3.1"
     const val androidxDatastoreVersion = "1.0.0"
     const val composeVersion = "1.2.0-rc02"
+    const val coilComposeVersion = "2.1.0"
     const val hamcrestVersion = "2.2"
     const val coreLibraryDesugaringVersion = "1.1.5"
 }
@@ -149,8 +150,6 @@ object ApacheLibraries {
 }
 
 object ComposeUiLibraries {
-    //    def composeVersion = "1.0.0-alpha06"
-//    ...
     const val compose = "androidx.compose.ui:ui:${Dependencies.composeVersion}"
     const val composeFoundation =
         "androidx.compose.foundation:foundation:${Dependencies.composeVersion}"
@@ -176,6 +175,8 @@ object ComposeUiLibraries {
     const val composeAnimatedDrawable = "androidx.compose.animation:animation-graphics:${Dependencies.composeVersion}"
     const val composeAnimation = "androidx.compose.animation:animation:${Dependencies.composeVersion}"
     const val composeRxjava = "androidx.compose.runtime:runtime-rxjava2:${Dependencies.composeVersion}"
+    const val coilCompose = "io.coil-kt:coil-compose:${Dependencies.coilComposeVersion}"
+
 }
 
 object TestLibraries {

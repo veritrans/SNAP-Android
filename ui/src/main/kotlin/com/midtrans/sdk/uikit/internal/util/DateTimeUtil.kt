@@ -49,14 +49,21 @@ internal object DateTimeUtil {
     }
 
     fun plusDateBy(time: Long, next: Int): Long {
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault())
-            .plusDays(next.toLong())
-            .toInstant(ZoneOffset.UTC)
-            .toEpochMilli()
+        return time + TimeUnit.DAYS.toMillis(next.toLong())
     }
 
 
-    fun getCurrentMillis() = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli()
+    fun getCurrentMillis(): Long {
+        val clock = Clock.systemDefaultZone()
+
+        // get Instant Object of Clock object
+        // in milliseconds using millis() method
+
+        // get Instant Object of Clock object
+        // in milliseconds using millis() method
+        val milliseconds = clock.millis()
+        return milliseconds
+    }
 
 
     fun getDuration(millis: Long): Duration {

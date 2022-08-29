@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.DisplayMetrics
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -24,17 +23,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.*
-import com.midtrans.sdk.corekit.internal.base.BaseActivity
 import com.midtrans.sdk.corekit.internal.network.model.response.MerchantData
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.external.UiKitApi
+import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
+import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
-import kotlin.math.sqrt
 
 class PaymentOptionActivity : BaseActivity() {
 
@@ -121,18 +122,6 @@ class PaymentOptionActivity : BaseActivity() {
                 paymentMethods = paymentMethods
             )
         }
-    }
-
-    private fun isTabletDevice(): Boolean {
-        val metrics = DisplayMetrics()
-        this.windowManager.defaultDisplay.getMetrics(metrics)
-
-        val yInches = metrics.heightPixels / metrics.ydpi
-        val xInches = metrics.widthPixels / metrics.xdpi
-        val diagonalInches = sqrt((xInches * xInches + yInches * yInches).toDouble())
-        val hasTabletAttribute = resources.getBoolean(R.bool.isTablet)
-
-        return diagonalInches >= 6.5 && hasTabletAttribute
     }
 
     @Preview
@@ -277,11 +266,16 @@ class PaymentOptionActivity : BaseActivity() {
         }
     }
 
-    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            finish()
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result?.data?.let {
+                    val transactionResult = it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT) as TransactionResult
+                    UiKitApi.getDefaultInstance().paymentCallback.onSuccess(transactionResult) //TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
+                }
+                finish()
+            }
         }
-    }
 
     private fun getOnPaymentItemClick(
         paymentType: String,
@@ -290,8 +284,21 @@ class PaymentOptionActivity : BaseActivity() {
         paymentMethodItem: PaymentMethodItem,
         customerInfo: CustomerInfo?,
     ): Map<String, () -> Unit> {
+
+        val eWalletPaymentLauncher = {
+            resultLauncher.launch(
+                WalletActivity.getIntent(
+                    activityContext = this,
+                    snapToken = snapToken,
+                    orderId = orderId,
+                    totalAmount = totalAmount,
+                    paymentType = paymentMethodItem.type,
+                    customerInfo = customerInfo,
+                )
+            )
+        }
         return mapOf(
-            Pair("bank_transfer") {
+            Pair(PaymentType.BANK_TRANSFER) {
                 resultLauncher.launch(
                     BankTransferListActivity.getIntent(
                         activityContext = this,
@@ -342,7 +349,9 @@ class PaymentOptionActivity : BaseActivity() {
                         )
                     )
                 }
-            }
+            },
+            Pair(PaymentType.SHOPEEPAY, eWalletPaymentLauncher),
+            Pair(PaymentType.GOPAY, eWalletPaymentLauncher)
         )
     }
 

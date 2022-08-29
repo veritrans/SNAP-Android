@@ -5,6 +5,7 @@ import com.midtrans.sdk.uikit.internal.di.viewmodel.UtilModule
 import com.midtrans.sdk.uikit.internal.di.viewmodel.ViewModelFactoryModule
 import com.midtrans.sdk.uikit.internal.di.viewmodel.ViewModelModule
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDetailActivity
+import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
@@ -32,6 +33,8 @@ internal interface UiKitComponent {
     }
 
     fun inject(activity: BankTransferDetailActivity)
+    fun inject(activity: WalletActivity)
+
     fun inject(activity: CreditCardActivity)
     fun inject(activity: DirectDebitActivity)
     fun inject(activity: SavedCardActivity)

@@ -1,4 +1,3 @@
-
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -74,6 +73,12 @@ dependencies {
     implementation(com.gtf.snap.ComposeUiLibraries.composeAnimatedDrawable)
     implementation(com.gtf.snap.ComposeUiLibraries.composeAnimation)
     implementation(com.gtf.snap.ComposeUiLibraries.composeRxjava)
+    implementation(com.gtf.snap.ComposeUiLibraries.coilCompose) {
+        exclude(group = "androidx.lifecycle", module = "lifecycle-viewmodel")
+        exclude(group = "androidx.lifecycle", module = "lifecycle-viewmodel-ktx")
+        exclude(group = "androidx.lifecycle:lifecycle-viewmodel")
+        exclude(group = "androidx.lifecycle:lifecycle-viewmodel-ktx")
+    }
 
     //TODO: work around, remove when google fix compose tooling
     debugImplementation("androidx.customview:customview:1.2.0-alpha01")
