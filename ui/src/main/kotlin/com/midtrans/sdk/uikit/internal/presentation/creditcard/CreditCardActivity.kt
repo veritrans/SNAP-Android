@@ -175,7 +175,9 @@ class CreditCardActivity : BaseActivity() {
         onClick: () -> Unit
     ){
         Column() {
-            SnapAppBar(title = "Credit Card", iconResId = R.drawable.ic_arrow_left) {
+            SnapAppBar(
+                title = stringResource(id = R.string.payment_summary_cc_dc),
+                iconResId = R.drawable.ic_arrow_left) {
                 onBackPressed()
             }
             val scrollState = rememberScrollState()

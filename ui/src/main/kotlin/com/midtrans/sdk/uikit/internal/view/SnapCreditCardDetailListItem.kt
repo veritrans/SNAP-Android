@@ -114,10 +114,8 @@ fun SnapCCDetailListItem(
                 )
                 SnapTextField(
                     value = cvvTextField,
-                    onValueChange = { value ->
-                        if (value.text.length <= 3) {
-                            onValueChange(value.text.filter { it.isDigit() })
-                        }
+                    onValueChange = {
+                        onCvvValueChange(formatCVV(it))
                     },
                     modifier = Modifier.width(69.dp),
                     visualTransformation = PasswordVisualTransformation(),
@@ -218,7 +216,9 @@ fun SnapSavedCardRadioGroup(
     onExpiryDateValueChange: (TextFieldValue) -> Unit,
     onCardTextFieldFocusedChange: (Boolean) -> Unit,
     onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
-    onCvvTextFieldFocusedChange: (Boolean) -> Unit
+    onCvvTextFieldFocusedChange: (Boolean) -> Unit,
+    onSavedCardRadioSelected: (item: FormData) -> Unit
+
 ) {
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(states[0].identifier) }
 
@@ -234,6 +234,7 @@ fun SnapSavedCardRadioGroup(
                         selected = (item.identifier == selectedOption),
                         onClick = {
                             onOptionSelected(item.identifier)
+                            onSavedCardRadioSelected(item)
                         },
                         role = Role.RadioButton
                     ),
@@ -252,11 +253,12 @@ fun SnapSavedCardRadioGroup(
                             if (item.tokenType == SavedToken.ONE_CLICK){
                                 cvvSavedCardTextFieldValue = TextFieldValue("***")
                             }
+                            item.tokenType
                             SnapCCDetailListItem(
                                 startIconId = item.startIcon,
                                 endIconId = item.endIcon,
                                 itemTitle = formatMaskedCard(item.maskedCardNumber),
-                                shouldReveal = item.identifier == selectedOption,
+                                shouldReveal = item.SavedCardidentifier == selectedOption,
                                 inputTitle = item.inputTitle,
                                 cvvTextField = cvvSavedCardTextFieldValue ,
                                 isInputError = errorText.isNotBlank(),
@@ -458,17 +460,18 @@ data class SavedCreditCardFormData(
     val tokenType: String,
     var errorText: MutableState<String>,
     val inputTitle: String,
-    var title: String
-) : FormData(title)
+    var SavedCardidentifier: String,
+    var tokenId: String,
+) : FormData(SavedCardidentifier)
 
 class NewCardFormData(
-    var title: String,
+    var NewCardIdentifier: String,
     var isCardNumberInvalid: MutableState<Boolean>,
     var isExpiryDateInvalid: MutableState<Boolean>,
     var isCvvInvalid: MutableState<Boolean>,
     var bankIconId: MutableState<Int?>,
     var principalIconId: MutableState<Int?>
-) : FormData(title)
+) : FormData(NewCardIdentifier)
 
 
 open class FormData(
@@ -503,9 +506,9 @@ class NormalCardItemState(
     val iconIdList by mutableStateOf(
         listOf (
             R.drawable.ic_outline_visa_24,
+            R.drawable.ic_outline_mastercard_24,
             R.drawable.ic_outline_jcb_24,
             R.drawable.ic_outline_amex_24,
-            R.drawable.ic_outline_mastercard_24
         )
     )
 }

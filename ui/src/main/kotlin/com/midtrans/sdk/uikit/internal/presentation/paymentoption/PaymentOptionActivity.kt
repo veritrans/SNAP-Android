@@ -32,7 +32,6 @@ import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
-import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
 import com.midtrans.sdk.uikit.internal.view.*
 import kotlin.math.sqrt
@@ -318,7 +317,8 @@ class PaymentOptionActivity : BaseActivity() {
                             creditCard = creditCard
                         )
                     } else {
-                        SavedCardActivity.getIntent(
+                        //TODO currently set to CreditCardActivity for testing purpose
+                        CreditCardActivity.getIntent(
                             activityContext = this,
                             snapToken = snapToken,
                             orderId = orderId,

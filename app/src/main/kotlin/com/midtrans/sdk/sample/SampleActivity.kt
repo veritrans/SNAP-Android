@@ -183,7 +183,7 @@ class SampleActivity : AppCompatActivity() {
             ) {
                 val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
                     activityContext = this@SampleActivity,
-                    transactionDetails =  SnapTransactionDetail(
+                    transactionDetails = SnapTransactionDetail(
                         orderId = UUID.randomUUID().toString(),
                         grossAmount = 15005.00
                     ),
