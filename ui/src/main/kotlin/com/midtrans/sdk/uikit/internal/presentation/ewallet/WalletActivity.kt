@@ -55,7 +55,15 @@ internal class WalletActivity : BaseActivity() {
             snapToken = snapToken,
             paymentType = paymentType
         )
+        observerDeepLinkUrl()
         setResult(RESULT_OK)
+    }
+
+    private fun observerDeepLinkUrl(){
+        viewModel.deepLinkUrlLiveData.observe(this) { url ->
+            val intent = DeepLinkActivity.getIntent(this, "jhfjaskdfh", "https://wa.me/6289604550377")
+            startActivity(intent)
+        }
     }
 
     private fun updateExpiredTime(): Observable<String> {
@@ -240,7 +248,7 @@ internal class WalletActivity : BaseActivity() {
 
     private val paymentType: String by lazy {
         intent.getStringExtra(EXTRA_PAYMENTTYPE)
-            ?: throw RuntimeException("Bank name must not be empty")
+            ?: throw RuntimeException("Payment Type must not be empty")
     }
 
     private val snapToken: String by lazy {
