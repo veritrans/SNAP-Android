@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.internal.getOrAwaitValue
 import org.junit.Assert
 import org.junit.Before
@@ -41,6 +42,6 @@ internal class DirectDebitViewModelTest {
 
         val callback = callbackCaptor.firstValue
         callback.onSuccess(TransactionResponse(redirectUrl = "redirect-url"))
-        Assert.assertEquals("redirect-url", viewModel.getRedirectUrl().getOrAwaitValue())
+        Assert.assertEquals("redirect-url", viewModel.getTransactionResponse().getOrAwaitValue().redirectUrl)
     }
 }

@@ -1,6 +1,7 @@
 package com.midtrans.sdk.sample
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.ScrollState
@@ -17,9 +18,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.SnapCore
+import com.midtrans.sdk.corekit.api.callback.Callback
+import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
-import com.midtrans.sdk.uikit.internal.presentation.loadingpayment.LoadingPaymentActivity
+import com.midtrans.sdk.corekit.api.model.TransactionResult
+import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import java.util.*
 
@@ -27,6 +31,10 @@ class SampleActivity : AppCompatActivity() {
 
     private val viewModel: SampleViewModel by lazy {
         ViewModelProvider(this).get(SampleViewModel::class.java)
+    }
+
+    private val uiKitApi: UiKitApi by lazy {
+        UiKitApi()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -180,7 +188,8 @@ class SampleActivity : AppCompatActivity() {
                 text = "To Payment Options",
                 style = SnapButton.Style.TERTIARY
             ) {
-                val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
+
+                uiKitApi.startPayment(
                     activityContext = this@SampleActivity,
                     transactionDetails = SnapTransactionDetail(
                         orderId = UUID.randomUUID().toString(),
@@ -191,7 +200,24 @@ class SampleActivity : AppCompatActivity() {
                         lastName = "Bhakti",
                         email = "aribhakti@email.com",
                         phone = "087788778212"
-                    )
+                    ),
+                    paymentCallback = object : Callback<TransactionResult> {
+                        override fun onSuccess(result: TransactionResult) {
+                            Toast.makeText(
+                                this@SampleActivity,
+                                "Transaction Pending. ID: " + result.transactionId,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+
+                        override fun onError(error: SnapError) {
+                            Toast.makeText(
+                                this@SampleActivity,
+                                "Error: " + error.javaClass.name,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
                 )
                 startActivity(
                     intent

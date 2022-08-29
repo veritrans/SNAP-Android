@@ -20,7 +20,6 @@ internal class WalletViewModel @Inject constructor(
 
     val qrCodeUrlLiveData = MutableLiveData<String>()
     val deepLinkUrlLiveData = MutableLiveData<String>()
-    val billingNumberLiveData = MutableLiveData<String>()
     var expiredTime = datetimeUtil.getCurrentMillis() + TimeUnit.MINUTES.toMillis(15)
 
     fun chargeQrPayment(
