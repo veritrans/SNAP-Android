@@ -61,7 +61,7 @@ internal class WalletActivity : BaseActivity() {
 
     private fun observerDeepLinkUrl(){
         viewModel.deepLinkUrlLiveData.observe(this) { url ->
-            val intent = DeepLinkActivity.getIntent(this, "jhfjaskdfh", "https://wa.me/6289604550377")
+            val intent = DeepLinkActivity.getIntent(this, paymentType, url)
             startActivity(intent)
         }
     }
