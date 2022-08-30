@@ -122,7 +122,7 @@ class DirectDebitActivity : BaseActivity() {
             ) {
                 SnapAppBar(
                     title = title,
-                    iconResId = R.drawable.ic_cross
+                    iconResId = R.drawable.ic_arrow_left
                 ) {
                     onBackPressed()
                 }
