@@ -15,7 +15,7 @@ internal data class SnapTokenRequest(
     val briVa: BankTransferRequest? = null,
     val enabledPayments: List<String>? = null,
     val expiry: Expiry? = null,
-    val promo: Promo? = null,
+    val promoRequest: PromoRequest? = null,
     @SerializedName("custom_field1") val customField1: String? = null,
     @SerializedName("custom_field2") val customField2: String? = null,
     @SerializedName("custom_field3") val customField3: String? = null,

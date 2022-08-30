@@ -9,7 +9,8 @@ data class SavedToken(
     val tokenType: String? = null,
     val maskedCard: String? = null,
     val expiresAt: String? = null,
-    val fromHostApp: Boolean = false
+    val fromHostApp: Boolean = false,
+    val binDetail: BinDetail?
 ) : Parcelable {
     companion object {
         const val ONE_CLICK = "one_click"

@@ -18,6 +18,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.SnapCore
+import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.CustomerDetails
@@ -195,6 +196,10 @@ class SampleActivity : AppCompatActivity() {
                         orderId = UUID.randomUUID().toString(),
                         grossAmount = 15005.00
                     ),
+                    creditCard = CreditCard(
+                        saveCard = true
+                    ),
+                    userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
                     customerDetails = CustomerDetails(
                         firstName = "Ari",
                         lastName = "Bhakti",

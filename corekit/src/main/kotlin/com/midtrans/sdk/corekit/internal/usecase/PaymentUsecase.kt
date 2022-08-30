@@ -3,14 +3,7 @@ package com.midtrans.sdk.corekit.internal.usecase
 import android.annotation.SuppressLint
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
-import com.midtrans.sdk.corekit.api.model.BankPointResponse
-import com.midtrans.sdk.corekit.api.model.BinResponse
-import com.midtrans.sdk.corekit.api.model.CardTokenResponse
-import com.midtrans.sdk.corekit.api.model.DeleteSavedCardResponse
-import com.midtrans.sdk.corekit.api.model.PaymentMethod
-import com.midtrans.sdk.corekit.api.model.PaymentOption
-import com.midtrans.sdk.corekit.api.model.PaymentType
-import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.CreditCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.PaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
@@ -65,8 +58,12 @@ internal class PaymentUsecase(
                         }
                         callback.onSuccess(
                             PaymentOption(
-                                token.orEmpty(),
-                                methods
+                                token = token.orEmpty(),
+                                options = methods,
+                                creditCard = responseData.creditCard,
+                                promos = responseData.promos,
+                                merchantData = responseData.merchantData,
+                                customerDetails = responseData.customerDetails
                             )
                         )
                     },
@@ -84,8 +81,12 @@ internal class PaymentUsecase(
                         }
                         callback.onSuccess(
                             PaymentOption(
-                                snapToken,
-                                methods
+                                token = snapToken,
+                                options = methods,
+                                creditCard = responseData.creditCard,
+                                promos = responseData.promos,
+                                merchantData = responseData.merchantData,
+                                customerDetails = responseData.customerDetails
                             )
                         )
                     },

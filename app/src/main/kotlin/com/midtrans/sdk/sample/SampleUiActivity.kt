@@ -128,31 +128,40 @@ class SampleUiActivity : AppCompatActivity() {
 
             val list = mutableListOf(
                 SavedCreditCardFormData(
-                    title = "satu",
+                    savedCardIdentifier = "satu",
                     inputTitle = "Masukkan CVV",
                     endIcon = R.drawable.ic_trash,
                     startIcon = R.drawable.ic_outline_bca_24,
                     errorText = remember { mutableStateOf("") },
-                    maskedCardNumber = "123***********345"
+                    maskedCardNumber = "123***********345",
+                    displayedMaskedCard = "**** **** **** 1234",
+                    tokenType = "one_click",
+                    tokenId = "tokenid"
                 ),
                 SavedCreditCardFormData(
-                    title = "dua",
+                    savedCardIdentifier = "dua",
                     inputTitle = "Masukkan CVV",
                     endIcon = R.drawable.ic_trash,
                     startIcon = R.drawable.ic_outline_bni_24,
                     errorText = remember { mutableStateOf("") },
-                    maskedCardNumber = "123***********345"
+                    maskedCardNumber = "123***********345",
+                    displayedMaskedCard = "**** **** **** 1234",
+                    tokenType = "one_click",
+                    tokenId = "tokenid"
                 ),
                 SavedCreditCardFormData(
-                    title = "tiga",
+                    savedCardIdentifier = "tiga",
                     inputTitle = "Masukkan CVV",
                     endIcon = R.drawable.ic_trash,
                     startIcon = R.drawable.ic_outline_mandiri_24,
                     errorText = remember { mutableStateOf("") },
-                    maskedCardNumber = "123***********345"
+                    maskedCardNumber = "123***********345",
+                    displayedMaskedCard = "**** **** **** 1234",
+                    tokenType = "one_click",
+                    tokenId = "tokenid"
                 ),
                 NewCardFormData(
-                    title = "new",
+                    newCardIdentifier = "new",
                     isCardNumberInvalid = remember { mutableStateOf(false) },
                     bankIconId = remember { mutableStateOf(R.drawable.ic_outline_bri_24) },
                     isCvvInvalid = remember { mutableStateOf(false) },

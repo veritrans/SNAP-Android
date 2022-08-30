@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Promo(
+data class PromoRequest(
     val enabled: Boolean,
     val allowedPromoCodes: List<String>
 ) : Parcelable
