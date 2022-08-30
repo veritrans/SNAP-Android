@@ -274,13 +274,14 @@ class DirectDebitActivity : BaseActivity() {
                             userId = it
                             onUserIdChanged(userId.text)
                             isError = userId.text.isEmpty()
+                            isFocused = !isError
                         },
                         isError = isError,
                         isFocused = isFocused,
                         onFocusChange = { isFocused = it },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                     )
-                    if (userId.text.isEmpty() && !isFocused) {
+                    if (isError) {
                         Text(
                             text = stringResource(id = R.string.klik_bca_validation_error),
                             style = SnapTypography.STYLES.snapTextSmallRegular,
