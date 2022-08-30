@@ -263,13 +263,13 @@ class DirectDebitActivity : BaseActivity() {
                         .padding(top = 8.dp, bottom = 12.dp, start = 16.dp, end = 16.dp)
                 ) {
                     SnapText(
-                        text = stringResource(id = R.string.klik_bca_id_field_title),
+                        text = stringResource(id = R.string.klik_bca_id_field_label),
                         style = SnapText.Style.SMALL
                     )
                     SnapTextField(
                         modifier = Modifier.fillMaxWidth(1f),
                         value = userId,
-                        hint = stringResource(id = R.string.klik_bca_id_field_label),
+                        hint = stringResource(id = R.string.klik_bca_placeholder),
                         onValueChange = {
                             userId = it
                             onUserIdChanged(userId.text)
