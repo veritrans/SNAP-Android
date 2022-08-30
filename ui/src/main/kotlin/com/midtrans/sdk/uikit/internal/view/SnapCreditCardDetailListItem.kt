@@ -316,6 +316,7 @@ fun SnapTextField(
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
+    singleLine: Boolean = true,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
@@ -349,11 +350,12 @@ fun SnapTextField(
         readOnly = readOnly,
         textStyle = textStyle,
         visualTransformation = visualTransformation,
+        singleLine = singleLine,
         decorationBox = {
             TextFieldDefaults.TextFieldDecorationBox(
                 value = value.text,
                 innerTextField = it,
-                singleLine = true,
+                singleLine = singleLine,
                 enabled = true,
                 placeholder = hint?.let {
                     {
