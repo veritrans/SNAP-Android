@@ -45,7 +45,8 @@ internal class BankTransferDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //TODO: create Dagger component holder for global access
-        DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build().inject(this)
+        DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build()
+            .inject(this)
         setContent {
             Content(
                 totalAmount = totalAmount,
@@ -88,116 +89,123 @@ internal class BankTransferDetailActivity : BaseActivity() {
     ) {
         val billingNumber by remember { billingNumberState }
         val companyCode by remember { companyCodeState }
-        val remainingTime by remember {remainingTimeState}
+        val remainingTime by remember { remainingTimeState }
         var expanding by remember {
             mutableStateOf(false)
         }
         val state = rememberScrollState()
 
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxHeight(1f)
-        ) {
-            SnapOverlayExpandingBox(
-                modifier = Modifier.weight(1f),
-                isExpanded = expanding,
-                mainContent = {
-                    SnapTotal(
-                        amount = totalAmount,
-                        orderId = orderId,
-                        canExpand = customerInfo != null,
-                        remainingTime = remainingTime
-                    ) {
-                        expanding = it
-                    }
-                },
-                expandingContent = {
-                    customerInfo?.run {
-                        SnapCustomerDetail(
-                            name = name,
-                            phone = phone,
-                            addressLines = addressLines
-                        )
-                    }
+        Column {
+            title[paymentType]?.let {
+                SnapAppBar(title = stringResource(id = it), iconResId = R.drawable.ic_cross) {
+                    onBackPressed()
                 }
+            }
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxHeight(1f)
             ) {
-                Column(
-                    modifier = Modifier
-                        .padding(top = 28.dp)
-                        .verticalScroll(state),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    generalInstruction[bankName]?.let {
-                        Text(
-                            text = stringResource(id = it),
-                            style = SnapTypography.STYLES.snapTextBigRegular,
-                            color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY)
-                        )
+                SnapOverlayExpandingBox(
+                    modifier = Modifier.weight(1f),
+                    isExpanded = expanding,
+                    mainContent = {
+                        SnapTotal(
+                            amount = totalAmount,
+                            orderId = orderId,
+                            canExpand = customerInfo != null,
+                            remainingTime = remainingTime
+                        ) {
+                            expanding = it
+                        }
+                    },
+                    expandingContent = {
+                        customerInfo?.run {
+                            SnapCustomerDetail(
+                                name = name,
+                                phone = phone,
+                                addressLines = addressLines
+                            )
+                        }
                     }
-                    getInfoField(
-                        vaNumber = vaNumberState.value,
-                        companyCode = companyCode,
-                        billingNumber = billingNumber,
-                        destinationBankCode = destinationBankCode
-                    )[bankName]?.invoke()
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(top = 28.dp)
+                            .verticalScroll(state),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        generalInstruction[bankName]?.let {
+                            Text(
+                                text = stringResource(id = it),
+                                style = SnapTypography.STYLES.snapTextBigRegular,
+                                color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY)
+                            )
+                        }
+                        getInfoField(
+                            vaNumber = vaNumberState.value,
+                            companyCode = companyCode,
+                            billingNumber = billingNumber,
+                            destinationBankCode = destinationBankCode
+                        )[bankName]?.invoke()
 
-                    var isExpanded by remember { mutableStateOf(false) }
-                    SnapInstructionButton(
-                        isExpanded = isExpanded,
-                        iconResId = R.drawable.ic_help,
-                        title = stringResource(id = R.string.kredivo_how_to_pay_title),
-                        onExpandClick = { isExpanded = !isExpanded },
-                        expandingContent = {
-                            val (selectedOption, onOptionSelected) = remember { mutableStateOf(0) }
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                paymentInstruction[bankName]?.forEach { item ->
-                                    val selected = item.first == selectedOption
-                                    Column(
-                                        modifier = Modifier.selectable(
-                                            selected = selected,
-                                            onClick = {
-                                                onOptionSelected(if (selected) 0 else item.first)
-                                            },
-                                            role = Role.RadioButton
-                                        )
-                                    ) {
-                                        Row {
-                                            Text(
-                                                text = stringResource(id = item.first),
-                                                modifier = Modifier.weight(1f),
-                                                style = SnapTypography.STYLES.snapTextMediumMedium,
-                                                color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY)
+                        var isExpanded by remember { mutableStateOf(false) }
+                        SnapInstructionButton(
+                            isExpanded = isExpanded,
+                            iconResId = R.drawable.ic_help,
+                            title = stringResource(id = R.string.kredivo_how_to_pay_title),
+                            onExpandClick = { isExpanded = !isExpanded },
+                            expandingContent = {
+                                val (selectedOption, onOptionSelected) = remember { mutableStateOf(0) }
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    paymentInstruction[bankName]?.forEach { item ->
+                                        val selected = item.first == selectedOption
+                                        Column(
+                                            modifier = Modifier.selectable(
+                                                selected = selected,
+                                                onClick = {
+                                                    onOptionSelected(if (selected) 0 else item.first)
+                                                },
+                                                role = Role.RadioButton
                                             )
-                                            Icon(
-                                                painter = painterResource(id = if (selected) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down),
-                                                contentDescription = null
+                                        ) {
+                                            Row {
+                                                Text(
+                                                    text = stringResource(id = item.first),
+                                                    modifier = Modifier.weight(1f),
+                                                    style = SnapTypography.STYLES.snapTextMediumMedium,
+                                                    color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY)
+                                                )
+                                                Icon(
+                                                    painter = painterResource(id = if (selected) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down),
+                                                    contentDescription = null
+                                                )
+                                            }
+                                            AnimatedVisibility(visible = selected) {
+                                                SnapNumberedList(list = stringArrayResource(id = item.second).toList())
+
+                                            }
+                                            Divider(
+                                                thickness = 1.dp,
+                                                color = SnapColors.getARGBColor(SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY),
+                                                modifier = Modifier.padding(top = 16.dp)
                                             )
                                         }
-                                        AnimatedVisibility(visible = selected) {
-                                            SnapNumberedList(list = stringArrayResource(id = item.second).toList())
-
-                                        }
-                                        Divider(
-                                            thickness = 1.dp,
-                                            color = SnapColors.getARGBColor(SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY),
-                                            modifier = Modifier.padding(top = 16.dp)
-                                        )
                                     }
                                 }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
-            }
 
-            SnapButton(
-                text = stringResource(id = R.string.i_have_already_paid),
-                modifier = Modifier.fillMaxWidth(1f)
-            ) {
-                //TODO: Click action
+                SnapButton(
+                    text = stringResource(id = R.string.i_have_already_paid),
+                    modifier = Modifier.fillMaxWidth(1f)
+                ) {
+                    //TODO: Click action
+                }
             }
         }
     }
@@ -315,7 +323,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
             bankName = "bni",
             billingNumberState = remember { mutableStateOf("2323222222") },
             destinationBankCode = "111",
-            remainingTimeState = remember { mutableStateOf("00:00")}
+            remainingTimeState = remember { mutableStateOf("00:00") }
         )
 
     }
@@ -467,6 +475,17 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 R.string.other_bank_instruction_alto_title,
                 R.array.other_bank_instruction_alto
             )
+        )
+    }
+
+    private val title by lazy {
+        mapOf(
+            Pair(PaymentType.BCA_VA, R.string.bank_bca),
+            Pair(PaymentType.E_CHANNEL, R.string.bank_mandiri),
+            Pair(PaymentType.PERMATA_VA, R.string.bank_permata),
+            Pair(PaymentType.BRI_VA, R.string.bank_bri),
+            Pair(PaymentType.BNI_VA, R.string.bank_bni),
+            Pair(PaymentType.ALL_VA, R.string.bank_other),
         )
     }
 

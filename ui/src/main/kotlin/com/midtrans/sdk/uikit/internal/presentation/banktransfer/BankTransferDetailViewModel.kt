@@ -52,7 +52,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
                 }
 
                 override fun onError(error: SnapError) {
-                    TODO("Not yet implemented") // TODO: error dialog etc
+                    // TODO: error dialog etc
                 }
             }
         )

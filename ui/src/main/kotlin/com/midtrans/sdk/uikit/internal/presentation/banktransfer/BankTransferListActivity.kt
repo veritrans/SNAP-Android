@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,10 +20,7 @@ import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
-import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
-import com.midtrans.sdk.uikit.internal.view.SnapOverlayExpandingBox
-import com.midtrans.sdk.uikit.internal.view.SnapSingleIconListItem
-import com.midtrans.sdk.uikit.internal.view.SnapTotal
+import com.midtrans.sdk.uikit.internal.view.*
 
 class BankTransferListActivity : BaseActivity() {
 
@@ -40,43 +38,52 @@ class BankTransferListActivity : BaseActivity() {
         var expanding by remember {
             mutableStateOf(false)
         }
-        Box(
-            modifier = Modifier
-                .padding(16.dp)
-        ) {
-            SnapOverlayExpandingBox(
-                modifier = Modifier.fillMaxHeight(1f),
-                isExpanded = expanding,
-                mainContent = {
-                    SnapTotal(
-                        amount = totalAmount,
-                        orderId = orderId,
-                        canExpand = customerInfo != null,
-                        remainingTime = null
-                    ) {
-                        expanding = it
-                    }
-                },
-                expandingContent = {
-                    customerInfo?.run {
-                        SnapCustomerDetail(
-                            name = name,
-                            phone = phone,
-                            addressLines = addressLines
-                        )
-                    }
-                }
+        Column {
+            SnapAppBar(
+                title = stringResource(id = R.string.payment_summary_bank_transfer),
+                iconResId = R.drawable.ic_arrow_left
             ) {
-                LazyColumn {
-                    paymentMethodItem.methods.forEachIndexed { index, method ->
-                        item {
-                            bankNameMap[method]?.let {
-                                SnapSingleIconListItem(title = stringResource(it.first),
-                                    iconResId = it.second,
-                                    modifier = Modifier.clickable {
-                                        toBankTransferDetail(method)
-                                    }
-                                )
+                onBackPressed()
+            }
+
+            Box(
+                modifier = Modifier
+                    .padding(16.dp)
+            ) {
+                SnapOverlayExpandingBox(
+                    modifier = Modifier.fillMaxHeight(1f),
+                    isExpanded = expanding,
+                    mainContent = {
+                        SnapTotal(
+                            amount = totalAmount,
+                            orderId = orderId,
+                            canExpand = customerInfo != null,
+                            remainingTime = null
+                        ) {
+                            expanding = it
+                        }
+                    },
+                    expandingContent = {
+                        customerInfo?.run {
+                            SnapCustomerDetail(
+                                name = name,
+                                phone = phone,
+                                addressLines = addressLines
+                            )
+                        }
+                    }
+                ) {
+                    LazyColumn {
+                        paymentMethodItem.methods.forEachIndexed { index, method ->
+                            item {
+                                bankNameMap[method]?.let {
+                                    SnapSingleIconListItem(title = stringResource(it.first),
+                                        iconResId = it.second,
+                                        modifier = Modifier.clickable {
+                                            toBankTransferDetail(method)
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
