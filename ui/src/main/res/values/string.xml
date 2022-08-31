@@ -33,7 +33,7 @@
     <string name="payment_summary_shopeepay">ShopeePay/QRIS</string>
     <string name="payment_summary_alfamart">Alfa Group</string>
     <string name="payment_summary_indomaret">Indomaret</string>
-    <string name="payment_title_gopay">Gopay</string>
+    <string name="payment_title_gopay">GoPay</string>
     <string name="payment_title_shopeepay">ShopeePay</string>
 
     <string name="success_screen_v1_status">Payment successful</string>
@@ -167,7 +167,12 @@
     <string name="general_instruction_copied_icon_text">Copied</string>
 
 
-    <string name="redirection_instruction_gopay_message">1. Tap Pay now. 2. Gojek app will open. 3. Confirm payment in the Gojek app. 4. Payment complete.</string>
+    <string-array name="redirection_instruction_gopay_message">
+        <item><data><![CDATA[Tap <b>Pay now</b>.]]></data></item>
+        <item><data><![CDATA[<b>Gojek</b> app will open.]]></data></item>
+        <item><data><![CDATA[Confirm payment in the <b>Gojek</b> app.]]></data></item>
+        <item><data><![CDATA[Payment complete.]]></data></item>
+    </string-array>
     <string name="redirection_instruction_gopay_cta">Pay now</string>
 
 
@@ -181,13 +186,19 @@
     <string name="transaction_denied_gopay_cta">Okay</string>
 
     <string-array name="scan_qr_instruction_gopay">
-        <item><data><![CDATA[Open your <b>Gojek</b> or <b>other e-wallet app</b>.]]></data>.</item>
-        <item><data><![CDATA[Scan the <b>QR code</b> on your monitor.]]></data>.</item>
-        <item><data><![CDATA[Confirm payment in the app.]]></data>.</item>
-        <item><data><![CDATA[Payment complete.]]></data>.</item>
+        <item><data><![CDATA[Open your <b>Gojek</b> or <b>other e-wallet app</b>.]]></data></item>
+        <item><data><![CDATA[Scan the <b>QR code</b> on your monitor.]]></data></item>
+        <item><data><![CDATA[Confirm payment in the app.]]></data></item>
+        <item><data><![CDATA[Payment complete.]]></data></item>
     </string-array>
 
-    <string name="redirection_instruction_shopeepay_message">1. Tap Pay now. 2. Shopee app will open. 3. Confirm payment in the Shopee app. 4. Payment complete.</string>
+    <string-array name="redirection_instruction_shopeepay_message">
+        <item><data><![CDATA[Tap <b>Pay now</b>.]]></data></item>
+        <item><data><![CDATA[<b>Shopee</b> app will open.]]></data></item>
+        <item><data><![CDATA[Confirm payment in the <b>Shopee</b> app.]]></data></item>
+        <item><data><![CDATA[Payment complete.]]></data></item>
+    </string-array>
+
     <string name="redirection_instruction_shopeepay_cta">Pay now</string>
 
 
@@ -202,10 +213,10 @@
 
 
     <string-array name="scan_qr_instruction_shopeepay_message">
-        <item><data><![CDATA[Open your <b>Shopee</b> or <b>other e-wallet app</b>.]]></data>.</item>
-        <item><data><![CDATA[Scan the <b>QR code</b> on your monitor.]]></data>.</item>
-        <item><data><![CDATA[Confirm payment in the app.]]></data>.</item>
-        <item><data><![CDATA[Payment complete.]]></data>.</item>
+        <item><data><![CDATA[Open your <b>Shopee</b> or <b>other e-wallet app</b>.]]></data></item>
+        <item><data><![CDATA[Scan the <b>QR code</b> on your monitor.]]></data></item>
+        <item><data><![CDATA[Confirm payment in the app.]]></data></item>
+        <item><data><![CDATA[Payment complete.]]></data></item>
     </string-array>
 
 
@@ -347,13 +358,13 @@
         <item><data><![CDATA[Select Multi Payment.]]></data></item>
         <item><data><![CDATA[Insert company code <b>70012</b>.]]></data></item>
         <item><data><![CDATA[Insert <b>payment code</b>, then <b>confirm</b>.]]></data></item>
-        <item>Payment complete.</item>
+        <item>Payment complete</item>
     </string-array>
 
     <string name="mandiri_instruction_internet_banking_title">Internet Banking</string>
 
     <string-array name="mandiri_instruction_internet_banking">
-        <item><data><![CDATA[Select <b>payment</b> on the main menu]]></data>.</item>
+        <item><data><![CDATA[Select <b>payment</b> on the main menu]]></data></item>
         <item><data><![CDATA[Select <b>multi payment</b>.]]></data></item>
         <item><data><![CDATA[Select <b>from account</b>.]]></data></item>
         <item><data><![CDATA[Select <b>Midtrans</b> in the <b>service provider</b> field.]]></data></item>
@@ -370,14 +381,14 @@
         <item><data><![CDATA[Select to <b>BNI account</b>.]]></data></item>
         <item><data><![CDATA[Insert the <b>payment account number</b>.]]></data></item>
         <item><data><![CDATA[Insert the <b>payable amount</b>, then <b>confirm</b>.]]></data></item>
-        <item>Payment complete.</item>
+        <item>Payment complete</item>
     </string-array>
 
 
     <string name="bni_instruction_internet_banking_title">Internet Banking</string>
 
     <string-array name="bni_instruction_internet_banking">
-        <item><data><![CDATA[Select <b>transaction</b>, then transfer administration Info.]]></data>.</item>
+        <item><data><![CDATA[Select <b>transaction</b>, then transfer administration Info.]]></data></item>
         <item><data><![CDATA[Select <b>set destination account</b>.]]></data></item>
         <item><data><![CDATA[Insert <b>account info</b>, then <b>confirm</b>]]></data></item>
         <item><data><![CDATA[Select <b>transfer</b>, then transfer to <b>BNI account</b>.]]></data></item>
@@ -388,142 +399,142 @@
     <string name="bni_instruction_mobile_banking_title">Internet Banking</string>
 
     <string-array name="bni_instruction_mobile_banking">
-        <item><data><![CDATA[Select <b>transfer</b>.]]></data>.</item>
-        <item><data><![CDATA[Select <b>virtual account billing</b>.]]></data>.</item>
-        <item><data><![CDATA[Select the <b>debit account</b> you want to use.]]></data>.</item>
-        <item><data><![CDATA[Insert <b>virtual account number</b>, then <b>confirm</b>.]]></data>.</item>
-        <item><data><![CDATA[Payment complete.]]></data>.</item>
+        <item><data><![CDATA[Select <b>transfer</b>.]]></data></item>
+        <item><data><![CDATA[Select <b>virtual account billing</b>.]]></data></item>
+        <item><data><![CDATA[Select the <b>debit account</b> you want to use.]]></data></item>
+        <item><data><![CDATA[Insert <b>virtual account number</b>, then <b>confirm</b>.]]></data></item>
+        <item><data><![CDATA[Payment complete.]]></data></item>
     </string-array>
 
     <string name="bni_instruction_other_banks_title">Via other banks</string>
 
     <string-array name="bni_instruction_other_banks">
-        <item><data><![CDATA[Select your <b>preferred bank & payment channel</b> (ATM/internet/mobile banking).]]></data>.</item>
-        <item><data><![CDATA[Select <b>transfer to other bank</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert <b>BNI virtual account number</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert <b>the payable amount</b>, then <b>confirm</b>.]]></data>.</item>
-        <item><data><![CDATA[Payment complete.]]></data>.</item>
+        <item><data><![CDATA[Select your <b>preferred bank & payment channel</b> (ATM/internet/mobile banking).]]></data></item>
+        <item><data><![CDATA[Select <b>transfer to other bank</b>.]]></data></item>
+        <item><data><![CDATA[Insert <b>BNI virtual account number</b>.]]></data></item>
+        <item><data><![CDATA[Insert <b>the payable amount</b>, then <b>confirm</b>.]]></data></item>
+        <item><data><![CDATA[Payment complete.]]></data></item>
     </string-array>
 
     <string name="bca_instruction_atm_title">ATM BCA</string>
     <string-array name="bca_instruction_atm">
-        <item><data><![CDATA[Select <b>other transactions</b> on the main menu.]]></data>.</item>
-        <item><data><![CDATA[Select <b>transfer</b>.]]></data>.</item>
-        <item><data><![CDATA[Select <b>BCA virtual account</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert <b>BCA virtual account number</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert the <b>payable amount</b>, then <b>confirm</b>.]]></data>.</item>
-        <item><data><![CDATA[Payment complete.]]></data>.</item>
+        <item><data><![CDATA[Select <b>other transactions</b> on the main menu.]]></data></item>
+        <item><data><![CDATA[Select <b>transfer</b>.]]></data></item>
+        <item><data><![CDATA[Select <b>BCA virtual account</b>.]]></data></item>
+        <item><data><![CDATA[Insert <b>BCA virtual account number</b>.]]></data></item>
+        <item><data><![CDATA[Insert the <b>payable amount</b>, then <b>confirm</b>.]]></data></item>
+        <item><data><![CDATA[Payment complete.]]></data></item>
     </string-array>
 
     <string name="bca_instruction_klikbca_title">KlikBCA</string>
     <string-array name="bca_instruction_klikbca">
-        <item><data><![CDATA[Select <b>fund transfer</b>.]]></data>.</item>
-        <item><data><![CDATA[Select <b>transfer to BCA virtual account</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert <b>BCA virtual account number</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert the <b>payable amount</b>, then <b>confirm</b>.]]></data>.</item>
-        <item><data><![CDATA[Payment complete.]]></data>.</item>
+        <item><data><![CDATA[Select <b>fund transfer</b>.]]></data></item>
+        <item><data><![CDATA[Select <b>transfer to BCA virtual account</b>.]]></data></item>
+        <item><data><![CDATA[Insert <b>BCA virtual account number</b>.]]></data></item>
+        <item><data><![CDATA[Insert the <b>payable amount</b>, then <b>confirm</b>.]]></data></item>
+        <item><data><![CDATA[Payment complete.]]></data></item>
     </string-array>
     <string name="bca_instruction_mbca_titel">m-BCA</string>
     <string-array name="bca_instruction_mbca">
-        <item><data><![CDATA[Select <b>m-Transfer</b>.]]></data>.</item>
-        <item><data><![CDATA[Select <b>BCA virtual account</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert <b>BCA virtual account number</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert the <b>payable amount</b>, then <b>confirm</b>.]]></data>.</item>
-        <item><data><![CDATA[Payment complete]]></data>.</item>
+        <item><data><![CDATA[Select <b>m-Transfer</b>.]]></data></item>
+        <item><data><![CDATA[Select <b>BCA virtual account</b>.]]></data></item>
+        <item><data><![CDATA[Insert <b>BCA virtual account number</b>.]]></data></item>
+        <item><data><![CDATA[Insert the <b>payable amount</b>, then <b>confirm</b>.]]></data></item>
+        <item><data><![CDATA[Payment complete]]></data></item>
     </string-array>
     <string name="i_have_already_paid">I have already paid</string>
 
     <string name="bri_instruction_atm_title">ATM BRI</string>
     <string-array name="bri_instruction_atm">
-    <item><data><![CDATA[Select <b>other transactions</b> on the main menu.]]></data>.</item>
-    <item><data><![CDATA[Select <b>payment</b>.]]></data>.</item>
-    <item><data><![CDATA[Select <b>other</b>.]]></data>.</item>
-    <item><data><![CDATA[Select <b>BRIVA</b>.]]></data>.</item>
-    <item><data><![CDATA[Insert <b>BRIVA number</b>, then <b>confirm</b>.]]></data>.</item>
-    <item><data><![CDATA[Payment complete.]]></data>.</item>
+    <item><data><![CDATA[Select <b>other transactions</b> on the main menu.]]></data></item>
+    <item><data><![CDATA[Select <b>payment</b>.]]></data></item>
+    <item><data><![CDATA[Select <b>other</b>.]]></data></item>
+    <item><data><![CDATA[Select <b>BRIVA</b>.]]></data></item>
+    <item><data><![CDATA[Insert <b>BRIVA number</b>, then <b>confirm</b>.]]></data></item>
+    <item><data><![CDATA[Payment complete.]]></data></item>
     </string-array>
 
 
     <string name="bri_instruction_ib_title">ATM BRI</string>
     <string-array name="bri_instruction_ib">
-    <item><data><![CDATA[Select <b>payment &amp; purchase</b>.]]></data>.</item>
-    <item><data><![CDATA[Select <b>BRIVA</b>.]]></data>.</item>
-    <item><data><![CDATA[Insert <b>BRIVA number</b>, then <b>confirm</b>. ]]></data>.</item>
-    <item><data><![CDATA[Payment complete.]]></data>.</item>
+    <item><data><![CDATA[Select <b>payment &amp; purchase</b>.]]></data></item>
+    <item><data><![CDATA[Select <b>BRIVA</b>.]]></data></item>
+    <item><data><![CDATA[Insert <b>BRIVA number</b>, then <b>confirm</b>. ]]></data></item>
+    <item><data><![CDATA[Payment complete.]]></data></item>
     </string-array>
 
     <string name="bri_instruction_brimo_title">BRImo</string>
     <string-array name="bri_instruction_brimo">
-    <item><data><![CDATA[Select <b>payment</b>.]]></data>.</item>
-    <item><data><![CDATA[Select <b>BRIVA</b>.]]></data>.</item>
-    <item><data><![CDATA[Insert <b>BRIVA number</b>, then <b>confirm</b>.]]></data>.</item>
-    <item><data><![CDATA[Payment complete.]]></data>.</item>
+    <item><data><![CDATA[Select <b>payment</b>.]]></data></item>
+    <item><data><![CDATA[Select <b>BRIVA</b>.]]></data></item>
+    <item><data><![CDATA[Insert <b>BRIVA number</b>, then <b>confirm</b>.]]></data></item>
+    <item><data><![CDATA[Payment complete.]]></data></item>
     </string-array>
 
     <string name="bri_instruction_other_bank_title">Via other banks</string>
     <string-array name="bri_instruction_other_bank">
-    <item><data><![CDATA[Select your <b>preferred bank & payment channel</b> (ATM/internet/mobile banking).]]></data>.</item>
-    <item><data><![CDATA[Select <b>transfer to other bank</b>.]]></data>.</item>
-    <item><data><![CDATA[Insert <b>BRIVA number</b>.]]></data>.</item>
-    <item><data><![CDATA[Insert the <b>payable amount<b/>, then <b>confirm</b>.]]></data>.</item>
-    <item><data><![CDATA[Payment complete.]]></data>.</item>
+    <item><data><![CDATA[Select your <b>preferred bank & payment channel</b> (ATM/internet/mobile banking).]]></data></item>
+    <item><data><![CDATA[Select <b>transfer to other bank</b>.]]></data></item>
+    <item><data><![CDATA[Insert <b>BRIVA number</b>.]]></data></item>
+    <item><data><![CDATA[Insert the <b>payable amount<b/>, then <b>confirm</b>.]]></data></item>
+    <item><data><![CDATA[Payment complete.]]></data></item>
     </string-array>
 
     <string name="permata_instruction_permata_title">Via Permata account</string>
     <string-array name="permata_instruction_permata">
-        <item><data><![CDATA[Select <b>other transactions</b> on the main menu.]]></data>.</item>
-        <item><data><![CDATA[Select <b>payment</b>.]]></data>.</item>
-        <item><data><![CDATA[Select <b>other payments</b>.]]></data>.</item>
-        <item><data><![CDATA[Select <b>virtual account</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert <b>Permata virtual account number</b>, then <b>confirm</b>.]]></data>.</item>
-        <item><data><![CDATA[Payment complete.]]></data>.</item>
+        <item><data><![CDATA[Select <b>other transactions</b> on the main menu.]]></data></item>
+        <item><data><![CDATA[Select <b>payment</b>.]]></data></item>
+        <item><data><![CDATA[Select <b>other payments</b>.]]></data></item>
+        <item><data><![CDATA[Select <b>virtual account</b>.]]></data></item>
+        <item><data><![CDATA[Insert <b>Permata virtual account number</b>, then <b>confirm</b>.]]></data></item>
+        <item><data><![CDATA[Payment complete.]]></data></item>
     </string-array>
 
     <string name="permata_instruction_other_bank_title">Via other banks</string>
     <string-array name="permata_instruction_other_bank">
-        <item><data><![CDATA[Select your <b>preferred bank & payment channel</b> (ATM/internet/mobile banking).]]></data>.</item>
-        <item><data><![CDATA[Select <b>transfer to other bank</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert <b>virtual account number</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert the <b>payable amount<b/>, then <b>confirm</b>.]]></data>.</item>
-        <item><data><![CDATA[Payment complete.]]></data>.</item>
+        <item><data><![CDATA[Select your <b>preferred bank & payment channel</b> (ATM/internet/mobile banking).]]></data></item>
+        <item><data><![CDATA[Select <b>transfer to other bank</b>.]]></data></item>
+        <item><data><![CDATA[Insert <b>virtual account number</b>.]]></data></item>
+        <item><data><![CDATA[Insert the <b>payable amount<b/>, then <b>confirm</b>.]]></data></item>
+        <item><data><![CDATA[Payment complete.]]></data></item>
     </string-array>
 
     <string name="other_bank_instruction_prima_title">Prima</string>
     <string-array name="other_bank_instruction_prima">
-        <item><data><![CDATA[Select <b>other transactions</b> on the main menu.]]></data>.</item>
-        <item><data><![CDATA[Select <b>transfer</b>.]]></data>.</item>
-        <item><data><![CDATA[Select <b>other bank account</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert <value> as the <b>bank code</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert the <b>payable amount</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert the <b>payment account number</b>, then <b>confirm</b>.]]></data>.</item>
-        <item><data><![CDATA[Payment complete.]]></data>.</item>
+        <item><data><![CDATA[Select <b>other transactions</b> on the main menu.]]></data></item>
+        <item><data><![CDATA[Select <b>transfer</b>.]]></data></item>
+        <item><data><![CDATA[Select <b>other bank account</b>.]]></data></item>
+        <item><data><![CDATA[Insert 009 as the <b>bank code</b>.]]></data></item>
+        <item><data><![CDATA[Insert the <b>payable amount</b>.]]></data></item>
+        <item><data><![CDATA[Insert the <b>payment account number</b>, then <b>confirm</b>.]]></data></item>
+        <item><data><![CDATA[Payment complete.]]></data></item>
     </string-array>
     <string name="other_bank_instruction_atm_bersama_title">ATM Bersama</string>
     <string-array name="other_bank_instruction_atm_bersama">
-        <item><data><![CDATA[Select <b>other transactions</b> on the main menu.]]></data>.</item>
-        <item><data><![CDATA[Select <b>transfer</b>.]]></data>.</item>
-        <item><data><![CDATA[Select <b>between online banks</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert <value> as the <b>bank code</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert the <b>payable amount</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert the <b>payment account number</b>, then <b>confirm</b>.]]></data>.</item>
-        <item><data><![CDATA[Payment complete.]]></data>.</item>
+        <item><data><![CDATA[Select <b>other transactions</b> on the main menu.]]></data></item>
+        <item><data><![CDATA[Select <b>transfer</b>.]]></data></item>
+        <item><data><![CDATA[Select <b>between online banks</b>.]]></data></item>
+        <item><data><![CDATA[Insert 009 as the <b>bank code</b>.]]></data></item>
+        <item><data><![CDATA[Insert the <b>payable amount</b>.]]></data></item>
+        <item><data><![CDATA[Insert the <b>payment account number</b>, then <b>confirm</b>.]]></data></item>
+        <item><data><![CDATA[Payment complete.]]></data></item>
     </string-array>
 
     <string name="other_bank_instruction_alto_title">Alto</string>
     <string-array name="other_bank_instruction_alto">
-        <item><data><![CDATA[Select <b>other transactions</b> on the main menu.]]></data>.</item>
-        <item><data><![CDATA[Select <b>transfer</b>.]]></data>.</item>
-        <item><data><![CDATA[Select <b>other bank account</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert <value> as the <b>bank code</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert the <b>payable amount</b>.]]></data>.</item>
-        <item><data><![CDATA[Insert the <b>payment account number</b>, then <b>confirm</b>.]]></data>.</item>
-        <item><data><![CDATA[Payment complete.]]></data>.</item>
+        <item><data><![CDATA[Select <b>other transactions</b> on the main menu.]]></data></item>
+        <item><data><![CDATA[Select <b>transfer</b>.]]></data></item>
+        <item><data><![CDATA[Select <b>other bank account</b>.]]></data></item>
+        <item><data><![CDATA[Insert 009 as the <b>bank code</b>.]]></data></item>
+        <item><data><![CDATA[Insert the <b>payable amount</b>.]]></data></item>
+        <item><data><![CDATA[Insert the <b>payment account number</b>, then <b>confirm</b>.]]></data></item>
+        <item><data><![CDATA[Payment complete.]]></data></item>
     </string-array>
 
     <string name="bank_bca">BCA</string>
     <string name="bank_permata">Permata</string>
     <string name="bank_bri">BRI</string>
     <string name="bank_mandiri">Mandiri</string>
-    <string name="bank_bni">BNI</string>
+    <string name="bank_bni">BNI46</string>
     <string name="bank_other">Other banks</string>
 </resources>

@@ -7,9 +7,18 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
+import com.midtrans.sdk.uikit.internal.view.AnimatedIcon
+import com.midtrans.sdk.uikit.internal.view.SnapColors
 import com.midtrans.sdk.uikit.internal.view.SnapWebView
 
 class DeepLinkActivity : BaseActivity() {
@@ -21,40 +30,66 @@ class DeepLinkActivity : BaseActivity() {
 
     @Composable
     private fun Content() {
-        SnapWebView(
-            title = "Pay",
-            paymentType = PaymentType.GOPAY,
-            url = url,
-            onPageStarted = { },
-            onPageFinished = { },
-            urlLoadingOverride = { webview, url ->
-                Log.e("urlOverload", url)
+        var loading by remember { mutableStateOf(true) }
 
-                if (url.contains("gojek") || url.contains("shopee")) {  // TODO: fill with exact scheme
-                    try {
-                        intent = Intent(Intent.ACTION_VIEW)
-                        intent.setData(Uri.parse(url))
-                        startActivity(intent)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(1f)
+                .fillMaxHeight(1f)
+        ) {
+            SnapWebView(
+                title = "",
+                paymentType = paymentType,
+                url = url,
+                onPageStarted = { loading = false },
+                onPageFinished = { loading = false },
+                urlLoadingOverride = { webview, url ->
+                    Log.e("urlOverload", url)
 
-                        true
-                    } catch (e: Throwable) {
-                        openAppInPlayStore()
-                        true
+                    if (url.contains("gojek") || url.contains("shopee")) {  // TODO: fill with exact scheme
+                        try {
+                            intent = Intent(Intent.ACTION_VIEW)
+                            intent.setData(Uri.parse(url))
+                            startActivity(intent)
+
+                            true
+                        } catch (e: Throwable) {
+                            openAppInPlayStore()
+                            true
+                        }
+                    } else {
+                        false
                     }
-                } else {
-                    false
-                }
 
+                }
+            )
+            if (loading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                        .fillMaxHeight(1f)
+                        .background(color = SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        AnimatedIcon(resId = R.drawable.ic_midtrans_animated).start()
+                        redirectionTitle[paymentType]?.let {
+                            Text(text = stringResource(id = it))
+                        }
+                    }
+                }
             }
-        )
+        }
     }
 
     private fun getAppPackageName(): String {
         return when (paymentType) {
-            PaymentType.GOPAY -> "com.gojek.app"
-            PaymentType.SHOPEEPAY -> "com.shopee.id"
-            PaymentType.SHOPEEPAY_QRIS -> "com.shopee.id"
-            else -> "com.gojek.app"
+            PaymentType.GOPAY -> GOJEK_PACKAGE_NAME
+            PaymentType.SHOPEEPAY -> SHOPEE_PACKAGE_NAME
+            PaymentType.SHOPEEPAY_QRIS -> SHOPEE_PACKAGE_NAME
+            else -> GOJEK_PACKAGE_NAME
         }
     }
 
@@ -65,6 +100,13 @@ class DeepLinkActivity : BaseActivity() {
     private val paymentType: String by lazy {
         intent.getStringExtra(EXTRA_PAYMENT_TYPE)
             ?: throw RuntimeException("Payment type must not be empty")
+    }
+
+    private val redirectionTitle by lazy {
+        mapOf(
+            Pair(PaymentType.GOPAY, R.string.redirection_screen_gopay_main_message),
+            Pair(PaymentType.SHOPEEPAY, R.string.redirection_screen_shopeepay_main_message),
+        )
     }
 
     private fun openAppInPlayStore() {
@@ -88,6 +130,9 @@ class DeepLinkActivity : BaseActivity() {
     companion object {
         private const val EXTRA_URL = "deeplinkactivity.extra.url"
         private const val EXTRA_PAYMENT_TYPE = "deeplinkactivity.extra.payment_type"
+        private const val GOJEK_PACKAGE_NAME = "com.gojek.app"
+        private const val SHOPEE_PACKAGE_NAME = "com.shopee.id"
+
 
         fun getIntent(
             activityContext: Context,

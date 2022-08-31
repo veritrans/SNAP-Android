@@ -85,7 +85,7 @@ class PaymentOptionViewModel : ViewModel() {
                 R.drawable.ic_outline_amex_40
             )
             AKULAKU -> listOf(R.drawable.ic_outline_akulaku_40)
-            GOPAY -> listOf(R.drawable.ic_outline_gopay_40_2, R.drawable.ic_outline_qris_40)
+            GOPAY -> listOf(R.drawable.ic_outline_gopaylogo_40, R.drawable.ic_outline_qris_40)
             SHOPEEPAY, SHOPEEPAY_QRIS -> {
                 listOf(
                     R.drawable.ic_outline_shopeepay_40,
