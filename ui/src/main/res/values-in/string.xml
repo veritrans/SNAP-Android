@@ -327,7 +327,7 @@
     <string name="kredivo_redirection_main_message">Mengalihkan ke Kredivo…</string>
     <string name="kredivo_redirection_cta">Buka sekarang</string>
 
-
+    <string name="uob_ez_pay_title">UOB EZ Pay</string>
     <string name="uob_web_method_name">UOB EZ Pay via web</string>
     <string name="uob_web_instruction">Pastikan Anda sudah memiliki ID terdaftar dan silakan selesaikan pembayaran melalui UOB EZ Pay.</string>
     <string-array name="uob_web_how_to_pay">
