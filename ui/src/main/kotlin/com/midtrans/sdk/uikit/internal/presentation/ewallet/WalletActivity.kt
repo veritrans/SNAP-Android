@@ -227,6 +227,8 @@ internal class WalletActivity : BaseActivity() {
             ) {
                 if (!isTablet) {
                     openDeepLink()
+                }else{
+                    onBackPressed()
                 }
             }
         }
