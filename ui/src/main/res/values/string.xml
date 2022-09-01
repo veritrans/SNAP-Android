@@ -76,13 +76,13 @@
     <string name="cc_dc_main_screen_placeholder_email">youremail@email.com</string>
 
     <string name="cc_dc_main_screen_card_number">Card number</string>
-    <string name="cc_dc_main_screen_placeholder_card_number">0000–0000–0000–0000</string>
+    <string name="cc_dc_main_screen_placeholder_card_number">0000 0000 0000 0000</string>
 
     <string name="cc_dc_main_screen_expiry">Expiration date</string>
     <string name="cc_dc_main_screen_placeholder_expiry">MM/YY</string>
 
     <string name="cc_dc_main_screen_cvv">CVV</string>
-    <string name="cc_dc_main_screen_placeholder_cvv">---</string>
+    <string name="cc_dc_main_screen_placeholder_cvv">***</string>
 
     <string name="cc_dc_main_screen_save_this_card">Save this card</string>
 

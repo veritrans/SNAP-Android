@@ -1,5 +1,7 @@
 package com.midtrans.sdk.uikit.internal.presentation.creditcard
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.widget.Toast
@@ -13,20 +15,70 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
+import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.view.*
 import kotlinx.android.parcel.Parcelize
+import javax.inject.Inject
 
-
-//TODO: Need to fix the UI implementation later when implementing Saved Card
 class SavedCardActivity: BaseActivity() {
+
+    @Inject
+    lateinit var viewModel: SavedCardViewModel
+
+    private val creditCard: CreditCard? by lazy {
+        intent.getParcelableExtra(SavedCardActivity.EXTRA_CREDIT_CARD) as? CreditCard
+    }
+
+    private val snapToken: String by lazy {
+        intent.getStringExtra(SavedCardActivity.EXTRA_SNAP_TOKEN).orEmpty()
+    }
+
+    private val totalAmount: String by lazy {
+        intent.getStringExtra(SavedCardActivity.EXTRA_TOTAL_AMOUNT)
+            ?: throw RuntimeException("Total amount must not be empty")
+    }
+
+    private val orderId: String by lazy {
+        intent.getStringExtra(SavedCardActivity.EXTRA_ORDER_ID)
+            ?: throw RuntimeException("Order ID must not be empty")
+    }
+
+    companion object {
+        private const val EXTRA_SNAP_TOKEN = "savedCard.extra.snap_token"
+        private const val EXTRA_TOTAL_AMOUNT = "savedCard.extra.total_amount"
+        private const val EXTRA_ORDER_ID = "savedCard.extra.order_id"
+        private const val EXTRA_CUSTOMER_DETAIL = "savedCard.extra.customer_detail"
+        private const val EXTRA_CREDIT_CARD = "savedCard.extra.credit_card"
+
+        fun getIntent(
+            activityContext: Context,
+            snapToken: String,
+            totalAmount: String,
+            orderId: String,
+            customerInfo: CustomerInfo? = null,
+            creditCard: CreditCard?,
+        ): Intent {
+            return Intent(activityContext, SavedCardActivity::class.java).apply {
+                putExtra(EXTRA_SNAP_TOKEN, snapToken)
+                putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
+                putExtra(EXTRA_ORDER_ID, orderId)
+                putExtra(EXTRA_CUSTOMER_DETAIL, customerInfo)
+                putExtra(EXTRA_CREDIT_CARD, creditCard)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build().inject(this)
         setContent {
             CrediCardPageStateFull(
                 totalAmount = "10000",
@@ -63,6 +115,7 @@ class SavedCardActivity: BaseActivity() {
         }
 
         var isExpanding by remember { mutableStateOf(false) }
+        var cvvTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
 
         CreditCardPageStateLess(
             state = state,
@@ -70,8 +123,29 @@ class SavedCardActivity: BaseActivity() {
             totalAmount = totalAmount,
             orderId = orderId,
             customerDetail = customerDetail,
+            cvvTextFieldValue = cvvTextFieldValue,
+            onCvvTextFieldValueChange = {
+                cvvTextFieldValue = it
+            },
             onExpand = { isExpanding = it }
         )
+    }
+
+    private fun getBankIcon(bank: String): Int? {
+        return when (bank.lowercase()) {
+            "bri" -> R.drawable.ic_outline_bri_24
+            "bni" -> R.drawable.ic_bank_bni_24
+            "mandiri" -> R.drawable.ic_bank_mandiri_24
+            "bca" -> R.drawable.ic_bank_bca_24
+            "cimb" -> R.drawable.ic_bank_cimb_24
+            "mega" -> R.drawable.ic_bank_mega_24
+            else -> null
+        }
+    }
+
+    private fun formatMaskedCard(maskedCard: String): String {
+        val lastFourDigit = maskedCard.substring(startIndex = maskedCard.length - 4, endIndex = maskedCard.length)
+        return "**** **** **** $lastFourDigit"
     }
 
     @Composable
@@ -80,76 +154,47 @@ class SavedCardActivity: BaseActivity() {
         isExpandingState: Boolean,
         totalAmount: String,
         orderId: String,
+        cvvTextFieldValue: TextFieldValue,
+        onCvvTextFieldValueChange: (TextFieldValue) -> Unit,
         customerDetail: SavedCardActivity.CustomerDetail,
         onExpand: (Boolean) -> Unit,
     ){
 
-        var list = mutableListOf(
-
-            SavedCreditCardFormData(
-                title = "satu",
-                inputTitle = "Masukkan CVV",
-                endIcon = R.drawable.ic_trash,
-                startIcon = R.drawable.ic_outline_bca_24,
-                errorText = remember { mutableStateOf("") },
-                maskedCardNumber = "123***********345"
-            ),
-            SavedCreditCardFormData(
-                title = "dua",
-                inputTitle = "Masukkan CVV",
-                endIcon = R.drawable.ic_trash,
-                startIcon = R.drawable.ic_outline_bni_24,
-                errorText = remember { mutableStateOf("") },
-                maskedCardNumber = "123***********345"
-            ),
-            SavedCreditCardFormData(
-                title = "tiga",
-                inputTitle = "Masukkan CVV",
-                endIcon = R.drawable.ic_trash,
-                startIcon = R.drawable.ic_outline_mandiri_24,
-                errorText = remember { mutableStateOf("") },
-                maskedCardNumber = "123***********345"
-            ),
-            SavedCreditCardFormData(
-                title = "satu",
-                inputTitle = "Masukkan CVV",
-                endIcon = R.drawable.ic_trash,
-                startIcon = R.drawable.ic_outline_bca_24,
-                errorText = remember { mutableStateOf("") },
-                maskedCardNumber = "123***********345"
-            ),
-            SavedCreditCardFormData(
-                title = "dua",
-                inputTitle = "Masukkan CVV",
-                endIcon = R.drawable.ic_trash,
-                startIcon = R.drawable.ic_outline_bni_24,
-                errorText = remember { mutableStateOf("") },
-                maskedCardNumber = "123***********345"
-            ),
-            SavedCreditCardFormData(
-                title = "tiga",
-                inputTitle = "Masukkan CVV",
-                endIcon = R.drawable.ic_trash,
-                startIcon = R.drawable.ic_outline_mandiri_24,
-                errorText = remember { mutableStateOf("") },
-                maskedCardNumber = "123***********345"
-            ),
-            NewCardFormData(
-                title = "new",
-                isCardNumberInvalid = remember { mutableStateOf(false) },
-                bankIconId = remember { mutableStateOf(R.drawable.ic_outline_bri_24) },
-                isCvvInvalid = remember { mutableStateOf(false) },
-                isExpiryDateInvalid = remember { mutableStateOf(false) },
-                principalIconId = remember { mutableStateOf(R.drawable.ic_outline_visa_24) }
+        var savedTokenList = mutableListOf<FormData>()
+        val newCardFormIdentifier = "newCardFormIdentifier"
+        val savedCardIdentifier = "savedCardIdentifier"
+        creditCard?.savedTokens?.forEachIndexed { index, savedToken ->
+            savedTokenList.add(
+                SavedCreditCardFormData(
+                    savedCardIdentifier = savedCardIdentifier + index.toString(),
+                    inputTitle = stringResource(id = R.string.cc_dc_saved_card_enter_cvv),
+                    endIcon = R.drawable.ic_trash,
+                    startIcon = getBankIcon(savedToken.binDetail?.bankCode.toString()),
+                    errorText = remember { mutableStateOf("") },
+                    maskedCardNumber = formatMaskedCard(savedToken.maskedCard.toString()),
+                    displayedMaskedCard = savedToken.maskedCard.toString(),
+                    tokenType = savedToken.tokenType.toString(),
+                    tokenId = savedToken.token.toString()
+                )
             )
+        }
+        savedTokenList.add(NewCardFormData(
+            newCardIdentifier = newCardFormIdentifier,
+            isCardNumberInvalid = remember { mutableStateOf(false) },
+            bankIconId = remember { mutableStateOf(R.drawable.ic_outline_bri_24) },
+            isCvvInvalid = remember { mutableStateOf(false) },
+            isExpiryDateInvalid = remember { mutableStateOf(false) },
+            principalIconId = remember { mutableStateOf(R.drawable.ic_outline_visa_24) }
+        ))
+        var savedTokenListState = savedTokenList.toMutableStateList()
 
-        ).toMutableStateList()
+        var selectedFormData : FormData? = null
 
         Column(
             modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
         ) {
             SnapAppBar(
-                title = "Credit Card",
+                title = stringResource(id = R.string.payment_summary_cc_dc),
                 iconResId = R.drawable.ic_arrow_left
             ) {
                 onBackPressed()
@@ -181,34 +226,55 @@ class SavedCardActivity: BaseActivity() {
                         SnapSavedCardRadioGroup(
                             modifier = Modifier
                                 .padding(top = 24.dp),
-                            states = list,
+                            states = savedTokenListState,
                             state = state,
-                            onValueChange ={selected: String, value: String ->} ,
-                            onItemRemoveClicked = {},
-                            onCvvValueChange = {},
+                            cvvTextField = cvvTextFieldValue,
+                            onValueChange ={selected: String, value: String ->
+                                Toast.makeText(
+                                    this@SavedCardActivity,
+                                    "radio clicked, selected = $selected dan value = $value",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } ,
+                            onItemRemoveClicked = {
+
+                                viewModel.deleteSavedCard(snapToken = snapToken, maskedCard = it.displayedMaskedCard)
+                                savedTokenListState.remove(it)
+                                Toast.makeText(
+                                    this@SavedCardActivity,
+                                    "delete clicked",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            },
+                            onCvvValueChange = {
+                                onCvvTextFieldValueChange(it)
+                            },
                             onCardNumberValueChange = {},
                             onExpiryDateValueChange = {},
                             onCardTextFieldFocusedChange = {},
                             onExpiryTextFieldFocusedChange = {},
-                            onCvvTextFieldFocusedChange = {}
+                            onCvvTextFieldFocusedChange = {},
+                            onSavedCardRadioSelected = {
+                                selectedFormData = it
+                            }
                         )
                         SnapButton(
-                            text = "Bayar",
+                            text = stringResource(id = R.string.cc_dc_main_screen_cta),
                             style = SnapButton.Style.PRIMARY,
                             modifier = Modifier
                                 .fillMaxWidth(1f),
-                            enabled = !(state.isCardNumberInvalid ||
-                                    state.isExpiryInvalid ||
-                                    state.isCvvInvalid ||
-                                    state.cardNumber.text.isEmpty() ||
-                                    state.expiry.text.isEmpty() ||
-                                    state.cvv.text.isEmpty()),
+                            enabled = true,
                             onClick = {
-                                Toast.makeText(
-                                    this@SavedCardActivity,
-                                    "button clicked",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                selectedFormData?.let {
+                                    viewModel.chargeUsingCreditCard(
+                                        formData = it,
+                                        snapToken = snapToken,
+                                        orderId = orderId,
+                                        grossAmount = totalAmount.toDouble(),
+                                        cardCVV = cvvTextFieldValue.text,
+                                        customerEmail = "johndoe@midtrans.com"
+                                    )
+                                }
                             }
                         )
                     }

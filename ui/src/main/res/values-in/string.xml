@@ -74,13 +74,13 @@
     <string name="cc_dc_main_screen_placeholder_email">emailanda@email.com</string>
 
     <string name="cc_dc_main_screen_card_number">Nomor kartu</string>
-    <string name="cc_dc_main_screen_placeholder_card_number">0000–0000–0000–0000</string>
+    <string name="cc_dc_main_screen_placeholder_card_number">0000 0000 0000 0000</string>
 
     <string name="cc_dc_main_screen_expiry">Masa berlaku</string>
     <string name="cc_dc_main_screen_placeholder_expiry">BB/TT</string>
 
     <string name="cc_dc_main_screen_cvv">CVV</string>
-    <string name="cc_dc_main_screen_placeholder_cvv">---</string>
+    <string name="cc_dc_main_screen_placeholder_cvv">***</string>
 
     <string name="cc_dc_main_screen_save_this_card">Simpan kartu ini</string>
 

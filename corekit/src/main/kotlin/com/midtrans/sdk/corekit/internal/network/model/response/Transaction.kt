@@ -1,9 +1,6 @@
 package com.midtrans.sdk.corekit.internal.network.model.response
 
-import com.midtrans.sdk.corekit.api.model.CreditCard
-import com.midtrans.sdk.corekit.api.model.CustomerDetails
-import com.midtrans.sdk.corekit.api.model.PaymentCallback
-import com.midtrans.sdk.corekit.api.model.ItemDetails
+import com.midtrans.sdk.corekit.api.model.*
 
 internal data class Transaction(
     val token: String? = null,

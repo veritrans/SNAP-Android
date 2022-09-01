@@ -14,9 +14,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
@@ -56,6 +58,7 @@ class CreditCardActivity : BaseActivity() {
         private const val EXTRA_TOTAL_AMOUNT = "card.extra.total_amount"
         private const val EXTRA_ORDER_ID = "card.extra.order_id"
         private const val EXTRA_CUSTOMER_DETAIL = "card.extra.customer_detail"
+        private const val EXTRA_CREDIT_CARD = "card.extra.credit_card"
 
         fun getIntent(
             activityContext: Context,
@@ -63,6 +66,7 @@ class CreditCardActivity : BaseActivity() {
             totalAmount: String,
             orderId: String,
             customerInfo: CustomerInfo? = null,
+            creditCard: CreditCard?,
         ): Intent {
             return Intent(activityContext, CreditCardActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -72,6 +76,7 @@ class CreditCardActivity : BaseActivity() {
                     EXTRA_CUSTOMER_DETAIL,
                     customerInfo
                 )
+                putExtra(EXTRA_CREDIT_CARD, creditCard)
             }
         }
     }
@@ -170,7 +175,9 @@ class CreditCardActivity : BaseActivity() {
         onClick: () -> Unit
     ){
         Column() {
-            SnapAppBar(title = "Credit Card", iconResId = R.drawable.ic_arrow_left) {
+            SnapAppBar(
+                title = stringResource(id = R.string.payment_summary_cc_dc),
+                iconResId = R.drawable.ic_arrow_left) {
                 onBackPressed()
             }
             val scrollState = rememberScrollState()
@@ -218,7 +225,7 @@ class CreditCardActivity : BaseActivity() {
                         )
 
                         SnapButton(
-                            text = "Bayar",
+                            text = stringResource(id = R.string.cc_dc_main_screen_cta),
                             style = SnapButton.Style.PRIMARY,
                             modifier = Modifier
                                 .fillMaxWidth(1f)

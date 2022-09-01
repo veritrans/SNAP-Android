@@ -7,6 +7,7 @@ import com.midtrans.sdk.uikit.internal.di.viewmodel.ViewModelModule
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDetailActivity
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
+import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
 import dagger.BindsInstance
 import dagger.Component
@@ -36,4 +37,5 @@ internal interface UiKitComponent {
 
     fun inject(activity: CreditCardActivity)
     fun inject(activity: DirectDebitActivity)
+    fun inject(activity: SavedCardActivity)
 }

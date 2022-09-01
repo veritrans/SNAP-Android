@@ -2,6 +2,7 @@ package com.midtrans.sdk.uikit.external
 
 import android.content.Context
 import com.midtrans.sdk.corekit.api.callback.Callback
+import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
 import com.midtrans.sdk.corekit.api.model.TransactionResult
@@ -18,6 +19,8 @@ class UiKitApi { //TODO revisit this implementation, currently for getting callb
         activityContext: Context,
         transactionDetails: SnapTransactionDetail,
         customerDetails: CustomerDetails,
+        creditCard: CreditCard,
+        userId: String,
         paymentCallback: Callback<TransactionResult>
     ) {
         this.paymentCallback = paymentCallback
@@ -25,7 +28,9 @@ class UiKitApi { //TODO revisit this implementation, currently for getting callb
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
             activityContext = activityContext,
             transactionDetails = transactionDetails,
-            customerDetails = customerDetails
+            customerDetails = customerDetails,
+            creditCard = creditCard,
+            userId = userId
         )
         activityContext.startActivity(intent)
     }
