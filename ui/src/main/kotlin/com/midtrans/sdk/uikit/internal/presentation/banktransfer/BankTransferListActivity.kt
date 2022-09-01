@@ -151,7 +151,7 @@ class BankTransferListActivity : BaseActivity() {
             Pair(PaymentType.BRI_VA, Pair(R.string.bank_bri, R.drawable.ic_bank_bri_40)),
             Pair(PaymentType.BNI_VA, Pair(R.string.bank_bni, R.drawable.ic_bank_bni_40)),
             Pair(PaymentType.E_CHANNEL, Pair(R.string.bank_mandiri, R.drawable.ic_bank_mandiri_40)),
-            Pair(PaymentType.ALL_VA, Pair(R.string.bank_other, R.drawable.ic_bank_other_img))
+            Pair(PaymentType.OTHER_VA, Pair(R.string.bank_other, R.drawable.ic_bank_other_img))
         )
     }
 

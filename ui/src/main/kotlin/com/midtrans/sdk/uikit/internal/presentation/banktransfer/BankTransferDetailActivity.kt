@@ -276,7 +276,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
             Pair(PaymentType.BNI_VA, getDetailWithVaNumber(vaNumber = vaNumber)),
             Pair(PaymentType.BRI_VA, getDetailWithVaNumber(vaNumber = vaNumber)),
             Pair(PaymentType.PERMATA_VA, getDetailWithVaNumber(vaNumber = vaNumber)),
-            Pair(PaymentType.ALL_VA) {
+            Pair(PaymentType.OTHER_VA) {
                 var copiedBankCode by remember {
                     mutableStateOf(false)
                 }
@@ -361,7 +361,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
             Pair(PaymentType.BNI_VA, bniPaymentInstruction),
             Pair(PaymentType.BRI_VA, briPaymentInstruction),
             Pair(PaymentType.PERMATA_VA, permataPaymentInstruction),
-            Pair(PaymentType.ALL_VA, otherBankPaymentInstruction)
+            Pair(PaymentType.OTHER_VA, otherBankPaymentInstruction)
         )
     }
 
@@ -372,7 +372,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
             Pair(PaymentType.BNI_VA, R.string.general_instruction_bni_bri_permata_other_bank),
             Pair(PaymentType.BRI_VA, R.string.general_instruction_bni_bri_permata_other_bank),
             Pair(PaymentType.PERMATA_VA, R.string.general_instruction_bni_bri_permata_other_bank),
-            Pair(PaymentType.ALL_VA, R.string.general_instruction_bni_bri_permata_other_bank)
+            Pair(PaymentType.OTHER_VA, R.string.general_instruction_bni_bri_permata_other_bank)
         )
     }
 
@@ -485,7 +485,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
             Pair(PaymentType.PERMATA_VA, R.string.bank_permata),
             Pair(PaymentType.BRI_VA, R.string.bank_bri),
             Pair(PaymentType.BNI_VA, R.string.bank_bni),
-            Pair(PaymentType.ALL_VA, R.string.bank_other),
+            Pair(PaymentType.OTHER_VA, R.string.bank_other),
         )
     }
 

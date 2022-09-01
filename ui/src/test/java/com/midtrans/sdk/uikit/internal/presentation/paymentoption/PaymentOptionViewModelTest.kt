@@ -282,7 +282,7 @@ internal class PaymentOptionViewModelTest {
         return listOf(
             PaymentMethod(
                 type = BANK_TRANSFER,
-                channels = listOf(PaymentType.PERMATA_VA, PaymentType.E_CHANNEL, PaymentType.ALL_VA)
+                channels = listOf(PaymentType.PERMATA_VA, PaymentType.E_CHANNEL, PaymentType.OTHER_VA)
             ),
             PaymentMethod(
                 type = KLIK_BCA,

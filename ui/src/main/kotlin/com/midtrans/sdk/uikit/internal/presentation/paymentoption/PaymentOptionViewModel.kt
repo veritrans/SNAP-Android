@@ -6,7 +6,7 @@ import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.PaymentMethod
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.AKULAKU
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.ALFAMART
-import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.ALL_VA
+import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.OTHER_VA
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.BANK_TRANSFER
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.BCA_KLIKPAY
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.BCA_VA
@@ -55,18 +55,18 @@ class PaymentOptionViewModel : ViewModel() {
 
     private fun isValidMethod(type: String, isTabletDevice: Boolean): Boolean {
         return type == CSTORE
-            || type == BANK_TRANSFER
-            || type == KLIK_BCA
-            || type == BCA_KLIKPAY
-            || type == CIMB_CLICKS
-            || type == BRI_EPAY
-            || type == DANAMON_ONLINE
-            || type == UOB_EZPAY
-            || type == CREDIT_CARD
-            || type == AKULAKU
-            || type == GOPAY
-            || (type == SHOPEEPAY && !isTabletDevice)
-            || (type == SHOPEEPAY_QRIS && isTabletDevice)
+                || type == BANK_TRANSFER
+                || type == KLIK_BCA
+                || type == BCA_KLIKPAY
+                || type == CIMB_CLICKS
+                || type == BRI_EPAY
+                || type == DANAMON_ONLINE
+                || type == UOB_EZPAY
+                || type == CREDIT_CARD
+                || type == AKULAKU
+                || type == GOPAY
+                || (type == SHOPEEPAY && !isTabletDevice)
+                || (type == SHOPEEPAY_QRIS && isTabletDevice)
     }
 
     private fun getIcons(type: String, channels: List<String>): List<Int> {
@@ -129,19 +129,11 @@ class PaymentOptionViewModel : ViewModel() {
                 BNI_VA -> icons.add(R.drawable.ic_outline_bni_40)
                 BRI_VA -> icons.add(R.drawable.ic_outline_bri_40)
                 E_CHANNEL -> icons.add(R.drawable.ic_outline_mandiri_40)
-                ALL_VA -> icons.addAll(
-                    listOf(
-                        R.drawable.ic_outline_permata_40,
-                        R.drawable.ic_outline_bca_40,
-                        R.drawable.ic_outline_bni_40,
-                        R.drawable.ic_outline_bri_40,
-                        R.drawable.ic_outline_mandiri_40
-                    )
-                )
+                OTHER_VA -> icons.add(R.drawable.ic_bank_other_img)
             }
         }
 
-        return icons.distinct()
+        return icons
     }
 
     fun getCustomerInfo(customerDetails: CustomerDetails?): CustomerInfo? {
