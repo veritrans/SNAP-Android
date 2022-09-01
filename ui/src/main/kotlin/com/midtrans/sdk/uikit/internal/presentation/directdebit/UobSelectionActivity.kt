@@ -3,12 +3,12 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -53,23 +53,27 @@ class UobSelectionActivity : BaseActivity() {
         }
     }
 
+    @Preview(showBackground = true)
     @Composable
     private fun UobSelectionContent(
-        amount: String,
-        orderId: String,
-        customerInfo: CustomerInfo?
+        amount: String = "Rp500",
+        orderId: String = "orderid",
+        customerInfo: CustomerInfo? = CustomerInfo(name="Habcde","Phone", listOf("address"))
     ) {
         var isExpanded by remember { mutableStateOf(false) }
 
         Column(modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))) {
             SnapAppBar(
-                title = stringResource(id = R.string.uob_ez_pay_title),
+                title = stringResource(R.string.uob_ez_pay_title),
                 iconResId = R.drawable.ic_arrow_left
             ) {
                 onBackPressed()
             }
 
             SnapOverlayExpandingBox(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(all = 16.dp),
                 isExpanded = isExpanded,
                 mainContent = {
                     SnapTotal(
@@ -91,15 +95,16 @@ class UobSelectionActivity : BaseActivity() {
                     }
                 },
                 followingContent = {
-                    LazyColumn {
-                        getUobTypes().forEach { (type, title) ->
-                            item {
-                                SelectionListItem(title = stringResource(title)) {
-                                    Log.d("UobSelection", type)
-                                    //TODO call direct debit activity based on uob type
+                    LazyColumn(modifier = Modifier.padding(top = 16.dp)) {
+                        items(
+                            items = getUobTypes(),
+                            key = { it.first },
+                            itemContent = { item ->
+                                SelectionListItem(title = stringResource(item.second)) {
+                                    //TODO
                                 }
                             }
-                        }
+                        )
                     }
                 }
             )
@@ -107,21 +112,21 @@ class UobSelectionActivity : BaseActivity() {
     }
 
     @Composable
-    @Preview(showBackground = true)
     private fun SelectionListItem(
-        title: String = "HEHE",
-        onClick: () -> Unit = { }
+        modifier: Modifier = Modifier,
+        title: String,
+        onClick: () -> Unit
     ) {
         Column(modifier = Modifier.height(54.dp)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(all = 16.dp)
-                    .clickable(onClick = onClick)
+                horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
+                modifier = modifier.clickable(onClick = onClick)
             ) {
                 Text(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(vertical = 16.dp),
                     text = title,
                     style = SnapTypography.STYLES.snapTextBigRegular
                 )
