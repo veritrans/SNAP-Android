@@ -129,7 +129,7 @@ class PaymentOptionViewModel : ViewModel() {
                 BNI_VA -> icons.add(R.drawable.ic_outline_bni_40)
                 BRI_VA -> icons.add(R.drawable.ic_outline_bri_40)
                 E_CHANNEL -> icons.add(R.drawable.ic_outline_mandiri_40)
-                OTHER_VA -> icons.add(R.drawable.ic_bank_other_img)
+                OTHER_VA -> icons.add(R.drawable.ic_bank_other_bordered_img)
             }
         }
 
