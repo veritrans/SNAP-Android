@@ -148,12 +148,13 @@ internal class WalletActivity : BaseActivity() {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(1f)
-                            .height(if(isTablet)300.dp else 1.dp),
+                            .height(if (isTablet) 300.dp else 1.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         if (error) {
                             Column(
-                                modifier = Modifier.align(Alignment.Center)
+                                modifier = Modifier.fillMaxWidth(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 SnapButton(
                                     style = SnapButton.Style.TERTIARY,
@@ -174,8 +175,8 @@ internal class WalletActivity : BaseActivity() {
                                 AsyncImage(
                                     model = qrCodeUrl.value, contentDescription = null,
                                     modifier = Modifier
-                                        .width(if(isTablet)300.dp else 1.dp)
-                                        .height(if(isTablet)300.dp else 1.dp),
+                                        .width(if (isTablet) 300.dp else 1.dp)
+                                        .height(if (isTablet) 300.dp else 1.dp),
                                     onError = {
                                         error = true
                                         loading = false
@@ -244,7 +245,8 @@ internal class WalletActivity : BaseActivity() {
             ),
             paymentType = PaymentType.GOPAY,
             remainingTimeState = remember { mutableStateOf("00:00") },
-            qrCodeUrl = remember { mutableStateOf("") }
+            qrCodeUrl = remember { mutableStateOf("http://kkkk") },
+            isTablet = true
         )
 
     }
