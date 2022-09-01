@@ -438,7 +438,7 @@
         <item><data><![CDATA[Pembayaran selesai.]]></data></item>
     </string-array>
 
-    <string name="i_have_already_paid">Saya sudah bayar</string>
+    <string name="i_have_already_paid">Kembali ke merchant</string>
 
     <string name="bri_instruction_atm_title">ATM BRI</string>
     <string-array name="bri_instruction_atm">

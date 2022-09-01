@@ -442,7 +442,7 @@
         <item><data><![CDATA[Insert the <b>payable amount</b>, then <b>confirm</b>.]]></data></item>
         <item><data><![CDATA[Payment complete]]></data></item>
     </string-array>
-    <string name="i_have_already_paid">I have already paid</string>
+    <string name="i_have_already_paid">Back to merchant</string>
 
     <string name="bri_instruction_atm_title">ATM BRI</string>
     <string-array name="bri_instruction_atm">
