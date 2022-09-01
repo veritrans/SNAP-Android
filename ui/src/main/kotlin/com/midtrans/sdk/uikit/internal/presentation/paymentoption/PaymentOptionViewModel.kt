@@ -88,7 +88,7 @@ class PaymentOptionViewModel : ViewModel() {
             GOPAY -> listOf(R.drawable.ic_outline_gopaylogo_40, R.drawable.ic_outline_qris_40)
             SHOPEEPAY, SHOPEEPAY_QRIS -> {
                 listOf(
-                    R.drawable.ic_outline_shopeepay_40,
+                    R.drawable.ic_outline_shopeepaylogo_40,
                     R.drawable.ic_outline_qris_40
                 )
             }
