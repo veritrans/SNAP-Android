@@ -122,7 +122,6 @@ class DirectDebitActivity : BaseActivity() {
             Column(
                 modifier = Modifier
                     .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                     .fillMaxHeight(1f)
             ) {
                 SnapAppBar(
@@ -132,7 +131,9 @@ class DirectDebitActivity : BaseActivity() {
                     onBackPressed()
                 }
                 SnapOverlayExpandingBox(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(all = 16.dp),
                     isExpanded = isCustomerDetailExpanded,
                     mainContent = {
                         SnapTotal(
@@ -185,7 +186,7 @@ class DirectDebitActivity : BaseActivity() {
                 SnapButton(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 40.dp),
+                        .padding(top = 40.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
                     enabled = enableButton(paymentType, userId),
                     text = stringResource(R.string.bca_klik_pay_cta),
                     style = SnapButton.Style.PRIMARY
