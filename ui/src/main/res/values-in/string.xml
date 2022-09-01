@@ -21,7 +21,7 @@
     <string name="payment_summary_cc_dc">Kartu kredit/debit</string>
     <string name="payment_summary_saved_card">card(s) saved</string>
     <string name="payment_summary_promo_available">Promo tersedia</string>
-    <string name="payment_summary_gopay">Gopay/QRIS</string>
+    <string name="payment_summary_gopay">GoPay/e-Wallet Lainnya</string>
     <string name="payment_summary_klikbca">KlikBCA</string>
     <string name="payment_summary_bcaklikpay">BCA KlikPay</string>
     <string name="payment_summary_octoclicks">OctoClicks</string>
@@ -29,7 +29,7 @@
     <string name="payment_summary_danamonob">Danamon Online Banking</string>
     <string name="payment_summary_uobezpay">UOB EZ Pay</string>
     <string name="payment_summary_akulaku">Akulaku</string>
-    <string name="payment_summary_shopeepay">ShopeePay/QRIS</string>
+    <string name="payment_summary_shopeepay">ShopeePay/e-Wallet Lainnya</string>
     <string name="payment_summary_alfamart">Alfa Group</string>
     <string name="payment_summary_indomaret">Indomaret</string>
 
