@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SnapNumberedListItem(number: String, paragraph: String) {
-    Row(modifier = Modifier.fillMaxWidth(fraction = 1.0f).padding(8.dp)) {
+    Row(modifier = Modifier.fillMaxWidth(fraction = 1.0f).padding(start = 8.dp, end = 8.dp)) {
         //Number
         Text(
             text = number,
