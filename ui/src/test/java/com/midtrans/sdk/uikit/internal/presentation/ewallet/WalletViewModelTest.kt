@@ -70,7 +70,7 @@ class WalletViewModelTest {
             dateTimeUtil.getDate(
                 date = eq("2021-01-06 11:32 +0700"),
                 dateFormat = eq("yyyy-MM-dd hh:mm Z"),
-                timeZone = argThat { timezone -> timezone.id == "Asia/Jakarta" },
+                timeZone = argThat { timezone -> timezone.id == "UTC" },
                 locale = any()
             )
         ).thenReturn(
@@ -103,6 +103,57 @@ class WalletViewModelTest {
         )
 
         Assert.assertEquals(qrCodeUrl, walletViewModel.qrCodeUrlLiveData.getOrAwaitValue())
+        Assert.assertEquals("00:00:01", walletViewModel.getExpiredHour())
+
+    }
+
+
+    @Test
+    fun deeplinkShouldDeliveredViaLiveData() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val snapToken = "SnapToken"
+        val paymentType = PaymentType.BNI_VA
+        Mockito.`when`(
+            dateTimeUtil.getDate(
+                date = eq("2021-01-06 11:32 +0700"),
+                dateFormat = eq("yyyy-MM-dd hh:mm Z"),
+                timeZone = argThat { timezone -> timezone.id == "UTC" },
+                locale = any()
+            )
+        ).thenReturn(
+            Date(1609907570066L)//"Wed Jan 6 2021 11:32:50 +0700"// (Asia/Jakarta)
+        )
+        Mockito.`when`(dateTimeUtil.getCalendar(null)).thenReturn(
+            Calendar.getInstance().apply { time = Date(1609907570066L) }
+        )
+        Mockito.`when`(dateTimeUtil.getDuration(any())).thenReturn(Duration.ofMillis(1000L)) //only this matter for final result
+        Mockito.`when`(dateTimeUtil.getTimeDiffInMillis(any(), any())).thenReturn(100000L)
+        val walletViewModel =
+            WalletViewModel(snapCore = snapCore, dateTimeUtil)
+        walletViewModel.chargeQrPayment(
+            snapToken = snapToken,
+            paymentType = paymentType
+        )
+        val callbackCaptor: KArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
+        verify(snapCore).pay(
+            snapToken = eq(snapToken),
+            paymentRequestBuilder = any(),
+            callback = callbackCaptor.capture()
+        )
+        val qrCodeUrl = "http://qr"
+        val deepLinkUrl = "http://deeplink"
+        val callback = callbackCaptor.firstValue
+        callback.onSuccess(
+            TransactionResponse(
+                qrCodeUrl = qrCodeUrl,
+                gopayExpirationRaw = "2021-01-06 11:32 +0700",
+                deeplinkUrl = deepLinkUrl
+            )
+        )
+
+        Assert.assertEquals(qrCodeUrl, walletViewModel.qrCodeUrlLiveData.getOrAwaitValue())
+        Assert.assertEquals(deepLinkUrl, walletViewModel.deepLinkUrlLiveData.getOrAwaitValue())
         Assert.assertEquals("00:00:01", walletViewModel.getExpiredHour())
 
     }

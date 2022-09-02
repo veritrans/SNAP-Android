@@ -23,7 +23,7 @@ class BankTransferPaymentRequestBuilder: PaymentRequestBuilder() {
             PaymentType.PERMATA_VA,
             PaymentType.BNI_VA,
             PaymentType.BRI_VA,
-            PaymentType.ALL_VA,
+            PaymentType.OTHER_VA,
             PaymentType.E_CHANNEL -> PaymentRequest(
                 paymentType = paymentType,
                 customerDetails = customerEmail?.let { CustomerDetailRequest(email = customerEmail) }

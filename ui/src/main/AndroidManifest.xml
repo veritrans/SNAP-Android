@@ -32,17 +32,21 @@
             android:theme="@style/Theme.AppCompat.Light" />
 
         <activity
-            android:windowSoftInputMode="adjustPan"
             android:name=".internal.presentation.creditcard.CreditCardActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:windowSoftInputMode="adjustPan"
             android:name=".internal.presentation.creditcard.SavedCardActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".internal.presentation.directdebit.DirectDebitActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity
+            android:name=".internal.presentation.ewallet.DeepLinkActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 

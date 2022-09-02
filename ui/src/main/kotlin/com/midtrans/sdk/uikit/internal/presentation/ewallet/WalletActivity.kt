@@ -35,6 +35,7 @@ internal class WalletActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModel: WalletViewModel
+    var deepLinkUrl: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,14 +49,31 @@ internal class WalletActivity : BaseActivity() {
                 customerInfo = customerInfo,
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
                 qrCodeUrl = viewModel.qrCodeUrlLiveData.observeAsState(initial = ""),
-                paymentType = paymentType
+                paymentType = paymentType,
+                isTablet = isTabletDevice()
             )
         }
         viewModel.chargeQrPayment(
             snapToken = snapToken,
             paymentType = paymentType
         )
+        if (!isTabletDevice()) {
+            observerDeepLinkUrl()
+        }
         setResult(RESULT_OK)
+    }
+
+    private fun observerDeepLinkUrl() {
+        viewModel.deepLinkUrlLiveData.observe(this) { url ->
+            deepLinkUrl = url
+        }
+    }
+
+    private fun openDeepLink() {
+        deepLinkUrl?.let {
+            val intent = DeepLinkActivity.getIntent(this, paymentType, it)
+            startActivity(intent)
+        }
     }
 
     private fun updateExpiredTime(): Observable<String> {
@@ -72,14 +90,15 @@ internal class WalletActivity : BaseActivity() {
         qrCodeUrl: State<String>,
         paymentType: String,
         customerInfo: CustomerInfo?,
-        remainingTimeState: State<String>
+        remainingTimeState: State<String>,
+        isTablet: Boolean = false
     ) {
         val remainingTime by remember { remainingTimeState }
         var expanding by remember {
             mutableStateOf(false)
         }
-        val state = rememberScrollState()
-
+        var error by remember { mutableStateOf(false) }
+        var loading by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
                 .fillMaxHeight(1f)
@@ -87,6 +106,7 @@ internal class WalletActivity : BaseActivity() {
         ) {
             title[paymentType]?.let {
                 SnapAppBar(title = stringResource(id = it), iconResId = R.drawable.ic_cross) {
+                    onBackPressed()
                 }
             }
 
@@ -125,16 +145,17 @@ internal class WalletActivity : BaseActivity() {
                         ),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    var error by remember { mutableStateOf(false) }
-                    var loading by remember { mutableStateOf(false) }
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(1f)
-                            .height(300.dp),
+                            .height(if (isTablet) 300.dp else 1.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         if (error) {
-                            Column {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
                                 SnapButton(
                                     style = SnapButton.Style.TERTIARY,
                                     text = stringResource(id = R.string.qr_reload),
@@ -154,8 +175,8 @@ internal class WalletActivity : BaseActivity() {
                                 AsyncImage(
                                     model = qrCodeUrl.value, contentDescription = null,
                                     modifier = Modifier
-                                        .width(300.dp)
-                                        .height(300.dp),
+                                        .width(if (isTablet) 300.dp else 1.dp)
+                                        .height(if (isTablet) 300.dp else 1.dp),
                                     onError = {
                                         error = true
                                         loading = false
@@ -178,14 +199,16 @@ internal class WalletActivity : BaseActivity() {
 
                     var isExpanded by remember { mutableStateOf(false) }
                     SnapInstructionButton(
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
                         isExpanded = isExpanded,
                         iconResId = R.drawable.ic_help,
                         title = stringResource(id = R.string.kredivo_how_to_pay_title),
                         onExpandClick = { isExpanded = !isExpanded },
                         expandingContent = {
                             AnimatedVisibility(visible = isExpanded) {
-                                paymentInstruction[paymentType]?.let {
+                                val instruction =
+                                    if (isTablet) paymentInstructionQr else paymentInstructionDeepLink
+                                instruction[paymentType]?.let {
                                     SnapNumberedList(list = stringArrayResource(id = it).toList())
                                 }
                             }
@@ -195,12 +218,18 @@ internal class WalletActivity : BaseActivity() {
             }
 
             SnapButton(
-                text = stringResource(id = R.string.i_have_already_paid),
+                text = stringResource(id = if (isTablet) R.string.i_have_already_paid else R.string.redirection_instruction_gopay_cta),
                 modifier = Modifier
                     .fillMaxWidth(1f)
-                    .padding(16.dp)
+                    .padding(16.dp),
+                enabled = !error && !loading,
+                style = if (!error && !loading) SnapButton.Style.PRIMARY else SnapButton.Style.PRIMARY
             ) {
-                //TODO: Click action
+                if (!isTablet) {
+                    openDeepLink()
+                }else{
+                    onBackPressed()
+                }
             }
         }
     }
@@ -218,7 +247,8 @@ internal class WalletActivity : BaseActivity() {
             ),
             paymentType = PaymentType.GOPAY,
             remainingTimeState = remember { mutableStateOf("00:00") },
-            qrCodeUrl = remember { mutableStateOf("") }
+            qrCodeUrl = remember { mutableStateOf("http://kkkk") },
+            isTablet = true
         )
 
     }
@@ -240,17 +270,24 @@ internal class WalletActivity : BaseActivity() {
 
     private val paymentType: String by lazy {
         intent.getStringExtra(EXTRA_PAYMENTTYPE)
-            ?: throw RuntimeException("Bank name must not be empty")
+            ?: throw RuntimeException("Payment Type must not be empty")
     }
 
     private val snapToken: String by lazy {
         intent.getStringExtra(EXTRA_SNAPTOKEN).orEmpty()
     }
 
-    private val paymentInstruction by lazy {
+    private val paymentInstructionQr by lazy {
         mapOf(
             Pair(PaymentType.GOPAY, R.array.scan_qr_instruction_gopay),
-            Pair(PaymentType.SHOPEEPAY, R.array.scan_qr_instruction_shopeepay_message),
+            Pair(PaymentType.SHOPEEPAY, R.array.scan_qr_instruction_shopeepay_message)
+        )
+    }
+
+    private val paymentInstructionDeepLink by lazy {
+        mapOf(
+            Pair(PaymentType.GOPAY, R.array.redirection_instruction_gopay_message),
+            Pair(PaymentType.SHOPEEPAY, R.array.redirection_instruction_shopeepay_message)
         )
     }
 

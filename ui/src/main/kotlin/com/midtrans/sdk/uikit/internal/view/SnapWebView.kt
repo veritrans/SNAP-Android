@@ -120,6 +120,7 @@ fun SnapWebView(
     }
 }
 
+//TODO: make more universal. move this to caller
 private inline fun finishWebView(
     paymentType: String,
     url: String,
@@ -150,6 +151,9 @@ private inline fun finishWebView(
             if (url.contains(SnapWebViewClient.CALLBACK_DANAMON_ONLINE, true)) {
                 onFinishWebView.invoke()
             }
+        }
+        PaymentType.GOPAY, PaymentType.SHOPEEPAY -> {
+            onFinishWebView.invoke()
         }
     }
 }

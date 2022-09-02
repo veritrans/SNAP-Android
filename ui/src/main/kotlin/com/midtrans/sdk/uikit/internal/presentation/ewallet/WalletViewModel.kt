@@ -41,7 +41,7 @@ internal class WalletViewModel @Inject constructor(
                 }
 
                 override fun onError(error: SnapError) {
-                    TODO("Not yet implemented") // TODO: error dialog etc
+                    // TODO: error dialog etc
                 }
             }
         )
@@ -51,7 +51,7 @@ internal class WalletViewModel @Inject constructor(
         val date = datetimeUtil.getDate(
             date = dateString,
             dateFormat = DATE_FORMAT,
-            timeZone = timeZoneWib
+            timeZone = timeZoneUtc
         )
         return date.time
     }
