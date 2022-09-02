@@ -49,6 +49,11 @@ class PaymentType {
         const val CIMB_CLICKS = "cimb_clicks"
         const val BRI_EPAY = "bri_epay"
         const val DANAMON_ONLINE = "danamon_online"
+        const val UOB_EZPAY = "uob_ezpay"
+
+        //DIRECT DEBIT - UOB MODE
+        const val UOB_WEB = "uobweb"
+        const val UOB_APP = "uobapp"
 
         //E-WALLET
         const val SHOPEEPAY_QRIS = "shopeepay_qris"
@@ -64,8 +69,5 @@ class PaymentType {
         const val INDOMARET = "indomaret"
         const val ALFAMART = "alfamart"
 
-        const val UOB_WEB = "uobweb"
-        const val UOB_APP = "uobapp"
-        const val UOB_EZPAY = "uob_ezpay"
     }
 }
