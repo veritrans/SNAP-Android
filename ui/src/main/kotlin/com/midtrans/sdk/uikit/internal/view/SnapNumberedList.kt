@@ -12,11 +12,7 @@ import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_NEUTRAL_FILL
 fun SnapNumberedList(
     list: List<String>
 ) {
-    Column(
-        modifier = Modifier
-            .background(color = SnapColors.getARGBColor(SUPPORT_NEUTRAL_FILL))
-            .padding(start = 4.dp, end = 4.dp, top = 8.dp, bottom = 8.dp)
-    ) {
+    Column(modifier = Modifier.background(color = SnapColors.getARGBColor(SUPPORT_NEUTRAL_FILL))) {
         list.forEachIndexed { index: Int, it: String ->
             SnapNumberedListItem(number = "${index + 1}.", paragraph = it)
         }
