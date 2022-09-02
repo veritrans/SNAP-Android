@@ -117,11 +117,12 @@ class UobSelectionActivity : BaseActivity() {
         title: String,
         onClick: () -> Unit
     ) {
-        Column(modifier = Modifier.height(54.dp)) {
+        Column(modifier = Modifier
+            .height(54.dp).clickable(onClick = onClick)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
-                modifier = modifier.clickable(onClick = onClick)
+                modifier = modifier.weight(1f)
             ) {
                 Text(
                     modifier = Modifier
