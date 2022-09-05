@@ -57,7 +57,7 @@ class PaymentUsecaseTest {
         closeable = MockitoAnnotations.openMocks(this)
         scheduler = TestSdkScheduler()
         usecase = PaymentUsecase(
-            scheduler, mockSnapRepository, mockCoreApiRepository, mockMerchantApiRepository
+            scheduler, mockSnapRepository, mockCoreApiRepository, mockMerchantApiRepository, "clientKey"
         )
     }
 

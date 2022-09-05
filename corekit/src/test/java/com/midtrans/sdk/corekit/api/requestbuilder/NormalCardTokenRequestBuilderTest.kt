@@ -21,7 +21,6 @@ internal class NormalCardTokenRequestBuilderTest {
     @Test
     fun shouldConstructCardTokenRequestBasic() {
         val request = NormalCardTokenRequestBuilder()
-            .withClientKey(clientKey)
             .withGrossAmount(grossAmount)
             .withCardNumber(cardNumber)
             .withCardExpMonth(expMonth)
@@ -29,6 +28,7 @@ internal class NormalCardTokenRequestBuilderTest {
             .withCardCvv(cvv)
             .withOrderId(orderId)
             .withCurrency(currency)
+            .withClientKey(clientKey)
             .build()
 
         Assert.assertEquals(clientKey, request.getValue(CreditCardTokenRequestBuilder.CLIENT_KEY))
@@ -44,7 +44,6 @@ internal class NormalCardTokenRequestBuilderTest {
     @Test
     fun shouldConstructCardTokenRequestWithInstallment() {
         val request = NormalCardTokenRequestBuilder()
-            .withClientKey(clientKey)
             .withGrossAmount(grossAmount)
             .withCardNumber(cardNumber)
             .withCardExpMonth(expMonth)
@@ -57,6 +56,7 @@ internal class NormalCardTokenRequestBuilderTest {
                 installmentTerm = installment.installmentTerm,
                 bank = installment.bank
             )
+            .withClientKey(clientKey)
             .build()
 
         Assert.assertEquals(clientKey, request.getValue(CreditCardTokenRequestBuilder.CLIENT_KEY))
