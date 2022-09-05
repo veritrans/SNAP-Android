@@ -204,7 +204,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                     text = stringResource(id = R.string.i_have_already_paid),
                     modifier = Modifier.fillMaxWidth(1f)
                 ) {
-                    //TODO: Click action
+                    onBackPressed()
                 }
             }
         }
