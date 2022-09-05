@@ -13,11 +13,15 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.view.AnimatedIcon
+import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapColors
 import com.midtrans.sdk.uikit.internal.view.SnapWebView
 
@@ -25,11 +29,11 @@ class DeepLinkActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { Content() }
+        setContent { Content(paymentType = paymentType, url = url) }
     }
 
     @Composable
-    private fun Content() {
+    private fun Content(paymentType: String, url: String) {
         var loading by remember { mutableStateOf(true) }
 
         Box(
@@ -41,7 +45,7 @@ class DeepLinkActivity : BaseActivity() {
                 title = "",
                 paymentType = paymentType,
                 url = url,
-                onPageStarted = { loading = false },
+                onPageStarted = { loading = true },
                 onPageFinished = { loading = false },
                 urlLoadingOverride = { webview, url ->
                     Log.e("urlOverload", url)
@@ -66,10 +70,10 @@ class DeepLinkActivity : BaseActivity() {
                     modifier = Modifier
                         .fillMaxWidth(1f)
                         .fillMaxHeight(1f)
-                        .background(color = SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY)),
-                    contentAlignment = Alignment.Center
+                        .background(color = SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY))
                 ) {
                     Column(
+                        modifier = Modifier.align(Alignment.Center),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         AnimatedIcon(resId = R.drawable.ic_midtrans_animated).start()
@@ -77,9 +81,25 @@ class DeepLinkActivity : BaseActivity() {
                             Text(text = stringResource(id = it))
                         }
                     }
+                    redirectionCta[paymentType]?.let {
+                        SnapButton(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .fillMaxWidth(1f)
+                                .padding(16.dp),
+                            text = stringResource(id = it),
+                            style = SnapButton.Style.TERTIARY
+                        ) {}
+                    }
                 }
             }
         }
+    }
+
+    @Preview
+    @Composable
+    private fun forPreview() {
+        Content(paymentType = PaymentType.GOPAY, url = "http://")
     }
 
     private fun getAppPackageName(): String {
@@ -104,6 +124,13 @@ class DeepLinkActivity : BaseActivity() {
         mapOf(
             Pair(PaymentType.GOPAY, R.string.redirection_screen_gopay_main_message),
             Pair(PaymentType.SHOPEEPAY, R.string.redirection_screen_shopeepay_main_message),
+        )
+    }
+
+    private val redirectionCta by lazy {
+        mapOf(
+            Pair(PaymentType.GOPAY, R.string.redirection_screen_gopay_cta),
+            Pair(PaymentType.SHOPEEPAY, R.string.redirection_screen_shopeepay_cta),
         )
     }
 
