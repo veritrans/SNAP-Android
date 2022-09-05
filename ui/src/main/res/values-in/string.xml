@@ -467,7 +467,7 @@
         <item><data><![CDATA[Pembayaran selesai.]]></data></item>
     </string-array>
 
-    <string name="bri_instruction_other_bank_title">Via other banks</string>
+    <string name="bri_instruction_other_bank_title">Via bank lainnya</string>
     <string-array name="bri_instruction_other_bank">
         <item><data><![CDATA[ Pilih <b>bank</b> &amp; <b>cara bayar</b> (ATM/internet/mobile banking) <b>yang Anda inginkan</b>.]]></data></item>
         <item><data><![CDATA[Pilih <b>transfer ke bank lain</b>.]]></data></item>
@@ -486,7 +486,7 @@
         <item><data><![CDATA[Pembayaran selesai.]]></data></item>
     </string-array>
 
-    <string name="permata_instruction_other_bank_title">Via other banks</string>
+    <string name="permata_instruction_other_bank_title">Via bank lainnya</string>
     <string-array name="permata_instruction_other_bank">
         <item><data><![CDATA[ Pilih <b>bank</b> &amp; <b>cara bayar</b> (ATM/internet/mobile banking) <b>yang Anda inginkan</b>.]]></data></item>
         <item><data><![CDATA[Pilih <b>transfer ke bank lain</b>.]]></data></item>
