@@ -535,10 +535,16 @@
 
     <string name="timeout_error_dialog_from_bank_title"></string>
     <string name="timeout_error_dialog_from_bank_content"></string>
+
     <string name="system_error_dialog_allow_retry_title"></string>
     <string name="system_error_dialog_allow_retry_content"></string>
+
     <string name="system_error_dialog_disallow_retry_title"></string>
     <string name="system_error_dialog_disallow_retry_content"></string>
-    <string name="tidmid_error_other_pay_method_available"></string>
 
+    <string name="tidmid_error_other_pay_method_available_title"></string>
+    <string name="tidmid_error_other_pay_method_available_content"></string>
+
+    <string name="tidmid_error_other_pay_method_not_available_title"></string>
+    <string name="tidmid_error_other_pay_method_not_available_content"></string>
 </resources>
