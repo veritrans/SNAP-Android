@@ -509,7 +509,7 @@
     <string-array name="other_bank_instruction_atm_bersama">
         <item><data><![CDATA[Pilih <b>transaksi lainnya</b> pada menu utama.]]></data></item>
         <item><data><![CDATA[Pilih <b>transfer</b>.]]></data></item>
-        <item><data><![CDATA[Pilih <b>rekening bank lain</b>.]]></data></item>
+        <item><data><![CDATA[Pilih <b>antar bank online</b>.]]></data></item>
         <item><data><![CDATA[Masukkan 009 sebagai <b>kode bank</b>.]]></data></item>
         <item><data><![CDATA[ Masukkan <b>jumlah yang akan dibayar</b>.]]></data></item>
         <item><data><![CDATA[Masukkan <b>nomor rekening pembayaran</b>, lalu <b>konfirmasi</b>.]]></data></item>
