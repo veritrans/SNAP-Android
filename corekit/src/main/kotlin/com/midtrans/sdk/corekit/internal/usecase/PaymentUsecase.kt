@@ -63,7 +63,9 @@ internal class PaymentUsecase(
                                 creditCard = responseData.creditCard,
                                 promos = responseData.promos,
                                 merchantData = responseData.merchantData,
-                                customerDetails = responseData.customerDetails
+                                customerDetails = responseData.customerDetails,
+                                transactionDetails = responseData.transactionDetails
+
                             )
                         )
                     },
@@ -86,7 +88,8 @@ internal class PaymentUsecase(
                                 creditCard = responseData.creditCard,
                                 promos = responseData.promos,
                                 merchantData = responseData.merchantData,
-                                customerDetails = responseData.customerDetails
+                                customerDetails = responseData.customerDetails,
+                                transactionDetails = responseData.transactionDetails
                             )
                         )
                     },

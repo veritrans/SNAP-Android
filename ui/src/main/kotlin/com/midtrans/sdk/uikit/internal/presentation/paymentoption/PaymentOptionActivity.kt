@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.internal.network.model.response.MerchantData
+import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
@@ -32,6 +34,7 @@ import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
+import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
@@ -48,11 +51,13 @@ class PaymentOptionActivity : BaseActivity() {
         const val EXTRA_CREDIT_CARD = "paymentOptionActivity.extra.credit_card"
         const val EXTRA_PROMOS = "paymentOptionActivity.extra.promos"
         const val EXTRA_MERCHANT_DATA = "paymentOptionActivity.extra.merchant_data"
+        const val EXTRA_TRANSACTION_DETAILS = "paymentOptionActivity.extra.transaction_details"
 
         fun openPaymentOptionPage(
             activityContext: Context,
             snapToken: String,
             totalAmount: String,
+            transactionDetail: TransactionDetails?,
             orderId: String,
             paymentList: List<PaymentMethod>,
             customerDetails: CustomerDetails?,
@@ -68,6 +73,7 @@ class PaymentOptionActivity : BaseActivity() {
                 putExtra(EXTRA_CUSTOMER_DETAILS, customerDetails)
                 putExtra(EXTRA_CREDIT_CARD, creditCard)
                 putExtra(EXTRA_MERCHANT_DATA, merchantData)
+                putExtra(EXTRA_TRANSACTION_DETAILS, transactionDetail)
             }
         }
     }
@@ -102,6 +108,10 @@ class PaymentOptionActivity : BaseActivity() {
 
     private val creditCard: CreditCard? by lazy {
         intent.getParcelableExtra(EXTRA_CREDIT_CARD) as? CreditCard
+    }
+
+    private val transactionDetails: TransactionDetails? by lazy {
+        intent.getParcelableExtra(EXTRA_TRANSACTION_DETAILS) as? TransactionDetails
     }
 
     private var customerInfo: CustomerInfo? = null
@@ -318,7 +328,7 @@ class PaymentOptionActivity : BaseActivity() {
                         CreditCardActivity.getIntent(
                             activityContext = this,
                             snapToken = snapToken,
-                            orderId = orderId,
+                            transactionDetails = transactionDetails,
                             totalAmount = totalAmount,
                             customerInfo = customerInfo,
                             creditCard = creditCard
@@ -328,7 +338,7 @@ class PaymentOptionActivity : BaseActivity() {
                         CreditCardActivity.getIntent(
                             activityContext = this,
                             snapToken = snapToken,
-                            orderId = orderId,
+                            transactionDetails = transactionDetails,
                             totalAmount = totalAmount,
                             customerInfo = customerInfo,
                             creditCard = creditCard
