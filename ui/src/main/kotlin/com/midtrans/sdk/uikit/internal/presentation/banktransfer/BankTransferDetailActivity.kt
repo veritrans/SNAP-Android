@@ -204,7 +204,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                     text = stringResource(id = R.string.i_have_already_paid),
                     modifier = Modifier.fillMaxWidth(1f)
                 ) {
-                    //TODO: Click action
+                    onBackPressed()
                 }
             }
         }
@@ -453,10 +453,6 @@ internal class BankTransferDetailActivity : BaseActivity() {
             Pair(
                 R.string.bri_instruction_brimo_title,
                 R.array.bri_instruction_brimo
-            ),
-            Pair(
-                R.string.bri_instruction_other_bank_title,
-                R.array.bri_instruction_other_bank
             )
         )
     }
