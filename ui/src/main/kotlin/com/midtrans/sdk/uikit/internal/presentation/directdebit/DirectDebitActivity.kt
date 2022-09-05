@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -115,18 +116,24 @@ class DirectDebitActivity : BaseActivity() {
         var isInstructionExpanded by remember { mutableStateOf(false) }
         val title = stringResource(getTitleId(paymentType = paymentType))
         val url = response?.redirectUrl.orEmpty()
+        var userId by remember { mutableStateOf("") }
 
         if (url.isEmpty()) {
             Column(
-                modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
+                modifier = Modifier
+                    .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
+                    .fillMaxHeight(1f)
             ) {
                 SnapAppBar(
                     title = title,
-                    iconResId = R.drawable.ic_cross
+                    iconResId = R.drawable.ic_arrow_left
                 ) {
                     onBackPressed()
                 }
                 SnapOverlayExpandingBox(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(all = 16.dp),
                     isExpanded = isCustomerDetailExpanded,
                     mainContent = {
                         SnapTotal(
@@ -155,8 +162,6 @@ class DirectDebitActivity : BaseActivity() {
                                 .fillMaxWidth()
 
                         ) {
-                            var userId by remember { mutableStateOf("") }
-
                             SnapText(stringResource(getInstructionId(paymentType = paymentType)))
                             KlikBcaUserIdTextField(paymentType = paymentType) { userId = it }
                             SnapInstructionButton(
@@ -167,33 +172,31 @@ class DirectDebitActivity : BaseActivity() {
                                 onExpandClick = { isInstructionExpanded = !isInstructionExpanded },
                                 expandingContent = {
                                     Column {
-                                        SnapNumberedList(
-                                            list = stringArrayResource(getHowToPayId(paymentType = paymentType)).toList()
-                                        )
+                                        AnimatedVisibility(visible = isInstructionExpanded) {
+                                            SnapNumberedList(
+                                                list = stringArrayResource(getHowToPayId(paymentType = paymentType)).toList()
+                                            )
+                                        }
                                     }
                                 }
                             )
-                            SnapButton(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 40.dp),
-                                enabled = enableButton(paymentType, userId),
-                                text = stringResource(R.string.bca_klik_pay_cta),
-                                style = SnapButton.Style.PRIMARY
-                            ) {
-                                viewModel.payDirectDebit(
-                                    snapToken = snapToken,
-                                    paymentType = paymentType,
-                                    userId = userId
-                                )
-                            }
                         }
-                    },
-                    modifier = Modifier
-                        .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
-                        .fillMaxHeight(1f)
-                        .padding(all = 16.dp)
+                    }
                 )
+                SnapButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 40.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
+                    enabled = enableButton(paymentType, userId),
+                    text = stringResource(R.string.bca_klik_pay_cta),
+                    style = SnapButton.Style.PRIMARY
+                ) {
+                    viewModel.payDirectDebit(
+                        snapToken = snapToken,
+                        paymentType = paymentType,
+                        userId = userId
+                    )
+                }
             }
         } else {
             val status = response?.transactionStatus
@@ -263,24 +266,25 @@ class DirectDebitActivity : BaseActivity() {
                         .padding(top = 8.dp, bottom = 12.dp, start = 16.dp, end = 16.dp)
                 ) {
                     SnapText(
-                        text = stringResource(id = R.string.klik_bca_id_field_title),
+                        text = stringResource(id = R.string.klik_bca_id_field_label),
                         style = SnapText.Style.SMALL
                     )
                     SnapTextField(
                         modifier = Modifier.fillMaxWidth(1f),
                         value = userId,
-                        hint = stringResource(id = R.string.klik_bca_id_field_label),
+                        hint = stringResource(id = R.string.klik_bca_placeholder),
                         onValueChange = {
                             userId = it
                             onUserIdChanged(userId.text)
                             isError = userId.text.isEmpty()
+                            isFocused = !isError
                         },
                         isError = isError,
                         isFocused = isFocused,
                         onFocusChange = { isFocused = it },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                     )
-                    if (userId.text.isEmpty() && !isFocused) {
+                    if (isError) {
                         Text(
                             text = stringResource(id = R.string.klik_bca_validation_error),
                             style = SnapTypography.STYLES.snapTextSmallRegular,

@@ -281,7 +281,6 @@
 
     <string name="klik_bca_title">KlikBCA</string>
     <string name="klik_bca_instruction">Please provide your KlikBCA User ID on the field below for us to verify your transaction.</string>
-    <string name="klik_bca_id_field_title">User ID KlikBCA</string>
     <string name="klik_bca_id_field_label">Enter KlikBCA User ID</string>
     <string name="klik_bca_placeholder">Your KlikBCA ID</string>
     <string name="klik_bca_validation_error">KlikBCA ID can\'t be empty</string>
