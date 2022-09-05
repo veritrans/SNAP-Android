@@ -16,7 +16,9 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.api.model.PaymentType
@@ -129,44 +131,33 @@ class SampleUiActivity : AppCompatActivity() {
             val list = mutableListOf(
                 SavedCreditCardFormData(
                     savedCardIdentifier = "satu",
-                    inputTitle = "Masukkan CVV",
-                    endIcon = R.drawable.ic_trash,
-                    startIcon = R.drawable.ic_outline_bca_24,
-                    errorText = remember { mutableStateOf("") },
-                    maskedCardNumber = "123***********345",
-                    displayedMaskedCard = "**** **** **** 1234",
-                    tokenType = "one_click",
-                    tokenId = "tokenid"
-                ),
-                SavedCreditCardFormData(
-                    savedCardIdentifier = "dua",
-                    inputTitle = "Masukkan CVV",
+                    inputTitle = stringResource(id = R.string.cc_dc_saved_card_enter_cvv),
                     endIcon = R.drawable.ic_trash,
                     startIcon = R.drawable.ic_outline_bni_24,
                     errorText = remember { mutableStateOf("") },
-                    maskedCardNumber = "123***********345",
+                    maskedCardNumber ="123***********345",
                     displayedMaskedCard = "**** **** **** 1234",
-                    tokenType = "one_click",
-                    tokenId = "tokenid"
+                    tokenType = "two_clicks",
+                    tokenId = "tokenId",
+                    cvvSavedCardTextField = TextFieldValue(),
+                    isCvvSavedCardInvalid = false
                 ),
                 SavedCreditCardFormData(
-                    savedCardIdentifier = "tiga",
-                    inputTitle = "Masukkan CVV",
+                    savedCardIdentifier = "satu",
+                    inputTitle = stringResource(id = R.string.cc_dc_saved_card_enter_cvv),
                     endIcon = R.drawable.ic_trash,
                     startIcon = R.drawable.ic_outline_mandiri_24,
                     errorText = remember { mutableStateOf("") },
-                    maskedCardNumber = "123***********345",
+                    maskedCardNumber ="123***********345",
                     displayedMaskedCard = "**** **** **** 1234",
                     tokenType = "one_click",
-                    tokenId = "tokenid"
+                    tokenId = "tokenId",
+                    cvvSavedCardTextField = TextFieldValue(),
+                    isCvvSavedCardInvalid = false
                 ),
                 NewCardFormData(
                     newCardIdentifier = "new",
-                    isCardNumberInvalid = remember { mutableStateOf(false) },
-                    bankIconId = remember { mutableStateOf(R.drawable.ic_outline_bri_24) },
-                    isCvvInvalid = remember { mutableStateOf(false) },
-                    isExpiryDateInvalid = remember { mutableStateOf(false) },
-                    principalIconId = remember { mutableStateOf(R.drawable.ic_outline_visa_24) }
+                    bankIconId = (R.drawable.ic_outline_bri_24),
                 )
 
             ).toMutableStateList()
