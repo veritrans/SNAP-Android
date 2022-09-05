@@ -451,7 +451,7 @@
     </string-array>
 
 
-    <string name="bri_instruction_ib_title">ATM BRI</string>
+    <string name="bri_instruction_ib_title">IB BRI</string>
     <string-array name="bri_instruction_ib">
         <item><data><![CDATA[Pilih <b>pembayaran &amp; pembelian<b>.]]></data></item>
         <item><data><![CDATA[Pilih <b>BRIVA<b>.]]></data></item>
