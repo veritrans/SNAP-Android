@@ -453,10 +453,6 @@ internal class BankTransferDetailActivity : BaseActivity() {
             Pair(
                 R.string.bri_instruction_brimo_title,
                 R.array.bri_instruction_brimo
-            ),
-            Pair(
-                R.string.bri_instruction_other_bank_title,
-                R.array.bri_instruction_other_bank
             )
         )
     }
