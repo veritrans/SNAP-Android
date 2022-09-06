@@ -1,7 +1,7 @@
 package com.midtrans.sdk.uikit.internal.presentation.creditcard
 
-import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.corekit.SnapCore
@@ -13,6 +13,7 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.NormalCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
+import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
 import javax.inject.Inject
 
@@ -21,9 +22,12 @@ class CreditCardViewModel @Inject constructor(
 ) : ViewModel()  {
 
     val bankIconId = MutableLiveData<Int>()
+    private val _transactionResponse = MutableLiveData<TransactionResponse>()
+    private val _error = MutableLiveData<SnapError>()
 
+    fun getTransactionResponseLiveData(): LiveData<TransactionResponse> = _transactionResponse
+    fun getErrorLiveData(): LiveData<SnapError> = _error
 
-    //TODO: should this be move to repository?
     fun getBankIconImage(binNumber: String) {
         snapCore.getBinData(
             binNumber = binNumber,
@@ -47,25 +51,31 @@ class CreditCardViewModel @Inject constructor(
     }
 
     fun chargeUsingCreditCard(
-        grossAmount: String,
+        transactionDetails: TransactionDetails?,
         cardNumber: TextFieldValue,
         cardExpiry: TextFieldValue,
         cardCvv: TextFieldValue,
-        orderId: String,
         isSavedCard: Boolean,
         customerEmail: String,
         snapToken: String
     ){
+        var tokenRequest = NormalCardTokenRequestBuilder()
+            .withCardNumber(getCardNumberFromTextField(cardNumber))
+            .withCardExpMonth(getExpMonthFromTextField(cardExpiry))
+            .withCardExpYear(getExpYearFromTextField(cardExpiry))
+            .withCardCvv(cardCvv.text)
+
+        transactionDetails?.currency?.let {
+            tokenRequest.withCurrency(it)
+        }
+        transactionDetails?.grossAmount?.let {
+            tokenRequest.withGrossAmount(it)
+        }
+        transactionDetails?.orderId?.let {
+            tokenRequest.withOrderId(it)
+        }
         snapCore.getCardToken(
-            cardTokenRequestBuilder = NormalCardTokenRequestBuilder()
-                .withGrossAmount(grossAmount.toDouble())
-                .withCardNumber(getCardNumberFromTextField(cardNumber))
-                .withCardExpMonth(getExpMonthFromTextField(cardExpiry))
-                .withCardExpYear(getExpYearFromTextField(cardExpiry))
-                .withCardCvv(cardCvv.text)
-                .withOrderId(orderId)
-                .withCurrency("IDR")
-            ,
+            cardTokenRequestBuilder = tokenRequest,
             callback = object : Callback<CardTokenResponse>{
                 override fun onSuccess(result: CardTokenResponse) {
 
@@ -82,16 +92,16 @@ class CreditCardViewModel @Inject constructor(
                         paymentRequestBuilder = ccRequestBuilder,
                         callback = object : Callback<TransactionResponse> {
                             override fun onSuccess(result: TransactionResponse) {
-                                Log.e("transaction succes", "transaction status ${result.transactionStatus}")
+                                _transactionResponse.value = result
                             }
                             override fun onError(error: SnapError) {
-                                Log.e("error, error, error", "error charge ${error.message}")
+                                _error.value = error
                             }
                         }
                     )
                 }
                 override fun onError(error: SnapError) {
-                    Log.e("error, error, error", "error get card token ${error.message}")
+                    //TODO:Need to confirm how to handle card token error on UI
                 }
             }
         )

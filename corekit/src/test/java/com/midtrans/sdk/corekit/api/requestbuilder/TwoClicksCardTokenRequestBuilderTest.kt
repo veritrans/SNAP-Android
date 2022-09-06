@@ -21,11 +21,11 @@ class TwoClicksCardTokenRequestBuilderTest {
     fun shouldConstructCardTokenRequestBasic() {
         val request = TwoClickCardTokenRequestBuilder()
             .withTokenId(tokenId)
-            .withClientKey(clientKey)
             .withGrossAmount(grossAmount)
             .withCardCvv(cvv)
             .withOrderId(orderId)
             .withCurrency(currency)
+            .withClientKey(clientKey)
             .build()
 
         Assert.assertEquals(tokenId, request.getValue(CreditCardTokenRequestBuilder.TOKEN_ID))
@@ -44,7 +44,6 @@ class TwoClicksCardTokenRequestBuilderTest {
     fun shouldConstructCardTokenRequestWithInstallment() {
         val request = TwoClickCardTokenRequestBuilder()
             .withTokenId(tokenId)
-            .withClientKey(clientKey)
             .withGrossAmount(grossAmount)
             .withCardCvv(cvv)
             .withOrderId(orderId)
@@ -54,6 +53,7 @@ class TwoClicksCardTokenRequestBuilderTest {
                 installmentTerm = installment.installmentTerm,
                 bank = installment.bank
             )
+            .withClientKey(clientKey)
             .build()
 
         Assert.assertEquals(tokenId, request.getValue(CreditCardTokenRequestBuilder.TOKEN_ID))

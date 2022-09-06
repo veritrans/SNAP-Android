@@ -12,7 +12,7 @@
 
 
     <string name="payment_summary_total">Total</string>
-    <string name="payment_summary_order_id">Order ID %s</string>
+    <string name="payment_summary_order_id">Order ID #</string>
 
     <string name="payment_summary_pay_method_selection_timer">Pilih dalam</string>
 
@@ -37,7 +37,7 @@
     <string name="success_screen_v1_status">Pembayaran berhasil</string>
     <string name="success_screen_v1_order_id">Order ID %s</string>
     <string name="success_screen_v1_redirecting_c_d">Kembali otomatis dalam %s detik</string>
-    <string name="success_screen_v1_cta">Kembali ke web %s</string>
+    <string name="success_screen_v1_cta">Kembali ke merchant</string>
 
 
     <string name="success_screen_v2_status">Pembayaran berhasil</string>

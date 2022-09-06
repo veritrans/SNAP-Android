@@ -18,11 +18,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Observer
 import com.midtrans.sdk.corekit.api.model.CreditCard
-import com.midtrans.sdk.uikit.internal.base.BaseActivity
+import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.presentation.ErrorScreenActivity
+import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.view.*
 import javax.inject.Inject
 
@@ -35,14 +39,12 @@ class CreditCardActivity : BaseActivity() {
     private var cardNumberWithoutSpace = ""
     private val supportedMaxBinNumber = 8
 
-    private val totalAmount: String by lazy {
-        intent.getStringExtra(CreditCardActivity.EXTRA_TOTAL_AMOUNT)
-            ?: throw RuntimeException("Total amount must not be empty")
+    private val transactionDetails: TransactionDetails? by lazy {
+        intent.getParcelableExtra(CreditCardActivity.EXTRA_TRANSACTION_DETAILS) as? TransactionDetails
     }
 
-    private val orderId: String by lazy {
-        intent.getStringExtra(CreditCardActivity.EXTRA_ORDER_ID)
-            ?: throw RuntimeException("Order ID must not be empty")
+    private val totalAmount: String by lazy {
+        intent.getStringExtra(CreditCardActivity.EXTRA_TOTAL_AMOUNT) ?: throw RuntimeException("Total amount must not be empty")
     }
 
     private val customerDetail: CustomerInfo? by lazy {
@@ -50,13 +52,14 @@ class CreditCardActivity : BaseActivity() {
     }
 
     private val snapToken: String by lazy {
-        intent.getStringExtra(CreditCardActivity.EXTRA_SNAP_TOKEN).orEmpty()
+        intent.getStringExtra(CreditCardActivity.EXTRA_SNAP_TOKEN)?: throw RuntimeException("Snaptoken must not be empty")
     }
+
 
     companion object {
         private const val EXTRA_SNAP_TOKEN = "card.extra.snap_token"
+        private const val EXTRA_TRANSACTION_DETAILS = "card.extra.transaction_details"
         private const val EXTRA_TOTAL_AMOUNT = "card.extra.total_amount"
-        private const val EXTRA_ORDER_ID = "card.extra.order_id"
         private const val EXTRA_CUSTOMER_DETAIL = "card.extra.customer_detail"
         private const val EXTRA_CREDIT_CARD = "card.extra.credit_card"
 
@@ -64,14 +67,14 @@ class CreditCardActivity : BaseActivity() {
             activityContext: Context,
             snapToken: String,
             totalAmount: String,
-            orderId: String,
+            transactionDetails: TransactionDetails?,
             customerInfo: CustomerInfo? = null,
             creditCard: CreditCard?,
         ): Intent {
             return Intent(activityContext, CreditCardActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
+                putExtra(EXTRA_TRANSACTION_DETAILS, transactionDetails)
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
-                putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(
                     EXTRA_CUSTOMER_DETAIL,
                     customerInfo
@@ -85,20 +88,38 @@ class CreditCardActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         //TODO: ViewModel might be better be used as parameter following the codelabs to support unidirectional data flow
         DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build().inject(this)
+        initTransactionResultScreenObserver()
         setContent {
             CreditCardPageStateFull(
-                totalAmount = totalAmount,
-                orderId = orderId,
+                transactionDetails = transactionDetails,
                 customerDetail = customerDetail,
                 viewModel = creditCardviewModel
             )
         }
     }
 
+    private fun initTransactionResultScreenObserver(){
+        creditCardviewModel.getTransactionResponseLiveData().observe(this, Observer {
+            val intent = SuccessScreenActivity.getIntent(
+                activityContext = this@CreditCardActivity,
+                total = totalAmount,
+                orderId = it?.orderId.toString()
+            )
+            startActivity(intent)
+        })
+        creditCardviewModel.getErrorLiveData().observe(this, Observer {
+            val intent = ErrorScreenActivity.getIntent(
+                activityContext = this@CreditCardActivity,
+                title = it.cause.toString(),
+                content = it.message.toString()
+            )
+            startActivity(intent)
+        })
+    }
+
     @Composable
     private fun CreditCardPageStateFull(
-        totalAmount: String,
-        orderId: String,
+        transactionDetails: TransactionDetails? = null,
         customerDetail: CustomerInfo? = null,
         viewModel: CreditCardViewModel
     ) {
@@ -125,7 +146,7 @@ class CreditCardActivity : BaseActivity() {
             state = state,
             isExpandingState = isExpanding,
             totalAmount = totalAmount,
-            orderId = orderId,
+            orderId = transactionDetails?.orderId.toString(),
             customerDetail = customerDetail,
             bankCodeState = bankCodeId,
             onExpand = { isExpanding = it },
@@ -149,11 +170,10 @@ class CreditCardActivity : BaseActivity() {
             },
             onClick = {
                 viewModel.chargeUsingCreditCard(
-                    grossAmount = totalAmount,
+                    transactionDetails = transactionDetails,
                     cardNumber = state.cardNumber,
                     cardExpiry = state.expiry,
                     cardCvv = state.cvv,
-                    orderId = orderId,
                     isSavedCard = state.isSavedCardChecked,
                     customerEmail = "johndoe@midtrans.com",
                     snapToken = snapToken
@@ -251,8 +271,7 @@ class CreditCardActivity : BaseActivity() {
     @Composable
     private fun forPreview() {
         CreditCardPageStateFull(
-            totalAmount = "15000",
-            orderId = "1234",
+            transactionDetails = transactionDetails,
             customerDetail = CustomerInfo(
                 "Ari Bhakti",
                 "087788778212",

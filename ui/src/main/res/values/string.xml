@@ -13,7 +13,7 @@
 
 
     <string name="payment_summary_total">Total</string>
-    <string name="payment_summary_order_id">Order ID %s</string>
+    <string name="payment_summary_order_id">Order ID #</string>
 
     <string name="payment_summary_pay_method_selection_timer">Choose within</string>
 
@@ -39,7 +39,7 @@
     <string name="success_screen_v1_status">Payment successful</string>
     <string name="success_screen_v1_order_id">Order ID %s</string>
     <string name="success_screen_v1_redirecting_c_d">Redirecting back automatically in %s second(s)</string>
-    <string name="success_screen_v1_cta">Back to %s\'s web</string>
+    <string name="success_screen_v1_cta">Back to merchant</string>
 
 
     <string name="success_screen_v2_status">Payment successful</string>

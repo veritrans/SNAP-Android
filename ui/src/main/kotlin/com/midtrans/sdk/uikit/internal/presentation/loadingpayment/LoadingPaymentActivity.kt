@@ -3,6 +3,7 @@ package com.midtrans.sdk.uikit.internal.presentation.loadingpayment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -190,6 +191,7 @@ class LoadingPaymentActivity : BaseActivity() {
                 activityContext = this,
                 snapToken = it.token,
                 totalAmount = viewModel.getAmountInString(transactionDetails),
+                transactionDetail = it.transactionDetails,
                 orderId = viewModel.getOrderId(transactionDetails),
                 paymentList = it.options,
                 customerDetails = customerDetails,
