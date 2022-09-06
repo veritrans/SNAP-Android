@@ -272,7 +272,7 @@ internal class PaymentOptionViewModelTest {
                 ),
                 allOf(
                     HasPropertyWithValue("type", equalTo(SHOPEEPAY)),
-                    HasPropertyWithValue.hasProperty("icons", hasSize<String>(2))
+                    HasPropertyWithValue.hasProperty("icons", hasSize<String>(1))
                 )
             )
         )
@@ -282,7 +282,7 @@ internal class PaymentOptionViewModelTest {
         return listOf(
             PaymentMethod(
                 type = BANK_TRANSFER,
-                channels = listOf(PaymentType.PERMATA_VA, PaymentType.E_CHANNEL, PaymentType.OTHER_VA)
+                channels = listOf(PaymentType.BCA_VA, PaymentType.BNI_VA, PaymentType.PERMATA_VA, PaymentType.E_CHANNEL, PaymentType.OTHER_VA)
             ),
             PaymentMethod(
                 type = KLIK_BCA,
