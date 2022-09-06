@@ -44,7 +44,7 @@ class CreditCardActivity : BaseActivity() {
     }
 
     private val totalAmount: String by lazy {
-        intent.getStringExtra(CreditCardActivity.EXTRA_TOTAL_AMOUNT).orEmpty()
+        intent.getStringExtra(CreditCardActivity.EXTRA_TOTAL_AMOUNT) ?: throw RuntimeException("Total amount must not be empty")
     }
 
     private val customerDetail: CustomerInfo? by lazy {
@@ -52,7 +52,7 @@ class CreditCardActivity : BaseActivity() {
     }
 
     private val snapToken: String by lazy {
-        intent.getStringExtra(CreditCardActivity.EXTRA_SNAP_TOKEN).orEmpty()
+        intent.getStringExtra(CreditCardActivity.EXTRA_SNAP_TOKEN)?: throw RuntimeException("Snaptoken must not be empty")
     }
 
 
