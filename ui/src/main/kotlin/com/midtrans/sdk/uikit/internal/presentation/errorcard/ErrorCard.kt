@@ -94,9 +94,9 @@ internal object ErrorCard {
                 message = R.string.card_error_declined_disallow_retry_content,
                 cta = R.string.card_error_declined_disallow_retry_cta
             )
-        ),
-
         )
+
+    )
 
     private data class ErrorComponent(
         val title: Int,
