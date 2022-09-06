@@ -42,6 +42,11 @@ class UobSelectionActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
     }
 
+    private val uobModes: List<String> by lazy {
+        intent.getStringArrayListExtra(EXTRA_UOB_MODES)
+            ?: throw RuntimeException("Missing Uob modes")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -97,7 +102,7 @@ class UobSelectionActivity : BaseActivity() {
                 followingContent = {
                     LazyColumn(modifier = Modifier.padding(top = 16.dp)) {
                         items(
-                            items = getUobTypes(),
+                            items = getUobModeAndTitle(),
                             key = { it.first },
                             itemContent = { item ->
                                 SelectionListItem(title = stringResource(item.second)) {
@@ -144,11 +149,15 @@ class UobSelectionActivity : BaseActivity() {
         }
     }
 
-    private fun getUobTypes(): List<Pair<String, Int>> {
-        return listOf(
-            Pair(PaymentType.UOB_WEB, R.string.uob_web_method_name),
-            Pair(PaymentType.UOB_APP, R.string.uob_tmrw_method_name)
-        )
+    private fun getUobModeAndTitle(): List<Pair<String, Int>> {
+        val modes = mutableListOf<Pair<String, Int>>()
+
+        uobModes.find { it.contains(PaymentType.UOB_EZPAY_WEB, true) }
+            ?.let { modes.add(Pair(it, R.string.uob_web_method_name)) }
+        uobModes.find { it.contains(PaymentType.UOB_EZPAY_APP, true) }
+            ?.let { modes.add(Pair(it, R.string.uob_tmrw_method_name)) }
+
+        return modes
     }
 
     companion object {
@@ -156,10 +165,12 @@ class UobSelectionActivity : BaseActivity() {
         private const val EXTRA_AMOUNT = "uobSelection.extra.amount"
         private const val EXTRA_ORDER_ID = "uobSelection.extra.order_id"
         private const val EXTRA_CUSTOMER_INFO = "uobSelection.extra.customer_info"
+        private const val EXTRA_UOB_MODES = "uobSelection.extra.uob_modes"
 
         fun getIntent(
             activityContext: Context,
             snapToken: String,
+            uobModes: ArrayList<String>,
             amount: String,
             orderId: String,
             customerInfo: CustomerInfo?
@@ -169,6 +180,7 @@ class UobSelectionActivity : BaseActivity() {
                 putExtra(EXTRA_AMOUNT, amount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
+                putStringArrayListExtra(EXTRA_UOB_MODES, uobModes)
             }
         }
     }
