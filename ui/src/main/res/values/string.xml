@@ -13,7 +13,7 @@
 
 
     <string name="payment_summary_total">Total</string>
-    <string name="payment_summary_order_id">Order ID %s</string>
+    <string name="payment_summary_order_id">Order ID #</string>
 
     <string name="payment_summary_pay_method_selection_timer">Choose within</string>
 
