@@ -718,4 +718,11 @@ fun getPrincipalIcon(cardType: String): Int? {
     }
 }
 
+object SnapCreditCard{
+    const val defaultOneClickCvvValue = "123"
+    const val formattedMaxCardNumberLength = 19
+    const val formattedMaxExpiryLength = 5
+    const val formattedMaxCvvLength = 3
+}
+
 
