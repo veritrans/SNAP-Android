@@ -28,8 +28,6 @@ class CreditCardViewModel @Inject constructor(
     fun getTransactionResponseLiveData(): LiveData<TransactionResponse> = _transactionResponse
     fun getErrorLiveData(): LiveData<SnapError> = _error
 
-
-    //TODO: should this be move to repository?
     fun getBankIconImage(binNumber: String) {
         snapCore.getBinData(
             binNumber = binNumber,
