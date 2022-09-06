@@ -24,8 +24,8 @@ class PaymentType {
         AKULAKU,
         CSTORE,
         ALFAMART,
-        UOB_WEB,
-        UOB_APP,
+        UOB_EZPAY_WEB,
+        UOB_EZPAY_APP,
         UOB_EZPAY,
         SHOPEEPAY_QRIS
     )
@@ -52,8 +52,8 @@ class PaymentType {
         const val UOB_EZPAY = "uob_ezpay"
 
         //DIRECT DEBIT - UOB MODE
-        const val UOB_WEB = "uobweb"
-        const val UOB_APP = "uobapp"
+        const val UOB_EZPAY_WEB = "uob_ezpay_web"
+        const val UOB_EZPAY_APP = "uob_ezpay_deeplink"
 
         //E-WALLET
         const val SHOPEEPAY_QRIS = "shopeepay_qris"
