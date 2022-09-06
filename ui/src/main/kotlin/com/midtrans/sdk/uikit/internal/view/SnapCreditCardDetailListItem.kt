@@ -113,14 +113,13 @@ fun SnapCCDetailListItem(
                     text = inputTitle,
                     style = SnapTypography.STYLES.snapTextSmallRegular
                 )
-                val formattedMaxCvvLength = 3
                 var isCvvInvalid by remember { mutableStateOf(false)}
                 var isCvvTextFieldFocused by remember { mutableStateOf(false)}
                 SnapTextField(
                     value = cvvTextField,
                     onValueChange = {
                         onCvvValueChange(formatCVV(it))
-                        isCvvInvalid = formatCVV(it).text.length != formattedMaxCvvLength
+                        isCvvInvalid = formatCVV(it).text.length != SnapCreditCard.formattedMaxCvvLength
                         onIsCvvInvalidValueChange(isCvvInvalid)
                     },
                     modifier = Modifier.width(69.dp),
@@ -264,21 +263,6 @@ fun SnapSavedCardRadioGroup(
     ) {
         listStates.forEach { item ->
             var cvvSavedCardTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
-            var newCardState = remember {
-                NormalCardItemState(
-                    cardNumber = TextFieldValue(),
-                    expiry = TextFieldValue(),
-                    cvv = TextFieldValue(),
-                    isCardNumberInvalid = false,
-                    isExpiryInvalid = false,
-                    isCvvInvalid = false,
-                    isCardTexFieldFocused = false,
-                    isExpiryTextFieldFocused = false,
-                    isCvvTextFieldFocused = false,
-                    principalIconId = null,
-                    isSavedCardChecked = true
-                )
-            }
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
@@ -290,11 +274,7 @@ fun SnapSavedCardRadioGroup(
                             onSavedCardRadioSelected(item)
                             when (item){
                                 is SavedCreditCardFormData -> {
-                                    cvvSavedCardTextFieldValue = if (item.tokenType == SavedToken.ONE_CLICK){
-                                        TextFieldValue("123", selection = TextRange(3))
-                                    } else {
-                                        TextFieldValue("")
-                                    }
+                                    cvvSavedCardTextFieldValue = formatCvvTextFieldBasedOnTokenType(item.tokenType)
                                     normalCardItemState.cvv = TextFieldValue("")
                                 }
                                 is NewCardFormData -> {
@@ -432,6 +412,15 @@ class NormalCardItemState(
     )
 }
 
+private fun formatCvvTextFieldBasedOnTokenType(tokenType: String): TextFieldValue{
+    var output = if (tokenType == SavedToken.ONE_CLICK){
+        TextFieldValue(SnapCreditCard.defaultOneClickCvvValue, selection = TextRange(SnapCreditCard.defaultOneClickCvvValue.length))
+    } else {
+        TextFieldValue("")
+    }
+    return output
+}
+
 private fun formatMaskedCard(maskedCard: String): String {
     val lastFourDigit = maskedCard.substring(startIndex = maskedCard.length - 4, endIndex = maskedCard.length)
     return "**** **** **** $lastFourDigit"
@@ -473,10 +462,6 @@ fun NormalCardItem(
     onCvvTextFieldFocusedChange: (Boolean) -> Unit,
     onSavedCardCheckedChange: (Boolean) -> Unit
 ) {
-    val formattedMaxCvvLength = 3
-    val formattedMaxCardNumberLength = 19
-    val formattedMaxExpiryLength = 5
-
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 16.dp)
     ) {
@@ -517,7 +502,7 @@ fun NormalCardItem(
                     onValueChange = {
                         state.principalIconId = getPrincipalIcon(getCardType(it.text))
                         var cardLength = formatCreditCard(it).text.length
-                        state.isCardNumberInvalid = cardLength != formattedMaxCardNumberLength
+                        state.isCardNumberInvalid = cardLength != SnapCreditCard.formattedMaxCardNumberLength
                         onCardNumberValueChange(formatCreditCard(it))
                     },
                     isFocused = state.isCardTexFieldFocused,
@@ -572,7 +557,9 @@ fun NormalCardItem(
                             if (formatExpiryDate(it).text.length == 5){
                                 isCardExpired = checkIsCardExpired(formatExpiryDate(it).text)
                             }
-                            state.isExpiryInvalid = formatExpiryDate(it).text.length == formattedMaxExpiryLength && isCardExpired || formatExpiryDate(it).text.length != formattedMaxExpiryLength
+                            state.isExpiryInvalid = formatExpiryDate(it).text.length == SnapCreditCard.formattedMaxExpiryLength &&
+                                    isCardExpired ||
+                                    formatExpiryDate(it).text.length != SnapCreditCard.formattedMaxExpiryLength
                         },
                         isError = state.isExpiryInvalid,
                         isFocused = state.isExpiryTextFieldFocused,
@@ -610,7 +597,7 @@ fun NormalCardItem(
                         hint = stringResource(id = R.string.cc_dc_main_screen_placeholder_cvv),
                         onValueChange = {
                             onCvvValueChange(formatCVV(it))
-                            state.isCvvInvalid = formatCVV(it).text.length != formattedMaxCvvLength
+                            state.isCvvInvalid = formatCVV(it).text.length != SnapCreditCard.formattedMaxCvvLength
                         },
                         isError = state.isCvvInvalid,
                         isFocused = state.isCvvTextFieldFocused,
