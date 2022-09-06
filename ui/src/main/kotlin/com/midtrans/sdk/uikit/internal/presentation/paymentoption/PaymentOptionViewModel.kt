@@ -45,7 +45,7 @@ class PaymentOptionViewModel : ViewModel() {
                         type = it.type,
                         titleId = getTitle(it.type),
                         methods = it.channels,
-                        icons = getIcons(it.type, it.channels)
+                        icons = getIcons(it.type, it.channels, isTabletDevice)
                     )
                 )
             }
@@ -69,7 +69,7 @@ class PaymentOptionViewModel : ViewModel() {
                 || (type == SHOPEEPAY_QRIS && isTabletDevice)
     }
 
-    private fun getIcons(type: String, channels: List<String>): List<Int> {
+    private fun getIcons(type: String, channels: List<String>, isTabletDevice: Boolean): List<Int> {
         return when (type) {
             BANK_TRANSFER -> getBankTransferIconList(channels)
             KLIK_BCA -> listOf(R.drawable.ic_outline_klikbca_40)
@@ -85,8 +85,15 @@ class PaymentOptionViewModel : ViewModel() {
                 R.drawable.ic_outline_amex_40
             )
             AKULAKU -> listOf(R.drawable.ic_outline_akulaku_40)
-            GOPAY -> listOf(R.drawable.ic_outline_gopaylogo_40, R.drawable.ic_outline_qris_40)
-            SHOPEEPAY, SHOPEEPAY_QRIS -> {
+            GOPAY -> if (isTabletDevice)
+                listOf(
+                    R.drawable.ic_outline_gopaylogo_40,
+                    R.drawable.ic_outline_qris_40
+                )
+            else
+                listOf(R.drawable.ic_outline_gopaylogo_40)
+            SHOPEEPAY -> { listOf(R.drawable.ic_outline_shopeepaylogo_40) }
+            SHOPEEPAY_QRIS -> {
                 listOf(
                     R.drawable.ic_outline_shopeepaylogo_40,
                     R.drawable.ic_outline_qris_40
