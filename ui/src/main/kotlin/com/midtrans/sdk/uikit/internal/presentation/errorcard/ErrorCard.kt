@@ -11,40 +11,42 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard.errorComponentMap
 import com.midtrans.sdk.uikit.internal.view.*
 
-internal object ErrorCard {
-    @Composable
-    fun ErrorCard(type: Int, onClick: () -> Unit = {}): DialogToggle {
-        return SnapBottomSheet {
-            ErrorContent(type = type, onClick = onClick)
-        }
-    }
 
-    @Composable
-    fun ErrorContent(type: Int, onClick: () -> Unit = {}) {
-        errorComponentMap[type]?.run {
-            Column(
-                modifier = Modifier
-                    .background(SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY))
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = stringResource(title),
-                    style = SnapTypography.STYLES.snapTextLabelMedium
-                )
-                Text(
-                    text = stringResource(id = message),
-                    style = SnapTypography.STYLES.snaTextBodySmall,
-                    modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
-                )
-                SnapButton(text = stringResource(id = cta), modifier = Modifier.fillMaxWidth(1f)) {
-                    onClick.invoke()
-                }
+@Composable
+fun ErrorCard(type: Int, onClick: () -> Unit = {}): DialogToggle {
+    return SnapBottomSheet {
+        ErrorContent(type = type, onClick = onClick)
+    }
+}
+
+@Composable
+fun ErrorContent(type: Int, onClick: () -> Unit = {}) {
+    errorComponentMap[type]?.run {
+        Column(
+            modifier = Modifier
+                .background(SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY))
+                .padding(16.dp)
+        ) {
+            Text(
+                text = stringResource(title),
+                style = SnapTypography.STYLES.snapTextLabelMedium
+            )
+            Text(
+                text = stringResource(id = message),
+                style = SnapTypography.STYLES.snaTextBodySmall,
+                modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
+            )
+            SnapButton(text = stringResource(id = cta), modifier = Modifier.fillMaxWidth(1f)) {
+                onClick.invoke()
             }
         }
     }
+}
 
+object ErrorCard {
 
     const val TIMEOUT_ERROR_DIALOG_FROM_BANK = 1
     const val SYSTEM_ERROR_DIALOG_ALLOW_RETRY = 2
@@ -52,7 +54,7 @@ internal object ErrorCard {
     const val TIDMID_ERROR_OTHER_PAY_METHOD_AVAILABLE = 4
     const val TIDMID_ERROR_OTHER_PAY_METHOD_NOT_AVAILABLE = 5
     const val CARD_ERROR_DECLINED_DISALLOW_RETRY = 6
-    private val errorComponentMap = mapOf(
+    internal val errorComponentMap = mapOf(
         Pair(
             TIMEOUT_ERROR_DIALOG_FROM_BANK, ErrorComponent(
                 title = R.string.timeout_error_dialog_from_bank_title,
@@ -98,17 +100,16 @@ internal object ErrorCard {
 
     )
 
-    private data class ErrorComponent(
+    internal data class ErrorComponent(
         val title: Int,
         val message: Int,
         val cta: Int
     )
 }
 
-class ErrorPreview() {
-    @Composable
-    @Preview
-    private fun forPreview() {
-        ErrorCard.ErrorContent(type = ErrorCard.TIMEOUT_ERROR_DIALOG_FROM_BANK)
-    }
+
+@Composable
+@Preview
+private fun forPreview() {
+    ErrorContent(type = ErrorCard.TIMEOUT_ERROR_DIALOG_FROM_BANK)
 }
