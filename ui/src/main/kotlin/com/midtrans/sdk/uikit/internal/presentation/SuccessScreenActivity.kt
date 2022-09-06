@@ -41,7 +41,7 @@ class SuccessScreenActivity : BaseActivity() {
         setContent {
             SuccessContent(
                 total = data.total,
-                orderId = "Order ID #${data.orderId}",
+                orderId = stringResource(id = R.string.payment_summary_order_id) + data.orderId.toString(),
                 isWithBackButton = !data.total.isNullOrEmpty() && !data.orderId.isNullOrEmpty()
             )
         }
