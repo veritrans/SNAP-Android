@@ -43,7 +43,7 @@ class PaymentOptionViewModel : ViewModel() {
                 paymentMethodItems.add(
                     element = PaymentMethodItem(
                         type = it.type,
-                        titleId = getTitle(it.type),
+                        titleId = getTitle(it.type, isTabletDevice),
                         methods = it.channels,
                         icons = getIcons(it.type, it.channels, isTabletDevice)
                     )
@@ -109,7 +109,7 @@ class PaymentOptionViewModel : ViewModel() {
         }
     }
 
-    private fun getTitle(type: String): Int {
+    private fun getTitle(type: String, isTabletDevice: Boolean): Int {
         return when (type) {
             BANK_TRANSFER -> R.string.payment_summary_bank_transfer
             KLIK_BCA -> R.string.payment_summary_klikbca
@@ -122,8 +122,9 @@ class PaymentOptionViewModel : ViewModel() {
             AKULAKU -> R.string.payment_summary_akulaku
             INDOMARET -> R.string.payment_summary_indomaret
             ALFAMART -> R.string.payment_summary_alfamart
-            SHOPEEPAY, SHOPEEPAY_QRIS -> R.string.payment_summary_shopeepay
-            else -> R.string.payment_summary_gopay
+            SHOPEEPAY -> R.string.payment_title_shopeepay
+            SHOPEEPAY_QRIS -> R.string.payment_summary_shopeepay
+            else -> if(isTabletDevice)R.string.payment_summary_gopay else R.string.payment_title_gopay
         }
     }
 
