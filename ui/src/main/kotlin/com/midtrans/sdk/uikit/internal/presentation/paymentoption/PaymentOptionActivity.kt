@@ -377,6 +377,7 @@ class PaymentOptionActivity : BaseActivity() {
                     UobSelectionActivity.getIntent(
                         activityContext = this,
                         snapToken = snapToken,
+                        uobModes = ArrayList(paymentMethodItem.methods),
                         amount = totalAmount,
                         orderId = orderId,
                         customerInfo = customerInfo
