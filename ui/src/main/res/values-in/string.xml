@@ -174,7 +174,7 @@
 
     <string name="redirection_screen_gopay_main_message">Mengalihkan ke Gojek…</string>
     <string name="redirection_screen_gopay_coundown_message">Membuka otomatis dalam %s detik.</string>
-    <string name="redirection_screen_gopay_cta">Buka sekarang</string>
+    <string name="redirection_screen_gopay_cta">Buka Gojek sekarang</string>
 
 
     <string name="transaction_denied_gopay_title">Gagal memproses ke GoPay</string>
@@ -199,7 +199,7 @@
 
     <string name="redirection_screen_shopeepay_main_message">Mengalihkan ke Shopee…</string>
     <string name="redirection_screen_shopeepay_coundown_message">Membuka otomatis dalam %s detik.</string>
-    <string name="redirection_screen_shopeepay_cta">Buka sekarang</string>
+    <string name="redirection_screen_shopeepay_cta">Buka Shopee sekarang</string>
 
 
     <string name="rejected_transaction_shopeepay_title">Gagal memproses ke Shopee</string>

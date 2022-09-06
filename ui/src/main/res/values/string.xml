@@ -178,7 +178,7 @@
 
     <string name="redirection_screen_gopay_main_message">Redirecting to Gojek…</string>
     <string name="redirection_screen_gopay_coundown_message">Page will be opened in %s second(s).</string>
-    <string name="redirection_screen_gopay_cta">Open now</string>
+    <string name="redirection_screen_gopay_cta">Open Gojek now</string>
 
 
     <string name="transaction_denied_gopay_title">Failed to proceed to GoPay</string>
@@ -204,7 +204,7 @@
 
     <string name="redirection_screen_shopeepay_main_message">Redirecting to Shopee…</string>
     <string name="redirection_screen_shopeepay_coundown_message">Page will be opened in %s second(s).</string>
-    <string name="redirection_screen_shopeepay_cta">Open now</string>
+    <string name="redirection_screen_shopeepay_cta">Open Shopee now</string>
 
 
     <string name="rejected_transaction_shopeepay_title">Failed to proceed to Shopee</string>
