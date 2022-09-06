@@ -35,6 +35,8 @@ class SnapTypography private constructor(){
         fontWeight = FontWeight.Normal
     )
 
+    val snaTextBodySmall = snapTextMediumRegular
+
     val snapTextSmallRegular = TextStyle(
         fontFamily = getPoppinsFontFamily(),
         fontSize = 12.sp,
@@ -45,6 +47,12 @@ class SnapTypography private constructor(){
         fontFamily = getPoppinsFontFamily(),
         fontSize = 14.sp,
         fontWeight = FontWeight.SemiBold
+    )
+
+    val snapTextLabelMedium = TextStyle(
+        fontFamily = getPoppinsFontFamily(),
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Medium
     )
 
     val snapHeadingL = TextStyle(
