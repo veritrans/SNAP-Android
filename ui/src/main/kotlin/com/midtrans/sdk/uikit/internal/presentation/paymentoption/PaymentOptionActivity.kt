@@ -351,6 +351,7 @@ class PaymentOptionActivity : BaseActivity() {
                 }
             },
             Pair(PaymentType.SHOPEEPAY, eWalletPaymentLauncher),
+            Pair(PaymentType.SHOPEEPAY_QRIS, eWalletPaymentLauncher),
             Pair(PaymentType.GOPAY, eWalletPaymentLauncher)
         )
     }
