@@ -532,4 +532,29 @@
     <string name="bank_mandiri">Mandiri</string>
     <string name="bank_bni">BNI46</string>
     <string name="bank_other">Bank Lainnya</string>
+
+    <string name="timeout_error_dialog_from_bank_title">Metode pembayaran sedang bermasalah</string>
+    <string name="timeout_error_dialog_from_bank_content">Pembayaranmu gagal diproses. Silakan pilih metode pembayaran lain.</string>
+    <string name="timeout_error_dialog_from_bank_cta">Ganti metode pembayaran</string>
+
+    <string name="system_error_dialog_allow_retry_title">Terjadi kesalahan sistem</string>
+    <string name="system_error_dialog_allow_retry_content">Pembayaranmu gagal diproses. Silakan coba lagi.</string>
+    <string name="system_error_dialog_allow_retry_cta">Coba lagi</string>
+
+    <string name="system_error_dialog_disallow_retry_title">Gagal memproses pembayaran</string>
+    <string name="system_error_dialog_disallow_retry_content">Silakan kembali ke halaman merchant dan lakukan pemesanan ulang.</string>
+    <string name="system_error_dialog_disallow_retry_cta">Kembali ke merchant</string>
+
+    <string name="tidmid_error_other_pay_method_available_title">Metode pembayaran sedang bermasalah</string>
+    <string name="tidmid_error_other_pay_method_available_content">Pembayaranmu gagal diproses. Silakan pilih metode pembayaran lain.</string>
+    <string name="tidmid_error_other_pay_method_available_cta">Ganti metode pembayaran</string>
+
+    <string name="tidmid_error_other_pay_method_not_available_title">Metode pembayaran sedang bermasalah</string>
+    <string name="tidmid_error_other_pay_method_not_available_content">Silakan kembali ke halaman merchant dan lakukan pemesanan ulang.</string>
+    <string name="tidmid_error_other_pay_method_not_available_cta">Kembali ke merchant</string>
+
+    <string name="card_error_declined_disallow_retry_title">Kartu ditolak oleh bank</string>
+    <string name="card_error_declined_disallow_retry_content">Pembayaran gagal diproses.Silakan lakukan pemesanan ulang.</string>
+    <string name="card_error_declined_disallow_retry_cta">Oke</string>
+
 </resources>
