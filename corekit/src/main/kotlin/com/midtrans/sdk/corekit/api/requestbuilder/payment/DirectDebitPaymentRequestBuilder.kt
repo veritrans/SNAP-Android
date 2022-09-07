@@ -28,7 +28,8 @@ class DirectDebitPaymentRequestBuilder : PaymentRequestBuilder() {
             PaymentType.BCA_KLIKPAY,
             PaymentType.CIMB_CLICKS,
             PaymentType.DANAMON_ONLINE,
-            PaymentType.BRI_EPAY -> PaymentRequest(paymentType)
+            PaymentType.BRI_EPAY,
+            PaymentType.UOB_EZPAY -> PaymentRequest(paymentType)
             else -> throw InvalidPaymentTypeException()
         }
     }
