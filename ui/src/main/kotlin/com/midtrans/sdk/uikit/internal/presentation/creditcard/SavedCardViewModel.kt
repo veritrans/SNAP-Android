@@ -14,7 +14,7 @@ import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.TwoClickCardTokenRe
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.OneClickCardPaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
-import com.midtrans.sdk.uikit.internal.view.SnapCreditCard
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.view.SavedCreditCardFormData
 import javax.inject.Inject
 
@@ -36,7 +36,7 @@ class SavedCardViewModel @Inject constructor(
                 override fun onSuccess(result: BinResponse) {
                     result.run {
                         data?.bankCode?.let {
-                            bankIconId.value = SnapCreditCard.getBankIcon(it?.lowercase())
+                            bankIconId.value = SnapCreditCardUtil.getBankIcon(it?.lowercase())
                         }
                     }
                 }
@@ -146,9 +146,9 @@ class SavedCardViewModel @Inject constructor(
         snapToken: String
     ){
         var tokenRequest = NormalCardTokenRequestBuilder()
-            .withCardNumber(SnapCreditCard.getCardNumberFromTextField(cardNumber))
-            .withCardExpMonth(SnapCreditCard.getExpMonthFromTextField(cardExpiry))
-            .withCardExpYear(SnapCreditCard.getExpYearFromTextField(cardExpiry))
+            .withCardNumber(SnapCreditCardUtil.getCardNumberFromTextField(cardNumber))
+            .withCardExpMonth(SnapCreditCardUtil.getExpMonthFromTextField(cardExpiry))
+            .withCardExpYear(SnapCreditCardUtil.getExpYearFromTextField(cardExpiry))
             .withCardCvv(cardCvv.text)
 
         transactionDetails?.currency?.let {

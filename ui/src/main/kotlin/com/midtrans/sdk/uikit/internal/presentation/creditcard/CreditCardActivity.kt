@@ -27,7 +27,7 @@ import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.presentation.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
-import com.midtrans.sdk.uikit.internal.view.SnapCreditCard
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.view.*
 import javax.inject.Inject
 
@@ -156,9 +156,9 @@ class CreditCardActivity : BaseActivity() {
             onCardNumberValueChange = {
 
                 state.cardNumber = it
-                var cardNumberWithoutSpace = SnapCreditCard.getCardNumberFromTextField(it)
-                if(cardNumberWithoutSpace.length >= SnapCreditCard.SUPPORTED_MAX_BIN_NUMBER){
-                    var eightDigitNumber = cardNumberWithoutSpace.substring(0, SnapCreditCard.SUPPORTED_MAX_BIN_NUMBER)
+                var cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
+                if(cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER){
+                    var eightDigitNumber = cardNumberWithoutSpace.substring(0, SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER)
                     if (eightDigitNumber != previousEightDigitNumber){
                         previousEightDigitNumber = eightDigitNumber
                         viewModel.getBankIconImage(

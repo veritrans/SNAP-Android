@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.SavedToken
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.view.SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY
 import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
 import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_NEUTRAL_FILL
@@ -112,7 +113,7 @@ fun SnapCCDetailListItem(
                     value = cvvTextField,
                     onValueChange = {
                         onCvvValueChange(formatCVV(it))
-                        isCvvInvalid = formatCVV(it).text.length != SnapCreditCard.FORMATTED_MAX_CVV_LENGTH
+                        isCvvInvalid = formatCVV(it).text.length != SnapCreditCardUtil.FORMATTED_MAX_CVV_LENGTH
                         onIsCvvInvalidValueChange(isCvvInvalid)
                     },
                     modifier = Modifier.width(69.dp),
@@ -411,8 +412,8 @@ class NormalCardItemState(
 private fun formatCvvTextFieldBasedOnTokenType(tokenType: String): TextFieldValue{
     var output = if (tokenType == SavedToken.ONE_CLICK){
         TextFieldValue(
-            SnapCreditCard.DEFAULT_ONE_CLICK_CVV_VALUE, selection = TextRange(
-                SnapCreditCard.DEFAULT_ONE_CLICK_CVV_VALUE.length))
+            SnapCreditCardUtil.DEFAULT_ONE_CLICK_CVV_VALUE, selection = TextRange(
+                SnapCreditCardUtil.DEFAULT_ONE_CLICK_CVV_VALUE.length))
     } else {
         TextFieldValue("")
     }
@@ -499,10 +500,10 @@ fun NormalCardItem(
                     hint = stringResource(id = R.string.cc_dc_main_screen_placeholder_card_number),
                     isError = state.isCardNumberInvalid,
                     onValueChange = {
-                        state.principalIconId = SnapCreditCard.getPrincipalIcon(SnapCreditCard.getCardType(it.text))
+                        state.principalIconId = SnapCreditCardUtil.getPrincipalIcon(SnapCreditCardUtil.getCardType(it.text))
                         var cardLength = formatCreditCard(it).text.length
-                        state.isCardNumberInvalid = cardLength != SnapCreditCard.FORMATTED_MAX_CARD_NUMBER_LENGTH || !SnapCreditCard.isValidCardNumber(
-                            SnapCreditCard.getCardNumberFromTextField(it))
+                        state.isCardNumberInvalid = cardLength != SnapCreditCardUtil.FORMATTED_MAX_CARD_NUMBER_LENGTH || !SnapCreditCardUtil.isValidCardNumber(
+                            SnapCreditCardUtil.getCardNumberFromTextField(it))
                         onCardNumberValueChange(formatCreditCard(it))
                     },
                     isFocused = state.isCardTexFieldFocused,
@@ -557,9 +558,9 @@ fun NormalCardItem(
                             if (formatExpiryDate(it).text.length == 5){
                                 isCardExpired = checkIsCardExpired(formatExpiryDate(it).text)
                             }
-                            state.isExpiryInvalid = formatExpiryDate(it).text.length == SnapCreditCard.FORMATTED_MAX_EXPIRY_LENGTH &&
+                            state.isExpiryInvalid = formatExpiryDate(it).text.length == SnapCreditCardUtil.FORMATTED_MAX_EXPIRY_LENGTH &&
                                     isCardExpired ||
-                                    formatExpiryDate(it).text.length != SnapCreditCard.FORMATTED_MAX_EXPIRY_LENGTH
+                                    formatExpiryDate(it).text.length != SnapCreditCardUtil.FORMATTED_MAX_EXPIRY_LENGTH
                         },
                         isError = state.isExpiryInvalid,
                         isFocused = state.isExpiryTextFieldFocused,
@@ -597,7 +598,7 @@ fun NormalCardItem(
                         hint = stringResource(id = R.string.cc_dc_main_screen_placeholder_cvv),
                         onValueChange = {
                             onCvvValueChange(formatCVV(it))
-                            state.isCvvInvalid = formatCVV(it).text.length != SnapCreditCard.FORMATTED_MAX_CVV_LENGTH
+                            state.isCvvInvalid = formatCVV(it).text.length != SnapCreditCardUtil.FORMATTED_MAX_CVV_LENGTH
                         },
                         isError = state.isCvvInvalid,
                         isFocused = state.isCvvTextFieldFocused,

@@ -27,7 +27,7 @@ import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.presentation.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
-import com.midtrans.sdk.uikit.internal.view.SnapCreditCard
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.view.*
 import javax.inject.Inject
 
@@ -149,10 +149,10 @@ class SavedCardActivity: BaseActivity() {
         creditCard?.savedTokens?.forEachIndexed { index, savedToken ->
             savedTokenList.add(
                 SavedCreditCardFormData(
-                    savedCardIdentifier = SnapCreditCard.SAVED_CARD_IDENTIFIER + index.toString(),
+                    savedCardIdentifier = SnapCreditCardUtil.SAVED_CARD_IDENTIFIER + index.toString(),
                     inputTitle = stringResource(id = R.string.cc_dc_saved_card_enter_cvv),
                     endIcon = R.drawable.ic_trash,
-                    startIcon = SnapCreditCard.getBankIcon(savedToken.binDetail?.bankCode.toString()),
+                    startIcon = SnapCreditCardUtil.getBankIcon(savedToken.binDetail?.bankCode.toString()),
                     errorText = remember { mutableStateOf("") },
                     maskedCardNumber = formatMaskedCard(savedToken.maskedCard.toString()),
                     displayedMaskedCard = savedToken.maskedCard.toString(),
@@ -164,7 +164,7 @@ class SavedCardActivity: BaseActivity() {
             )
         }
         savedTokenList.add(NewCardFormData(
-            newCardIdentifier = SnapCreditCard.NEW_CARD_FORM_IDENTIFIER,
+            newCardIdentifier = SnapCreditCardUtil.NEW_CARD_FORM_IDENTIFIER,
             bankIconId = bankCodeId,
         ))
         var savedTokenListState = savedTokenList.toMutableStateList()
@@ -219,13 +219,13 @@ class SavedCardActivity: BaseActivity() {
                             },
                             onCvvSavedCardValueChange = {
                                 selectedCvvTextFieldValue = it
-                                isSelectedSavedCardCvvInvalid = selectedCvvTextFieldValue.text.length != SnapCreditCard.FORMATTED_MAX_CVV_LENGTH
+                                isSelectedSavedCardCvvInvalid = selectedCvvTextFieldValue.text.length != SnapCreditCardUtil.FORMATTED_MAX_CVV_LENGTH
                             },
                             onCardNumberOtherCardValueChange = {
                                 state.cardNumber = it
-                                var cardNumberWithoutSpace = SnapCreditCard.getCardNumberFromTextField(it)
-                                if(cardNumberWithoutSpace.length >= SnapCreditCard.SUPPORTED_MAX_BIN_NUMBER){
-                                    var eightDigitNumber = cardNumberWithoutSpace.substring(0, SnapCreditCard.SUPPORTED_MAX_BIN_NUMBER)
+                                var cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
+                                if(cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER){
+                                    var eightDigitNumber = cardNumberWithoutSpace.substring(0, SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER)
                                     if (eightDigitNumber != previousEightDigitNumber){
                                         previousEightDigitNumber = eightDigitNumber
                                         viewModel.getBankIconImage(

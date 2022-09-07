@@ -1,9 +1,9 @@
-package com.midtrans.sdk.uikit.internal.view
+package com.midtrans.sdk.uikit.internal.util
 
 import androidx.compose.ui.text.input.TextFieldValue
 import com.midtrans.sdk.uikit.R
 
-object SnapCreditCard {
+object SnapCreditCardUtil {
 
     const val CARD_TYPE_VISA = "VISA"
     const val CARD_TYPE_MASTERCARD = "MASTERCARD"
