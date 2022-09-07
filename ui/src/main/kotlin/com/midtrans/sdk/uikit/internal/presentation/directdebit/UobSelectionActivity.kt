@@ -1,9 +1,11 @@
 package com.midtrans.sdk.uikit.internal.presentation.directdebit
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -21,12 +23,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 
 class UobSelectionActivity : BaseActivity() {
+
+    private val snapToken: String by lazy {
+        intent.getStringExtra(EXTRA_SNAP_TOKEN)
+            ?: throw RuntimeException("Snap token must not be empty")
+    }
 
     private val amount: String by lazy {
         intent.getStringExtra(EXTRA_AMOUNT)
@@ -62,8 +72,8 @@ class UobSelectionActivity : BaseActivity() {
     @Composable
     private fun UobSelectionContent(
         amount: String = "Rp500",
-        orderId: String = "orderid",
-        customerInfo: CustomerInfo? = CustomerInfo(name="Habcde","Phone", listOf("address"))
+        orderId: String = "order-123456",
+        customerInfo: CustomerInfo? = CustomerInfo(name="Harry","Phone", listOf("address"))
     ) {
         var isExpanded by remember { mutableStateOf(false) }
 
@@ -106,7 +116,12 @@ class UobSelectionActivity : BaseActivity() {
                             key = { it.first },
                             itemContent = { item ->
                                 SelectionListItem(title = stringResource(item.second)) {
-                                    //TODO
+                                    getOnSelectedItemClick(
+                                        snapToken = snapToken,
+                                        orderId = orderId,
+                                        totalAmount = amount,
+                                        customerInfo = customerInfo
+                                    )[item.first]?.invoke()
                                 }
                             }
                         )
@@ -123,7 +138,8 @@ class UobSelectionActivity : BaseActivity() {
         onClick: () -> Unit
     ) {
         Column(modifier = Modifier
-            .height(54.dp).clickable(onClick = onClick)) {
+            .height(54.dp)
+            .clickable(onClick = onClick)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
@@ -159,6 +175,39 @@ class UobSelectionActivity : BaseActivity() {
 
         return modes
     }
+
+    private fun getOnSelectedItemClick(
+        snapToken: String,
+        totalAmount: String,
+        orderId: String,
+        customerInfo: CustomerInfo?
+    ): Map<String, () -> Unit> {
+        return mapOf(
+            Pair(PaymentType.UOB_EZPAY_WEB) {
+                resultLauncher.launch(
+                    DirectDebitActivity.getIntent(
+                        activityContext = this,
+                        snapToken = snapToken,
+                        paymentType = PaymentType.UOB_EZPAY_WEB,
+                        amount = totalAmount,
+                        orderId = orderId,
+                        customerInfo = customerInfo
+                    )
+                )
+            }
+        )
+    }
+
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result?.data?.let {
+                    val transactionResult = it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT) as TransactionResult
+                    UiKitApi.getDefaultInstance().paymentCallback.onSuccess(transactionResult) //TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
+                }
+                finish()
+            }
+        }
 
     companion object {
         private const val EXTRA_SNAP_TOKEN = "uobSelection.extra.snap_token"
