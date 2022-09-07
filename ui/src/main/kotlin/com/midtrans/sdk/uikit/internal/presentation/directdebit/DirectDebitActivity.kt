@@ -304,7 +304,7 @@ class DirectDebitActivity : BaseActivity() {
             PaymentType.CIMB_CLICKS -> R.string.octo_click_title
             PaymentType.DANAMON_ONLINE -> R.string.danamon_title
             PaymentType.BRI_EPAY -> R.string.brimo_title
-            PaymentType.UOB_EZPAY_WEB -> R.string.uob_web_method_name
+            PaymentType.UOB_EZPAY -> R.string.uob_web_method_name
             else -> 0
         }
     }
@@ -317,7 +317,7 @@ class DirectDebitActivity : BaseActivity() {
             PaymentType.CIMB_CLICKS -> R.string.octo_click_instruction
             PaymentType.DANAMON_ONLINE -> R.string.danamon_instruction
             PaymentType.BRI_EPAY -> R.string.brimo_instruction
-            PaymentType.UOB_EZPAY_WEB -> R.string.uob_web_instruction
+            PaymentType.UOB_EZPAY -> R.string.uob_web_instruction
             else -> 0
         }
     }
@@ -330,7 +330,7 @@ class DirectDebitActivity : BaseActivity() {
             PaymentType.CIMB_CLICKS -> R.array.octo_click_how_to_pay
             PaymentType.DANAMON_ONLINE -> R.array.danamon_how_to_pay
             PaymentType.BRI_EPAY -> R.array.brimo_how_to_pay
-            PaymentType.UOB_EZPAY_WEB -> R.array.uob_web_how_to_pay
+            PaymentType.UOB_EZPAY -> R.array.uob_web_how_to_pay
             else -> 0
         }
     }
