@@ -14,7 +14,7 @@ import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.NormalCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
-import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.view.SnapCreditCard
 import javax.inject.Inject
 
 class CreditCardViewModel @Inject constructor(
@@ -35,12 +35,11 @@ class CreditCardViewModel @Inject constructor(
                 override fun onSuccess(result: BinResponse) {
                     result.run {
                         data?.bankCode?.let {
-                            bankIconId.value = getBankIcon(it?.lowercase())
+                            bankIconId.value = SnapCreditCard.getBankIcon(it?.lowercase())
                         }
                     }
                 }
                 override fun onError(error: SnapError) {
-                    TODO("Not yet implemented")
                 }
             }
         )
@@ -60,9 +59,9 @@ class CreditCardViewModel @Inject constructor(
         snapToken: String
     ){
         var tokenRequest = NormalCardTokenRequestBuilder()
-            .withCardNumber(getCardNumberFromTextField(cardNumber))
-            .withCardExpMonth(getExpMonthFromTextField(cardExpiry))
-            .withCardExpYear(getExpYearFromTextField(cardExpiry))
+            .withCardNumber(SnapCreditCard.getCardNumberFromTextField(cardNumber))
+            .withCardExpMonth(SnapCreditCard.getExpMonthFromTextField(cardExpiry))
+            .withCardExpYear(SnapCreditCard.getExpYearFromTextField(cardExpiry))
             .withCardCvv(cardCvv.text)
 
         transactionDetails?.currency?.let {
@@ -105,28 +104,5 @@ class CreditCardViewModel @Inject constructor(
                 }
             }
         )
-    }
-
-    private fun getCardNumberFromTextField(value: TextFieldValue) : String{
-        return value.text.replace(" ", "")
-    }
-    private fun getExpMonthFromTextField(value: TextFieldValue) : String{
-        return value.text.substring(0, 2)
-    }
-    private fun getExpYearFromTextField(value: TextFieldValue) : String{
-        return return value.text.substring(3, 5)
-    }
-
-    private fun getBankIcon(bank: String): Int? {
-
-        return when (bank.lowercase()) {
-            "bri" -> R.drawable.ic_outline_bri_24
-            "bni" -> R.drawable.ic_bank_bni_24
-            "mandiri" -> R.drawable.ic_bank_mandiri_24
-            "bca" -> R.drawable.ic_bank_bca_24
-            "cimb" -> R.drawable.ic_bank_cimb_24
-            "mega" -> R.drawable.ic_bank_mega_24
-            else -> null
-        }
     }
 }
