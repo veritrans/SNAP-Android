@@ -27,17 +27,16 @@ import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.presentation.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.view.*
 import javax.inject.Inject
 
 class CreditCardActivity : BaseActivity() {
 
     @Inject
-    lateinit var creditCardviewModel: CreditCardViewModel
+    lateinit var viewModel: CreditCardViewModel
 
     private var previousEightDigitNumber = ""
-    private var cardNumberWithoutSpace = ""
-    private val supportedMaxBinNumber = 8
 
     private val transactionDetails: TransactionDetails? by lazy {
         intent.getParcelableExtra(CreditCardActivity.EXTRA_TRANSACTION_DETAILS) as? TransactionDetails
@@ -49,6 +48,10 @@ class CreditCardActivity : BaseActivity() {
 
     private val customerDetail: CustomerInfo? by lazy {
         intent.getParcelableExtra(CreditCardActivity.EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
+    }
+
+    private val creditCard: CreditCard? by lazy {
+        intent.getParcelableExtra(CreditCardActivity.EXTRA_CREDIT_CARD) as? CreditCard
     }
 
     private val snapToken: String by lazy {
@@ -86,20 +89,19 @@ class CreditCardActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //TODO: ViewModel might be better be used as parameter following the codelabs to support unidirectional data flow
         DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build().inject(this)
         initTransactionResultScreenObserver()
         setContent {
             CreditCardPageStateFull(
                 transactionDetails = transactionDetails,
                 customerDetail = customerDetail,
-                viewModel = creditCardviewModel
+                creditCard = creditCard
             )
         }
     }
 
     private fun initTransactionResultScreenObserver(){
-        creditCardviewModel.getTransactionResponseLiveData().observe(this, Observer {
+        viewModel.getTransactionResponseLiveData().observe(this, Observer {
             val intent = SuccessScreenActivity.getIntent(
                 activityContext = this@CreditCardActivity,
                 total = totalAmount,
@@ -107,7 +109,7 @@ class CreditCardActivity : BaseActivity() {
             )
             startActivity(intent)
         })
-        creditCardviewModel.getErrorLiveData().observe(this, Observer {
+        viewModel.getErrorLiveData().observe(this, Observer {
             val intent = ErrorScreenActivity.getIntent(
                 activityContext = this@CreditCardActivity,
                 title = it.cause.toString(),
@@ -121,7 +123,7 @@ class CreditCardActivity : BaseActivity() {
     private fun CreditCardPageStateFull(
         transactionDetails: TransactionDetails? = null,
         customerDetail: CustomerInfo? = null,
-        viewModel: CreditCardViewModel
+        creditCard: CreditCard?
     ) {
         val state = remember {
             NormalCardItemState(
@@ -134,7 +136,7 @@ class CreditCardActivity : BaseActivity() {
                 isCardTexFieldFocused = false,
                 isExpiryTextFieldFocused = false,
                 isCvvTextFieldFocused = false,
-                isSavedCardChecked = true,
+                isSaveCardChecked = true,
                 principalIconId = null
             )
         }
@@ -148,15 +150,15 @@ class CreditCardActivity : BaseActivity() {
             totalAmount = totalAmount,
             orderId = transactionDetails?.orderId.toString(),
             customerDetail = customerDetail,
+            creditCard = creditCard,
             bankCodeState = bankCodeId,
             onExpand = { isExpanding = it },
             onCardNumberValueChange = {
 
-                //TODO:Find a more elegant logic for exbin and to set/get livedata on viewModel
                 state.cardNumber = it
-                cardNumberWithoutSpace = it.text.replace(" ", "")
-                if(cardNumberWithoutSpace.length >= supportedMaxBinNumber){
-                    var eightDigitNumber = cardNumberWithoutSpace.substring(0, supportedMaxBinNumber)
+                var cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
+                if(cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER){
+                    var eightDigitNumber = cardNumberWithoutSpace.substring(0, SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER)
                     if (eightDigitNumber != previousEightDigitNumber){
                         previousEightDigitNumber = eightDigitNumber
                         viewModel.getBankIconImage(
@@ -189,6 +191,7 @@ class CreditCardActivity : BaseActivity() {
         totalAmount: String,
         orderId: String,
         customerDetail: CustomerInfo? = null,
+        creditCard: CreditCard?,
         bankCodeState: Int?,
         onExpand: (Boolean) -> Unit,
         onCardNumberValueChange: (TextFieldValue) -> Unit,
@@ -233,6 +236,7 @@ class CreditCardActivity : BaseActivity() {
                         NormalCardItem(
                             state = state,
                             bankIcon = bankCodeState,
+                            creditCard = creditCard,
                             onCardNumberValueChange = {
                                 onCardNumberValueChange(it)
                             },
@@ -249,7 +253,7 @@ class CreditCardActivity : BaseActivity() {
                             style = SnapButton.Style.PRIMARY,
                             modifier = Modifier
                                 .fillMaxWidth(1f)
-                                .padding(16.dp),
+                                .padding(top = 16.dp, bottom = 16.dp),
                             enabled = !(state.isCardNumberInvalid ||
                                     state.isExpiryInvalid ||
                                     state.isCvvInvalid ||
@@ -277,7 +281,7 @@ class CreditCardActivity : BaseActivity() {
                 "087788778212",
                 listOf("Jl. ABC", "Rumah DEF")
             ),
-            viewModel = creditCardviewModel
+            creditCard = CreditCard()
         )
     }
 }
