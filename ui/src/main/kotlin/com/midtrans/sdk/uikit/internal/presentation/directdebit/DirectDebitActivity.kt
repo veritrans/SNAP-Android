@@ -115,8 +115,12 @@ class DirectDebitActivity : BaseActivity() {
         var isCustomerDetailExpanded by remember { mutableStateOf(false) }
         var isInstructionExpanded by remember { mutableStateOf(false) }
         val title = stringResource(getTitleId(paymentType = paymentType))
-        val url = response?.redirectUrl.orEmpty()
         var userId by remember { mutableStateOf("") }
+        val url = if (paymentType == PaymentType.UOB_EZPAY) {
+            response?.uobEzpayWebUrl.orEmpty()
+        } else {
+            response?.redirectUrl.orEmpty()
+        }
 
         if (url.isEmpty()) {
             Column(
