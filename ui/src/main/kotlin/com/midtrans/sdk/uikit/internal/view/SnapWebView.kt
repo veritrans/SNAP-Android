@@ -228,6 +228,11 @@ private inline fun finishWebView(
                 onFinishWebView.invoke()
             }
         }
+        PaymentType.UOB_EZPAY -> {
+            if (url.contains(SnapWebViewClient.CALLBACK_UOB_EZPAY, true)) {
+                onFinishWebView.invoke()
+            }
+        }
         PaymentType.GOPAY, PaymentType.SHOPEEPAY -> {
             onFinishWebView.invoke()
         }
@@ -251,5 +256,6 @@ private class SnapWebViewClient(
         const val CALLBACK_BRI_EPAY = "briPayment?tid="
         const val CALLBACK_OLD_THREE_DS = "callback"
         const val CALLBACK_NEW_THREE_DS = "result-completion"
+        const val CALLBACK_UOB_EZPAY = "/finish" //TODO make sure why in midtrans sdk uob web opened through browser
     }
 }
