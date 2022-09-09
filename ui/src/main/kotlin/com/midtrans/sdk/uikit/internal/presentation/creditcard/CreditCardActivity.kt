@@ -19,6 +19,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
+import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
@@ -28,6 +29,7 @@ import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.presentation.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.view.*
+import java.util.*
 import javax.inject.Inject
 
 class CreditCardActivity : BaseActivity() {
@@ -93,7 +95,9 @@ class CreditCardActivity : BaseActivity() {
             CreditCardPageStateFull(
                 transactionDetails = transactionDetails,
                 customerDetail = customerDetail,
-                viewModel = creditCardviewModel
+                viewModel = creditCardviewModel,
+                bankCodeIdState = creditCardviewModel.bankIconId.observeAsState(null),
+                totalAmount = totalAmount
             )
         }
     }
@@ -121,7 +125,9 @@ class CreditCardActivity : BaseActivity() {
     private fun CreditCardPageStateFull(
         transactionDetails: TransactionDetails? = null,
         customerDetail: CustomerInfo? = null,
-        viewModel: CreditCardViewModel
+        totalAmount: String,
+        bankCodeIdState: State<Int?>,
+        viewModel: CreditCardViewModel?
     ) {
         val state = remember {
             NormalCardItemState(
@@ -139,7 +145,7 @@ class CreditCardActivity : BaseActivity() {
             )
         }
 
-        val bankCodeId by viewModel.bankIconId.observeAsState(null)
+        val bankCodeId by bankCodeIdState
         var isExpanding by remember { mutableStateOf(false) }
 
         CreditCardPageStateLess(
@@ -159,17 +165,17 @@ class CreditCardActivity : BaseActivity() {
                     var eightDigitNumber = cardNumberWithoutSpace.substring(0, supportedMaxBinNumber)
                     if (eightDigitNumber != previousEightDigitNumber){
                         previousEightDigitNumber = eightDigitNumber
-                        viewModel.getBankIconImage(
+                        viewModel?.getBankIconImage(
                             binNumber = eightDigitNumber
                         )
                     }
                 } else {
-                    viewModel.setBankIconToNull()
+                    viewModel?.setBankIconToNull()
                     previousEightDigitNumber = cardNumberWithoutSpace
                 }
             },
             onClick = {
-                viewModel.chargeUsingCreditCard(
+                viewModel?.chargeUsingCreditCard(
                     transactionDetails = transactionDetails,
                     cardNumber = state.cardNumber,
                     cardExpiry = state.expiry,
@@ -271,13 +277,17 @@ class CreditCardActivity : BaseActivity() {
     @Composable
     private fun forPreview() {
         CreditCardPageStateFull(
-            transactionDetails = transactionDetails,
+            transactionDetails = TransactionDetails(orderId = "orderID", grossAmount = 5000.0, currency = "IDR"),
             customerDetail = CustomerInfo(
                 "Ari Bhakti",
                 "087788778212",
                 listOf("Jl. ABC", "Rumah DEF")
             ),
-            viewModel = creditCardviewModel
+            viewModel = null,
+            bankCodeIdState = remember {
+                mutableStateOf(null)
+            },
+            totalAmount = "5000"
         )
     }
 }
