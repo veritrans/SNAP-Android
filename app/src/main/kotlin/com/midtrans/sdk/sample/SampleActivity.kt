@@ -42,8 +42,8 @@ class SampleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         SnapCore.Builder()
             .withContext(this.applicationContext)
-            .withMerchantUrl("https://charmenzy-mid-mobile-sandbox.herokuapp.com/")
-            .withMerchantClientKey("SB-Mid-client-zt7XrRxPQXZNvuBY")
+            .withMerchantUrl("https://fiesta-point-sample.herokuapp.com/")
+            .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
             .build()
         viewModel.getHelloFromSnap()
         setContent { Greeting() }
