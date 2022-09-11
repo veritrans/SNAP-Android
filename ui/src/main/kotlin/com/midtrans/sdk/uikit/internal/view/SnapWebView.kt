@@ -228,11 +228,6 @@ private inline fun finishWebView(
                 onFinishWebView.invoke()
             }
         }
-        PaymentType.UOB_EZPAY -> {
-            if (url.contains(SnapWebViewClient.CALLBACK_UOB_EZPAY, true)) {
-                onFinishWebView.invoke()
-            }
-        }
         PaymentType.GOPAY, PaymentType.SHOPEEPAY -> {
             onFinishWebView.invoke()
         }
