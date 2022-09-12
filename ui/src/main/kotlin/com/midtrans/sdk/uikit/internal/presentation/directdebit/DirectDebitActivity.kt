@@ -2,6 +2,7 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
@@ -211,33 +212,56 @@ class DirectDebitActivity : BaseActivity() {
                 url = url,
                 onPageStarted = {
                     Log.d("WebView", "Started")
-                    if (status != null && transactionId != null) {
-                        finishDirectDebitPayment(
-                            status = status,
-                            transactionId = transactionId
-                        )
-                    }
+                    finishDirectDebitPayment(
+                        status = status,
+                        transactionId = transactionId
+                    )
                 },
-                onPageFinished = { }
+                onPageFinished = { },
+                urlLoadingOverride = { _, _url ->
+                   openUobWeb(status, transactionId, _url)
+                }
             )
         }
     }
 
+    //NOTE: Uob web use callback url set in requesting snap token
+    private fun openUobWeb(
+        status: String?,
+        transactionId: String?,
+        callbackUrl: String
+    ): Boolean {
+        return if (paymentType == PaymentType.UOB_EZPAY) {
+            try {
+                intent = Intent(Intent.ACTION_VIEW, Uri.parse(callbackUrl))
+                startActivity(intent)
+                finishDirectDebitPayment(status, transactionId)
+                true
+            } catch (e: Throwable) {
+                false
+            }
+        } else {
+            false
+        }
+    }
+
     private fun finishDirectDebitPayment(
-        status: String,
-        transactionId: String
+        status: String?,
+        transactionId: String?
     ) {
-        val data = Intent()
-        data.putExtra( ///TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
-            UiKitConstants.KEY_TRANSACTION_RESULT,
-            TransactionResult(
-                status = status,
-                transactionId = transactionId,
-                paymentType = paymentType
+        if (status != null && transactionId != null) {
+            val data = Intent()
+            data.putExtra( ///TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
+                UiKitConstants.KEY_TRANSACTION_RESULT,
+                TransactionResult(
+                    status = status,
+                    transactionId = transactionId,
+                    paymentType = paymentType
+                )
             )
-        )
-        setResult(RESULT_OK, data)
-        finish()
+            setResult(RESULT_OK, data)
+            finish()
+        }
     }
 
     private fun enableButton(paymentType: String, userId: String): Boolean {
