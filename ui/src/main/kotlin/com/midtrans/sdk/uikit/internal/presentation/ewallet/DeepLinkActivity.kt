@@ -126,7 +126,7 @@ class DeepLinkActivity : BaseActivity() {
         mapOf(
             Pair(PaymentType.GOPAY, R.string.redirection_screen_gopay_main_message),
             Pair(PaymentType.SHOPEEPAY, R.string.redirection_screen_shopeepay_main_message),
-            Pair(PaymentType.UOB_EZPAY, )
+            Pair(PaymentType.UOB_EZPAY, R.string.redirection_to_uob_tmrw_message)
         )
     }
 
@@ -134,6 +134,7 @@ class DeepLinkActivity : BaseActivity() {
         mapOf(
             Pair(PaymentType.GOPAY, R.string.redirection_screen_gopay_cta),
             Pair(PaymentType.SHOPEEPAY, R.string.redirection_screen_shopeepay_cta),
+            Pair(PaymentType.UOB_EZPAY, R.string.redirection_to_uob_tmrw_message)
         )
     }
 
