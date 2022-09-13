@@ -94,6 +94,5 @@ private fun Preview() {
         R.drawable.ic_outline_mandiri_40
     ) , creditCard = CreditCard(),
         paymentType = "credit_card") {
-
     }
 }
