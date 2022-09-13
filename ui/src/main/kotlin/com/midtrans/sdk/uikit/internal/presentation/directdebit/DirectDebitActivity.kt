@@ -2,7 +2,6 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
@@ -117,11 +116,7 @@ class DirectDebitActivity : BaseActivity() {
         var isInstructionExpanded by remember { mutableStateOf(false) }
         val title = stringResource(getTitleId(paymentType = paymentType))
         var userId by remember { mutableStateOf("") }
-        val url = if (paymentType == PaymentType.UOB_EZPAY) {
-            response?.uobEzpayWebUrl.orEmpty()
-        } else {
-            response?.redirectUrl.orEmpty()
-        }
+        val url = response?.redirectUrl.orEmpty()
 
         if (url.isEmpty()) {
             Column(
@@ -217,31 +212,8 @@ class DirectDebitActivity : BaseActivity() {
                         transactionId = transactionId
                     )
                 },
-                onPageFinished = { },
-                urlLoadingOverride = { _, _url ->
-                   openUobWeb(status, transactionId, _url)
-                }
+                onPageFinished = { }
             )
-        }
-    }
-
-    //NOTE: Uob web use callback url set in requesting snap token
-    private fun openUobWeb(
-        status: String?,
-        transactionId: String?,
-        callbackUrl: String
-    ): Boolean {
-        return if (paymentType == PaymentType.UOB_EZPAY) {
-            try {
-                intent = Intent(Intent.ACTION_VIEW, Uri.parse(callbackUrl))
-                startActivity(intent)
-                finishDirectDebitPayment(status, transactionId)
-                true
-            } catch (e: Throwable) {
-                false
-            }
-        } else {
-            false
         }
     }
 
@@ -332,7 +304,6 @@ class DirectDebitActivity : BaseActivity() {
             PaymentType.CIMB_CLICKS -> R.string.octo_click_title
             PaymentType.DANAMON_ONLINE -> R.string.danamon_title
             PaymentType.BRI_EPAY -> R.string.brimo_title
-            PaymentType.UOB_EZPAY -> R.string.uob_web_method_name
             else -> 0
         }
     }
@@ -345,7 +316,6 @@ class DirectDebitActivity : BaseActivity() {
             PaymentType.CIMB_CLICKS -> R.string.octo_click_instruction
             PaymentType.DANAMON_ONLINE -> R.string.danamon_instruction
             PaymentType.BRI_EPAY -> R.string.brimo_instruction
-            PaymentType.UOB_EZPAY -> R.string.uob_web_instruction
             else -> 0
         }
     }
@@ -358,7 +328,6 @@ class DirectDebitActivity : BaseActivity() {
             PaymentType.CIMB_CLICKS -> R.array.octo_click_how_to_pay
             PaymentType.DANAMON_ONLINE -> R.array.danamon_how_to_pay
             PaymentType.BRI_EPAY -> R.array.brimo_how_to_pay
-            PaymentType.UOB_EZPAY -> R.array.uob_web_how_to_pay
             else -> 0
         }
     }
