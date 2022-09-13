@@ -3,6 +3,7 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -83,6 +84,7 @@ class UobPaymentActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        Log.d("UobPayment", "onResume")
         //TODO uob app check status here
     }
 
@@ -98,6 +100,7 @@ class UobPaymentActivity : BaseActivity() {
         var isInstructionExpanded by remember { mutableStateOf(false) }
         val title = stringResource(getTitleId(uobMode = uobMode))
         val url = getUobDeeplinkUrl(uobMode, response)
+        Log.d("UobPayment", "Url : $url")
 
         if (url.isEmpty()) {
             Column(
