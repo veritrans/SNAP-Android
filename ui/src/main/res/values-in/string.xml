@@ -348,6 +348,7 @@
         <item><data><![CDATA[Periksa detail pembayaran, lalu swipe kanan untuk mengkonfirmasi detail.]]></data></item>
         <item><data><![CDATA[Masukkan Secure PIN untuk menyelesaikan pembayaran.]]></data></item>
     </string-array>
+    <string name="redirection_to_uob_tmrw_message">Mengalihkan ke Uob…</string>
 
 
     <string name="mandiri_description">Lakukan pembayaran dari rekening bank Mandiri ke nomor virtual account berikut.</string>
