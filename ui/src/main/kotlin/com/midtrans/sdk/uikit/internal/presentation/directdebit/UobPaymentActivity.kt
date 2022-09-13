@@ -81,6 +81,11 @@ class UobPaymentActivity : BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        //TODO uob app check status here
+    }
+
     @Composable
     private fun UobPaymentContent(
         uobMode: String,
@@ -170,7 +175,7 @@ class UobPaymentActivity : BaseActivity() {
                 }
             }
         } else {
-            openDeeplink(url)
+            openDeeplink(uobMode, url)
         }
     }
 
@@ -185,10 +190,13 @@ class UobPaymentActivity : BaseActivity() {
         }
     }
 
-    private fun openDeeplink(url: String) {
+    private fun openDeeplink(
+        uobMode: String,
+        url: String
+    ) {
         DeepLinkActivity.getIntent(
             activityContext = this,
-            paymentType = PaymentType.UOB_EZPAY,
+            paymentType = uobMode,
             url = url
         ).apply { startActivity(this) }
     }
