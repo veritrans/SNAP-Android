@@ -189,6 +189,20 @@ class UobSelectionActivity : BaseActivity() {
                         activityContext = this,
                         snapToken = snapToken,
                         paymentType = PaymentType.UOB_EZPAY,
+                        uobMode = PaymentType.UOB_EZPAY_WEB,
+                        amount = totalAmount,
+                        orderId = orderId,
+                        customerInfo = customerInfo
+                    )
+                )
+            },
+            Pair(PaymentType.UOB_EZPAY_APP) {
+                resultLauncher.launch(
+                    DirectDebitActivity.getIntent(
+                        activityContext = this,
+                        snapToken = snapToken,
+                        paymentType = PaymentType.UOB_EZPAY,
+                        uobMode = PaymentType.UOB_EZPAY_APP,
                         amount = totalAmount,
                         orderId = orderId,
                         customerInfo = customerInfo
