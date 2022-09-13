@@ -23,12 +23,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.api.model.PaymentType
-import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
-import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 
 class UobSelectionActivity : BaseActivity() {
@@ -73,7 +70,7 @@ class UobSelectionActivity : BaseActivity() {
     private fun UobSelectionContent(
         amount: String = "Rp500",
         orderId: String = "order-123456",
-        customerInfo: CustomerInfo? = CustomerInfo(name="Harry","Phone", listOf("address"))
+        customerInfo: CustomerInfo? = CustomerInfo(name = "Harry", "Phone", listOf("address"))
     ) {
         var isExpanded by remember { mutableStateOf(false) }
 
@@ -116,12 +113,16 @@ class UobSelectionActivity : BaseActivity() {
                             key = { it.first },
                             itemContent = { item ->
                                 SelectionListItem(title = stringResource(item.second)) {
-                                    getOnSelectedItemClick(
-                                        snapToken = snapToken,
-                                        orderId = orderId,
-                                        totalAmount = amount,
-                                        customerInfo = customerInfo
-                                    )[item.first]?.invoke()
+                                    resultLauncher.launch(
+                                        UobPaymentActivity.getIntent(
+                                            activityContext = this@UobSelectionActivity,
+                                            snapToken = snapToken,
+                                            uobMode = item.first,
+                                            amount = amount,
+                                            orderId = orderId,
+                                            customerInfo = customerInfo
+                                        )
+                                    )
                                 }
                             }
                         )
@@ -137,9 +138,11 @@ class UobSelectionActivity : BaseActivity() {
         title: String,
         onClick: () -> Unit
     ) {
-        Column(modifier = Modifier
-            .height(54.dp)
-            .clickable(onClick = onClick)) {
+        Column(
+            modifier = Modifier
+                .height(54.dp)
+                .clickable(onClick = onClick)
+        ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
@@ -174,42 +177,6 @@ class UobSelectionActivity : BaseActivity() {
             ?.let { modes.add(Pair(it, R.string.uob_tmrw_method_name)) }
 
         return modes
-    }
-
-    private fun getOnSelectedItemClick(
-        snapToken: String,
-        totalAmount: String,
-        orderId: String,
-        customerInfo: CustomerInfo?
-    ): Map<String, () -> Unit> {
-        return mapOf(
-            Pair(PaymentType.UOB_EZPAY_WEB) {
-                resultLauncher.launch(
-                    DirectDebitActivity.getIntent(
-                        activityContext = this,
-                        snapToken = snapToken,
-                        paymentType = PaymentType.UOB_EZPAY,
-                        uobMode = PaymentType.UOB_EZPAY_WEB,
-                        amount = totalAmount,
-                        orderId = orderId,
-                        customerInfo = customerInfo
-                    )
-                )
-            },
-            Pair(PaymentType.UOB_EZPAY_APP) {
-                resultLauncher.launch(
-                    DirectDebitActivity.getIntent(
-                        activityContext = this,
-                        snapToken = snapToken,
-                        paymentType = PaymentType.UOB_EZPAY,
-                        uobMode = PaymentType.UOB_EZPAY_APP,
-                        amount = totalAmount,
-                        orderId = orderId,
-                        customerInfo = customerInfo
-                    )
-                )
-            }
-        )
     }
 
     private val resultLauncher =

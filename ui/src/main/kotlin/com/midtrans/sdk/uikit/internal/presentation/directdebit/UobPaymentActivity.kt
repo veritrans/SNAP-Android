@@ -170,7 +170,7 @@ class UobPaymentActivity : BaseActivity() {
                 }
             }
         } else {
-            openUobDeeplink()
+            openDeeplink(url)
         }
     }
 
@@ -185,15 +185,12 @@ class UobPaymentActivity : BaseActivity() {
         }
     }
 
-    private fun openUobDeeplink(url: String) {
+    private fun openDeeplink(url: String) {
         DeepLinkActivity.getIntent(
             activityContext = this,
             paymentType = PaymentType.UOB_EZPAY,
             url = url
         ).apply { startActivity(this) }
-
-        setResult(RESULT_OK)
-        finish()
     }
 
     @Composable
@@ -242,7 +239,7 @@ class UobPaymentActivity : BaseActivity() {
         fun getIntent(
             activityContext: Context,
             snapToken: String,
-            uobMode: String = "",
+            uobMode: String,
             amount: String,
             orderId: String,
             customerInfo: CustomerInfo?
