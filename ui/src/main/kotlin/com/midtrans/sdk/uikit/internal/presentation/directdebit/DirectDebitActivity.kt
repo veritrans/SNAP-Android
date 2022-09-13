@@ -168,7 +168,7 @@ class DirectDebitActivity : BaseActivity() {
                                 modifier = Modifier.padding(top = 28.dp),
                                 isExpanded = isInstructionExpanded,
                                 iconResId = R.drawable.ic_help,
-                                title = stringResource(R.string.bca_klik_pay_how_to_pay_title),
+                                title = stringResource(getCta(paymentType = paymentType)),
                                 onExpandClick = { isInstructionExpanded = !isInstructionExpanded },
                                 expandingContent = {
                                     Column {
@@ -328,6 +328,18 @@ class DirectDebitActivity : BaseActivity() {
             PaymentType.CIMB_CLICKS -> R.array.octo_click_how_to_pay
             PaymentType.DANAMON_ONLINE -> R.array.danamon_how_to_pay
             PaymentType.BRI_EPAY -> R.array.brimo_how_to_pay
+            else -> 0
+        }
+    }
+
+    @Composable
+    private fun getCta(paymentType: String): Int {
+        return when (paymentType) {
+            PaymentType.KLIK_BCA -> R.string.klik_bca_cta
+            PaymentType.BCA_KLIKPAY -> R.string.bca_klik_pay_cta
+            PaymentType.CIMB_CLICKS -> R.string.octo_click_cta
+            PaymentType.DANAMON_ONLINE -> R.string.danamon_cta
+            PaymentType.BRI_EPAY -> R.string.brimo_cta
             else -> 0
         }
     }
