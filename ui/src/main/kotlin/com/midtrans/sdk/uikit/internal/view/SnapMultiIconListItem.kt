@@ -13,7 +13,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.midtrans.sdk.corekit.api.model.CreditCard
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.SnapColors.LINE_LIGHT_MUTED
 
@@ -21,6 +25,8 @@ import com.midtrans.sdk.uikit.internal.view.SnapColors.LINE_LIGHT_MUTED
 fun SnapMultiIconListItem(
     title: String,
     iconList: List<Int>,
+    creditCard: CreditCard?,
+    paymentType: String,
     onClick: () -> Unit
 ) {
     Row(
@@ -33,20 +39,34 @@ fun SnapMultiIconListItem(
                 .weight(1f)
         ) {
 
-            Text(
-                text = title,
-                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
-                style = SnapTypography.STYLES.snapTextBigRegular
-            )
+            if (paymentType == PaymentType.CREDIT_CARD && !creditCard?.savedTokens.isNullOrEmpty()){
+                Text(
+                    text = title,
+                    modifier = Modifier.padding(top = 16.dp),
+                    style = SnapTypography.STYLES.snapTextBigRegular
+                )
+                Text(
+                    text = "${creditCard?.savedTokens?.count()} " + stringResource(id = R.string.payment_summary_saved_card),
+                    modifier = Modifier.padding(top = 2.5.dp, bottom = 4.dp),
+                    style = SnapTypography.STYLES.snapTextSmallRegular,
+                    color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY)
+                )
+            } else {
+                Text(
+                    text = title,
+                    modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
+                    style = SnapTypography.STYLES.snapTextBigRegular
+                )
+            }
             Row(
                 horizontalArrangement = Arrangement.spacedBy(space = 8.dp, alignment = Alignment.Start)
             ) {
                 iconList.forEach {
-                        Icon(
-                            painter = painterResource(id = it),
-                            tint = Color.Unspecified,
-                            contentDescription = null
-                        )
+                    Icon(
+                        painter = painterResource(id = it),
+                        tint = Color.Unspecified,
+                        contentDescription = null
+                    )
                 }
             }
             Divider(
@@ -60,5 +80,20 @@ fun SnapMultiIconListItem(
             tint = Color.Unspecified,
             contentDescription = null,
         )
+    }
+}
+
+@Preview
+@Composable
+private fun Preview() {
+    SnapMultiIconListItem(title = "Credit Card", iconList = listOf(
+        R.drawable.ic_outline_permata_40,
+        R.drawable.ic_outline_bca_40,
+        R.drawable.ic_outline_bni_40,
+        R.drawable.ic_outline_bri_40,
+        R.drawable.ic_outline_mandiri_40
+    ) , creditCard = CreditCard(),
+        paymentType = "credit_card") {
+
     }
 }
