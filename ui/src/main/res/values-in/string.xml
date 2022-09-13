@@ -338,6 +338,7 @@
         <item><data><![CDATA[Periksa detail pembayaran, lalu masukkan OTP yang dikirim via SMS.]]></data></item>
         <item><data><![CDATA[Konfirmasi pembayaran.]]></data></item>
     </string-array>
+    <string name="uob_web_cta">Bayar sekarang</string>
 
     <string name="uob_tmrw_method_name">UOB TMRW app</string>
     <string name="uob_tmrw_instruction">Pastikan Anda sudah memiliki ID terdaftar dan silakan selesaikan pembayaran melalui aplikasi UOB TMRW.</string>
@@ -348,6 +349,7 @@
         <item><data><![CDATA[Periksa detail pembayaran, lalu swipe kanan untuk mengkonfirmasi detail.]]></data></item>
         <item><data><![CDATA[Masukkan Secure PIN untuk menyelesaikan pembayaran.]]></data></item>
     </string-array>
+    <string name="uob_tmrw_cta">Bayar sekarang</string>
     <string name="redirection_to_uob_tmrw_message">Mengalihkan ke Uob…</string>
     <string name="redirection_to_uob_tmrw_cta">Buka Uob sekarang</string>
 
