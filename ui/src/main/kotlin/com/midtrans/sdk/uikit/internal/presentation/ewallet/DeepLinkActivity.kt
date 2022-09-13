@@ -109,6 +109,7 @@ class DeepLinkActivity : BaseActivity() {
                 intent = Intent(Intent.ACTION_VIEW)
                 intent.setData(Uri.parse(url))
                 startActivity(intent)
+                finish()
                 true
             } catch (e: Throwable) {
                 false
@@ -183,7 +184,6 @@ class DeepLinkActivity : BaseActivity() {
         private const val GOJEK_PACKAGE_NAME = "com.gojek.app"
         private const val SHOPEE_PACKAGE_NAME = "com.shopee.id"
         private const val UOB_TMRW_PACKAGE_NAME = "com.uob.id.digitalbank"
-
 
         fun getIntent(
             activityContext: Context,
