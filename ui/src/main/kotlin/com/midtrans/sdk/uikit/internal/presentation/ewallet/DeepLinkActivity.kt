@@ -26,9 +26,20 @@ import com.midtrans.sdk.uikit.internal.view.SnapWebView
 
 class DeepLinkActivity : BaseActivity() {
 
+    private val url: String by lazy {
+        intent.getStringExtra(EXTRA_URL) ?: throw RuntimeException("Url must not be empty")
+    }
+
+    private val paymentType: String by lazy {
+        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
+            ?: throw RuntimeException("Payment type must not be empty")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { Content(paymentType = paymentType, url = url) }
+        setContent {
+            Content(paymentType = paymentType, url = url)
+        }
     }
 
     @Composable
@@ -46,24 +57,10 @@ class DeepLinkActivity : BaseActivity() {
                 url = url,
                 onPageStarted = { loading = true },
                 onPageFinished = { loading = false },
-                urlLoadingOverride = { webview, url ->
-                    Log.e("urlOverload", url)
+                urlLoadingOverride = { _, url ->
+                    Log.d("urlOverload", url)
 
-                    if (url.contains("gojek") // TODO: fill with exact scheme
-                        || url.contains("shopee")
-                        || url.contains("uob")
-                    ) {
-                        try {
-                            intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                            startActivity(intent)
-                            true
-                        } catch (e: Throwable) {
-                            openAppInPlayStore()
-                            true
-                        }
-                    } else {
-                        false
-                    }
+                    openDeeplink(paymentType, url)
                 }
             )
             if (loading) {
@@ -99,34 +96,47 @@ class DeepLinkActivity : BaseActivity() {
 
     @Preview
     @Composable
-    private fun forPreview() {
+    private fun ForPreview() {
         Content(paymentType = PaymentType.GOPAY, url = "http://")
     }
 
-    private fun getAppPackageName(): String {
-        return when (paymentType) {
-            PaymentType.GOPAY -> GOJEK_PACKAGE_NAME
-            PaymentType.SHOPEEPAY -> SHOPEE_PACKAGE_NAME
-            PaymentType.SHOPEEPAY_QRIS -> SHOPEE_PACKAGE_NAME
-            PaymentType.UOB_EZPAY -> UOB_TMRW_PACKAGE_NAME
-            else -> GOJEK_PACKAGE_NAME
+    private fun openDeeplink(
+        paymentType: String,
+        url: String
+    ): Boolean {
+        return if (paymentType == PaymentType.UOB_EZPAY_WEB) {
+            try {
+                intent = Intent(Intent.ACTION_VIEW)
+                intent.setData(Uri.parse(url))
+                startActivity(intent)
+                true
+            } catch (e: Throwable) {
+                false
+            }
+        } else if (url.contains("gojek") // TODO: fill with exact scheme | check with pak wahyu can checking payment type instead?
+            || url.contains("shopee")
+            || url.contains("uob")
+        ) {
+            try {
+                intent = Intent(Intent.ACTION_VIEW)
+                intent.setData(Uri.parse(url))
+                startActivity(intent)
+                true
+            } catch (e: Throwable) {
+                openAppInPlayStore()
+                true
+            }
+        } else {
+            false
         }
-    }
-
-    private val url: String by lazy {
-        intent.getStringExtra(EXTRA_URL) ?: throw RuntimeException("Url must not be empty")
-    }
-
-    private val paymentType: String by lazy {
-        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
-            ?: throw RuntimeException("Payment type must not be empty")
     }
 
     private val redirectionTitle by lazy {
         mapOf(
             Pair(PaymentType.GOPAY, R.string.redirection_screen_gopay_main_message),
             Pair(PaymentType.SHOPEEPAY, R.string.redirection_screen_shopeepay_main_message),
-            Pair(PaymentType.UOB_EZPAY, R.string.redirection_to_uob_tmrw_message)
+            Pair(PaymentType.UOB_EZPAY_WEB, R.string.redirection_to_uob_tmrw_message), //TODO get correct copy for uob web
+            Pair(PaymentType.UOB_EZPAY_APP, R.string.redirection_to_uob_tmrw_message) //TODO get correct copy for uob app
         )
     }
 
@@ -134,7 +144,8 @@ class DeepLinkActivity : BaseActivity() {
         mapOf(
             Pair(PaymentType.GOPAY, R.string.redirection_screen_gopay_cta),
             Pair(PaymentType.SHOPEEPAY, R.string.redirection_screen_shopeepay_cta),
-            Pair(PaymentType.UOB_EZPAY, R.string.redirection_to_uob_tmrw_message)
+            Pair(PaymentType.UOB_EZPAY_WEB, R.string.redirection_to_uob_tmrw_message), //TODO get correct copy for uob web
+            Pair(PaymentType.UOB_EZPAY_APP, R.string.redirection_to_uob_tmrw_message) //TODO get correct copy for uob app
         )
     }
 
@@ -153,6 +164,16 @@ class DeepLinkActivity : BaseActivity() {
                     Uri.parse("https://play.google.com/store/apps/details?id=${getAppPackageName()}")
                 )
             )
+        }
+    }
+
+    private fun getAppPackageName(): String {
+        return when (paymentType) {
+            PaymentType.GOPAY -> GOJEK_PACKAGE_NAME
+            PaymentType.SHOPEEPAY -> SHOPEE_PACKAGE_NAME
+            PaymentType.SHOPEEPAY_QRIS -> SHOPEE_PACKAGE_NAME
+            PaymentType.UOB_EZPAY_APP -> UOB_TMRW_PACKAGE_NAME
+            else -> GOJEK_PACKAGE_NAME
         }
     }
 
