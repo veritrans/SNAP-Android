@@ -18,10 +18,7 @@ internal class UobPaymentViewModel @Inject constructor(
     private val transactionResponse = MutableLiveData<TransactionResponse>()
     fun getTransactionResponse(): LiveData<TransactionResponse> = transactionResponse
 
-    fun payUob(
-        snapToken: String,
-        userId: String?
-    ) {
+    fun payUob(snapToken: String) {
         val builder = DirectDebitPaymentRequestBuilder()
             .withPaymentType(PaymentType.UOB_EZPAY)
 

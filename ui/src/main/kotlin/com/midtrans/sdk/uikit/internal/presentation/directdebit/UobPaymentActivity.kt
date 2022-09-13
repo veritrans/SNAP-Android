@@ -3,6 +3,7 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -12,19 +13,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.presentation.ewallet.DeepLinkActivity
 import com.midtrans.sdk.uikit.internal.view.*
+import javax.inject.Inject
 
 class UobPaymentActivity : BaseActivity() {
+
+    @Inject
+    internal lateinit var vmFactory: ViewModelProvider.Factory
 
     private val snapToken: String by lazy {
         intent.getStringExtra(EXTRA_SNAP_TOKEN)
@@ -50,6 +58,10 @@ class UobPaymentActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
     }
 
+    private val viewModel: UobPaymentViewModel by lazy {
+        ViewModelProvider(this, vmFactory).get(UobPaymentViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -57,6 +69,16 @@ class UobPaymentActivity : BaseActivity() {
             .applicationContext(this.applicationContext)
             .build()
             .inject(this)
+
+        setContent {
+            UobPaymentContent(
+                uobMode = uobMode,
+                amount = amount,
+                orderId = orderId,
+                customerInfo = customerInfo,
+                response = viewModel.getTransactionResponse().observeAsState().value
+            )
+        }
     }
 
     @Composable
@@ -144,16 +166,11 @@ class UobPaymentActivity : BaseActivity() {
                     text = stringResource(id = getUobCta(uobMode)),
                     style = SnapButton.Style.PRIMARY
                 ) {
-                    //TODO viewmodel here
-//                    viewModel.payDirectDebit(
-//                        snapToken = snapToken,
-//                        paymentType = paymentType,
-//                        userId = userId
-//                    )
+                    viewModel.payUob(snapToken)
                 }
             }
         } else {
-            //todo open deeplink
+            openUobDeeplink()
         }
     }
 
@@ -166,6 +183,17 @@ class UobPaymentActivity : BaseActivity() {
             PaymentType.UOB_EZPAY_APP -> response?.uobEzpayDeeplinkUrl.orEmpty()
             else -> ""
         }
+    }
+
+    private fun openUobDeeplink(url: String) {
+        DeepLinkActivity.getIntent(
+            activityContext = this,
+            paymentType = PaymentType.UOB_EZPAY,
+            url = url
+        ).apply { startActivity(this) }
+
+        setResult(RESULT_OK)
+        finish()
     }
 
     @Composable
