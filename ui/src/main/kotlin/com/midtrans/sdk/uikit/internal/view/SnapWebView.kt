@@ -228,7 +228,10 @@ private inline fun finishWebView(
                 onFinishWebView.invoke()
             }
         }
-        PaymentType.GOPAY, PaymentType.SHOPEEPAY, PaymentType.UOB_EZPAY -> {
+        PaymentType.GOPAY,
+        PaymentType.SHOPEEPAY,
+        PaymentType.UOB_EZPAY_WEB,
+        PaymentType.UOB_EZPAY_APP-> {
             onFinishWebView.invoke()
         }
     }
