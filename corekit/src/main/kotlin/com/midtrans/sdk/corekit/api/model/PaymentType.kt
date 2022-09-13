@@ -51,7 +51,7 @@ class PaymentType {
         const val DANAMON_ONLINE = "danamon_online"
         const val UOB_EZPAY = "uob_ezpay"
 
-        //DIRECT DEBIT - UOB MODE
+        //DIRECT DEBIT - UOB MODE //TODO move this to uob mode independent class
         const val UOB_EZPAY_WEB = "uob_ezpay_web"
         const val UOB_EZPAY_APP = "uob_ezpay_deeplink"
 

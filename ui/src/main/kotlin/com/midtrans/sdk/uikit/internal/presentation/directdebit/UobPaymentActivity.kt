@@ -3,6 +3,11 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.compose.runtime.*
+import androidx.compose.ui.res.stringResource
+import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
@@ -40,6 +45,33 @@ class UobPaymentActivity : BaseActivity() {
             .applicationContext(this.applicationContext)
             .build()
             .inject(this)
+    }
+
+    @Composable
+    private fun getTitleId(uobMode: String): Int {
+        return when (uobMode) {
+            PaymentType.UOB_EZPAY_APP -> R.string.uob_tmrw_method_name
+            PaymentType.UOB_EZPAY_WEB -> R.string.uob_web_method_name
+            else -> 0
+        }
+    }
+
+    @Composable
+    private fun getInstructionId(uobMode: String): Int {
+        return when (uobMode) {
+            PaymentType.UOB_EZPAY_WEB -> R.string.uob_web_instruction
+            PaymentType.UOB_EZPAY_APP -> R.string.uob_tmrw_instruction
+            else -> 0
+        }
+    }
+
+    @Composable
+    private fun getHowToPayId(uobMode: String): Int {
+        return when (uobMode) {
+            PaymentType.UOB_EZPAY_WEB -> R.array.uob_web_how_to_pay
+            PaymentType.UOB_EZPAY_APP -> R.array.uob_tmrw_how_to_pay
+            else -> 0
+        }
     }
 
     companion object {
