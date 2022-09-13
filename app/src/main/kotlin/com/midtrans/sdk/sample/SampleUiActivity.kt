@@ -205,7 +205,9 @@ class SampleUiActivity : AppCompatActivity() {
                     R.drawable.ic_outline_bni_40,
                     R.drawable.ic_outline_bri_40,
                     R.drawable.ic_outline_permata_40
-                )
+                ),
+                creditCard = null,
+                paymentType = "credit_card"
             ) {
                 Toast.makeText(
                     this@SampleUiActivity,
