@@ -12,7 +12,8 @@ object SnapCreditCardUtil {
     const val DEFAULT_ONE_CLICK_CVV_VALUE = "123"
     const val FORMATTED_MAX_CARD_NUMBER_LENGTH = 19
     const val FORMATTED_MAX_EXPIRY_LENGTH = 5
-    const val FORMATTED_MAX_CVV_LENGTH = 3
+    const val FORMATTED_MAX_CVV_LENGTH = 6
+    const val FORMATTED_MIN_CVV_LENGTH = 3
     const val SUPPORTED_MAX_BIN_NUMBER = 8
     const val NEW_CARD_FORM_IDENTIFIER = "newCardFormIdentifier"
     const val SAVED_CARD_IDENTIFIER = "savedCardIdentifier"

@@ -255,7 +255,9 @@ class PaymentOptionActivity : BaseActivity() {
                         ) { payment ->
                             SnapMultiIconListItem(
                                 title = stringResource(payment.titleId),
-                                iconList = payment.icons
+                                iconList = payment.icons,
+                                creditCard = creditCard,
+                                paymentType = payment.type
                             ) {
                                 getOnPaymentItemClick(
                                     paymentType = payment.type,
@@ -335,7 +337,7 @@ class PaymentOptionActivity : BaseActivity() {
                         )
                     } else {
                         //TODO currently set to CreditCardActivity for testing purpose
-                        CreditCardActivity.getIntent(
+                        SavedCardActivity.getIntent(
                             activityContext = this,
                             snapToken = snapToken,
                             transactionDetails = transactionDetails,
