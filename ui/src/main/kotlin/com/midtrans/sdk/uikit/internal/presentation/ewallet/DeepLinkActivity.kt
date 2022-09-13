@@ -13,7 +13,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,10 +49,12 @@ class DeepLinkActivity : BaseActivity() {
                 urlLoadingOverride = { webview, url ->
                     Log.e("urlOverload", url)
 
-                    if (url.contains("gojek") || url.contains("shopee")) {  // TODO: fill with exact scheme
+                    if (url.contains("gojek") // TODO: fill with exact scheme
+                        || url.contains("shopee")
+                        || url.contains("uob")
+                    ) {
                         try {
-                            intent = Intent(Intent.ACTION_VIEW)
-                            intent.setData(Uri.parse(url))
+                            intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                             startActivity(intent)
                             true
                         } catch (e: Throwable) {
@@ -107,6 +108,7 @@ class DeepLinkActivity : BaseActivity() {
             PaymentType.GOPAY -> GOJEK_PACKAGE_NAME
             PaymentType.SHOPEEPAY -> SHOPEE_PACKAGE_NAME
             PaymentType.SHOPEEPAY_QRIS -> SHOPEE_PACKAGE_NAME
+            PaymentType.UOB_EZPAY -> UOB_TMRW_PACKAGE_NAME
             else -> GOJEK_PACKAGE_NAME
         }
     }
@@ -124,6 +126,7 @@ class DeepLinkActivity : BaseActivity() {
         mapOf(
             Pair(PaymentType.GOPAY, R.string.redirection_screen_gopay_main_message),
             Pair(PaymentType.SHOPEEPAY, R.string.redirection_screen_shopeepay_main_message),
+            Pair(PaymentType.UOB_EZPAY, )
         )
     }
 
@@ -157,13 +160,13 @@ class DeepLinkActivity : BaseActivity() {
         private const val EXTRA_PAYMENT_TYPE = "deeplinkactivity.extra.payment_type"
         private const val GOJEK_PACKAGE_NAME = "com.gojek.app"
         private const val SHOPEE_PACKAGE_NAME = "com.shopee.id"
+        private const val UOB_TMRW_PACKAGE_NAME = "com.uob.id.digitalbank"
 
 
         fun getIntent(
             activityContext: Context,
             paymentType: String,
             url: String
-
         ): Intent {
             return Intent(activityContext, DeepLinkActivity::class.java).apply {
                 putExtra(EXTRA_URL, url)
