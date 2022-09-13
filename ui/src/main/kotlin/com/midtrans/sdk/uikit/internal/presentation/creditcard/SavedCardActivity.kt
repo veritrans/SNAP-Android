@@ -27,6 +27,7 @@ import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.presentation.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.view.*
 import javax.inject.Inject
 
@@ -124,13 +125,7 @@ class SavedCardActivity: BaseActivity() {
         orderId: String,
         customerDetail: CustomerInfo?,
     ){
-        val newCardFormIdentifier = "newCardFormIdentifier"
-        val savedCardIdentifier = "savedCardIdentifier"
         var previousEightDigitNumber = ""
-        var cardNumberWithoutSpace = ""
-        val supportedMaxBinNumber = 8
-        val maxCvvLength = 3
-
         val bankCodeId by viewModel.bankIconId.observeAsState(null)
         var isCvvSavedCardInvalid by remember { mutableStateOf(false)}
         var savedTokenList = mutableListOf<FormData>()
@@ -147,17 +142,19 @@ class SavedCardActivity: BaseActivity() {
                 isExpiryTextFieldFocused = false,
                 isCvvTextFieldFocused = false,
                 principalIconId = null,
-                isSavedCardChecked = true
+                isSaveCardChecked = true,
+                customerPhone = TextFieldValue(),
+                customerEmail = TextFieldValue()
             )
         }
 
         creditCard?.savedTokens?.forEachIndexed { index, savedToken ->
             savedTokenList.add(
                 SavedCreditCardFormData(
-                    savedCardIdentifier = savedCardIdentifier + index.toString(),
+                    savedCardIdentifier = SnapCreditCardUtil.SAVED_CARD_IDENTIFIER + index.toString(),
                     inputTitle = stringResource(id = R.string.cc_dc_saved_card_enter_cvv),
                     endIcon = R.drawable.ic_trash,
-                    startIcon = viewModel.getBankIcon(savedToken.binDetail?.bankCode.toString()),
+                    startIcon = SnapCreditCardUtil.getBankIcon(savedToken.binDetail?.bankCode.toString()),
                     errorText = remember { mutableStateOf("") },
                     maskedCardNumber = formatMaskedCard(savedToken.maskedCard.toString()),
                     displayedMaskedCard = savedToken.maskedCard.toString(),
@@ -169,7 +166,7 @@ class SavedCardActivity: BaseActivity() {
             )
         }
         savedTokenList.add(NewCardFormData(
-            newCardIdentifier = newCardFormIdentifier,
+            newCardIdentifier = SnapCreditCardUtil.NEW_CARD_FORM_IDENTIFIER,
             bankIconId = bankCodeId,
         ))
         var savedTokenListState = savedTokenList.toMutableStateList()
@@ -217,20 +214,20 @@ class SavedCardActivity: BaseActivity() {
                                 .padding(top = 24.dp),
                             listStates = savedTokenListState,
                             normalCardItemState = state,
-                            cvvTextField = selectedCvvTextFieldValue,
+                            creditCard = creditCard,
                             onItemRemoveClicked = {
                                 viewModel.deleteSavedCard(snapToken = snapToken, maskedCard = it.displayedMaskedCard)
                                 savedTokenListState.remove(it)
                             },
                             onCvvSavedCardValueChange = {
                                 selectedCvvTextFieldValue = it
-                                isSelectedSavedCardCvvInvalid = selectedCvvTextFieldValue.text.length != maxCvvLength
+                                isSelectedSavedCardCvvInvalid = selectedCvvTextFieldValue.text.length != SnapCreditCardUtil.FORMATTED_MAX_CVV_LENGTH
                             },
                             onCardNumberOtherCardValueChange = {
                                 state.cardNumber = it
-                                cardNumberWithoutSpace = it.text.replace(" ", "")
-                                if(cardNumberWithoutSpace.length >= supportedMaxBinNumber){
-                                    var eightDigitNumber = cardNumberWithoutSpace.substring(0, supportedMaxBinNumber)
+                                var cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
+                                if(cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER){
+                                    var eightDigitNumber = cardNumberWithoutSpace.substring(0, SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER)
                                     if (eightDigitNumber != previousEightDigitNumber){
                                         previousEightDigitNumber = eightDigitNumber
                                         viewModel.getBankIconImage(

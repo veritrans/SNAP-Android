@@ -26,8 +26,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.SavedToken
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.view.SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY
 import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
 import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_NEUTRAL_FILL
@@ -111,7 +113,7 @@ fun SnapCCDetailListItem(
                     value = cvvTextField,
                     onValueChange = {
                         onCvvValueChange(formatCVV(it))
-                        isCvvInvalid = formatCVV(it).text.length != SnapCreditCard.formattedMaxCvvLength
+                        isCvvInvalid = formatCVV(it).text.length != SnapCreditCardUtil.FORMATTED_MAX_CVV_LENGTH
                         onIsCvvInvalidValueChange(isCvvInvalid)
                     },
                     modifier = Modifier.width(69.dp),
@@ -149,6 +151,7 @@ fun InputNewCardItem(
     shouldReveal: Boolean,
     state: NormalCardItemState,
     bankIconState: Int?,
+    creditCard: CreditCard?,
     onCardNumberValueChange: (TextFieldValue) -> Unit,
     onExpiryDateValueChange: (TextFieldValue) -> Unit,
     onCvvValueChange: (TextFieldValue) -> Unit,
@@ -175,6 +178,7 @@ fun InputNewCardItem(
                 NormalCardItem(
                     state = state,
                     bankIcon = bankIconState,
+                    creditCard = creditCard,
                     onCardNumberValueChange = {
                         onCardNumberValueChange(it)
                     },
@@ -238,7 +242,7 @@ fun SnapSavedCardRadioGroup(
     listStates: List<FormData>,
     normalCardItemState: NormalCardItemState,
     onItemRemoveClicked: (item: SavedCreditCardFormData) -> Unit,
-    cvvTextField: TextFieldValue,
+    creditCard: CreditCard?,
     onCvvSavedCardValueChange: (TextFieldValue) -> Unit,
     onCardNumberOtherCardValueChange: (TextFieldValue) -> Unit,
     onExpiryOtherCardValueChange: (TextFieldValue) -> Unit,
@@ -321,6 +325,7 @@ fun SnapSavedCardRadioGroup(
                             InputNewCardItem(
                                 shouldReveal = item.identifier == selectedOption,
                                 state = normalCardItemState,
+                                creditCard = creditCard,
                                 bankIconState = item.bankIconId,
                                 onCardNumberValueChange = { onCardNumberOtherCardValueChange(it)},
                                 onExpiryDateValueChange = { onExpiryOtherCardValueChange(it)},
@@ -379,8 +384,10 @@ class NormalCardItemState(
     isCardTexFieldFocused: Boolean,
     isExpiryTextFieldFocused: Boolean,
     isCvvTextFieldFocused: Boolean,
-    isSavedCardChecked: Boolean,
+    isSaveCardChecked: Boolean,
     principalIconId: Int?,
+    customerEmail: TextFieldValue,
+    customerPhone: TextFieldValue
 ){
     var cardNumber by mutableStateOf(cardNumber)
     var expiry by mutableStateOf(expiry)
@@ -392,7 +399,9 @@ class NormalCardItemState(
     var isExpiryTextFieldFocused by mutableStateOf(isExpiryTextFieldFocused)
     var isCvvTextFieldFocused by mutableStateOf(isCvvTextFieldFocused)
     var principalIconId by mutableStateOf(principalIconId)
-    var isSavedCardChecked by mutableStateOf(isSavedCardChecked)
+    var isSavedCardChecked by mutableStateOf(isSaveCardChecked)
+    var customerEmail by mutableStateOf(customerEmail)
+    var customerPhone by mutableStateOf(customerPhone)
 
     val iconIdList by mutableStateOf(
         listOf (
@@ -406,7 +415,9 @@ class NormalCardItemState(
 
 private fun formatCvvTextFieldBasedOnTokenType(tokenType: String): TextFieldValue{
     var output = if (tokenType == SavedToken.ONE_CLICK){
-        TextFieldValue(SnapCreditCard.defaultOneClickCvvValue, selection = TextRange(SnapCreditCard.defaultOneClickCvvValue.length))
+        TextFieldValue(
+            SnapCreditCardUtil.DEFAULT_ONE_CLICK_CVV_VALUE, selection = TextRange(
+                SnapCreditCardUtil.DEFAULT_ONE_CLICK_CVV_VALUE.length))
     } else {
         TextFieldValue("")
     }
@@ -441,11 +452,26 @@ fun formatCVV(input: TextFieldValue): TextFieldValue{
     return output
 }
 
+fun formatPhoneNumber(input: TextFieldValue): TextFieldValue{
+
+    var digit = input.text.filter {
+        it.isDigit()
+    }
+    var processed: String = digit.replace("\\D", "").replace(" ", "")
+    // insert a space after all groups of 4 digits that are followed by another digit
+    // insert a space after all groups of 4 digits that are followed by another digit
+    processed = processed.replace("(\\d{4})(?=\\d)".toRegex(), "$1 ")
+    val length = min(processed.length, 19)
+    val output = input.copy(text = processed.substring(0 until length), selection = TextRange(length))
+    return output
+}
+
 
 @Composable
 fun NormalCardItem(
     state: NormalCardItemState,
     bankIcon: Int?,
+    creditCard: CreditCard?,
     onCardNumberValueChange: (TextFieldValue) -> Unit,
     onExpiryDateValueChange: (TextFieldValue) -> Unit,
     onCvvValueChange: (TextFieldValue) -> Unit,
@@ -468,8 +494,8 @@ fun NormalCardItem(
                 ) {
                     Text(
                         text = stringResource(id = R.string.cc_dc_main_screen_card_number),
-                        modifier = Modifier.weight(1f),
-                        style = SnapTypography.STYLES.snapTextSmallRegular
+                        modifier = Modifier.weight(1f).padding(bottom = 4.dp),
+                        style = SnapTypography.STYLES.snapTextSmallRegular,
                     )
                     if (state.principalIconId != null && state.cardNumber.text.isNotEmpty()) {
                         Icon(
@@ -492,9 +518,10 @@ fun NormalCardItem(
                     hint = stringResource(id = R.string.cc_dc_main_screen_placeholder_card_number),
                     isError = state.isCardNumberInvalid,
                     onValueChange = {
-                        state.principalIconId = getPrincipalIcon(getCardType(it.text))
+                        state.principalIconId = SnapCreditCardUtil.getPrincipalIcon(SnapCreditCardUtil.getCardType(it.text))
                         var cardLength = formatCreditCard(it).text.length
-                        state.isCardNumberInvalid = cardLength != SnapCreditCard.formattedMaxCardNumberLength
+                        state.isCardNumberInvalid = cardLength != SnapCreditCardUtil.FORMATTED_MAX_CARD_NUMBER_LENGTH || !SnapCreditCardUtil.isValidCardNumber(
+                            SnapCreditCardUtil.getCardNumberFromTextField(it))
                         onCardNumberValueChange(formatCreditCard(it))
                     },
                     isFocused = state.isCardTexFieldFocused,
@@ -538,7 +565,8 @@ fun NormalCardItem(
                 ) {
                     Text(
                         text = stringResource(id = R.string.cc_dc_main_screen_expiry),
-                        style = SnapTypography.STYLES.snapTextSmallRegular
+                        style = SnapTypography.STYLES.snapTextSmallRegular,
+                        modifier = Modifier.padding(bottom = 4.dp)
                     )
                     var isCardExpired = true
                     SnapTextField(
@@ -549,9 +577,9 @@ fun NormalCardItem(
                             if (formatExpiryDate(it).text.length == 5){
                                 isCardExpired = checkIsCardExpired(formatExpiryDate(it).text)
                             }
-                            state.isExpiryInvalid = formatExpiryDate(it).text.length == SnapCreditCard.formattedMaxExpiryLength &&
+                            state.isExpiryInvalid = formatExpiryDate(it).text.length == SnapCreditCardUtil.FORMATTED_MAX_EXPIRY_LENGTH &&
                                     isCardExpired ||
-                                    formatExpiryDate(it).text.length != SnapCreditCard.formattedMaxExpiryLength
+                                    formatExpiryDate(it).text.length != SnapCreditCardUtil.FORMATTED_MAX_EXPIRY_LENGTH
                         },
                         isError = state.isExpiryInvalid,
                         isFocused = state.isExpiryTextFieldFocused,
@@ -582,14 +610,15 @@ fun NormalCardItem(
                 ) {
                     Text(
                         text = stringResource(id = R.string.cc_dc_main_screen_cvv),
-                        style = SnapTypography.STYLES.snapTextSmallRegular
+                        style = SnapTypography.STYLES.snapTextSmallRegular,
+                        modifier = Modifier.padding(bottom = 4.dp)
                     )
                     SnapTextField(
                         value = state.cvv,
                         hint = stringResource(id = R.string.cc_dc_main_screen_placeholder_cvv),
                         onValueChange = {
                             onCvvValueChange(formatCVV(it))
-                            state.isCvvInvalid = formatCVV(it).text.length != SnapCreditCard.formattedMaxCvvLength
+                            state.isCvvInvalid = formatCVV(it).text.length != SnapCreditCardUtil.FORMATTED_MAX_CVV_LENGTH
                         },
                         isError = state.isCvvInvalid,
                         isFocused = state.isCvvTextFieldFocused,
@@ -616,42 +645,19 @@ fun NormalCardItem(
                     }
                 }
             }
-            Row(
-            ) {
-                LabelledCheckBox(checked = state.isSavedCardChecked,
-                    onCheckedChange = { onSavedCardCheckedChange(it) },
-                    label = stringResource(id = R.string.cc_dc_main_screen_save_this_card)
-                )
+            creditCard?.saveCard?.let {
+                if (it){
+                    Row(
+                    ) {
+                        LabelledCheckBox(checked = state.isSavedCardChecked,
+                            onCheckedChange = { onSavedCardCheckedChange(it) },
+                            label = stringResource(id = R.string.cc_dc_main_screen_save_this_card)
+                        )
+                    }
+                }
             }
-        }
-    }
-}
 
-//TODO: Need to find better solution about principal icon
-fun getCardType(cardNumber: String): String {
-    return try {
-        if (cardNumber.isEmpty()) {
-            ""
-        } else {
-            if (cardNumber[0] == '4') {
-                "visa"
-            } else if (cardNumber[0] == '5' && (cardNumber[1] == '1' || cardNumber[1] == '2'
-                        || cardNumber[1] == '3' || cardNumber[1] == '4' || cardNumber[1] == '5')
-            ) {
-                "mastercard"
-            } else if (cardNumber[0] == '3' && (cardNumber[1] == '4' || cardNumber[1] == '7')) {
-                "amex"
-            } else if (cardNumber.startsWith("35") || cardNumber.startsWith("2131") || cardNumber.startsWith(
-                    "1800"
-                )
-            ) {
-                "jcb"
-            } else {
-                ""
-            }
         }
-    } catch (e: RuntimeException) {
-        ""
     }
 }
 
@@ -685,21 +691,4 @@ fun LabelledCheckBox(
             text = label,
         )
     }
-}
-
-fun getPrincipalIcon(cardType: String): Int? {
-    return when (cardType) {
-        "visa" -> R.drawable.ic_outline_visa_24
-        "mastercard" -> R.drawable.ic_outline_mastercard_24
-        "amex" -> R.drawable.ic_outline_amex_24
-        "jcb" -> R.drawable.ic_arrow_left
-        else -> null
-    }
-}
-
-object SnapCreditCard {
-    const val defaultOneClickCvvValue = "123"
-    const val formattedMaxCardNumberLength = 19
-    const val formattedMaxExpiryLength = 5
-    const val formattedMaxCvvLength = 3
 }
