@@ -240,6 +240,7 @@ fun checkIsCardExpired(cardExpiry: String): Boolean{
 fun SnapSavedCardRadioGroup(
     modifier: Modifier,
     listStates: List<FormData>,
+    bankIconState: Int?,
     normalCardItemState: NormalCardItemState,
     onItemRemoveClicked: (item: SavedCreditCardFormData) -> Unit,
     creditCard: CreditCard?,
@@ -326,7 +327,7 @@ fun SnapSavedCardRadioGroup(
                                 shouldReveal = item.identifier == selectedOption,
                                 state = normalCardItemState,
                                 creditCard = creditCard,
-                                bankIconState = item.bankIconId,
+                                bankIconState = bankIconState,
                                 onCardNumberValueChange = { onCardNumberOtherCardValueChange(it)},
                                 onExpiryDateValueChange = { onExpiryOtherCardValueChange(it)},
                                 onCvvValueChange = { onCvvOtherCardValueChange(it)},
@@ -365,8 +366,7 @@ data class SavedCreditCardFormData(
 ) : FormData(savedCardIdentifier){}
 
 class NewCardFormData(
-    var newCardIdentifier: String,
-    var bankIconId: Int?,
+    var newCardIdentifier: String
 ) : FormData(newCardIdentifier)
 
 
