@@ -104,31 +104,22 @@ class DeepLinkActivity : BaseActivity() {
         paymentType: String,
         url: String
     ): Boolean {
-        return if (paymentType == PaymentType.UOB_EZPAY_WEB) {
-            try {
-                intent = Intent(Intent.ACTION_VIEW)
-                intent.setData(Uri.parse(url))
-                startActivity(intent)
-                finish()
-                true
-            } catch (e: Throwable) {
+        return when (paymentType) {
+            PaymentType.GOPAY, PaymentType.SHOPEEPAY, PaymentType.UOB_EZPAY_APP -> {
+                try {
+                    intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(url)
+                    startActivity(intent)
+                    finish()
+                    true
+                } catch (e: Throwable) {
+//                    openAppInPlayStore()
+                    false
+                }
+            }
+            else -> {
                 false
             }
-        } else if (url.contains("gojek") // TODO: fill with exact scheme | check with pak wahyu can checking payment type instead?
-            || url.contains("shopee")
-            || url.contains("uob")
-        ) {
-            try {
-                intent = Intent(Intent.ACTION_VIEW)
-                intent.setData(Uri.parse(url))
-                startActivity(intent)
-                true
-            } catch (e: Throwable) {
-                openAppInPlayStore()
-                true
-            }
-        } else {
-            false
         }
     }
 
@@ -136,7 +127,6 @@ class DeepLinkActivity : BaseActivity() {
         mapOf(
             Pair(PaymentType.GOPAY, R.string.redirection_screen_gopay_main_message),
             Pair(PaymentType.SHOPEEPAY, R.string.redirection_screen_shopeepay_main_message),
-            Pair(PaymentType.UOB_EZPAY_WEB, R.string.redirection_to_uob_tmrw_message), //TODO get correct copy for uob web
             Pair(PaymentType.UOB_EZPAY_APP, R.string.redirection_to_uob_tmrw_message) //TODO get correct copy for uob app
         )
     }
@@ -145,7 +135,6 @@ class DeepLinkActivity : BaseActivity() {
         mapOf(
             Pair(PaymentType.GOPAY, R.string.redirection_screen_gopay_cta),
             Pair(PaymentType.SHOPEEPAY, R.string.redirection_screen_shopeepay_cta),
-            Pair(PaymentType.UOB_EZPAY_WEB, R.string.redirection_to_uob_tmrw_message), //TODO get correct copy for uob web
             Pair(PaymentType.UOB_EZPAY_APP, R.string.redirection_to_uob_tmrw_message) //TODO get correct copy for uob app
         )
     }
