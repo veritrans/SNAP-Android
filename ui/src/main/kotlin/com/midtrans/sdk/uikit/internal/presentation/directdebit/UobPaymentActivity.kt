@@ -2,6 +2,7 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
@@ -197,11 +198,24 @@ class UobPaymentActivity : BaseActivity() {
         uobMode: String,
         url: String
     ) {
-        DeepLinkActivity.getIntent(
-            activityContext = this,
-            paymentType = uobMode,
-            url = url
-        ).apply { startActivity(this) }
+        if (uobMode == PaymentType.UOB_EZPAY_WEB) {
+            try {
+                intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse(url)
+                startActivity(intent)
+
+                setResult(RESULT_OK)
+                finish()
+            } catch (e: Throwable) {
+                //TODO implement error handling
+            }
+        } else {
+            DeepLinkActivity.getIntent(
+                activityContext = this,
+                paymentType = uobMode,
+                url = url
+            ).apply { startActivity(this) }
+        }
     }
 
     @Composable
