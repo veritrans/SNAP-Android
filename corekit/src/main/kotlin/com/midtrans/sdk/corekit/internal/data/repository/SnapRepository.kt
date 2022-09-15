@@ -29,4 +29,7 @@ internal class SnapRepository(private val snapApi: SnapApi): BaseRepository() {
     fun getTransactionStatus(snapToken: String): Single<TransactionResponse> {
         return snapApi.getTransactionStatus(snapToken)
     }
+    fun checkStatus(snapToken: String): Single<TransactionResponse> {
+        return snapApi.checkStatus(snapToken)
+    }
 }
