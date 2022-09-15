@@ -10,13 +10,17 @@ import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.DirectDebitPaymentRequestBuilder
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import javax.inject.Inject
 
 internal class UobPaymentViewModel @Inject constructor(
     private val snapCore: SnapCore
 ): ViewModel() {
     private val transactionResponse = MutableLiveData<TransactionResponse>()
+    private val transactionStatus = MutableLiveData<String>()
+
     fun getTransactionResponse(): LiveData<TransactionResponse> = transactionResponse
+    fun getTransactionStatus(): LiveData<String> = transactionStatus
 
     fun payUob(snapToken: String) {
         val builder = DirectDebitPaymentRequestBuilder()
@@ -35,5 +39,31 @@ internal class UobPaymentViewModel @Inject constructor(
                 }
             }
         )
+    }
+
+    fun checkStatus(snapToken: String) {
+        snapCore.checkStatus(
+            snapToken = snapToken,
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    transactionStatus.value = getTransactionStatus(result)
+                }
+
+                override fun onError(error: SnapError) {
+                    Log.e("Uob Payment Status", error.javaClass.name)
+                }
+            }
+        )
+    }
+
+    private fun getTransactionStatus(response: TransactionResponse): String {
+        return response.transactionStatus?.let { status ->
+            when {
+                status.contains(UiKitConstants.STATUS_SUCCESS, true) -> UiKitConstants.STATUS_SUCCESS
+                status.contains(UiKitConstants.STATUS_PENDING, true) -> UiKitConstants.STATUS_PENDING
+                status.contains(UiKitConstants.STATUS_FAILED, true) -> UiKitConstants.STATUS_FAILED
+                else -> UiKitConstants.STATUS_FAILED
+            }
+        } ?: ""
     }
 }
