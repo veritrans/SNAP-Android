@@ -42,21 +42,23 @@ fun SnapWebView(
     urlLoadingOverride: ((WebView, String) -> Boolean)? = null
 ) {
     Column {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .background(color = SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_LIGHT))
-                .fillMaxWidth(1f)
-                .height(64.dp)
-        ) {
-            Text(
-                text = title,
-                style = SnapTypography.STYLES.snapAppBar,
+        if (title.isNotEmpty()) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
                 modifier = Modifier
+                    .background(color = SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_LIGHT))
                     .fillMaxWidth(1f)
-                    .padding(start = 21.dp)
-            )
+                    .height(64.dp)
+            ) {
+                Text(
+                    text = title,
+                    style = SnapTypography.STYLES.snapAppBar,
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                        .padding(start = 21.dp)
+                )
+            }
         }
 
         AndroidView(factory = {
@@ -230,7 +232,6 @@ private inline fun finishWebView(
         }
         PaymentType.GOPAY,
         PaymentType.SHOPEEPAY,
-        PaymentType.UOB_EZPAY_WEB,
         PaymentType.UOB_EZPAY_APP-> {
             onFinishWebView.invoke()
         }
