@@ -14,6 +14,7 @@ import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.NormalCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
+import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import java.util.*
@@ -22,20 +23,26 @@ import javax.inject.Inject
 internal class CreditCardViewModel @Inject constructor(
     private val snapCore: SnapCore,
     private val datetimeUtil: DateTimeUtil,
-    private val snapCreditCardUtil: SnapCreditCardUtil
-) : ViewModel()  {
+    private val snapCreditCardUtil: SnapCreditCardUtil,
+    private val errorCard: ErrorCard
+) : ViewModel() {
 
     val bankIconId = MutableLiveData<Int>()
     private val _transactionResponse = MutableLiveData<TransactionResponse>()
-    private val _error = MutableLiveData<SnapError>()
+    private val _error = MutableLiveData<Int>()
     private var expireTimeInMillis = 0L
+    private var allowRetry = false
 
     fun getTransactionResponseLiveData(): LiveData<TransactionResponse> = _transactionResponse
-    fun getErrorLiveData(): LiveData<SnapError> = _error
-    fun setExpiryTime(expireTime: String?){
+    fun getErrorLiveData(): LiveData<Int> = _error
+    fun setExpiryTime(expireTime: String?) {
         expireTime?.let {
             expireTimeInMillis = parseTime(it)
         }
+    }
+
+    fun setAllowRetry(allowRetry: Boolean){
+        this.allowRetry = allowRetry
     }
 
     private fun parseTime(dateString: String): Long {
@@ -58,13 +65,14 @@ internal class CreditCardViewModel @Inject constructor(
                         }
                     }
                 }
+
                 override fun onError(error: SnapError) {
                 }
             }
         )
     }
 
-    fun setBankIconToNull(){
+    fun setBankIconToNull() {
         bankIconId.value = null
     }
 
@@ -77,7 +85,7 @@ internal class CreditCardViewModel @Inject constructor(
         customerEmail: String,
         customerPhone: String,
         snapToken: String
-    ){
+    ) {
         var tokenRequest = NormalCardTokenRequestBuilder()
             .withCardNumber(snapCreditCardUtil.getCardNumberFromTextField(cardNumber))
             .withCardExpMonth(snapCreditCardUtil.getExpMonthFromTextField(cardExpiry))
@@ -95,7 +103,7 @@ internal class CreditCardViewModel @Inject constructor(
         }
         snapCore.getCardToken(
             cardTokenRequestBuilder = tokenRequest,
-            callback = object : Callback<CardTokenResponse>{
+            callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
 
                     var ccRequestBuilder = CreditCardPaymentRequestBuilder()
@@ -112,16 +120,25 @@ internal class CreditCardViewModel @Inject constructor(
                         paymentRequestBuilder = ccRequestBuilder,
                         callback = object : Callback<TransactionResponse> {
                             override fun onSuccess(result: TransactionResponse) {
-                                _transactionResponse.value = result
+                                errorCard.getErrorCardType(result)?.let {
+                                    _error.value = it
+                                } ?: run {
+                                    _transactionResponse.value = result
+                                    null
+                                }
+
+
                             }
+
                             override fun onError(error: SnapError) {
-                                _error.value = error
+                                _error.value = errorCard.getErrorCardType(error)
                             }
                         }
                     )
                 }
+
                 override fun onError(error: SnapError) {
-                    //TODO:Need to confirm how to handle card token error on UI
+                    _error.value = errorCard.getErrorCardType(error)
                 }
             }
         )
@@ -141,6 +158,7 @@ internal class CreditCardViewModel @Inject constructor(
             duration.seconds % 60
         )
     }
+
     companion object {
         private const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
         private val timeZoneUtc = TimeZone.getTimeZone("UTC")

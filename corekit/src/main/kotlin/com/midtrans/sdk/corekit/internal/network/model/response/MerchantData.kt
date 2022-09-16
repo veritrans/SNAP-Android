@@ -12,5 +12,7 @@ data class MerchantData(
     val merchantId: String? = null,
     val acquiringBanks: List<String>? = null,
     val priorityCardFeature: String? = null,
-    val recurringMidIsActive: Boolean? = null
+    val recurringMidIsActive: Boolean? = null,
+    val allowRetry: Boolean? = null,
+    val showCreditCardCustomerInfo: Boolean? = null,
 ): Parcelable

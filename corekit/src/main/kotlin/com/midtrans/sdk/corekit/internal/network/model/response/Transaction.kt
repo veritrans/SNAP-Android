@@ -7,7 +7,7 @@ internal data class Transaction(
     val transactionDetails: TransactionDetails? = null,
     val callbacks: Callbacks? = null,
     val enabledPayments: List<EnabledPayment>? = null,
-    val merchantData: MerchantData? = null,
+    val merchant: MerchantData? = null,
     val creditCard: CreditCard? = null,
     val promos: List<PromoResponse>? = null,
     val promoDetails: PromoDetails? = null,
