@@ -435,7 +435,6 @@ fun formatCreditCard(input: TextFieldValue): TextFieldValue {
     }
     var processed: String = digit.replace("\\D", "").replace(" ", "")
     // insert a space after all groups of 4 digits that are followed by another digit
-    // insert a space after all groups of 4 digits that are followed by another digit
     processed = processed.replace("(\\d{4})(?=\\d)".toRegex(), "$1 ")
     val length = min(processed.length, 19)
     val output = input.copy(text = processed.substring(0 until length), selection = TextRange(length))
@@ -458,7 +457,6 @@ fun formatPhoneNumber(input: TextFieldValue): TextFieldValue{
         it.isDigit()
     }
     var processed: String = digit.replace("\\D", "").replace(" ", "")
-    // insert a space after all groups of 4 digits that are followed by another digit
     // insert a space after all groups of 4 digits that are followed by another digit
     processed = processed.replace("(\\d{4})(?=\\d)".toRegex(), "$1 ")
     val length = min(processed.length, 19)
