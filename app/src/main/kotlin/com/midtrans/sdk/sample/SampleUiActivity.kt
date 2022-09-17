@@ -156,8 +156,7 @@ class SampleUiActivity : AppCompatActivity() {
                     isCvvSavedCardInvalid = false
                 ),
                 NewCardFormData(
-                    newCardIdentifier = "new",
-                    bankIconId = (R.drawable.ic_outline_bri_24),
+                    newCardIdentifier = "new"
                 )
 
             ).toMutableStateList()
