@@ -32,4 +32,6 @@ internal interface SnapApi {
         @Query("gross_amount") grossAmount: Double
     ): Single<BankPointResponse>
 
+    @GET("v1/transactions/{snap_token}/status")
+    fun getTransactionStatus(@Path("snap_token") snapToken: String?): Single<TransactionResponse>
 }
