@@ -60,6 +60,7 @@ internal class UobPaymentViewModel @Inject constructor(
         return response.transactionStatus?.let { status ->
             when {
                 status.contains(UiKitConstants.STATUS_SUCCESS, true) -> UiKitConstants.STATUS_SUCCESS
+                status.contains(UiKitConstants.STATUS_SETTLEMENT, true) -> UiKitConstants.STATUS_SETTLEMENT
                 status.contains(UiKitConstants.STATUS_PENDING, true) -> UiKitConstants.STATUS_PENDING
                 status.contains(UiKitConstants.STATUS_FAILED, true) -> UiKitConstants.STATUS_FAILED
                 else -> UiKitConstants.STATUS_FAILED
