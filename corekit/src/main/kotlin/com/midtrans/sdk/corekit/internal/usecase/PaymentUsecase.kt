@@ -311,7 +311,14 @@ internal class PaymentUsecase(
             snapRepository.checkStatus(snapToken)
                 .subscribeOn(scheduler.io())
                 .observeOn(scheduler.ui())
-                .subscribe({},{})
+                .subscribe(
+                    {
+                        callback.onSuccess(it)
+                    },
+                    {
+                        deliverError(it, callback)
+                    }
+                )
         } catch (error: Throwable) {
             deliverError(error, callback)
         }
