@@ -113,7 +113,7 @@ class DeepLinkActivity : BaseActivity() {
                     finish()
                     true
                 } catch (e: Throwable) {
-//                    openAppInPlayStore()
+                    openAppInPlayStore() //TODO check with pak wahyu should this be removed?
                     false
                 }
             }
