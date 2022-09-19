@@ -17,10 +17,10 @@ internal class UobPaymentViewModel @Inject constructor(
     private val snapCore: SnapCore
 ): ViewModel() {
     private val transactionResponse = MutableLiveData<TransactionResponse>()
-    private val transactionStatus = MutableLiveData<String>()
+    private val transactionResult = MutableLiveData<Pair<String, String>>()
 
     fun getTransactionResponse(): LiveData<TransactionResponse> = transactionResponse
-    fun getTransactionStatus(): LiveData<String> = transactionStatus
+    fun getTransactionResult(): LiveData<Pair<String, String>> = transactionResult
 
     fun payUob(snapToken: String) {
         val builder = DirectDebitPaymentRequestBuilder()
@@ -46,7 +46,7 @@ internal class UobPaymentViewModel @Inject constructor(
             snapToken = snapToken,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
-                    transactionStatus.value = getTransactionStatus(result)
+                    transactionResult.value = Pair(getTransactionResult(result), result.transactionId.orEmpty())
                 }
 
                 override fun onError(error: SnapError) {
@@ -56,7 +56,7 @@ internal class UobPaymentViewModel @Inject constructor(
         )
     }
 
-    private fun getTransactionStatus(response: TransactionResponse): String {
+    private fun getTransactionResult(response: TransactionResponse): String {
         return response.transactionStatus?.let { status ->
             when {
                 status.contains(UiKitConstants.STATUS_SUCCESS, true) -> UiKitConstants.STATUS_SUCCESS
