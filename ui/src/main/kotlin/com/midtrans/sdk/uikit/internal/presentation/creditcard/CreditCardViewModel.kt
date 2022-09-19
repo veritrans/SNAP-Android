@@ -23,9 +23,11 @@ class CreditCardViewModel @Inject constructor(
 
     val bankIconId = MutableLiveData<Int>()
     private val _transactionResponse = MutableLiveData<TransactionResponse>()
+    private val _transactionStatus = MutableLiveData<TransactionResponse>()
     private val _error = MutableLiveData<SnapError>()
 
     fun getTransactionResponseLiveData(): LiveData<TransactionResponse> = _transactionResponse
+    fun getTransactionStatusLiveData(): LiveData<TransactionResponse> = _transactionStatus
     fun getErrorLiveData(): LiveData<SnapError> = _error
 
     fun getBankIconImage(binNumber: String) {
@@ -101,6 +103,20 @@ class CreditCardViewModel @Inject constructor(
                 }
                 override fun onError(error: SnapError) {
                     //TODO:Need to confirm how to handle card token error on UI
+                }
+            }
+        )
+    }
+
+    fun getTransactionStatus(snapToken: String){
+        snapCore.getTransactionStatus(
+            snapToken = snapToken,
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    _transactionStatus.value = result
+                }
+                override fun onError(error: SnapError) {
+                   _error.value = error
                 }
             }
         )
