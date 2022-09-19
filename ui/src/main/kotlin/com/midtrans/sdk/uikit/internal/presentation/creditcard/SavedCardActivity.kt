@@ -71,7 +71,7 @@ class SavedCardActivity: BaseActivity() {
             snapToken: String,
             totalAmount: String,
             customerInfo: CustomerInfo? = null,
-            creditCard: CreditCard?,
+            creditCard: CreditCard?
         ): Intent {
             return Intent(activityContext, SavedCardActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -147,7 +147,7 @@ class SavedCardActivity: BaseActivity() {
     private fun CreditCardPage(
         totalAmount: String,
         orderId: String,
-        customerDetail: CustomerInfo?,
+        customerDetail: CustomerInfo?
     ){
         var previousEightDigitNumber = ""
         val bankCodeId by viewModel.bankIconId.observeAsState(null)

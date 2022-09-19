@@ -73,7 +73,7 @@ class CreditCardActivity : BaseActivity() {
             totalAmount: String,
             transactionDetails: TransactionDetails?,
             customerInfo: CustomerInfo? = null,
-            creditCard: CreditCard?,
+            creditCard: CreditCard?
         ): Intent {
             return Intent(activityContext, CreditCardActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -147,7 +147,7 @@ class CreditCardActivity : BaseActivity() {
     private fun CreditCardPageStateFull(
         transactionDetails: TransactionDetails? = null,
         customerDetail: CustomerInfo? = null,
-        creditCard: CreditCard?,
+        creditCard: CreditCard?
     ) {
         val state = remember {
             NormalCardItemState(
