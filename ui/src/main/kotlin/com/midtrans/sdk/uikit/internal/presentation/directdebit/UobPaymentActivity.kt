@@ -23,11 +23,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
-import com.midtrans.sdk.uikit.internal.presentation.ewallet.DeepLinkActivity
+import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import javax.inject.Inject
 
@@ -81,12 +83,55 @@ class UobPaymentActivity : BaseActivity() {
                 response = viewModel.getTransactionResponse().observeAsState().value
             )
         }
+
+
     }
 
     override fun onResume() {
         super.onResume()
-        Log.d("UobPayment", "onResume")
-        //TODO uob app check status here
+        Log.d("Uob Payment", "onResume")
+        viewModel.checkStatus(snapToken)
+        observeTransactionStatus()
+    }
+
+    private fun observeTransactionStatus() {
+        viewModel.getTransactionResult().observe(this) { result ->
+            val status = result.first
+            val transactionId = result.second
+            when (status) {
+                UiKitConstants.STATUS_SUCCESS,
+                UiKitConstants.STATUS_SETTLEMENT -> {
+                    goToSuccessScreen(amount, orderId)
+                }
+                UiKitConstants.STATUS_PENDING,
+                UiKitConstants.STATUS_FAILED -> {
+                    val data = Intent()
+                    data.putExtra(
+                        UiKitConstants.KEY_TRANSACTION_RESULT,
+                        TransactionResult(
+                            status = status,
+                            transactionId = transactionId,
+                            paymentType = PaymentType.UOB_EZPAY
+                        )
+                    )
+                    setResult(RESULT_OK, data)
+                    finish()
+                }
+            }
+        }
+    }
+
+    private fun goToSuccessScreen(
+        amount: String,
+        orderId: String
+    ) {
+        SuccessScreenActivity.getIntent(
+            activityContext = this,
+            total = amount,
+            orderId = orderId
+        ).apply { startActivity(this) }
+        setResult(RESULT_OK)
+        finish()
     }
 
     @Composable
@@ -207,14 +252,16 @@ class UobPaymentActivity : BaseActivity() {
                 setResult(RESULT_OK)
                 finish()
             } catch (e: Throwable) {
-                //TODO implement error handling
+                //TODO implement error handling later
             }
         } else {
-            DeepLinkActivity.getIntent(
-                activityContext = this,
-                paymentType = uobMode,
-                url = url
-            ).apply { startActivity(this) }
+            try {
+                intent = Intent(Intent.ACTION_VIEW)
+                intent.data = Uri.parse(url)
+                startActivity(intent)
+            } catch (e: Throwable) {
+                //TODO implement error handling later
+            }
         }
     }
 
