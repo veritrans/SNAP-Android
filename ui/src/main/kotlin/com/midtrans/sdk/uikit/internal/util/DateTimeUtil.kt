@@ -61,13 +61,27 @@ internal object DateTimeUtil {
 
         // get Instant Object of Clock object
         // in milliseconds using millis() method
-        val milliseconds = clock.millis()
-        return milliseconds
+        return clock.millis()
     }
 
 
     fun getDuration(millis: Long): Duration {
         return Duration.ofMillis(millis)
+    }
+
+    fun getExpiredHour(expiredTime: Long): String {
+        val duration = getDuration(
+            getTimeDiffInMillis(
+                getCurrentMillis(),
+                expiredTime
+            )
+        )
+        return String.format(
+            "%02d:%02d:%02d",
+            duration.toHours(),
+            duration.seconds % 3600 / 60,
+            duration.seconds % 60
+        )
     }
 
     const val DATE_FORMAT = "dd MMMM hh:mm Z"

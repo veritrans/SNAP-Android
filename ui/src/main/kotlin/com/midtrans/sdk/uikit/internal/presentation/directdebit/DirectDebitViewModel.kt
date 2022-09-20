@@ -20,6 +20,7 @@ internal class DirectDebitViewModel @Inject constructor(
 ): ViewModel() {
     private val transactionResponse = MutableLiveData<TransactionResponse>()
     private val exception = MutableLiveData<SnapError>()
+
     private var expiredTime = dateTimeUtil.plusDateBy(dateTimeUtil.getCurrentMillis(), 1) //TODO temporary is 24H, later get value from request snap if set
 
     fun getTransactionResponse(): LiveData<TransactionResponse> = transactionResponse
@@ -50,18 +51,5 @@ internal class DirectDebitViewModel @Inject constructor(
         )
     }
 
-    fun getExpiredHour(): String {
-        val duration = dateTimeUtil.getDuration(
-            dateTimeUtil.getTimeDiffInMillis(
-                dateTimeUtil.getCurrentMillis(),
-                expiredTime
-            )
-        )
-        return String.format(
-            "%02d:%02d:%02d",
-            duration.toHours(),
-            duration.seconds % 3600 / 60,
-            duration.seconds % 60
-        )
-    }
+    fun getExpiredHour() = dateTimeUtil.getExpiredHour(expiredTime)
 }
