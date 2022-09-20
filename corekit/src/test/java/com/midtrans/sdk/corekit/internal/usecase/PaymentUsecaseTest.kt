@@ -9,6 +9,7 @@ import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.BANK_TRANSFER
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY_QRIS
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.UOB_EZPAY
 import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
+import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
 import com.midtrans.sdk.corekit.internal.data.repository.CoreApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.MerchantApiRepository
@@ -20,6 +21,7 @@ import com.midtrans.sdk.corekit.internal.network.model.response.Transaction
 import com.midtrans.sdk.corekit.internal.scheduler.BaseSdkScheduler
 import com.midtrans.sdk.corekit.internal.scheduler.TestSdkScheduler
 import io.reactivex.Single
+import io.reactivex.schedulers.TestScheduler
 import org.hamcrest.CoreMatchers.hasItems
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
@@ -202,6 +204,24 @@ class PaymentUsecaseTest {
         val error = errorCaptor.firstValue
         assertTrue(error.cause is RuntimeException)
         assertEquals("test get transaction detail error", error.cause?.message)
+    }
+
+    @Test
+    fun checkStatusWhenSucceedShouldCallbackOnSuccess() {
+        val mockCallback: Callback<TransactionResponse> = mock()
+        val single = Single.just(
+            TransactionResponse(
+                transactionId = "transactionId",
+                transactionStatus = "pending"
+            )
+        )
+
+        whenever(mockSnapRepository.checkStatus(any())) doReturn single
+        usecase.checkStatus("snap-token", mockCallback)
+        single.test()
+            .assertComplete()
+
+        verify(mockCallback).onSuccess(any())
     }
 
     private fun assertPaymentOption(result: PaymentOption, snapToken: String) {
