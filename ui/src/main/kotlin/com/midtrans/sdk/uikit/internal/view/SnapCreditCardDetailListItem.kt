@@ -386,6 +386,8 @@ class NormalCardItemState(
     isCvvTextFieldFocused: Boolean,
     isSaveCardChecked: Boolean,
     principalIconId: Int?,
+    customerEmail: TextFieldValue,
+    customerPhone: TextFieldValue
 ){
     var cardNumber by mutableStateOf(cardNumber)
     var expiry by mutableStateOf(expiry)
@@ -398,6 +400,8 @@ class NormalCardItemState(
     var isCvvTextFieldFocused by mutableStateOf(isCvvTextFieldFocused)
     var principalIconId by mutableStateOf(principalIconId)
     var isSavedCardChecked by mutableStateOf(isSaveCardChecked)
+    var customerEmail by mutableStateOf(customerEmail)
+    var customerPhone by mutableStateOf(customerPhone)
 
     val iconIdList by mutableStateOf(
         listOf (
@@ -431,7 +435,6 @@ fun formatCreditCard(input: TextFieldValue): TextFieldValue {
     }
     var processed: String = digit.replace("\\D", "").replace(" ", "")
     // insert a space after all groups of 4 digits that are followed by another digit
-    // insert a space after all groups of 4 digits that are followed by another digit
     processed = processed.replace("(\\d{4})(?=\\d)".toRegex(), "$1 ")
     val length = min(processed.length, SnapCreditCardUtil.FORMATTED_MAX_CARD_NUMBER_LENGTH)
     val output = input.copy(text = processed.substring(0 until length), selection = TextRange(length))
@@ -445,6 +448,19 @@ fun formatCVV(input: TextFieldValue): TextFieldValue{
     }
     val length = min(digit.length, SnapCreditCardUtil.FORMATTED_MAX_CVV_LENGTH)
     val output = input.copy(digit.substring(0 until length), TextRange(length))
+    return output
+}
+
+fun formatPhoneNumber(input: TextFieldValue): TextFieldValue{
+
+    var digit = input.text.filter {
+        it.isDigit()
+    }
+    var processed: String = digit.replace("\\D", "").replace(" ", "")
+    // insert a space after all groups of 4 digits that are followed by another digit
+    processed = processed.replace("(\\d{4})(?=\\d)".toRegex(), "$1 ")
+    val length = min(processed.length, 19)
+    val output = input.copy(text = processed.substring(0 until length), selection = TextRange(length))
     return output
 }
 
@@ -476,8 +492,8 @@ fun NormalCardItem(
                 ) {
                     Text(
                         text = stringResource(id = R.string.cc_dc_main_screen_card_number),
-                        modifier = Modifier.weight(1f),
-                        style = SnapTypography.STYLES.snapTextSmallRegular
+                        modifier = Modifier.weight(1f).padding(bottom = 4.dp),
+                        style = SnapTypography.STYLES.snapTextSmallRegular,
                     )
                     if (state.principalIconId != null && state.cardNumber.text.isNotEmpty()) {
                         Icon(
@@ -547,7 +563,8 @@ fun NormalCardItem(
                 ) {
                     Text(
                         text = stringResource(id = R.string.cc_dc_main_screen_expiry),
-                        style = SnapTypography.STYLES.snapTextSmallRegular
+                        style = SnapTypography.STYLES.snapTextSmallRegular,
+                        modifier = Modifier.padding(bottom = 4.dp)
                     )
                     var isCardExpired = true
                     SnapTextField(
@@ -591,7 +608,8 @@ fun NormalCardItem(
                 ) {
                     Text(
                         text = stringResource(id = R.string.cc_dc_main_screen_cvv),
-                        style = SnapTypography.STYLES.snapTextSmallRegular
+                        style = SnapTypography.STYLES.snapTextSmallRegular,
+                        modifier = Modifier.padding(bottom = 4.dp)
                     )
                     SnapTextField(
                         value = state.cvv,

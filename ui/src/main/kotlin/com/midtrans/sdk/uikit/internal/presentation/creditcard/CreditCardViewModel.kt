@@ -14,19 +14,38 @@ import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.NormalCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
+import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
+import java.util.*
 import javax.inject.Inject
 
-class CreditCardViewModel @Inject constructor(
-    private val snapCore: SnapCore
+internal class CreditCardViewModel @Inject constructor(
+    private val snapCore: SnapCore,
+    private val datetimeUtil: DateTimeUtil,
+    private val snapCreditCardUtil: SnapCreditCardUtil
 ) : ViewModel()  {
 
     val bankIconId = MutableLiveData<Int>()
     private val _transactionResponse = MutableLiveData<TransactionResponse>()
     private val _error = MutableLiveData<SnapError>()
+    private var expireTimeInMillis = 0L
 
     fun getTransactionResponseLiveData(): LiveData<TransactionResponse> = _transactionResponse
     fun getErrorLiveData(): LiveData<SnapError> = _error
+    fun setExpiryTime(expireTime: String?){
+        expireTime?.let {
+            expireTimeInMillis = parseTime(it)
+        }
+    }
+
+    private fun parseTime(dateString: String): Long {
+        val date = datetimeUtil.getDate(
+            date = dateString,
+            dateFormat = DATE_FORMAT,
+            timeZone = timeZoneUtc
+        )
+        return date.time
+    }
 
     fun getBankIconImage(binNumber: String) {
         snapCore.getBinData(
@@ -35,7 +54,7 @@ class CreditCardViewModel @Inject constructor(
                 override fun onSuccess(result: BinResponse) {
                     result.run {
                         data?.bankCode?.let {
-                            bankIconId.value = SnapCreditCardUtil.getBankIcon(it?.lowercase())
+                            bankIconId.value = snapCreditCardUtil.getBankIcon(it.lowercase())
                         }
                     }
                 }
@@ -56,12 +75,13 @@ class CreditCardViewModel @Inject constructor(
         cardCvv: TextFieldValue,
         isSavedCard: Boolean,
         customerEmail: String,
+        customerPhone: String,
         snapToken: String
     ){
         var tokenRequest = NormalCardTokenRequestBuilder()
-            .withCardNumber(SnapCreditCardUtil.getCardNumberFromTextField(cardNumber))
-            .withCardExpMonth(SnapCreditCardUtil.getExpMonthFromTextField(cardExpiry))
-            .withCardExpYear(SnapCreditCardUtil.getExpYearFromTextField(cardExpiry))
+            .withCardNumber(snapCreditCardUtil.getCardNumberFromTextField(cardNumber))
+            .withCardExpMonth(snapCreditCardUtil.getExpMonthFromTextField(cardExpiry))
+            .withCardExpYear(snapCreditCardUtil.getExpYearFromTextField(cardExpiry))
             .withCardCvv(cardCvv.text)
 
         transactionDetails?.currency?.let {
@@ -82,6 +102,7 @@ class CreditCardViewModel @Inject constructor(
                         .withSaveCard(isSavedCard)
                         .withPaymentType(PaymentType.CREDIT_CARD)
                         .withCustomerEmail(customerEmail)
+                        .withCustomerPhone(customerPhone)
 
                     result?.tokenId?.let {
                         ccRequestBuilder.withCardToken(it)
@@ -104,5 +125,25 @@ class CreditCardViewModel @Inject constructor(
                 }
             }
         )
+    }
+
+    fun getExpiredHour(): String {
+        val duration = datetimeUtil.getDuration(
+            datetimeUtil.getTimeDiffInMillis(
+                datetimeUtil.getCurrentMillis(),
+                expireTimeInMillis
+            )
+        )
+        return String.format(
+            TIME_FORMAT,
+            duration.toHours(),
+            duration.seconds % 3600 / 60,
+            duration.seconds % 60
+        )
+    }
+    companion object {
+        private const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
+        private const val TIME_FORMAT = "%02d:%02d:%02d"
+        private val timeZoneUtc = TimeZone.getTimeZone("UTC")
     }
 }

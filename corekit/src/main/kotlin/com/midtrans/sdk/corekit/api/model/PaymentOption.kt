@@ -13,5 +13,6 @@ data class PaymentOption(
     val promos: List<PromoResponse>?,
     val merchantData: MerchantData?,
     val customerDetails: CustomerDetails?,
-    val transactionDetails: TransactionDetails?
+    val transactionDetails: TransactionDetails?,
+    val expiryTme: String?
 ) : Parcelable

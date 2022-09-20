@@ -52,6 +52,7 @@ class PaymentOptionActivity : BaseActivity() {
         const val EXTRA_PROMOS = "paymentOptionActivity.extra.promos"
         const val EXTRA_MERCHANT_DATA = "paymentOptionActivity.extra.merchant_data"
         const val EXTRA_TRANSACTION_DETAILS = "paymentOptionActivity.extra.transaction_details"
+        const val EXTRA_EXPIRY_TIME = "paymentOptionActivity.extra.expiry_time"
 
         fun openPaymentOptionPage(
             activityContext: Context,
@@ -63,7 +64,8 @@ class PaymentOptionActivity : BaseActivity() {
             customerDetails: CustomerDetails?,
             creditCard: CreditCard?,
             promos: List<PromoResponse>?,
-            merchantData: MerchantData?
+            merchantData: MerchantData?,
+            expiryTime: String?
         ): Intent {
             return Intent(activityContext, PaymentOptionActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -74,6 +76,7 @@ class PaymentOptionActivity : BaseActivity() {
                 putExtra(EXTRA_CREDIT_CARD, creditCard)
                 putExtra(EXTRA_MERCHANT_DATA, merchantData)
                 putExtra(EXTRA_TRANSACTION_DETAILS, transactionDetail)
+                putExtra(EXTRA_EXPIRY_TIME, expiryTime)
             }
         }
     }
@@ -112,6 +115,10 @@ class PaymentOptionActivity : BaseActivity() {
 
     private val transactionDetails: TransactionDetails? by lazy {
         intent.getParcelableExtra(EXTRA_TRANSACTION_DETAILS) as? TransactionDetails
+    }
+
+    private val expiryTime: String? by lazy {
+        intent.getStringExtra(EXTRA_EXPIRY_TIME)
     }
 
     private var customerInfo: CustomerInfo? = null
@@ -333,7 +340,8 @@ class PaymentOptionActivity : BaseActivity() {
                             transactionDetails = transactionDetails,
                             totalAmount = totalAmount,
                             customerInfo = customerInfo,
-                            creditCard = creditCard
+                            creditCard = creditCard,
+                            expiryTime = expiryTime
                         )
                     } else {
                         //TODO currently set to CreditCardActivity for testing purpose
@@ -343,7 +351,8 @@ class PaymentOptionActivity : BaseActivity() {
                             transactionDetails = transactionDetails,
                             totalAmount = totalAmount,
                             customerInfo = customerInfo,
-                            creditCard = creditCard
+                            creditCard = creditCard,
+                            expiryTime = expiryTime
                         )
                     }
                 )

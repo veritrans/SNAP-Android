@@ -197,7 +197,8 @@ class LoadingPaymentActivity : BaseActivity() {
                 customerDetails = customerDetails,
                 creditCard = it.creditCard,
                 promos = it.promos,
-                merchantData = it.merchantData
+                merchantData = it.merchantData,
+                expiryTime = it.expiryTme
             )
             startActivity(intent)
             finish()
