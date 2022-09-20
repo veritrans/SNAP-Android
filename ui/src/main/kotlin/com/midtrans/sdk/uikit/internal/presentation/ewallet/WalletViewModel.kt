@@ -9,7 +9,8 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.EWalletPaymentRequestBuilder
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
-import java.util.*
+import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.DATE_FORMAT
+import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.TIME_ZONE_UTC
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -51,7 +52,7 @@ internal class WalletViewModel @Inject constructor(
         val date = datetimeUtil.getDate(
             date = dateString,
             dateFormat = DATE_FORMAT,
-            timeZone = timeZoneUtc
+            timeZone = TIME_ZONE_UTC
         )
         return date.time
     }
@@ -69,12 +70,5 @@ internal class WalletViewModel @Inject constructor(
             duration.seconds % 3600 / 60,
             duration.seconds % 60
         )
-    }
-
-    companion object {
-        private const val DATE_FORMAT = "yyyy-MM-dd hh:mm Z"
-        private const val TIME_FORMAT = "hh:mm:ss"
-        private val timeZoneWib = TimeZone.getTimeZone("Asia/Jakarta")
-        private val timeZoneUtc = TimeZone.getTimeZone("UTC")
     }
 }
