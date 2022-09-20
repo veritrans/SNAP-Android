@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rxjava2.subscribeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -31,6 +32,9 @@ import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class UobPaymentActivity : BaseActivity() {
@@ -80,11 +84,10 @@ class UobPaymentActivity : BaseActivity() {
                 amount = amount,
                 orderId = orderId,
                 customerInfo = customerInfo,
-                response = viewModel.getTransactionResponse().observeAsState().value
+                response = viewModel.getTransactionResponse().observeAsState().value,
+                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
             )
         }
-
-
     }
 
     override fun onResume() {
@@ -140,12 +143,14 @@ class UobPaymentActivity : BaseActivity() {
         amount: String,
         orderId: String,
         customerInfo: CustomerInfo?,
-        response: TransactionResponse?
+        response: TransactionResponse?,
+        remainingTimeState: State<String>
     ) {
         var isCustomerDetailExpanded by remember { mutableStateOf(false) }
         var isInstructionExpanded by remember { mutableStateOf(false) }
         val title = stringResource(getTitleId(uobMode = uobMode))
         val url = getUobDeeplinkUrl(uobMode, response)
+        val remainingTime by remember { remainingTimeState }
         Log.d("UobPayment", "Url : $url")
 
         if (url.isEmpty()) {
@@ -170,7 +175,7 @@ class UobPaymentActivity : BaseActivity() {
                             amount = amount,
                             orderId = orderId,
                             canExpand = customerInfo != null,
-                            remainingTime = null
+                            remainingTime = remainingTime
                         ) {
                             isCustomerDetailExpanded = it
                         }
@@ -299,6 +304,13 @@ class UobPaymentActivity : BaseActivity() {
             PaymentType.UOB_EZPAY_APP -> R.string.uob_tmrw_cta
             else -> 0
         }
+    }
+
+    private fun updateExpiredTime(): Observable<String> {
+        return Observable
+            .interval(1L, TimeUnit.SECONDS)
+            .map { viewModel.getExpiredHour() }
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     companion object {

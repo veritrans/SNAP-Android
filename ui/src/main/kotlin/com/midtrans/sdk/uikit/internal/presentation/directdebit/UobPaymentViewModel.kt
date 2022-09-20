@@ -10,14 +10,18 @@ import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.DirectDebitPaymentRequestBuilder
+import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import javax.inject.Inject
 
 internal class UobPaymentViewModel @Inject constructor(
-    private val snapCore: SnapCore
+    private val snapCore: SnapCore,
+    private val dateTimeUtil: DateTimeUtil
 ): ViewModel() {
     private val transactionResponse = MutableLiveData<TransactionResponse>()
     private val transactionResult = MutableLiveData<Pair<String, String>>()
+
+    private var expiredTime = dateTimeUtil.plusDateBy(dateTimeUtil.getCurrentMillis(), 1) //TODO temporary is 24H, later get value from request snap if set
 
     fun getTransactionResponse(): LiveData<TransactionResponse> = transactionResponse
     fun getTransactionResult(): LiveData<Pair<String, String>> = transactionResult
@@ -67,4 +71,6 @@ internal class UobPaymentViewModel @Inject constructor(
             }
         } ?: ""
     }
+
+    fun getExpiredHour() = dateTimeUtil.getExpiredHour(expiredTime)
 }
