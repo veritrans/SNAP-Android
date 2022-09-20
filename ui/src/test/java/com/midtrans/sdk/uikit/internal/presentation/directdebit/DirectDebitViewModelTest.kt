@@ -6,6 +6,7 @@ import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.internal.getOrAwaitValue
+import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -19,11 +20,13 @@ internal class DirectDebitViewModelTest {
 
     private val snapCore: SnapCore = mock()
 
+    private val dateTimeUtil: DateTimeUtil = mock()
+
     private lateinit var viewModel: DirectDebitViewModel
 
     @Before
     fun setup() {
-        viewModel = DirectDebitViewModel(snapCore)
+        viewModel = DirectDebitViewModel(snapCore, dateTimeUtil)
     }
 
     @Test
