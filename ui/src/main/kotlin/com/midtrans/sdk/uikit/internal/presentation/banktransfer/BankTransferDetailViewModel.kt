@@ -73,18 +73,5 @@ internal class BankTransferDetailViewModel @Inject constructor(
         return expCalendar.timeInMillis
     }
 
-    fun getExpiredHour(): String {
-        val duration = datetimeUtil.getDuration(
-            datetimeUtil.getTimeDiffInMillis(
-                datetimeUtil.getCurrentMillis(),
-                expiredTime
-            )
-        )
-        return String.format(
-            "%02d:%02d:%02d",
-            duration.toHours(),
-            duration.seconds % 3600 / 60,
-            duration.seconds % 60
-        )
-    }
+    fun getExpiredHour() = datetimeUtil.getExpiredHour(expiredTime)
 }
