@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rxjava2.subscribeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -32,6 +33,9 @@ import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class DirectDebitActivity : BaseActivity() {
@@ -81,7 +85,8 @@ class DirectDebitActivity : BaseActivity() {
                 amount = amount,
                 orderId = orderId,
                 customerInfo = customerInfo,
-                response = viewModel.getTransactionResponse().observeAsState().value
+                response = viewModel.getTransactionResponse().observeAsState().value,
+                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
             )
         }
     }
@@ -94,13 +99,14 @@ class DirectDebitActivity : BaseActivity() {
             amount = "Rp.123999",
             orderId = "order-id",
             customerInfo = CustomerInfo(
-                name = "Dohn Joe",
+                name = "John Joe",
                 phone = "081234567890",
                 addressLines = listOf("address one", "address two")
             ),
             response = TransactionResponse(
                 transactionStatus = "pending"
-            )
+            ),
+            remainingTimeState = remember { mutableStateOf("00:00") }
         )
     }
 
@@ -110,13 +116,15 @@ class DirectDebitActivity : BaseActivity() {
         amount: String,
         orderId: String,
         customerInfo: CustomerInfo?,
-        response: TransactionResponse?
+        response: TransactionResponse?,
+        remainingTimeState: State<String>
     ) {
         var isCustomerDetailExpanded by remember { mutableStateOf(false) }
         var isInstructionExpanded by remember { mutableStateOf(false) }
         val title = stringResource(getTitleId(paymentType = paymentType))
         var userId by remember { mutableStateOf("") }
         val url = response?.redirectUrl.orEmpty()
+        val remainingTime by remember { remainingTimeState }
 
         if (url.isEmpty()) {
             Column(
@@ -140,7 +148,7 @@ class DirectDebitActivity : BaseActivity() {
                             amount = amount,
                             orderId = orderId,
                             canExpand = customerInfo != null,
-                            remainingTime = null
+                            remainingTime = remainingTime
                         ) {
                             isCustomerDetailExpanded = it
                         }
@@ -342,6 +350,13 @@ class DirectDebitActivity : BaseActivity() {
             PaymentType.BRI_EPAY -> R.string.brimo_cta
             else -> 0
         }
+    }
+
+    private fun updateExpiredTime(): Observable<String> {
+        return Observable
+            .interval(1L, TimeUnit.SECONDS)
+            .map { viewModel.getExpiredHour() }
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     companion object {
