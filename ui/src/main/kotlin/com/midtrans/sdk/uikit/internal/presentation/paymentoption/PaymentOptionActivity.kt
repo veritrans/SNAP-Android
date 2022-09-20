@@ -339,7 +339,7 @@ class PaymentOptionActivity : BaseActivity() {
                             totalAmount = totalAmount,
                             customerInfo = customerInfo,
                             creditCard = creditCard,
-                            expiryTIme = expiryTime
+                            expiryTime = expiryTime
                         )
                     } else {
                         //TODO currently set to CreditCardActivity for testing purpose
@@ -350,7 +350,7 @@ class PaymentOptionActivity : BaseActivity() {
                             totalAmount = totalAmount,
                             customerInfo = customerInfo,
                             creditCard = creditCard,
-                            expiryTIme = expiryTime
+                            expiryTime = expiryTime
                         )
                     }
                 )
