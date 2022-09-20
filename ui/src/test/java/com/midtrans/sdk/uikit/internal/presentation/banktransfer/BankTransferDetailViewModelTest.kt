@@ -13,11 +13,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
-import org.mockito.ArgumentCaptor
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.*
 import java.time.Clock
-import java.time.Duration
 import java.time.Instant
 import java.util.*
 import java.util.concurrent.CountDownLatch
