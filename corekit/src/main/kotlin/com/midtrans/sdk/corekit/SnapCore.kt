@@ -2,12 +2,7 @@ package com.midtrans.sdk.corekit
 
 import android.content.Context
 import com.midtrans.sdk.corekit.api.callback.Callback
-import com.midtrans.sdk.corekit.api.model.BankPointResponse
-import com.midtrans.sdk.corekit.api.model.BinResponse
-import com.midtrans.sdk.corekit.api.model.CardTokenResponse
-import com.midtrans.sdk.corekit.api.model.DeleteSavedCardResponse
-import com.midtrans.sdk.corekit.api.model.PaymentOption
-import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.CreditCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.PaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
@@ -78,6 +73,13 @@ class SnapCore private constructor(builder: Builder) {
         callback: Callback<BankPointResponse>
     ) {
         paymentUsecase.getBankPoint(snapToken, cardToken, grossAmount, callback)
+    }
+
+    fun getTransactionStatus(
+        snapToken: String,
+        callback: Callback<TransactionResponse>
+    ){
+        paymentUsecase.getTransactionStatus(snapToken, callback)
     }
 
     companion object {

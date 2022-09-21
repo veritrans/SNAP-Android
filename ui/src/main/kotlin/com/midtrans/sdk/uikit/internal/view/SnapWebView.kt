@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.TransactionResponse
 
 @Composable
 @Preview(showBackground = true)
@@ -85,16 +86,16 @@ fun SnapWebView(
                         )
                     }
 
-                override fun shouldOverrideUrlLoading(
-                    view: WebView,
-                    request: WebResourceRequest
-                ): Boolean {
-                    return if (urlLoadingOverride != null) {
-                        urlLoadingOverride(view, request.url.toString())
-                    } else {
-                        super.shouldOverrideUrlLoading(view, request)
+                    override fun shouldOverrideUrlLoading(
+                        view: WebView,
+                        request: WebResourceRequest
+                    ): Boolean {
+                        return if (urlLoadingOverride != null) {
+                            urlLoadingOverride(view, request.url.toString())
+                        } else {
+                            super.shouldOverrideUrlLoading(view, request)
+                        }
                     }
-                }
                 }
                 settings.apply { //NOTE: following settings in old midtrans sdk
                     allowFileAccess = false
@@ -118,6 +119,81 @@ fun SnapWebView(
     BackHandler(true) {
         //NOTE: do nothing to disable back button is handled here instead of onBackPressed
     }
+}
+
+@Composable
+fun SnapThreeDsWebView(
+    url: String,
+    transactionResponse: TransactionResponse?,
+    onPageStarted: () -> Unit,
+    onPageFinished: () -> Unit,
+    urlLoadingOverride: ((WebView, String) -> Boolean)? = null
+){
+    Column {
+        AndroidView(factory = {
+            WebView(it).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+                webViewClient = object : WebViewClient() {
+                    override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                        super.onPageStarted(view, url, favicon)
+                        onPageStarted
+                    }
+
+                    override fun onPageFinished(view: WebView?, url: String?) {
+                        super.onPageFinished(view, url)
+                        url?.let {
+                            if (isUsingThreeDsOldVersion(transactionResponse)){
+                                if (url.contains(SnapWebViewClient.CALLBACK_OLD_THREE_DS, true)) {
+                                    onPageFinished()
+                                }
+                            } else {
+                                if (url.contains(SnapWebViewClient.CALLBACK_NEW_THREE_DS, true)) {
+                                    onPageFinished()
+                                }
+                            }
+                        }
+                    }
+
+                    override fun shouldOverrideUrlLoading(
+                        view: WebView,
+                        request: WebResourceRequest
+                    ): Boolean {
+                        return if (urlLoadingOverride != null) {
+                            urlLoadingOverride(view, request.url.toString())
+                        } else {
+                            super.shouldOverrideUrlLoading(view, request)
+                        }
+                    }
+                }
+                settings.apply { //NOTE: following settings in old midtrans sdk
+                    allowFileAccess = false
+                    javaScriptEnabled = true //TODO check do we need to enable javascript
+                    domStorageEnabled = true
+                    loadWithOverviewMode = true
+                    useWideViewPort = true
+                    builtInZoomControls = true
+                    displayZoomControls = false
+                    mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+                }
+                setInitialScale(1)
+                resumeTimers()
+                loadUrl(url)
+            }
+        }, update = {
+            it.loadUrl(url)
+        })
+    }
+
+    BackHandler(true) {
+        //NOTE: do nothing to disable back button is handled here instead of onBackPressed
+    }
+}
+
+private fun isUsingThreeDsOldVersion(transactionResponse: TransactionResponse?): Boolean{
+    return transactionResponse?.threeDsVersion == "1" || transactionResponse?.threeDsVersion.isNullOrEmpty()
 }
 
 //TODO: make more universal. move this to caller
@@ -173,5 +249,7 @@ private class SnapWebViewClient(
         const val CALLBACK_CIMB_CLICKS = "cimb-clicks/response"
         const val CALLBACK_DANAMON_ONLINE = "/callback?signature="
         const val CALLBACK_BRI_EPAY = "briPayment?tid="
+        const val CALLBACK_OLD_THREE_DS = "callback"
+        const val CALLBACK_NEW_THREE_DS = "result-completion"
     }
 }
