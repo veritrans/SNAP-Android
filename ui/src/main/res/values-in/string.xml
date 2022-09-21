@@ -19,7 +19,7 @@
     <string name="payment_summary_select_method">Metode pembayaran</string>
     <string name="payment_summary_bank_transfer">Transfer bank</string>
     <string name="payment_summary_cc_dc">Kartu kredit/debit</string>
-    <string name="payment_summary_saved_card">card(s) saved</string>
+    <string name="payment_summary_saved_card">kartu tersimpan</string>
     <string name="payment_summary_promo_available">Promo tersedia</string>
     <string name="payment_summary_gopay">GoPay/e-Wallet Lainnya</string>
     <string name="payment_summary_klikbca">KlikBCA</string>

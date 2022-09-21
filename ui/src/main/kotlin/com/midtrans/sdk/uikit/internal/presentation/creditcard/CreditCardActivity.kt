@@ -65,7 +65,7 @@ internal class CreditCardActivity : BaseActivity() {
             ?: throw RuntimeException("Snaptoken must not be empty")
     }
 
-    private val expiryTIme: String? by lazy {
+    private val expiryTime: String? by lazy {
         intent.getStringExtra(EXTRA_EXPIRY_TIME)
     }
 
@@ -97,7 +97,7 @@ internal class CreditCardActivity : BaseActivity() {
             transactionDetails: TransactionDetails?,
             customerInfo: CustomerInfo? = null,
             creditCard: CreditCard?,
-            expiryTIme: String?,
+            expiryTime: String?,
             withMerchantData: MerchantData? = null
         ): Intent {
             return Intent(activityContext, CreditCardActivity::class.java).apply {
@@ -109,7 +109,7 @@ internal class CreditCardActivity : BaseActivity() {
                     customerInfo
                 )
                 putExtra(EXTRA_CREDIT_CARD, creditCard)
-                putExtra(EXTRA_EXPIRY_TIME, expiryTIme)
+                putExtra(EXTRA_EXPIRY_TIME, expiryTime)
                 withMerchantData?.let { putExtra(EXTRA_MERCHANT_DATA, withMerchantData) }
             }
         }
@@ -119,7 +119,7 @@ internal class CreditCardActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build()
             .inject(this)
-        viewModel.setExpiryTime(expiryTIme)
+        viewModel.setExpiryTime(expiryTime)
         initTransactionResultScreenObserver()
         setContent {
             CreditCardPageStateFull(
@@ -147,8 +147,6 @@ internal class CreditCardActivity : BaseActivity() {
         })
     }
 
-
-//    private fun startErrorCard()
 
     @Composable
     private fun CreditCardPageStateFull(

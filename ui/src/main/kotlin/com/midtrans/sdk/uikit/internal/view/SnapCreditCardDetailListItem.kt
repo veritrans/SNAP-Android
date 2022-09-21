@@ -113,7 +113,7 @@ fun SnapCCDetailListItem(
                     value = cvvTextField,
                     onValueChange = {
                         onCvvValueChange(formatCVV(it))
-                        isCvvInvalid = formatCVV(it).text.length != SnapCreditCardUtil.FORMATTED_MAX_CVV_LENGTH
+                        isCvvInvalid = formatCVV(it).text.length < SnapCreditCardUtil.FORMATTED_MIN_CVV_LENGTH
                         onIsCvvInvalidValueChange(isCvvInvalid)
                     },
                     modifier = Modifier.width(69.dp),
@@ -240,6 +240,7 @@ fun checkIsCardExpired(cardExpiry: String): Boolean{
 fun SnapSavedCardRadioGroup(
     modifier: Modifier,
     listStates: List<FormData>,
+    bankIconState: Int?,
     normalCardItemState: NormalCardItemState,
     onItemRemoveClicked: (item: SavedCreditCardFormData) -> Unit,
     creditCard: CreditCard?,
@@ -326,7 +327,7 @@ fun SnapSavedCardRadioGroup(
                                 shouldReveal = item.identifier == selectedOption,
                                 state = normalCardItemState,
                                 creditCard = creditCard,
-                                bankIconState = item.bankIconId,
+                                bankIconState = bankIconState,
                                 onCardNumberValueChange = { onCardNumberOtherCardValueChange(it)},
                                 onExpiryDateValueChange = { onExpiryOtherCardValueChange(it)},
                                 onCvvValueChange = { onCvvOtherCardValueChange(it)},
@@ -365,8 +366,7 @@ data class SavedCreditCardFormData(
 ) : FormData(savedCardIdentifier){}
 
 class NewCardFormData(
-    var newCardIdentifier: String,
-    var bankIconId: Int?,
+    var newCardIdentifier: String
 ) : FormData(newCardIdentifier)
 
 
@@ -435,9 +435,8 @@ fun formatCreditCard(input: TextFieldValue): TextFieldValue {
     }
     var processed: String = digit.replace("\\D", "").replace(" ", "")
     // insert a space after all groups of 4 digits that are followed by another digit
-    // insert a space after all groups of 4 digits that are followed by another digit
     processed = processed.replace("(\\d{4})(?=\\d)".toRegex(), "$1 ")
-    val length = min(processed.length, 19)
+    val length = min(processed.length, SnapCreditCardUtil.FORMATTED_MAX_CARD_NUMBER_LENGTH)
     val output = input.copy(text = processed.substring(0 until length), selection = TextRange(length))
     return output
 }
@@ -447,7 +446,7 @@ fun formatCVV(input: TextFieldValue): TextFieldValue{
     var digit = input.text.filter {
         it.isDigit()
     }
-    val length = min(digit.length, 3)
+    val length = min(digit.length, SnapCreditCardUtil.FORMATTED_MAX_CVV_LENGTH)
     val output = input.copy(digit.substring(0 until length), TextRange(length))
     return output
 }
@@ -603,7 +602,7 @@ fun NormalCardItem(
                         hint = stringResource(id = R.string.cc_dc_main_screen_placeholder_cvv),
                         onValueChange = {
                             onCvvValueChange(formatCVV(it))
-                            state.isCvvInvalid = formatCVV(it).text.length != SnapCreditCardUtil.FORMATTED_MAX_CVV_LENGTH
+                            state.isCvvInvalid = formatCVV(it).text.length < SnapCreditCardUtil.FORMATTED_MIN_CVV_LENGTH
                         },
                         isError = state.isCvvInvalid,
                         isFocused = state.isCvvTextFieldFocused,

@@ -152,7 +152,7 @@ internal class CreditCardViewModel @Inject constructor(
             )
         )
         return String.format(
-            "%02d:%02d:%02d",
+            TIME_FORMAT,
             duration.toHours(),
             duration.seconds % 3600 / 60,
             duration.seconds % 60
@@ -161,6 +161,7 @@ internal class CreditCardViewModel @Inject constructor(
 
     companion object {
         private const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
+        private const val TIME_FORMAT = "%02d:%02d:%02d"
         private val timeZoneUtc = TimeZone.getTimeZone("UTC")
     }
 }

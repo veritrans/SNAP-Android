@@ -167,7 +167,6 @@ class SavedCardActivity: BaseActivity() {
         }
         savedTokenList.add(NewCardFormData(
             newCardIdentifier = SnapCreditCardUtil.NEW_CARD_FORM_IDENTIFIER,
-            bankIconId = bankCodeId,
         ))
         var savedTokenListState = savedTokenList.toMutableStateList()
         var selectedFormData : FormData? = savedTokenList.first()
@@ -214,6 +213,7 @@ class SavedCardActivity: BaseActivity() {
                                 .padding(top = 24.dp),
                             listStates = savedTokenListState,
                             normalCardItemState = state,
+                            bankIconState = bankCodeId,
                             creditCard = creditCard,
                             onItemRemoveClicked = {
                                 viewModel.deleteSavedCard(snapToken = snapToken, maskedCard = it.displayedMaskedCard)
@@ -221,7 +221,7 @@ class SavedCardActivity: BaseActivity() {
                             },
                             onCvvSavedCardValueChange = {
                                 selectedCvvTextFieldValue = it
-                                isSelectedSavedCardCvvInvalid = selectedCvvTextFieldValue.text.length != SnapCreditCardUtil.FORMATTED_MAX_CVV_LENGTH
+                                isSelectedSavedCardCvvInvalid = selectedCvvTextFieldValue.text.length < SnapCreditCardUtil.FORMATTED_MAX_CVV_LENGTH
                             },
                             onCardNumberOtherCardValueChange = {
                                 state.cardNumber = it
@@ -253,15 +253,15 @@ class SavedCardActivity: BaseActivity() {
                             modifier = Modifier
                                 .fillMaxWidth(1f),
                             enabled = checkIsPayButtonEnabled(
-                                selectedFormData,
-                                isSelectedSavedCardCvvInvalid,
-                                selectedCvvTextFieldValue,
-                                state.isCardNumberInvalid,
-                                state.isCvvInvalid,
-                                state.isExpiryInvalid,
-                                state.cardNumber,
-                                state.expiry,
-                                state.cvv
+                                selectedFormData = selectedFormData,
+                                isSelectedSavedCardCvvInvalid = isSelectedSavedCardCvvInvalid,
+                                selectedCvvTextFieldValue = selectedCvvTextFieldValue,
+                                isCardNumberInvalid = state.isCardNumberInvalid,
+                                isExpiryInvalid = state.isExpiryInvalid,
+                                isCvvInvalid = state.isCvvInvalid,
+                                cardNumber = state.cardNumber,
+                                expiry = state.expiry,
+                                cvv = state.cvv
                             ),
                             onClick = {
                                 selectedFormData?.let {
