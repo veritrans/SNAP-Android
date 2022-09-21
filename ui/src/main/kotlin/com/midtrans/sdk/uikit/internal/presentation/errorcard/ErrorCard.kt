@@ -10,10 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.network.HttpException
+import com.midtrans.sdk.corekit.api.exception.SnapError
+import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard.errorComponentMap
 import com.midtrans.sdk.uikit.internal.view.*
-
 
 @Composable
 fun ErrorCard(type: Int, onClick: () -> Unit = {}): DialogToggle {
@@ -51,8 +53,8 @@ object ErrorCard {
     const val TIMEOUT_ERROR_DIALOG_FROM_BANK = 1
     const val SYSTEM_ERROR_DIALOG_ALLOW_RETRY = 2
     const val SYSTEM_ERROR_DIALOG_DISALLOW_RETRY = 3
-    const val TIDMID_ERROR_OTHER_PAY_METHOD_AVAILABLE = 4
-    const val TIDMID_ERROR_OTHER_PAY_METHOD_NOT_AVAILABLE = 5
+    const val TID_MID_ERROR_OTHER_PAY_METHOD_AVAILABLE = 4
+    const val TID_MID_ERROR_OTHER_PAY_METHOD_NOT_AVAILABLE = 5
     const val CARD_ERROR_DECLINED_DISALLOW_RETRY = 6
     internal val errorComponentMap = mapOf(
         Pair(
@@ -77,14 +79,14 @@ object ErrorCard {
             )
         ),
         Pair(
-            TIDMID_ERROR_OTHER_PAY_METHOD_AVAILABLE, ErrorComponent(
+            TID_MID_ERROR_OTHER_PAY_METHOD_AVAILABLE, ErrorComponent(
                 title = R.string.tidmid_error_other_pay_method_available_title,
                 message = R.string.tidmid_error_other_pay_method_available_content,
                 cta = R.string.tidmid_error_other_pay_method_available_cta
             )
         ),
         Pair(
-            TIDMID_ERROR_OTHER_PAY_METHOD_NOT_AVAILABLE, ErrorComponent(
+            TID_MID_ERROR_OTHER_PAY_METHOD_NOT_AVAILABLE, ErrorComponent(
                 title = R.string.tidmid_error_other_pay_method_not_available_title,
                 message = R.string.tidmid_error_other_pay_method_not_available_content,
                 cta = R.string.tidmid_error_other_pay_method_not_available_cta
@@ -105,6 +107,43 @@ object ErrorCard {
         val message: Int,
         val cta: Int
     )
+
+    fun getErrorCardType(
+        transactionResponse: TransactionResponse,
+        allowRetry: Boolean = false
+    ): Int? {
+        var errorType = when (transactionResponse.transactionStatus) {
+            "deny" -> CARD_ERROR_DECLINED_DISALLOW_RETRY
+            else -> null
+        }
+        if (errorType == null) {
+            errorType = when (transactionResponse.statusCode) {
+                "402" -> TID_MID_ERROR_OTHER_PAY_METHOD_AVAILABLE
+                "500" -> if (allowRetry) SYSTEM_ERROR_DIALOG_ALLOW_RETRY else SYSTEM_ERROR_DIALOG_DISALLOW_RETRY
+                else -> null
+            }
+        }
+        return errorType
+    }
+
+    fun getErrorCardType(snapError: SnapError, allowRetry: Boolean = false): Int? {
+        return when (val exception = snapError.cause) {
+            is HttpException -> errorForHttpException(exception)
+            else -> null
+        }
+    }
+
+    private fun errorForHttpException(
+        httpException: HttpException,
+        allowRetry: Boolean = false
+    ): Int {
+        val httpCode = httpException.response.code
+        return when (httpCode) {
+            503 -> TIMEOUT_ERROR_DIALOG_FROM_BANK
+            500 -> if (allowRetry) SYSTEM_ERROR_DIALOG_ALLOW_RETRY else SYSTEM_ERROR_DIALOG_DISALLOW_RETRY
+            else -> SYSTEM_ERROR_DIALOG_ALLOW_RETRY
+        }
+    }
 }
 
 

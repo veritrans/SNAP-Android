@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
 import com.midtrans.sdk.corekit.api.model.CreditCard
+import com.midtrans.sdk.corekit.internal.network.model.response.MerchantData
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
@@ -28,6 +29,7 @@ import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.presentation.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
+import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
@@ -70,7 +72,15 @@ internal class CreditCardActivity : BaseActivity() {
     }
 
     private val withCustomerPhoneEmail: Boolean by lazy {
-        intent.getBooleanExtra(EXTRA_WITH_CUSTOMER_PHONE_EMAIL, false)
+        merchantData?.showCreditCardCustomerInfo ?: false
+    }
+
+    private val allowRetry: Boolean by lazy {
+        merchantData?.allowRetry ?: false
+    }
+
+    private val merchantData: MerchantData? by lazy {
+        intent.getParcelableExtra(EXTRA_MERCHANT_DATA) as? MerchantData
     }
 
     companion object {
@@ -80,7 +90,7 @@ internal class CreditCardActivity : BaseActivity() {
         private const val EXTRA_CUSTOMER_DETAIL = "card.extra.customer_detail"
         private const val EXTRA_CREDIT_CARD = "card.extra.credit_card"
         private const val EXTRA_EXPIRY_TIME = "card.extra.expiry_time"
-        private const val EXTRA_WITH_CUSTOMER_PHONE_EMAIL = "card.extra.with_customer_phone_email"
+        private const val EXTRA_MERCHANT_DATA = "card.extra.merchantdata"
 
         fun getIntent(
             activityContext: Context,
@@ -90,7 +100,7 @@ internal class CreditCardActivity : BaseActivity() {
             customerInfo: CustomerInfo? = null,
             creditCard: CreditCard?,
             expiryTime: String?,
-            withCustomerPhoneEmail: Boolean = false
+            withMerchantData: MerchantData? = null
         ): Intent {
             return Intent(activityContext, CreditCardActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -102,7 +112,7 @@ internal class CreditCardActivity : BaseActivity() {
                 )
                 putExtra(EXTRA_CREDIT_CARD, creditCard)
                 putExtra(EXTRA_EXPIRY_TIME, expiryTime)
-                putExtra(EXTRA_WITH_CUSTOMER_PHONE_EMAIL, withCustomerPhoneEmail)
+                withMerchantData?.let { putExtra(EXTRA_MERCHANT_DATA, withMerchantData) }
             }
         }
     }
@@ -111,8 +121,9 @@ internal class CreditCardActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build()
             .inject(this)
-        initTransactionResultScreenObserver()
         viewModel.setExpiryTime(expiryTime)
+        viewModel.setAllowRetry(allowRetry)
+        initTransactionResultScreenObserver()
         setContent {
             CreditCardPageStateFull(
                 transactionDetails = transactionDetails,
@@ -122,13 +133,13 @@ internal class CreditCardActivity : BaseActivity() {
                 bankCodeIdState = viewModel.bankIconId.observeAsState(null),
                 totalAmount = totalAmount,
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
-                withCustomerPhoneEmail = withCustomerPhoneEmail
+                withCustomerPhoneEmail = withCustomerPhoneEmail,
+                errorTypeState = viewModel.getErrorLiveData().observeAsState(initial = null)
             )
         }
     }
 
-    private fun initTransactionResultScreenObserver(){
-        //TODO: Need to be revisit on handling all the payment status
+    private fun initTransactionResultScreenObserver() {
         viewModel.getTransactionResponseLiveData().observe(this, Observer {
             if (it.statusCode != UiKitConstants.STATUS_CODE_201 && it.redirectUrl.isNullOrEmpty()) {
                 val intent = SuccessScreenActivity.getIntent(
@@ -159,15 +170,8 @@ internal class CreditCardActivity : BaseActivity() {
             }
             startActivity(intent)
         })
-        viewModel.getErrorLiveData().observe(this, Observer {
-            val intent = ErrorScreenActivity.getIntent(
-                activityContext = this@CreditCardActivity,
-                title = it.cause.toString(),
-                content = it.message.toString()
-            )
-            startActivity(intent)
-        })
     }
+
 
     @Composable
     private fun CreditCardPageStateFull(
@@ -178,7 +182,8 @@ internal class CreditCardActivity : BaseActivity() {
         totalAmount: String,
         bankCodeIdState: State<Int?>,
         viewModel: CreditCardViewModel?,
-        remainingTimeState: State<String>
+        remainingTimeState: State<String>,
+        errorTypeState: State<Int?>
     ) {
         val state = remember {
             NormalCardItemState(
@@ -244,6 +249,48 @@ internal class CreditCardActivity : BaseActivity() {
             },
             withCustomerPhoneEmail = withCustomerPhoneEmail
         )
+        val errorState by errorTypeState
+        errorState?.let {
+            val clicked = remember {
+                mutableStateOf(false)
+            }
+            ErrorCard(type = it, getErrorCta(type = it, state = state, clicked = clicked)).apply {
+                if(clicked.value){
+                    hide()
+                }
+            }
+        }
+    }
+
+    private fun getErrorCta(type: Int, state: NormalCardItemState, clicked: MutableState<Boolean>): () -> Unit{
+        return when(type){
+            ErrorCard.CARD_ERROR_DECLINED_DISALLOW_RETRY, ErrorCard.SYSTEM_ERROR_DIALOG_DISALLOW_RETRY -> { ->
+                setResult(RESULT_OK)
+                clicked.value = true
+                finish()
+            }
+
+            ErrorCard.TID_MID_ERROR_OTHER_PAY_METHOD_AVAILABLE, ErrorCard.TIMEOUT_ERROR_DIALOG_FROM_BANK -> { ->
+                setResult(RESULT_CANCELED)
+                clicked.value = true
+                finish()
+            }
+
+            ErrorCard.SYSTEM_ERROR_DIALOG_ALLOW_RETRY -> { ->
+                viewModel.chargeUsingCreditCard(
+                    transactionDetails = transactionDetails,
+                    cardNumber = state.cardNumber,
+                    cardExpiry = state.expiry,
+                    cardCvv = state.cvv,
+                    isSavedCard = state.isSavedCardChecked,
+                    customerEmail = state.customerEmail.text,
+                    customerPhone = state.customerPhone.text,
+                    snapToken = snapToken
+                )
+                clicked.value = true
+            }
+            else -> {-> clicked.value = true}
+        }
     }
 
     @Composable
@@ -413,7 +460,8 @@ internal class CreditCardActivity : BaseActivity() {
             },
             totalAmount = "5000",
             remainingTimeState = remember { mutableStateOf("00:00") },
-            withCustomerPhoneEmail = true
+            withCustomerPhoneEmail = true,
+            errorTypeState = remember { mutableStateOf(null) }
         )
     }
 }

@@ -352,7 +352,7 @@ class PaymentOptionActivity : BaseActivity() {
                             totalAmount = totalAmount,
                             customerInfo = customerInfo,
                             creditCard = creditCard,
-                            expiryTime = expiryTime
+//                            expiryTime = expiryTime
                         )
                     }
                 )
