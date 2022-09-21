@@ -21,7 +21,6 @@ import com.midtrans.sdk.corekit.internal.network.model.response.Transaction
 import com.midtrans.sdk.corekit.internal.scheduler.BaseSdkScheduler
 import com.midtrans.sdk.corekit.internal.scheduler.TestSdkScheduler
 import io.reactivex.Single
-import io.reactivex.schedulers.TestScheduler
 import org.hamcrest.CoreMatchers.hasItems
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
@@ -31,14 +30,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.any
-import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
+import org.mockito.kotlin.*
 
 class PaymentUsecaseTest {
     private lateinit var closeable: AutoCloseable
@@ -216,8 +208,8 @@ class PaymentUsecaseTest {
             )
         )
 
-        whenever(mockSnapRepository.checkStatus(any())) doReturn single
-        usecase.checkStatus("snap-token", mockCallback)
+        whenever(mockSnapRepository.getTransactionStatus(any())) doReturn single
+        usecase.getTransactionStatus("snap-token", mockCallback)
         single.test()
             .assertComplete()
 

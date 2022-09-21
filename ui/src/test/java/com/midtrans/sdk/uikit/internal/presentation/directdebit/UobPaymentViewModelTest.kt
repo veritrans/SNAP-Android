@@ -5,6 +5,7 @@ import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.uikit.internal.getOrAwaitValue
+import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -18,11 +19,12 @@ internal class UobPaymentViewModelTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val snapCore: SnapCore = mock()
+    private val dateTimeUtil: DateTimeUtil = mock()
     private lateinit var viewModel: UobPaymentViewModel
 
     @Before
     fun setup() {
-        viewModel = UobPaymentViewModel(snapCore)
+        viewModel = UobPaymentViewModel(snapCore, dateTimeUtil)
     }
 
     @Test
@@ -61,7 +63,7 @@ internal class UobPaymentViewModelTest {
 
         viewModel.checkStatus(snapToken)
 
-        verify(snapCore).checkStatus(
+        verify(snapCore).getTransactionStatus(
             snapToken = eq(snapToken),
             callback = callbackCaptor.capture()
         )

@@ -34,7 +34,5 @@ internal interface SnapApi {
 
     @GET("v1/transactions/{snap_token}/status")
     fun getTransactionStatus(@Path("snap_token") snapToken: String?): Single<TransactionResponse>
-    @GET("v1/transactions/{snap_token}/status")
-    fun checkStatus(@Path("snap_token") snapToken: String): Single<TransactionResponse>
 
 }

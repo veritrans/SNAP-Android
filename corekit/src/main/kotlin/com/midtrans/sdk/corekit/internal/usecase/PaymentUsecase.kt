@@ -302,25 +302,4 @@ internal class PaymentUsecase(
         }
     }
 
-    @SuppressLint("CheckResult")
-    fun checkStatus(
-        snapToken: String,
-        callback: Callback<TransactionResponse>
-    ) {
-        try {
-            snapRepository.checkStatus(snapToken)
-                .subscribeOn(scheduler.io())
-                .observeOn(scheduler.ui())
-                .subscribe(
-                    {
-                        callback.onSuccess(it)
-                    },
-                    {
-                        deliverError(it, callback)
-                    }
-                )
-        } catch (error: Throwable) {
-            deliverError(error, callback)
-        }
-    }
 }

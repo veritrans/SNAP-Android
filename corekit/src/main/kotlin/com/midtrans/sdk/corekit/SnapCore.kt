@@ -82,13 +82,6 @@ class SnapCore private constructor(builder: Builder) {
         paymentUsecase.getTransactionStatus(snapToken, callback)
     }
 
-    fun checkStatus(
-        snapToken: String,
-        callback: Callback<TransactionResponse>
-    ) {
-        paymentUsecase.checkStatus(snapToken, callback)
-    }
-
     companion object {
         private var INSTANCE: SnapCore? = null
 

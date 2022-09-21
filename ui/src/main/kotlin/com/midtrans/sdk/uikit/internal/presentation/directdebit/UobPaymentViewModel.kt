@@ -46,7 +46,7 @@ internal class UobPaymentViewModel @Inject constructor(
     }
 
     fun checkStatus(snapToken: String) {
-        snapCore.checkStatus(
+        snapCore.getTransactionStatus(
             snapToken = snapToken,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
