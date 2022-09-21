@@ -452,21 +452,6 @@ fun formatCVV(input: TextFieldValue): TextFieldValue{
     return output
 }
 
-fun formatPhoneNumber(input: TextFieldValue): TextFieldValue{
-
-    var digit = input.text.filter {
-        it.isDigit()
-    }
-    var processed: String = digit.replace("\\D", "").replace(" ", "")
-    // insert a space after all groups of 4 digits that are followed by another digit
-    // insert a space after all groups of 4 digits that are followed by another digit
-    processed = processed.replace("(\\d{4})(?=\\d)".toRegex(), "$1 ")
-    val length = min(processed.length, 19)
-    val output = input.copy(text = processed.substring(0 until length), selection = TextRange(length))
-    return output
-}
-
-
 @Composable
 fun NormalCardItem(
     state: NormalCardItemState,
