@@ -199,7 +199,7 @@ class PaymentUsecaseTest {
     }
 
     @Test
-    fun checkStatusWhenSucceedShouldCallbackOnSuccess() {
+    fun getTransactionStatusWhenSucceedShouldCallbackOnSuccess() {
         val mockCallback: Callback<TransactionResponse> = mock()
         val single = Single.just(
             TransactionResponse(
