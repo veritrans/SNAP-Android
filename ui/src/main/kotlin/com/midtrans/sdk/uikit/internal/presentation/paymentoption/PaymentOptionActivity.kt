@@ -352,8 +352,8 @@ class PaymentOptionActivity : BaseActivity() {
                             transactionDetails = transactionDetails,
                             totalAmount = totalAmount,
                             customerInfo = customerInfo,
-                            creditCard = creditCard,
-//                            expiryTime = expiryTime
+                            creditCard = creditCard
+//                            expiryTime = expiryTime //TODO will be fixed by pak wahyu
                         )
                     }
                 )
