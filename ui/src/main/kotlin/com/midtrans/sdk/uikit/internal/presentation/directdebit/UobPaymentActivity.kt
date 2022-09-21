@@ -270,7 +270,6 @@ class UobPaymentActivity : BaseActivity() {
         }
     }
 
-    @Composable
     private fun getTitleId(uobMode: String): Int {
         return when (uobMode) {
             PaymentType.UOB_EZPAY_APP -> R.string.uob_tmrw_method_name
@@ -279,7 +278,6 @@ class UobPaymentActivity : BaseActivity() {
         }
     }
 
-    @Composable
     private fun getInstructionId(uobMode: String): Int {
         return when (uobMode) {
             PaymentType.UOB_EZPAY_WEB -> R.string.uob_web_instruction
@@ -288,7 +286,6 @@ class UobPaymentActivity : BaseActivity() {
         }
     }
 
-    @Composable
     private fun getHowToPayId(uobMode: String): Int {
         return when (uobMode) {
             PaymentType.UOB_EZPAY_WEB -> R.array.uob_web_how_to_pay
@@ -297,7 +294,6 @@ class UobPaymentActivity : BaseActivity() {
         }
     }
 
-    @Composable
     private fun getUobCta(uobMode: String): Int {
         return when (uobMode) {
             PaymentType.UOB_EZPAY_WEB -> R.string.uob_web_cta
