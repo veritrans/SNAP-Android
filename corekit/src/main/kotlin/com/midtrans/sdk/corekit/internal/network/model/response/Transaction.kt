@@ -13,5 +13,6 @@ internal data class Transaction(
     val promoDetails: PromoDetails? = null,
     val itemDetails: List<ItemDetails>? = null,
     val customerDetails: CustomerDetails? = null,
-    val gopay: PaymentCallback? = null
+    val gopay: PaymentCallback? = null,
+    val expiryTime: String? = null
 )

@@ -38,18 +38,18 @@ internal object DateTimeUtil {
             dateTime =
                 LocalDateTime.ofInstant(Instant.ofEpochMilli(date.time), ZoneId.systemDefault())
         }
-        dateTime.withHour(0)
+        val dateCopy = dateTime.withHour(0).withMinute(0).withSecond(0).withNano(0)
 
         return Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault())
             .apply {
                 date?.let {
-                    time = Date(dateTime.toInstant(ZoneOffset.UTC).toEpochMilli())
+                    time = Date.from(dateCopy.toInstant(OffsetTime.now().offset))
                 }
             }
     }
 
     fun plusDateBy(time: Long, next: Int): Long {
-        return time + TimeUnit.DAYS.toMillis(next.toLong())
+        return getCalendar(Date(time + TimeUnit.DAYS.toMillis(next.toLong()))).timeInMillis
     }
 
 
