@@ -304,7 +304,6 @@ class DirectDebitActivity : BaseActivity() {
         }
     }
 
-    @Composable
     private fun getTitleId(paymentType: String): Int {
         return when (paymentType) {
             PaymentType.KLIK_BCA -> R.string.klik_bca_title
@@ -316,7 +315,6 @@ class DirectDebitActivity : BaseActivity() {
         }
     }
 
-    @Composable
     private fun getInstructionId(paymentType: String): Int {
         return when (paymentType) {
             PaymentType.KLIK_BCA -> R.string.klik_bca_instruction
@@ -328,7 +326,6 @@ class DirectDebitActivity : BaseActivity() {
         }
     }
 
-    @Composable
     private fun getHowToPayId(paymentType: String): Int {
         return when (paymentType) {
             PaymentType.KLIK_BCA -> R.array.klik_bca_how_to_pay
@@ -340,7 +337,6 @@ class DirectDebitActivity : BaseActivity() {
         }
     }
 
-    @Composable
     private fun getCta(paymentType: String): Int {
         return when (paymentType) {
             PaymentType.KLIK_BCA -> R.string.klik_bca_cta
