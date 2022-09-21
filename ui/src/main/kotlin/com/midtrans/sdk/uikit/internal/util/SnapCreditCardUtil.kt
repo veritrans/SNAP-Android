@@ -1,6 +1,7 @@
 package com.midtrans.sdk.uikit.internal.util
 
 import androidx.compose.ui.text.input.TextFieldValue
+import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.uikit.R
 
 object SnapCreditCardUtil {
@@ -85,6 +86,14 @@ object SnapCreditCardUtil {
     }
     fun getExpYearFromTextField(value: TextFieldValue) : String{
         return return value.text.substring(3, 5)
+    }
+
+    fun isBinBlocked(cardNumber: String, creditCard: CreditCard?): Boolean{
+        val whiteLisAvailable = !creditCard?.whitelistBins.isNullOrEmpty()
+        val blackListAvailable = !creditCard?.blacklistBins.isNullOrEmpty()
+        val whiteListed = !creditCard?.whitelistBins?.filter { whiteListedBin -> cardNumber.startsWith(whiteListedBin) }.isNullOrEmpty()
+        val blackListed = !creditCard?.blacklistBins?.filter { blacklistedBin -> cardNumber.startsWith(blacklistedBin) }.isNullOrEmpty()
+        return (whiteLisAvailable.and(!whiteListed)).or(blackListAvailable.and(blackListed))
     }
 
     fun getBankIcon(bank: String): Int? {

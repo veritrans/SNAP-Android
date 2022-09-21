@@ -7,6 +7,7 @@ import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.internal.getOrAwaitValue
+import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import org.junit.Assert
@@ -49,6 +50,7 @@ class CreditCardViewModelTest {
         val cvv = TextFieldValue(text = "123")
         val customerEmail = "email@email.com"
         val customerPhone = "123456789"
+        val errorCard: ErrorCard = mock()
         `when`(snapCreditCardUtil.getCardNumberFromTextField(any())).thenReturn("")
         `when`(snapCreditCardUtil.getExpMonthFromTextField(any())).thenReturn("")
         `when`(snapCreditCardUtil.getExpYearFromTextField(any())).thenReturn("")
@@ -72,7 +74,7 @@ class CreditCardViewModelTest {
             currency = "IDR"
         )
         val creditCardViewModel =
-            CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil)
+            CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil, errorCard)
         creditCardViewModel.chargeUsingCreditCard(
             transactionDetails = transactionDetail,
             cardNumber = cardNumber,
@@ -109,6 +111,7 @@ class CreditCardViewModelTest {
         val snapCore: SnapCore = mock()
         val dateTimeUtil: DateTimeUtil = mock()
         val snapCreditCardUtil: SnapCreditCardUtil = mock()
+        val errorCard: ErrorCard = mock()
         `when`(
             dateTimeUtil.getDate(
                 date = eq("2022-01-06 11:32:50 +0700"),
@@ -125,7 +128,7 @@ class CreditCardViewModelTest {
         `when`(dateTimeUtil.getDuration(any())).thenReturn(Duration.ofMillis(1000L)) //only this matter for final result
         `when`(dateTimeUtil.getTimeDiffInMillis(any(), any())).thenReturn(100000L)
         val creditCardViewModel =
-            CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil)
+            CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil, errorCard)
         creditCardViewModel.setExpiryTime("2022-01-06 11:32:50 +0700")
         Assert.assertEquals("00:00:01", creditCardViewModel.getExpiredHour())
     }
@@ -138,12 +141,13 @@ class CreditCardViewModelTest {
         val binNumber = "12345678"
         val bankIconResId = 1
         val bankCode = "009"
+        val errorCard: ErrorCard = mock()
         val binResponse = BinResponse(
             data = BinData(null, null, null, null, null, null, bankCode, null)
         )
         `when`(snapCreditCardUtil.getBankIcon(bankCode)).thenReturn(bankIconResId)
         val creditCardViewModel =
-            CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil)
+            CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil, mock())
 
         creditCardViewModel.getBankIconImage(binNumber)
         val callbackCaptor: KArgumentCaptor<Callback<BinResponse>> = argumentCaptor()

@@ -157,14 +157,6 @@ internal class CreditCardViewModel @Inject constructor(
         )
     }
 
-    private fun isBinBlocked(cardNumber: String): Boolean{
-        val whiteLisAvailable = !creditCard?.whitelistBins.isNullOrEmpty()
-        val blackListAvailable = !creditCard?.blacklistBins.isNullOrEmpty()
-        val whiteListed = !creditCard?.whitelistBins?.filter { whiteListedBin -> cardNumber.startsWith(whiteListedBin) }.isNullOrEmpty()
-        val blackListed = !creditCard?.blacklistBins?.filter { blacklistedBin -> cardNumber.startsWith(blacklistedBin) }.isNullOrEmpty()
-        return (!(whiteLisAvailable.and(whiteListed))).or(blackListAvailable.and(blackListed))
-    }
-
     companion object {
         private const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
         private val timeZoneUtc = TimeZone.getTimeZone("UTC")

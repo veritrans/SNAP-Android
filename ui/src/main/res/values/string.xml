@@ -135,6 +135,7 @@
     <string name="card_error_exceeding_limit">Card limit has been exceeded.</string>
     <string name="card_error_cant_be_used_for_online_payments">This card can\'t be used for online transactions.</string>
     <string name="card_error_hasnt_been_registered_for_online_payments">This card hasn\'t been registered for online transactions.</string>
+    <string name="card_error_bank_blacklisted_by_merchant">"Can\'t use this card for this merchant.\nTry using another card/payment method."</string>
 
     <string name="card_error_invalid_expiry">Invalid expiration detail.</string>
     <string name="card_error_empty_expiry">Expiry can\'t be empty.</string>
