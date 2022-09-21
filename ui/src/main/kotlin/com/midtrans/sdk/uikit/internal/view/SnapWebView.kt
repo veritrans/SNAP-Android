@@ -205,11 +205,6 @@ private inline fun finishWebView(
     onFinishWebView: () -> Unit
 ) {
     when (paymentType) {
-        PaymentType.KLIK_BCA -> {
-            if (url.contains(SnapWebViewClient.CALLBACK_KLIK_BCA, true)) {
-                onFinishWebView.invoke()
-            }
-        }
         PaymentType.BCA_KLIKPAY -> {
             if (url.contains(SnapWebViewClient.CALLBACK_BCA_KLIK_PAY, true)) {
                 onFinishWebView.invoke()
@@ -248,7 +243,6 @@ private class SnapWebViewClient(
     }
 
     companion object {
-        const val CALLBACK_KLIK_BCA = "/inquiry" //TODO klik bca behavior is not final yet, this is for simulate web view only
         const val CALLBACK_BCA_KLIK_PAY = "?id="
         const val CALLBACK_CIMB_CLICKS = "cimb-clicks/response"
         const val CALLBACK_DANAMON_ONLINE = "/callback?signature="
