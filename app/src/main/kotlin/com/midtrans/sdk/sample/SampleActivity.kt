@@ -198,7 +198,7 @@ class SampleActivity : AppCompatActivity() {
                     ),
                     creditCard = CreditCard(
                         saveCard = true,
-                        secure = false
+                        secure = true
                     ),
                     userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
                     customerDetails = CustomerDetails(

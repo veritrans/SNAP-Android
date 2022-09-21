@@ -27,9 +27,11 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.presentation.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -120,6 +122,7 @@ internal class CreditCardActivity : BaseActivity() {
         DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build()
             .inject(this)
         viewModel.setExpiryTime(expiryTime)
+        viewModel.setAllowRetry(allowRetry)
         initTransactionResultScreenObserver()
         setContent {
             CreditCardPageStateFull(
@@ -138,11 +141,33 @@ internal class CreditCardActivity : BaseActivity() {
 
     private fun initTransactionResultScreenObserver() {
         viewModel.getTransactionResponseLiveData().observe(this, Observer {
-            val intent = SuccessScreenActivity.getIntent(
-                activityContext = this@CreditCardActivity,
-                total = totalAmount,
-                orderId = it?.orderId.toString()
-            )
+            if (it.statusCode != UiKitConstants.STATUS_CODE_201 && it.redirectUrl.isNullOrEmpty()) {
+                val intent = SuccessScreenActivity.getIntent(
+                    activityContext = this@CreditCardActivity,
+                    total = totalAmount,
+                    orderId = it?.orderId.toString()
+                )
+                startActivity(intent)
+            }
+        })
+        viewModel.getTransactionStatusLiveData().observe(this, Observer {
+            var intent = Intent()
+            when (it.statusCode) {
+                UiKitConstants.STATUS_CODE_200 -> {
+                    intent = SuccessScreenActivity.getIntent(
+                        activityContext = this@CreditCardActivity,
+                        total = totalAmount,
+                        orderId = it?.orderId.toString()
+                    )
+                }
+                else -> {
+                    intent = ErrorScreenActivity.getIntent(
+                        activityContext = this@CreditCardActivity,
+                        title = it.statusCode.toString(),
+                        content = it.transactionStatus.toString()
+                    )
+                }
+            }
             startActivity(intent)
         })
     }
@@ -177,7 +202,6 @@ internal class CreditCardActivity : BaseActivity() {
                 customerPhone = TextFieldValue()
             )
         }
-
         val bankCodeId by bankCodeIdState
         var isExpanding by remember { mutableStateOf(false) }
 
@@ -441,3 +465,4 @@ internal class CreditCardActivity : BaseActivity() {
         )
     }
 }
+

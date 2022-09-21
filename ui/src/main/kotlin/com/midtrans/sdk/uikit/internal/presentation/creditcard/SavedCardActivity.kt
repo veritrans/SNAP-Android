@@ -28,6 +28,7 @@ import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.presentation.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import javax.inject.Inject
 
@@ -70,7 +71,7 @@ class SavedCardActivity: BaseActivity() {
             snapToken: String,
             totalAmount: String,
             customerInfo: CustomerInfo? = null,
-            creditCard: CreditCard?,
+            creditCard: CreditCard?
         ): Intent {
             return Intent(activityContext, SavedCardActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -96,12 +97,35 @@ class SavedCardActivity: BaseActivity() {
     }
 
     private fun initTransactionResultScreenObserver(){
+        //TODO: Need to be revisit on handling all the payment status
         viewModel.getTransactionResponseLiveData().observe(this, Observer {
-            val intent = SuccessScreenActivity.getIntent(
-                activityContext = this@SavedCardActivity,
-                total = totalAmount,
-                orderId = it?.orderId.toString()
-            )
+            if (it.statusCode != UiKitConstants.STATUS_CODE_201 && it.redirectUrl.isNullOrEmpty()) {
+                val intent = SuccessScreenActivity.getIntent(
+                    activityContext = this@SavedCardActivity,
+                    total = totalAmount,
+                    orderId = it?.orderId.toString()
+                )
+                startActivity(intent)
+            }
+        })
+        viewModel.getTransactionStatusLiveData().observe(this, Observer {
+            var intent = Intent()
+            when (it.statusCode) {
+                UiKitConstants.STATUS_CODE_200 -> {
+                    intent = SuccessScreenActivity.getIntent(
+                        activityContext = this@SavedCardActivity,
+                        total = totalAmount,
+                        orderId = it?.orderId.toString()
+                    )
+                }
+                else -> {
+                    intent = ErrorScreenActivity.getIntent(
+                        activityContext = this@SavedCardActivity,
+                        title = it.statusCode.toString(),
+                        content = it.transactionStatus.toString()
+                    )
+                }
+            }
             startActivity(intent)
         })
         viewModel.getErrorLiveData().observe(this, Observer {
@@ -123,7 +147,7 @@ class SavedCardActivity: BaseActivity() {
     private fun CreditCardPage(
         totalAmount: String,
         orderId: String,
-        customerDetail: CustomerInfo?,
+        customerDetail: CustomerInfo?
     ){
         var previousEightDigitNumber = ""
         val bankCodeId by viewModel.bankIconId.observeAsState(null)
@@ -172,130 +196,145 @@ class SavedCardActivity: BaseActivity() {
         var selectedFormData : FormData? = savedTokenList.first()
         var isSelectedSavedCardCvvInvalid by remember { mutableStateOf(false) }
         var selectedCvvTextFieldValue by remember{ mutableStateOf(TextFieldValue())}
+        val transactionResponse by viewModel.getTransactionResponseLiveData().observeAsState()
 
-        Column(
-            modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
-        ) {
-            SnapAppBar(
-                title = stringResource(id = R.string.payment_summary_cc_dc),
-                iconResId = R.drawable.ic_arrow_left
-            ) {
-                onBackPressed()
+        if (transactionResponse?.statusCode == UiKitConstants.STATUS_CODE_201 && !transactionResponse?.redirectUrl.isNullOrEmpty()){
+            transactionResponse?.redirectUrl?.let {
+                SnapThreeDsWebView(
+                    url = it,
+                    transactionResponse = transactionResponse,
+                    onPageStarted = {},
+                    onPageFinished = {
+                        finish()
+                        viewModel.getTransactionStatus(snapToken)
+                    }
+                )
             }
-            var scrollState = rememberScrollState()
-            SnapOverlayExpandingBox(
-                isExpanded = isExpanding,
-                mainContent = {
-                    SnapTotal(
-                        amount = totalAmount,
-                        orderId = orderId,
-                        remainingTime = null,
-                        canExpand = customerDetail != null,
-                    ) {
-                        isExpanding = it
-                    }
-                },
-                expandingContent = {
-                    customerDetail?.let {
-                        SnapCustomerDetail(
-                            name = customerDetail.name,
-                            phone = customerDetail.phone,
-                            addressLines = customerDetail.addressLines
-                        )
-                    }
-                },
-                followingContent = {
-                    Column(
-                        modifier = Modifier.verticalScroll(scrollState)
-                    ) {
-                        SnapSavedCardRadioGroup(
-                            modifier = Modifier
-                                .padding(top = 24.dp),
-                            listStates = savedTokenListState,
-                            normalCardItemState = state,
-                            bankIconState = bankCodeId,
-                            creditCard = creditCard,
-                            onItemRemoveClicked = {
-                                viewModel.deleteSavedCard(snapToken = snapToken, maskedCard = it.displayedMaskedCard)
-                                savedTokenListState.remove(it)
-                            },
-                            onCvvSavedCardValueChange = {
-                                selectedCvvTextFieldValue = it
-                                isSelectedSavedCardCvvInvalid = selectedCvvTextFieldValue.text.length < SnapCreditCardUtil.FORMATTED_MAX_CVV_LENGTH
-                            },
-                            onCardNumberOtherCardValueChange = {
-                                state.cardNumber = it
-                                var cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
-                                if(cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER){
-                                    var eightDigitNumber = cardNumberWithoutSpace.substring(0, SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER)
-                                    if (eightDigitNumber != previousEightDigitNumber){
-                                        previousEightDigitNumber = eightDigitNumber
-                                        viewModel.getBankIconImage(
-                                            binNumber = eightDigitNumber
-                                        )
-                                    }
-                                } else {
-                                    viewModel.setBankIconToNull()
-                                    previousEightDigitNumber = cardNumberWithoutSpace
-                                }
-                            },
-                            onExpiryOtherCardValueChange =  {state.expiry = it},
-                            onSavedCardRadioSelected = { selectedFormData = it },
-                            onIsCvvSavedCardInvalidValueChange = { isSelectedSavedCardCvvInvalid = it },
-                            onCvvOtherCardValueChange = {
-                                state.cvv = it
-                            },
-                            onSavedCardCheckedChange = { state.isSavedCardChecked = it }
-                        )
-                        SnapButton(
-                            text = stringResource(id = R.string.cc_dc_main_screen_cta),
-                            style = SnapButton.Style.PRIMARY,
-                            modifier = Modifier
-                                .fillMaxWidth(1f),
-                            enabled = checkIsPayButtonEnabled(
-                                selectedFormData = selectedFormData,
-                                isSelectedSavedCardCvvInvalid = isSelectedSavedCardCvvInvalid,
-                                selectedCvvTextFieldValue = selectedCvvTextFieldValue,
-                                isCardNumberInvalid = state.isCardNumberInvalid,
-                                isExpiryInvalid = state.isExpiryInvalid,
-                                isCvvInvalid = state.isCvvInvalid,
-                                cardNumber = state.cardNumber,
-                                expiry = state.expiry,
-                                cvv = state.cvv
-                            ),
-                            onClick = {
-                                selectedFormData?.let {
-                                    when (selectedFormData){
-                                        is SavedCreditCardFormData -> {
-                                            viewModel.chargeUsingSavedCard(
-                                                formData = it as SavedCreditCardFormData,
-                                                snapToken = snapToken,
-                                                cardCVV = selectedCvvTextFieldValue.text,
-                                                customerEmail = "johndoe@midtrans.com",
-                                                transactionDetails = transactionDetails
+        } else {
+            Column(
+                modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
+            ) {
+                SnapAppBar(
+                    title = stringResource(id = R.string.payment_summary_cc_dc),
+                    iconResId = R.drawable.ic_arrow_left
+                ) {
+                    onBackPressed()
+                }
+                var scrollState = rememberScrollState()
+                SnapOverlayExpandingBox(
+                    isExpanded = isExpanding,
+                    mainContent = {
+                        SnapTotal(
+                            amount = totalAmount,
+                            orderId = orderId,
+                            remainingTime = null,
+                            canExpand = customerDetail != null,
+                        ) {
+                            isExpanding = it
+                        }
+                    },
+                    expandingContent = {
+                        customerDetail?.let {
+                            SnapCustomerDetail(
+                                name = customerDetail.name,
+                                phone = customerDetail.phone,
+                                addressLines = customerDetail.addressLines
+                            )
+                        }
+                    },
+                    followingContent = {
+                        Column(
+                            modifier = Modifier.verticalScroll(scrollState)
+                        ) {
+                            SnapSavedCardRadioGroup(
+                                modifier = Modifier
+                                    .padding(top = 24.dp),
+                                listStates = savedTokenListState,
+                                normalCardItemState = state,
+                                bankIconState = bankCodeId,
+                                creditCard = creditCard,
+                                onItemRemoveClicked = {
+                                    viewModel.deleteSavedCard(snapToken = snapToken, maskedCard = it.displayedMaskedCard)
+                                    savedTokenListState.remove(it)
+                                },
+                                onCvvSavedCardValueChange = {
+                                    selectedCvvTextFieldValue = it
+                                    isSelectedSavedCardCvvInvalid = selectedCvvTextFieldValue.text.length < SnapCreditCardUtil.FORMATTED_MAX_CVV_LENGTH
+                                },
+                                onCardNumberOtherCardValueChange = {
+                                    state.cardNumber = it
+                                    var cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
+                                    if(cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER){
+                                        var eightDigitNumber = cardNumberWithoutSpace.substring(0, SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER)
+                                        if (eightDigitNumber != previousEightDigitNumber){
+                                            previousEightDigitNumber = eightDigitNumber
+                                            viewModel.getBankIconImage(
+                                                binNumber = eightDigitNumber
                                             )
                                         }
-                                        is NewCardFormData -> {
-                                            viewModel.chargeUsingOtherCard(
-                                                transactionDetails = transactionDetails,
-                                                cardNumber = state.cardNumber,
-                                                cardExpiry = state.expiry,
-                                                cardCvv = state.cvv,
-                                                isSavedCard = state.isSavedCardChecked,
-                                                customerEmail = "johndoe@midtrans.com",
-                                                snapToken = snapToken
-                                            )
+                                    } else {
+                                        viewModel.setBankIconToNull()
+                                        previousEightDigitNumber = cardNumberWithoutSpace
+                                    }
+                                },
+                                onExpiryOtherCardValueChange =  {state.expiry = it},
+                                onSavedCardRadioSelected = { selectedFormData = it },
+                                onIsCvvSavedCardInvalidValueChange = { isSelectedSavedCardCvvInvalid = it },
+                                onCvvOtherCardValueChange = {
+                                    state.cvv = it
+                                },
+                                onSavedCardCheckedChange = { state.isSavedCardChecked = it }
+                            )
+                            SnapButton(
+                                text = stringResource(id = R.string.cc_dc_main_screen_cta),
+                                style = SnapButton.Style.PRIMARY,
+                                modifier = Modifier
+                                    .fillMaxWidth(1f),
+                                enabled = checkIsPayButtonEnabled(
+                                    selectedFormData = selectedFormData,
+                                    isSelectedSavedCardCvvInvalid = isSelectedSavedCardCvvInvalid,
+                                    selectedCvvTextFieldValue = selectedCvvTextFieldValue,
+                                    isCardNumberInvalid = state.isCardNumberInvalid,
+                                    isExpiryInvalid = state.isExpiryInvalid,
+                                    isCvvInvalid = state.isCvvInvalid,
+                                    cardNumber = state.cardNumber,
+                                    expiry = state.expiry,
+                                    cvv = state.cvv
+                                ),
+                                onClick = {
+                                    selectedFormData?.let {
+                                        when (selectedFormData){
+                                            is SavedCreditCardFormData -> {
+                                                viewModel.chargeUsingSavedCard(
+                                                    formData = it as SavedCreditCardFormData,
+                                                    snapToken = snapToken,
+                                                    cardCVV = selectedCvvTextFieldValue.text,
+                                                    customerEmail = "johndoe@midtrans.com",
+                                                    transactionDetails = transactionDetails
+                                                )
+                                            }
+                                            is NewCardFormData -> {
+                                                viewModel.chargeUsingOtherCard(
+                                                    transactionDetails = transactionDetails,
+                                                    cardNumber = state.cardNumber,
+                                                    cardExpiry = state.expiry,
+                                                    cardCvv = state.cvv,
+                                                    isSavedCard = state.isSavedCardChecked,
+                                                    customerEmail = "johndoe@midtrans.com",
+                                                    snapToken = snapToken
+                                                )
+                                            }
                                         }
                                     }
                                 }
-                            }
-                        )
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxHeight(1f)
-                    .padding(top = 16.dp, start = 16.dp, end = 16.dp)
-            )
+                            )
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxHeight(1f)
+                        .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                )
+            }
         }
     }
     private fun checkIsPayButtonEnabled(
@@ -331,7 +370,7 @@ class SavedCardActivity: BaseActivity() {
 
     @Preview
     @Composable
-    private fun forPreview() {
+    private fun Preview() {
         CreditCardPage(
             totalAmount = "10000",
             orderId = "Order ID #34345445554",

@@ -114,7 +114,7 @@ class ErrorScreenActivity : BaseActivity() {
             title: String,
             content: String
         ): Intent {
-            return Intent(activityContext, SuccessScreenActivity::class.java).apply {
+            return Intent(activityContext, ErrorScreenActivity::class.java).apply {
                 putExtra(
                     EXTRA_ERROR, ErrorData(
                         title = title,
