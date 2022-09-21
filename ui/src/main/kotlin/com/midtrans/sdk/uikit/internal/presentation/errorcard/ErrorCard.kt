@@ -53,8 +53,8 @@ object ErrorCard {
     const val TIMEOUT_ERROR_DIALOG_FROM_BANK = 1
     const val SYSTEM_ERROR_DIALOG_ALLOW_RETRY = 2
     const val SYSTEM_ERROR_DIALOG_DISALLOW_RETRY = 3
-    const val TIDMID_ERROR_OTHER_PAY_METHOD_AVAILABLE = 4
-    const val TIDMID_ERROR_OTHER_PAY_METHOD_NOT_AVAILABLE = 5
+    const val TID_MID_ERROR_OTHER_PAY_METHOD_AVAILABLE = 4
+    const val TID_MID_ERROR_OTHER_PAY_METHOD_NOT_AVAILABLE = 5
     const val CARD_ERROR_DECLINED_DISALLOW_RETRY = 6
     internal val errorComponentMap = mapOf(
         Pair(
@@ -79,14 +79,14 @@ object ErrorCard {
             )
         ),
         Pair(
-            TIDMID_ERROR_OTHER_PAY_METHOD_AVAILABLE, ErrorComponent(
+            TID_MID_ERROR_OTHER_PAY_METHOD_AVAILABLE, ErrorComponent(
                 title = R.string.tidmid_error_other_pay_method_available_title,
                 message = R.string.tidmid_error_other_pay_method_available_content,
                 cta = R.string.tidmid_error_other_pay_method_available_cta
             )
         ),
         Pair(
-            TIDMID_ERROR_OTHER_PAY_METHOD_NOT_AVAILABLE, ErrorComponent(
+            TID_MID_ERROR_OTHER_PAY_METHOD_NOT_AVAILABLE, ErrorComponent(
                 title = R.string.tidmid_error_other_pay_method_not_available_title,
                 message = R.string.tidmid_error_other_pay_method_not_available_content,
                 cta = R.string.tidmid_error_other_pay_method_not_available_cta
@@ -118,7 +118,7 @@ object ErrorCard {
         }
         if (errorType == null) {
             errorType = when (transactionResponse.statusCode) {
-                "402" -> TIDMID_ERROR_OTHER_PAY_METHOD_AVAILABLE
+                "402" -> TID_MID_ERROR_OTHER_PAY_METHOD_AVAILABLE
                 "500" -> if (allowRetry) SYSTEM_ERROR_DIALOG_ALLOW_RETRY else SYSTEM_ERROR_DIALOG_DISALLOW_RETRY
                 else -> null
             }

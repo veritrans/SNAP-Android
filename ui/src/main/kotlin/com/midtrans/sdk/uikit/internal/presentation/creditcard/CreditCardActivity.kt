@@ -27,7 +27,6 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
-import com.midtrans.sdk.uikit.internal.presentation.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
@@ -249,7 +248,7 @@ internal class CreditCardActivity : BaseActivity() {
                 finish()
             }
 
-            ErrorCard.TIDMID_ERROR_OTHER_PAY_METHOD_AVAILABLE, ErrorCard.TIMEOUT_ERROR_DIALOG_FROM_BANK -> { ->
+            ErrorCard.TID_MID_ERROR_OTHER_PAY_METHOD_AVAILABLE, ErrorCard.TIMEOUT_ERROR_DIALOG_FROM_BANK -> { ->
                 setResult(RESULT_CANCELED)
                 clicked.value = true
                 finish()
