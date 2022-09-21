@@ -2,6 +2,7 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
@@ -209,19 +210,27 @@ class DirectDebitActivity : BaseActivity() {
         } else {
             val status = response?.transactionStatus
             val transactionId = response?.transactionId
-            SnapWebView(
-                title = title,
-                paymentType = paymentType,
-                url = url,
-                onPageStarted = {
-                    Log.d("WebView", "Started")
-                    finishDirectDebitPayment(
-                        status = status,
-                        transactionId = transactionId
-                    )
-                },
-                onPageFinished = { }
-            )
+            if (paymentType == PaymentType.KLIK_BCA) {
+                openWebLink(
+                    url = url,
+                    status = status,
+                    transactionId = transactionId
+                )
+            } else {
+                SnapWebView(
+                    title = title,
+                    paymentType = paymentType,
+                    url = url,
+                    onPageStarted = {
+                        Log.d("WebView", "Started")
+                        finishDirectDebitPayment(
+                            status = status,
+                            transactionId = transactionId
+                        )
+                    },
+                    onPageFinished = { }
+                )
+            }
         }
     }
 
@@ -242,6 +251,20 @@ class DirectDebitActivity : BaseActivity() {
             setResult(RESULT_OK, data)
             finish()
         }
+    }
+
+    private fun openWebLink(
+        url: String,
+        status: String?,
+        transactionId: String?
+    ) {
+        intent = Intent(Intent.ACTION_VIEW)
+        intent.data = (Uri.parse(url))
+        startActivity(intent)
+        finishDirectDebitPayment(
+            status = status,
+            transactionId = transactionId
+        )
     }
 
     private fun enableButton(paymentType: String, userId: String): Boolean {
