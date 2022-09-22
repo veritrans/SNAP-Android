@@ -18,12 +18,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.SnapCore
-import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
-import com.midtrans.sdk.corekit.api.model.CustomerDetails
-import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
-import com.midtrans.sdk.corekit.api.model.TransactionResult
+import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import java.util.*
@@ -42,8 +39,8 @@ class SampleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         SnapCore.Builder()
             .withContext(this.applicationContext)
-            .withMerchantUrl("https://charmenzy-mid-mobile-sandbox.herokuapp.com/")
-            .withMerchantClientKey("SB-Mid-client-zt7XrRxPQXZNvuBY")
+            .withMerchantUrl("https://fiesta-point-sample.herokuapp.com/")
+            .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
             .build()
         viewModel.getHelloFromSnap()
         setContent { Greeting() }
@@ -207,6 +204,7 @@ class SampleActivity : AppCompatActivity() {
                         email = "aribhakti@email.com",
                         phone = "087788778212"
                     ),
+                    uobEzpayCallback = PaymentCallback(callbackUrl = "demo://snap"),
                     paymentCallback = object : Callback<TransactionResult> {
                         override fun onSuccess(result: TransactionResult) {
                             Toast.makeText(

@@ -42,21 +42,23 @@ fun SnapWebView(
     urlLoadingOverride: ((WebView, String) -> Boolean)? = null
 ) {
     Column {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .background(color = SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_LIGHT))
-                .fillMaxWidth(1f)
-                .height(64.dp)
-        ) {
-            Text(
-                text = title,
-                style = SnapTypography.STYLES.snapAppBar,
+        if (title.isNotEmpty()) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
                 modifier = Modifier
+                    .background(color = SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_LIGHT))
                     .fillMaxWidth(1f)
-                    .padding(start = 21.dp)
-            )
+                    .height(64.dp)
+            ) {
+                Text(
+                    text = title,
+                    style = SnapTypography.STYLES.snapAppBar,
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                        .padding(start = 21.dp)
+                )
+            }
         }
 
         AndroidView(factory = {
@@ -203,11 +205,6 @@ private inline fun finishWebView(
     onFinishWebView: () -> Unit
 ) {
     when (paymentType) {
-        PaymentType.KLIK_BCA -> {
-            if (url.contains(SnapWebViewClient.CALLBACK_KLIK_BCA, true)) {
-                onFinishWebView.invoke()
-            }
-        }
         PaymentType.BCA_KLIKPAY -> {
             if (url.contains(SnapWebViewClient.CALLBACK_BCA_KLIK_PAY, true)) {
                 onFinishWebView.invoke()
@@ -228,7 +225,9 @@ private inline fun finishWebView(
                 onFinishWebView.invoke()
             }
         }
-        PaymentType.GOPAY, PaymentType.SHOPEEPAY -> {
+        PaymentType.GOPAY,
+        PaymentType.SHOPEEPAY,
+        PaymentType.UOB_EZPAY_APP-> {
             onFinishWebView.invoke()
         }
     }
@@ -244,7 +243,6 @@ private class SnapWebViewClient(
     }
 
     companion object {
-        const val CALLBACK_KLIK_BCA = "/inquiry" //TODO klik bca behavior is not final yet, this is for simulate web view only
         const val CALLBACK_BCA_KLIK_PAY = "?id="
         const val CALLBACK_CIMB_CLICKS = "cimb-clicks/response"
         const val CALLBACK_DANAMON_ONLINE = "/callback?signature="

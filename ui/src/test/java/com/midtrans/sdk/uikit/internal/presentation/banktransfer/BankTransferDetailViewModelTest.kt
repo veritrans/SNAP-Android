@@ -13,11 +13,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
-import org.mockito.ArgumentCaptor
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.*
 import java.time.Clock
-import java.time.Duration
 import java.time.Instant
 import java.util.*
 import java.util.concurrent.CountDownLatch
@@ -81,8 +79,8 @@ internal class BankTransferDetailViewModelTest {
         `when`(dateTimeUtil.getCalendar(null)).thenReturn(
             Calendar.getInstance().apply { time = Date(1609907570066L) }
         )
-        `when`(dateTimeUtil.getDuration(any())).thenReturn(Duration.ofMillis(1000L)) //only this matter for final result
-        `when`(dateTimeUtil.getTimeDiffInMillis(any(), any())).thenReturn(100000L)
+        `when`(dateTimeUtil.getExpiredHour(any())).thenReturn("00:00:01")
+
         val bankTransferDetailViewModel =
             BankTransferDetailViewModel(snapCore = snapCore, dateTimeUtil)
         bankTransferDetailViewModel.chargeBankTransfer(

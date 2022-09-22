@@ -36,6 +36,7 @@ import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferLis
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
+import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobSelectionActivity
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
@@ -351,8 +352,8 @@ class PaymentOptionActivity : BaseActivity() {
                             transactionDetails = transactionDetails,
                             totalAmount = totalAmount,
                             customerInfo = customerInfo,
-                            creditCard = creditCard,
-//                            expiryTime = expiryTime
+                            creditCard = creditCard
+//                            expiryTime = expiryTime //TODO will be fixed by pak wahyu
                         )
                     }
                 )
@@ -370,6 +371,18 @@ class PaymentOptionActivity : BaseActivity() {
                         )
                     )
                 }
+            },
+            Pair(PaymentType.UOB_EZPAY) {
+                resultLauncher.launch(
+                    UobSelectionActivity.getIntent(
+                        activityContext = this,
+                        snapToken = snapToken,
+                        uobModes = ArrayList(paymentMethodItem.methods),
+                        amount = totalAmount,
+                        orderId = orderId,
+                        customerInfo = customerInfo
+                    )
+                )
             },
             Pair(PaymentType.SHOPEEPAY, eWalletPaymentLauncher),
             Pair(PaymentType.SHOPEEPAY_QRIS, eWalletPaymentLauncher),
