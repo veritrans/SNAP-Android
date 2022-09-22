@@ -76,7 +76,7 @@ internal class CreditCardActivity : BaseActivity() {
     }
 
     private val withCustomerPhoneEmail: Boolean by lazy {
-        merchantData?.showCreditCardCustomerInfo ?: false
+       merchantData?.showCreditCardCustomerInfo ?: false
     }
 
     private val allowRetry: Boolean by lazy {
@@ -405,11 +405,21 @@ internal class CreditCardActivity : BaseActivity() {
                                 isFocused = emailAddressFieldFocused,
                                 onFocusChange = { emailAddressFieldFocused = it },
                                 modifier = Modifier
-                                    .fillMaxWidth(1f)
-                                    .padding(bottom = 16.dp),
+                                    .fillMaxWidth(1f),
                                 hint = stringResource(id = R.string.cc_dc_main_screen_placeholder_email),
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                             )
+
+                            if (!emailAddressFieldFocused && emailAddress.text.isNotBlank() && !SnapCreditCardUtil.isValidEmail(emailAddress.text)) {
+                                if (state.cardNumber.text.isEmpty()){
+                                    Text(
+                                        text = stringResource(id = R.string.cc_dc_main_screen_email_invalid),
+                                        style = SnapTypography.STYLES.snapTextSmallRegular,
+                                        color = SnapColors.getARGBColor(SnapColors.SUPPORT_DANGER_DEFAULT)
+                                    )
+                                }
+                            }
+                            Box(modifier = Modifier.padding(8.dp))
                         }
                         NormalCardItem(
                             state = state,
