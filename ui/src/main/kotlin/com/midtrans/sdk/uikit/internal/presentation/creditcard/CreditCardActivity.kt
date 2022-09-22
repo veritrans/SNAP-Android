@@ -1,9 +1,11 @@
 package com.midtrans.sdk.uikit.internal.presentation.creditcard
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -21,9 +23,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
 import com.midtrans.sdk.corekit.api.model.CreditCard
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.internal.network.model.response.MerchantData
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
@@ -147,11 +151,11 @@ internal class CreditCardActivity : BaseActivity() {
                     total = totalAmount,
                     orderId = it?.orderId.toString()
                 )
-                startActivity(intent)
+                resultLauncher.launch(intent)
             }
         })
         viewModel.getTransactionStatusLiveData().observe(this, Observer {
-            var intent = Intent()
+            var intent: Intent
             when (it.statusCode) {
                 UiKitConstants.STATUS_CODE_200 -> {
                     intent = SuccessScreenActivity.getIntent(
@@ -159,19 +163,19 @@ internal class CreditCardActivity : BaseActivity() {
                         total = totalAmount,
                         orderId = it?.orderId.toString()
                     )
-                }
-                else -> {
-                    intent = ErrorScreenActivity.getIntent(
-                        activityContext = this@CreditCardActivity,
-                        title = it.statusCode.toString(),
-                        content = it.transactionStatus.toString()
-                    )
+                    resultLauncher.launch(intent)
                 }
             }
-            startActivity(intent)
         })
     }
 
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                setResult(RESULT_OK)
+                finish()
+            }
+        }
 
     @Composable
     private fun CreditCardPageStateFull(
@@ -206,15 +210,14 @@ internal class CreditCardActivity : BaseActivity() {
         val bankCodeId by bankCodeIdState
         var isExpanding by remember { mutableStateOf(false) }
 
-        if (transactionResponse?.value?.statusCode == UiKitConstants.STATUS_CODE_201 && !transactionResponse?.value?.redirectUrl.isNullOrEmpty()) {
-            transactionResponse?.value?.redirectUrl?.let {
+        if (transactionResponse?.value?.statusCode == UiKitConstants.STATUS_CODE_201 && !transactionResponse.value?.redirectUrl.isNullOrEmpty()) {
+            transactionResponse.value?.redirectUrl?.let {
                 SnapThreeDsWebView(
                     url = it,
                     transactionResponse = transactionResponse.value,
                     onPageStarted = {},
                     onPageFinished = {
-                        finish()
-                        viewModel?.getTransactionStatus(snapToken)
+                        viewModel.getTransactionStatus(snapToken)
                     }
                 )
             }
@@ -263,18 +266,18 @@ internal class CreditCardActivity : BaseActivity() {
                 },
                 withCustomerPhoneEmail = withCustomerPhoneEmail
             )
-            val errorState by errorTypeState
-            errorState?.let {
-                val clicked = remember {
-                    mutableStateOf(false)
-                }
-                ErrorCard(
-                    type = it,
-                    getErrorCta(type = it, state = state, clicked = clicked)
-                ).apply {
-                    if (clicked.value) {
-                        hide()
-                    }
+        }
+        val errorState by errorTypeState
+        errorState?.let {
+            val clicked = remember {
+                mutableStateOf(false)
+            }
+            ErrorCard(
+                type = it,
+                getErrorCta(type = it, state = state, clicked = clicked)
+            ).apply {
+                if (clicked.value) {
+                    hide()
                 }
             }
         }

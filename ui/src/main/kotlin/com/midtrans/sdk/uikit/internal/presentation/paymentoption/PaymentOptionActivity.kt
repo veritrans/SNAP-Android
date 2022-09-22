@@ -333,7 +333,7 @@ class PaymentOptionActivity : BaseActivity() {
             Pair("credit_card") {
                 resultLauncher.launch(
                     //TODO: Need to revisit, if we need to enable adding a flag on sdk to force Normal Transaction like old ios sdk
-                    if (creditCard?.savedTokens.isNullOrEmpty()) {
+                    if (creditCard?.savedTokens.isNullOrEmpty().or(true)) {
                         CreditCardActivity.getIntent(
                             activityContext = this,
                             snapToken = snapToken,
