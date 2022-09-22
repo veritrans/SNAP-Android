@@ -301,5 +301,4 @@ internal class PaymentUsecase(
             deliverError(error, callback)
         }
     }
-
 }
