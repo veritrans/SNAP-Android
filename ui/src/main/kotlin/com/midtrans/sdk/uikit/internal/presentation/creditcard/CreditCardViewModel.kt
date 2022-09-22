@@ -145,20 +145,20 @@ internal class CreditCardViewModel @Inject constructor(
             }
         )
     }
-//TODO: not used yet
-//    fun getTransactionStatus(snapToken: String){
-//        snapCore.getTransactionStatus(
-//            snapToken = snapToken,
-//            callback = object : Callback<TransactionResponse> {
-//                override fun onSuccess(result: TransactionResponse) {
-//                    _transactionStatus.value = result
-//                }
-//                override fun onError(error: SnapError) {
-//                   _error.value = error
-//                }
-//            }
-//        )
-//    }
+
+    fun getTransactionStatus(snapToken: String){
+        snapCore.getTransactionStatus(
+            snapToken = snapToken,
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    _transactionStatus.value = result
+                }
+                override fun onError(error: SnapError) {
+                   _error.value = errorCard.getErrorCardType(error, allowRetry)
+                }
+            }
+        )
+    }
 
     fun getExpiredHour(): String {
         val duration = datetimeUtil.getDuration(

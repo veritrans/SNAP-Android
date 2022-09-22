@@ -202,61 +202,79 @@ internal class CreditCardActivity : BaseActivity() {
                 customerPhone = TextFieldValue()
             )
         }
+        val transactionResponse = viewModel?.getTransactionResponseLiveData()?.observeAsState()
         val bankCodeId by bankCodeIdState
         var isExpanding by remember { mutableStateOf(false) }
 
-        CreditCardPageStateLess(
-            state = state,
-            isExpandingState = isExpanding,
-            totalAmount = totalAmount,
-            orderId = transactionDetails?.orderId.toString(),
-            customerDetail = customerDetail,
-            creditCard = creditCard,
-            bankCodeState = bankCodeId,
-            remainingTimeState = remainingTimeState,
-            onExpand = { isExpanding = it },
-            onCardNumberValueChange = {
-
-                state.cardNumber = it
-                var cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
-                if (cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER) {
-                    var eightDigitNumber = cardNumberWithoutSpace.substring(
-                        0,
-                        SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER
-                    )
-                    if (eightDigitNumber != previousEightDigitNumber) {
-                        previousEightDigitNumber = eightDigitNumber
-                        viewModel?.getBankIconImage(
-                            binNumber = eightDigitNumber
-                        )
+        if (transactionResponse?.value?.statusCode == UiKitConstants.STATUS_CODE_201 && !transactionResponse?.value?.redirectUrl.isNullOrEmpty()) {
+            transactionResponse?.value?.redirectUrl?.let {
+                SnapThreeDsWebView(
+                    url = it,
+                    transactionResponse = transactionResponse.value,
+                    onPageStarted = {},
+                    onPageFinished = {
+                        finish()
+                        viewModel?.getTransactionStatus(snapToken)
                     }
-                } else {
-                    viewModel?.setBankIconToNull()
-                    previousEightDigitNumber = cardNumberWithoutSpace
-                }
-            },
-            onClick = {
-                viewModel?.chargeUsingCreditCard(
-                    transactionDetails = transactionDetails,
-                    cardNumber = state.cardNumber,
-                    cardExpiry = state.expiry,
-                    cardCvv = state.cvv,
-                    isSavedCard = state.isSavedCardChecked,
-                    customerEmail = state.customerEmail.text,
-                    customerPhone = state.customerPhone.text,
-                    snapToken = snapToken
                 )
-            },
-            withCustomerPhoneEmail = withCustomerPhoneEmail
-        )
-        val errorState by errorTypeState
-        errorState?.let {
-            val clicked = remember {
-                mutableStateOf(false)
             }
-            ErrorCard(type = it, getErrorCta(type = it, state = state, clicked = clicked)).apply {
-                if(clicked.value){
-                    hide()
+        } else {
+            CreditCardPageStateLess(
+                state = state,
+                isExpandingState = isExpanding,
+                totalAmount = totalAmount,
+                orderId = transactionDetails?.orderId.toString(),
+                customerDetail = customerDetail,
+                creditCard = creditCard,
+                bankCodeState = bankCodeId,
+                remainingTimeState = remainingTimeState,
+                onExpand = { isExpanding = it },
+                onCardNumberValueChange = {
+
+                    state.cardNumber = it
+                    var cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
+                    if (cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER) {
+                        var eightDigitNumber = cardNumberWithoutSpace.substring(
+                            0,
+                            SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER
+                        )
+                        if (eightDigitNumber != previousEightDigitNumber) {
+                            previousEightDigitNumber = eightDigitNumber
+                            viewModel?.getBankIconImage(
+                                binNumber = eightDigitNumber
+                            )
+                        }
+                    } else {
+                        viewModel?.setBankIconToNull()
+                        previousEightDigitNumber = cardNumberWithoutSpace
+                    }
+                },
+                onClick = {
+                    viewModel?.chargeUsingCreditCard(
+                        transactionDetails = transactionDetails,
+                        cardNumber = state.cardNumber,
+                        cardExpiry = state.expiry,
+                        cardCvv = state.cvv,
+                        isSavedCard = state.isSavedCardChecked,
+                        customerEmail = state.customerEmail.text,
+                        customerPhone = state.customerPhone.text,
+                        snapToken = snapToken
+                    )
+                },
+                withCustomerPhoneEmail = withCustomerPhoneEmail
+            )
+            val errorState by errorTypeState
+            errorState?.let {
+                val clicked = remember {
+                    mutableStateOf(false)
+                }
+                ErrorCard(
+                    type = it,
+                    getErrorCta(type = it, state = state, clicked = clicked)
+                ).apply {
+                    if (clicked.value) {
+                        hide()
+                    }
                 }
             }
         }
