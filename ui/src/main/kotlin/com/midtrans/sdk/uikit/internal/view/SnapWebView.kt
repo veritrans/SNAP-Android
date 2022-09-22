@@ -249,6 +249,5 @@ private class SnapWebViewClient(
         const val CALLBACK_BRI_EPAY = "briPayment?tid="
         const val CALLBACK_OLD_THREE_DS = "callback"
         const val CALLBACK_NEW_THREE_DS = "result-completion"
-        const val CALLBACK_UOB_EZPAY = "/finish" //TODO make sure why in midtrans sdk uob web opened through browser
     }
 }
