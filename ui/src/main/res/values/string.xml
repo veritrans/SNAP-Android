@@ -74,6 +74,7 @@
 
     <string name="cc_dc_main_screen_email">E-mail</string>
     <string name="cc_dc_main_screen_placeholder_email">youremail@email.com</string>
+    <string name="cc_dc_main_screen_email_invalid">Invalid email.</string>
 
     <string name="cc_dc_main_screen_card_number">Card number</string>
     <string name="cc_dc_main_screen_placeholder_card_number">0000 0000 0000 0000</string>

@@ -1,5 +1,6 @@
 package com.midtrans.sdk.uikit.internal.util
 
+import android.util.Patterns
 import androidx.compose.ui.text.input.TextFieldValue
 import com.midtrans.sdk.uikit.R
 
@@ -98,5 +99,9 @@ object SnapCreditCardUtil {
             "mega" -> R.drawable.ic_bank_mega_24
             else -> null
         }
+    }
+
+    fun isValidEmail(target: String): Boolean {
+        return target.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(target).matches()
     }
 }

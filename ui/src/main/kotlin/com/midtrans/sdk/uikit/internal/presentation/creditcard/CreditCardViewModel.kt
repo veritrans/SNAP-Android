@@ -128,8 +128,6 @@ internal class CreditCardViewModel @Inject constructor(
                                     _transactionResponse.value = result
                                     null
                                 }
-
-
                             }
 
                             override fun onError(error: SnapError) {
@@ -151,7 +149,12 @@ internal class CreditCardViewModel @Inject constructor(
             snapToken = snapToken,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
-                    _transactionStatus.value = result
+                    errorCard.getErrorCardType(result, allowRetry)?.let {
+                        _error.value = it
+                    } ?: run {
+                        _transactionResponse.value = result
+                        null
+                    }
                 }
                 override fun onError(error: SnapError) {
                    _error.value = errorCard.getErrorCardType(error, allowRetry)

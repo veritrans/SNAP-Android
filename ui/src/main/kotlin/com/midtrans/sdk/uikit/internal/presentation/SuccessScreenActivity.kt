@@ -45,6 +45,7 @@ class SuccessScreenActivity : BaseActivity() {
                 isWithBackButton = !data.total.isNullOrEmpty() && !data.orderId.isNullOrEmpty()
             )
         }
+        setResult(RESULT_OK)
     }
 
     @Preview
@@ -117,7 +118,6 @@ class SuccessScreenActivity : BaseActivity() {
                         .fillMaxWidth(1f)
                         .padding(16.dp)
                 ) {
-                    //TODO implement go back to host app
                     finish()
                 }
             } else {
