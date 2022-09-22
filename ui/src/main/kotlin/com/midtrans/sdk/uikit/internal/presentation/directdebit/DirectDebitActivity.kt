@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -222,7 +221,6 @@ class DirectDebitActivity : BaseActivity() {
                     paymentType = paymentType,
                     url = url,
                     onPageStarted = {
-                        Log.d("WebView", "Started")
                         finishDirectDebitPayment(
                             status = status,
                             transactionId = transactionId
