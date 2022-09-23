@@ -32,6 +32,8 @@
     <string name="payment_summary_shopeepay">ShopeePay/e-Wallet Lainnya</string>
     <string name="payment_summary_alfamart">Alfa Group</string>
     <string name="payment_summary_indomaret">Indomaret</string>
+    <string name="payment_title_gopay">GoPay</string>
+    <string name="payment_title_shopeepay">ShopeePay</string>
 
 
     <string name="success_screen_v1_status">Pembayaran berhasil</string>
@@ -335,7 +337,7 @@
         <item><data><![CDATA[Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke situs web UOB EZ Pay.]]></data></item>
         <item><data><![CDATA[Masuk menggunakan userID &amp; password Anda.]]></data></item>
         <item><data><![CDATA[Masukkan OTP yang dikirim via SMS ketika diminta.]]></data></item>
-        <item><data><![CDATA[Pilih akun untuk melakukan pembayaran, lalu pilih \"Lanjutkan\".]]></data></item>
+        <item><data><![CDATA[Pilih akun untuk melakukan pembayaran, lalu pilih &#34;Lanjutkan&#34;.]]></data></item>
         <item><data><![CDATA[Periksa detail pembayaran, lalu masukkan OTP yang dikirim via SMS.]]></data></item>
         <item><data><![CDATA[Konfirmasi pembayaran.]]></data></item>
     </string-array>
@@ -346,7 +348,7 @@
     <string-array name="uob_tmrw_how_to_pay">
         <item><data><![CDATA[Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke aplikasi TMRW.]]></data></item>
         <item><data><![CDATA[Masuk menggunakan userID &amp; password Anda.]]></data></item>
-        <item><data><![CDATA[Pilih akun untuk melanjutkan pembayaran, lalu klik "Lanjutkan".]]></data></item>
+        <item><data><![CDATA[Pilih akun untuk melanjutkan pembayaran, lalu klik &#34;Lanjutkan&#34;.]]></data></item>
         <item><data><![CDATA[Periksa detail pembayaran, lalu swipe kanan untuk mengkonfirmasi detail.]]></data></item>
         <item><data><![CDATA[Masukkan Secure PIN untuk menyelesaikan pembayaran.]]></data></item>
     </string-array>
