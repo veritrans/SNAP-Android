@@ -517,11 +517,7 @@ fun NormalCardItem(
                         )
                         state.isCardNumberInvalid =
                             cardLength != SnapCreditCardUtil.FORMATTED_MAX_CARD_NUMBER_LENGTH
-                                    || !SnapCreditCardUtil.isValidCardNumber(
-                                SnapCreditCardUtil.getCardNumberFromTextField(
-                                    it
-                                )
-                            )
+                                    || !SnapCreditCardUtil.isValidCardNumber(SnapCreditCardUtil.getCardNumberFromTextField(it))
                                     || isBinBlocked
                         onCardNumberValueChange(formatCreditCard(it))
                     },
