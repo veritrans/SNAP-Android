@@ -456,7 +456,7 @@ internal class CreditCardActivity : BaseActivity() {
                         state.cardNumber.text.isEmpty() ||
                         state.expiry.text.isEmpty() ||
                         state.cvv.text.isEmpty())
-                    .or(!SnapCreditCardUtil.isValidEmail(emailAddress.text)),
+                    .or(!SnapCreditCardUtil.isValidEmail(emailAddress.text).or(emailAddress.text.isBlank())),
                 onClick = { onClick() }
             )
         }
