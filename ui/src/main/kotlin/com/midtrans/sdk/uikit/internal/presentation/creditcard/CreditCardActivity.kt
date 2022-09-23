@@ -1,9 +1,11 @@
 package com.midtrans.sdk.uikit.internal.presentation.creditcard
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -30,6 +32,7 @@ import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -65,7 +68,7 @@ internal class CreditCardActivity : BaseActivity() {
             ?: throw RuntimeException("Snaptoken must not be empty")
     }
 
-    private val expiryTIme: String? by lazy {
+    private val expiryTime: String? by lazy {
         intent.getStringExtra(EXTRA_EXPIRY_TIME)
     }
 
@@ -97,7 +100,7 @@ internal class CreditCardActivity : BaseActivity() {
             transactionDetails: TransactionDetails?,
             customerInfo: CustomerInfo? = null,
             creditCard: CreditCard?,
-            expiryTIme: String?,
+            expiryTime: String?,
             withMerchantData: Merchant? = null
         ): Intent {
             return Intent(activityContext, CreditCardActivity::class.java).apply {
@@ -109,7 +112,7 @@ internal class CreditCardActivity : BaseActivity() {
                     customerInfo
                 )
                 putExtra(EXTRA_CREDIT_CARD, creditCard)
-                putExtra(EXTRA_EXPIRY_TIME, expiryTIme)
+                putExtra(EXTRA_EXPIRY_TIME, expiryTime)
                 withMerchantData?.let { putExtra(EXTRA_MERCHANT_DATA, withMerchantData) }
             }
         }
@@ -119,7 +122,8 @@ internal class CreditCardActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build()
             .inject(this)
-        viewModel.setExpiryTime(expiryTIme)
+        viewModel.setExpiryTime(expiryTime)
+        viewModel.setAllowRetry(allowRetry)
         initTransactionResultScreenObserver()
         setContent {
             CreditCardPageStateFull(
@@ -138,17 +142,37 @@ internal class CreditCardActivity : BaseActivity() {
 
     private fun initTransactionResultScreenObserver() {
         viewModel.getTransactionResponseLiveData().observe(this, Observer {
-            val intent = SuccessScreenActivity.getIntent(
-                activityContext = this@CreditCardActivity,
-                total = totalAmount,
-                orderId = it?.orderId.toString()
-            )
-            startActivity(intent)
+            if (it.statusCode != UiKitConstants.STATUS_CODE_201 && it.redirectUrl.isNullOrEmpty()) {
+                val intent = SuccessScreenActivity.getIntent(
+                    activityContext = this@CreditCardActivity,
+                    total = totalAmount,
+                    orderId = it?.orderId.toString()
+                )
+                resultLauncher.launch(intent)
+            }
+        })
+        viewModel.getTransactionStatusLiveData().observe(this, Observer {
+            var intent: Intent
+            when (it.statusCode) {
+                UiKitConstants.STATUS_CODE_200 -> {
+                    intent = SuccessScreenActivity.getIntent(
+                        activityContext = this@CreditCardActivity,
+                        total = totalAmount,
+                        orderId = it?.orderId.toString()
+                    )
+                    resultLauncher.launch(intent)
+                }
+            }
         })
     }
 
-
-//    private fun startErrorCard()
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                setResult(RESULT_OK)
+                finish()
+            }
+        }
 
     @Composable
     private fun CreditCardPageStateFull(
@@ -179,61 +203,77 @@ internal class CreditCardActivity : BaseActivity() {
                 customerPhone = TextFieldValue()
             )
         }
-
+        val transactionResponse = viewModel?.getTransactionResponseLiveData()?.observeAsState()
         val bankCodeId by bankCodeIdState
         var isExpanding by remember { mutableStateOf(false) }
 
-        CreditCardPageStateLess(
-            state = state,
-            isExpandingState = isExpanding,
-            totalAmount = totalAmount,
-            orderId = transactionDetails?.orderId.toString(),
-            customerDetail = customerDetail,
-            creditCard = creditCard,
-            bankCodeState = bankCodeId,
-            remainingTimeState = remainingTimeState,
-            onExpand = { isExpanding = it },
-            onCardNumberValueChange = {
-
-                state.cardNumber = it
-                var cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
-                if (cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER) {
-                    var eightDigitNumber = cardNumberWithoutSpace.substring(
-                        0,
-                        SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER
-                    )
-                    if (eightDigitNumber != previousEightDigitNumber) {
-                        previousEightDigitNumber = eightDigitNumber
-                        viewModel?.getBankIconImage(
-                            binNumber = eightDigitNumber
-                        )
+        if (transactionResponse?.value?.statusCode == UiKitConstants.STATUS_CODE_201 && !transactionResponse.value?.redirectUrl.isNullOrEmpty()) {
+            transactionResponse.value?.redirectUrl?.let {
+                SnapThreeDsWebView(
+                    url = it,
+                    transactionResponse = transactionResponse.value,
+                    onPageStarted = {},
+                    onPageFinished = {
+                        viewModel.getTransactionStatus(snapToken)
                     }
-                } else {
-                    viewModel?.setBankIconToNull()
-                    previousEightDigitNumber = cardNumberWithoutSpace
-                }
-            },
-            onClick = {
-                viewModel?.chargeUsingCreditCard(
-                    transactionDetails = transactionDetails,
-                    cardNumber = state.cardNumber,
-                    cardExpiry = state.expiry,
-                    cardCvv = state.cvv,
-                    isSavedCard = state.isSavedCardChecked,
-                    customerEmail = state.customerEmail.text,
-                    customerPhone = state.customerPhone.text,
-                    snapToken = snapToken
                 )
-            },
-            withCustomerPhoneEmail = withCustomerPhoneEmail
-        )
+            }
+        } else {
+            CreditCardPageStateLess(
+                state = state,
+                isExpandingState = isExpanding,
+                totalAmount = totalAmount,
+                orderId = transactionDetails?.orderId.toString(),
+                customerDetail = customerDetail,
+                creditCard = creditCard,
+                bankCodeState = bankCodeId,
+                remainingTimeState = remainingTimeState,
+                onExpand = { isExpanding = it },
+                onCardNumberValueChange = {
+
+                    state.cardNumber = it
+                    var cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
+                    if (cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER) {
+                        var eightDigitNumber = cardNumberWithoutSpace.substring(
+                            0,
+                            SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER
+                        )
+                        if (eightDigitNumber != previousEightDigitNumber) {
+                            previousEightDigitNumber = eightDigitNumber
+                            viewModel?.getBankIconImage(
+                                binNumber = eightDigitNumber
+                            )
+                        }
+                    } else {
+                        viewModel?.setBankIconToNull()
+                        previousEightDigitNumber = cardNumberWithoutSpace
+                    }
+                },
+                onClick = {
+                    viewModel?.chargeUsingCreditCard(
+                        transactionDetails = transactionDetails,
+                        cardNumber = state.cardNumber,
+                        cardExpiry = state.expiry,
+                        cardCvv = state.cvv,
+                        isSavedCard = state.isSavedCardChecked,
+                        customerEmail = state.customerEmail.text,
+                        customerPhone = state.customerPhone.text,
+                        snapToken = snapToken
+                    )
+                },
+                withCustomerPhoneEmail = withCustomerPhoneEmail
+            )
+        }
         val errorState by errorTypeState
         errorState?.let {
             val clicked = remember {
                 mutableStateOf(false)
             }
-            ErrorCard(type = it, getErrorCta(type = it, state = state, clicked = clicked)).apply {
-                if(clicked.value){
+            ErrorCard(
+                type = it,
+                getErrorCta(type = it, state = state, clicked = clicked)
+            ).apply {
+                if (clicked.value) {
                     hide()
                 }
             }
@@ -248,7 +288,7 @@ internal class CreditCardActivity : BaseActivity() {
                 finish()
             }
 
-            ErrorCard.TIDMID_ERROR_OTHER_PAY_METHOD_AVAILABLE, ErrorCard.TIMEOUT_ERROR_DIALOG_FROM_BANK -> { ->
+            ErrorCard.TID_MID_ERROR_OTHER_PAY_METHOD_AVAILABLE, ErrorCard.TIMEOUT_ERROR_DIALOG_FROM_BANK -> { ->
                 setResult(RESULT_CANCELED)
                 clicked.value = true
                 finish()
@@ -297,6 +337,7 @@ internal class CreditCardActivity : BaseActivity() {
                 onBackPressed()
             }
             val scrollState = rememberScrollState()
+            var emailAddress by remember { mutableStateOf(TextFieldValue()) }
 
             SnapOverlayExpandingBox(
                 isExpanded = isExpandingState,
@@ -327,7 +368,6 @@ internal class CreditCardActivity : BaseActivity() {
                             .padding(top = 24.dp)
                     ) {
                         var phoneNumber by remember { mutableStateOf(TextFieldValue()) }
-                        var emailAddress by remember { mutableStateOf(TextFieldValue()) }
                         var phoneNumberFieldFocused by remember { mutableStateOf(false) }
                         var emailAddressFieldFocused by remember { mutableStateOf(false) }
                         if (withCustomerPhoneEmail) {
@@ -362,11 +402,19 @@ internal class CreditCardActivity : BaseActivity() {
                                 isFocused = emailAddressFieldFocused,
                                 onFocusChange = { emailAddressFieldFocused = it },
                                 modifier = Modifier
-                                    .fillMaxWidth(1f)
-                                    .padding(bottom = 16.dp),
+                                    .fillMaxWidth(1f),
                                 hint = stringResource(id = R.string.cc_dc_main_screen_placeholder_email),
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                             )
+
+                            if (!emailAddressFieldFocused && emailAddress.text.isNotBlank() && !SnapCreditCardUtil.isValidEmail(emailAddress.text)) {
+                                    Text(
+                                        text = stringResource(id = R.string.cc_dc_main_screen_email_invalid),
+                                        style = SnapTypography.STYLES.snapTextSmallRegular,
+                                        color = SnapColors.getARGBColor(SnapColors.SUPPORT_DANGER_DEFAULT)
+                                    )
+                            }
+                            Box(modifier = Modifier.padding(8.dp))
                         }
                         NormalCardItem(
                             state = state,
@@ -404,7 +452,8 @@ internal class CreditCardActivity : BaseActivity() {
                         state.isCvvInvalid ||
                         state.cardNumber.text.isEmpty() ||
                         state.expiry.text.isEmpty() ||
-                        state.cvv.text.isEmpty()),
+                        state.cvv.text.isEmpty())
+                    .or(!SnapCreditCardUtil.isValidEmail(emailAddress.text)),
                 onClick = { onClick() }
             )
         }
@@ -443,3 +492,4 @@ internal class CreditCardActivity : BaseActivity() {
         )
     }
 }
+

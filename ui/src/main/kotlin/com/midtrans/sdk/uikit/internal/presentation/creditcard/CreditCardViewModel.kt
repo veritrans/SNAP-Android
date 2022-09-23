@@ -26,12 +26,14 @@ internal class CreditCardViewModel @Inject constructor(
 
     val bankIconId = MutableLiveData<Int>()
     private val _transactionResponse = MutableLiveData<TransactionResponse>()
+    private val _transactionStatus = MutableLiveData<TransactionResponse>()
     private val _error = MutableLiveData<Int>()
     private var expireTimeInMillis = 0L
     private var allowRetry = false
     var creditCard: CreditCard?  = null
 
     fun getTransactionResponseLiveData(): LiveData<TransactionResponse> = _transactionResponse
+    fun getTransactionStatusLiveData(): LiveData<TransactionResponse> = _transactionStatus
     fun getErrorLiveData(): LiveData<Int> = _error
     fun setExpiryTime(expireTime: String?) {
         expireTime?.let {
@@ -118,25 +120,42 @@ internal class CreditCardViewModel @Inject constructor(
                         paymentRequestBuilder = ccRequestBuilder,
                         callback = object : Callback<TransactionResponse> {
                             override fun onSuccess(result: TransactionResponse) {
-                                errorCard.getErrorCardType(result)?.let {
+                                errorCard.getErrorCardType(result, allowRetry)?.let {
                                     _error.value = it
                                 } ?: run {
                                     _transactionResponse.value = result
                                     null
                                 }
-
-
                             }
 
                             override fun onError(error: SnapError) {
-                                _error.value = errorCard.getErrorCardType(error)
+                                _error.value = errorCard.getErrorCardType(error, allowRetry)
                             }
                         }
                     )
                 }
 
                 override fun onError(error: SnapError) {
-                    _error.value = errorCard.getErrorCardType(error)
+                    _error.value = errorCard.getErrorCardType(error, allowRetry)
+                }
+            }
+        )
+    }
+
+    fun getTransactionStatus(snapToken: String){
+        snapCore.getTransactionStatus(
+            snapToken = snapToken,
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    errorCard.getErrorCardType(result, allowRetry)?.let {
+                        _error.value = it
+                    } ?: run {
+                        _transactionResponse.value = result
+                        null
+                    }
+                }
+                override fun onError(error: SnapError) {
+                   _error.value = errorCard.getErrorCardType(error, allowRetry)
                 }
             }
         )
@@ -150,7 +169,7 @@ internal class CreditCardViewModel @Inject constructor(
             )
         )
         return String.format(
-            "%02d:%02d:%02d",
+            TIME_FORMAT,
             duration.toHours(),
             duration.seconds % 3600 / 60,
             duration.seconds % 60
@@ -159,6 +178,7 @@ internal class CreditCardViewModel @Inject constructor(
 
     companion object {
         private const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
+        private const val TIME_FORMAT = "%02d:%02d:%02d"
         private val timeZoneUtc = TimeZone.getTimeZone("UTC")
     }
 }

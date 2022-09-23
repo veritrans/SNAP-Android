@@ -2,8 +2,8 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rxjava2.subscribeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -32,6 +33,9 @@ import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class DirectDebitActivity : BaseActivity() {
@@ -81,7 +85,8 @@ class DirectDebitActivity : BaseActivity() {
                 amount = amount,
                 orderId = orderId,
                 customerInfo = customerInfo,
-                response = viewModel.getTransactionResponse().observeAsState().value
+                response = viewModel.getTransactionResponse().observeAsState().value,
+                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
             )
         }
     }
@@ -94,13 +99,14 @@ class DirectDebitActivity : BaseActivity() {
             amount = "Rp.123999",
             orderId = "order-id",
             customerInfo = CustomerInfo(
-                name = "Dohn Joe",
+                name = "John Joe",
                 phone = "081234567890",
                 addressLines = listOf("address one", "address two")
             ),
             response = TransactionResponse(
                 transactionStatus = "pending"
-            )
+            ),
+            remainingTimeState = remember { mutableStateOf("00:00") }
         )
     }
 
@@ -110,13 +116,15 @@ class DirectDebitActivity : BaseActivity() {
         amount: String,
         orderId: String,
         customerInfo: CustomerInfo?,
-        response: TransactionResponse?
+        response: TransactionResponse?,
+        remainingTimeState: State<String>
     ) {
         var isCustomerDetailExpanded by remember { mutableStateOf(false) }
         var isInstructionExpanded by remember { mutableStateOf(false) }
         val title = stringResource(getTitleId(paymentType = paymentType))
-        val url = response?.redirectUrl.orEmpty()
         var userId by remember { mutableStateOf("") }
+        val url = response?.redirectUrl.orEmpty()
+        val remainingTime by remember { remainingTimeState }
 
         if (url.isEmpty()) {
             Column(
@@ -140,7 +148,7 @@ class DirectDebitActivity : BaseActivity() {
                             amount = amount,
                             orderId = orderId,
                             canExpand = customerInfo != null,
-                            remainingTime = null
+                            remainingTime = remainingTime
                         ) {
                             isCustomerDetailExpanded = it
                         }
@@ -168,7 +176,7 @@ class DirectDebitActivity : BaseActivity() {
                                 modifier = Modifier.padding(top = 28.dp),
                                 isExpanded = isInstructionExpanded,
                                 iconResId = R.drawable.ic_help,
-                                title = stringResource(R.string.bca_klik_pay_how_to_pay_title),
+                                title = stringResource(getCta(paymentType = paymentType)),
                                 onExpandClick = { isInstructionExpanded = !isInstructionExpanded },
                                 expandingContent = {
                                     Column {
@@ -201,39 +209,60 @@ class DirectDebitActivity : BaseActivity() {
         } else {
             val status = response?.transactionStatus
             val transactionId = response?.transactionId
-            SnapWebView(
-                title = title,
-                paymentType = paymentType,
-                url = url,
-                onPageStarted = {
-                    Log.d("WebView", "Started")
-                    if (status != null && transactionId != null) {
+            if (paymentType == PaymentType.KLIK_BCA) {
+                openWebLink(
+                    url = url,
+                    status = status,
+                    transactionId = transactionId
+                )
+            } else {
+                SnapWebView(
+                    title = title,
+                    paymentType = paymentType,
+                    url = url,
+                    onPageStarted = {
                         finishDirectDebitPayment(
                             status = status,
                             transactionId = transactionId
                         )
-                    }
-                },
-                onPageFinished = { }
-            )
+                    },
+                    onPageFinished = { }
+                )
+            }
         }
     }
 
     private fun finishDirectDebitPayment(
-        status: String,
-        transactionId: String
+        status: String?,
+        transactionId: String?
     ) {
-        val data = Intent()
-        data.putExtra( ///TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
-            UiKitConstants.KEY_TRANSACTION_RESULT,
-            TransactionResult(
-                status = status,
-                transactionId = transactionId,
-                paymentType = paymentType
+        if (status != null && transactionId != null) {
+            val data = Intent()
+            data.putExtra( ///TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
+                UiKitConstants.KEY_TRANSACTION_RESULT,
+                TransactionResult(
+                    status = status,
+                    transactionId = transactionId,
+                    paymentType = paymentType
+                )
             )
+            setResult(RESULT_OK, data)
+            finish()
+        }
+    }
+
+    private fun openWebLink(
+        url: String,
+        status: String?,
+        transactionId: String?
+    ) {
+        intent = Intent(Intent.ACTION_VIEW)
+        intent.data = (Uri.parse(url))
+        startActivity(intent)
+        finishDirectDebitPayment(
+            status = status,
+            transactionId = transactionId
         )
-        setResult(RESULT_OK, data)
-        finish()
     }
 
     private fun enableButton(paymentType: String, userId: String): Boolean {
@@ -296,7 +325,6 @@ class DirectDebitActivity : BaseActivity() {
         }
     }
 
-    @Composable
     private fun getTitleId(paymentType: String): Int {
         return when (paymentType) {
             PaymentType.KLIK_BCA -> R.string.klik_bca_title
@@ -308,7 +336,6 @@ class DirectDebitActivity : BaseActivity() {
         }
     }
 
-    @Composable
     private fun getInstructionId(paymentType: String): Int {
         return when (paymentType) {
             PaymentType.KLIK_BCA -> R.string.klik_bca_instruction
@@ -320,7 +347,6 @@ class DirectDebitActivity : BaseActivity() {
         }
     }
 
-    @Composable
     private fun getHowToPayId(paymentType: String): Int {
         return when (paymentType) {
             PaymentType.KLIK_BCA -> R.array.klik_bca_how_to_pay
@@ -330,6 +356,24 @@ class DirectDebitActivity : BaseActivity() {
             PaymentType.BRI_EPAY -> R.array.brimo_how_to_pay
             else -> 0
         }
+    }
+
+    private fun getCta(paymentType: String): Int {
+        return when (paymentType) {
+            PaymentType.KLIK_BCA -> R.string.klik_bca_cta
+            PaymentType.BCA_KLIKPAY -> R.string.bca_klik_pay_cta
+            PaymentType.CIMB_CLICKS -> R.string.octo_click_cta
+            PaymentType.DANAMON_ONLINE -> R.string.danamon_cta
+            PaymentType.BRI_EPAY -> R.string.brimo_cta
+            else -> 0
+        }
+    }
+
+    private fun updateExpiredTime(): Observable<String> {
+        return Observable
+            .interval(1L, TimeUnit.SECONDS)
+            .map { viewModel.getExpiredHour() }
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     companion object {

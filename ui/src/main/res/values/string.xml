@@ -74,6 +74,7 @@
 
     <string name="cc_dc_main_screen_email">E-mail</string>
     <string name="cc_dc_main_screen_placeholder_email">youremail@email.com</string>
+    <string name="cc_dc_main_screen_email_invalid">Invalid email.</string>
 
     <string name="cc_dc_main_screen_card_number">Card number</string>
     <string name="cc_dc_main_screen_placeholder_card_number">0000 0000 0000 0000</string>
@@ -334,15 +335,31 @@
     <string name="kredivo_redirection_main_message">Redirecting to Kredivo…</string>
     <string name="kredivo_redirection_cta">Open now</string>
 
+    <string name="uob_ez_pay_title">UOB EZ Pay</string>
+    <string name="uob_web_method_name">UOB EZ Pay via web</string>
+    <string name="uob_web_instruction">Please make sure that you have registered ID and complete your payment via UOB EZ Pay.</string>
+    <string-array name="uob_web_how_to_pay">
+        <item><data><![CDATA[Click <b>Pay now</b> and you will be redirected to UOB EZ Pay website.]]></data></item>
+        <item><data><![CDATA[Login using your userID &amp; password.]]></data></item>
+        <item><data><![CDATA[Enter OTP you\'ll receive via SMS when prompted.]]></data></item>
+        <item><data><![CDATA[Select the account that you would like to pay from and choose "Continue".]]></data></item>
+        <item><data><![CDATA[Review your transaction details, enter the OTP you\'ll receive via SMS.]]></data></item>
+        <item><data><![CDATA[Choose "Confirm" to complete the payment.]]></data></item>
+    </string-array>
+    <string name="uob_web_cta">Pay now</string>
 
-    <string name="uob_method_name">UOB EZ Pay via web</string>
-    <string name="uob_desc">Please make sure that you have registered ID and complete your payment via UOB EZ Pay.</string>
-    <string name="uob_desc_detail">1. Click Pay now and you will be redirected to UOB EZ Pay website.  2. Login using your userID &amp; password. 3. Enter OTP you\'ll receive via SMS when prompted. 4. Select the account that you would like to pay from and choose "Continue". 5. Review your transaction details, enter the OTP you\'ll receive via SMS. 6 Choose "Confirm" to complete the payment.</string>
-
-
-    <string name="tmrw_method_name">UOB TMRW app</string>
-    <string name="tmrw_desc">Please make sure that you have registered ID and complete your payment via UOB TMRW app.</string>
-    <string name="tmrw_instruction">1. Click Pay now and you will be redirected to TMRW app. 2. Login using your userID &amp; password. 3. Select the account that you would like to pay from and choose "Next". 4. Review your transaction details, swipe right to confirm. 5. Enter your Secure PIN for verification to complete the payment.</string>
+    <string name="uob_tmrw_method_name">UOB TMRW app</string>
+    <string name="uob_tmrw_instruction">Please make sure that you have registered ID and complete your payment via UOB TMRW app.</string>
+    <string-array name="uob_tmrw_how_to_pay">
+        <item><data><![CDATA[Click <b>Pay now</b> and you will be redirected to TMRW app.]]></data></item>
+        <item><data><![CDATA[Login using your userID &amp; password.]]></data></item>
+        <item><data><![CDATA[Select the account that you would like to pay from and choose "Next".]]></data></item>
+        <item><data><![CDATA[Review your transaction details, swipe right to confirm.]]></data></item>
+        <item><data><![CDATA[Enter your Secure PIN for verification to complete the payment.]]></data></item>
+    </string-array>
+    <string name="uob_tmrw_cta">Pay now</string>
+    <string name="redirection_to_uob_tmrw_message">Redirecting to Uob…</string>
+    <string name="redirection_to_uob_tmrw_cta">Open Uob now</string>
 
 
     <string name="mandiri_description">Complete payment from Mandiri to the virtual account number below.</string>

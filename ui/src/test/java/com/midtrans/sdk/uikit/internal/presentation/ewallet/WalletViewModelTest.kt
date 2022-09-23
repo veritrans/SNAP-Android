@@ -13,10 +13,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
-import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.mockito.kotlin.*
 import java.time.Clock
-import java.time.Duration
 import java.time.Instant
 import java.util.*
 import java.util.concurrent.CountDownLatch
@@ -65,22 +64,15 @@ class WalletViewModelTest {
         val snapCore: SnapCore = mock()
         val dateTimeUtil: DateTimeUtil = mock()
         val snapToken = "SnapToken"
-        val paymentType = PaymentType.BNI_VA
-        Mockito.`when`(
-            dateTimeUtil.getDate(
-                date = eq("2021-01-06 11:32 +0700"),
-                dateFormat = eq("yyyy-MM-dd hh:mm Z"),
-                timeZone = argThat { timezone -> timezone.id == "UTC" },
-                locale = any()
-            )
-        ).thenReturn(
-            Date(1609907570066L)//"Wed Jan 6 2021 11:32:50 +0700"// (Asia/Jakarta)
+        val paymentType = PaymentType.GOPAY
+        val millis = 1609907570066L //"Wed Jan 6 2021 11:32:50 +0700"// (Asia/Jakarta)
+
+        `when`(dateTimeUtil.getCalendar(null)).thenReturn(
+            Calendar.getInstance().apply { time = Date(millis) }
         )
-        Mockito.`when`(dateTimeUtil.getCalendar(null)).thenReturn(
-            Calendar.getInstance().apply { time = Date(1609907570066L) }
-        )
-        Mockito.`when`(dateTimeUtil.getDuration(any())).thenReturn(Duration.ofMillis(1000L)) //only this matter for final result
-        Mockito.`when`(dateTimeUtil.getTimeDiffInMillis(any(), any())).thenReturn(100000L)
+        `when`(dateTimeUtil.getDate(any(), any(), any(), any())).thenReturn(Date(millis))
+        `when`(dateTimeUtil.getExpiredHour(any())).thenReturn("00:00:01")
+
         val walletViewModel =
             WalletViewModel(snapCore = snapCore, dateTimeUtil)
         walletViewModel.chargeQrPayment(
@@ -114,21 +106,14 @@ class WalletViewModelTest {
         val dateTimeUtil: DateTimeUtil = mock()
         val snapToken = "SnapToken"
         val paymentType = PaymentType.BNI_VA
-        Mockito.`when`(
-            dateTimeUtil.getDate(
-                date = eq("2021-01-06 11:32 +0700"),
-                dateFormat = eq("yyyy-MM-dd hh:mm Z"),
-                timeZone = argThat { timezone -> timezone.id == "UTC" },
-                locale = any()
-            )
-        ).thenReturn(
-            Date(1609907570066L)//"Wed Jan 6 2021 11:32:50 +0700"// (Asia/Jakarta)
+        val millis = 1609907570066L //"Wed Jan 6 2021 11:32:50 +0700"// (Asia/Jakarta)
+
+        `when`(dateTimeUtil.getCalendar(null)).thenReturn(
+            Calendar.getInstance().apply { time = Date(millis) }
         )
-        Mockito.`when`(dateTimeUtil.getCalendar(null)).thenReturn(
-            Calendar.getInstance().apply { time = Date(1609907570066L) }
-        )
-        Mockito.`when`(dateTimeUtil.getDuration(any())).thenReturn(Duration.ofMillis(1000L)) //only this matter for final result
-        Mockito.`when`(dateTimeUtil.getTimeDiffInMillis(any(), any())).thenReturn(100000L)
+        `when`(dateTimeUtil.getDate(any(), any(), any(), any())).thenReturn(Date(millis))
+        `when`(dateTimeUtil.getExpiredHour(any())).thenReturn("00:00:01")
+
         val walletViewModel =
             WalletViewModel(snapCore = snapCore, dateTimeUtil)
         walletViewModel.chargeQrPayment(

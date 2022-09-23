@@ -9,6 +9,7 @@ import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
+import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobPaymentActivity
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -38,4 +39,5 @@ internal interface UiKitComponent {
     fun inject(activity: CreditCardActivity)
     fun inject(activity: DirectDebitActivity)
     fun inject(activity: SavedCardActivity)
+    fun inject(activity: UobPaymentActivity)
 }

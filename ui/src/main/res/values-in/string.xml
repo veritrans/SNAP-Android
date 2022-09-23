@@ -19,7 +19,7 @@
     <string name="payment_summary_select_method">Metode pembayaran</string>
     <string name="payment_summary_bank_transfer">Transfer bank</string>
     <string name="payment_summary_cc_dc">Kartu kredit/debit</string>
-    <string name="payment_summary_saved_card">card(s) saved</string>
+    <string name="payment_summary_saved_card">kartu tersimpan</string>
     <string name="payment_summary_promo_available">Promo tersedia</string>
     <string name="payment_summary_gopay">GoPay/e-Wallet Lainnya</string>
     <string name="payment_summary_klikbca">KlikBCA</string>
@@ -72,6 +72,7 @@
 
     <string name="cc_dc_main_screen_email">E-mail</string>
     <string name="cc_dc_main_screen_placeholder_email">emailanda@email.com</string>
+    <string name="cc_dc_main_screen_email_invalid">Email tidak valid.</string>
 
     <string name="cc_dc_main_screen_card_number">Nomor kartu</string>
     <string name="cc_dc_main_screen_placeholder_card_number">0000 0000 0000 0000</string>
@@ -328,15 +329,31 @@
     <string name="kredivo_redirection_main_message">Mengalihkan ke Kredivo…</string>
     <string name="kredivo_redirection_cta">Buka sekarang</string>
 
+    <string name="uob_ez_pay_title">UOB EZ Pay</string>
+    <string name="uob_web_method_name">UOB EZ Pay via web</string>
+    <string name="uob_web_instruction">Pastikan Anda sudah memiliki ID terdaftar dan silakan selesaikan pembayaran melalui UOB EZ Pay.</string>
+    <string-array name="uob_web_how_to_pay">
+        <item><data><![CDATA[Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke situs web UOB EZ Pay.]]></data></item>
+        <item><data><![CDATA[Masuk menggunakan userID &amp; password Anda.]]></data></item>
+        <item><data><![CDATA[Masukkan OTP yang dikirim via SMS ketika diminta.]]></data></item>
+        <item><data><![CDATA[Pilih akun untuk melakukan pembayaran, lalu pilih \"Lanjutkan\".]]></data></item>
+        <item><data><![CDATA[Periksa detail pembayaran, lalu masukkan OTP yang dikirim via SMS.]]></data></item>
+        <item><data><![CDATA[Konfirmasi pembayaran.]]></data></item>
+    </string-array>
+    <string name="uob_web_cta">Bayar sekarang</string>
 
-    <string name="uob_method_name">UOB EZ Pay via web</string>
-    <string name="uob_desc">Pastikan Anda sudah memiliki ID terdaftar dan silakan selesaikan pembayaran melalui UOB EZ Pay.</string>
-    <string name="uob_desc_detail">1. Klik Bayar sekarang dan Anda akan diarahkan ke situs web UOB EZ Pay. 2. Masuk menggunakan userID &amp; password Anda. 3. Masukkan OTP yang dikirim via SMS ketika diminta. 4. Pilih akun untuk melakukan pembayaran, lalu pilih \"Lanjutkan\". 5. Periksa detail pembayaran, lalu masukkan OTP yang dikirim via SMS. 6. Konfirmasi pembayaran.</string>
-
-
-    <string name="tmrw_method_name">UOB TMRW app</string>
-    <string name="tmrw_desc">Pastikan Anda sudah memiliki ID terdaftar dan silakan selesaikan pembayaran melalui aplikasi UOB TMRW.</string>
-    <string name="tmrw_instruction">1. Klik Bayar sekarang dan Anda akan diarahkan ke aplikasi TMRW. 2. Masuk menggunakan userID &amp; password Anda. 3. Pilih akun untuk melanjutkan pembayaran, lalu klik "Lanjutkan". 4. Periksa detail pembayaran, lalu swipe kanan untuk mengkonfirmasi detail. 5. Masukkan Secure PIN untuk menyelesaikan pembayaran.</string>
+    <string name="uob_tmrw_method_name">UOB TMRW app</string>
+    <string name="uob_tmrw_instruction">Pastikan Anda sudah memiliki ID terdaftar dan silakan selesaikan pembayaran melalui aplikasi UOB TMRW.</string>
+    <string-array name="uob_tmrw_how_to_pay">
+        <item><data><![CDATA[Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke aplikasi TMRW.]]></data></item>
+        <item><data><![CDATA[Masuk menggunakan userID &amp; password Anda.]]></data></item>
+        <item><data><![CDATA[Pilih akun untuk melanjutkan pembayaran, lalu klik "Lanjutkan".]]></data></item>
+        <item><data><![CDATA[Periksa detail pembayaran, lalu swipe kanan untuk mengkonfirmasi detail.]]></data></item>
+        <item><data><![CDATA[Masukkan Secure PIN untuk menyelesaikan pembayaran.]]></data></item>
+    </string-array>
+    <string name="uob_tmrw_cta">Bayar sekarang</string>
+    <string name="redirection_to_uob_tmrw_message">Mengalihkan ke Uob…</string>
+    <string name="redirection_to_uob_tmrw_cta">Buka Uob sekarang</string>
 
 
     <string name="mandiri_description">Lakukan pembayaran dari rekening bank Mandiri ke nomor virtual account berikut.</string>

@@ -1,5 +1,6 @@
 package com.midtrans.sdk.uikit.internal.util
 
+import android.util.Patterns
 import androidx.compose.ui.text.input.TextFieldValue
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.uikit.R
@@ -13,7 +14,8 @@ object SnapCreditCardUtil {
     const val DEFAULT_ONE_CLICK_CVV_VALUE = "123"
     const val FORMATTED_MAX_CARD_NUMBER_LENGTH = 19
     const val FORMATTED_MAX_EXPIRY_LENGTH = 5
-    const val FORMATTED_MAX_CVV_LENGTH = 3
+    const val FORMATTED_MAX_CVV_LENGTH = 6
+    const val FORMATTED_MIN_CVV_LENGTH = 3
     const val SUPPORTED_MAX_BIN_NUMBER = 8
     const val NEW_CARD_FORM_IDENTIFIER = "newCardFormIdentifier"
     const val SAVED_CARD_IDENTIFIER = "savedCardIdentifier"
@@ -106,5 +108,9 @@ object SnapCreditCardUtil {
             "mega" -> R.drawable.ic_bank_mega_24
             else -> null
         }
+    }
+
+    fun isValidEmail(target: String): Boolean {
+        return target.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(target).matches()
     }
 }

@@ -121,7 +121,7 @@ fun SnapTotal(
             }
         }
         Text(
-            text = String.format(stringResource(id = R.string.payment_summary_order_id), orderId),
+            text = String.format(stringResource(id = R.string.payment_summary_order_id)+"%s", orderId),
             style = SnapTypography.STYLES.snapTextSmallRegular,
             color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)
         )

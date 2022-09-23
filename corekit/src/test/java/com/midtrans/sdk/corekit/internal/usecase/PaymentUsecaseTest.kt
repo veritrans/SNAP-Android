@@ -9,6 +9,7 @@ import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.BANK_TRANSFER
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY_QRIS
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.UOB_EZPAY
 import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
+import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
 import com.midtrans.sdk.corekit.internal.data.repository.CoreApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.MerchantApiRepository
@@ -29,14 +30,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.any
-import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
+import org.mockito.kotlin.*
 
 class PaymentUsecaseTest {
     private lateinit var closeable: AutoCloseable
@@ -202,6 +196,24 @@ class PaymentUsecaseTest {
         val error = errorCaptor.firstValue
         assertTrue(error.cause is RuntimeException)
         assertEquals("test get transaction detail error", error.cause?.message)
+    }
+
+    @Test
+    fun getTransactionStatusWhenSucceedShouldCallbackOnSuccess() {
+        val mockCallback: Callback<TransactionResponse> = mock()
+        val single = Single.just(
+            TransactionResponse(
+                transactionId = "transactionId",
+                transactionStatus = "pending"
+            )
+        )
+
+        whenever(mockSnapRepository.getTransactionStatus(any())) doReturn single
+        usecase.getTransactionStatus("snap-token", mockCallback)
+        single.test()
+            .assertComplete()
+
+        verify(mockCallback).onSuccess(any())
     }
 
     private fun assertPaymentOption(result: PaymentOption, snapToken: String) {

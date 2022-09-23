@@ -9,6 +9,8 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.BankTransferPaymentRequestBuilder
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
+import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.DATE_FORMAT
+import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.TIME_ZONE_WIB
 import java.util.*
 import javax.inject.Inject
 
@@ -64,33 +66,12 @@ internal class BankTransferDetailViewModel @Inject constructor(
             datetimeUtil.getDate(
                 date = dateString.replace("WIB", "+0700"),
                 dateFormat = DATE_FORMAT,
-                timeZone = timeZoneWib,
+                timeZone = TIME_ZONE_WIB,
                 locale = Locale.US
             )
         expCalendar.set(Calendar.YEAR, datetimeUtil.getCalendar().get(Calendar.YEAR))
         return expCalendar.timeInMillis
     }
 
-    fun getExpiredHour(): String {
-        val duration = datetimeUtil.getDuration(
-            datetimeUtil.getTimeDiffInMillis(
-                datetimeUtil.getCurrentMillis(),
-                expiredTime
-            )
-        )
-        return String.format(
-            "%02d:%02d:%02d",
-            duration.toHours(),
-            duration.seconds % 3600 / 60,
-            duration.seconds % 60
-        )
-    }
-
-    companion object {
-        private const val DATE_FORMAT = "dd MMMM hh:mm Z"
-        private const val TIME_FORMAT = "hh:mm:ss"
-        private val timeZoneWib = TimeZone.getTimeZone("Asia/Jakarta")
-        private val timeZoneUtc = TimeZone.getTimeZone("UTC")
-
-    }
+    fun getExpiredHour() = datetimeUtil.getExpiredHour(expiredTime)
 }

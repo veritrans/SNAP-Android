@@ -33,7 +33,9 @@ import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
+import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
+import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobSelectionActivity
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
@@ -260,7 +262,9 @@ class PaymentOptionActivity : BaseActivity() {
                         ) { payment ->
                             SnapMultiIconListItem(
                                 title = stringResource(payment.titleId),
-                                iconList = payment.icons
+                                iconList = payment.icons,
+                                creditCard = creditCard,
+                                paymentType = payment.type
                             ) {
                                 getOnPaymentItemClick(
                                     paymentType = payment.type,
@@ -329,7 +333,7 @@ class PaymentOptionActivity : BaseActivity() {
             Pair("credit_card") {
                 resultLauncher.launch(
                     //TODO: Need to revisit, if we need to enable adding a flag on sdk to force Normal Transaction like old ios sdk
-                    if (creditCard?.savedTokens.isNullOrEmpty()) {
+                    if (creditCard?.savedTokens.isNullOrEmpty().or(true)) {
                         CreditCardActivity.getIntent(
                             activityContext = this,
                             snapToken = snapToken,
@@ -337,18 +341,18 @@ class PaymentOptionActivity : BaseActivity() {
                             totalAmount = totalAmount,
                             customerInfo = customerInfo,
                             creditCard = creditCard,
-                            expiryTIme = expiryTime
+                            expiryTime = expiryTime
                         )
                     } else {
                         //TODO currently set to CreditCardActivity for testing purpose
-                        CreditCardActivity.getIntent(
+                        SavedCardActivity.getIntent(
                             activityContext = this,
                             snapToken = snapToken,
                             transactionDetails = transactionDetails,
                             totalAmount = totalAmount,
                             customerInfo = customerInfo,
-                            creditCard = creditCard,
-                            expiryTIme = expiryTime
+                            creditCard = creditCard
+//                            expiryTime = expiryTime //TODO will be fixed by pak wahyu
                         )
                     }
                 )
@@ -366,6 +370,18 @@ class PaymentOptionActivity : BaseActivity() {
                         )
                     )
                 }
+            },
+            Pair(PaymentType.UOB_EZPAY) {
+                resultLauncher.launch(
+                    UobSelectionActivity.getIntent(
+                        activityContext = this,
+                        snapToken = snapToken,
+                        uobModes = ArrayList(paymentMethodItem.methods),
+                        amount = totalAmount,
+                        orderId = orderId,
+                        customerInfo = customerInfo
+                    )
+                )
             },
             Pair(PaymentType.SHOPEEPAY, eWalletPaymentLauncher),
             Pair(PaymentType.SHOPEEPAY_QRIS, eWalletPaymentLauncher),
