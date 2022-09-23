@@ -128,12 +128,12 @@ object ErrorCard {
 
     fun getErrorCardType(snapError: SnapError, allowRetry: Boolean = false): Int? {
         return when (val exception = snapError.cause) {
-            is HttpException -> errorForHttpException(exception)
+            is HttpException -> getErrorForHttpException(exception)
             else -> null
         }
     }
 
-    private fun errorForHttpException(
+    private fun getErrorForHttpException(
         httpException: HttpException,
         allowRetry: Boolean = false
     ): Int {
