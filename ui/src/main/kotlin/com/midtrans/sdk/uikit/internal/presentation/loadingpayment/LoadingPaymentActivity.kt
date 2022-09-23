@@ -3,7 +3,6 @@ package com.midtrans.sdk.uikit.internal.presentation.loadingpayment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -197,7 +196,7 @@ class LoadingPaymentActivity : BaseActivity() {
                 customerDetails = customerDetails,
                 creditCard = it.creditCard,
                 promos = it.promos,
-                merchantData = it.merchantData,
+                merchant = it.merchantData,
                 expiryTime = it.expiryTme
             )
             startActivity(intent)
