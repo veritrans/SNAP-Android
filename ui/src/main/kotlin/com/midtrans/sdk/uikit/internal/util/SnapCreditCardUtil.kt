@@ -91,11 +91,11 @@ object SnapCreditCardUtil {
     }
 
     fun isBinBlocked(cardNumber: String, creditCard: CreditCard?): Boolean{
-        val whiteLisAvailable = !creditCard?.whitelistBins.isNullOrEmpty()
+        val whiteListAvailable = !creditCard?.whitelistBins.isNullOrEmpty()
         val blackListAvailable = !creditCard?.blacklistBins.isNullOrEmpty()
         val whiteListed = !creditCard?.whitelistBins?.filter { whiteListedBin -> cardNumber.startsWith(whiteListedBin) }.isNullOrEmpty()
         val blackListed = !creditCard?.blacklistBins?.filter { blacklistedBin -> cardNumber.startsWith(blacklistedBin) }.isNullOrEmpty()
-        return (whiteLisAvailable.and(!whiteListed)).or(blackListAvailable.and(blackListed))
+        return (whiteListAvailable.and(!whiteListed)).or(blackListAvailable.and(blackListed))
     }
 
     fun getBankIcon(bank: String): Int? {
