@@ -340,6 +340,7 @@ internal class CreditCardActivity : BaseActivity() {
                 onBackPressed()
             }
             val scrollState = rememberScrollState()
+            var emailAddress by remember { mutableStateOf(TextFieldValue()) }
 
             SnapOverlayExpandingBox(
                 isExpanded = isExpandingState,
@@ -370,7 +371,6 @@ internal class CreditCardActivity : BaseActivity() {
                             .padding(top = 24.dp)
                     ) {
                         var phoneNumber by remember { mutableStateOf(TextFieldValue()) }
-                        var emailAddress by remember { mutableStateOf(TextFieldValue()) }
                         var phoneNumberFieldFocused by remember { mutableStateOf(false) }
                         var emailAddressFieldFocused by remember { mutableStateOf(false) }
                         if (withCustomerPhoneEmail) {
@@ -411,13 +411,11 @@ internal class CreditCardActivity : BaseActivity() {
                             )
 
                             if (!emailAddressFieldFocused && emailAddress.text.isNotBlank() && !SnapCreditCardUtil.isValidEmail(emailAddress.text)) {
-                                if (state.cardNumber.text.isEmpty()){
                                     Text(
                                         text = stringResource(id = R.string.cc_dc_main_screen_email_invalid),
                                         style = SnapTypography.STYLES.snapTextSmallRegular,
                                         color = SnapColors.getARGBColor(SnapColors.SUPPORT_DANGER_DEFAULT)
                                     )
-                                }
                             }
                             Box(modifier = Modifier.padding(8.dp))
                         }
@@ -457,7 +455,8 @@ internal class CreditCardActivity : BaseActivity() {
                         state.isCvvInvalid ||
                         state.cardNumber.text.isEmpty() ||
                         state.expiry.text.isEmpty() ||
-                        state.cvv.text.isEmpty()),
+                        state.cvv.text.isEmpty())
+                    .or(!SnapCreditCardUtil.isValidEmail(emailAddress.text)),
                 onClick = { onClick() }
             )
         }
