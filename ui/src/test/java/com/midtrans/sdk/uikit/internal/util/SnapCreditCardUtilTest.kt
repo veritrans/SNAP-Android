@@ -59,44 +59,57 @@ class SnapCreditCardUtilTest {
     fun isBinBlockedShouldCalculateAccordingBlacklistAndWhiteList() {
         val blackList = listOf("123456", "234567")
         val whiteList = listOf("111111", "123456")
+
+        //whitelist null blacklist null
         val creditCard0 = CreditCard()
         Assert.assertFalse(
             SnapCreditCardUtil.isBinBlocked(
                 "4123456789989884",
                 creditCard0
             )
-        ) //whitelist null blacklist null
+        )
+
+        //whitelist empty
         val creditCard1 = CreditCard(whitelistBins = listOf())
         Assert.assertFalse(
             SnapCreditCardUtil.isBinBlocked(
                 "4123456789989884",
                 creditCard1
             )
-        ) //whitelist empty
+        )
+
+        //blacklist empty
         val creditCard2 = CreditCard(blacklistBins = listOf())
         Assert.assertFalse(
             SnapCreditCardUtil.isBinBlocked(
                 "4123456789989884",
                 creditCard2
             )
-        ) //blacklist empty
-        val creditCard3 = CreditCard(whitelistBins = whiteList) //whitelist
+        )
+
+        //whitelist
+        val creditCard3 = CreditCard(whitelistBins = whiteList)
         Assert.assertTrue(SnapCreditCardUtil.isBinBlocked("4123456789989884", creditCard3))
         Assert.assertFalse(SnapCreditCardUtil.isBinBlocked("11111123456789", creditCard3))
-        val creditCard4 = CreditCard(blacklistBins = blackList) //blacklist
+
+        //blacklist
+        val creditCard4 = CreditCard(blacklistBins = blackList)
         Assert.assertFalse(SnapCreditCardUtil.isBinBlocked("4123456789989884", creditCard4))
         Assert.assertTrue(SnapCreditCardUtil.isBinBlocked("12345623456789", creditCard4))
 
+        //blacklist + whitelist
         val creditCard5 =
-            CreditCard(blacklistBins = blackList, whitelistBins = whiteList) //blacklist + whitelist
+            CreditCard(blacklistBins = blackList, whitelistBins = whiteList)
         Assert.assertTrue(SnapCreditCardUtil.isBinBlocked("4123456789989884", creditCard5))
         Assert.assertTrue(SnapCreditCardUtil.isBinBlocked("12345623456789", creditCard5))
+
+        //whitelisted + blacklisted
         Assert.assertTrue(
             SnapCreditCardUtil.isBinBlocked(
                 "123456789989884",
                 creditCard5
             )
-        ) //whitelisted + blacklisted
+        )
     }
 
     @Test
