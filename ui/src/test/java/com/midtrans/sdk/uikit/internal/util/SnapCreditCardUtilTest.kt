@@ -17,12 +17,12 @@ class SnapCreditCardUtilTest {
     }
 
     @Test
-    fun getCardTypeShouldDecodeBasedOnNumberPrefix() { //TODO: actual unit test :(
+    fun getCardTypeShouldDecodeBasedOnNumberPrefix() { //TODO: actual unit test by Fauzy.
 
     }
 
     @Test
-    fun getPrincipalIconShouldReturnCorrespondingResId() { //TODO: actual unit test :(
+    fun getPrincipalIconShouldReturnCorrespondingResId() { //TODO: actual unit test by Fauzy.
 
     }
 
