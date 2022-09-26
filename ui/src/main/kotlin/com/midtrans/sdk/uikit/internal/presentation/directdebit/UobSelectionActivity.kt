@@ -15,6 +15,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.rxjava2.subscribeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,13 +23,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.view.*
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class UobSelectionActivity : BaseActivity() {
+
+    @Inject
+    internal lateinit var vmFactory: ViewModelProvider.Factory
 
     private val snapToken: String by lazy {
         intent.getStringExtra(EXTRA_SNAP_TOKEN)
@@ -54,13 +63,18 @@ class UobSelectionActivity : BaseActivity() {
             ?: throw RuntimeException("Missing Uob modes")
     }
 
+    private val viewModel: UobSelectionViewModel by lazy {
+        ViewModelProvider(this, vmFactory).get(UobSelectionViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             UobSelectionContent(
                 amount = amount,
                 orderId = orderId,
-                customerInfo = customerInfo
+                customerInfo = customerInfo,
+                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
             )
         }
     }
@@ -70,7 +84,8 @@ class UobSelectionActivity : BaseActivity() {
     private fun UobSelectionContent(
         amount: String = "Rp500",
         orderId: String = "order-123456",
-        customerInfo: CustomerInfo? = CustomerInfo(name = "Harry", "Phone", listOf("address"))
+        customerInfo: CustomerInfo? = CustomerInfo(name = "Harry", "Phone", listOf("address")),
+        remainingTimeState: State<String> = remember { mutableStateOf("00:00") }
     ) {
         var isExpanded by remember { mutableStateOf(false) }
 
@@ -186,6 +201,13 @@ class UobSelectionActivity : BaseActivity() {
                 finish()
             }
         }
+
+    private fun updateExpiredTime(): Observable<String> {
+        return Observable
+            .interval(1L, TimeUnit.SECONDS)
+            .map { viewModel.getExpiredHour() }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
 
     companion object {
         private const val EXTRA_SNAP_TOKEN = "uobSelection.extra.snap_token"
