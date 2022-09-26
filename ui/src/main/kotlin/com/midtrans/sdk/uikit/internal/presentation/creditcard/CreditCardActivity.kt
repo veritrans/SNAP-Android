@@ -23,15 +23,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
 import com.midtrans.sdk.corekit.api.model.CreditCard
-import com.midtrans.sdk.corekit.api.model.TransactionResult
-import com.midtrans.sdk.corekit.internal.network.model.response.MerchantData
+import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
-import com.midtrans.sdk.uikit.internal.presentation.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
@@ -76,15 +73,15 @@ internal class CreditCardActivity : BaseActivity() {
     }
 
     private val withCustomerPhoneEmail: Boolean by lazy {
-       merchantData?.showCreditCardCustomerInfo ?: false
+        merchant?.showCreditCardCustomerInfo ?: false
     }
 
     private val allowRetry: Boolean by lazy {
-        merchantData?.allowRetry ?: false
+        merchant?.allowRetry ?: false
     }
 
-    private val merchantData: MerchantData? by lazy {
-        intent.getParcelableExtra(EXTRA_MERCHANT_DATA) as? MerchantData
+    private val merchant: Merchant? by lazy {
+        intent.getParcelableExtra(EXTRA_MERCHANT_DATA) as? Merchant
     }
 
     companion object {
@@ -104,7 +101,7 @@ internal class CreditCardActivity : BaseActivity() {
             customerInfo: CustomerInfo? = null,
             creditCard: CreditCard?,
             expiryTime: String?,
-            withMerchantData: MerchantData? = null
+            withMerchantData: Merchant? = null
         ): Intent {
             return Intent(activityContext, CreditCardActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)

@@ -7,10 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
-import com.midtrans.sdk.corekit.api.model.BinResponse
-import com.midtrans.sdk.corekit.api.model.CardTokenResponse
-import com.midtrans.sdk.corekit.api.model.PaymentType
-import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.NormalCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
@@ -33,6 +30,7 @@ internal class CreditCardViewModel @Inject constructor(
     private val _error = MutableLiveData<Int>()
     private var expireTimeInMillis = 0L
     private var allowRetry = false
+    var creditCard: CreditCard?  = null
 
     fun getTransactionResponseLiveData(): LiveData<TransactionResponse> = _transactionResponse
     fun getTransactionStatusLiveData(): LiveData<TransactionResponse> = _transactionStatus

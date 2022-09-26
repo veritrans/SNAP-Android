@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class MerchantData(
+data class Merchant(
     val preference: MerchantPreferences? = null,
     val clientKey: String? = null,
     val enabledPrinciples: List<String>? = null,

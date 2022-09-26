@@ -140,6 +140,7 @@
     <string name="card_error_empty_cvv">CVV wajib diisi.</string>
     <string name="card_error_declined_not_allowed_to_retry">Kartu ditolak oleh bank</string>
     <string name="card_error_failed_to_process">Pembayaran gagal diproses. Silakan lakukan pemesanan ulang.</string>
+    <string name="card_error_bank_blacklisted_by_merchant">""Kartu ini tidak bisa digunakan di merchant ini.\nSilakan coba kartu/metode pembayaran lainnya.""</string>
 
     <string name="cc_dc_saved_card_enter_cvv">Masukkan CVV</string>
     <string name="cc_dc_saved_card_use_another_card">Gunakan kartu lain</string>

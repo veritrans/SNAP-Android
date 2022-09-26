@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -24,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.*
-import com.midtrans.sdk.corekit.internal.network.model.response.MerchantData
+import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
@@ -65,7 +64,7 @@ class PaymentOptionActivity : BaseActivity() {
             customerDetails: CustomerDetails?,
             creditCard: CreditCard?,
             promos: List<PromoResponse>?,
-            merchantData: MerchantData?,
+            merchant: Merchant?,
             expiryTime: String?
         ): Intent {
             return Intent(activityContext, PaymentOptionActivity::class.java).apply {
@@ -75,7 +74,7 @@ class PaymentOptionActivity : BaseActivity() {
                 putParcelableArrayListExtra(EXTRA_PAYMENT_LIST, ArrayList(paymentList))
                 putExtra(EXTRA_CUSTOMER_DETAILS, customerDetails)
                 putExtra(EXTRA_CREDIT_CARD, creditCard)
-                putExtra(EXTRA_MERCHANT_DATA, merchantData)
+                putExtra(EXTRA_MERCHANT_DATA, merchant)
                 putExtra(EXTRA_TRANSACTION_DETAILS, transactionDetail)
                 putExtra(EXTRA_EXPIRY_TIME, expiryTime)
             }
