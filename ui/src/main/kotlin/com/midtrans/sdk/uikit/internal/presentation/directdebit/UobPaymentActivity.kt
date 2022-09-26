@@ -63,6 +63,10 @@ class UobPaymentActivity : BaseActivity() {
             ?: throw RuntimeException("Order ID must not be empty")
     }
 
+    private val remainingTime: Long by lazy {
+        intent.getLongExtra(EXTRA_REMAINING_TIME, 0)
+    }
+
     private val customerInfo: CustomerInfo? by lazy {
         intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
     }
@@ -312,7 +316,7 @@ class UobPaymentActivity : BaseActivity() {
     private fun updateExpiredTime(): Observable<String> {
         return Observable
             .interval(1L, TimeUnit.SECONDS)
-            .map { viewModel.getExpiredHour() }
+            .map { viewModel.getExpiredHour(remainingTime) }
             .observeOn(AndroidSchedulers.mainThread())
     }
 
@@ -322,6 +326,7 @@ class UobPaymentActivity : BaseActivity() {
         private const val EXTRA_AMOUNT = "directDebit.uobPayment.extra.amount"
         private const val EXTRA_ORDER_ID = "directDebit.uobPayment.extra.order_id"
         private const val EXTRA_CUSTOMER_INFO = "directDebit.uobPayment.extra.customer_info"
+        private const val EXTRA_REMAINING_TIME = "directDebit.uobPayment.extra.remaining_time"
 
         fun getIntent(
             activityContext: Context,
@@ -329,7 +334,8 @@ class UobPaymentActivity : BaseActivity() {
             uobMode: String,
             amount: String,
             orderId: String,
-            customerInfo: CustomerInfo?
+            customerInfo: CustomerInfo?,
+            remainingTime: Long
         ): Intent {
             return Intent(activityContext, UobPaymentActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -337,6 +343,7 @@ class UobPaymentActivity : BaseActivity() {
                 putExtra(EXTRA_AMOUNT, amount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
+                putExtra(EXTRA_REMAINING_TIME, remainingTime)
             }
         }
     }

@@ -10,5 +10,8 @@ internal class UobSelectionViewModel @Inject constructor(
 
     private var expiredTime = dateTimeUtil.plusDateBy(dateTimeUtil.getCurrentMillis(), 1) //TODO temporary is 24H, later get value from request snap if set
 
+    fun getExpiredTime() = expiredTime
+
     fun getExpiredHour() = dateTimeUtil.getExpiredHour(expiredTime)
+
 }

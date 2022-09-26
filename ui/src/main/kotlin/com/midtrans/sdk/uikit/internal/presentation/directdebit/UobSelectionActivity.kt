@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -27,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
+import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
@@ -69,6 +71,11 @@ class UobSelectionActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        DaggerUiKitComponent.builder()
+            .applicationContext(this.applicationContext)
+            .build()
+            .inject(this)
+
         setContent {
             UobSelectionContent(
                 amount = amount,
@@ -88,6 +95,7 @@ class UobSelectionActivity : BaseActivity() {
         remainingTimeState: State<String> = remember { mutableStateOf("00:00") }
     ) {
         var isExpanded by remember { mutableStateOf(false) }
+        val remainingTime by remember { remainingTimeState }
 
         Column(modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))) {
             SnapAppBar(
@@ -107,7 +115,7 @@ class UobSelectionActivity : BaseActivity() {
                         amount = amount,
                         orderId = orderId,
                         canExpand = customerInfo != null,
-                        remainingTime = null
+                        remainingTime = remainingTime
                     ) {
                         isExpanded = it
                     }
@@ -135,7 +143,8 @@ class UobSelectionActivity : BaseActivity() {
                                             uobMode = item.first,
                                             amount = amount,
                                             orderId = orderId,
-                                            customerInfo = customerInfo
+                                            customerInfo = customerInfo,
+                                            remainingTime = viewModel.getExpiredTime()
                                         )
                                     )
                                 }
