@@ -1,11 +1,12 @@
 package com.midtrans.sdk.uikit.internal.presentation.directdebit
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -88,12 +89,6 @@ class UobPaymentActivity : BaseActivity() {
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
             )
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d("Uob Payment", "onResume")
-        viewModel.checkStatus(snapToken)
         observeTransactionStatus()
     }
 
@@ -124,17 +119,30 @@ class UobPaymentActivity : BaseActivity() {
         }
     }
 
+    private val successScreenLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                setResult(RESULT_OK, result?.data)
+                finish()
+            }
+        }
+
+    private val webLinkLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            viewModel.checkStatus(snapToken)
+        }
+
     private fun goToSuccessScreen(
         amount: String,
         orderId: String
     ) {
-        SuccessScreenActivity.getIntent(
-            activityContext = this,
-            total = amount,
-            orderId = orderId
-        ).apply { startActivity(this) }
-        setResult(RESULT_OK)
-        finish()
+        successScreenLauncher.launch(
+            SuccessScreenActivity.getIntent(
+                activityContext = this,
+                total = amount,
+                orderId = orderId
+            )
+        )
     }
 
     @Composable
@@ -151,7 +159,6 @@ class UobPaymentActivity : BaseActivity() {
         val title = stringResource(getTitleId(uobMode = uobMode))
         val url = getUobDeeplinkUrl(uobMode, response)
         val remainingTime by remember { remainingTimeState }
-        Log.d("UobPayment", "Url : $url")
 
         if (url.isEmpty()) {
             Column(
@@ -263,7 +270,7 @@ class UobPaymentActivity : BaseActivity() {
             try {
                 intent = Intent(Intent.ACTION_VIEW)
                 intent.data = Uri.parse(url)
-                startActivity(intent)
+                webLinkLauncher.launch(intent)
             } catch (e: Throwable) {
                 //TODO implement error handling later
             }
