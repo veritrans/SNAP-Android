@@ -1,11 +1,12 @@
 package com.midtrans.sdk.uikit.internal.presentation.directdebit
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -62,6 +63,10 @@ class UobPaymentActivity : BaseActivity() {
             ?: throw RuntimeException("Order ID must not be empty")
     }
 
+    private val remainingTime: Long by lazy {
+        intent.getLongExtra(EXTRA_REMAINING_TIME, 0)
+    }
+
     private val customerInfo: CustomerInfo? by lazy {
         intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
     }
@@ -88,12 +93,6 @@ class UobPaymentActivity : BaseActivity() {
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
             )
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d("Uob Payment", "onResume")
-        viewModel.checkStatus(snapToken)
         observeTransactionStatus()
     }
 
@@ -124,17 +123,30 @@ class UobPaymentActivity : BaseActivity() {
         }
     }
 
+    private val successScreenLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                setResult(RESULT_OK, result?.data)
+                finish()
+            }
+        }
+
+    private val webLinkLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            viewModel.checkStatus(snapToken)
+        }
+
     private fun goToSuccessScreen(
         amount: String,
         orderId: String
     ) {
-        SuccessScreenActivity.getIntent(
-            activityContext = this,
-            total = amount,
-            orderId = orderId
-        ).apply { startActivity(this) }
-        setResult(RESULT_OK)
-        finish()
+        successScreenLauncher.launch(
+            SuccessScreenActivity.getIntent(
+                activityContext = this,
+                total = amount,
+                orderId = orderId
+            )
+        )
     }
 
     @Composable
@@ -151,7 +163,6 @@ class UobPaymentActivity : BaseActivity() {
         val title = stringResource(getTitleId(uobMode = uobMode))
         val url = getUobDeeplinkUrl(uobMode, response)
         val remainingTime by remember { remainingTimeState }
-        Log.d("UobPayment", "Url : $url")
 
         if (url.isEmpty()) {
             Column(
@@ -263,7 +274,7 @@ class UobPaymentActivity : BaseActivity() {
             try {
                 intent = Intent(Intent.ACTION_VIEW)
                 intent.data = Uri.parse(url)
-                startActivity(intent)
+                webLinkLauncher.launch(intent)
             } catch (e: Throwable) {
                 //TODO implement error handling later
             }
@@ -305,7 +316,7 @@ class UobPaymentActivity : BaseActivity() {
     private fun updateExpiredTime(): Observable<String> {
         return Observable
             .interval(1L, TimeUnit.SECONDS)
-            .map { viewModel.getExpiredHour() }
+            .map { viewModel.getExpiredHour(remainingTime) }
             .observeOn(AndroidSchedulers.mainThread())
     }
 
@@ -315,6 +326,7 @@ class UobPaymentActivity : BaseActivity() {
         private const val EXTRA_AMOUNT = "directDebit.uobPayment.extra.amount"
         private const val EXTRA_ORDER_ID = "directDebit.uobPayment.extra.order_id"
         private const val EXTRA_CUSTOMER_INFO = "directDebit.uobPayment.extra.customer_info"
+        private const val EXTRA_REMAINING_TIME = "directDebit.uobPayment.extra.remaining_time"
 
         fun getIntent(
             activityContext: Context,
@@ -322,7 +334,8 @@ class UobPaymentActivity : BaseActivity() {
             uobMode: String,
             amount: String,
             orderId: String,
-            customerInfo: CustomerInfo?
+            customerInfo: CustomerInfo?,
+            remainingTime: Long
         ): Intent {
             return Intent(activityContext, UobPaymentActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -330,6 +343,7 @@ class UobPaymentActivity : BaseActivity() {
                 putExtra(EXTRA_AMOUNT, amount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
+                putExtra(EXTRA_REMAINING_TIME, remainingTime)
             }
         }
     }

@@ -342,9 +342,9 @@
         <item><data><![CDATA[Click <b>Pay now</b> and you will be redirected to UOB EZ Pay website.]]></data></item>
         <item><data><![CDATA[Login using your userID &amp; password.]]></data></item>
         <item><data><![CDATA[Enter OTP you\'ll receive via SMS when prompted.]]></data></item>
-        <item><data><![CDATA[Select the account that you would like to pay from and choose "Continue".]]></data></item>
+        <item><data><![CDATA[Select the account that you would like to pay from and choose &#34;Continue&#34;.]]></data></item>
         <item><data><![CDATA[Review your transaction details, enter the OTP you\'ll receive via SMS.]]></data></item>
-        <item><data><![CDATA[Choose "Confirm" to complete the payment.]]></data></item>
+        <item><data><![CDATA[Choose &#34;Confirm&#34; to complete the payment.]]></data></item>
     </string-array>
     <string name="uob_web_cta">Pay now</string>
 
@@ -353,7 +353,7 @@
     <string-array name="uob_tmrw_how_to_pay">
         <item><data><![CDATA[Click <b>Pay now</b> and you will be redirected to TMRW app.]]></data></item>
         <item><data><![CDATA[Login using your userID &amp; password.]]></data></item>
-        <item><data><![CDATA[Select the account that you would like to pay from and choose "Next".]]></data></item>
+        <item><data><![CDATA[Select the account that you would like to pay from and choose &#34;Next&#34;.]]></data></item>
         <item><data><![CDATA[Review your transaction details, swipe right to confirm.]]></data></item>
         <item><data><![CDATA[Enter your Secure PIN for verification to complete the payment.]]></data></item>
     </string-array>
