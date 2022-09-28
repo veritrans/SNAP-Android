@@ -246,6 +246,7 @@
     <string name="alfa_group_cta_2">Tutup halaman ini</string>
 
 
+    <string name="akulaku_title">Akulaku PayLater</string>
     <string name="akulaku_instruction">Akulaku PayLater memungkinkan Anda untuk berbelanja dengan angsuran tanpa menggunakan kartu kredit.</string>
     <string-array name="akulaku_how_to_pay">
         <item><data><![CDATA[Klik <b>Bayar sekarang</b>, lalu Anda akan dialihkan ke <b>halaman pembayaran Akulaku PayLater</b>.]]></data></item>

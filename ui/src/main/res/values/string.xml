@@ -250,6 +250,7 @@
     <string name="alfa_group_cta_2">Close this page</string>
 
 
+    <string name="akulaku_title">Akulaku PayLater</string>
     <string name="akulaku_instruction">Akulaku PayLater allows you to shop in installments without using a credit card.</string>
     <string-array name="akulaku_how_to_pay">
         <item><data><![CDATA[Click <b>Pay Now</b>, then you will be directed to the <b>Akulaku PayLater Payment Center</b> page.]]></data></item>
