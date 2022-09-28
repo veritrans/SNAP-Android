@@ -131,7 +131,7 @@ object ErrorCard {
 
     fun getErrorCardType(snapError: SnapError, allowRetry: Boolean = false): Int? {
         return when (val exception = snapError.cause) {
-            is HttpException -> getErrorForHttpException(exception)
+            is HttpException -> getErrorForHttpException(exception, allowRetry)
             is UnknownHostException -> SYSTEM_ERROR_DIALOG_ALLOW_RETRY
             else -> null
         }
