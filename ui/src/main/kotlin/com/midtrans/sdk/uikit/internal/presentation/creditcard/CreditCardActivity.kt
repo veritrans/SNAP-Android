@@ -273,8 +273,11 @@ internal class CreditCardActivity : BaseActivity() {
                 type = it,
                 getErrorCta(type = it, state = state, clicked = clicked)
             ).apply {
+                show()
                 if (clicked.value) {
+                    clicked.value = false
                     hide()
+                    viewModel?.resetError()
                 }
             }
         }

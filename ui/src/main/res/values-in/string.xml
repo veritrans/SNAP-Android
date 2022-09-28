@@ -574,7 +574,7 @@
     <string name="tidmid_error_other_pay_method_not_available_cta">Kembali ke merchant</string>
 
     <string name="card_error_declined_disallow_retry_title">Kartu ditolak oleh bank</string>
-    <string name="card_error_declined_disallow_retry_content">Pembayaran gagal diproses.Silakan lakukan pemesanan ulang.</string>
+    <string name="card_error_declined_disallow_retry_content">Pembayaran gagal diproses. Silakan lakukan pemesanan ulang.</string>
     <string name="card_error_declined_disallow_retry_cta">Oke</string>
 
 </resources>

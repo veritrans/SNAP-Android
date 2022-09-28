@@ -95,7 +95,7 @@ fun SnapPointRedeemDialogContent(
 fun SnapBottomSheet(
     content: @Composable (() -> Unit)
 ): DialogToggle {
-    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Expanded)
+    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, confirmStateChange = {false})
     val coroutine = rememberCoroutineScope()
 
     ModalBottomSheetLayout(

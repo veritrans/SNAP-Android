@@ -90,6 +90,8 @@ dependencies {
     implementation(com.gtf.snap.RxLibraries.rxJava2)
     implementation(com.gtf.snap.RxLibraries.rxBinding)
 
+    implementation(com.gtf.snap.NetworkLibraries.retrofit)
+
     //dagger
     implementation(com.gtf.snap.DaggerLibraries.dagger)
     kapt(com.gtf.snap.DaggerLibraries.daggerCompiler)
