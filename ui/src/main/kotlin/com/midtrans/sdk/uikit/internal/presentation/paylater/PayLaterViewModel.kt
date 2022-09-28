@@ -1,5 +1,7 @@
 package com.midtrans.sdk.uikit.internal.presentation.paylater
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
@@ -13,6 +15,10 @@ internal class PayLaterViewModel @Inject constructor(
     private val snapCore: SnapCore,
     private val dateTimeUtil: DateTimeUtil
 ): ViewModel() {
+    private val transactionResponse = MutableLiveData<TransactionResponse>()
+    private var expiredTime = dateTimeUtil.plusDateBy(dateTimeUtil.getCurrentMillis(), 1) //TODO later get value from request snap if set
+
+    fun getTransactionResponse(): LiveData<TransactionResponse> = transactionResponse
 
     fun payPayLater(
         snapToken: String,
@@ -26,7 +32,7 @@ internal class PayLaterViewModel @Inject constructor(
             paymentRequestBuilder = builder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
-                    TODO("Not yet implemented")
+                    transactionResponse.value = result
                 }
 
                 override fun onError(error: SnapError) {
@@ -35,4 +41,6 @@ internal class PayLaterViewModel @Inject constructor(
             }
         )
     }
+
+    fun getExpiredHour() = dateTimeUtil.getExpiredHour(expiredTime)
 }
