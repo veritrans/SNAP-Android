@@ -31,12 +31,12 @@ android {
             buildConfigField(
                 "String",
                 "SNAP_BASE_URL",
-                "\"https://04b4-36-71-83-43.ap.ngrok.io/snap/\""
+                "\"https://app.sandbox.midtrans.com/snap/\""
             )
             buildConfigField(
                 "String",
                 "CORE_API_BASE_URL",
-                "\"https://04b4-36-71-83-43.ap.ngrok.io/\""
+                "\"https://api.sandbox.midtrans.com/\""
             )
         }
     }
