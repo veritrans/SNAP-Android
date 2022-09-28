@@ -196,7 +196,7 @@ class DirectDebitActivity : BaseActivity() {
                         .fillMaxWidth()
                         .padding(top = 40.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
                     enabled = enableButton(paymentType, userId),
-                    text = stringResource(R.string.bca_klik_pay_cta),
+                    text = stringResource(getCta(paymentType)),
                     style = SnapButton.Style.PRIMARY
                 ) {
                     viewModel.payDirectDebit(
