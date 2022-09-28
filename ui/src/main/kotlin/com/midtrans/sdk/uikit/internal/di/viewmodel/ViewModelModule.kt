@@ -2,6 +2,7 @@ package com.midtrans.sdk.uikit.internal.di.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDetailViewModel
+import com.midtrans.sdk.uikit.internal.presentation.conveniencestore.ConvenienceStoreViewModel
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardViewModel
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardViewModel
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitViewModel
@@ -43,4 +44,9 @@ internal abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SavedCardViewModel::class)
     abstract fun bindSavedCardViewModel(viewModel: SavedCardViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ConvenienceStoreViewModel::class)
+    abstract fun bindConvenienceStoreViewModel(viewModel: ConvenienceStoreViewModel): ViewModel
 }

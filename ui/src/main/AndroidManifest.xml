@@ -56,6 +56,10 @@
         <activity
             android:name=".internal.presentation.ewallet.DeepLinkActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity
+            android:name=".internal.presentation.conveniencestore.ConvenienceStoreActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>
