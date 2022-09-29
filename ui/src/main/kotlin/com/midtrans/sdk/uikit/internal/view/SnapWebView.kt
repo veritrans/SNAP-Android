@@ -225,6 +225,11 @@ private inline fun finishWebView(
                 onFinishWebView.invoke()
             }
         }
+        PaymentType.AKULAKU -> {
+            if (url.contains(SnapWebViewClient.CALLBACK_AKULAKU, true)) {
+                onFinishWebView.invoke()
+            }
+        }
         PaymentType.GOPAY,
         PaymentType.SHOPEEPAY,
         PaymentType.UOB_EZPAY_APP-> {
@@ -247,6 +252,7 @@ private class SnapWebViewClient(
         const val CALLBACK_CIMB_CLICKS = "cimb-clicks/response"
         const val CALLBACK_DANAMON_ONLINE = "/callback?signature="
         const val CALLBACK_BRI_EPAY = "briPayment?tid="
+        const val CALLBACK_AKULAKU = "?refNo="
         const val CALLBACK_OLD_THREE_DS = "callback"
         const val CALLBACK_NEW_THREE_DS = "result-completion"
     }
