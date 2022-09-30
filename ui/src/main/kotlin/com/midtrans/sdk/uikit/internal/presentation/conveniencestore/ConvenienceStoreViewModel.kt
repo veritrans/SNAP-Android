@@ -21,7 +21,8 @@ import javax.inject.Inject
 internal class ConvenienceStoreViewModel @Inject constructor(
     private val snapCore: SnapCore,
     private val datetimeUtil: DateTimeUtil,
-    private val errorCard: ErrorCard
+    private val errorCard: ErrorCard,
+    private val barcodeEncoder: BarcodeEncoder
 ) : ViewModel() {
 
     val barCodeBitmapLiveData = MutableLiveData<Bitmap>()
@@ -58,7 +59,6 @@ internal class ConvenienceStoreViewModel @Inject constructor(
 
     private fun generateBarcode(barcode: String){
         try {
-            val barcodeEncoder = BarcodeEncoder()
             val bitmap: Bitmap =
                 barcodeEncoder.encodeBitmap(barcode, BarcodeFormat.CODE_39, 1000, 100)
             barCodeBitmapLiveData.value = bitmap

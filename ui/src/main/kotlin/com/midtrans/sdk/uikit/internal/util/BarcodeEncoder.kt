@@ -7,7 +7,7 @@ import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 
-class BarcodeEncoder {
+object BarcodeEncoder {
     fun createBitmap(matrix: BitMatrix): Bitmap {
         val width = matrix.width
         val height = matrix.height
@@ -16,7 +16,7 @@ class BarcodeEncoder {
             val offset = y * width
             for (x in 0 until width) {
                 pixels[offset + x] =
-                    if (matrix[x, y]) BarcodeEncoder.Companion.BLACK else BarcodeEncoder.Companion.WHITE
+                    if (matrix[x, y]) BLACK else WHITE
             }
         }
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
@@ -69,8 +69,8 @@ class BarcodeEncoder {
         return createBitmap(encode(contents, format, width, height, hints))
     }
 
-    companion object {
-        private const val WHITE = -0x1
-        private const val BLACK = -0x1000000
-    }
+
+    private const val WHITE = -0x1
+    private const val BLACK = -0x1000000
+
 }
