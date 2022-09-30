@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import coil.compose.AsyncImage
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.R
@@ -40,7 +41,11 @@ import javax.inject.Inject
 internal class ConvenienceStoreActivity : BaseActivity() {
 
     @Inject
-    lateinit var viewModel: ConvenienceStoreViewModel
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel: ConvenienceStoreViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory).get(ConvenienceStoreViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
