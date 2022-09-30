@@ -101,4 +101,6 @@ dependencies {
     testImplementation(com.gtf.snap.DaggerLibraries.daggerAndroid)
     kaptTest(com.gtf.snap.DaggerLibraries.daggerAndroidCompiler)
 
+    implementation(com.gtf.snap.CommonLibraries.zxing)
+
 }

@@ -6,18 +6,21 @@ import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalAnimationGraphicsApi::class)
 @Composable
 fun AnimatedIcon(
     resId: Int,
+    modifier: Modifier = Modifier
 ): AnimationToggle {
     var atEnd by remember { mutableStateOf(false) }
     val image = AnimatedImageVector.animatedVectorResource(id = resId)
 
     Image(
         painter = rememberAnimatedVectorPainter(image, atEnd = atEnd),
-        contentDescription = "null"
+        contentDescription = "null",
+        modifier = modifier
     )
     return object : AnimationToggle {
         override fun start() {

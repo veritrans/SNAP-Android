@@ -225,7 +225,16 @@
     <string name="indomaret_cta_reload">Muat ulang</string>
 
 
-    <string name="indomaret_how_to_pay">1. Klik Unduh info pembayaran untuk menyimpan detail pembayaran Anda. 2. Jika Anda hendak membayar melalui konter, datangi gerai Indomaret terdekat dan tunjukkan kode bayar/barcode Anda ke kasir. 3. Kasir akan mengonfirmasi detail transaksi Anda. Anda akan mendapatkan e-mail berisi konfirmasi pembayaran jika transaksi Anda berhasil diproses. 4. Jika Anda hendak membayar melalui i.saku, silakan buka aplikasinya dan klik Bayar. 5. Pilih nama toko yang ingin Anda bayar, lalu masukkan Kode Bayar Anda. 6. Klik Selanjutnya dan periksa kembali detail transaksi Anda. 7. Klik Bayar sekarang untuk mengonfirmasi pembayaran. 8. Mohon menyimpan bukti pembayaran untuk berjaga-jaga jika Anda membutuhkan bantuan lebih lanjut.</string>
+    <string-array name="indomaret_how_to_pay">
+        <item><data><![CDATA[Klik Unduh info pembayaran untuk menyimpan detail pembayaran Anda. ]]></data></item>
+        <item><data><![CDATA[Jika Anda hendak membayar melalui konter, datangi gerai Indomaret terdekat dan tunjukkan kode bayar/barcode Anda ke kasir. ]]></data></item>
+        <item><data><![CDATA[Kasir akan mengonfirmasi detail transaksi Anda. Anda akan mendapatkan e-mail berisi konfirmasi pembayaran jika transaksi Anda berhasil diproses. ]]></data></item>
+        <item><data><![CDATA[Jika Anda hendak membayar melalui i.saku, silakan buka aplikasinya dan klik Bayar. ]]></data></item>
+        <item><data><![CDATA[Pilih nama toko yang ingin Anda bayar, lalu masukkan Kode Bayar Anda. ]]></data></item>
+        <item><data><![CDATA[Klik Selanjutnya dan periksa kembali detail transaksi Anda. ]]></data></item>
+        <item><data><![CDATA[Klik Bayar sekarang untuk mengonfirmasi pembayaran. ]]></data></item>
+        <item><data><![CDATA[Mohon menyimpan bukti pembayaran untuk berjaga-jaga jika Anda membutuhkan bantuan lebih lanjut.]]></data></item>
+    </string-array>
 
     <string name="indomaret_cta_1">Unduh info pembayaran</string>
     <string name="indomaret_cta_2">Tutup halaman ini</string>
@@ -238,7 +247,14 @@
     <string name="alfa_group_failed_to_load_payment_code">Gagal memuat</string>
     <string name="alfa_group_cta_reload">Muat ulang</string>
 
-    <string name="alfa_group_how_to_pay">1. Klik Unduh info pembayaran untuk menyimpan detail pembayaran Anda. 2. Datangi gerai Alfamart/Alfamidi/Dan+Dan terdekat dan tunjukkan barcode/kode pembayaran Anda ke kasir. 3. Kasir akan mengonfirmasi detail transaksi Anda. 4. Konfirmasi detail pembayaran Anda ke kasir. 5. Anda akan mendapatkan e-mail berisi konfirmasi pembayaran jika transaksi Anda berhasil diproses. 6. Mohon menyimpan bukti pembayaran untuk berjaga-jaga jika Anda membutuhkan bantuan lebih lanjut.</string>
+    <string-array name="alfa_group_how_to_pay">
+        <item><data><![CDATA[Klik Unduh info pembayaran untuk menyimpan detail pembayaran Anda. ]]></data></item>
+        <item><data><![CDATA[Datangi gerai Alfamart/Alfamidi/Dan+Dan terdekat dan tunjukkan barcode/kode pembayaran Anda ke kasir. ]]></data></item>
+        <item><data><![CDATA[Kasir akan mengonfirmasi detail transaksi Anda. ]]></data></item>
+        <item><data><![CDATA[Konfirmasi detail pembayaran Anda ke kasir. ]]></data></item>
+        <item><data><![CDATA[Anda akan mendapatkan e-mail berisi konfirmasi pembayaran jika transaksi Anda berhasil diproses. ]]></data></item>
+        <item><data><![CDATA[Mohon menyimpan bukti pembayaran untuk berjaga-jaga jika Anda membutuhkan bantuan lebih lanjut.]]></data></item>
+    </string-array>
     <string name="alfa_group_cta_1">Unduh info pembayaran</string>
     <string name="alfa_group_cta_2">Tutup halaman ini</string>
 

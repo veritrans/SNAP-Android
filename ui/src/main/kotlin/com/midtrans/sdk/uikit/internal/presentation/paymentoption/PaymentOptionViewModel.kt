@@ -54,7 +54,8 @@ class PaymentOptionViewModel : ViewModel() {
     }
 
     private fun isValidMethod(type: String, isTabletDevice: Boolean): Boolean {
-        return type == CSTORE
+        return type == INDOMARET
+                || type == ALFAMART
                 || type == BANK_TRANSFER
                 || type == KLIK_BCA
                 || type == BCA_KLIKPAY

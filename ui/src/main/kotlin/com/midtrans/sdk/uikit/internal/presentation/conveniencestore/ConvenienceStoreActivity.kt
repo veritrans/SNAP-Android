@@ -2,6 +2,8 @@ package com.midtrans.sdk.uikit.internal.presentation.conveniencestore
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
@@ -15,14 +17,18 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rxjava2.subscribeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.midtrans.sdk.corekit.api.model.PaymentType
-import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.view.*
@@ -35,7 +41,6 @@ internal class ConvenienceStoreActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModel: ConvenienceStoreViewModel
-    var deepLinkUrl: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,27 +53,25 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 orderId = orderId,
                 customerInfo = customerInfo,
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
-                barCode = viewModel.barCodeUrlLiveData.observeAsState(initial = ""),
+                barCode = viewModel.barCodeBitmapLiveData.observeAsState(initial = null),
                 paymentType = paymentType,
-                isTablet = isTabletDevice()
+                paymentCodeState = viewModel.paymentCodeLiveData.observeAsState(initial = null),
+                pdfUrl = viewModel.pdfUrlLiveData.observeAsState(initial = null),
+                errorState = viewModel.errorLiveData.observeAsState(initial = null),
+                viewModel = viewModel,
+                clipboardManager = LocalClipboardManager.current
             )
         }
-        viewModel.chargeQrPayment(
-            snapToken = snapToken,
-            paymentType = paymentType
-        )
-        if (!isTabletDevice()) {
-            observerDeepLinkUrl()
-        }
+        charge()
         setResult(RESULT_OK)
     }
 
-    private fun observerDeepLinkUrl() {
-        viewModel.deepLinkUrlLiveData.observe(this) { url ->
-            deepLinkUrl = url
-        }
+    private fun charge(){
+        viewModel.chargeConvenienceStorePayment(
+            snapToken = snapToken,
+            paymentType = paymentType
+        )
     }
-
     private fun updateExpiredTime(): Observable<String> {
         return Observable
             .interval(1L, TimeUnit.SECONDS)
@@ -80,18 +83,21 @@ internal class ConvenienceStoreActivity : BaseActivity() {
     private fun Content(
         totalAmount: String,
         orderId: String,
-        barCode: State<String>,
+        barCode: State<Bitmap?>,
         paymentType: String,
         customerInfo: CustomerInfo?,
+        paymentCodeState:State<String?>,
         remainingTimeState: State<String>,
-        isTablet: Boolean = false
+        pdfUrl: State<String?>,
+        errorState: State<Int?>,
+        clipboardManager: ClipboardManager? = null,
+        viewModel: ConvenienceStoreViewModel? = null
     ) {
         val remainingTime by remember { remainingTimeState }
         var expanding by remember {
             mutableStateOf(false)
         }
-        var error by remember { mutableStateOf(false) }
-        var loading by remember { mutableStateOf(false) }
+        var loading by remember { mutableStateOf(true) }
         Column(
             modifier = Modifier
                 .fillMaxHeight(1f)
@@ -138,55 +144,93 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                         ),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
+                    var paymentCodeCopied by remember {
+                        mutableStateOf(false)
+                    }
+
+                    paymentInstruction[paymentType]?.let {
+                        Text(
+                            text = stringResource(id = it),
+                            style = SnapTypography.STYLES.snapTextMediumRegular,
+                            color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY)
+                        )
+                    }
+
+                    SnapCopyableInfoListItem(
+                        title = stringResource(id = R.string.indomaret_payment_code_title),
+                        info = paymentCodeState.value,
+                        copied = paymentCodeCopied,
+                        withDivider = false,
+                        onCopyClicked = { label ->
+                            paymentCodeCopied = true
+                            clipboardManager?.setText(AnnotatedString(text = label))
+                        }
+                    )
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(1f)
-                            .height(50.dp),
+                            .height(70.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        if (error) {
-                            Column(
+                        errorState.value?.let {
+                            Row(
                                 modifier = Modifier.fillMaxWidth(1f),
-                                horizontalAlignment = Alignment.CenterHorizontally
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
+                                Text(
+                                    text = stringResource(id = R.string.alfa_group_failed_to_load_payment_code),
+                                    style = SnapTypography.STYLES.snapTextSmallRegular,
+                                    color = SnapColors.getARGBColor(SnapColors.SUPPORT_DANGER_DEFAULT),
+                                    modifier = Modifier.weight(1f)
+                                )
                                 SnapButton(
                                     style = SnapButton.Style.TERTIARY,
                                     text = stringResource(id = R.string.qr_reload),
                                     onClick = {
-                                        error = false
+                                        viewModel?.resetError()
+                                        loading = true
+                                        charge()
                                     }
-                                )
-                                Text(
-                                    text = stringResource(id = R.string.qr_failed_load),
-                                    style = SnapTypography.STYLES.snapTextSmallRegular,
-                                    color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY)
                                 )
                             }
 
-                        } else {
-                            if (barCode.value.isNotBlank()) {
+                        }
+                        if(errorState.value == null){
+                            if (barCode.value != null) {
                                 AsyncImage(
                                     model = barCode.value, contentDescription = null,
                                     modifier = Modifier
                                         .fillMaxWidth(1f)
-                                        .height(50.dp),
+                                        .height(70.dp),
                                     onError = {
-                                        error = true
                                         loading = false
                                     },
                                     onSuccess = {
-                                        error = false
                                         loading = false
                                     },
                                     onLoading = {
-                                        error = false
                                         loading = true
-                                    }
+                                    },
+                                    contentScale = ContentScale.FillBounds
                                 )
                             }
                         }
-                        if (loading) {
-                            AnimatedIcon(resId = R.drawable.ic_midtrans_animated).start()
+                        if (loading && errorState.value == null) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(1f),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.alfa_group_loading_payment_code),
+                                    style = SnapTypography.STYLES.snapTextSmallRegular,
+                                    color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY),
+                                    modifier = Modifier.weight(1f)
+                                )
+                                AnimatedIcon(
+                                    resId = R.drawable.ic_midtrans_animated,
+                                    modifier = Modifier.width(20.dp).height(20.dp)
+                                ).start()
+                            }
                         }
                     }
 
@@ -199,8 +243,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                         onExpandClick = { isExpanded = !isExpanded },
                         expandingContent = {
                             AnimatedVisibility(visible = isExpanded) {
-                                val instruction =
-                                    if (isTablet) paymentHowToPay else paymentInstruction
+                                val instruction = paymentHowToPay
                                 instruction[paymentType]?.let {
                                     SnapNumberedList(list = stringArrayResource(id = it).toList())
                                 }
@@ -214,11 +257,16 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                enabled = !error && !loading,
+                enabled = errorState.value==null && !loading,
                 style = SnapButton.Style.TERTIARY
             ) {
 
-                onBackPressed()
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(pdfUrl.value)
+                    )
+                )
 
             }
             SnapButton(
@@ -226,8 +274,8 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(16.dp),
-                enabled = !error && !loading,
-                style = if (!error && !loading) SnapButton.Style.PRIMARY else SnapButton.Style.PRIMARY
+                enabled = errorState.value==null && !loading,
+                style = if (errorState.value==null && !loading) SnapButton.Style.PRIMARY else SnapButton.Style.PRIMARY
             ) {
 
                 onBackPressed()
@@ -249,8 +297,10 @@ internal class ConvenienceStoreActivity : BaseActivity() {
             ),
             paymentType = PaymentType.GOPAY,
             remainingTimeState = remember { mutableStateOf("00:00") },
-            barCode = remember { mutableStateOf("http://kkkk") },
-            isTablet = true
+            barCode = remember { mutableStateOf(null) },
+            pdfUrl = remember { mutableStateOf(null) },
+            paymentCodeState = remember { mutableStateOf("1234")},
+            errorState = remember { mutableStateOf(null)}
         )
 
     }
@@ -281,8 +331,8 @@ internal class ConvenienceStoreActivity : BaseActivity() {
 
     private val paymentHowToPay by lazy {
         mapOf(
-            Pair(PaymentType.INDOMARET, R.string.indomaret_how_to_pay),
-            Pair(PaymentType.ALFAMART, R.string.alfa_group_how_to_pay)
+            Pair(PaymentType.INDOMARET, R.array.indomaret_how_to_pay),
+            Pair(PaymentType.ALFAMART, R.array.alfa_group_how_to_pay)
         )
     }
 
