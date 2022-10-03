@@ -7,7 +7,10 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -21,7 +24,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Observer
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
@@ -47,24 +49,24 @@ internal class CreditCardActivity : BaseActivity() {
     private var previousEightDigitNumber = ""
 
     private val transactionDetails: TransactionDetails? by lazy {
-        intent.getParcelableExtra(CreditCardActivity.EXTRA_TRANSACTION_DETAILS) as? TransactionDetails
+        intent.getParcelableExtra(EXTRA_TRANSACTION_DETAILS) as? TransactionDetails
     }
 
     private val totalAmount: String by lazy {
-        intent.getStringExtra(CreditCardActivity.EXTRA_TOTAL_AMOUNT)
+        intent.getStringExtra(EXTRA_TOTAL_AMOUNT)
             ?: throw RuntimeException("Total amount must not be empty")
     }
 
     private val customerDetail: CustomerInfo? by lazy {
-        intent.getParcelableExtra(CreditCardActivity.EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
+        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
     }
 
     private val creditCard: CreditCard? by lazy {
-        intent.getParcelableExtra(CreditCardActivity.EXTRA_CREDIT_CARD) as? CreditCard
+        intent.getParcelableExtra(EXTRA_CREDIT_CARD) as? CreditCard
     }
 
     private val snapToken: String by lazy {
-        intent.getStringExtra(CreditCardActivity.EXTRA_SNAP_TOKEN)
+        intent.getStringExtra(EXTRA_SNAP_TOKEN)
             ?: throw RuntimeException("Snaptoken must not be empty")
     }
 
@@ -141,7 +143,7 @@ internal class CreditCardActivity : BaseActivity() {
     }
 
     private fun initTransactionResultScreenObserver() {
-        viewModel.getTransactionResponseLiveData().observe(this, Observer {
+        viewModel.getTransactionResponseLiveData().observe(this) {
             if (it.statusCode != UiKitConstants.STATUS_CODE_201 && it.redirectUrl.isNullOrEmpty()) {
                 val intent = SuccessScreenActivity.getIntent(
                     activityContext = this@CreditCardActivity,
@@ -150,9 +152,9 @@ internal class CreditCardActivity : BaseActivity() {
                 )
                 resultLauncher.launch(intent)
             }
-        })
-        viewModel.getTransactionStatusLiveData().observe(this, Observer {
-            var intent: Intent
+        }
+        viewModel.getTransactionStatusLiveData().observe(this) {
+            val intent: Intent
             when (it.statusCode) {
                 UiKitConstants.STATUS_CODE_200 -> {
                     intent = SuccessScreenActivity.getIntent(
@@ -163,7 +165,7 @@ internal class CreditCardActivity : BaseActivity() {
                     resultLauncher.launch(intent)
                 }
             }
-        })
+        }
     }
 
     private val resultLauncher =
@@ -232,9 +234,9 @@ internal class CreditCardActivity : BaseActivity() {
                 onCardNumberValueChange = {
 
                     state.cardNumber = it
-                    var cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
+                    val cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
                     if (cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER) {
-                        var eightDigitNumber = cardNumberWithoutSpace.substring(
+                        val eightDigitNumber = cardNumberWithoutSpace.substring(
                             0,
                             SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER
                         )
@@ -471,7 +473,7 @@ internal class CreditCardActivity : BaseActivity() {
 
     @Preview
     @Composable
-    private fun forPreview() {
+    private fun ForPreview() {
         CreditCardPageStateFull(
             transactionDetails = TransactionDetails(
                 orderId = "orderID",

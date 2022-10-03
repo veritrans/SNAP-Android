@@ -86,7 +86,7 @@ internal class CreditCardViewModel @Inject constructor(
         customerPhone: String,
         snapToken: String
     ) {
-        var tokenRequest = NormalCardTokenRequestBuilder()
+        val tokenRequest = NormalCardTokenRequestBuilder()
             .withCardNumber(snapCreditCardUtil.getCardNumberFromTextField(cardNumber))
             .withCardExpMonth(snapCreditCardUtil.getExpMonthFromTextField(cardExpiry))
             .withCardExpYear(snapCreditCardUtil.getExpYearFromTextField(cardExpiry))
@@ -106,13 +106,13 @@ internal class CreditCardViewModel @Inject constructor(
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
 
-                    var ccRequestBuilder = CreditCardPaymentRequestBuilder()
+                    val ccRequestBuilder = CreditCardPaymentRequestBuilder()
                         .withSaveCard(isSavedCard)
                         .withPaymentType(PaymentType.CREDIT_CARD)
                         .withCustomerEmail(customerEmail)
                         .withCustomerPhone(customerPhone)
 
-                    result?.tokenId?.let {
+                    result.tokenId?.let {
                         ccRequestBuilder.withCardToken(it)
                     }
                     snapCore.pay(
