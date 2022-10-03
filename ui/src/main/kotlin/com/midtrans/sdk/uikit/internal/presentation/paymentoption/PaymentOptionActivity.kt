@@ -121,6 +121,10 @@ class PaymentOptionActivity : BaseActivity() {
         intent.getStringExtra(EXTRA_EXPIRY_TIME)
     }
 
+    private val merchant: Merchant? by lazy {
+        intent.getParcelableExtra(EXTRA_MERCHANT_DATA)
+    }
+
     private var customerInfo: CustomerInfo? = null
 
     private lateinit var paymentMethods: PaymentMethodList
@@ -341,7 +345,8 @@ class PaymentOptionActivity : BaseActivity() {
                             totalAmount = totalAmount,
                             customerInfo = customerInfo,
                             creditCard = creditCard,
-                            expiryTime = expiryTime
+                            expiryTime = expiryTime,
+                            withMerchantData = merchant
                         )
                     } else {
                         //TODO currently set to CreditCardActivity for testing purpose
