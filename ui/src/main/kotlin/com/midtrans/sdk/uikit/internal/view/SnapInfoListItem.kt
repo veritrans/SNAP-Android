@@ -72,7 +72,7 @@ fun SnapCopyableInfoListItem(
             }
 
 
-            if (!copied && info!= null) {
+            if (!copied && info != null) {
                 Text(
                     text = stringResource(id = R.string.general_instruction_copy_icon_text),
                     modifier = Modifier.clickable(onClick = { onCopyClicked(info.orEmpty()) }),
