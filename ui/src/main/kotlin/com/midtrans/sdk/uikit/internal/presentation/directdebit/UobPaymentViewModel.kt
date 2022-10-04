@@ -21,8 +21,6 @@ internal class UobPaymentViewModel @Inject constructor(
     private val transactionResponse = MutableLiveData<TransactionResponse>()
     private val transactionResult = MutableLiveData<Pair<String, String>>()
 
-    private var expiredTime = dateTimeUtil.plusDateBy(dateTimeUtil.getCurrentMillis(), 1) //TODO temporary is 24H, later get value from request snap if set
-
     fun getTransactionResponse(): LiveData<TransactionResponse> = transactionResponse
     fun getTransactionResult(): LiveData<Pair<String, String>> = transactionResult
 
@@ -72,5 +70,5 @@ internal class UobPaymentViewModel @Inject constructor(
         } ?: ""
     }
 
-    fun getExpiredHour() = dateTimeUtil.getExpiredHour(expiredTime)
+    fun getExpiredHour(remainingTime: Long) = dateTimeUtil.getExpiredHour(remainingTime)
 }

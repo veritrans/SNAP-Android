@@ -29,7 +29,7 @@
     <string name="payment_summary_brimo">BRIMo</string>
     <string name="payment_summary_danamonob">Danamon Online Banking</string>
     <string name="payment_summary_uobezpay">UOB EZ Pay</string>
-    <string name="payment_summary_akulaku">Akulaku</string>
+    <string name="payment_summary_akulaku">Akulaku PayLater</string>
     <string name="payment_summary_shopeepay">ShopeePay/other e-Wallets</string>
     <string name="payment_summary_alfamart">Alfa Group</string>
     <string name="payment_summary_indomaret">Indomaret</string>
@@ -136,6 +136,7 @@
     <string name="card_error_exceeding_limit">Card limit has been exceeded.</string>
     <string name="card_error_cant_be_used_for_online_payments">This card can\'t be used for online transactions.</string>
     <string name="card_error_hasnt_been_registered_for_online_payments">This card hasn\'t been registered for online transactions.</string>
+    <string name="card_error_bank_blacklisted_by_merchant">"Can\'t use this card for this merchant.\nTry using another card/payment method."</string>
 
     <string name="card_error_invalid_expiry">Invalid expiration detail.</string>
     <string name="card_error_empty_expiry">Expiry can\'t be empty.</string>
@@ -265,8 +266,15 @@
     <string name="alfa_group_cta_2">Close this page</string>
 
 
-    <string name="akulaku_instruction">Akulaku allows you to shop in installments without using a credit card.</string>
-    <string name="akulaku_how_to_pay">1. Click Pay Now, then you will be directed to the Akulaku Payment Center page. 2. Select the desired installment tenor. 3. Login to your Akulaku account. 4. Enter the verification code (OTP) that has been sent to your mobile number, then click Next. 5. Confirm and finish your payment.</string>
+    <string name="akulaku_title">Akulaku PayLater</string>
+    <string name="akulaku_instruction">Akulaku PayLater allows you to shop in installments without using a credit card.</string>
+    <string-array name="akulaku_how_to_pay">
+        <item><data><![CDATA[Click <b>Pay Now</b>, then you will be directed to the <b>Akulaku PayLater Payment Center</b> page.]]></data></item>
+        <item><data><![CDATA[Select the desired installment tenor.]]></data></item>
+        <item><data><![CDATA[Login to your Akulaku PayLater account.]]></data></item>
+        <item><data><![CDATA[Enter the verification code (OTP) that has been sent to your mobile number, then click <b>Next</b>.]]></data></item>
+        <item><data><![CDATA[Confirm and finish your payment.]]></data></item>
+    </string-array>
     <string name="akulaku_cta">Pay now</string>
 
 
@@ -357,9 +365,9 @@
         <item><data><![CDATA[Click <b>Pay now</b> and you will be redirected to UOB EZ Pay website.]]></data></item>
         <item><data><![CDATA[Login using your userID &amp; password.]]></data></item>
         <item><data><![CDATA[Enter OTP you\'ll receive via SMS when prompted.]]></data></item>
-        <item><data><![CDATA[Select the account that you would like to pay from and choose "Continue".]]></data></item>
+        <item><data><![CDATA[Select the account that you would like to pay from and choose &#34;Continue&#34;.]]></data></item>
         <item><data><![CDATA[Review your transaction details, enter the OTP you\'ll receive via SMS.]]></data></item>
-        <item><data><![CDATA[Choose "Confirm" to complete the payment.]]></data></item>
+        <item><data><![CDATA[Choose &#34;Confirm&#34; to complete the payment.]]></data></item>
     </string-array>
     <string name="uob_web_cta">Pay now</string>
 
@@ -368,7 +376,7 @@
     <string-array name="uob_tmrw_how_to_pay">
         <item><data><![CDATA[Click <b>Pay now</b> and you will be redirected to TMRW app.]]></data></item>
         <item><data><![CDATA[Login using your userID &amp; password.]]></data></item>
-        <item><data><![CDATA[Select the account that you would like to pay from and choose "Next".]]></data></item>
+        <item><data><![CDATA[Select the account that you would like to pay from and choose &#34;Next&#34;.]]></data></item>
         <item><data><![CDATA[Review your transaction details, swipe right to confirm.]]></data></item>
         <item><data><![CDATA[Enter your Secure PIN for verification to complete the payment.]]></data></item>
     </string-array>

@@ -110,8 +110,8 @@ class CreditCardViewModelTest {
     fun getExpiredHourShouldReturnhhmmss() {
         val snapCore: SnapCore = mock()
         val dateTimeUtil: DateTimeUtil = mock()
-        val errorCard: ErrorCard = mock()
         val snapCreditCardUtil: SnapCreditCardUtil = mock()
+        val errorCard: ErrorCard = mock()
         `when`(
             dateTimeUtil.getDate(
                 date = eq("2022-01-06 11:32:50 +0700"),

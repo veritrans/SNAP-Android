@@ -7,7 +7,9 @@ import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardViewMod
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardViewModel
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitViewModel
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobPaymentViewModel
+import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobSelectionViewModel
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletViewModel
+import com.midtrans.sdk.uikit.internal.presentation.paylater.PayLaterViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -42,8 +44,18 @@ internal abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(UobSelectionViewModel::class)
+    abstract fun bindUobSelectionViewModel(viewModel: UobSelectionViewModel): ViewModel
+
+    @Binds
+    @IntoMap
     @ViewModelKey(SavedCardViewModel::class)
     abstract fun bindSavedCardViewModel(viewModel: SavedCardViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PayLaterViewModel::class)
+    abstract fun bindPayLaterViewModel(viewModel: PayLaterViewModel): ViewModel
 
     @Binds
     @IntoMap

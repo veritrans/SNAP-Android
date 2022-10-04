@@ -28,10 +28,12 @@
     <string name="payment_summary_brimo">BRIMo</string>
     <string name="payment_summary_danamonob">Danamon Online Banking</string>
     <string name="payment_summary_uobezpay">UOB EZ Pay</string>
-    <string name="payment_summary_akulaku">Akulaku</string>
+    <string name="payment_summary_akulaku">Akulaku PayLater</string>
     <string name="payment_summary_shopeepay">ShopeePay/e-Wallet Lainnya</string>
     <string name="payment_summary_alfamart">Alfa Group</string>
     <string name="payment_summary_indomaret">Indomaret</string>
+    <string name="payment_title_gopay">GoPay</string>
+    <string name="payment_title_shopeepay">ShopeePay</string>
 
 
     <string name="success_screen_v1_status">Pembayaran berhasil</string>
@@ -140,6 +142,7 @@
     <string name="card_error_empty_cvv">CVV wajib diisi.</string>
     <string name="card_error_declined_not_allowed_to_retry">Kartu ditolak oleh bank</string>
     <string name="card_error_failed_to_process">Pembayaran gagal diproses. Silakan lakukan pemesanan ulang.</string>
+    <string name="card_error_bank_blacklisted_by_merchant">""Kartu ini tidak bisa digunakan di merchant ini.\nSilakan coba kartu/metode pembayaran lainnya.""</string>
 
     <string name="cc_dc_saved_card_enter_cvv">Masukkan CVV</string>
     <string name="cc_dc_saved_card_use_another_card">Gunakan kartu lain</string>
@@ -259,8 +262,15 @@
     <string name="alfa_group_cta_2">Tutup halaman ini</string>
 
 
-    <string name="akulaku_instruction">Akulaku memungkinkan Anda untuk berbelanja dengan angsuran tanpa menggunakan kartu kredit.</string>
-    <string name="akulaku_how_to_pay">1. Klik Bayar sekarang, lalu Anda akan dialihkan ke halaman pembayaran Akulaku. 2. Tentukan pilihan angsuran yang ingin dipakai. 3. Login ke akun Akulaku Anda. 4. Masukkan kode OTP yang dikirimkan ke nomor ponsel Anda, lalu klik Lanjut. 5. Konfirmasi dan selesaikan pembayaran Anda.</string>
+    <string name="akulaku_title">Akulaku PayLater</string>
+    <string name="akulaku_instruction">Akulaku PayLater memungkinkan Anda untuk berbelanja dengan angsuran tanpa menggunakan kartu kredit.</string>
+    <string-array name="akulaku_how_to_pay">
+        <item><data><![CDATA[Klik <b>Bayar sekarang</b>, lalu Anda akan dialihkan ke <b>halaman pembayaran Akulaku PayLater</b>.]]></data></item>
+        <item><data><![CDATA[Tentukan pilihan angsuran yang ingin dipakai.]]></data></item>
+        <item><data><![CDATA[Login ke akun Akulaku PayLater Anda.]]></data></item>
+        <item><data><![CDATA[Masukkan kode OTP yang dikirimkan ke nomor ponsel Anda, lalu klik <b>Lanjut</b>.]]></data></item>
+        <item><data><![CDATA[Konfirmasi dan selesaikan pembayaran Anda.]]></data></item>
+    </string-array>
     <string name="akulaku_cta">Bayar sekarang</string>
 
 
@@ -351,7 +361,7 @@
         <item><data><![CDATA[Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke situs web UOB EZ Pay.]]></data></item>
         <item><data><![CDATA[Masuk menggunakan userID &amp; password Anda.]]></data></item>
         <item><data><![CDATA[Masukkan OTP yang dikirim via SMS ketika diminta.]]></data></item>
-        <item><data><![CDATA[Pilih akun untuk melakukan pembayaran, lalu pilih \"Lanjutkan\".]]></data></item>
+        <item><data><![CDATA[Pilih akun untuk melakukan pembayaran, lalu pilih &#34;Lanjutkan&#34;.]]></data></item>
         <item><data><![CDATA[Periksa detail pembayaran, lalu masukkan OTP yang dikirim via SMS.]]></data></item>
         <item><data><![CDATA[Konfirmasi pembayaran.]]></data></item>
     </string-array>
@@ -362,7 +372,7 @@
     <string-array name="uob_tmrw_how_to_pay">
         <item><data><![CDATA[Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke aplikasi TMRW.]]></data></item>
         <item><data><![CDATA[Masuk menggunakan userID &amp; password Anda.]]></data></item>
-        <item><data><![CDATA[Pilih akun untuk melanjutkan pembayaran, lalu klik "Lanjutkan".]]></data></item>
+        <item><data><![CDATA[Pilih akun untuk melanjutkan pembayaran, lalu klik &#34;Lanjutkan&#34;.]]></data></item>
         <item><data><![CDATA[Periksa detail pembayaran, lalu swipe kanan untuk mengkonfirmasi detail.]]></data></item>
         <item><data><![CDATA[Masukkan Secure PIN untuk menyelesaikan pembayaran.]]></data></item>
     </string-array>
@@ -587,7 +597,7 @@
     <string name="tidmid_error_other_pay_method_not_available_cta">Kembali ke merchant</string>
 
     <string name="card_error_declined_disallow_retry_title">Kartu ditolak oleh bank</string>
-    <string name="card_error_declined_disallow_retry_content">Pembayaran gagal diproses.Silakan lakukan pemesanan ulang.</string>
+    <string name="card_error_declined_disallow_retry_content">Pembayaran gagal diproses. Silakan lakukan pemesanan ulang.</string>
     <string name="card_error_declined_disallow_retry_cta">Oke</string>
 
 </resources>

@@ -50,7 +50,7 @@ class SuccessScreenActivity : BaseActivity() {
 
     @Preview
     @Composable
-    private fun forPreview() {
+    private fun ForPreview() {
         SuccessContent(
             total = "Rp399.000",
             orderId = "Order ID #333333333",
@@ -131,7 +131,6 @@ class SuccessScreenActivity : BaseActivity() {
                     textAlign = TextAlign.Center
                 )
             }
-
         }
     }
 

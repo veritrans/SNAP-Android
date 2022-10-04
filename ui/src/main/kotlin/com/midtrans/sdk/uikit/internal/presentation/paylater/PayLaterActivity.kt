@@ -1,12 +1,9 @@
-package com.midtrans.sdk.uikit.internal.presentation.directdebit
+package com.midtrans.sdk.uikit.internal.presentation.paylater
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -30,7 +27,6 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
-import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
@@ -38,7 +34,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class UobPaymentActivity : BaseActivity() {
+class PayLaterActivity : BaseActivity() {
 
     @Inject
     internal lateinit var vmFactory: ViewModelProvider.Factory
@@ -48,9 +44,9 @@ class UobPaymentActivity : BaseActivity() {
             ?: throw RuntimeException("Snap token must not be empty")
     }
 
-    private val uobMode: String by lazy {
-        intent.getStringExtra(EXTRA_UOB_MODE)
-            ?: throw RuntimeException("Uob mode must not be empty")
+    private val paymentType: String by lazy {
+        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
+            ?: throw RuntimeException("Payment type must not be empty")
     }
 
     private val amount: String by lazy {
@@ -63,16 +59,12 @@ class UobPaymentActivity : BaseActivity() {
             ?: throw RuntimeException("Order ID must not be empty")
     }
 
-    private val remainingTime: Long by lazy {
-        intent.getLongExtra(EXTRA_REMAINING_TIME, 0)
-    }
-
     private val customerInfo: CustomerInfo? by lazy {
         intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
     }
 
-    private val viewModel: UobPaymentViewModel by lazy {
-        ViewModelProvider(this, vmFactory).get(UobPaymentViewModel::class.java)
+    private val viewModel: PayLaterViewModel by lazy {
+        ViewModelProvider(this, vmFactory).get(PayLaterViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,74 +76,20 @@ class UobPaymentActivity : BaseActivity() {
             .inject(this)
 
         setContent {
-            UobPaymentContent(
-                uobMode = uobMode,
+            PayLaterContent(
+                paymentType = paymentType,
                 amount = amount,
                 orderId = orderId,
                 customerInfo = customerInfo,
-                response = viewModel.getTransactionResponse().observeAsState().value,
+                response =  viewModel.getTransactionResponse().observeAsState().value,
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
             )
         }
-        observeTransactionStatus()
-    }
-
-    private fun observeTransactionStatus() {
-        viewModel.getTransactionResult().observe(this) { result ->
-            val status = result.first
-            val transactionId = result.second
-            when (status) {
-                UiKitConstants.STATUS_SUCCESS,
-                UiKitConstants.STATUS_SETTLEMENT -> {
-                    goToSuccessScreen(amount, orderId)
-                }
-                UiKitConstants.STATUS_PENDING,
-                UiKitConstants.STATUS_FAILED -> {
-                    val data = Intent()
-                    data.putExtra(
-                        UiKitConstants.KEY_TRANSACTION_RESULT,
-                        TransactionResult(
-                            status = status,
-                            transactionId = transactionId,
-                            paymentType = PaymentType.UOB_EZPAY
-                        )
-                    )
-                    setResult(RESULT_OK, data)
-                    finish()
-                }
-            }
-        }
-    }
-
-    private val successScreenLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                setResult(RESULT_OK, result?.data)
-                finish()
-            }
-        }
-
-    private val webLinkLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            viewModel.checkStatus(snapToken)
-        }
-
-    private fun goToSuccessScreen(
-        amount: String,
-        orderId: String
-    ) {
-        successScreenLauncher.launch(
-            SuccessScreenActivity.getIntent(
-                activityContext = this,
-                total = amount,
-                orderId = orderId
-            )
-        )
     }
 
     @Composable
-    private fun UobPaymentContent(
-        uobMode: String,
+    private fun PayLaterContent(
+        paymentType: String,
         amount: String,
         orderId: String,
         customerInfo: CustomerInfo?,
@@ -160,8 +98,8 @@ class UobPaymentActivity : BaseActivity() {
     ) {
         var isCustomerDetailExpanded by remember { mutableStateOf(false) }
         var isInstructionExpanded by remember { mutableStateOf(false) }
-        val title = stringResource(getTitleId(uobMode = uobMode))
-        val url = getUobDeeplinkUrl(uobMode, response)
+        val title = stringResource(getTitleId(paymentType = paymentType))
+        val url = response?.redirectUrl.orEmpty()
         val remainingTime by remember { remainingTimeState }
 
         if (url.isEmpty()) {
@@ -208,18 +146,18 @@ class UobPaymentActivity : BaseActivity() {
                                 .fillMaxWidth()
 
                         ) {
-                            SnapText(stringResource(getInstructionId(uobMode)))
+                            SnapText(stringResource(getInstructionId(paymentType = paymentType)))
                             SnapInstructionButton(
                                 modifier = Modifier.padding(top = 28.dp),
                                 isExpanded = isInstructionExpanded,
                                 iconResId = R.drawable.ic_help,
-                                title = stringResource(R.string.bca_klik_pay_how_to_pay_title),
+                                title = stringResource(getCta(paymentType = paymentType)),
                                 onExpandClick = { isInstructionExpanded = !isInstructionExpanded },
                                 expandingContent = {
                                     Column {
                                         AnimatedVisibility(visible = isInstructionExpanded) {
                                             SnapNumberedList(
-                                                list = stringArrayResource(getHowToPayId(uobMode)).toList()
+                                                list = stringArrayResource(getHowToPayId(paymentType = paymentType)).toList()
                                             )
                                         }
                                     }
@@ -233,82 +171,76 @@ class UobPaymentActivity : BaseActivity() {
                         .fillMaxWidth()
                         .padding(top = 40.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
                     enabled = true,
-                    text = stringResource(id = getUobCta(uobMode)),
+                    text = stringResource(getCta(paymentType)),
                     style = SnapButton.Style.PRIMARY
                 ) {
-                    viewModel.payUob(snapToken)
+                    viewModel.payPayLater(
+                        snapToken = snapToken,
+                        paymentType = paymentType
+                    )
                 }
             }
         } else {
-            openDeeplink(uobMode, url)
+            val status = response?.transactionStatus
+            val transactionId = response?.transactionId
+            SnapWebView(
+                title = title,
+                paymentType = paymentType,
+                url = url,
+                onPageStarted = {
+                    finishPayLater(
+                        status = status,
+                        transactionId = transactionId
+                    )
+                },
+                onPageFinished = { }
+            )
         }
     }
 
-    private fun getUobDeeplinkUrl(
-        uobMode: String,
-        response: TransactionResponse?
-    ): String {
-        return when (uobMode) {
-            PaymentType.UOB_EZPAY_WEB -> response?.uobEzpayWebUrl.orEmpty()
-            PaymentType.UOB_EZPAY_APP -> response?.uobEzpayDeeplinkUrl.orEmpty()
-            else -> ""
-        }
-    }
-
-    private fun openDeeplink(
-        uobMode: String,
-        url: String
+    private fun finishPayLater(
+        status: String?,
+        transactionId: String?
     ) {
-        if (uobMode == PaymentType.UOB_EZPAY_WEB) {
-            try {
-                intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(url)
-                startActivity(intent)
-
-                setResult(RESULT_OK)
-                finish()
-            } catch (e: Throwable) {
-                //TODO implement error handling later
-            }
-        } else {
-            try {
-                intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(url)
-                webLinkLauncher.launch(intent)
-            } catch (e: Throwable) {
-                //TODO implement error handling later
-            }
+        if (status != null && transactionId != null) {
+            val data = Intent()
+            data.putExtra(
+                UiKitConstants.KEY_TRANSACTION_RESULT,
+                TransactionResult(
+                    status = status,
+                    transactionId = transactionId,
+                    paymentType = paymentType
+                )
+            )
+            setResult(RESULT_OK, data)
+            finish()
         }
     }
 
-    private fun getTitleId(uobMode: String): Int {
-        return when (uobMode) {
-            PaymentType.UOB_EZPAY_APP -> R.string.uob_tmrw_method_name
-            PaymentType.UOB_EZPAY_WEB -> R.string.uob_web_method_name
+    private fun getTitleId(paymentType: String): Int {
+        return when (paymentType) {
+            PaymentType.AKULAKU -> R.string.akulaku_title
             else -> 0
         }
     }
 
-    private fun getInstructionId(uobMode: String): Int {
-        return when (uobMode) {
-            PaymentType.UOB_EZPAY_WEB -> R.string.uob_web_instruction
-            PaymentType.UOB_EZPAY_APP -> R.string.uob_tmrw_instruction
+    private fun getInstructionId(paymentType: String): Int {
+        return when (paymentType) {
+            PaymentType.AKULAKU -> R.string.akulaku_instruction
             else -> 0
         }
     }
 
-    private fun getHowToPayId(uobMode: String): Int {
-        return when (uobMode) {
-            PaymentType.UOB_EZPAY_WEB -> R.array.uob_web_how_to_pay
-            PaymentType.UOB_EZPAY_APP -> R.array.uob_tmrw_how_to_pay
+    private fun getHowToPayId(paymentType: String): Int {
+        return when (paymentType) {
+            PaymentType.AKULAKU -> R.array.akulaku_how_to_pay
             else -> 0
         }
     }
 
-    private fun getUobCta(uobMode: String): Int {
-        return when (uobMode) {
-            PaymentType.UOB_EZPAY_WEB -> R.string.uob_web_cta
-            PaymentType.UOB_EZPAY_APP -> R.string.uob_tmrw_cta
+    private fun getCta(paymentType: String): Int {
+        return when (paymentType) {
+            PaymentType.AKULAKU -> R.string.akulaku_cta
             else -> 0
         }
     }
@@ -316,34 +248,31 @@ class UobPaymentActivity : BaseActivity() {
     private fun updateExpiredTime(): Observable<String> {
         return Observable
             .interval(1L, TimeUnit.SECONDS)
-            .map { viewModel.getExpiredHour(remainingTime) }
+            .map { viewModel.getExpiredHour() }
             .observeOn(AndroidSchedulers.mainThread())
     }
 
     companion object {
-        private const val EXTRA_SNAP_TOKEN = "directDebit.uobPayment.extra.snap_token"
-        private const val EXTRA_UOB_MODE = "directDebit.uobPayment.extra.uob_mode"
-        private const val EXTRA_AMOUNT = "directDebit.uobPayment.extra.amount"
-        private const val EXTRA_ORDER_ID = "directDebit.uobPayment.extra.order_id"
-        private const val EXTRA_CUSTOMER_INFO = "directDebit.uobPayment.extra.customer_info"
-        private const val EXTRA_REMAINING_TIME = "directDebit.uobPayment.extra.remaining_time"
+        private const val EXTRA_SNAP_TOKEN = "payLater.extra.snap_token"
+        private const val EXTRA_PAYMENT_TYPE = "payLater.extra.payment_type"
+        private const val EXTRA_AMOUNT = "payLater.extra.amount"
+        private const val EXTRA_ORDER_ID = "payLater.extra.order_id"
+        private const val EXTRA_CUSTOMER_INFO = "payLater.extra.customer_info"
 
         fun getIntent(
             activityContext: Context,
             snapToken: String,
-            uobMode: String,
+            @PaymentType.Def paymentType: String,
             amount: String,
             orderId: String,
-            customerInfo: CustomerInfo?,
-            remainingTime: Long
+            customerInfo: CustomerInfo?
         ): Intent {
-            return Intent(activityContext, UobPaymentActivity::class.java).apply {
+            return Intent(activityContext, PayLaterActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
-                putExtra(EXTRA_UOB_MODE, uobMode)
+                putExtra(EXTRA_PAYMENT_TYPE, paymentType)
                 putExtra(EXTRA_AMOUNT, amount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
-                putExtra(EXTRA_REMAINING_TIME, remainingTime)
             }
         }
     }
