@@ -41,9 +41,18 @@ internal class BankTransferDetailViewModel @Inject constructor(
                 override fun onSuccess(result: TransactionResponse) {
                     result.run {
                         bcaVaNumber?.let { vaNumberLiveData.value = it }
-                        bniVaNumber?.let { vaNumberLiveData.value = it }
-                        briVaNumber?.let { vaNumberLiveData.value = it }
-                        permataVaNumber?.let { vaNumberLiveData.value = it }
+                        bniVaNumber?.let {
+                            vaNumberLiveData.value = it
+                            bankCodeLiveData.value = BANK_CODE_BNI
+                        }
+                        briVaNumber?.let {
+                            vaNumberLiveData.value = it
+                            bankCodeLiveData.value = BANK_CODE_BRI
+                        }
+                        permataVaNumber?.let {
+                            vaNumberLiveData.value = it
+                            bankCodeLiveData.value = BANK_CODE_PERMATA
+                        }
                         billerCode?.let { companyCodeLiveData.value = it }
                         billKey?.let { billingNumberLiveData.value = it }
                         bcaExpiration?.let { expiredTime = parseTime(it) }
@@ -74,4 +83,10 @@ internal class BankTransferDetailViewModel @Inject constructor(
     }
 
     fun getExpiredHour() = datetimeUtil.getExpiredHour(expiredTime)
+
+    companion object{
+        private val BANK_CODE_BNI = "009 - BNI46"
+        private val BANK_CODE_BRI = "002 - BRI"
+        private val BANK_CODE_PERMATA = "013 - PERMATA"
+    }
 }

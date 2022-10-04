@@ -325,8 +325,7 @@ class PaymentOptionActivity : BaseActivity() {
                         orderId = orderId,
                         totalAmount = totalAmount,
                         paymentMethodItem = paymentMethodItem,
-                        customerInfo = customerInfo,
-                        destinationBankCode = "009 - Permata"  //TODO: clarify if always permata or something
+                        customerInfo = customerInfo
                     )
                 )
             },
