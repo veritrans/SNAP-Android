@@ -85,8 +85,8 @@ internal class BankTransferDetailViewModel @Inject constructor(
     fun getExpiredHour() = datetimeUtil.getExpiredHour(expiredTime)
 
     companion object{
-        private val BANK_CODE_BNI = "009 - BNI46"
-        private val BANK_CODE_BRI = "002 - BRI"
-        private val BANK_CODE_PERMATA = "013 - PERMATA"
+        private const val BANK_CODE_BNI = "009 - BNI46"
+        private const val BANK_CODE_BRI = "002 - BRI"
+        private const val BANK_CODE_PERMATA = "013 - PERMATA"
     }
 }
