@@ -7,7 +7,7 @@ import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 
-object BarcodeEncoder {
+internal object BarcodeEncoder {
     fun createBitmap(matrix: BitMatrix): Bitmap {
         val width = matrix.width
         val height = matrix.height
