@@ -356,11 +356,11 @@ internal class ConvenienceStoreActivity : BaseActivity() {
     }
 
     companion object {
-        private const val EXTRA_TOTAL_AMOUNT = "convenience_store.extra_total_amount"
-        private const val EXTRA_ORDER_ID = "convenience_store.extra_order_id"
-        private const val EXTRA_CUSTOMER_DETAIL = "convenience_store.extra_customer_detail"
-        private const val EXTRA_PAYMENTTYPE = "convenience_store.extra_paymenttype"
-        private const val EXTRA_SNAPTOKEN = "convenience_store.extra_snaptoken"
+        private const val EXTRA_TOTAL_AMOUNT = "convenience_store.extra.total_amount"
+        private const val EXTRA_ORDER_ID = "convenience_store.extra.order_id"
+        private const val EXTRA_CUSTOMER_DETAIL = "convenience_store.extra.customer_detail"
+        private const val EXTRA_PAYMENTTYPE = "convenience_store.extra.payment_type"
+        private const val EXTRA_SNAPTOKEN = "convenience_store.extra.snap_token"
 
         fun getIntent(
             activityContext: Context,
