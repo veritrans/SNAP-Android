@@ -28,7 +28,7 @@
     <string name="payment_summary_brimo">BRIMo</string>
     <string name="payment_summary_danamonob">Danamon Online Banking</string>
     <string name="payment_summary_uobezpay">UOB EZ Pay</string>
-    <string name="payment_summary_akulaku">Akulaku</string>
+    <string name="payment_summary_akulaku">Akulaku PayLater</string>
     <string name="payment_summary_shopeepay">ShopeePay/e-Wallet Lainnya</string>
     <string name="payment_summary_alfamart">Alfa Group</string>
     <string name="payment_summary_indomaret">Indomaret</string>
@@ -246,8 +246,15 @@
     <string name="alfa_group_cta_2">Tutup halaman ini</string>
 
 
-    <string name="akulaku_instruction">Akulaku memungkinkan Anda untuk berbelanja dengan angsuran tanpa menggunakan kartu kredit.</string>
-    <string name="akulaku_how_to_pay">1. Klik Bayar sekarang, lalu Anda akan dialihkan ke halaman pembayaran Akulaku. 2. Tentukan pilihan angsuran yang ingin dipakai. 3. Login ke akun Akulaku Anda. 4. Masukkan kode OTP yang dikirimkan ke nomor ponsel Anda, lalu klik Lanjut. 5. Konfirmasi dan selesaikan pembayaran Anda.</string>
+    <string name="akulaku_title">Akulaku PayLater</string>
+    <string name="akulaku_instruction">Akulaku PayLater memungkinkan Anda untuk berbelanja dengan angsuran tanpa menggunakan kartu kredit.</string>
+    <string-array name="akulaku_how_to_pay">
+        <item><data><![CDATA[Klik <b>Bayar sekarang</b>, lalu Anda akan dialihkan ke <b>halaman pembayaran Akulaku PayLater</b>.]]></data></item>
+        <item><data><![CDATA[Tentukan pilihan angsuran yang ingin dipakai.]]></data></item>
+        <item><data><![CDATA[Login ke akun Akulaku PayLater Anda.]]></data></item>
+        <item><data><![CDATA[Masukkan kode OTP yang dikirimkan ke nomor ponsel Anda, lalu klik <b>Lanjut</b>.]]></data></item>
+        <item><data><![CDATA[Konfirmasi dan selesaikan pembayaran Anda.]]></data></item>
+    </string-array>
     <string name="akulaku_cta">Bayar sekarang</string>
 
 

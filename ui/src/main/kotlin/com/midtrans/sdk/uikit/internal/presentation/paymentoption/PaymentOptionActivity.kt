@@ -37,6 +37,7 @@ import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobSelectionActivity
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
+import com.midtrans.sdk.uikit.internal.presentation.paylater.PayLaterActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 
@@ -390,7 +391,19 @@ class PaymentOptionActivity : BaseActivity() {
             },
             Pair(PaymentType.SHOPEEPAY, eWalletPaymentLauncher),
             Pair(PaymentType.SHOPEEPAY_QRIS, eWalletPaymentLauncher),
-            Pair(PaymentType.GOPAY, eWalletPaymentLauncher)
+            Pair(PaymentType.GOPAY, eWalletPaymentLauncher),
+            Pair(PaymentType.AKULAKU) {
+                resultLauncher.launch(
+                    PayLaterActivity.getIntent(
+                        activityContext = this,
+                        snapToken = snapToken,
+                        paymentType = paymentType,
+                        amount = totalAmount,
+                        orderId = orderId,
+                        customerInfo = customerInfo
+                    )
+                )
+            }
         )
     }
 
