@@ -25,6 +25,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.SavedToken
@@ -685,5 +686,67 @@ fun LabelledCheckBox(
         Text(
             text = label,
         )
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun SnapDropdownMenu(
+    title: String,
+    optionList: List<String>
+) {
+    val options by remember { mutableStateOf(optionList) }
+    var expanded by remember { mutableStateOf(false) }
+    var selectedOptionText by remember { mutableStateOf(options[0]) }
+
+    ExposedDropdownMenuBox(
+        modifier = Modifier.fillMaxWidth(1f),
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded }
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(1f),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = title,
+                style = SnapTypography.STYLES.snapTextMediumMedium
+            )
+            SnapTextField(
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .padding(top = 20.dp),
+                readOnly = true,
+                value = TextFieldValue(selectedOptionText),
+                onValueChange = {},
+                isFocused = false,
+                onFocusChange = {},
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(
+                        expanded = expanded
+                    )
+                },
+                textStyle = SnapTypography.STYLES.snapTextMediumRegular
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                options.forEach { selectionOption ->
+                    DropdownMenuItem(
+                        onClick = {
+                            selectedOptionText = selectionOption
+                            expanded = false
+                        }
+                    ) {
+                        Text(
+                            text = selectionOption,
+                            style = SnapTypography.STYLES.snapTextMediumRegular
+                        )
+                    }
+                }
+            }
+        }
     }
 }
