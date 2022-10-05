@@ -41,6 +41,7 @@ class CreditCardViewModelTest {
     @Test
     fun chargeCreditCardShouldInvokeSnapCorePay() {
         val snapCore: SnapCore = mock()
+        val errorCard: ErrorCard = mock()
         val snapCreditCardUtil: SnapCreditCardUtil = mock()
         val dateTimeUtil: DateTimeUtil = mock()
         val snapToken = "SnapToken"
@@ -50,7 +51,6 @@ class CreditCardViewModelTest {
         val cvv = TextFieldValue(text = "123")
         val customerEmail = "email@email.com"
         val customerPhone = "123456789"
-        val errorCard: ErrorCard = mock()
         `when`(snapCreditCardUtil.getCardNumberFromTextField(any())).thenReturn("")
         `when`(snapCreditCardUtil.getExpMonthFromTextField(any())).thenReturn("")
         `when`(snapCreditCardUtil.getExpYearFromTextField(any())).thenReturn("")
@@ -137,17 +137,17 @@ class CreditCardViewModelTest {
     fun getBankIconShouldReturnBankIconResId(){
         val snapCore: SnapCore = mock()
         val dateTimeUtil: DateTimeUtil = mock()
+        val errorCard: ErrorCard = mock()
         val snapCreditCardUtil: SnapCreditCardUtil = mock()
         val binNumber = "12345678"
         val bankIconResId = 1
         val bankCode = "009"
-        val errorCard: ErrorCard = mock()
         val binResponse = BinResponse(
             data = BinData(null, null, null, null, null, null, bankCode, null)
         )
         `when`(snapCreditCardUtil.getBankIcon(bankCode)).thenReturn(bankIconResId)
         val creditCardViewModel =
-            CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil, mock())
+            CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil, errorCard)
 
         creditCardViewModel.getBankIconImage(binNumber)
         val callbackCaptor: KArgumentCaptor<Callback<BinResponse>> = argumentCaptor()

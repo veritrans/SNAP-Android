@@ -26,7 +26,7 @@ object Dependencies {
     const val rxBindingVersion = "3.0.0-alpha2"
     const val jodaTimeVersion = "2.9.9.4" // TODO: migrate to javatime
     const val jodaTimeTestVersion = "2.9.9"
-    const val zxingVersion = "3.6.0"
+    const val zxingVersion = "3.4.1"
     const val robolectricVersion = "4.4"
     const val localizationVersion = "1.2.6"
     const val uuidVersion = "3.1.5"
@@ -62,7 +62,7 @@ object CommonLibraries {
     const val roomRuntime = "androidx.room:room-runtime:${Dependencies.roomVersion}"
     const val roomRxJava2 = "androidx.room:room-rxjava2:${Dependencies.roomVersion}"
     const val timber = "com.jakewharton.timber:timber:${Dependencies.timberVersion}"
-    const val zxing = "com.journeyapps:zxing-android-embedded:${Dependencies.zxingVersion}"
+    const val zxing = "com.google.zxing:core:${Dependencies.zxingVersion}"
     const val androidxDatastore =
         "androidx.datastore:datastore-preferences:${Dependencies.androidxDatastoreVersion}"
     const val coreLibraryDesugaring = "com.android.tools:desugar_jdk_libs:${Dependencies.coreLibraryDesugaringVersion}"

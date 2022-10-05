@@ -27,7 +27,8 @@ fun SnapCopyableInfoListItem(
     info: String? = null,
     copied: Boolean = false,
     modifier: Modifier = Modifier.fillMaxWidth(1f),
-    onCopyClicked: (info: String) -> Unit = {}
+    onCopyClicked: (info: String) -> Unit = {},
+    withDivider: Boolean = true
 ) {
     Column {
         title?.let {
@@ -71,7 +72,7 @@ fun SnapCopyableInfoListItem(
             }
 
 
-            if (!copied) {
+            if (!copied && info != null) {
                 Text(
                     text = stringResource(id = R.string.general_instruction_copy_icon_text),
                     modifier = Modifier.clickable(onClick = { onCopyClicked(info.orEmpty()) }),
@@ -81,11 +82,13 @@ fun SnapCopyableInfoListItem(
             }
 
         }
-        Divider(
-            thickness = 1.dp,
-            color = SnapColors.getARGBColor(SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY),
-            modifier = Modifier.padding(top = 16.dp)
-        )
+        if(withDivider) {
+            Divider(
+                thickness = 1.dp,
+                color = SnapColors.getARGBColor(SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY),
+                modifier = Modifier.padding(top = 16.dp)
+            )
+        }
     }
 }
 

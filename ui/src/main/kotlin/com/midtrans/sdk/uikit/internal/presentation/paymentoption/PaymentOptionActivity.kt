@@ -32,6 +32,7 @@ import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
+import com.midtrans.sdk.uikit.internal.presentation.conveniencestore.ConvenienceStoreActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
@@ -321,6 +322,19 @@ class PaymentOptionActivity : BaseActivity() {
                 )
             )
         }
+
+        val cStorePaymentLauncher = {
+            resultLauncher.launch(
+                ConvenienceStoreActivity.getIntent(
+                    activityContext = this,
+                    snapToken = snapToken,
+                    orderId = orderId,
+                    totalAmount = totalAmount,
+                    paymentType = paymentMethodItem.type,
+                    customerInfo = customerInfo,
+                )
+            )
+        }
         return mapOf(
             Pair(PaymentType.BANK_TRANSFER) {
                 resultLauncher.launch(
@@ -403,7 +417,9 @@ class PaymentOptionActivity : BaseActivity() {
                         customerInfo = customerInfo
                     )
                 )
-            }
+            },
+            Pair(PaymentType.ALFAMART, cStorePaymentLauncher),
+            Pair(PaymentType.INDOMARET, cStorePaymentLauncher)
         )
     }
 

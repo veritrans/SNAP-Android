@@ -230,7 +230,16 @@
     <string name="indomaret_cta_reload">Reload</string>
 
 
-    <string name="indomaret_how_to_pay">1. Tap Download payment info to get a copy of your unique payment details. 2. If you’re going to pay on the counter, go to the nearest Indomaret store and show your payment code/barcode to the cashier. 3. The cashier will confirm your transaction details. Once your transaction is successful, you’ll receive the payment confirmation e-mail. 4. If you’re going to pay via i.saku, open the app and tap Bayar. 5. Choose the merchant you’d like to pay to, and enter your payment code. 6. Tap Selanjutnya and check your transaction details. 7. Tap Bayar sekarang to confirm your payment. 8. Please keep your Indomaret payment receipt in case you’ll need further help via support.</string>
+    <string-array name="indomaret_how_to_pay">
+        <item><data><![CDATA[Tap Download payment info to get a copy of your unique payment details. ]]></data></item>
+        <item><data><![CDATA[If you’re going to pay on the counter, go to the nearest Indomaret store and show your payment code/barcode to the cashier. ]]></data></item>
+        <item><data><![CDATA[The cashier will confirm your transaction details. Once your transaction is successful, you’ll receive the payment confirmation e-mail. ]]></data></item>
+        <item><data><![CDATA[If you’re going to pay via i.saku, open the app and tap Bayar. ]]></data></item>
+        <item><data><![CDATA[Choose the merchant you’d like to pay to, and enter your payment code. ]]></data></item>
+        <item><data><![CDATA[Tap Selanjutnya and check your transaction details. ]]></data></item>
+        <item><data><![CDATA[Tap Bayar sekarang to confirm your payment. ]]></data></item>
+        <item><data><![CDATA[Please keep your Indomaret payment receipt in case you’ll need further help via support.]]></data></item>
+    </string-array>
 
     <string name="indomaret_cta_1">Download payment info</string>
     <string name="indomaret_cta_2">Close this page</string>
@@ -244,7 +253,14 @@
     <string name="alfa_group_failed_to_load_payment_code">Failed to load</string>
     <string name="alfa_group_cta_reload">Reload</string>
 
-    <string name="alfa_group_how_to_pay">1. Tap Download payment info to get a copy of your unique payment details. 2. Go to the nearest Alfamart/Alfamidi/Dan+Dan store near you and show your barcode/payment code to the cashier. 3. The cashier will confirm your transaction details. 4. Confirm your payment with the cashier. 5. Once your transaction is successful, you’ll receive the payment confirmation e-mail. 6. Please keep your Indomaret payment receipt in case you’ll need further help via support.</string>
+    <string-array name="alfa_group_how_to_pay">
+        <item><data><![CDATA[Tap Download payment info to get a copy of your unique payment details. ]]></data></item>
+        <item><data><![CDATA[Go to the nearest Alfamart/Alfamidi/Dan+Dan store near you and show your barcode/payment code to the cashier. ]]></data></item>
+        <item><data><![CDATA[The cashier will confirm your transaction details. ]]></data></item>
+        <item><data><![CDATA[Confirm your payment with the cashier. ]]></data></item>
+        <item><data><![CDATA[Once your transaction is successful, you’ll receive the payment confirmation e-mail. ]]></data></item>
+        <item><data><![CDATA[Please keep your Indomaret payment receipt in case you’ll need further help via support.]]></data></item>
+    </string-array>
 
     <string name="alfa_group_cta_1">Download payment info</string>
     <string name="alfa_group_cta_2">Close this page</string>
