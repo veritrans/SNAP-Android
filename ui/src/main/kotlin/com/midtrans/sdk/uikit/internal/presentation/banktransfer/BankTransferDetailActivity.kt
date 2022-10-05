@@ -26,6 +26,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
@@ -40,7 +41,11 @@ import javax.inject.Inject
 internal class BankTransferDetailActivity : BaseActivity() {
 
     @Inject
-    lateinit var viewModel: BankTransferDetailViewModel
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel: BankTransferDetailViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory).get(BankTransferDetailViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +61,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 billingNumberState = viewModel.billingNumberLiveData.observeAsState(initial = ""),
                 bankName = paymentType,
                 companyCodeState = viewModel.companyCodeLiveData.observeAsState(initial = ""),
-                destinationBankCode = destinationBankCode,
+                destinationBankCode = viewModel.bankCodeLiveData.observeAsState(),
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
             )
         }
@@ -84,7 +89,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
         vaNumberState: State<String>,
         billingNumberState: State<String>,
         companyCodeState: State<String>,
-        destinationBankCode: String?,
+        destinationBankCode: State<String?>,
         remainingTimeState: State<String>
     ) {
         val billingNumber by remember { billingNumberState }
@@ -146,7 +151,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                             vaNumber = vaNumberState.value,
                             companyCode = companyCode,
                             billingNumber = billingNumber,
-                            destinationBankCode = destinationBankCode
+                            destinationBankCode = destinationBankCode.value
                         )[bankName]?.invoke()
 
                         var isExpanded by remember { mutableStateOf(false) }
@@ -184,8 +189,12 @@ internal class BankTransferDetailActivity : BaseActivity() {
                                                 )
                                             }
                                             AnimatedVisibility(visible = selected) {
-                                                SnapNumberedList(list = stringArrayResource(id = item.second).toList())
-
+                                                val instructionList = stringArrayResource(id = item.second).toMutableList()
+                                                destinationBankCode.value?.let {
+                                                    instructionList.forEachIndexed{ index, value -> instructionList[index] =
+                                                        value.replace(BANK_CODE_MARK, it.split(" ")[0]) }
+                                                }
+                                                SnapNumberedList(list = instructionList)
                                             }
                                             Divider(
                                                 thickness = 1.dp,
@@ -322,7 +331,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
             companyCodeState = remember { mutableStateOf("32323") },
             bankName = "bni",
             billingNumberState = remember { mutableStateOf("2323222222") },
-            destinationBankCode = "111",
+            destinationBankCode = remember { mutableStateOf("123") },
             remainingTimeState = remember { mutableStateOf("00:00") }
         )
 
@@ -347,9 +356,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
         intent.getStringExtra(EXTRA_PAYMENTTYPE)
             ?: throw RuntimeException("Bank name must not be empty")
     }
-    private val destinationBankCode: String? by lazy {
-        intent.getStringExtra(EXTRA_DESTINATIONBANKCODE)
-    }
+
     private val snapToken: String by lazy {
         intent.getStringExtra(EXTRA_SNAPTOKEN).orEmpty()
     }
@@ -495,7 +502,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
         private const val EXTRA_CUSTOMER_DETAIL = "bankTransfer.extra.customer_detail"
         private const val EXTRA_PAYMENTTYPE = "bankTransfer.extra.paymenttype"
         private const val EXTRA_SNAPTOKEN = "bankTransfer.extra.snaptoken"
-        private const val EXTRA_DESTINATIONBANKCODE = "bankTransfer.extra.destinationbankcode"
+        private const val BANK_CODE_MARK = "--BANK_CODE--"
 
         fun getIntent(
             activityContext: Context,
@@ -503,7 +510,6 @@ internal class BankTransferDetailActivity : BaseActivity() {
             paymentType: String,
             totalAmount: String,
             orderId: String,
-            destinationBankCode: String? = null,
             customerInfo: CustomerInfo? = null
 
         ): Intent {
@@ -516,10 +522,6 @@ internal class BankTransferDetailActivity : BaseActivity() {
                     customerInfo
                 )
                 putExtra(EXTRA_PAYMENTTYPE, paymentType)
-
-                destinationBankCode?.let {
-                    putExtra(EXTRA_DESTINATIONBANKCODE, it)
-                }
             }
         }
     }

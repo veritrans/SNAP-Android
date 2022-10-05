@@ -107,7 +107,6 @@ class BankTransferListActivity : BaseActivity() {
                 customerInfo = customerInfo,
                 orderId = orderId,
                 totalAmount = totalAmount,
-                destinationBankCode = destinationBankCode,
                 snapToken = snapToken
             )
         resultLauncher.launch(intent)
@@ -130,10 +129,6 @@ class BankTransferListActivity : BaseActivity() {
 
     private val customerInfo: CustomerInfo? by lazy {
         intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
-    }
-
-    private val destinationBankCode: String? by lazy {
-        intent.getStringExtra(EXTRA_DESTINATIONBANKCODE)
     }
 
     private val paymentMethodItem: PaymentMethodItem by lazy {
@@ -167,7 +162,6 @@ class BankTransferListActivity : BaseActivity() {
         private const val EXTRA_SNAP_TOKEN = "bankTransfer.extra.snap_token"
         private const val EXTRA_TOTAL_AMOUNT = "bankTransfer.extra.total_amount"
         private const val EXTRA_ORDER_ID = "bankTransfer.extra.order_id"
-        private const val EXTRA_DESTINATIONBANKCODE = "bankTransfer.extra.destinationbankcode"
         private const val EXTRA_CUSTOMER_INFO = "bankTransfer.extra.customer_info"
         private const val EXTRA_PAYMENT_METHOD_ITEM = "bankTransfer.extra.payment_method_item"
 
@@ -177,7 +171,6 @@ class BankTransferListActivity : BaseActivity() {
             totalAmount: String,
             orderId: String,
             paymentMethodItem: PaymentMethodItem,
-            destinationBankCode: String? = null,
             customerInfo: CustomerInfo? = null
         ): Intent {
             return Intent(activityContext, BankTransferListActivity::class.java).apply {
@@ -189,9 +182,6 @@ class BankTransferListActivity : BaseActivity() {
                     EXTRA_CUSTOMER_INFO,
                     customerInfo
                 )
-                destinationBankCode?.let {
-                    putExtra(EXTRA_DESTINATIONBANKCODE, it)
-                }
             }
         }
     }

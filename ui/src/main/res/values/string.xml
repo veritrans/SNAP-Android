@@ -544,7 +544,7 @@
         <item><data><![CDATA[Select <b>other transactions</b> on the main menu.]]></data></item>
         <item><data><![CDATA[Select <b>transfer</b>.]]></data></item>
         <item><data><![CDATA[Select <b>other bank account</b>.]]></data></item>
-        <item><data><![CDATA[Insert 009 as the <b>bank code</b>.]]></data></item>
+        <item><data><![CDATA[Insert --BANK_CODE-- as the <b>bank code</b>.]]></data></item>
         <item><data><![CDATA[Insert the <b>payable amount</b>.]]></data></item>
         <item><data><![CDATA[Insert the <b>payment account number</b>, then <b>confirm</b>.]]></data></item>
         <item><data><![CDATA[Payment complete.]]></data></item>
@@ -554,7 +554,7 @@
         <item><data><![CDATA[Select <b>other transactions</b> on the main menu.]]></data></item>
         <item><data><![CDATA[Select <b>transfer</b>.]]></data></item>
         <item><data><![CDATA[Select <b>between online banks</b>.]]></data></item>
-        <item><data><![CDATA[Insert 009 as the <b>bank code</b>.]]></data></item>
+        <item><data><![CDATA[Insert --BANK_CODE-- as the <b>bank code</b>.]]></data></item>
         <item><data><![CDATA[Insert the <b>payable amount</b>.]]></data></item>
         <item><data><![CDATA[Insert the <b>payment account number</b>, then <b>confirm</b>.]]></data></item>
         <item><data><![CDATA[Payment complete.]]></data></item>
@@ -565,7 +565,7 @@
         <item><data><![CDATA[Select <b>other transactions</b> on the main menu.]]></data></item>
         <item><data><![CDATA[Select <b>transfer</b>.]]></data></item>
         <item><data><![CDATA[Select <b>other bank account</b>.]]></data></item>
-        <item><data><![CDATA[Insert 009 as the <b>bank code</b>.]]></data></item>
+        <item><data><![CDATA[Insert --BANK_CODE-- as the <b>bank code</b>.]]></data></item>
         <item><data><![CDATA[Insert the <b>payable amount</b>.]]></data></item>
         <item><data><![CDATA[Insert the <b>payment account number</b>, then <b>confirm</b>.]]></data></item>
         <item><data><![CDATA[Payment complete.]]></data></item>
