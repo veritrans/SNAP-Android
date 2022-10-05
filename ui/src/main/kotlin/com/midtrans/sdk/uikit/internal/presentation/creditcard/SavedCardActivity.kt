@@ -38,24 +38,24 @@ class SavedCardActivity: BaseActivity() {
     lateinit var viewModel: SavedCardViewModel
 
     private val creditCard: CreditCard? by lazy {
-        intent.getParcelableExtra(SavedCardActivity.EXTRA_CREDIT_CARD) as? CreditCard
+        intent.getParcelableExtra(EXTRA_CREDIT_CARD) as? CreditCard
     }
 
     private val transactionDetails: TransactionDetails? by lazy {
-        intent.getParcelableExtra(SavedCardActivity.EXTRA_TRANSACTION_DETAILS) as? TransactionDetails
+        intent.getParcelableExtra(EXTRA_TRANSACTION_DETAILS) as? TransactionDetails
     }
 
     private val snapToken: String by lazy {
-        intent.getStringExtra(SavedCardActivity.EXTRA_SNAP_TOKEN).orEmpty()
+        intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
     }
 
     private val totalAmount: String by lazy {
-        intent.getStringExtra(SavedCardActivity.EXTRA_TOTAL_AMOUNT)
+        intent.getStringExtra(EXTRA_TOTAL_AMOUNT)
             ?: throw RuntimeException("Total amount must not be empty")
     }
 
     private val customerDetail: CustomerInfo? by lazy {
-        intent.getParcelableExtra(SavedCardActivity.EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
+        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
     }
 
     companion object {
