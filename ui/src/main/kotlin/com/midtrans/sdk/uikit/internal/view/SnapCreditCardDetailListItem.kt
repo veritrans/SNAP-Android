@@ -25,7 +25,6 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.SavedToken
@@ -649,6 +648,12 @@ fun NormalCardItem(
                 }
             }
 
+            creditCard?.installment?.terms?.values?.let { terms ->
+                InstallmentDropdownMenu(
+                    title = stringResource(R.string.installment_title),
+                    optionList = terms.map { it.toString() }
+                )
+            }
         }
     }
 }
@@ -691,7 +696,7 @@ fun LabelledCheckBox(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SnapDropdownMenu(
+fun InstallmentDropdownMenu(
     title: String,
     optionList: List<String>
 ) {
