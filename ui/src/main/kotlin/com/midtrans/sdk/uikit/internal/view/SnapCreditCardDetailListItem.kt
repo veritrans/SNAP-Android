@@ -35,6 +35,8 @@ import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
 import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_NEUTRAL_FILL
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.stream.Collector
+import java.util.stream.Collectors
 import kotlin.math.min
 
 @Composable
@@ -648,11 +650,17 @@ fun NormalCardItem(
                 }
             }
 
-            creditCard?.installment?.terms?.values?.let { terms ->
-                InstallmentDropdownMenu(
-                    title = stringResource(R.string.installment_title),
-                    optionList = terms.map { it.toString() }
-                )
+            val issuer = "Mandiri" //TODO get this from read card
+            creditCard?.installment?.terms?.let { terms ->
+                terms.keys
+                    .find { it.contains(issuer, true) }
+                    ?.let { bankName -> terms[bankName]?.map { it.toString() } }
+                    ?.let {
+                        InstallmentDropdownMenu(
+                            title = stringResource(R.string.installment_title),
+                            optionList = it
+                        )
+                    }
             }
         }
     }
