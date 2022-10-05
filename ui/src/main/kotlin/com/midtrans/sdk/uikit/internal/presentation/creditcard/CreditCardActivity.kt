@@ -7,7 +7,10 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -22,7 +25,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.CreditCard
+import com.midtrans.sdk.corekit.api.model.PromoResponse
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
@@ -42,29 +47,33 @@ import javax.inject.Inject
 internal class CreditCardActivity : BaseActivity() {
 
     @Inject
-    lateinit var viewModel: CreditCardViewModel
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel: CreditCardViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory).get(CreditCardViewModel::class.java)
+    }
 
     private var previousEightDigitNumber = ""
 
     private val transactionDetails: TransactionDetails? by lazy {
-        intent.getParcelableExtra(CreditCardActivity.EXTRA_TRANSACTION_DETAILS) as? TransactionDetails
+        intent.getParcelableExtra(EXTRA_TRANSACTION_DETAILS) as? TransactionDetails
     }
 
     private val totalAmount: String by lazy {
-        intent.getStringExtra(CreditCardActivity.EXTRA_TOTAL_AMOUNT)
+        intent.getStringExtra(EXTRA_TOTAL_AMOUNT)
             ?: throw RuntimeException("Total amount must not be empty")
     }
 
     private val customerDetail: CustomerInfo? by lazy {
-        intent.getParcelableExtra(CreditCardActivity.EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
+        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
     }
 
     private val creditCard: CreditCard? by lazy {
-        intent.getParcelableExtra(CreditCardActivity.EXTRA_CREDIT_CARD) as? CreditCard
+        intent.getParcelableExtra(EXTRA_CREDIT_CARD) as? CreditCard
     }
 
     private val snapToken: String by lazy {
-        intent.getStringExtra(CreditCardActivity.EXTRA_SNAP_TOKEN)
+        intent.getStringExtra(EXTRA_SNAP_TOKEN)
             ?: throw RuntimeException("Snaptoken must not be empty")
     }
 
@@ -84,6 +93,10 @@ internal class CreditCardActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_MERCHANT_DATA) as? Merchant
     }
 
+    private val promos: List<PromoResponse>? by lazy {
+        intent.getParcelableArrayListExtra<PromoResponse>(EXTRA_PROMOS)
+    }
+
     companion object {
         private const val EXTRA_SNAP_TOKEN = "card.extra.snap_token"
         private const val EXTRA_TRANSACTION_DETAILS = "card.extra.transaction_details"
@@ -92,6 +105,7 @@ internal class CreditCardActivity : BaseActivity() {
         private const val EXTRA_CREDIT_CARD = "card.extra.credit_card"
         private const val EXTRA_EXPIRY_TIME = "card.extra.expiry_time"
         private const val EXTRA_MERCHANT_DATA = "card.extra.merchantdata"
+        private const val EXTRA_PROMOS = "card.extra.extra.promos"
 
         fun getIntent(
             activityContext: Context,
@@ -100,6 +114,7 @@ internal class CreditCardActivity : BaseActivity() {
             transactionDetails: TransactionDetails?,
             customerInfo: CustomerInfo? = null,
             creditCard: CreditCard?,
+            promos: List<PromoResponse>? = null,
             expiryTime: String?,
             withMerchantData: Merchant? = null
         ): Intent {
@@ -114,6 +129,9 @@ internal class CreditCardActivity : BaseActivity() {
                 putExtra(EXTRA_CREDIT_CARD, creditCard)
                 putExtra(EXTRA_EXPIRY_TIME, expiryTime)
                 withMerchantData?.let { putExtra(EXTRA_MERCHANT_DATA, withMerchantData) }
+                promos?.let {
+                    putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it))
+                }
             }
         }
     }

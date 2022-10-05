@@ -3,9 +3,12 @@ package com.midtrans.sdk.uikit.internal.util
 import android.util.Patterns
 import androidx.compose.ui.text.input.TextFieldValue
 import com.midtrans.sdk.corekit.api.model.CreditCard
+import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.PromoResponse
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.view.PromoData
 
-object SnapCreditCardUtil {
+internal object SnapCreditCardUtil {
 
     const val CARD_TYPE_VISA = "VISA"
     const val CARD_TYPE_MASTERCARD = "MASTERCARD"
@@ -107,6 +110,17 @@ object SnapCreditCardUtil {
             "cimb" -> R.drawable.ic_bank_cimb_24
             "mega" -> R.drawable.ic_bank_mega_24
             else -> null
+        }
+    }
+
+    fun getCreditCardApplicablePromosData(binNumber: String, promos: List<PromoResponse>?): List<PromoData>?{
+        val creditCardPromos = promos?.filter { promo -> promo.paymentTypes?.contains(PaymentType.CREDIT_CARD)?: false }
+        return creditCardPromos?.map {
+            PromoData(
+                leftText = it.sponsorMessageId.orEmpty(),
+                rightText = it.discountAmount.toString(),
+                enabled = it.bins.filter {  }
+            )
         }
     }
 

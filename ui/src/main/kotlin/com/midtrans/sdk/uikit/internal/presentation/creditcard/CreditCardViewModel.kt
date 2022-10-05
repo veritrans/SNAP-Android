@@ -14,6 +14,7 @@ import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetai
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
+import com.midtrans.sdk.uikit.internal.view.PromoData
 import java.util.*
 import javax.inject.Inject
 
@@ -28,8 +29,10 @@ internal class CreditCardViewModel @Inject constructor(
     private val _transactionResponse = MutableLiveData<TransactionResponse>()
     private val _transactionStatus = MutableLiveData<TransactionResponse>()
     private val _error = MutableLiveData<Int>()
+    val promoDataLiveData = MutableLiveData<List<PromoData>>()
     private var expireTimeInMillis = 0L
     private var allowRetry = false
+    private var promos: List<PromoResponse>? = null
     var creditCard: CreditCard?  = null
 
     fun getTransactionResponseLiveData(): LiveData<TransactionResponse> = _transactionResponse
@@ -52,6 +55,10 @@ internal class CreditCardViewModel @Inject constructor(
             timeZone = timeZoneUtc
         )
         return date.time
+    }
+
+    fun getPromos(binNumber: String) {
+
     }
 
     fun getBankIconImage(binNumber: String) {
