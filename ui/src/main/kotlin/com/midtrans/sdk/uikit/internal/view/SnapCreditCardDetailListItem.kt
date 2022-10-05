@@ -699,23 +699,21 @@ fun SnapDropdownMenu(
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(options[0]) }
 
-    ExposedDropdownMenuBox(
+    Column(
         modifier = Modifier.fillMaxWidth(1f),
-        expanded = expanded,
-        onExpandedChange = { expanded = !expanded }
+        horizontalAlignment = Alignment.Start
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(1f),
-            horizontalAlignment = Alignment.Start
+        Text(
+            modifier = Modifier.padding(bottom = 20.dp),
+            text = title,
+            style = SnapTypography.STYLES.snapTextMediumMedium
+        )
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { expanded = !expanded }
         ) {
-            Text(
-                text = title,
-                style = SnapTypography.STYLES.snapTextMediumMedium
-            )
             SnapTextField(
-                modifier = Modifier
-                    .fillMaxWidth(1f)
-                    .padding(top = 20.dp),
+                modifier = Modifier.fillMaxWidth(1f),
                 readOnly = true,
                 value = TextFieldValue(selectedOptionText),
                 onValueChange = {},
@@ -730,6 +728,7 @@ fun SnapDropdownMenu(
             )
 
             ExposedDropdownMenu(
+                modifier = Modifier.fillMaxWidth(1f),
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
