@@ -292,7 +292,6 @@
 
     <string name="bca_klik_pay_title">BCA KlikPay</string>
     <string name="bca_klik_pay_instruction">Please complete BCA KlikPay through BCA KlikPay app/website.</string>
-    <string name="bca_klik_pay_how_to_pay_title">How to pay</string>
     <string-array name="bca_klik_pay_how_to_pay">
         <item><data><![CDATA[Tap <b>Pay Now</b> and you will be redirected to BCA KlikPay page.]]></data></item>
         <item><data><![CDATA[Login and check your payment details.]]></data></item>
@@ -570,6 +569,8 @@
         <item><data><![CDATA[Insert the <b>payment account number</b>, then <b>confirm</b>.]]></data></item>
         <item><data><![CDATA[Payment complete.]]></data></item>
     </string-array>
+
+    <string name="payment_instruction_how_to_pay_title">How to pay</string>
 
     <string name="bank_bca">BCA</string>
     <string name="bank_permata">Permata</string>
