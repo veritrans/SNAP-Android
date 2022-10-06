@@ -24,7 +24,7 @@ internal class CreditCardViewModel @Inject constructor(
     private val errorCard: ErrorCard
 ) : ViewModel() {
 
-    val bankIconId = MutableLiveData<Int>()
+    private val bankIconId = MutableLiveData<Int>()
     private val _transactionResponse = MutableLiveData<TransactionResponse>()
     private val _transactionStatus = MutableLiveData<TransactionResponse>()
     private val _error = MutableLiveData<Int>()
@@ -32,6 +32,7 @@ internal class CreditCardViewModel @Inject constructor(
     private var allowRetry = false
     var creditCard: CreditCard?  = null
 
+    fun getBankIconId(): LiveData<Int> = bankIconId
     fun getTransactionResponseLiveData(): LiveData<TransactionResponse> = _transactionResponse
     fun getTransactionStatusLiveData(): LiveData<TransactionResponse> = _transactionStatus
     fun getErrorLiveData(): LiveData<Int> = _error
@@ -54,7 +55,7 @@ internal class CreditCardViewModel @Inject constructor(
         return date.time
     }
 
-    fun getBankIconImage(binNumber: String) {
+    fun getBinData(binNumber: String) {
         snapCore.getBinData(
             binNumber = binNumber,
             callback = object : Callback<BinResponse> {

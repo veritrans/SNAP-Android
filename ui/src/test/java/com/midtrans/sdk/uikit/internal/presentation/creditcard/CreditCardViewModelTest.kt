@@ -15,7 +15,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.*
 import java.time.Clock
@@ -149,7 +148,7 @@ class CreditCardViewModelTest {
         val creditCardViewModel =
             CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil, errorCard)
 
-        creditCardViewModel.getBankIconImage(binNumber)
+        creditCardViewModel.getBinData(binNumber)
         val callbackCaptor: KArgumentCaptor<Callback<BinResponse>> = argumentCaptor()
 
         verify(snapCore).getBinData(

@@ -133,7 +133,7 @@ internal class CreditCardActivity : BaseActivity() {
                 customerDetail = customerDetail,
                 creditCard = creditCard,
                 viewModel = viewModel,
-                bankCodeIdState = viewModel.bankIconId.observeAsState(null),
+                bankCodeIdState = viewModel.getBankIconId().observeAsState(null),
                 totalAmount = totalAmount,
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
                 withCustomerPhoneEmail = withCustomerPhoneEmail,
@@ -242,7 +242,7 @@ internal class CreditCardActivity : BaseActivity() {
                         )
                         if (eightDigitNumber != previousEightDigitNumber) {
                             previousEightDigitNumber = eightDigitNumber
-                            viewModel?.getBankIconImage(
+                            viewModel?.getBinData(
                                 binNumber = eightDigitNumber
                             )
                         }
