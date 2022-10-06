@@ -88,6 +88,7 @@ internal class CreditCardViewModel @Inject constructor(
         isSavedCard: Boolean,
         customerEmail: String,
         customerPhone: String,
+        installmentTerm: String,
         snapToken: String
     ) {
         val tokenRequest = NormalCardTokenRequestBuilder()
@@ -115,6 +116,7 @@ internal class CreditCardViewModel @Inject constructor(
                         .withPaymentType(PaymentType.CREDIT_CARD)
                         .withCustomerEmail(customerEmail)
                         .withCustomerPhone(customerPhone)
+                        .withInstallment(installmentTerm)
 
                     result.tokenId?.let {
                         ccRequestBuilder.withCardToken(it)
