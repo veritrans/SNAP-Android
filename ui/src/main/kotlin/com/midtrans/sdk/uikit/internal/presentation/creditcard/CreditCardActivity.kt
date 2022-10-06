@@ -152,6 +152,7 @@ internal class CreditCardActivity : BaseActivity() {
         viewModel.setExpiryTime(expiryTime)
         viewModel.setAllowRetry(allowRetry)
         viewModel.setPromos(promos = promos)
+        viewModel.setTransactionDetails(transactionDetails)
         initTransactionResultScreenObserver()
         setContent {
             CreditCardPageStateFull(
@@ -160,7 +161,7 @@ internal class CreditCardActivity : BaseActivity() {
                 creditCard = creditCard,
                 viewModel = viewModel,
                 bankCodeIdState = viewModel.bankIconId.observeAsState(null),
-                totalAmount = totalAmount,
+                totalAmount = viewModel.netAmountLiveData.observeAsState(initial = totalAmount),
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
                 withCustomerPhoneEmail = withCustomerPhoneEmail,
                 errorTypeState = viewModel.getErrorLiveData().observeAsState(initial = null),
@@ -209,7 +210,7 @@ internal class CreditCardActivity : BaseActivity() {
         customerDetail: CustomerInfo? = null,
         withCustomerPhoneEmail: Boolean = false,
         creditCard: CreditCard?,
-        totalAmount: String,
+        totalAmount: State<String>,
         bankCodeIdState: State<Int?>,
         viewModel: CreditCardViewModel?,
         remainingTimeState: State<String>,
@@ -253,7 +254,7 @@ internal class CreditCardActivity : BaseActivity() {
             CreditCardPageStateLess(
                 state = state,
                 isExpandingState = isExpanding,
-                totalAmount = totalAmount,
+                totalAmount = totalAmount.value,
                 orderId = transactionDetails?.orderId.toString(),
                 customerDetail = customerDetail,
                 creditCard = creditCard,
@@ -313,6 +314,7 @@ internal class CreditCardActivity : BaseActivity() {
                 }
             }
         }
+        viewModel?.setPromoId(state.promoId)
     }
 
     private fun getErrorCta(type: Int, state: NormalCardItemState, clicked: MutableState<Boolean>): () -> Unit{
@@ -537,7 +539,7 @@ internal class CreditCardActivity : BaseActivity() {
             bankCodeIdState = remember {
                 mutableStateOf(null)
             },
-            totalAmount = "5000",
+            totalAmount = remember { mutableStateOf("5000")},
             remainingTimeState = remember { mutableStateOf("00:00") },
             withCustomerPhoneEmail = true,
             errorTypeState = remember { mutableStateOf(null) },

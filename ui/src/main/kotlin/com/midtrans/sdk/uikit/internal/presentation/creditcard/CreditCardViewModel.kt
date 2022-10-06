@@ -1,5 +1,6 @@
 package com.midtrans.sdk.uikit.internal.presentation.creditcard
 
+import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,6 +13,7 @@ import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.NormalCardTokenRequ
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
+import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.view.PromoData
@@ -30,9 +32,12 @@ internal class CreditCardViewModel @Inject constructor(
     private val _transactionStatus = MutableLiveData<TransactionResponse>()
     private val _error = MutableLiveData<Int>()
     val promoDataLiveData = MutableLiveData<List<PromoData>>()
+    val netAmountLiveData = MutableLiveData<String>()
     private var expireTimeInMillis = 0L
     private var allowRetry = false
     private var promos: List<Promo>? = null
+    private var transactionDetails: TransactionDetails? = null
+
     var creditCard: CreditCard?  = null
 
     fun getTransactionResponseLiveData(): LiveData<TransactionResponse> = _transactionResponse
@@ -60,6 +65,17 @@ internal class CreditCardViewModel @Inject constructor(
     fun setPromos(promos: List<Promo>?){
         this.promos = promos
         getPromosData("")
+    }
+
+    fun setTransactionDetails(transactionDetails: TransactionDetails?){
+        this.transactionDetails = transactionDetails
+    }
+
+    fun setPromoId(promoId: Long){
+        netAmountLiveData.value = transactionDetails?.grossAmount?.currencyFormatRp()
+        promos?.find { it.id == promoId }?.discountedGrossAmount?.let {
+            netAmountLiveData.value = it.currencyFormatRp()
+        }
     }
 
     fun getPromosData(binNumber: String) {

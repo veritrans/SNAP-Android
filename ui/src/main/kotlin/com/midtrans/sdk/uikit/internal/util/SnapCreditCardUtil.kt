@@ -7,6 +7,7 @@ import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.Promo
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 import com.midtrans.sdk.uikit.internal.view.PromoData
 
 internal object SnapCreditCardUtil {
@@ -120,7 +121,7 @@ internal object SnapCreditCardUtil {
             PromoData(
                 identifier = promoResponse.id.toString(),
                 leftText = promoResponse.name.orEmpty(),
-                rightText = (-(promoResponse.calculatedDiscountAmount.toInt())).toString(),
+                rightText = "-${promoResponse.calculatedDiscountAmount.currencyFormatRp()}",
                 enabled = mutableStateOf(
                     (binNumber.isNotBlank().and(promoResponse.bins.isNullOrEmpty()))
                         .or(promoResponse.bins?.any { binNumber.startsWith(it)}?: false )
