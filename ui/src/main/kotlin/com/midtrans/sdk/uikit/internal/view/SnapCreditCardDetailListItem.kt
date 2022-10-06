@@ -651,16 +651,20 @@ fun NormalCardItem(
             }
 
             val issuer = "Mandiri" //TODO get this from read card
-            creditCard?.installment?.terms?.let { terms ->
-                terms.keys
-                    .find { it.contains(issuer, true) }
-                    ?.let { bankName -> terms[bankName]?.map { it.toString() } }
-                    ?.let {
-                        InstallmentDropdownMenu(
-                            title = stringResource(R.string.installment_title),
-                            optionList = it
-                        )
-                    }
+            creditCard?.installment?.let { installment ->
+                val isRequired = installment.isRequired
+                installment.terms?.let { terms ->
+                    terms.keys
+                        .find { it.contains(issuer, true) }
+                        ?.let { bankName -> terms[bankName]?.map { it.toString() } }
+                        ?.let {
+                            InstallmentDropdownMenu(
+                                title = stringResource(R.string.installment_title),
+                                optionList = it,
+                                isRequired = isRequired
+                            )
+                        }
+                }
             }
         }
     }
@@ -706,7 +710,8 @@ fun LabelledCheckBox(
 @Composable
 fun InstallmentDropdownMenu(
     title: String,
-    optionList: List<String>
+    optionList: List<String>,
+    isRequired: Boolean
 ) {
     val options by remember { mutableStateOf(optionList) }
     var expanded by remember { mutableStateOf(false) }
