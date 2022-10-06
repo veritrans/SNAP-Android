@@ -9,8 +9,8 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.EWalletPaymentRequestBuilder
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
-import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.DATE_FORMAT
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.TIME_ZONE_UTC
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -58,4 +58,8 @@ internal class WalletViewModel @Inject constructor(
     }
 
     fun getExpiredHour(): String = datetimeUtil.getExpiredHour(expiredTime)
+
+    companion object {
+        private const val DATE_FORMAT = "yyyy-MM-dd hh:mm Z"
+    }
 }

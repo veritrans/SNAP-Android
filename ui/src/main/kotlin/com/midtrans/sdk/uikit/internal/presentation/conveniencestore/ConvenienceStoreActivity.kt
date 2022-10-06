@@ -231,10 +231,10 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                                     color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY),
                                     modifier = Modifier.weight(1f)
                                 )
-                                AnimatedIcon(
-                                    resId = R.drawable.ic_midtrans_animated,
+                                GifImage(
+                                    gifResId = R.drawable.gif_loading_ios,
                                     modifier = Modifier.width(20.dp).height(20.dp)
-                                ).start()
+                                )
                             }
                         }
                     }
