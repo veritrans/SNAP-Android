@@ -175,6 +175,7 @@ fun InputNewCardItem(
                 NormalCardItem(
                     state = state,
                     bankIcon = bankIconState,
+                    cardIssuerBank = null,
                     creditCard = creditCard,
                     onCardNumberValueChange = {
                         onCardNumberValueChange(it)
@@ -452,6 +453,7 @@ fun formatCVV(input: TextFieldValue): TextFieldValue {
 fun NormalCardItem(
     state: NormalCardItemState,
     bankIcon: Int?,
+    cardIssuerBank: String?,
     creditCard: CreditCard?,
     onCardNumberValueChange: (TextFieldValue) -> Unit,
     onExpiryDateValueChange: (TextFieldValue) -> Unit,
@@ -648,12 +650,11 @@ fun NormalCardItem(
                 }
             }
 
-            val issuer = "Mandiri" //TODO get this from read card
             creditCard?.installment?.let { installment ->
                 val isRequired = installment.isRequired
                 installment.terms?.let { terms ->
                     terms.keys
-                        .find { it.contains(issuer, true) }
+                        .find { it.contains(cardIssuerBank.orEmpty(), true) }
                         ?.let { bankName -> terms[bankName]?.map { it.toString() } }
                         ?.toMutableList()
                         ?.let { options ->
