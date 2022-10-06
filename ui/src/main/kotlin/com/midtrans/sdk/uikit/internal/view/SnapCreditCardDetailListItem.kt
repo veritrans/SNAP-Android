@@ -35,8 +35,6 @@ import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
 import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_NEUTRAL_FILL
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.stream.Collector
-import java.util.stream.Collectors
 import kotlin.math.min
 
 @Composable
@@ -657,11 +655,15 @@ fun NormalCardItem(
                     terms.keys
                         .find { it.contains(issuer, true) }
                         ?.let { bankName -> terms[bankName]?.map { it.toString() } }
-                        ?.let {
+                        ?.toMutableList()
+                        ?.let { options ->
+                            if (!isRequired) {
+                                options.add(0, stringResource(id = R.string.installment_full_payment))
+                            }
+
                             InstallmentDropdownMenu(
                                 title = stringResource(R.string.installment_title),
-                                optionList = it,
-                                isRequired = isRequired
+                                optionList = options
                             )
                         }
                 }
@@ -710,8 +712,7 @@ fun LabelledCheckBox(
 @Composable
 fun InstallmentDropdownMenu(
     title: String,
-    optionList: List<String>,
-    isRequired: Boolean
+    optionList: List<String>
 ) {
     val options by remember { mutableStateOf(optionList) }
     var expanded by remember { mutableStateOf(false) }
