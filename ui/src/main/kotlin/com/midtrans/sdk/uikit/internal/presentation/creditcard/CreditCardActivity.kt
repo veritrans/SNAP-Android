@@ -210,6 +210,7 @@ internal class CreditCardActivity : BaseActivity() {
         val transactionResponse = viewModel?.getTransactionResponseLiveData()?.observeAsState()
         val bankCodeId by bankCodeIdState
         var isExpanding by remember { mutableStateOf(false) }
+        var installmentTerm by remember { mutableStateOf("") }
 
         if (transactionResponse?.value?.statusCode == UiKitConstants.STATUS_CODE_201 && !transactionResponse.value?.redirectUrl.isNullOrEmpty()) {
             transactionResponse.value?.redirectUrl?.let {
@@ -263,8 +264,13 @@ internal class CreditCardActivity : BaseActivity() {
                         isSavedCard = state.isSavedCardChecked,
                         customerEmail = state.customerEmail.text,
                         customerPhone = state.customerPhone.text,
+                        installmentTerm = installmentTerm,
                         snapToken = snapToken
                     )
+                },
+                onInstallmentTermSelected = { selected ->
+                    val term = selected.filter { it.isDigit() }
+                    installmentTerm = cardIssuerBank.value+"_"+term
                 },
                 withCustomerPhoneEmail = withCustomerPhoneEmail
             )
@@ -276,7 +282,7 @@ internal class CreditCardActivity : BaseActivity() {
             }
             ErrorCard(
                 type = it,
-                getErrorCta(type = it, state = state, clicked = clicked)
+                getErrorCta(type = it, state = state, clicked = clicked, installmentTerm = installmentTerm)
             ).apply {
                 show()
                 if (clicked.value) {
@@ -288,7 +294,12 @@ internal class CreditCardActivity : BaseActivity() {
         }
     }
 
-    private fun getErrorCta(type: Int, state: NormalCardItemState, clicked: MutableState<Boolean>): () -> Unit{
+    private fun getErrorCta(
+        type: Int,
+        state: NormalCardItemState,
+        installmentTerm: String, //TODO move this to NormalCardItemState
+        clicked: MutableState<Boolean>
+    ): () -> Unit{
         return when(type){
             ErrorCard.CARD_ERROR_DECLINED_DISALLOW_RETRY, ErrorCard.SYSTEM_ERROR_DIALOG_DISALLOW_RETRY -> { ->
                 setResult(RESULT_OK)
@@ -311,11 +322,12 @@ internal class CreditCardActivity : BaseActivity() {
                     isSavedCard = state.isSavedCardChecked,
                     customerEmail = state.customerEmail.text,
                     customerPhone = state.customerPhone.text,
+                    installmentTerm = installmentTerm,
                     snapToken = snapToken
                 )
                 clicked.value = true
             }
-            else -> {-> clicked.value = true}
+            else -> { -> clicked.value = true }
         }
     }
 
@@ -333,6 +345,7 @@ internal class CreditCardActivity : BaseActivity() {
         remainingTimeState: State<String>,
         onExpand: (Boolean) -> Unit,
         onCardNumberValueChange: (TextFieldValue) -> Unit,
+        onInstallmentTermSelected: (String) -> Unit,
         onClick: () -> Unit
     ) {
         Column(
@@ -440,10 +453,9 @@ internal class CreditCardActivity : BaseActivity() {
                                 state.isExpiryTextFieldFocused = it
                             },
                             onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
-                            onSavedCardCheckedChange = { state.isSavedCardChecked = it }
+                            onSavedCardCheckedChange = { state.isSavedCardChecked = it },
+                            onInstallmentTermSelected = { onInstallmentTermSelected(it) }
                         )
-
-
                     }
                 },
                 modifier = Modifier
