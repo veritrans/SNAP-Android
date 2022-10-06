@@ -65,7 +65,7 @@ class PaymentOptionActivity : BaseActivity() {
             paymentList: List<PaymentMethod>,
             customerDetails: CustomerDetails?,
             creditCard: CreditCard?,
-            promos: List<PromoResponse>?,
+            promos: List<Promo>?,
             merchant: Merchant?,
             expiryTime: String?
         ): Intent {
@@ -110,8 +110,8 @@ class PaymentOptionActivity : BaseActivity() {
             ?: throw RuntimeException("Payment list must not be empty")
     }
 
-    private val promos: List<PromoResponse>? by lazy {
-        intent.getParcelableArrayListExtra<PromoResponse>(EXTRA_PROMOS)
+    private val promos: List<Promo>? by lazy {
+        intent.getParcelableArrayListExtra<Promo>(EXTRA_PROMOS)
     }
 
     private val customerDetail: CustomerDetails? by lazy {

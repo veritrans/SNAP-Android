@@ -32,7 +32,7 @@ internal class CreditCardViewModel @Inject constructor(
     val promoDataLiveData = MutableLiveData<List<PromoData>>()
     private var expireTimeInMillis = 0L
     private var allowRetry = false
-    private var promos: List<PromoResponse>? = null
+    private var promos: List<Promo>? = null
     var creditCard: CreditCard?  = null
 
     fun getTransactionResponseLiveData(): LiveData<TransactionResponse> = _transactionResponse
@@ -57,8 +57,13 @@ internal class CreditCardViewModel @Inject constructor(
         return date.time
     }
 
-    fun getPromos(binNumber: String) {
+    fun setPromos(promos: List<Promo>?){
+        this.promos = promos
+        getPromosData("")
+    }
 
+    fun getPromosData(binNumber: String) {
+        promoDataLiveData.value = snapCreditCardUtil.getCreditCardApplicablePromosData(binNumber, promos)
     }
 
     fun getBankIconImage(binNumber: String) {
@@ -91,6 +96,7 @@ internal class CreditCardViewModel @Inject constructor(
         isSavedCard: Boolean,
         customerEmail: String,
         customerPhone: String,
+        promoId: Long?,
         snapToken: String
     ) {
         var tokenRequest = NormalCardTokenRequestBuilder()
@@ -108,6 +114,7 @@ internal class CreditCardViewModel @Inject constructor(
         transactionDetails?.orderId?.let {
             tokenRequest.withOrderId(it)
         }
+
         snapCore.getCardToken(
             cardTokenRequestBuilder = tokenRequest,
             callback = object : Callback<CardTokenResponse> {
@@ -118,6 +125,10 @@ internal class CreditCardViewModel @Inject constructor(
                         .withPaymentType(PaymentType.CREDIT_CARD)
                         .withCustomerEmail(customerEmail)
                         .withCustomerPhone(customerPhone)
+
+                    promos?.find { it.id == promoId }?.discountedGrossAmount?.let {
+                        ccRequestBuilder.withPromo(discountedGrossAmount = it, promoId = promoId.toString())
+                    }
 
                     result?.tokenId?.let {
                         ccRequestBuilder.withCardToken(it)

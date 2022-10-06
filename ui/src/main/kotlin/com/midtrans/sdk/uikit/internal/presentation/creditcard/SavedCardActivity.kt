@@ -167,6 +167,7 @@ class SavedCardActivity: BaseActivity() {
                 isCvvTextFieldFocused = false,
                 principalIconId = null,
                 isSaveCardChecked = true,
+                promoId = 0,
                 customerPhone = TextFieldValue(),
                 customerEmail = TextFieldValue()
             )

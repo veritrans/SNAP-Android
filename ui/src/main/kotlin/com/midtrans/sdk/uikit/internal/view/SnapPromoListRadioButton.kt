@@ -91,6 +91,7 @@ fun SnapPromoListRadioButtonItem(promoData: PromoData) {
 }
 
 data class PromoData(
+    val identifier: String? = null,
     val leftText: String,
     val rightText: String,
     val subLeftText: String? = null,

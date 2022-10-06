@@ -1,10 +1,11 @@
 package com.midtrans.sdk.uikit.internal.util
 
 import android.util.Patterns
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.PaymentType
-import com.midtrans.sdk.corekit.api.model.PromoResponse
+import com.midtrans.sdk.corekit.api.model.Promo
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.PromoData
 
@@ -113,13 +114,17 @@ internal object SnapCreditCardUtil {
         }
     }
 
-    fun getCreditCardApplicablePromosData(binNumber: String, promos: List<PromoResponse>?): List<PromoData>?{
+    fun getCreditCardApplicablePromosData(binNumber: String, promos: List<Promo>?): List<PromoData>?{
         val creditCardPromos = promos?.filter { promo -> promo.paymentTypes?.contains(PaymentType.CREDIT_CARD)?: false }
-        return creditCardPromos?.map {
+        return creditCardPromos?.map { promoResponse ->
             PromoData(
-                leftText = it.sponsorMessageId.orEmpty(),
-                rightText = it.discountAmount.toString(),
-                enabled = it.bins.filter {  }
+                identifier = promoResponse.id.toString(),
+                leftText = promoResponse.name.orEmpty(),
+                rightText = (-(promoResponse.calculatedDiscountAmount.toInt())).toString(),
+                enabled = mutableStateOf(
+                    (binNumber.isNotBlank().and(promoResponse.bins.isNullOrEmpty()))
+                        .or(promoResponse.bins?.any { binNumber.startsWith(it)}?: false )
+                )
             )
         }
     }

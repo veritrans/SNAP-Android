@@ -388,7 +388,8 @@ class NormalCardItemState(
     isSaveCardChecked: Boolean,
     principalIconId: Int?,
     customerEmail: TextFieldValue,
-    customerPhone: TextFieldValue
+    customerPhone: TextFieldValue,
+    promoId: Long
 ) {
     var cardNumber by mutableStateOf(cardNumber)
     var expiry by mutableStateOf(expiry)
@@ -403,6 +404,7 @@ class NormalCardItemState(
     var isSavedCardChecked by mutableStateOf(isSaveCardChecked)
     var customerEmail by mutableStateOf(customerEmail)
     var customerPhone by mutableStateOf(customerPhone)
+    var promoId by mutableStateOf(promoId)
 
     val iconIdList by mutableStateOf(
         listOf(
