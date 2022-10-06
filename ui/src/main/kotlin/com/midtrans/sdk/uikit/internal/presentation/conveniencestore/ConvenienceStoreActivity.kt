@@ -233,7 +233,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                                 )
                                 GifImage(
                                     gifResId = R.drawable.gif_loading_ios,
-                                    modifier = Modifier.width(20.dp).height(20.dp)
+                                    modifier = Modifier.width(40.dp).height(40.dp)
                                 )
                             }
                         }

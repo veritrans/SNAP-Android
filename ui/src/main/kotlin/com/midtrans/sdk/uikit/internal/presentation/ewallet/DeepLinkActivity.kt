@@ -20,10 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
-import com.midtrans.sdk.uikit.internal.view.AnimatedIcon
-import com.midtrans.sdk.uikit.internal.view.SnapButton
-import com.midtrans.sdk.uikit.internal.view.SnapColors
-import com.midtrans.sdk.uikit.internal.view.SnapWebView
+import com.midtrans.sdk.uikit.internal.view.*
 
 class DeepLinkActivity : BaseActivity() {
 
@@ -76,7 +73,10 @@ class DeepLinkActivity : BaseActivity() {
                         modifier = Modifier.align(Alignment.Center),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        AnimatedIcon(resId = R.drawable.ic_midtrans_animated).start()
+                        GifImage(
+                            gifResId = R.drawable.gif_loading_ios,
+                            modifier = Modifier.width(50.dp).height(50.dp)
+                        )
                         redirectionTitle[paymentType]?.let {
                             Text(text = stringResource(id = it))
                         }

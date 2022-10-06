@@ -195,7 +195,7 @@ internal class WalletActivity : BaseActivity() {
                         if (loading) {
                             GifImage(
                                 gifResId = R.drawable.gif_loading_ios,
-                                modifier = Modifier.width(100.dp).height(100.dp)
+                                modifier = Modifier.width(50.dp).height(50.dp)
                             )
                         }
                     }
