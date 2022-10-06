@@ -67,7 +67,7 @@ internal class CreditCardActivity : BaseActivity() {
 
     private val snapToken: String by lazy {
         intent.getStringExtra(EXTRA_SNAP_TOKEN)
-            ?: throw RuntimeException("Snaptoken must not be empty")
+            ?: throw RuntimeException("Snap token must not be empty")
     }
 
     private val expiryTime: String? by lazy {
@@ -93,7 +93,7 @@ internal class CreditCardActivity : BaseActivity() {
         private const val EXTRA_CUSTOMER_DETAIL = "card.extra.customer_detail"
         private const val EXTRA_CREDIT_CARD = "card.extra.credit_card"
         private const val EXTRA_EXPIRY_TIME = "card.extra.expiry_time"
-        private const val EXTRA_MERCHANT_DATA = "card.extra.merchantdata"
+        private const val EXTRA_MERCHANT_DATA = "card.extra.merchant_data"
 
         fun getIntent(
             activityContext: Context,
@@ -134,6 +134,7 @@ internal class CreditCardActivity : BaseActivity() {
                 creditCard = creditCard,
                 viewModel = viewModel,
                 bankCodeIdState = viewModel.getBankIconId().observeAsState(null),
+                cardIssuerBank = viewModel.getCardIssuerBank().observeAsState(null),
                 totalAmount = totalAmount,
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
                 withCustomerPhoneEmail = withCustomerPhoneEmail,
@@ -184,6 +185,7 @@ internal class CreditCardActivity : BaseActivity() {
         creditCard: CreditCard?,
         totalAmount: String,
         bankCodeIdState: State<Int?>,
+        cardIssuerBank: State<String?>,
         viewModel: CreditCardViewModel?,
         remainingTimeState: State<String>,
         errorTypeState: State<Int?>
@@ -229,6 +231,7 @@ internal class CreditCardActivity : BaseActivity() {
                 customerDetail = customerDetail,
                 creditCard = creditCard,
                 bankCodeState = bankCodeId,
+                cardIssuerBank = cardIssuerBank.value,
                 remainingTimeState = remainingTimeState,
                 onExpand = { isExpanding = it },
                 onCardNumberValueChange = {
@@ -326,6 +329,7 @@ internal class CreditCardActivity : BaseActivity() {
         customerDetail: CustomerInfo? = null,
         creditCard: CreditCard?,
         bankCodeState: Int?,
+        cardIssuerBank: String?,
         remainingTimeState: State<String>,
         onExpand: (Boolean) -> Unit,
         onCardNumberValueChange: (TextFieldValue) -> Unit,
@@ -424,6 +428,7 @@ internal class CreditCardActivity : BaseActivity() {
                         NormalCardItem(
                             state = state,
                             bankIcon = bankCodeState,
+                            cardIssuerBank = cardIssuerBank,
                             creditCard = creditCard,
                             onCardNumberValueChange = {
                                 onCardNumberValueChange(it)
@@ -487,9 +492,8 @@ internal class CreditCardActivity : BaseActivity() {
             ),
             creditCard = CreditCard(),
             viewModel = null,
-            bankCodeIdState = remember {
-                mutableStateOf(null)
-            },
+            bankCodeIdState = remember { mutableStateOf(null) },
+            cardIssuerBank = remember { mutableStateOf(null) },
             totalAmount = "5000",
             remainingTimeState = remember { mutableStateOf("00:00") },
             withCustomerPhoneEmail = true,
