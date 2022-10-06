@@ -25,6 +25,7 @@ internal class CreditCardViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val bankIconId = MutableLiveData<Int>()
+    private val cardIssuerBank = MutableLiveData<String>()
     private val _transactionResponse = MutableLiveData<TransactionResponse>()
     private val _transactionStatus = MutableLiveData<TransactionResponse>()
     private val _error = MutableLiveData<Int>()
@@ -33,6 +34,7 @@ internal class CreditCardViewModel @Inject constructor(
     var creditCard: CreditCard?  = null
 
     fun getBankIconId(): LiveData<Int> = bankIconId
+    fun getCardIssuerBank(): LiveData<String> = cardIssuerBank
     fun getTransactionResponseLiveData(): LiveData<TransactionResponse> = _transactionResponse
     fun getTransactionStatusLiveData(): LiveData<TransactionResponse> = _transactionStatus
     fun getErrorLiveData(): LiveData<Int> = _error
@@ -63,6 +65,7 @@ internal class CreditCardViewModel @Inject constructor(
                     result.run {
                         data?.bankCode?.let {
                             bankIconId.value = snapCreditCardUtil.getBankIcon(it.lowercase())
+                            cardIssuerBank.value = it
                         }
                     }
                 }
