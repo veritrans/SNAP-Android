@@ -193,7 +193,8 @@ fun InputNewCardItem(
                     onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
                     onSavedCardCheckedChange = {
                         onSavedCardCheckedChange(it)
-                    }
+                    },
+                    onInstallmentTermSelected = { }
                 )
             }
         }
@@ -248,7 +249,6 @@ fun SnapSavedCardRadioGroup(
     onSavedCardRadioSelected: (item: FormData) -> Unit,
     onIsCvvSavedCardInvalidValueChange: (Boolean) -> Unit,
     onSavedCardCheckedChange: (Boolean) -> Unit
-
 ) {
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(listStates[0].identifier) }
 
@@ -461,7 +461,8 @@ fun NormalCardItem(
     onCardTextFieldFocusedChange: (Boolean) -> Unit,
     onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
     onCvvTextFieldFocusedChange: (Boolean) -> Unit,
-    onSavedCardCheckedChange: (Boolean) -> Unit
+    onSavedCardCheckedChange: (Boolean) -> Unit,
+    onInstallmentTermSelected: (String) -> Unit
 ) {
     var isBinBlocked by remember { mutableStateOf(false) }
     Column(
@@ -655,7 +656,8 @@ fun NormalCardItem(
                 installment.terms?.let { terms ->
                     terms.keys
                         .find { it.contains(cardIssuerBank.orEmpty(), true) }
-                        ?.let { bankName -> terms[bankName]?.map { it.toString() } }
+                        ?.let { bankName -> terms[bankName]?.map { it } }
+                        ?.map { term -> "Cicilan $term bulan" }
                         ?.toMutableList()
                         ?.let { options ->
                             if (!isRequired) {
@@ -664,7 +666,8 @@ fun NormalCardItem(
 
                             InstallmentDropdownMenu(
                                 title = stringResource(R.string.installment_title),
-                                optionList = options
+                                optionList = options,
+                                onOptionsSelected = { onInstallmentTermSelected(it) }
                             )
                         }
                 }
@@ -713,7 +716,8 @@ fun LabelledCheckBox(
 @Composable
 fun InstallmentDropdownMenu(
     title: String,
-    optionList: List<String>
+    optionList: List<String>,
+    onOptionsSelected: (String) -> Unit
 ) {
     val options by remember { mutableStateOf(optionList) }
     var expanded by remember { mutableStateOf(false) }
@@ -756,6 +760,7 @@ fun InstallmentDropdownMenu(
                     DropdownMenuItem(
                         onClick = {
                             selectedOptionText = selectionOption
+                            onOptionsSelected.invoke(selectionOption)
                             expanded = false
                         }
                     ) {
