@@ -213,7 +213,7 @@ class UobPaymentActivity : BaseActivity() {
                                 modifier = Modifier.padding(top = 28.dp),
                                 isExpanded = isInstructionExpanded,
                                 iconResId = R.drawable.ic_help,
-                                title = stringResource(R.string.bca_klik_pay_how_to_pay_title),
+                                title = stringResource(R.string.payment_instruction_how_to_pay_title),
                                 onExpandClick = { isInstructionExpanded = !isInstructionExpanded },
                                 expandingContent = {
                                     Column {

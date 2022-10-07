@@ -288,7 +288,6 @@
 
     <string name="bca_klik_pay_title">BCA KlikPay</string>
     <string name="bca_klik_pay_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web BCA KlikPay.</string>
-    <string name="bca_klik_pay_how_to_pay_title">Cara bayar</string>
     <string-array name="bca_klik_pay_how_to_pay">
         <item><data><![CDATA[Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke halaman BCA KlikPay.]]></data></item>
         <item><data><![CDATA[Login dan periksa kembali detail pembayaran Anda.]]></data></item>
@@ -568,6 +567,8 @@
         <item><data><![CDATA[Masukkan <b>nomor rekening pembayaran</b>, lalu <b>konfirmasi</b>.]]></data></item>
         <item><data><![CDATA[Pembayaran selesai.]]></data></item>
     </string-array>
+
+    <string name="payment_instruction_how_to_pay_title">Cara bayar</string>
 
     <string name="bank_bca">BCA</string>
     <string name="bank_permata">Permata</string>
