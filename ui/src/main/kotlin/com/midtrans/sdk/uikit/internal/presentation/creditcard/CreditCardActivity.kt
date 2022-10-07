@@ -269,12 +269,7 @@ internal class CreditCardActivity : BaseActivity() {
                         snapToken = snapToken
                     )
                 },
-                onInstallmentTermSelected = { term ->
-                    term
-                        .filter { it.isDigit() }
-                        .takeIf { it.isDigitsOnly() }
-                        ?.let { installmentTerm = "${cardIssuerBank.value}_${it}".lowercase() }
-                },
+                onInstallmentTermSelected = { installmentTerm = it },
                 withCustomerPhoneEmail = withCustomerPhoneEmail
             )
         }

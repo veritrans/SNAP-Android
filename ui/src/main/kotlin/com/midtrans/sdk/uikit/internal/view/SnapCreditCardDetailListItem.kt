@@ -26,6 +26,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.core.text.isDigitsOnly
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.SavedToken
 import com.midtrans.sdk.uikit.R
@@ -651,12 +652,27 @@ fun NormalCardItem(
                 }
             }
 
-            creditCard?.installment?.let { installment ->
+            creditCard?.installment?.let { installment -> //TODO should create a method instead
                 val isRequired = installment.isRequired
+
                 installment.terms?.let { terms ->
-                    terms.keys
-                        .find { it.contains(cardIssuerBank.orEmpty(), true) }
-                        ?.let { bankName -> terms[bankName]?.map { it } }
+                    var selectedBank = ""
+                    val termList = when {
+                        terms.containsKey(cardIssuerBank?.lowercase()) -> {
+                            val key = terms.keys.toList()[0]
+                            selectedBank = key
+                            terms[key]
+                        }
+                        terms.containsKey("offline") -> {
+                            val key = terms.keys.toList()[0]
+                            selectedBank = key
+                            terms[key]
+                        }
+                        else -> listOf()
+                    }
+
+                    termList
+                        ?.takeIf { it.isNotEmpty() }
                         ?.map { term -> stringResource(id = R.string.installment_term, term) }
                         ?.toMutableList()
                         ?.let { options ->
@@ -666,8 +682,13 @@ fun NormalCardItem(
 
                             InstallmentDropdownMenu(
                                 title = stringResource(R.string.installment_title),
-                                optionList = options,
-                                onOptionsSelected = { onInstallmentTermSelected(it) }
+                                optionList = options.toList(),
+                                onOptionsSelected = { selectedTerm ->
+                                    selectedTerm
+                                        .filter { it.isDigit() }
+                                        .takeIf { it.isDigitsOnly() }
+                                        ?.let { onInstallmentTermSelected("${selectedBank}_$it") }
+                                }
                             )
                         }
                 }
