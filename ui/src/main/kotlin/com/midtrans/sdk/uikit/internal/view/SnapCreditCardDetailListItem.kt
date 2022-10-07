@@ -657,7 +657,7 @@ fun NormalCardItem(
                     terms.keys
                         .find { it.contains(cardIssuerBank.orEmpty(), true) }
                         ?.let { bankName -> terms[bankName]?.map { it } }
-                        ?.map { term -> "Cicilan $term bulan" }
+                        ?.map { term -> stringResource(id = R.string.installment_term, term) }
                         ?.toMutableList()
                         ?.let { options ->
                             if (!isRequired) {

@@ -110,8 +110,7 @@
 
     <string name="installment_title">Choose installment</string>
     <string name="installment_full_payment">Full payment</string>
-    <string name="installment_3x_installment">3 months</string>
-    <string name="installment_6x_installment">6 months</string>
+    <string name="installment_term">%s months</string>
 
 
     <string name="point_loading">Loading points…</string>
