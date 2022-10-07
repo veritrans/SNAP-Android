@@ -193,7 +193,10 @@ internal class WalletActivity : BaseActivity() {
                             }
                         }
                         if (loading) {
-                            AnimatedIcon(resId = R.drawable.ic_midtrans_animated).start()
+                            GifImage(
+                                gifResId = R.drawable.gif_loading_ios,
+                                modifier = Modifier.width(50.dp).height(50.dp)
+                            )
                         }
                     }
 

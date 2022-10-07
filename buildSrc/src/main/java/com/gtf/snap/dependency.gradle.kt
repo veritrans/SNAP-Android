@@ -176,6 +176,7 @@ object ComposeUiLibraries {
     const val composeAnimation = "androidx.compose.animation:animation:${Dependencies.composeVersion}"
     const val composeRxjava = "androidx.compose.runtime:runtime-rxjava2:${Dependencies.composeVersion}"
     const val coilCompose = "io.coil-kt:coil-compose:${Dependencies.coilComposeVersion}"
+    const val coilComposeGif = "io.coil-kt:coil-gif:${Dependencies.coilComposeVersion}"
 
 }
 

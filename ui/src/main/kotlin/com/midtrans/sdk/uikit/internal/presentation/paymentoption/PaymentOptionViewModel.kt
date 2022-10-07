@@ -100,7 +100,7 @@ class PaymentOptionViewModel : ViewModel() {
                     R.drawable.ic_outline_qris_40
                 )
             }
-            INDOMARET -> listOf(R.drawable.ic_outline_indomaret_40)
+            INDOMARET -> listOf(R.drawable.ic_outline_indomaret_40, R.drawable.ic_outline_isaku_40)
             ALFAMART -> listOf(
                 R.drawable.ic_outline_alfamart_40,
                 R.drawable.ic_outline_alfamidi_40,
