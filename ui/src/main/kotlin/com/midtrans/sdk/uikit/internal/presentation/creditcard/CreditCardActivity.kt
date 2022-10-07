@@ -7,13 +7,11 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -505,6 +503,18 @@ internal class CreditCardActivity : BaseActivity() {
         promoData: List<PromoData>,
         normalCardItemState: NormalCardItemState
     ){
+        Divider(
+            color = SnapColors.getARGBColor(SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY),
+            modifier = Modifier
+                .fillMaxWidth(1f)
+                .padding(top = 16.dp)
+        )
+        Text(
+            text = stringResource(id = R.string.promo_select_promo_title),
+            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
+            style = SnapTypography.STYLES.snapTextMediumRegular
+        )
+
         SnapPromoListRadioButton(
             states = promoData.toMutableList().apply { add(noPromo) },
             onItemSelectedListener = {

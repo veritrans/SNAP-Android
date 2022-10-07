@@ -1,6 +1,5 @@
 package com.midtrans.sdk.uikit.internal.presentation.creditcard
 
-import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
