@@ -231,13 +231,13 @@
 
 
     <string-array name="indomaret_how_to_pay">
-        <item><data><![CDATA[Tap Download payment info to get a copy of your unique payment details. ]]></data></item>
-        <item><data><![CDATA[If you’re going to pay on the counter, go to the nearest Indomaret store and show your payment code/barcode to the cashier. ]]></data></item>
+        <item><data><![CDATA[Tap <b>Download payment info</b> to get a copy of your unique payment details. ]]></data></item>
+        <item><data><![CDATA[If you’re going to pay <b>on the counter</b>, go to the nearest Indomaret store and <b>show your payment code/barcode to the cashier</b>. ]]></data></item>
         <item><data><![CDATA[The cashier will confirm your transaction details. Once your transaction is successful, you’ll receive the payment confirmation e-mail. ]]></data></item>
-        <item><data><![CDATA[If you’re going to pay via i.saku, open the app and tap Bayar. ]]></data></item>
-        <item><data><![CDATA[Choose the merchant you’d like to pay to, and enter your payment code. ]]></data></item>
-        <item><data><![CDATA[Tap Selanjutnya and check your transaction details. ]]></data></item>
-        <item><data><![CDATA[Tap Bayar sekarang to confirm your payment. ]]></data></item>
+        <item><data><![CDATA[If you’re going to pay via <b>i.saku</b>, open the app and tap <b>Bayar</b>. ]]></data></item>
+        <item><data><![CDATA[Choose the merchant you’d like to pay to, and enter your <b>payment code</b>. ]]></data></item>
+        <item><data><![CDATA[Tap <b>Selanjutnya</b> and check your transaction details. ]]></data></item>
+        <item><data><![CDATA[Tap <b>Bayar sekarang</b> to confirm your payment. ]]></data></item>
         <item><data><![CDATA[Please keep your Indomaret payment receipt in case you’ll need further help via support.]]></data></item>
     </string-array>
 
@@ -254,8 +254,8 @@
     <string name="alfa_group_cta_reload">Reload</string>
 
     <string-array name="alfa_group_how_to_pay">
-        <item><data><![CDATA[Tap Download payment info to get a copy of your unique payment details. ]]></data></item>
-        <item><data><![CDATA[Go to the nearest Alfamart/Alfamidi/Dan+Dan store near you and show your barcode/payment code to the cashier. ]]></data></item>
+        <item><data><![CDATA[Tap <b>Download payment info</b> to get a copy of your unique payment details. ]]></data></item>
+        <item><data><![CDATA[Go to the nearest <b>Alfamart/Alfamidi/Dan+Dan</b> store near you and <b>show your barcode/payment code to the cashier</b>. ]]></data></item>
         <item><data><![CDATA[The cashier will confirm your transaction details. ]]></data></item>
         <item><data><![CDATA[Confirm your payment with the cashier. ]]></data></item>
         <item><data><![CDATA[Once your transaction is successful, you’ll receive the payment confirmation e-mail. ]]></data></item>
@@ -292,7 +292,6 @@
 
     <string name="bca_klik_pay_title">BCA KlikPay</string>
     <string name="bca_klik_pay_instruction">Please complete BCA KlikPay through BCA KlikPay app/website.</string>
-    <string name="bca_klik_pay_how_to_pay_title">How to pay</string>
     <string-array name="bca_klik_pay_how_to_pay">
         <item><data><![CDATA[Tap <b>Pay Now</b> and you will be redirected to BCA KlikPay page.]]></data></item>
         <item><data><![CDATA[Login and check your payment details.]]></data></item>
@@ -570,6 +569,8 @@
         <item><data><![CDATA[Insert the <b>payment account number</b>, then <b>confirm</b>.]]></data></item>
         <item><data><![CDATA[Payment complete.]]></data></item>
     </string-array>
+
+    <string name="payment_instruction_how_to_pay_title">How to pay</string>
 
     <string name="bank_bca">BCA</string>
     <string name="bank_permata">Permata</string>

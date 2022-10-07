@@ -229,13 +229,13 @@
 
 
     <string-array name="indomaret_how_to_pay">
-        <item><data><![CDATA[Klik Unduh info pembayaran untuk menyimpan detail pembayaran Anda. ]]></data></item>
-        <item><data><![CDATA[Jika Anda hendak membayar melalui konter, datangi gerai Indomaret terdekat dan tunjukkan kode bayar/barcode Anda ke kasir. ]]></data></item>
+        <item><data><![CDATA[Klik <b>Unduh info pembayaran</b> untuk menyimpan detail pembayaran Anda. ]]></data></item>
+        <item><data><![CDATA[Jika Anda hendak membayar <b>melalui konter</b>, datangi gerai Indomaret terdekat dan <b>tunjukkan kode bayar/barcode Anda ke kasir</b>. ]]></data></item>
         <item><data><![CDATA[Kasir akan mengonfirmasi detail transaksi Anda. Anda akan mendapatkan e-mail berisi konfirmasi pembayaran jika transaksi Anda berhasil diproses. ]]></data></item>
-        <item><data><![CDATA[Jika Anda hendak membayar melalui i.saku, silakan buka aplikasinya dan klik Bayar. ]]></data></item>
-        <item><data><![CDATA[Pilih nama toko yang ingin Anda bayar, lalu masukkan Kode Bayar Anda. ]]></data></item>
-        <item><data><![CDATA[Klik Selanjutnya dan periksa kembali detail transaksi Anda. ]]></data></item>
-        <item><data><![CDATA[Klik Bayar sekarang untuk mengonfirmasi pembayaran. ]]></data></item>
+        <item><data><![CDATA[Jika Anda hendak membayar melalui <b>i.saku</b>, silakan buka aplikasinya dan klik <b>Bayar</b>. ]]></data></item>
+        <item><data><![CDATA[Pilih nama toko yang ingin Anda bayar, lalu masukkan <b>Kode Bayar</b> Anda. ]]></data></item>
+        <item><data><![CDATA[Klik <b>Selanjutnya</b> dan periksa kembali detail transaksi Anda. ]]></data></item>
+        <item><data><![CDATA[Klik <b>Bayar sekarang</b> untuk mengonfirmasi pembayaran. ]]></data></item>
         <item><data><![CDATA[Mohon menyimpan bukti pembayaran untuk berjaga-jaga jika Anda membutuhkan bantuan lebih lanjut.]]></data></item>
     </string-array>
 
@@ -251,8 +251,8 @@
     <string name="alfa_group_cta_reload">Muat ulang</string>
 
     <string-array name="alfa_group_how_to_pay">
-        <item><data><![CDATA[Klik Unduh info pembayaran untuk menyimpan detail pembayaran Anda. ]]></data></item>
-        <item><data><![CDATA[Datangi gerai Alfamart/Alfamidi/Dan+Dan terdekat dan tunjukkan barcode/kode pembayaran Anda ke kasir. ]]></data></item>
+        <item><data><![CDATA[Klik <b>Unduh info pembayaran</b> untuk menyimpan detail pembayaran Anda. ]]></data></item>
+        <item><data><![CDATA[Datangi gerai <b>Alfamart/Alfamidi/Dan+Dan</b> terdekat dan <b>tunjukkan barcode/kode pembayaran Anda ke kasir</b>. ]]></data></item>
         <item><data><![CDATA[Kasir akan mengonfirmasi detail transaksi Anda. ]]></data></item>
         <item><data><![CDATA[Konfirmasi detail pembayaran Anda ke kasir. ]]></data></item>
         <item><data><![CDATA[Anda akan mendapatkan e-mail berisi konfirmasi pembayaran jika transaksi Anda berhasil diproses. ]]></data></item>
@@ -288,7 +288,6 @@
 
     <string name="bca_klik_pay_title">BCA KlikPay</string>
     <string name="bca_klik_pay_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/situs web BCA KlikPay.</string>
-    <string name="bca_klik_pay_how_to_pay_title">Cara bayar</string>
     <string-array name="bca_klik_pay_how_to_pay">
         <item><data><![CDATA[Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke halaman BCA KlikPay.]]></data></item>
         <item><data><![CDATA[Login dan periksa kembali detail pembayaran Anda.]]></data></item>
@@ -568,6 +567,8 @@
         <item><data><![CDATA[Masukkan <b>nomor rekening pembayaran</b>, lalu <b>konfirmasi</b>.]]></data></item>
         <item><data><![CDATA[Pembayaran selesai.]]></data></item>
     </string-array>
+
+    <string name="payment_instruction_how_to_pay_title">Cara bayar</string>
 
     <string name="bank_bca">BCA</string>
     <string name="bank_permata">Permata</string>
