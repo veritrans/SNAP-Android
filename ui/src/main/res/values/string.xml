@@ -236,7 +236,7 @@
         <item><data><![CDATA[The cashier will confirm your transaction details. Once your transaction is successful, you’ll receive the payment confirmation e-mail. ]]></data></item>
         <item><data><![CDATA[If you’re going to pay via <b>i.saku</b>, open the app and tap <b>Bayar</b>. ]]></data></item>
         <item><data><![CDATA[Choose the merchant you’d like to pay to, and enter your <b>payment code</b>. ]]></data></item>
-        <item><data><![CDATA[Tap Selanjutnya and check your transaction details. ]]></data></item>
+        <item><data><![CDATA[Tap <b>Selanjutnya</b> and check your transaction details. ]]></data></item>
         <item><data><![CDATA[Tap <b>Bayar sekarang</b> to confirm your payment. ]]></data></item>
         <item><data><![CDATA[Please keep your Indomaret payment receipt in case you’ll need further help via support.]]></data></item>
     </string-array>
