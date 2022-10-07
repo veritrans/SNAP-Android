@@ -760,7 +760,7 @@ fun InstallmentDropdownMenu(
                     DropdownMenuItem(
                         onClick = {
                             selectedOptionText = selectionOption
-                            onOptionsSelected.invoke(selectionOption)
+                            onOptionsSelected(selectionOption)
                             expanded = false
                         }
                     ) {

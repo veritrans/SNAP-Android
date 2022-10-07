@@ -24,6 +24,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.text.isDigitsOnly
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
@@ -268,9 +269,11 @@ internal class CreditCardActivity : BaseActivity() {
                         snapToken = snapToken
                     )
                 },
-                onInstallmentTermSelected = { selected ->
-                    val term = selected.filter { it.isDigit() }
-                    installmentTerm = cardIssuerBank.value+"_"+term
+                onInstallmentTermSelected = { term ->
+                    term
+                        .filter { it.isDigit() }
+                        .takeIf { it.isDigitsOnly() }
+                        ?.let { installmentTerm = "${cardIssuerBank.value}_${it}".lowercase() }
                 },
                 withCustomerPhoneEmail = withCustomerPhoneEmail
             )
@@ -282,7 +285,12 @@ internal class CreditCardActivity : BaseActivity() {
             }
             ErrorCard(
                 type = it,
-                getErrorCta(type = it, state = state, clicked = clicked, installmentTerm = installmentTerm)
+                getErrorCta(
+                    type = it,
+                    state = state,
+                    clicked = clicked,
+                    installmentTerm = installmentTerm
+                )
             ).apply {
                 show()
                 if (clicked.value) {
@@ -297,7 +305,7 @@ internal class CreditCardActivity : BaseActivity() {
     private fun getErrorCta(
         type: Int,
         state: NormalCardItemState,
-        installmentTerm: String, //TODO move this to NormalCardItemState
+        installmentTerm: String,
         clicked: MutableState<Boolean>
     ): () -> Unit{
         return when(type){
