@@ -141,6 +141,7 @@ class SnapCreditCardUtilTest {
        //Matched promo
         val result1 = SnapCreditCardUtil.getCreditCardApplicablePromosData("4811111111111", listOf(promo1))
         Assert.assertEquals("promo", result1?.get(0)?.leftText )
+        Assert.assertTrue(result1?.get(0)?.enabled?.value!!)
 
         //promo not enabled
         val result12 = SnapCreditCardUtil.getCreditCardApplicablePromosData("44111111111111", listOf(promo1))
@@ -158,9 +159,11 @@ class SnapCreditCardUtilTest {
         //match whatever bins
         val result2 = SnapCreditCardUtil.getCreditCardApplicablePromosData("44111111111111", listOf(promo2))
         Assert.assertEquals("promo", result2?.get(0)?.leftText )
+        Assert.assertTrue(result2?.get(0)?.enabled?.value!!)
 
         val result22 = SnapCreditCardUtil.getCreditCardApplicablePromosData("48111111111111", listOf(promo2))
         Assert.assertEquals("promo", result22?.get(0)?.leftText )
+        Assert.assertTrue(result22?.get(0)?.enabled?.value!!)
 
         //promo with no credit card payment type
         val promo3 = Promo(

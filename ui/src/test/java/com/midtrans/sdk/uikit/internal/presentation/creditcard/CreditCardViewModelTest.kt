@@ -10,6 +10,7 @@ import com.midtrans.sdk.uikit.internal.getOrAwaitValue
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
+import com.midtrans.sdk.uikit.internal.view.PromoData
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -17,6 +18,7 @@ import org.junit.Test
 import org.junit.rules.TestRule
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.times
 import org.mockito.kotlin.*
 import java.time.Clock
 import java.time.Duration
@@ -161,5 +163,54 @@ class CreditCardViewModelTest {
         val callback = callbackCaptor.firstValue
         callback.onSuccess(binResponse)
         Assert.assertEquals(bankIconResId, creditCardViewModel.bankIconId.getOrAwaitValue())
+    }
+
+    @Test
+    fun setPromoIdShouldUpdateTheNetAmount(){
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val errorCard: ErrorCard = mock()
+        val snapCreditCardUtil: SnapCreditCardUtil = mock()
+
+        val promo = Promo(
+            id = 1L,
+            name = "promo",
+            bins = listOf("481111"),
+            calculatedDiscountAmount = 1000.0,
+            paymentTypes = listOf(PaymentType.CREDIT_CARD),
+            discountedGrossAmount = 9000.0
+        )
+        val creditCardViewModel =
+            CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil, errorCard)
+
+        creditCardViewModel.setPromos(listOf(promo))
+        creditCardViewModel.setPromoId(1L)
+        Assert.assertEquals("Rp9.000", creditCardViewModel.netAmountLiveData.getOrAwaitValue())
+    }
+
+    @Test
+    fun getPromoDataShouldInvokeGetCreditCardApplicablePromosData(){
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val errorCard: ErrorCard = mock()
+        val snapCreditCardUtil: SnapCreditCardUtil = mock()
+        val promoData: List<PromoData> = mock()
+        `when`(snapCreditCardUtil.getCreditCardApplicablePromosData(any(), any())).thenReturn(promoData)
+
+        val promo = Promo(
+            id = 1L,
+            name = "promo",
+            bins = listOf("481111"),
+            calculatedDiscountAmount = 1000.0,
+            paymentTypes = listOf(PaymentType.CREDIT_CARD),
+            discountedGrossAmount = 9000.0
+        )
+        val creditCardViewModel =
+            CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil, errorCard)
+
+        creditCardViewModel.setPromos(listOf(promo))
+        creditCardViewModel.getPromosData("12121")
+        verify(snapCreditCardUtil, times(2)).getCreditCardApplicablePromosData(any(), any())
+        Assert.assertEquals(promoData, creditCardViewModel.promoDataLiveData.getOrAwaitValue())
     }
 }
