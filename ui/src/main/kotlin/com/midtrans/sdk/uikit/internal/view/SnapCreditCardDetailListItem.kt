@@ -239,8 +239,15 @@ fun checkIsCardExpired(cardExpiry: String): Boolean {
     return sdf.parse(cardExpiry).before(sdf.parse(currentDate))
 }
 
-fun checkIsCardEligibleForInstallment(binType: String?) : Boolean{
+fun isCardEligibleForInstallment(binType: String?) : Boolean{
     return binType == "CREDIT"
+}
+
+fun checkIsEligibleForInstallment() : Boolean{
+    if (!isCardEligibleForInstallment(binCardType) || !isCCMatch) {
+        return false
+    }
+    return true
 }
 
 @Composable
@@ -796,7 +803,7 @@ fun InstallmentDropdownMenu(
                             onOptionsSelected(selectionOption)
                             expanded = false
                         },
-                        enabled = checkIsCardEligibleForInstallment(binCardType)
+                        enabled = checkIsEligibleForInstallment()
                     ) {
                         Text(
                             text = selectionOption,
@@ -806,7 +813,7 @@ fun InstallmentDropdownMenu(
                 }
             }
         }
-        if (!checkIsCardEligibleForInstallment(binCardType)) {
+        if (!isCardEligibleForInstallment(binCardType)) {
             Text(
                 text = stringResource(id = R.string.installment_dc_error),
                 style = SnapTypography.STYLES.snapTextSmallRegular,
