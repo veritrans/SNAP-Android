@@ -24,7 +24,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.text.isDigitsOnly
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
@@ -135,6 +134,7 @@ internal class CreditCardActivity : BaseActivity() {
                 creditCard = creditCard,
                 viewModel = viewModel,
                 bankCodeIdState = viewModel.getBankIconId().observeAsState(null),
+                binType = viewModel.getBinType().observeAsState(null),
                 cardIssuerBank = viewModel.getCardIssuerBank().observeAsState(null),
                 totalAmount = totalAmount,
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
@@ -186,6 +186,7 @@ internal class CreditCardActivity : BaseActivity() {
         creditCard: CreditCard?,
         totalAmount: String,
         bankCodeIdState: State<Int?>,
+        binType: State<String?>,
         cardIssuerBank: State<String?>,
         viewModel: CreditCardViewModel?,
         remainingTimeState: State<String>,
@@ -233,6 +234,7 @@ internal class CreditCardActivity : BaseActivity() {
                 customerDetail = customerDetail,
                 creditCard = creditCard,
                 bankCodeState = bankCodeId,
+                binType = binType.value,
                 cardIssuerBank = cardIssuerBank.value,
                 remainingTimeState = remainingTimeState,
                 onExpand = { isExpanding = it },
@@ -344,6 +346,7 @@ internal class CreditCardActivity : BaseActivity() {
         customerDetail: CustomerInfo? = null,
         creditCard: CreditCard?,
         bankCodeState: Int?,
+        binType: String?,
         cardIssuerBank: String?,
         remainingTimeState: State<String>,
         onExpand: (Boolean) -> Unit,
@@ -444,6 +447,7 @@ internal class CreditCardActivity : BaseActivity() {
                         NormalCardItem(
                             state = state,
                             bankIcon = bankCodeState,
+                            binType= binType,
                             cardIssuerBank = cardIssuerBank,
                             creditCard = creditCard,
                             onCardNumberValueChange = {
@@ -478,7 +482,10 @@ internal class CreditCardActivity : BaseActivity() {
                         state.cardNumber.text.isEmpty() ||
                         state.expiry.text.isEmpty() ||
                         state.cvv.text.isEmpty())
-                    .or(!SnapCreditCardUtil.isValidEmail(emailAddress.text).or(emailAddress.text.isBlank())),
+                    .or(
+                        !SnapCreditCardUtil.isValidEmail(emailAddress.text)
+                            .or(emailAddress.text.isBlank())
+                    ),
                 onClick = { onClick() }
             )
         }
@@ -506,6 +513,7 @@ internal class CreditCardActivity : BaseActivity() {
                 listOf("Jl. ABC", "Rumah DEF")
             ),
             creditCard = CreditCard(),
+            binType = remember { mutableStateOf(null) },
             viewModel = null,
             bankCodeIdState = remember { mutableStateOf(null) },
             cardIssuerBank = remember { mutableStateOf(null) },
