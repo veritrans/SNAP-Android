@@ -38,6 +38,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
 
+private var binCardType: String? = null
+
 @Composable
 fun SnapCCDetailListItem(
     @DrawableRes startIconId: Int?,
@@ -176,6 +178,7 @@ fun InputNewCardItem(
                 NormalCardItem(
                     state = state,
                     bankIcon = bankIconState,
+                    binType = binCardType,
                     cardIssuerBank = null,
                     creditCard = creditCard,
                     onCardNumberValueChange = {
@@ -233,6 +236,10 @@ fun checkIsCardExpired(cardExpiry: String): Boolean {
     val sdf = SimpleDateFormat("MM/yy", Locale.getDefault())
     val currentDate = sdf.format(Date())
     return sdf.parse(cardExpiry).before(sdf.parse(currentDate))
+}
+
+fun checkIsCardEligibleForInstallment(binType: String?) : Boolean{
+    return binType == "CREDIT"
 }
 
 @Composable
@@ -454,6 +461,7 @@ fun formatCVV(input: TextFieldValue): TextFieldValue {
 fun NormalCardItem(
     state: NormalCardItemState,
     bankIcon: Int?,
+    binType: String?,
     cardIssuerBank: String?,
     creditCard: CreditCard?,
     onCardNumberValueChange: (TextFieldValue) -> Unit,
@@ -466,6 +474,7 @@ fun NormalCardItem(
     onInstallmentTermSelected: (String) -> Unit
 ) {
     var isBinBlocked by remember { mutableStateOf(false) }
+    binCardType = binType
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 16.dp)
     ) {
@@ -783,7 +792,8 @@ fun InstallmentDropdownMenu(
                             selectedOptionText = selectionOption
                             onOptionsSelected(selectionOption)
                             expanded = false
-                        }
+                        },
+                        enabled = checkIsCardEligibleForInstallment(binCardType)
                     ) {
                         Text(
                             text = selectionOption,
