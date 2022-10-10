@@ -39,6 +39,7 @@ import java.util.*
 import kotlin.math.min
 
 private var binCardType: String? = null
+private var isCCMatch: Boolean = false
 
 @Composable
 fun SnapCCDetailListItem(
@@ -680,6 +681,8 @@ fun NormalCardItem(
                         else -> listOf()
                     }
 
+                    isCCMatch = terms.containsKey(cardIssuerBank?.lowercase())
+
                     termList
                         ?.takeIf { it.isNotEmpty() }
                         ?.map { term -> stringResource(id = R.string.installment_term, term) }
@@ -802,6 +805,19 @@ fun InstallmentDropdownMenu(
                     }
                 }
             }
+        }
+        if (!checkIsCardEligibleForInstallment(binCardType)) {
+            Text(
+                text = stringResource(id = R.string.installment_dc_error),
+                style = SnapTypography.STYLES.snapTextSmallRegular,
+                color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+            )
+        } else if (!isCCMatch) {
+            Text(
+                text = stringResource(id = R.string.installment_cc_not_match_installment),
+                style = SnapTypography.STYLES.snapTextSmallRegular,
+                color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+            )
         }
     }
 }
