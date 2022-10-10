@@ -25,15 +25,17 @@ internal class CreditCardViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val bankIconId = MutableLiveData<Int>()
+    private val binType = MutableLiveData<String>()
     private val cardIssuerBank = MutableLiveData<String>()
     private val _transactionResponse = MutableLiveData<TransactionResponse>()
     private val _transactionStatus = MutableLiveData<TransactionResponse>()
     private val _error = MutableLiveData<Int>()
     private var expireTimeInMillis = 0L
     private var allowRetry = false
-    var creditCard: CreditCard?  = null
+    var creditCard: CreditCard? = null
 
     fun getBankIconId(): LiveData<Int> = bankIconId
+    fun getBinType(): LiveData<String> = binType
     fun getCardIssuerBank(): LiveData<String> = cardIssuerBank
     fun getTransactionResponseLiveData(): LiveData<TransactionResponse> = _transactionResponse
     fun getTransactionStatusLiveData(): LiveData<TransactionResponse> = _transactionStatus
@@ -44,7 +46,7 @@ internal class CreditCardViewModel @Inject constructor(
         }
     }
 
-    fun setAllowRetry(allowRetry: Boolean){
+    fun setAllowRetry(allowRetry: Boolean) {
         this.allowRetry = allowRetry
     }
 
@@ -67,6 +69,7 @@ internal class CreditCardViewModel @Inject constructor(
                             bankIconId.value = snapCreditCardUtil.getBankIcon(it.lowercase())
                             cardIssuerBank.value = it
                         }
+                        binType.value = data?.binType
                     }
                 }
 
@@ -148,11 +151,11 @@ internal class CreditCardViewModel @Inject constructor(
         )
     }
 
-    fun resetError(){
+    fun resetError() {
         _error.value = null
     }
 
-    fun getTransactionStatus(snapToken: String){
+    fun getTransactionStatus(snapToken: String) {
         snapCore.getTransactionStatus(
             snapToken = snapToken,
             callback = object : Callback<TransactionResponse> {
@@ -164,8 +167,9 @@ internal class CreditCardViewModel @Inject constructor(
                         null
                     }
                 }
+
                 override fun onError(error: SnapError) {
-                   _error.value = errorCard.getErrorCardType(error, allowRetry)
+                    _error.value = errorCard.getErrorCardType(error, allowRetry)
                 }
             }
         )
