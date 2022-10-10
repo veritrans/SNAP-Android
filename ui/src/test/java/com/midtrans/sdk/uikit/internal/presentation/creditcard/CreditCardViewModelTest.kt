@@ -83,7 +83,8 @@ class CreditCardViewModelTest {
             isSavedCard = false,
             customerEmail = customerEmail,
             customerPhone = customerPhone,
-            snapToken = snapToken
+            snapToken = snapToken,
+            promoId = null
         )
         val callbackCaptor: KArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
         val cardTokenCallbackCaptor: KArgumentCaptor<Callback<CardTokenResponse>> = argumentCaptor()

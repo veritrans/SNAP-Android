@@ -116,7 +116,7 @@ internal object SnapCreditCardUtil {
     }
 
     fun getCreditCardApplicablePromosData(binNumber: String, promos: List<Promo>?): List<PromoData>?{
-        val creditCardPromos = promos?.filter { promo -> promo.paymentTypes?.contains(PaymentType.CREDIT_CARD)?: false }
+        val creditCardPromos = promos?.filter { promo -> promo.paymentTypes?.contains(PaymentType.CREDIT_CARD)?: false }?.ifEmpty{ null }
         return creditCardPromos?.map { promoResponse ->
             PromoData(
                 identifier = promoResponse.id.toString(),
