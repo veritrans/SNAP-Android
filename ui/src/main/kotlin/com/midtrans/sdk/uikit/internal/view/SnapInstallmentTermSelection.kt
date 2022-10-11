@@ -14,7 +14,6 @@ import androidx.core.text.isDigitsOnly
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.uikit.R
 
-
 @Composable
 fun SnapInstallmentTermSelectionMenu(
     state: NormalCardItemState,
@@ -28,11 +27,13 @@ fun SnapInstallmentTermSelectionMenu(
         state.isRequiredInstallment = isRequired
 
         installment.terms?.let { terms ->
+            var isOnUs = false
             var selectedBank = ""
             val termList = when {
                 terms.containsKey(cardIssuerBank?.lowercase()) -> {
                     val key = terms.keys.toList()[0]
                     selectedBank = key
+                    isOnUs = true
                     terms[key]
                 }
                 terms.containsKey("offline") -> {
@@ -46,17 +47,16 @@ fun SnapInstallmentTermSelectionMenu(
                 }
             }
 
-            val isCCMatch = terms.containsKey(cardIssuerBank?.lowercase())
             val isCreditCard = binType == "CREDIT"
             val isError: Boolean
             val errorMessage = mutableListOf<String>()
 
             if (!selectedBank.contains("offline")) {
-                isError = !isCCMatch || !isCreditCard
+                isError = !isOnUs || !isCreditCard
                 if (!isCreditCard) {
                     errorMessage.add(stringResource(id = R.string.installment_dc_error))
                 }
-                if (!isCCMatch) {
+                if (!isOnUs) {
                     errorMessage.add(stringResource(id = R.string.installment_cc_not_match_installment))
                 }
             } else {
@@ -162,10 +162,12 @@ fun InstallmentDropdownMenu(
         }
 
         binType?.let {
-            if(isError && isRequired) {
+            if (isError && isRequired) {
                 state!!.isEligibleForInstallment = false
-                errorMessage.forEach{
-                    ErrorTextInstallment(errorMessage = it)
+                Column(modifier = Modifier.fillMaxWidth(1f).padding(top = 10.dp)) {
+                    errorMessage.forEach {
+                        ErrorTextInstallment(errorMessage = it)
+                    }
                 }
             } else {
                 state!!.isEligibleForInstallment = true
