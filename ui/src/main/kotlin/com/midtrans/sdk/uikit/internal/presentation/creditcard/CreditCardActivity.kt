@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -449,8 +450,6 @@ internal class CreditCardActivity : BaseActivity() {
                         NormalCardItem(
                             state = state,
                             bankIcon = bankCodeState,
-                            binType= binType,
-                            cardIssuerBank = cardIssuerBank,
                             creditCard = creditCard,
                             onCardNumberValueChange = {
                                 onCardNumberValueChange(it)
@@ -462,7 +461,18 @@ internal class CreditCardActivity : BaseActivity() {
                                 state.isExpiryTextFieldFocused = it
                             },
                             onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
-                            onSavedCardCheckedChange = { state.isSavedCardChecked = it },
+                            onSavedCardCheckedChange = { state.isSavedCardChecked = it }
+                        )
+                        Divider(
+                            thickness = 1.dp,
+                            color = SnapColors.getARGBColor(SnapColors.LINE_LIGHT_MUTED),
+                            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
+                        )
+                        SnapInstallmentTermSelectionMenu(
+                            state = state,
+                            creditCard = creditCard,
+                            cardIssuerBank = cardIssuerBank,
+                            binType = binType,
                             onInstallmentTermSelected = { onInstallmentTermSelected(it) }
                         )
                     }
