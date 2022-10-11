@@ -402,6 +402,7 @@ class NormalCardItemState(
     isCvvTextFieldFocused: Boolean,
     isSaveCardChecked: Boolean,
     isEligibleForInstallment: Boolean,
+    isRequiredInstallment: Boolean,
     principalIconId: Int?,
     customerEmail: TextFieldValue,
     customerPhone: TextFieldValue
@@ -418,6 +419,7 @@ class NormalCardItemState(
     var principalIconId by mutableStateOf(principalIconId)
     var isSavedCardChecked by mutableStateOf(isSaveCardChecked)
     var isEligibleForInstallment by mutableStateOf(isEligibleForInstallment)
+    var isRequiredInstallment by mutableStateOf(isRequiredInstallment)
     var customerEmail by mutableStateOf(customerEmail)
     var customerPhone by mutableStateOf(customerPhone)
 
@@ -676,6 +678,7 @@ fun NormalCardItem(
 
             creditCard?.installment?.let { installment -> //TODO should create a method instead
                 isRequired = installment.isRequired
+                state.isRequiredInstallment = isRequired
 
                 installment.terms?.let { terms ->
                     var selectedBank = ""

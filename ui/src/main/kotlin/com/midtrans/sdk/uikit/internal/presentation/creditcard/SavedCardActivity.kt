@@ -168,6 +168,7 @@ class SavedCardActivity: BaseActivity() {
                 principalIconId = null,
                 isSaveCardChecked = true,
                 isEligibleForInstallment = false,
+                isRequiredInstallment = false,
                 customerPhone = TextFieldValue(),
                 customerEmail = TextFieldValue()
             )

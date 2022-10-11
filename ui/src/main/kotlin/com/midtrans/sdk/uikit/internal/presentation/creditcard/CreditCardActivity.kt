@@ -205,6 +205,7 @@ internal class CreditCardActivity : BaseActivity() {
                 isCvvTextFieldFocused = false,
                 isSaveCardChecked = true,
                 isEligibleForInstallment = false,
+                isRequiredInstallment = false,
                 principalIconId = null,
                 customerEmail = TextFieldValue(),
                 customerPhone = TextFieldValue()
@@ -471,6 +472,12 @@ internal class CreditCardActivity : BaseActivity() {
                     .padding(all = 16.dp)
             )
 
+            val installmentStatus = if (state.isRequiredInstallment) {
+                state.isEligibleForInstallment
+            } else {
+                true
+            }
+
             SnapButton(
                 text = stringResource(id = R.string.cc_dc_main_screen_cta),
                 style = SnapButton.Style.PRIMARY,
@@ -487,7 +494,7 @@ internal class CreditCardActivity : BaseActivity() {
                         !SnapCreditCardUtil.isValidEmail(emailAddress.text)
                             .or(emailAddress.text.isBlank())
                     ).or(
-                        !state.isEligibleForInstallment
+                        !installmentStatus
                     ),
                 onClick = { onClick() }
             )
