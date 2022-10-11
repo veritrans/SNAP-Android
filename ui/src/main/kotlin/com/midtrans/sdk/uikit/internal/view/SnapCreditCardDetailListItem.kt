@@ -40,7 +40,7 @@ import kotlin.math.min
 
 private var binCardType: String? = null
 private var isCCMatch: Boolean = false
-private var checkNow: Boolean = false
+private var isEightDigitNumber: Boolean = false
 
 @Composable
 fun SnapCCDetailListItem(
@@ -537,7 +537,7 @@ fun NormalCardItem(
                                     || !SnapCreditCardUtil.isValidCardNumber(SnapCreditCardUtil.getCardNumberFromTextField(it))
                                     || isBinBlocked
                         onCardNumberValueChange(formatCreditCard(it))
-                        checkNow = it.text.length > 8
+                        isEightDigitNumber = it.text.length > 8
                     },
                     isFocused = state.isCardTexFieldFocused,
                     onFocusChange = {
@@ -783,7 +783,7 @@ fun InstallmentDropdownMenu(
             onExpandedChange = { expanded = !expanded }
         ) {
             var status = false
-            if (checkNow) status = checkIsEligibleForInstallment()
+            if (isEightDigitNumber) status = checkIsEligibleForInstallment()
 
             SnapTextField(
                 modifier = Modifier.fillMaxWidth(1f),
@@ -823,21 +823,14 @@ fun InstallmentDropdownMenu(
                 }
             }
         }
-        if(checkNow){
+
+        if(isEightDigitNumber){
             if (!isCardEligibleForInstallment(binCardType)) {
                 state!!.isEligibleForInstallment = false
-                Text(
-                    text = stringResource(id = R.string.installment_dc_error),
-                    style = SnapTypography.STYLES.snapTextSmallRegular,
-                    color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
-                )
+                ErrorTextInstallment(errorMessage = stringResource(id = R.string.installment_dc_error))
             } else if (!isCCMatch) {
                 state!!.isEligibleForInstallment = false
-                Text(
-                    text = stringResource(id = R.string.installment_cc_not_match_installment),
-                    style = SnapTypography.STYLES.snapTextSmallRegular,
-                    color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
-                )
+                ErrorTextInstallment(errorMessage = stringResource(id = R.string.installment_cc_not_match_installment))
             } else {
                 state!!.isEligibleForInstallment = true
             }
@@ -846,4 +839,15 @@ fun InstallmentDropdownMenu(
             onOptionsSelected("Full Payment")
         }
     }
+}
+
+@Composable
+fun ErrorTextInstallment(
+    errorMessage: String
+) {
+    Text(
+        text = errorMessage,
+        style = SnapTypography.STYLES.snapTextSmallRegular,
+        color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+    )
 }
