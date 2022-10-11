@@ -32,6 +32,9 @@ import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import javax.inject.Inject
 
+//TODO: will deleted later after saved card retested by QA,
+// keep this class for source reference,
+// albeit the implementation already merged into CreditCardActivity
 class SavedCardActivity: BaseActivity() {
 
     @Inject
