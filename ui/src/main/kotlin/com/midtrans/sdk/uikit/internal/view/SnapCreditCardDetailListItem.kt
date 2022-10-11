@@ -176,8 +176,6 @@ fun InputNewCardItem(
                 NormalCardItem(
                     state = state,
                     bankIcon = bankIconState,
-                    binType = binType,
-                    cardIssuerBank = null,
                     creditCard = creditCard,
                     onCardNumberValueChange = {
                         onCardNumberValueChange(it)
@@ -195,8 +193,7 @@ fun InputNewCardItem(
                     onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
                     onSavedCardCheckedChange = {
                         onSavedCardCheckedChange(it)
-                    },
-                    onInstallmentTermSelected = { }
+                    }
                 )
             }
         }
@@ -461,8 +458,6 @@ fun formatCVV(input: TextFieldValue): TextFieldValue {
 fun NormalCardItem(
     state: NormalCardItemState,
     bankIcon: Int?,
-    binType: String?,
-    cardIssuerBank: String?,
     creditCard: CreditCard?,
     onCardNumberValueChange: (TextFieldValue) -> Unit,
     onExpiryDateValueChange: (TextFieldValue) -> Unit,
@@ -470,8 +465,7 @@ fun NormalCardItem(
     onCardTextFieldFocusedChange: (Boolean) -> Unit,
     onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
     onCvvTextFieldFocusedChange: (Boolean) -> Unit,
-    onSavedCardCheckedChange: (Boolean) -> Unit,
-    onInstallmentTermSelected: (String) -> Unit
+    onSavedCardCheckedChange: (Boolean) -> Unit
 ) {
     var isBinBlocked by remember { mutableStateOf(false) }
     Column(
