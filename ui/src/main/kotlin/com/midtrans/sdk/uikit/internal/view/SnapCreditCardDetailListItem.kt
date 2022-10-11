@@ -706,6 +706,7 @@ fun NormalCardItem(
                                 state = state,
                                 title = stringResource(R.string.installment_title),
                                 binType = binType,
+                                isRequired = isRequired,
                                 isError = isError,
                                 errorMessage = errorMessage,
                                 optionList = options.toList(),
@@ -765,6 +766,7 @@ fun InstallmentDropdownMenu(
     state: NormalCardItemState?,
     title: String,
     isError: Boolean,
+    isRequired: Boolean,
     errorMessage: List<String>,
     binType: String?,
     optionList: List<String>,
@@ -808,6 +810,7 @@ fun InstallmentDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
+                //TODO add padding bottom 10dp between dropdown and first error message
                 options.forEach { selectionOption ->
                     DropdownMenuItem(
                         onClick = {
@@ -827,7 +830,7 @@ fun InstallmentDropdownMenu(
         }
 
         binType?.let {
-            if(isError) {
+            if(isError && isRequired) {
                 state!!.isEligibleForInstallment = false
                 errorMessage.forEach{
                     ErrorTextInstallment(errorMessage = it)
