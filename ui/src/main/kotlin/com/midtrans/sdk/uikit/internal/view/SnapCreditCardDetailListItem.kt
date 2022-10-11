@@ -38,8 +38,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
 
-private var isRequired: Boolean = false
-
 @Composable
 fun SnapCCDetailListItem(
     @DrawableRes startIconId: Int?,
@@ -664,7 +662,7 @@ fun NormalCardItem(
             }
 
             creditCard?.installment?.let { installment -> //TODO should create a method instead
-                isRequired = installment.isRequired
+                val isRequired = installment.isRequired
                 state.isRequiredInstallment = isRequired
 
                 installment.terms?.let { terms ->
