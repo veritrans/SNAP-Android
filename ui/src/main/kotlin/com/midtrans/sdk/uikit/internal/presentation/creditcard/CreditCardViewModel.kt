@@ -1,5 +1,6 @@
 package com.midtrans.sdk.uikit.internal.presentation.creditcard
 
+import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,13 +10,16 @@ import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.NormalCardTokenRequestBuilder
+import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.TwoClickCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
+import com.midtrans.sdk.corekit.api.requestbuilder.payment.OneClickCardPaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.view.PromoData
+import com.midtrans.sdk.uikit.internal.view.SavedCreditCardFormData
 import java.util.*
 import javax.inject.Inject
 
@@ -175,6 +179,85 @@ internal class CreditCardViewModel @Inject constructor(
         )
     }
 
+    fun chargeUsingCreditCard(
+        formData: SavedCreditCardFormData,
+        snapToken: String,
+        transactionDetails: TransactionDetails?,
+        cardCVV: TextFieldValue,
+        customerEmail: String,
+        promoId: Long?
+        ){
+        if (formData.tokenType == SavedToken.ONE_CLICK){
+            snapCore.pay(
+                snapToken = snapToken,
+                paymentRequestBuilder = OneClickCardPaymentRequestBuilder()
+                    .withPaymentType(PaymentType.CREDIT_CARD)
+                    .withMaskedCard(formData.displayedMaskedCard).apply {
+                        promos?.find { it.id == promoId }?.discountedGrossAmount?.let {
+                            withPromo(discountedGrossAmount = it, promoId = promoId.toString())
+                        }
+                    },
+                callback = object : Callback<TransactionResponse> {
+                    override fun onSuccess(result: TransactionResponse) {
+                        _transactionResponse.value = result
+                    }
+                    override fun onError(error: SnapError) {
+                        _error.value = errorCard.getErrorCardType(error, allowRetry)
+                    }
+                }
+            )
+        } else {
+
+            var tokenRequest = TwoClickCardTokenRequestBuilder()
+                .withCardCvv(cardCVV.text)
+                .withTokenId(formData.tokenId)
+
+            transactionDetails?.currency?.let {
+                tokenRequest.withCurrency(it)
+            }
+            transactionDetails?.grossAmount?.let {
+                tokenRequest.withGrossAmount(it)
+            }
+            transactionDetails?.orderId?.let {
+                tokenRequest.withOrderId(it)
+            }
+            snapCore.getCardToken(cardTokenRequestBuilder = tokenRequest ,
+                callback = object : Callback<CardTokenResponse> {
+                    override fun onSuccess(result: CardTokenResponse) {
+                        var ccRequestBuilder = CreditCardPaymentRequestBuilder()
+                            .withPaymentType(PaymentType.CREDIT_CARD)
+                            .withCustomerEmail(customerEmail).apply {
+                                promos?.find { it.id == promoId }?.discountedGrossAmount?.let {
+                                    withPromo(discountedGrossAmount = it, promoId = promoId.toString())
+                                }
+                            }
+
+                        result?.tokenId?.let {
+                            ccRequestBuilder.withCardToken(it)
+                        }
+
+                        snapCore.pay(
+                            snapToken = snapToken,
+                            paymentRequestBuilder = ccRequestBuilder,
+                            callback = object : Callback<TransactionResponse> {
+                                override fun onSuccess(result: TransactionResponse) {
+                                    _transactionResponse.value = result
+                                }
+                                override fun onError(error: SnapError) {
+                                    _error.value = errorCard.getErrorCardType(error, allowRetry)
+                                }
+                            }
+                        )
+                    }
+                    override fun onError(error: SnapError) {
+                        //TODO: Need to confirm how to handle get token error on UI
+                        Log.e("error get 2click token", "error, error, error")
+                    }
+                }
+            )
+        }
+    }
+
     fun resetError(){
         _error.value = null
     }
@@ -193,6 +276,21 @@ internal class CreditCardViewModel @Inject constructor(
                 }
                 override fun onError(error: SnapError) {
                    _error.value = errorCard.getErrorCardType(error, allowRetry)
+                }
+            }
+        )
+    }
+
+    fun deleteSavedCard(snapToken: String, maskedCard: String){
+        snapCore.deleteSavedCard(
+            snapToken = snapToken,
+            maskedCard = maskedCard,
+            callback = object : Callback<DeleteSavedCardResponse> {
+                override fun onSuccess(result: DeleteSavedCardResponse) {
+                    Log.e("Delete Card Success", "Delete Card Success")
+                }
+                override fun onError(error: SnapError) {
+                    Log.e("Delete Card Error", "Delete Card Error")
                 }
             }
         )

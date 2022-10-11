@@ -149,7 +149,7 @@ fun SnapCCDetailListItem(
 @Composable
 fun InputNewCardItem(
     shouldReveal: Boolean,
-    state: NormalCardItemState,
+    state: CardItemState,
     bankIconState: Int?,
     creditCard: CreditCard?,
     onCardNumberValueChange: (TextFieldValue) -> Unit,
@@ -241,23 +241,27 @@ fun SnapSavedCardRadioGroup(
     modifier: Modifier,
     listStates: List<FormData>,
     bankIconState: Int?,
-    normalCardItemState: NormalCardItemState,
+    cardItemState: CardItemState,
     onItemRemoveClicked: (item: SavedCreditCardFormData) -> Unit,
     creditCard: CreditCard?,
-    onCvvSavedCardValueChange: (TextFieldValue) -> Unit,
     onCardNumberOtherCardValueChange: (TextFieldValue) -> Unit,
     onExpiryOtherCardValueChange: (TextFieldValue) -> Unit,
-    onCvvOtherCardValueChange: (TextFieldValue) -> Unit,
-    onSavedCardRadioSelected: (item: FormData) -> Unit,
+    onCvvValueChange: (TextFieldValue) -> Unit,
+    onSavedCardRadioSelected: (item: FormData?) -> Unit,
     onIsCvvSavedCardInvalidValueChange: (Boolean) -> Unit,
-    onSavedCardCheckedChange: (Boolean) -> Unit
-
+    onSavedCardCheckedChange: (Boolean) -> Unit,
+    onCvvSavedCardValueChange: ((TextFieldValue) -> Unit)? = null //Todo: delete later
 ) {
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(listStates[0].identifier) }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        var newCardNumberTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
+        var newCvvTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
+        var cardItemType by remember { mutableStateOf(CardItemState.CardItemType.SAVED_CARD)}
+        cardItemState.cardItemType = cardItemType
+
         listStates.forEach { item ->
             var cvvSavedCardTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
             Column(
@@ -268,20 +272,25 @@ fun SnapSavedCardRadioGroup(
                         selected = (item.identifier == selectedOption),
                         onClick = {
                             onOptionSelected(item.identifier)
-                            onSavedCardRadioSelected(item)
                             when (item) {
                                 is SavedCreditCardFormData -> {
                                     cvvSavedCardTextFieldValue =
                                         formatCvvTextFieldBasedOnTokenType(item.tokenType)
-                                    normalCardItemState.cvv = TextFieldValue("")
+                                    cardItemState.cvv = cvvSavedCardTextFieldValue
+                                    onCardNumberOtherCardValueChange(TextFieldValue(item.maskedCardNumber))
+                                    onSavedCardRadioSelected(item)
+                                    cardItemType = CardItemState.CardItemType.SAVED_CARD
                                 }
                                 is NewCardFormData -> {
                                     cvvSavedCardTextFieldValue = TextFieldValue("")
-                                    normalCardItemState.cvv = TextFieldValue("")
+                                    cardItemState.cvv = newCvvTextFieldValue
+                                    cardItemState.cardNumber = newCardNumberTextFieldValue
+                                    onCardNumberOtherCardValueChange(newCardNumberTextFieldValue)
+                                    onSavedCardRadioSelected(null)
+                                    cardItemType = CardItemState.CardItemType.NORMAL_CARD
                                 }
                             }
-                            onCvvOtherCardValueChange(normalCardItemState.cvv)
-                            onCvvSavedCardValueChange(cvvSavedCardTextFieldValue)
+                            onCvvValueChange(cardItemState.cvv)
                         },
                         role = Role.RadioButton
                     ),
@@ -312,7 +321,7 @@ fun SnapSavedCardRadioGroup(
                                 onExpiryDateValueChange = {},
                                 onCvvValueChange = {
                                     cvvSavedCardTextFieldValue = it
-                                    onCvvSavedCardValueChange(cvvSavedCardTextFieldValue)
+                                    onCvvValueChange(cvvSavedCardTextFieldValue)
                                 },
                                 onCardTextFieldFocusedChange = {},
                                 onExpiryTextFieldFocusedChange = {},
@@ -326,12 +335,18 @@ fun SnapSavedCardRadioGroup(
                         is NewCardFormData -> {
                             InputNewCardItem(
                                 shouldReveal = item.identifier == selectedOption,
-                                state = normalCardItemState,
+                                state = cardItemState,
                                 creditCard = creditCard,
                                 bankIconState = bankIconState,
-                                onCardNumberValueChange = { onCardNumberOtherCardValueChange(it) },
+                                onCardNumberValueChange = {
+                                    newCardNumberTextFieldValue = it
+                                    onCardNumberOtherCardValueChange(it)
+                                },
                                 onExpiryDateValueChange = { onExpiryOtherCardValueChange(it) },
-                                onCvvValueChange = { onCvvOtherCardValueChange(it) },
+                                onCvvValueChange = {
+                                    newCvvTextFieldValue = it
+                                    onCvvValueChange(it)
+                                },
                                 onCardTextFieldFocusedChange = {},
                                 onExpiryTextFieldFocusedChange = {},
                                 onCvvTextFieldFocusedChange = {},
@@ -375,7 +390,7 @@ open class FormData(
     public val identifier: String
 )
 
-class NormalCardItemState(
+class CardItemState(
     cardNumber: TextFieldValue,
     expiry: TextFieldValue,
     cvv: TextFieldValue,
@@ -389,7 +404,8 @@ class NormalCardItemState(
     principalIconId: Int?,
     customerEmail: TextFieldValue,
     customerPhone: TextFieldValue,
-    promoId: Long
+    promoId: Long,
+    cardItemType: CardItemType = CardItemType.NORMAL_CARD
 ) {
     var cardNumber by mutableStateOf(cardNumber)
     var expiry by mutableStateOf(expiry)
@@ -405,6 +421,7 @@ class NormalCardItemState(
     var customerEmail by mutableStateOf(customerEmail)
     var customerPhone by mutableStateOf(customerPhone)
     var promoId by mutableStateOf(promoId)
+    var cardItemType by mutableStateOf(cardItemType)
 
     val iconIdList by mutableStateOf(
         listOf(
@@ -414,6 +431,10 @@ class NormalCardItemState(
             R.drawable.ic_outline_amex_24,
         )
     )
+    enum class CardItemType{
+        NORMAL_CARD,
+        SAVED_CARD
+    }
 }
 
 private fun formatCvvTextFieldBasedOnTokenType(tokenType: String): TextFieldValue {
@@ -459,7 +480,7 @@ fun formatCVV(input: TextFieldValue): TextFieldValue {
 
 @Composable
 fun NormalCardItem(
-    state: NormalCardItemState,
+    state: CardItemState,
     bankIcon: Int?,
     creditCard: CreditCard?,
     onCardNumberValueChange: (TextFieldValue) -> Unit,

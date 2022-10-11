@@ -133,4 +133,9 @@ internal object SnapCreditCardUtil {
     fun isValidEmail(target: String): Boolean {
         return target.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(target).matches()
     }
+
+    fun formatMaskedCard(maskedCard: String): String {
+        val lastFourDigit = maskedCard.substring(startIndex = maskedCard.length - 4, endIndex = maskedCard.length)
+        return "**** **** **** $lastFourDigit"
+    }
 }

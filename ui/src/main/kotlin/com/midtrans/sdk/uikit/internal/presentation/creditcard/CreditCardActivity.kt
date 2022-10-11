@@ -16,6 +16,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rxjava2.subscribeAsState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -43,6 +44,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+//TODO: refactor, state on value change listener is not required, compose will do the magic
 internal class CreditCardActivity : BaseActivity() {
 
     @Inject
@@ -96,51 +98,39 @@ internal class CreditCardActivity : BaseActivity() {
         intent.getParcelableArrayListExtra<Promo>(EXTRA_PROMOS)
     }
 
+    private val savedTokenList: SnapshotStateList<FormData>? by lazy {
+        mutableListOf<FormData>()
+            .apply {
+            creditCard?.savedTokens?.forEachIndexed { index, savedToken ->
+                add(
+                    SavedCreditCardFormData(
+                        savedCardIdentifier = SnapCreditCardUtil.SAVED_CARD_IDENTIFIER + index.toString(),
+                        inputTitle = getString(R.string.cc_dc_saved_card_enter_cvv),
+                        endIcon = R.drawable.ic_trash,
+                        startIcon = SnapCreditCardUtil.getBankIcon(savedToken.binDetail?.bankCode.toString()),
+                        errorText = mutableStateOf(""),
+                        maskedCardNumber = savedToken.maskedCard.orEmpty(),
+                        displayedMaskedCard = savedToken.maskedCard.orEmpty(),
+                        tokenType = savedToken.tokenType.toString(),
+                        tokenId = savedToken.token.toString(),
+                        cvvSavedCardTextField = TextFieldValue(),
+                        isCvvSavedCardInvalid = false
+                    )
+                )
+            }
+                add(NewCardFormData(newCardIdentifier = SnapCreditCardUtil.NEW_CARD_FORM_IDENTIFIER))
+        }
+            .ifEmpty { null }?.toMutableStateList()
+        //uncomment below to force non save card
+//        null
+    }
+
     private val noPromo by lazy {
         PromoData(
             identifier = "0",
             leftText = getString(R.string.cant_continue_promo_dont_want_to_use_promo),
             rightText = ""
         )
-    }
-
-    companion object {
-        private const val EXTRA_SNAP_TOKEN = "card.extra.snap_token"
-        private const val EXTRA_TRANSACTION_DETAILS = "card.extra.transaction_details"
-        private const val EXTRA_TOTAL_AMOUNT = "card.extra.total_amount"
-        private const val EXTRA_CUSTOMER_DETAIL = "card.extra.customer_detail"
-        private const val EXTRA_CREDIT_CARD = "card.extra.credit_card"
-        private const val EXTRA_EXPIRY_TIME = "card.extra.expiry_time"
-        private const val EXTRA_MERCHANT_DATA = "card.extra.merchantdata"
-        private const val EXTRA_PROMOS = "card.extra.extra.promos"
-
-        fun getIntent(
-            activityContext: Context,
-            snapToken: String,
-            totalAmount: String,
-            transactionDetails: TransactionDetails?,
-            customerInfo: CustomerInfo? = null,
-            creditCard: CreditCard?,
-            promos: List<Promo>? = null,
-            expiryTime: String?,
-            withMerchantData: Merchant? = null
-        ): Intent {
-            return Intent(activityContext, CreditCardActivity::class.java).apply {
-                putExtra(EXTRA_SNAP_TOKEN, snapToken)
-                putExtra(EXTRA_TRANSACTION_DETAILS, transactionDetails)
-                putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
-                putExtra(
-                    EXTRA_CUSTOMER_DETAIL,
-                    customerInfo
-                )
-                putExtra(EXTRA_CREDIT_CARD, creditCard)
-                putExtra(EXTRA_EXPIRY_TIME, expiryTime)
-                withMerchantData?.let { putExtra(EXTRA_MERCHANT_DATA, withMerchantData) }
-                promos?.let {
-                    putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it))
-                }
-            }
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -156,6 +146,7 @@ internal class CreditCardActivity : BaseActivity() {
             CreditCardPageStateFull(
                 transactionDetails = transactionDetails,
                 customerDetail = customerDetail,
+                savedTokenListState = savedTokenList,
                 creditCard = creditCard,
                 viewModel = viewModel,
                 bankCodeIdState = viewModel.bankIconId.observeAsState(null),
@@ -207,6 +198,7 @@ internal class CreditCardActivity : BaseActivity() {
         transactionDetails: TransactionDetails? = null,
         customerDetail: CustomerInfo? = null,
         withCustomerPhoneEmail: Boolean = false,
+        savedTokenListState: SnapshotStateList<FormData>?,
         creditCard: CreditCard?,
         totalAmount: State<String>,
         bankCodeIdState: State<Int?>,
@@ -216,7 +208,7 @@ internal class CreditCardActivity : BaseActivity() {
         errorTypeState: State<Int?>
     ) {
         val state = remember {
-            NormalCardItemState(
+            CardItemState(
                 cardNumber = TextFieldValue(),
                 expiry = TextFieldValue(),
                 cvv = TextFieldValue(),
@@ -236,6 +228,7 @@ internal class CreditCardActivity : BaseActivity() {
         val transactionResponse = viewModel?.getTransactionResponseLiveData()?.observeAsState()
         val bankCodeId by bankCodeIdState
         var isExpanding by remember { mutableStateOf(false) }
+        var selectedFormData : FormData? by remember { mutableStateOf(null)}
 
         if (transactionResponse?.value?.statusCode == UiKitConstants.STATUS_CODE_201 && !transactionResponse.value?.redirectUrl.isNullOrEmpty()) {
             transactionResponse.value?.redirectUrl?.let {
@@ -253,9 +246,10 @@ internal class CreditCardActivity : BaseActivity() {
                 state = state,
                 isExpandingState = isExpanding,
                 totalAmount = totalAmount.value,
+                creditCard = creditCard,
                 orderId = transactionDetails?.orderId.toString(),
                 customerDetail = customerDetail,
-                creditCard = creditCard,
+                savedTokenListState = savedTokenListState,
                 bankCodeState = bankCodeId,
                 remainingTimeState = remainingTimeState,
                 onExpand = { isExpanding = it },
@@ -279,20 +273,32 @@ internal class CreditCardActivity : BaseActivity() {
                     }
                 },
                 onClick = {
-                    viewModel?.chargeUsingCreditCard(
-                        transactionDetails = transactionDetails,
-                        cardNumber = state.cardNumber,
-                        cardExpiry = state.expiry,
-                        cardCvv = state.cvv,
-                        isSavedCard = state.isSavedCardChecked,
-                        customerEmail = state.customerEmail.text,
-                        customerPhone = state.customerPhone.text,
-                        snapToken = snapToken,
-                        promoId = state.promoId
-                    )
+                    if (selectedFormData == null) {
+                        viewModel?.chargeUsingCreditCard(
+                            transactionDetails = transactionDetails,
+                            cardNumber = state.cardNumber,
+                            cardExpiry = state.expiry,
+                            cardCvv = state.cvv,
+                            isSavedCard = state.isSavedCardChecked,
+                            customerEmail = state.customerEmail.text,
+                            customerPhone = state.customerPhone.text,
+                            snapToken = snapToken,
+                            promoId = state.promoId
+                        )
+                    } else {
+                        viewModel?.chargeUsingCreditCard(
+                            formData = selectedFormData as SavedCreditCardFormData,
+                            snapToken = snapToken,
+                            cardCVV = state.cvv,
+                            customerEmail = state.customerEmail.text,
+                            transactionDetails = transactionDetails,
+                            promoId = state.promoId
+                        )
+                    }
                 },
                 withCustomerPhoneEmail = withCustomerPhoneEmail,
-                promoState = promoState
+                promoState = promoState,
+                onSavedCardRadioSelected = { selectedFormData = it }
             )
         }
         val errorState by errorTypeState
@@ -315,7 +321,7 @@ internal class CreditCardActivity : BaseActivity() {
         viewModel?.setPromoId(state.promoId)
     }
 
-    private fun getErrorCta(type: Int, state: NormalCardItemState, clicked: MutableState<Boolean>): () -> Unit{
+    private fun getErrorCta(type: Int, state: CardItemState, clicked: MutableState<Boolean>): () -> Unit{
         return when(type){
             ErrorCard.CARD_ERROR_DECLINED_DISALLOW_RETRY, ErrorCard.SYSTEM_ERROR_DIALOG_DISALLOW_RETRY -> { ->
                 setResult(RESULT_OK)
@@ -349,18 +355,20 @@ internal class CreditCardActivity : BaseActivity() {
 
     @Composable
     private fun CreditCardPageStateLess(
-        state: NormalCardItemState,
+        state: CardItemState,
         isExpandingState: Boolean,
         withCustomerPhoneEmail: Boolean = false,
         totalAmount: String,
+        creditCard: CreditCard?,
         orderId: String,
         customerDetail: CustomerInfo? = null,
-        creditCard: CreditCard?,
+        savedTokenListState: SnapshotStateList<FormData>?,
         promoState: State<List<PromoData>?>,
         bankCodeState: Int?,
         remainingTimeState: State<String>,
         onExpand: (Boolean) -> Unit,
         onCardNumberValueChange: (TextFieldValue) -> Unit,
+        onSavedCardRadioSelected: (item: FormData?) -> Unit,
         onClick: () -> Unit
     ) {
         Column(
@@ -374,8 +382,6 @@ internal class CreditCardActivity : BaseActivity() {
                 onBackPressed()
             }
             val scrollState = rememberScrollState()
-            var emailAddress by remember { mutableStateOf(TextFieldValue()) }
-
             SnapOverlayExpandingBox(
                 isExpanded = isExpandingState,
                 mainContent = {
@@ -404,74 +410,31 @@ internal class CreditCardActivity : BaseActivity() {
                             .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
                             .padding(top = 24.dp)
                     ) {
-                        var phoneNumber by remember { mutableStateOf(TextFieldValue()) }
-                        var phoneNumberFieldFocused by remember { mutableStateOf(false) }
-                        var emailAddressFieldFocused by remember { mutableStateOf(false) }
                         if (withCustomerPhoneEmail) {
-                            Text(
-                                text = stringResource(id = R.string.cc_dc_main_screen_tlp),
-                                modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
-                                style = SnapTypography.STYLES.snapTextSmallRegular
-                            )
-                            SnapTextField(
-                                value = phoneNumber,
-                                onValueChange = {
-                                    phoneNumber = it
-                                    state.customerPhone = it
-                                },
-                                isFocused = phoneNumberFieldFocused,
-                                onFocusChange = { phoneNumberFieldFocused = it },
-                                modifier = Modifier.fillMaxWidth(1f),
-                                hint = stringResource(id = R.string.cc_dc_main_screen_placeholder_phone),
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                            )
-                            Text(
-                                text = stringResource(id = R.string.cc_dc_main_screen_email),
-                                modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
-                                style = SnapTypography.STYLES.snapTextSmallRegular
-                            )
-                            SnapTextField(
-                                value = emailAddress,
-                                onValueChange = {
-                                    state.customerEmail = it
-                                    emailAddress = it
-                                },
-                                isFocused = emailAddressFieldFocused,
-                                onFocusChange = { emailAddressFieldFocused = it },
-                                modifier = Modifier
-                                    .fillMaxWidth(1f),
-                                hint = stringResource(id = R.string.cc_dc_main_screen_placeholder_email),
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-                            )
-
-                            if (!emailAddressFieldFocused && emailAddress.text.isNotBlank() && !SnapCreditCardUtil.isValidEmail(emailAddress.text)) {
-                                    Text(
-                                        text = stringResource(id = R.string.cc_dc_main_screen_email_invalid),
-                                        style = SnapTypography.STYLES.snapTextSmallRegular,
-                                        color = SnapColors.getARGBColor(SnapColors.SUPPORT_DANGER_DEFAULT)
-                                    )
-                            }
-                            Box(modifier = Modifier.padding(8.dp))
+                            customerPhoneLayout(state = state)
                         }
-                        NormalCardItem(
-                            state = state,
-                            bankIcon = bankCodeState,
-                            creditCard = creditCard,
-                            onCardNumberValueChange = {
-                                onCardNumberValueChange(it)
-                            },
-                            onExpiryDateValueChange = { state.expiry = it },
-                            onCvvValueChange = { state.cvv = it },
-                            onCardTextFieldFocusedChange = { state.isCardTexFieldFocused = it },
-                            onExpiryTextFieldFocusedChange = {
-                                state.isExpiryTextFieldFocused = it
-                            },
-                            onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
-                            onSavedCardCheckedChange = { state.isSavedCardChecked = it }
-                        )
+
+                        savedTokenListState?.let {
+                            savedCardlayout(
+                                viewModel = viewModel,
+                                state = state,
+                                savedTokenListState = it,
+                                bankCodeId = bankCodeState,
+                                onCardNumberValueChange = onCardNumberValueChange,
+                                onSavedCardRadioSelected = onSavedCardRadioSelected
+                            )
+                        }
+                        if (savedTokenListState == null) {
+                            normalCardFormLayout(
+                                state = state,
+                                creditCard = creditCard,
+                                bankCodeState = bankCodeState,
+                                onCardNumberValueChange = onCardNumberValueChange
+                            )
+                        }
 
                         promoState.value?.let {
-                            promoContent(promoData = it, normalCardItemState = state)
+                            promoLayout(promoData = it, cardItemState = state)
                         }
                     }
                 },
@@ -486,22 +449,48 @@ internal class CreditCardActivity : BaseActivity() {
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
-                enabled = !(state.isCardNumberInvalid ||
+                enabled = (!(state.isCardNumberInvalid ||
                         state.isExpiryInvalid ||
                         state.isCvvInvalid ||
                         state.cardNumber.text.isEmpty() ||
                         state.expiry.text.isEmpty() ||
                         state.cvv.text.isEmpty())
-                    .or(!SnapCreditCardUtil.isValidEmail(emailAddress.text).or(emailAddress.text.isBlank())),
+                    .or(!SnapCreditCardUtil.isValidEmail(state.customerEmail.text).or(state.customerEmail.text.isBlank())))
+                    .or((state.cardItemType == CardItemState.CardItemType.SAVED_CARD).and(!state.isCvvInvalid)),
                 onClick = { onClick() }
             )
         }
     }
+
+    @Composable
+    private fun normalCardFormLayout(
+        state: CardItemState,
+        bankCodeState: Int?,
+        creditCard: CreditCard?,
+        onCardNumberValueChange: (TextFieldValue) -> Unit
+    ){
+        NormalCardItem(
+            state = state,
+            bankIcon = bankCodeState,
+            creditCard = creditCard,
+            onCardNumberValueChange = {
+                onCardNumberValueChange(it)
+            },
+            onExpiryDateValueChange = { state.expiry = it },
+            onCvvValueChange = { state.cvv = it },
+            onCardTextFieldFocusedChange = { state.isCardTexFieldFocused = it },
+            onExpiryTextFieldFocusedChange = {
+                state.isExpiryTextFieldFocused = it
+            },
+            onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
+            onSavedCardCheckedChange = { state.isSavedCardChecked = it }
+        )
+    }
     
     @Composable
-    private fun promoContent(
+    private fun promoLayout(
         promoData: List<PromoData>,
-        normalCardItemState: NormalCardItemState
+        cardItemState: CardItemState
     ){
         Divider(
             color = SnapColors.getARGBColor(SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY),
@@ -518,8 +507,91 @@ internal class CreditCardActivity : BaseActivity() {
         SnapPromoListRadioButton(
             states = promoData.toMutableList().apply { add(noPromo) },
             onItemSelectedListener = {
-                normalCardItemState.promoId = it.identifier.orEmpty().toLong()
+                cardItemState.promoId = it.identifier.orEmpty().toLong()
             }
+        )
+    }
+    
+    @Composable
+    private fun customerPhoneLayout(
+        state: CardItemState
+    ){
+        var phoneNumber by remember { mutableStateOf(TextFieldValue()) }
+        var phoneNumberFieldFocused by remember { mutableStateOf(false) }
+        var emailAddressFieldFocused by remember { mutableStateOf(false) }
+        Text(
+            text = stringResource(id = R.string.cc_dc_main_screen_tlp),
+            modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
+            style = SnapTypography.STYLES.snapTextSmallRegular
+        )
+        SnapTextField(
+            value = phoneNumber,
+            onValueChange = {
+                phoneNumber = it
+                state.customerPhone = it
+            },
+            isFocused = phoneNumberFieldFocused,
+            onFocusChange = { phoneNumberFieldFocused = it },
+            modifier = Modifier.fillMaxWidth(1f),
+            hint = stringResource(id = R.string.cc_dc_main_screen_placeholder_phone),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+        Text(
+            text = stringResource(id = R.string.cc_dc_main_screen_email),
+            modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
+            style = SnapTypography.STYLES.snapTextSmallRegular
+        )
+        SnapTextField(
+            value = state.customerEmail,
+            onValueChange = {
+                state.customerEmail = it
+            },
+            isFocused = emailAddressFieldFocused,
+            onFocusChange = { emailAddressFieldFocused = it },
+            modifier = Modifier
+                .fillMaxWidth(1f),
+            hint = stringResource(id = R.string.cc_dc_main_screen_placeholder_email),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+        )
+
+        if (!emailAddressFieldFocused && state.customerEmail.text.isNotBlank() && !SnapCreditCardUtil.isValidEmail(state.customerEmail.text)) {
+            Text(
+                text = stringResource(id = R.string.cc_dc_main_screen_email_invalid),
+                style = SnapTypography.STYLES.snapTextSmallRegular,
+                color = SnapColors.getARGBColor(SnapColors.SUPPORT_DANGER_DEFAULT)
+            )
+        }
+        Box(modifier = Modifier.padding(8.dp))
+    }
+
+    @Composable
+    private fun savedCardlayout(
+        viewModel: CreditCardViewModel?,
+        state: CardItemState,
+        savedTokenListState: SnapshotStateList<FormData>,
+        bankCodeId: Int?,
+        onCardNumberValueChange: (TextFieldValue) -> Unit,
+        onSavedCardRadioSelected: (item: FormData?) -> Unit
+        ){
+        SnapSavedCardRadioGroup(
+            modifier = Modifier
+                .padding(top = 24.dp),
+            listStates = savedTokenListState,
+            cardItemState = state,
+            bankIconState = bankCodeId,
+            creditCard = creditCard,
+            onItemRemoveClicked = {
+                viewModel?.deleteSavedCard(snapToken = snapToken, maskedCard = it.displayedMaskedCard)
+                savedTokenListState.remove(it)
+            },
+            onCardNumberOtherCardValueChange = onCardNumberValueChange,
+            onExpiryOtherCardValueChange =  {state.expiry = it},
+            onSavedCardRadioSelected = onSavedCardRadioSelected,
+            onIsCvvSavedCardInvalidValueChange = { state.isCvvInvalid = it },
+            onCvvValueChange = {
+                state.cvv = it
+            },
+            onSavedCardCheckedChange = { state.isSavedCardChecked = it }
         )
     }
 
@@ -544,7 +616,7 @@ internal class CreditCardActivity : BaseActivity() {
                 "087788778212",
                 listOf("Jl. ABC", "Rumah DEF")
             ),
-            creditCard = CreditCard(),
+            savedTokenListState = null,
             viewModel = null,
             bankCodeIdState = remember {
                 mutableStateOf(null)
@@ -553,8 +625,49 @@ internal class CreditCardActivity : BaseActivity() {
             remainingTimeState = remember { mutableStateOf("00:00") },
             withCustomerPhoneEmail = true,
             errorTypeState = remember { mutableStateOf(null) },
-            promoState = remember { mutableStateOf(null)}
+            promoState = remember { mutableStateOf(null)},
+            creditCard = CreditCard()
         )
     }
+
+    companion object {
+        private const val EXTRA_SNAP_TOKEN = "card.extra.snap_token"
+        private const val EXTRA_TRANSACTION_DETAILS = "card.extra.transaction_details"
+        private const val EXTRA_TOTAL_AMOUNT = "card.extra.total_amount"
+        private const val EXTRA_CUSTOMER_DETAIL = "card.extra.customer_detail"
+        private const val EXTRA_CREDIT_CARD = "card.extra.credit_card"
+        private const val EXTRA_EXPIRY_TIME = "card.extra.expiry_time"
+        private const val EXTRA_MERCHANT_DATA = "card.extra.merchantdata"
+        private const val EXTRA_PROMOS = "card.extra.extra.promos"
+
+        fun getIntent(
+            activityContext: Context,
+            snapToken: String,
+            totalAmount: String,
+            transactionDetails: TransactionDetails?,
+            customerInfo: CustomerInfo? = null,
+            creditCard: CreditCard?,
+            promos: List<Promo>? = null,
+            expiryTime: String?,
+            withMerchantData: Merchant? = null
+        ): Intent {
+            return Intent(activityContext, CreditCardActivity::class.java).apply {
+                putExtra(EXTRA_SNAP_TOKEN, snapToken)
+                putExtra(EXTRA_TRANSACTION_DETAILS, transactionDetails)
+                putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
+                putExtra(
+                    EXTRA_CUSTOMER_DETAIL,
+                    customerInfo
+                )
+                putExtra(EXTRA_CREDIT_CARD, creditCard)
+                putExtra(EXTRA_EXPIRY_TIME, expiryTime)
+                withMerchantData?.let { putExtra(EXTRA_MERCHANT_DATA, withMerchantData) }
+                promos?.let {
+                    putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it))
+                }
+            }
+        }
+    }
+
 }
 
