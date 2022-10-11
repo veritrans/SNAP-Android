@@ -399,6 +399,7 @@ class NormalCardItemState(
     isExpiryTextFieldFocused: Boolean,
     isCvvTextFieldFocused: Boolean,
     isSaveCardChecked: Boolean,
+    isEligibleForInstallment: Boolean,
     principalIconId: Int?,
     customerEmail: TextFieldValue,
     customerPhone: TextFieldValue
@@ -414,6 +415,7 @@ class NormalCardItemState(
     var isCvvTextFieldFocused by mutableStateOf(isCvvTextFieldFocused)
     var principalIconId by mutableStateOf(principalIconId)
     var isSavedCardChecked by mutableStateOf(isSaveCardChecked)
+    var isEligibleForInstallment by mutableStateOf(isEligibleForInstallment)
     var customerEmail by mutableStateOf(customerEmail)
     var customerPhone by mutableStateOf(customerPhone)
 
@@ -700,6 +702,7 @@ fun NormalCardItem(
                             }
 
                             InstallmentDropdownMenu(
+                                state = state,
                                 title = stringResource(R.string.installment_title),
                                 optionList = options.toList(),
                                 onOptionsSelected = { selectedTerm ->
@@ -755,6 +758,7 @@ fun LabelledCheckBox(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun InstallmentDropdownMenu(
+    state: NormalCardItemState?,
     title: String,
     optionList: List<String>,
     onOptionsSelected: (String) -> Unit
@@ -814,17 +818,21 @@ fun InstallmentDropdownMenu(
             }
         }
         if (!isCardEligibleForInstallment(binCardType)) {
+            state!!.isEligibleForInstallment = false
             Text(
                 text = stringResource(id = R.string.installment_dc_error),
                 style = SnapTypography.STYLES.snapTextSmallRegular,
                 color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
             )
         } else if (!isCCMatch) {
+            state!!.isEligibleForInstallment = false
             Text(
                 text = stringResource(id = R.string.installment_cc_not_match_installment),
                 style = SnapTypography.STYLES.snapTextSmallRegular,
                 color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
             )
+        } else {
+            state!!.isEligibleForInstallment = true
         }
     }
 }

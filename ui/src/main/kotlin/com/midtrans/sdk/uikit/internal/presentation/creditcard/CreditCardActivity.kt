@@ -204,6 +204,7 @@ internal class CreditCardActivity : BaseActivity() {
                 isExpiryTextFieldFocused = false,
                 isCvvTextFieldFocused = false,
                 isSaveCardChecked = true,
+                isEligibleForInstallment = false,
                 principalIconId = null,
                 customerEmail = TextFieldValue(),
                 customerPhone = TextFieldValue()
@@ -485,6 +486,8 @@ internal class CreditCardActivity : BaseActivity() {
                     .or(
                         !SnapCreditCardUtil.isValidEmail(emailAddress.text)
                             .or(emailAddress.text.isBlank())
+                    ).or(
+                        !state.isEligibleForInstallment
                     ),
                 onClick = { onClick() }
             )
