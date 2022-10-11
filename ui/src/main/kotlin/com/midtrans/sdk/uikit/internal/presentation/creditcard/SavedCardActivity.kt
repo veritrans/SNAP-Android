@@ -285,7 +285,8 @@ class SavedCardActivity: BaseActivity() {
                                 onCvvOtherCardValueChange = {
                                     state.cvv = it
                                 },
-                                onSavedCardCheckedChange = { state.isSavedCardChecked = it }
+                                onSavedCardCheckedChange = { state.isSavedCardChecked = it },
+                                binType = null
                             )
                             SnapButton(
                                 text = stringResource(id = R.string.cc_dc_main_screen_cta),

@@ -197,8 +197,8 @@ class SampleActivity : AppCompatActivity() {
                         saveCard = true,
                         secure = true,
                         installment = Installment(
-                            isRequired = false,
-                            terms = mapOf("offline" to listOf(3,6,9,12), "mandiri" to listOf(3,6,9,12))
+                            isRequired = true,
+                            terms = mapOf("mandiri" to listOf(3,6,9,12))
                         )
                     ),
                     userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
