@@ -38,9 +38,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
 
-private var binCardType: String? = null
 private var isCCMatch: Boolean = false
-private var isEightDigitNumber: Boolean = false
 private var isRequired: Boolean = false
 
 @Composable
@@ -155,6 +153,7 @@ fun InputNewCardItem(
     state: NormalCardItemState,
     bankIconState: Int?,
     creditCard: CreditCard?,
+    binType: String?,
     onCardNumberValueChange: (TextFieldValue) -> Unit,
     onExpiryDateValueChange: (TextFieldValue) -> Unit,
     onCvvValueChange: (TextFieldValue) -> Unit,
@@ -181,7 +180,7 @@ fun InputNewCardItem(
                 NormalCardItem(
                     state = state,
                     bankIcon = bankIconState,
-                    binType = binCardType,
+                    binType = binType,
                     cardIssuerBank = null,
                     creditCard = creditCard,
                     onCardNumberValueChange = {
@@ -241,17 +240,6 @@ fun checkIsCardExpired(cardExpiry: String): Boolean {
     return sdf.parse(cardExpiry).before(sdf.parse(currentDate))
 }
 
-fun isCardEligibleForInstallment(binType: String?) : Boolean{
-    return binType == "CREDIT"
-}
-
-fun checkIsEligibleForInstallment() : Boolean{
-    if (!isCardEligibleForInstallment(binCardType) || !isCCMatch) {
-        return false
-    }
-    return true
-}
-
 @Composable
 fun SnapSavedCardRadioGroup(
     modifier: Modifier,
@@ -260,6 +248,7 @@ fun SnapSavedCardRadioGroup(
     normalCardItemState: NormalCardItemState,
     onItemRemoveClicked: (item: SavedCreditCardFormData) -> Unit,
     creditCard: CreditCard?,
+    binType: String?,
     onCvvSavedCardValueChange: (TextFieldValue) -> Unit,
     onCardNumberOtherCardValueChange: (TextFieldValue) -> Unit,
     onExpiryOtherCardValueChange: (TextFieldValue) -> Unit,
@@ -344,6 +333,7 @@ fun SnapSavedCardRadioGroup(
                                 state = normalCardItemState,
                                 creditCard = creditCard,
                                 bankIconState = bankIconState,
+                                binType = binType,
                                 onCardNumberValueChange = { onCardNumberOtherCardValueChange(it) },
                                 onExpiryDateValueChange = { onExpiryOtherCardValueChange(it) },
                                 onCvvValueChange = { onCvvOtherCardValueChange(it) },
@@ -488,7 +478,6 @@ fun NormalCardItem(
     onInstallmentTermSelected: (String) -> Unit
 ) {
     var isBinBlocked by remember { mutableStateOf(false) }
-    binCardType = binType
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 16.dp)
     ) {
@@ -540,7 +529,6 @@ fun NormalCardItem(
                                     || !SnapCreditCardUtil.isValidCardNumber(SnapCreditCardUtil.getCardNumberFromTextField(it))
                                     || isBinBlocked
                         onCardNumberValueChange(formatCreditCard(it))
-                        isEightDigitNumber = it.text.length > 8
                     },
                     isFocused = state.isCardTexFieldFocused,
                     onFocusChange = {
@@ -710,6 +698,7 @@ fun NormalCardItem(
                             InstallmentDropdownMenu(
                                 state = state,
                                 title = stringResource(R.string.installment_title),
+                                binType = binType,
                                 optionList = options.toList(),
                                 onOptionsSelected = { selectedTerm ->
                                     selectedTerm
@@ -766,12 +755,14 @@ fun LabelledCheckBox(
 fun InstallmentDropdownMenu(
     state: NormalCardItemState?,
     title: String,
+    binType: String?,
     optionList: List<String>,
     onOptionsSelected: (String) -> Unit
 ) {
     val options by remember { mutableStateOf(optionList) }
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(options[0]) }
+    var status by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxWidth(1f),
@@ -786,9 +777,6 @@ fun InstallmentDropdownMenu(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
         ) {
-            var status = false
-            if (isEightDigitNumber) status = checkIsEligibleForInstallment()
-
             SnapTextField(
                 modifier = Modifier.fillMaxWidth(1f),
                 readOnly = true,
@@ -817,7 +805,7 @@ fun InstallmentDropdownMenu(
                             onOptionsSelected(selectionOption)
                             expanded = false
                         },
-                        enabled = checkIsEligibleForInstallment()
+                        enabled = checkIsEligibleForInstallment(binType)
                     ) {
                         Text(
                             text = selectionOption,
@@ -828,8 +816,9 @@ fun InstallmentDropdownMenu(
             }
         }
 
-        if(isEightDigitNumber){
-            if (!isCardEligibleForInstallment(binCardType)) {
+        binType?.let {
+            status = checkIsEligibleForInstallment(binType)
+            if (!isCardEligibleForInstallment(binType)) {
                 state!!.isEligibleForInstallment = false
                 ErrorTextInstallment(errorMessage = stringResource(id = R.string.installment_dc_error))
             } else if (!isCCMatch) {
@@ -838,16 +827,39 @@ fun InstallmentDropdownMenu(
             } else {
                 state!!.isEligibleForInstallment = true
             }
-        } else {
-            if (isRequired) {
-                selectedOptionText = stringResource(id = R.string.installment_term, 3)
-                onOptionsSelected(stringResource(id = R.string.installment_term, 3))
-            } else {
-                selectedOptionText = stringResource(id = R.string.installment_full_payment)
-                onOptionsSelected(stringResource(id = R.string.installment_full_payment))
-            }
         }
+
+//        if(binType!= null){
+//            if (!isCardEligibleForInstallment(binType)) {
+//                state!!.isEligibleForInstallment = false
+//                ErrorTextInstallment(errorMessage = stringResource(id = R.string.installment_dc_error))
+//            } else if (!isCCMatch) {
+//                state!!.isEligibleForInstallment = false
+//                ErrorTextInstallment(errorMessage = stringResource(id = R.string.installment_cc_not_match_installment))
+//            } else {
+//                state!!.isEligibleForInstallment = true
+//            }
+//        } else {
+//            if (isRequired) {
+//                selectedOptionText = stringResource(id = R.string.installment_term, 3)
+//                onOptionsSelected(stringResource(id = R.string.installment_term, 3))
+//            } else {
+//                selectedOptionText = stringResource(id = R.string.installment_full_payment)
+//                onOptionsSelected(stringResource(id = R.string.installment_full_payment))
+//            }
+//        }
     }
+}
+
+fun isCardEligibleForInstallment(binType: String?) : Boolean{
+    return binType == "CREDIT"
+}
+
+fun checkIsEligibleForInstallment(binType: String?) : Boolean{
+    if (!isCardEligibleForInstallment(binType) || !isCCMatch) {
+        return false
+    }
+    return true
 }
 
 @Composable

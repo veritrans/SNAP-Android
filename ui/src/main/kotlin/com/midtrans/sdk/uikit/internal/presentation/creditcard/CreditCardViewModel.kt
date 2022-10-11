@@ -69,7 +69,9 @@ internal class CreditCardViewModel @Inject constructor(
                             bankIconId.value = snapCreditCardUtil.getBankIcon(it.lowercase())
                             cardIssuerBank.value = it
                         }
-                        binType.value = data?.binType
+                        data?.binType?.let {
+                            binType.value = it
+                        }
                     }
                 }
 
