@@ -38,7 +38,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
 
-private var isCCMatch: Boolean = false
 private var isRequired: Boolean = false
 
 @Composable
@@ -684,7 +683,17 @@ fun NormalCardItem(
                         else -> listOf()
                     }
 
-                    isCCMatch = terms.containsKey(cardIssuerBank?.lowercase())
+                    val isCCMatch = terms.containsKey(cardIssuerBank?.lowercase())
+                    val isCreditCard = binType == "CREDIT"
+                    val isError = !isCCMatch || !isCreditCard
+                    val errorMessage = mutableListOf<String>()
+
+                    if (!isCreditCard) {
+                        errorMessage.add(stringResource(id = R.string.installment_dc_error))
+                    }
+                    if (!isCCMatch) {
+                        errorMessage.add(stringResource(id = R.string.installment_cc_not_match_installment))
+                    }
 
                     termList
                         ?.takeIf { it.isNotEmpty() }
@@ -699,6 +708,8 @@ fun NormalCardItem(
                                 state = state,
                                 title = stringResource(R.string.installment_title),
                                 binType = binType,
+                                isError = isError,
+                                errorMessage = errorMessage,
                                 optionList = options.toList(),
                                 onOptionsSelected = { selectedTerm ->
                                     selectedTerm
@@ -755,6 +766,8 @@ fun LabelledCheckBox(
 fun InstallmentDropdownMenu(
     state: NormalCardItemState?,
     title: String,
+    isError: Boolean,
+    errorMessage: List<String>,
     binType: String?,
     optionList: List<String>,
     onOptionsSelected: (String) -> Unit
@@ -762,7 +775,6 @@ fun InstallmentDropdownMenu(
     val options by remember { mutableStateOf(optionList) }
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(options[0]) }
-    var status by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxWidth(1f),
@@ -783,7 +795,7 @@ fun InstallmentDropdownMenu(
                 value = TextFieldValue(selectedOptionText),
                 onValueChange = {},
                 isFocused = false,
-                enabled = status,
+                enabled = !isError,
                 onFocusChange = {},
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(
@@ -805,7 +817,7 @@ fun InstallmentDropdownMenu(
                             onOptionsSelected(selectionOption)
                             expanded = false
                         },
-                        enabled = checkIsEligibleForInstallment(binType)
+                        enabled = !isError
                     ) {
                         Text(
                             text = selectionOption,
@@ -817,49 +829,16 @@ fun InstallmentDropdownMenu(
         }
 
         binType?.let {
-            status = checkIsEligibleForInstallment(binType)
-            if (!isCardEligibleForInstallment(binType)) {
+            if(isError) {
                 state!!.isEligibleForInstallment = false
-                ErrorTextInstallment(errorMessage = stringResource(id = R.string.installment_dc_error))
-            } else if (!isCCMatch) {
-                state!!.isEligibleForInstallment = false
-                ErrorTextInstallment(errorMessage = stringResource(id = R.string.installment_cc_not_match_installment))
+                errorMessage.forEach{
+                    ErrorTextInstallment(errorMessage = it)
+                }
             } else {
                 state!!.isEligibleForInstallment = true
             }
         }
-
-//        if(binType!= null){
-//            if (!isCardEligibleForInstallment(binType)) {
-//                state!!.isEligibleForInstallment = false
-//                ErrorTextInstallment(errorMessage = stringResource(id = R.string.installment_dc_error))
-//            } else if (!isCCMatch) {
-//                state!!.isEligibleForInstallment = false
-//                ErrorTextInstallment(errorMessage = stringResource(id = R.string.installment_cc_not_match_installment))
-//            } else {
-//                state!!.isEligibleForInstallment = true
-//            }
-//        } else {
-//            if (isRequired) {
-//                selectedOptionText = stringResource(id = R.string.installment_term, 3)
-//                onOptionsSelected(stringResource(id = R.string.installment_term, 3))
-//            } else {
-//                selectedOptionText = stringResource(id = R.string.installment_full_payment)
-//                onOptionsSelected(stringResource(id = R.string.installment_full_payment))
-//            }
-//        }
     }
-}
-
-fun isCardEligibleForInstallment(binType: String?) : Boolean{
-    return binType == "CREDIT"
-}
-
-fun checkIsEligibleForInstallment(binType: String?) : Boolean{
-    if (!isCardEligibleForInstallment(binType) || !isCCMatch) {
-        return false
-    }
-    return true
 }
 
 @Composable
