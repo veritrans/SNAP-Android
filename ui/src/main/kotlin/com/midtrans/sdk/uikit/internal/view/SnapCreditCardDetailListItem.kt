@@ -841,6 +841,9 @@ fun InstallmentDropdownMenu(
             } else {
                 state!!.isEligibleForInstallment = true
             }
+        } else {
+            selectedOptionText = "Full Payment"
+            onOptionsSelected("Full Payment")
         }
     }
 }
