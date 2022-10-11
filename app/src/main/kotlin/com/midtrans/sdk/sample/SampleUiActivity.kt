@@ -191,7 +191,7 @@ class SampleUiActivity : AppCompatActivity() {
 //                }
 //            )
 
-            InstallmentDropdownMenu(title = "Option", optionList = listOf("option_1", "option_2", "option_3"), onOptionsSelected = {} )
+            InstallmentDropdownMenu(title = "Option", optionList = listOf("option_1", "option_2", "option_3"), onOptionsSelected = {}, state = null )
 
             SnapNumberedListItem(
                 number = "1.",
