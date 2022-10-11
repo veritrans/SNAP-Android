@@ -40,6 +40,7 @@ import kotlin.math.min
 
 private var binCardType: String? = null
 private var isCCMatch: Boolean = false
+private var checkNow: Boolean = false
 
 @Composable
 fun SnapCCDetailListItem(
@@ -536,6 +537,7 @@ fun NormalCardItem(
                                     || !SnapCreditCardUtil.isValidCardNumber(SnapCreditCardUtil.getCardNumberFromTextField(it))
                                     || isBinBlocked
                         onCardNumberValueChange(formatCreditCard(it))
+                        checkNow = it.text.length > 8
                     },
                     isFocused = state.isCardTexFieldFocused,
                     onFocusChange = {
@@ -817,22 +819,24 @@ fun InstallmentDropdownMenu(
                 }
             }
         }
-        if (!isCardEligibleForInstallment(binCardType)) {
-            state!!.isEligibleForInstallment = false
-            Text(
-                text = stringResource(id = R.string.installment_dc_error),
-                style = SnapTypography.STYLES.snapTextSmallRegular,
-                color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
-            )
-        } else if (!isCCMatch) {
-            state!!.isEligibleForInstallment = false
-            Text(
-                text = stringResource(id = R.string.installment_cc_not_match_installment),
-                style = SnapTypography.STYLES.snapTextSmallRegular,
-                color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
-            )
-        } else {
-            state!!.isEligibleForInstallment = true
+        if(checkNow){
+            if (!isCardEligibleForInstallment(binCardType)) {
+                state!!.isEligibleForInstallment = false
+                Text(
+                    text = stringResource(id = R.string.installment_dc_error),
+                    style = SnapTypography.STYLES.snapTextSmallRegular,
+                    color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                )
+            } else if (!isCCMatch) {
+                state!!.isEligibleForInstallment = false
+                Text(
+                    text = stringResource(id = R.string.installment_cc_not_match_installment),
+                    style = SnapTypography.STYLES.snapTextSmallRegular,
+                    color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                )
+            } else {
+                state!!.isEligibleForInstallment = true
+            }
         }
     }
 }
