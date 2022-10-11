@@ -41,6 +41,7 @@ import kotlin.math.min
 private var binCardType: String? = null
 private var isCCMatch: Boolean = false
 private var isEightDigitNumber: Boolean = false
+private var isRequired: Boolean = false
 
 @Composable
 fun SnapCCDetailListItem(
@@ -674,7 +675,7 @@ fun NormalCardItem(
             }
 
             creditCard?.installment?.let { installment -> //TODO should create a method instead
-                val isRequired = installment.isRequired
+                isRequired = installment.isRequired
 
                 installment.terms?.let { terms ->
                     var selectedBank = ""
@@ -835,8 +836,13 @@ fun InstallmentDropdownMenu(
                 state!!.isEligibleForInstallment = true
             }
         } else {
-            selectedOptionText = "Full Payment"
-            onOptionsSelected("Full Payment")
+            if (isRequired) {
+                selectedOptionText = stringResource(id = R.string.installment_term, 3)
+                onOptionsSelected(stringResource(id = R.string.installment_term, 3))
+            } else {
+                selectedOptionText = stringResource(id = R.string.installment_full_payment)
+                onOptionsSelected(stringResource(id = R.string.installment_full_payment))
+            }
         }
     }
 }
