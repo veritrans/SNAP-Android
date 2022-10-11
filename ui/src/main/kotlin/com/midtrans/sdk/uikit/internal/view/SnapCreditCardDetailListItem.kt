@@ -678,19 +678,27 @@ fun NormalCardItem(
                             selectedBank = key
                             terms[key]
                         }
-                        else -> listOf()
+                        else -> {
+                            val key = terms.keys.toList()[0]
+                            terms[key]
+                        }
                     }
 
                     val isCCMatch = terms.containsKey(cardIssuerBank?.lowercase())
                     val isCreditCard = binType == "CREDIT"
-                    val isError = !isCCMatch || !isCreditCard
+                    val isError: Boolean
                     val errorMessage = mutableListOf<String>()
 
-                    if (!isCreditCard) {
-                        errorMessage.add(stringResource(id = R.string.installment_dc_error))
-                    }
-                    if (!isCCMatch) {
-                        errorMessage.add(stringResource(id = R.string.installment_cc_not_match_installment))
+                    if (!selectedBank.contains("offline")){
+                        isError = !isCCMatch || !isCreditCard
+                        if (!isCreditCard) {
+                            errorMessage.add(stringResource(id = R.string.installment_dc_error))
+                        }
+                        if (!isCCMatch) {
+                            errorMessage.add(stringResource(id = R.string.installment_cc_not_match_installment))
+                        }
+                    } else {
+                        isError = false
                     }
 
                     termList
