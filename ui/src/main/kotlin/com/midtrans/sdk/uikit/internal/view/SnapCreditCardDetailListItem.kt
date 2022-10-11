@@ -782,12 +782,16 @@ fun InstallmentDropdownMenu(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
         ) {
+            var status = false
+            if (checkNow) status = checkIsEligibleForInstallment()
+
             SnapTextField(
                 modifier = Modifier.fillMaxWidth(1f),
                 readOnly = true,
                 value = TextFieldValue(selectedOptionText),
                 onValueChange = {},
                 isFocused = false,
+                enabled = status,
                 onFocusChange = {},
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(
