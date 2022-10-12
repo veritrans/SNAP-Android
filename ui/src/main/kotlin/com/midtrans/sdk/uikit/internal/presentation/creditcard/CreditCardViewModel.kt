@@ -34,18 +34,20 @@ internal class CreditCardViewModel @Inject constructor(
     private val _transactionResponse = MutableLiveData<TransactionResponse>()
     private val _transactionStatus = MutableLiveData<TransactionResponse>()
     private val _error = MutableLiveData<Int>()
-    val promoDataLiveData = MutableLiveData<List<PromoData>>()
-    val netAmountLiveData = MutableLiveData<String>()
+    private val _promoDataLiveData = MutableLiveData<List<PromoData>>()
+    private val _netAmountLiveData = MutableLiveData<String>()
     private var expireTimeInMillis = 0L
     private var allowRetry = false
     private var promos: List<Promo>? = null
     private var transactionDetails: TransactionDetails? = null
 
+    val promoDataLiveData: LiveData<List<PromoData>> = _promoDataLiveData
+    val netAmountLiveData: LiveData<String> = _netAmountLiveData
     var creditCard: CreditCard?  = null
 
-    fun getTransactionResponseLiveData(): LiveData<TransactionResponse> = _transactionResponse
-    fun getTransactionStatusLiveData(): LiveData<TransactionResponse> = _transactionStatus
-    fun getErrorLiveData(): LiveData<Int> = _error
+    val transactionResponseLiveData: LiveData<TransactionResponse> = _transactionResponse
+    val transactionStatusLiveData: LiveData<TransactionResponse> = _transactionStatus
+    val errorLiveData: LiveData<Int> = _error
     fun setExpiryTime(expireTime: String?) {
         expireTime?.let {
             expireTimeInMillis = parseTime(it)
@@ -75,14 +77,14 @@ internal class CreditCardViewModel @Inject constructor(
     }
 
     fun setPromoId(promoId: Long){
-        netAmountLiveData.value = transactionDetails?.grossAmount?.currencyFormatRp()
+        _netAmountLiveData.value = transactionDetails?.grossAmount?.currencyFormatRp()
         promos?.find { it.id == promoId }?.discountedGrossAmount?.let {
-            netAmountLiveData.value = it.currencyFormatRp()
+            _netAmountLiveData.value = it.currencyFormatRp()
         }
     }
 
     fun getPromosData(binNumber: String) {
-        promoDataLiveData.value = snapCreditCardUtil.getCreditCardApplicablePromosData(binNumber, promos)
+        _promoDataLiveData.value = snapCreditCardUtil.getCreditCardApplicablePromosData(binNumber, promos)
     }
 
     fun getBankIconImage(binNumber: String) {

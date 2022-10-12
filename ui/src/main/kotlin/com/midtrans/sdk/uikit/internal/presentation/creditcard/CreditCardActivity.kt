@@ -141,6 +141,7 @@ internal class CreditCardActivity : BaseActivity() {
         viewModel.setAllowRetry(allowRetry)
         viewModel.setPromos(promos = promos)
         viewModel.setTransactionDetails(transactionDetails)
+        viewModel.creditCard = creditCard
         initTransactionResultScreenObserver()
         setContent {
             CreditCardPageStateFull(
@@ -153,14 +154,14 @@ internal class CreditCardActivity : BaseActivity() {
                 totalAmount = viewModel.netAmountLiveData.observeAsState(initial = totalAmount),
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
                 withCustomerPhoneEmail = withCustomerPhoneEmail,
-                errorTypeState = viewModel.getErrorLiveData().observeAsState(initial = null),
+                errorTypeState = viewModel.errorLiveData.observeAsState(initial = null),
                 promoState = viewModel.promoDataLiveData.observeAsState(initial = null)
             )
         }
     }
 
     private fun initTransactionResultScreenObserver() {
-        viewModel.getTransactionResponseLiveData().observe(this, Observer {
+        viewModel.transactionResponseLiveData.observe(this, Observer {
             if (it.statusCode != UiKitConstants.STATUS_CODE_201 && it.redirectUrl.isNullOrEmpty()) {
                 val intent = SuccessScreenActivity.getIntent(
                     activityContext = this@CreditCardActivity,
@@ -170,7 +171,7 @@ internal class CreditCardActivity : BaseActivity() {
                 resultLauncher.launch(intent)
             }
         })
-        viewModel.getTransactionStatusLiveData().observe(this, Observer {
+        viewModel.transactionStatusLiveData.observe(this, Observer {
             var intent: Intent
             when (it.statusCode) {
                 UiKitConstants.STATUS_CODE_200 -> {
@@ -225,7 +226,7 @@ internal class CreditCardActivity : BaseActivity() {
                 promoId = 0L
             )
         }
-        val transactionResponse = viewModel?.getTransactionResponseLiveData()?.observeAsState()
+        val transactionResponse = viewModel?.transactionResponseLiveData?.observeAsState()
         val bankCodeId by bankCodeIdState
         var isExpanding by remember { mutableStateOf(false) }
         var selectedFormData : FormData? by remember { mutableStateOf(null)}
