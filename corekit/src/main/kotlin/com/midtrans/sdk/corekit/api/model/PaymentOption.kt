@@ -10,7 +10,7 @@ data class PaymentOption(
     val token: String,
     val options: List<PaymentMethod>,
     val creditCard: CreditCard?,
-    val promos: List<PromoResponse>?,
+    val promos: List<Promo>?,
     val merchantData: Merchant?,
     val customerDetails: CustomerDetails?,
     val transactionDetails: TransactionDetails?,

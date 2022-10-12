@@ -32,6 +32,9 @@ import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import javax.inject.Inject
 
+//TODO: will deleted later after saved card retested by QA,
+// keep this class for source reference,
+// albeit the implementation already merged into CreditCardActivity
 class SavedCardActivity: BaseActivity() {
 
     @Inject
@@ -155,7 +158,7 @@ class SavedCardActivity: BaseActivity() {
         val savedTokenList = mutableListOf<FormData>()
         var isExpanding by remember { mutableStateOf(false) }
         val state = remember {
-            NormalCardItemState(
+            CardItemState(
                 cardNumber = TextFieldValue(),
                 expiry = TextFieldValue(),
                 cvv = TextFieldValue(),
@@ -167,6 +170,7 @@ class SavedCardActivity: BaseActivity() {
                 isCvvTextFieldFocused = false,
                 principalIconId = null,
                 isSaveCardChecked = true,
+                promoId = 0,
                 customerPhone = TextFieldValue(),
                 customerEmail = TextFieldValue()
             )
@@ -250,7 +254,7 @@ class SavedCardActivity: BaseActivity() {
                                 modifier = Modifier
                                     .padding(top = 24.dp),
                                 listStates = savedTokenListState,
-                                normalCardItemState = state,
+                                cardItemState = state,
                                 bankIconState = bankCodeId,
                                 creditCard = creditCard,
                                 onItemRemoveClicked = {
@@ -280,7 +284,7 @@ class SavedCardActivity: BaseActivity() {
                                 onExpiryOtherCardValueChange =  {state.expiry = it},
                                 onSavedCardRadioSelected = { selectedFormData = it },
                                 onIsCvvSavedCardInvalidValueChange = { isSelectedSavedCardCvvInvalid = it },
-                                onCvvOtherCardValueChange = {
+                                onCvvValueChange = {
                                     state.cvv = it
                                 },
                                 onSavedCardCheckedChange = { state.isSavedCardChecked = it },

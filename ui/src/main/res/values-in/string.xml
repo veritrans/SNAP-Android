@@ -235,7 +235,7 @@
         <item><data><![CDATA[Kasir akan mengonfirmasi detail transaksi Anda. Anda akan mendapatkan e-mail berisi konfirmasi pembayaran jika transaksi Anda berhasil diproses. ]]></data></item>
         <item><data><![CDATA[Jika Anda hendak membayar melalui <b>i.saku</b>, silakan buka aplikasinya dan klik <b>Bayar</b>. ]]></data></item>
         <item><data><![CDATA[Pilih nama toko yang ingin Anda bayar, lalu masukkan <b>Kode Bayar</b> Anda. ]]></data></item>
-        <item><data><![CDATA[Klik Selanjutnya dan periksa kembali detail transaksi Anda. ]]></data></item>
+        <item><data><![CDATA[Klik <b>Selanjutnya</b> dan periksa kembali detail transaksi Anda. ]]></data></item>
         <item><data><![CDATA[Klik <b>Bayar sekarang</b> untuk mengonfirmasi pembayaran. ]]></data></item>
         <item><data><![CDATA[Mohon menyimpan bukti pembayaran untuk berjaga-jaga jika Anda membutuhkan bantuan lebih lanjut.]]></data></item>
     </string-array>

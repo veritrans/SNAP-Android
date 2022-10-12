@@ -45,16 +45,16 @@ import com.midtrans.sdk.uikit.internal.view.*
 class PaymentOptionActivity : BaseActivity() {
 
     companion object {
-        const val EXTRA_SNAP_TOKEN = "paymentOptionActivity.extra.snap_token"
-        const val EXTRA_TOTAL_AMOUNT = "paymentOptionActivity.extra.total_amount"
-        const val EXTRA_ORDER_ID = "paymentOptionActivity.extra.order_id"
-        const val EXTRA_PAYMENT_LIST = "paymentOptionActivity.extra.payment_list"
-        const val EXTRA_CUSTOMER_DETAILS = "paymentOptionActivity.extra.customer_details"
-        const val EXTRA_CREDIT_CARD = "paymentOptionActivity.extra.credit_card"
-        const val EXTRA_PROMOS = "paymentOptionActivity.extra.promos"
-        const val EXTRA_MERCHANT_DATA = "paymentOptionActivity.extra.merchant_data"
-        const val EXTRA_TRANSACTION_DETAILS = "paymentOptionActivity.extra.transaction_details"
-        const val EXTRA_EXPIRY_TIME = "paymentOptionActivity.extra.expiry_time"
+        private const val EXTRA_SNAP_TOKEN = "paymentOptionActivity.extra.snap_token"
+        private const val EXTRA_TOTAL_AMOUNT = "paymentOptionActivity.extra.total_amount"
+        private const val EXTRA_ORDER_ID = "paymentOptionActivity.extra.order_id"
+        private const val EXTRA_PAYMENT_LIST = "paymentOptionActivity.extra.payment_list"
+        private const val EXTRA_CUSTOMER_DETAILS = "paymentOptionActivity.extra.customer_details"
+        private const val EXTRA_CREDIT_CARD = "paymentOptionActivity.extra.credit_card"
+        private const val EXTRA_PROMOS = "paymentOptionActivity.extra.promos"
+        private const val EXTRA_MERCHANT_DATA = "paymentOptionActivity.extra.merchant_data"
+        private const val EXTRA_TRANSACTION_DETAILS = "paymentOptionActivity.extra.transaction_details"
+        private const val EXTRA_EXPIRY_TIME = "paymentOptionActivity.extra.expiry_time"
 
         fun openPaymentOptionPage(
             activityContext: Context,
@@ -65,7 +65,7 @@ class PaymentOptionActivity : BaseActivity() {
             paymentList: List<PaymentMethod>,
             customerDetails: CustomerDetails?,
             creditCard: CreditCard?,
-            promos: List<PromoResponse>?,
+            promos: List<Promo>?,
             merchant: Merchant?,
             expiryTime: String?
         ): Intent {
@@ -79,6 +79,9 @@ class PaymentOptionActivity : BaseActivity() {
                 putExtra(EXTRA_MERCHANT_DATA, merchant)
                 putExtra(EXTRA_TRANSACTION_DETAILS, transactionDetail)
                 putExtra(EXTRA_EXPIRY_TIME, expiryTime)
+                promos?.let {
+                    putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it))
+                }
             }
         }
     }
@@ -105,6 +108,10 @@ class PaymentOptionActivity : BaseActivity() {
     private val paymentList: List<PaymentMethod> by lazy {
         intent.getParcelableArrayListExtra<PaymentMethod>(EXTRA_PAYMENT_LIST) as? List<PaymentMethod>
             ?: throw RuntimeException("Payment list must not be empty")
+    }
+
+    private val promos: List<Promo>? by lazy {
+        intent.getParcelableArrayListExtra<Promo>(EXTRA_PROMOS)
     }
 
     private val customerDetail: CustomerDetails? by lazy {
@@ -360,7 +367,8 @@ class PaymentOptionActivity : BaseActivity() {
                             customerInfo = customerInfo,
                             creditCard = creditCard,
                             expiryTime = expiryTime,
-                            withMerchantData = merchant
+                            withMerchantData = merchant,
+                            promos = promos
                         )
                     } else {
                         //TODO currently set to CreditCardActivity for testing purpose
