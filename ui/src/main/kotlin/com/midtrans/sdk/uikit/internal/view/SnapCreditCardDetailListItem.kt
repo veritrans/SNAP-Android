@@ -794,6 +794,7 @@ fun InstallmentDropdownMenu(
             style = SnapTypography.STYLES.snapTextMediumMedium
         )
         ExposedDropdownMenuBox(
+            modifier = Modifier.padding(bottom = 10.dp),
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
         ) {
@@ -818,7 +819,6 @@ fun InstallmentDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                //TODO add padding bottom 10dp between dropdown and first error message
                 options.forEach { selectionOption ->
                     DropdownMenuItem(
                         onClick = {
