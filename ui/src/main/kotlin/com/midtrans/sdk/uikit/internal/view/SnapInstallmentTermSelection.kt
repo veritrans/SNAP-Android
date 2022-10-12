@@ -72,6 +72,11 @@ fun SnapInstallmentTermSelectionMenu(
                         options.add(0, stringResource(id = R.string.installment_full_payment))
                     }
 
+                    Divider(
+                        thickness = 1.dp,
+                        color = SnapColors.getARGBColor(SnapColors.LINE_LIGHT_MUTED),
+                        modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
+                    )
                     InstallmentDropdownMenu(
                         title = stringResource(R.string.installment_title),
                         binType = binType,

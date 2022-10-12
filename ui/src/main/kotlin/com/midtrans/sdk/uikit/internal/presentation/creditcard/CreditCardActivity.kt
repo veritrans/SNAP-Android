@@ -462,11 +462,6 @@ internal class CreditCardActivity : BaseActivity() {
                             onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
                             onSavedCardCheckedChange = { state.isSavedCardChecked = it }
                         )
-                        Divider(
-                            thickness = 1.dp,
-                            color = SnapColors.getARGBColor(SnapColors.LINE_LIGHT_MUTED),
-                            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
-                        )
                         SnapInstallmentTermSelectionMenu(
                             creditCard = creditCard,
                             cardIssuerBank = cardIssuerBank,
