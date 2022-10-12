@@ -28,6 +28,7 @@ internal class CreditCardViewModel @Inject constructor(
     private val _transactionResponse = MutableLiveData<TransactionResponse>()
     private val _transactionStatus = MutableLiveData<TransactionResponse>()
     private val _error = MutableLiveData<Int>()
+    private val _binBlockedLiveData = MutableLiveData<Boolean>()
     private var expireTimeInMillis = 0L
     private var allowRetry = false
     var creditCard: CreditCard?  = null
@@ -35,6 +36,7 @@ internal class CreditCardViewModel @Inject constructor(
     fun getTransactionResponseLiveData(): LiveData<TransactionResponse> = _transactionResponse
     fun getTransactionStatusLiveData(): LiveData<TransactionResponse> = _transactionStatus
     fun getErrorLiveData(): LiveData<Int> = _error
+    val binBlockedLiveData: LiveData<Boolean> = _binBlockedLiveData
     fun setExpiryTime(expireTime: String?) {
         expireTime?.let {
             expireTimeInMillis = parseTime(it)
@@ -63,6 +65,13 @@ internal class CreditCardViewModel @Inject constructor(
                         data?.bankCode?.let {
                             bankIconId.value = snapCreditCardUtil.getBankIcon(it.lowercase())
                         }
+                        _binBlockedLiveData.value = snapCreditCardUtil
+                            .isBinBlocked(
+                                cardNumber = binNumber,
+                                creditCard = creditCard,
+                                bank = data?.bank.orEmpty(),
+                                creditDebit = data?.binType.orEmpty()
+                            )
                     }
                 }
 

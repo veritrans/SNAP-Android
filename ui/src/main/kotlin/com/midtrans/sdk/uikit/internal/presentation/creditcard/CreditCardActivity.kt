@@ -124,6 +124,7 @@ internal class CreditCardActivity : BaseActivity() {
             .inject(this)
         viewModel.setExpiryTime(expiryTime)
         viewModel.setAllowRetry(allowRetry)
+        viewModel.creditCard = creditCard
         initTransactionResultScreenObserver()
         setContent {
             CreditCardPageStateFull(
@@ -206,6 +207,7 @@ internal class CreditCardActivity : BaseActivity() {
         val transactionResponse = viewModel?.getTransactionResponseLiveData()?.observeAsState()
         val bankCodeId by bankCodeIdState
         var isExpanding by remember { mutableStateOf(false) }
+        state.isBinBlocked = viewModel?.binBlockedLiveData?.observeAsState(false)?.value?: false
 
         if (transactionResponse?.value?.statusCode == UiKitConstants.STATUS_CODE_201 && !transactionResponse.value?.redirectUrl.isNullOrEmpty()) {
             transactionResponse.value?.redirectUrl?.let {

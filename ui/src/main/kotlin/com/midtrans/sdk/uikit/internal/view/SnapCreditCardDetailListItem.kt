@@ -386,6 +386,7 @@ class NormalCardItemState(
     isExpiryTextFieldFocused: Boolean,
     isCvvTextFieldFocused: Boolean,
     isSaveCardChecked: Boolean,
+    isBinBlocked: Boolean = false,
     principalIconId: Int?,
     customerEmail: TextFieldValue,
     customerPhone: TextFieldValue
@@ -403,6 +404,7 @@ class NormalCardItemState(
     var isSavedCardChecked by mutableStateOf(isSaveCardChecked)
     var customerEmail by mutableStateOf(customerEmail)
     var customerPhone by mutableStateOf(customerPhone)
+    var isBinBlocked by mutableStateOf(isBinBlocked)
 
     val iconIdList by mutableStateOf(
         listOf(
@@ -468,7 +470,6 @@ fun NormalCardItem(
     onCvvTextFieldFocusedChange: (Boolean) -> Unit,
     onSavedCardCheckedChange: (Boolean) -> Unit
 ) {
-    var isBinBlocked by remember { mutableStateOf(false) }
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 16.dp)
     ) {
@@ -512,13 +513,10 @@ fun NormalCardItem(
                         state.principalIconId =
                             SnapCreditCardUtil.getPrincipalIcon(SnapCreditCardUtil.getCardType(it.text))
                         var cardLength = formatCreditCard(it).text.length
-                        isBinBlocked = SnapCreditCardUtil.isBinBlocked(
-                            SnapCreditCardUtil.getCardNumberFromTextField(it), creditCard
-                        )
                         state.isCardNumberInvalid =
                             cardLength != SnapCreditCardUtil.FORMATTED_MAX_CARD_NUMBER_LENGTH
                                     || !SnapCreditCardUtil.isValidCardNumber(SnapCreditCardUtil.getCardNumberFromTextField(it))
-                                    || isBinBlocked
+                                    || state.isBinBlocked
                         onCardNumberValueChange(formatCreditCard(it))
                     },
                     isFocused = state.isCardTexFieldFocused,
@@ -546,7 +544,7 @@ fun NormalCardItem(
                         )
                     } else {
                         Text(
-                            text = stringResource(id = if (isBinBlocked) R.string.card_error_bank_blacklisted_by_merchant else R.string.card_error_invalid_card_number),
+                            text = stringResource(id = if (state.isBinBlocked) R.string.card_error_bank_blacklisted_by_merchant else R.string.card_error_invalid_card_number),
                             style = SnapTypography.STYLES.snapTextSmallRegular,
                             color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
                         )

@@ -15,7 +15,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.*
 import java.time.Clock
@@ -102,7 +101,7 @@ class CreditCardViewModelTest {
 
         val callback = callbackCaptor.firstValue
         callback.onSuccess(transactionResponse)
-        Assert.assertEquals(transactionResponse, creditCardViewModel.getTransactionResponseLiveData().getOrAwaitValue())
+        Assert.assertEquals(transactionResponse, creditCardViewModel.transactionResponseLiveData.getOrAwaitValue())
     }
 
 
