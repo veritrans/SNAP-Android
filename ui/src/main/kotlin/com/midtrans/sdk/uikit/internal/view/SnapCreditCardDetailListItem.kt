@@ -382,8 +382,6 @@ class NormalCardItemState(
     isExpiryTextFieldFocused: Boolean,
     isCvvTextFieldFocused: Boolean,
     isSaveCardChecked: Boolean,
-    isEligibleForInstallment: Boolean,
-    isRequiredInstallment: Boolean,
     principalIconId: Int?,
     customerEmail: TextFieldValue,
     customerPhone: TextFieldValue
@@ -399,8 +397,6 @@ class NormalCardItemState(
     var isCvvTextFieldFocused by mutableStateOf(isCvvTextFieldFocused)
     var principalIconId by mutableStateOf(principalIconId)
     var isSavedCardChecked by mutableStateOf(isSaveCardChecked)
-    var isEligibleForInstallment by mutableStateOf(isEligibleForInstallment)
-    var isRequiredInstallment by mutableStateOf(isRequiredInstallment)
     var customerEmail by mutableStateOf(customerEmail)
     var customerPhone by mutableStateOf(customerPhone)
 

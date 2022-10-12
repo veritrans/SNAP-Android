@@ -16,15 +16,14 @@ import com.midtrans.sdk.uikit.R
 
 @Composable
 fun SnapInstallmentTermSelectionMenu(
-    state: NormalCardItemState,
     creditCard: CreditCard?,
     cardIssuerBank: String?,
     binType: String?,
-    onInstallmentTermSelected: (String) -> Unit
+    onInstallmentTermSelected: (String) -> Unit,
+    onInstallmentAllowed: (Boolean) -> Unit
 ) {
     creditCard?.installment?.let { installment ->
         val isRequired = installment.isRequired
-        state.isRequiredInstallment = isRequired
 
         installment.terms?.let { terms ->
             var isOnUs = false
@@ -73,7 +72,6 @@ fun SnapInstallmentTermSelectionMenu(
                     }
 
                     InstallmentDropdownMenu(
-                        state = state,
                         title = stringResource(R.string.installment_title),
                         binType = binType,
                         isRequired = isRequired,
@@ -85,7 +83,8 @@ fun SnapInstallmentTermSelectionMenu(
                                 .filter { it.isDigit() }
                                 .takeIf { it.isDigitsOnly() }
                                 ?.let { onInstallmentTermSelected("${selectedBank}_$it") }
-                        }
+                        },
+                        onInstallmentAllowed = { onInstallmentAllowed(it) }
                     )
                 }
         }
@@ -95,14 +94,14 @@ fun SnapInstallmentTermSelectionMenu(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun InstallmentDropdownMenu(
-    state: NormalCardItemState?,
     title: String,
     isError: Boolean,
     isRequired: Boolean,
     errorMessage: List<String>,
     binType: String?,
     optionList: List<String>,
-    onOptionsSelected: (String) -> Unit
+    onOptionsSelected: (String) -> Unit,
+    onInstallmentAllowed: (Boolean) -> Unit
 ) {
     val options by remember { mutableStateOf(optionList) }
     var expanded by remember { mutableStateOf(false) }
@@ -163,12 +162,12 @@ fun InstallmentDropdownMenu(
 
         binType?.let {
             if (isError && isRequired) {
-                state!!.isEligibleForInstallment = false
+                onInstallmentAllowed.invoke(false)
                 errorMessage.forEach {
                     ErrorTextInstallment(errorMessage = it)
                 }
             } else {
-                state!!.isEligibleForInstallment = true
+                onInstallmentAllowed.invoke(true)
             }
         }
     }

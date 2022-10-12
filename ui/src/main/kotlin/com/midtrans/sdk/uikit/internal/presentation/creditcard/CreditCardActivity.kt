@@ -205,8 +205,6 @@ internal class CreditCardActivity : BaseActivity() {
                 isExpiryTextFieldFocused = false,
                 isCvvTextFieldFocused = false,
                 isSaveCardChecked = true,
-                isEligibleForInstallment = false,
-                isRequiredInstallment = false,
                 principalIconId = null,
                 customerEmail = TextFieldValue(),
                 customerPhone = TextFieldValue()
@@ -361,6 +359,7 @@ internal class CreditCardActivity : BaseActivity() {
             modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY)),
         ) {
             val remainingTime by remember { remainingTimeState }
+            var installmentStatus by remember { mutableStateOf(true) }
             SnapAppBar(
                 title = stringResource(id = R.string.payment_summary_cc_dc),
                 iconResId = R.drawable.ic_arrow_left
@@ -469,11 +468,13 @@ internal class CreditCardActivity : BaseActivity() {
                             modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
                         )
                         SnapInstallmentTermSelectionMenu(
-                            state = state,
                             creditCard = creditCard,
                             cardIssuerBank = cardIssuerBank,
                             binType = binType,
-                            onInstallmentTermSelected = { onInstallmentTermSelected(it) }
+                            onInstallmentTermSelected = { onInstallmentTermSelected(it) },
+                            onInstallmentAllowed = {
+                                installmentStatus = it
+                            }
                         )
                     }
                 },
@@ -481,12 +482,6 @@ internal class CreditCardActivity : BaseActivity() {
                     .weight(1f)
                     .padding(all = 16.dp)
             )
-
-            val installmentStatus = if (state.isRequiredInstallment) {
-                state.isEligibleForInstallment
-            } else {
-                true
-            }
 
             SnapButton(
                 text = stringResource(id = R.string.cc_dc_main_screen_cta),
