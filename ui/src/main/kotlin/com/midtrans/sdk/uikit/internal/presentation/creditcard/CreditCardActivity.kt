@@ -121,7 +121,7 @@ internal class CreditCardActivity : BaseActivity() {
                 add(NewCardFormData(newCardIdentifier = SnapCreditCardUtil.NEW_CARD_FORM_IDENTIFIER))
         }
             .ifEmpty { null }?.toMutableStateList()
-        //uncomment below to force non save card
+        //For testing purpose: uncomment below to force non save card
 //        null
     }
 
