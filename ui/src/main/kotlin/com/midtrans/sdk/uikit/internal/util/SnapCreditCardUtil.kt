@@ -2,8 +2,10 @@ package com.midtrans.sdk.uikit.internal.util
 
 import android.util.Patterns
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.toLowerCase
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.uikit.R
+import java.util.*
 
 object SnapCreditCardUtil {
 
@@ -102,7 +104,7 @@ object SnapCreditCardUtil {
         val blockedByWhiteListedByCreditDebit = (creditCard?.whitelistBins
             ?.filter { whiteList -> whiteList == "debit" || whiteList == "credit" }
             ?.map { whiteListCreditDebitAvailable = true; it }
-            ?.filter { whiteListedCreditDebit -> whiteListedCreditDebit == creditDebit }
+            ?.filter { whiteListedCreditDebit -> whiteListedCreditDebit == creditDebit.lowercase()}
             .isNullOrEmpty())
             .and(whiteListCreditDebitAvailable)
             .and(creditDebit.isNotBlank())
@@ -111,7 +113,7 @@ object SnapCreditCardUtil {
             ?.filter { whiteList -> whiteList.toIntOrNull() == null }
             ?.filter { whiteList -> whiteList != "debit" && whiteList != "credit" }
             ?.map { whiteListBankAvailable = true; it }
-            ?.filter { whiteListedCreditDebit -> whiteListedCreditDebit == bank }
+            ?.filter { whiteListedCreditDebit -> whiteListedCreditDebit == bank.lowercase() }
             .isNullOrEmpty())
             .and(whiteListBankAvailable)
             .and(bank.isNotBlank())
@@ -119,7 +121,7 @@ object SnapCreditCardUtil {
         val blockedByBlackListedByCreditDebit = (!creditCard?.blacklistBins
             ?.filter { blackList -> blackList == "debit" || blackList == "credit" }
             ?.map{blackListCreditDebitAvailable = true; it}
-            ?.filter { blackListedCreditDebit -> blackListedCreditDebit == creditDebit }
+            ?.filter { blackListedCreditDebit -> blackListedCreditDebit == creditDebit.lowercase() }
             .isNullOrEmpty())
             .and(blackListCreditDebitAvailable)
             .and(creditDebit.isNotBlank())
@@ -128,7 +130,7 @@ object SnapCreditCardUtil {
             ?.filter { blackList -> blackList.toIntOrNull() == null }
             ?.filter { blackList -> blackList != "debit" && blackList != "credit" }
             ?.map { blackListBankAvailable = true; it }
-            ?.filter { blackListedCreditDebit -> blackListedCreditDebit == bank }
+            ?.filter { blackListedCreditDebit -> blackListedCreditDebit == bank.lowercase() }
             .isNullOrEmpty())
             .and(blackListBankAvailable)
             .and(bank.isNotBlank())
