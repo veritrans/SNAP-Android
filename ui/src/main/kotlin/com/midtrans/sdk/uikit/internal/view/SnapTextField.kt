@@ -44,9 +44,9 @@ fun SnapTextField(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val backgroundColor: Color = if (enabled) {
-        Color.White
+        SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY)
     } else {
-        Color(0xFFDCDFE6)
+        SnapColors.getARGBColor(SnapColors.INTERACTIVE_DISABLED)
     }
 
     BasicTextField(
