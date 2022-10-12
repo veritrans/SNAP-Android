@@ -19,6 +19,7 @@ fun SnapInstallmentTermSelectionMenu(
     creditCard: CreditCard?,
     cardIssuerBank: String?,
     binType: String?,
+    cardNumber: TextFieldValue,
     onInstallmentTermSelected: (String) -> Unit,
     onInstallmentAllowed: (Boolean) -> Unit
 ) {
@@ -77,6 +78,7 @@ fun SnapInstallmentTermSelectionMenu(
                         isRequired = isRequired,
                         isError = isError,
                         errorMessage = errorMessage,
+                        cardNumber = cardNumber,
                         optionList = options.toList(),
                         onOptionsSelected = { selectedTerm ->
                             selectedTerm
@@ -100,6 +102,7 @@ fun InstallmentDropdownMenu(
     errorMessage: List<String>,
     binType: String?,
     optionList: List<String>,
+    cardNumber: TextFieldValue,
     onOptionsSelected: (String) -> Unit,
     onInstallmentAllowed: (Boolean) -> Unit
 ) {
@@ -161,13 +164,15 @@ fun InstallmentDropdownMenu(
         }
 
         binType?.let {
-            if (isError && isRequired) {
-                onInstallmentAllowed.invoke(false)
-                errorMessage.forEach {
-                    ErrorTextInstallment(errorMessage = it)
+            if(cardNumber.text.length >= 8){
+                if (isError && isRequired) {
+                    onInstallmentAllowed.invoke(false)
+                    errorMessage.forEach {
+                        ErrorTextInstallment(errorMessage = it)
+                    }
+                } else {
+                    onInstallmentAllowed.invoke(true)
                 }
-            } else {
-                onInstallmentAllowed.invoke(true)
             }
         }
     }

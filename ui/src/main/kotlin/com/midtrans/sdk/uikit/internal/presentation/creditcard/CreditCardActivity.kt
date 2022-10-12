@@ -471,6 +471,7 @@ internal class CreditCardActivity : BaseActivity() {
                             creditCard = creditCard,
                             cardIssuerBank = cardIssuerBank,
                             binType = binType,
+                            cardNumber = state.cardNumber,
                             onInstallmentTermSelected = { onInstallmentTermSelected(it) },
                             onInstallmentAllowed = {
                                 installmentStatus = it
