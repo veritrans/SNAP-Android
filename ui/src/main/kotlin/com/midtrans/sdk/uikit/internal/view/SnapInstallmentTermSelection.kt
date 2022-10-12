@@ -118,6 +118,7 @@ fun InstallmentDropdownMenu(
             style = SnapTypography.STYLES.snapTextMediumMedium
         )
         ExposedDropdownMenuBox(
+            modifier = Modifier.padding(bottom = 10.dp),
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
         ) {
@@ -142,7 +143,6 @@ fun InstallmentDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                //TODO add padding bottom 10dp between dropdown and first error message
                 options.forEach { selectionOption ->
                     DropdownMenuItem(
                         onClick = {
@@ -164,10 +164,8 @@ fun InstallmentDropdownMenu(
         binType?.let {
             if (isError && isRequired) {
                 state!!.isEligibleForInstallment = false
-                Column(modifier = Modifier.fillMaxWidth(1f).padding(top = 10.dp)) {
-                    errorMessage.forEach {
-                        ErrorTextInstallment(errorMessage = it)
-                    }
+                errorMessage.forEach {
+                    ErrorTextInstallment(errorMessage = it)
                 }
             } else {
                 state!!.isEligibleForInstallment = true
