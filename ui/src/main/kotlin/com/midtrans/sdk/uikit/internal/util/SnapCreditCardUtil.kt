@@ -3,6 +3,7 @@ package com.midtrans.sdk.uikit.internal.util
 import android.util.Patterns
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.toLowerCase
+import androidx.core.text.isDigitsOnly
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.uikit.R
 import java.util.*
@@ -102,48 +103,53 @@ object SnapCreditCardUtil {
 
 
         val blockedByWhiteListedByCreditDebit = (creditCard?.whitelistBins
+            ?.map { it.lowercase() }
             ?.filter { whiteList -> whiteList == "debit" || whiteList == "credit" }
-            ?.map { whiteListCreditDebitAvailable = true; it.lowercase() }
+            ?.map { whiteListCreditDebitAvailable = true; it }
             ?.filter { whiteListedCreditDebit -> whiteListedCreditDebit == creditDebit.lowercase()}
             .isNullOrEmpty())
             .and(whiteListCreditDebitAvailable)
             .and(creditDebit.isNotBlank())
 
         val blockedByWhiteListedByBank = (creditCard?.whitelistBins
+            ?.map { it.lowercase() }
             ?.filter { whiteList -> whiteList.toIntOrNull() == null }
             ?.filter { whiteList -> whiteList != "debit" && whiteList != "credit" }
-            ?.map { whiteListBankAvailable = true; it.lowercase() }
+            ?.map { whiteListBankAvailable = true; it }
             ?.filter { whiteListedCreditDebit -> whiteListedCreditDebit == bank.lowercase() }
+            ?.toList()
             .isNullOrEmpty())
             .and(whiteListBankAvailable)
             .and(bank.isNotBlank())
 
         val blockedByBlackListedByCreditDebit = (!creditCard?.blacklistBins
+            ?.map { it.lowercase() }
             ?.filter { blackList -> blackList == "debit" || blackList == "credit" }
-            ?.map{blackListCreditDebitAvailable = true; it.lowercase()}
+            ?.map{blackListCreditDebitAvailable = true; it}
             ?.filter { blackListedCreditDebit -> blackListedCreditDebit == creditDebit.lowercase() }
             .isNullOrEmpty())
             .and(blackListCreditDebitAvailable)
             .and(creditDebit.isNotBlank())
 
         val blockedByBlackListedByBank = (!creditCard?.blacklistBins
+            ?.map { it.lowercase() }
             ?.filter { blackList -> blackList.toIntOrNull() == null }
             ?.filter { blackList -> blackList != "debit" && blackList != "credit" }
-            ?.map { blackListBankAvailable = true; it.lowercase() }
+            ?.map { blackListBankAvailable = true; it }
             ?.filter { blackListedCreditDebit -> blackListedCreditDebit == bank.lowercase() }
             .isNullOrEmpty())
             .and(blackListBankAvailable)
             .and(bank.isNotBlank())
 
         val blockedByWhiteListedByBinNumber = (creditCard?.whitelistBins
-            ?.filter { whiteList -> whiteList.toIntOrNull() != null }
+            ?.filter { whiteList -> whiteList.isDigitsOnly() }
             ?.map { whiteListBinAvailable = true; it }
             ?.filter { whiteListedBin -> cardNumber.startsWith(whiteListedBin) }
             .isNullOrEmpty())
             .and(whiteListBinAvailable)
 
         val blackListedByBinNumber = (!creditCard?.blacklistBins
-            ?.filter { whiteList -> whiteList.toIntOrNull() != null }
+            ?.filter { whiteList -> whiteList.isDigitsOnly() }
             ?.map { blackListBinAvailable = true; it }
             ?.filter { blacklistedBin -> cardNumber.startsWith(blacklistedBin) }
             .isNullOrEmpty())
