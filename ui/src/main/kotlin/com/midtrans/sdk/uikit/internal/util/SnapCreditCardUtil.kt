@@ -103,7 +103,7 @@ object SnapCreditCardUtil {
 
         val blockedByWhiteListedByCreditDebit = (creditCard?.whitelistBins
             ?.filter { whiteList -> whiteList == "debit" || whiteList == "credit" }
-            ?.map { whiteListCreditDebitAvailable = true; it }
+            ?.map { whiteListCreditDebitAvailable = true; it.lowercase() }
             ?.filter { whiteListedCreditDebit -> whiteListedCreditDebit == creditDebit.lowercase()}
             .isNullOrEmpty())
             .and(whiteListCreditDebitAvailable)
@@ -112,7 +112,7 @@ object SnapCreditCardUtil {
         val blockedByWhiteListedByBank = (creditCard?.whitelistBins
             ?.filter { whiteList -> whiteList.toIntOrNull() == null }
             ?.filter { whiteList -> whiteList != "debit" && whiteList != "credit" }
-            ?.map { whiteListBankAvailable = true; it }
+            ?.map { whiteListBankAvailable = true; it.lowercase() }
             ?.filter { whiteListedCreditDebit -> whiteListedCreditDebit == bank.lowercase() }
             .isNullOrEmpty())
             .and(whiteListBankAvailable)
@@ -120,7 +120,7 @@ object SnapCreditCardUtil {
 
         val blockedByBlackListedByCreditDebit = (!creditCard?.blacklistBins
             ?.filter { blackList -> blackList == "debit" || blackList == "credit" }
-            ?.map{blackListCreditDebitAvailable = true; it}
+            ?.map{blackListCreditDebitAvailable = true; it.lowercase()}
             ?.filter { blackListedCreditDebit -> blackListedCreditDebit == creditDebit.lowercase() }
             .isNullOrEmpty())
             .and(blackListCreditDebitAvailable)
@@ -129,7 +129,7 @@ object SnapCreditCardUtil {
         val blockedByBlackListedByBank = (!creditCard?.blacklistBins
             ?.filter { blackList -> blackList.toIntOrNull() == null }
             ?.filter { blackList -> blackList != "debit" && blackList != "credit" }
-            ?.map { blackListBankAvailable = true; it }
+            ?.map { blackListBankAvailable = true; it.lowercase() }
             ?.filter { blackListedCreditDebit -> blackListedCreditDebit == bank.lowercase() }
             .isNullOrEmpty())
             .and(blackListBankAvailable)
