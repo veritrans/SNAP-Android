@@ -151,8 +151,8 @@ class SavedCardActivity: BaseActivity() {
     ){
         var previousEightDigitNumber = ""
         val bankCodeId by viewModel.bankIconId.observeAsState(null)
-        var isCvvSavedCardInvalid by remember { mutableStateOf(false)}
-        var savedTokenList = mutableListOf<FormData>()
+        val isCvvSavedCardInvalid by remember { mutableStateOf(false)}
+        val savedTokenList = mutableListOf<FormData>()
         var isExpanding by remember { mutableStateOf(false) }
         val state = remember {
             NormalCardItemState(
@@ -167,8 +167,6 @@ class SavedCardActivity: BaseActivity() {
                 isCvvTextFieldFocused = false,
                 principalIconId = null,
                 isSaveCardChecked = true,
-                isEligibleForInstallment = false,
-                isRequiredInstallment = false,
                 customerPhone = TextFieldValue(),
                 customerEmail = TextFieldValue()
             )
