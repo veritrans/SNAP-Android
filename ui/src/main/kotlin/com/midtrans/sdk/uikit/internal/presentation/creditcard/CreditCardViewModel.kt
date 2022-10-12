@@ -183,7 +183,7 @@ internal class CreditCardViewModel @Inject constructor(
         formData: SavedCreditCardFormData,
         snapToken: String,
         transactionDetails: TransactionDetails?,
-        cardCVV: TextFieldValue,
+        cardCvv: TextFieldValue,
         customerEmail: String,
         promoId: Long?
         ){
@@ -209,7 +209,7 @@ internal class CreditCardViewModel @Inject constructor(
         } else {
 
             var tokenRequest = TwoClickCardTokenRequestBuilder()
-                .withCardCvv(cardCVV.text)
+                .withCardCvv(cardCvv.text)
                 .withTokenId(formData.tokenId)
 
             transactionDetails?.currency?.let {

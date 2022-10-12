@@ -289,7 +289,7 @@ internal class CreditCardActivity : BaseActivity() {
                         viewModel?.chargeUsingCreditCard(
                             formData = selectedFormData as SavedCreditCardFormData,
                             snapToken = snapToken,
-                            cardCVV = state.cvv,
+                            cardCvv = state.cvv,
                             customerEmail = state.customerEmail.text,
                             transactionDetails = transactionDetails,
                             promoId = state.promoId
