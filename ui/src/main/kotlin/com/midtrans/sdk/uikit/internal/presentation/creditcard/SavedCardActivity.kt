@@ -196,7 +196,7 @@ class SavedCardActivity: BaseActivity() {
         savedTokenList.add(NewCardFormData(
             newCardIdentifier = SnapCreditCardUtil.NEW_CARD_FORM_IDENTIFIER,
         ))
-        var savedTokenListState = savedTokenList.toMutableStateList()
+        val savedTokenListState = savedTokenList.toMutableStateList()
         var selectedFormData : FormData? = savedTokenList.first()
         var isSelectedSavedCardCvvInvalid by remember { mutableStateOf(false) }
         var selectedCvvTextFieldValue by remember{ mutableStateOf(TextFieldValue())}
@@ -224,7 +224,7 @@ class SavedCardActivity: BaseActivity() {
                 ) {
                     onBackPressed()
                 }
-                var scrollState = rememberScrollState()
+                val scrollState = rememberScrollState()
                 SnapOverlayExpandingBox(
                     isExpanded = isExpanding,
                     mainContent = {
@@ -267,9 +267,9 @@ class SavedCardActivity: BaseActivity() {
                                 },
                                 onCardNumberOtherCardValueChange = {
                                     state.cardNumber = it
-                                    var cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
+                                    val cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
                                     if(cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER){
-                                        var eightDigitNumber = cardNumberWithoutSpace.substring(0, SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER)
+                                        val eightDigitNumber = cardNumberWithoutSpace.substring(0, SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER)
                                         if (eightDigitNumber != previousEightDigitNumber){
                                             previousEightDigitNumber = eightDigitNumber
                                             viewModel.getBankIconImage(
@@ -287,8 +287,7 @@ class SavedCardActivity: BaseActivity() {
                                 onCvvValueChange = {
                                     state.cvv = it
                                 },
-                                onSavedCardCheckedChange = { state.isSavedCardChecked = it },
-                                binType = null
+                                onSavedCardCheckedChange = { state.isSavedCardChecked = it }
                             )
                             SnapButton(
                                 text = stringResource(id = R.string.cc_dc_main_screen_cta),
