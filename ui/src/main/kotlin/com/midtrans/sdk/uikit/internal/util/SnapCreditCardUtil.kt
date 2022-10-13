@@ -119,7 +119,7 @@ internal object SnapCreditCardUtil {
             ?.filter { whiteList -> whiteList.toIntOrNull() == null }
             ?.filter { whiteList -> whiteList != "debit" && whiteList != "credit" }
             ?.map { whiteListBankAvailable = true; it }
-            ?.filter { whiteListedCreditDebit -> whiteListedCreditDebit == bank.lowercase() }
+            ?.filter { whiteListedBank -> whiteListedBank == bank.lowercase() }
             .isNullOrEmpty())
             .and(whiteListBankAvailable)
             .and(bank.isNotBlank())
