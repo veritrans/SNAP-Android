@@ -229,7 +229,8 @@ internal class CreditCardActivity : BaseActivity() {
                 principalIconId = null,
                 customerEmail = TextFieldValue(),
                 customerPhone = TextFieldValue(),
-                promoId = 0L
+                promoId = 0L,
+                isInstallmentAllowed = true
             )
         }
         val transactionResponse = viewModel?.transactionResponseLiveData?.observeAsState()
@@ -401,7 +402,7 @@ internal class CreditCardActivity : BaseActivity() {
             modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY)),
         ) {
             val remainingTime by remember { remainingTimeState }
-            var isInstallmentAllowed by remember { mutableStateOf(true) }
+
             SnapAppBar(
                 title = stringResource(id = R.string.payment_summary_cc_dc),
                 iconResId = R.drawable.ic_arrow_left
@@ -467,7 +468,7 @@ internal class CreditCardActivity : BaseActivity() {
                             binType = binType,
                             cardNumber = state.cardNumber,
                             onInstallmentTermSelected = { onInstallmentTermSelected(it) },
-                            onInstallmentAllowed = { isInstallmentAllowed = it }
+                            onInstallmentAllowed = { state.isInstallmentAllowed = it }
                         )
 
                         promoState.value?.let {
@@ -486,21 +487,38 @@ internal class CreditCardActivity : BaseActivity() {
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
-                enabled = (!(state.isCardNumberInvalid ||
-                    state.isExpiryInvalid ||
-                    state.isCvvInvalid ||
-                    state.cardNumber.text.isEmpty() ||
-                    state.expiry.text.isEmpty() ||
-                    state.cvv.text.isEmpty())
-                    .or(
-                        !SnapCreditCardUtil.isValidEmail(state.customerEmail.text)
-                            .or(state.customerEmail.text.isBlank())
-                    ))
-                    .or((state.cardItemType == CardItemState.CardItemType.SAVED_CARD).and(!state.isCvvInvalid))
-                    .or(!isInstallmentAllowed),
+                enabled = isValidNormalCard(state)
+                    .or(isValidSavedCard(state)),
                 onClick = { onClick() }
             )
         }
+    }
+
+    private fun isValidNormalCard(state: CardItemState): Boolean {
+        return isValidCardData(state)
+            .or(isValidEmail(state.customerEmail))
+            .and(state.isInstallmentAllowed)
+    }
+
+    private fun isValidCardData(state: CardItemState): Boolean {
+        return !(state.isCardNumberInvalid ||
+            state.isExpiryInvalid ||
+            state.isCvvInvalid ||
+            state.cardNumber.text.isEmpty() ||
+            state.expiry.text.isEmpty() ||
+            state.cvv.text.isEmpty()
+            )
+    }
+
+    private fun isValidEmail(customerEmail: TextFieldValue): Boolean {
+        return !SnapCreditCardUtil.isValidEmail(customerEmail.text)
+            .or(customerEmail.text.isBlank())
+    }
+
+    private fun isValidSavedCard(state: CardItemState): Boolean {
+        return (state.cardItemType == CardItemState.CardItemType.SAVED_CARD)
+            .and(!state.isCvvInvalid)
+            .and(state.isInstallmentAllowed)
     }
 
     @Composable

@@ -255,8 +255,6 @@ fun SnapSavedCardRadioGroup(
     ) {
         var newCardNumberTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
         var newCvvTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
-        var cardItemType by remember { mutableStateOf(CardItemState.CardItemType.SAVED_CARD)}
-        cardItemState.cardItemType = cardItemType
 
         listStates.forEach { item ->
             var cvvSavedCardTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
@@ -275,7 +273,7 @@ fun SnapSavedCardRadioGroup(
                                     cardItemState.cvv = cvvSavedCardTextFieldValue
                                     onCardNumberOtherCardValueChange(TextFieldValue(item.maskedCardNumber))
                                     onSavedCardRadioSelected(item)
-                                    cardItemType = CardItemState.CardItemType.SAVED_CARD
+                                    cardItemState.cardItemType = CardItemState.CardItemType.SAVED_CARD
                                 }
                                 is NewCardFormData -> {
                                     cvvSavedCardTextFieldValue = TextFieldValue("")
@@ -283,7 +281,7 @@ fun SnapSavedCardRadioGroup(
                                     cardItemState.cardNumber = newCardNumberTextFieldValue
                                     onCardNumberOtherCardValueChange(newCardNumberTextFieldValue)
                                     onSavedCardRadioSelected(null)
-                                    cardItemType = CardItemState.CardItemType.NORMAL_CARD
+                                    cardItemState.cardItemType = CardItemState.CardItemType.NORMAL_CARD
                                 }
                             }
                             onCvvValueChange(cardItemState.cvv)
@@ -401,6 +399,7 @@ class CardItemState(
     customerEmail: TextFieldValue,
     customerPhone: TextFieldValue,
     promoId: Long,
+    isInstallmentAllowed: Boolean,
     cardItemType: CardItemType = CardItemType.NORMAL_CARD
 ) {
     var cardNumber by mutableStateOf(cardNumber)
@@ -418,6 +417,7 @@ class CardItemState(
     var customerPhone by mutableStateOf(customerPhone)
     var promoId by mutableStateOf(promoId)
     var cardItemType by mutableStateOf(cardItemType)
+    var isInstallmentAllowed by mutableStateOf(isInstallmentAllowed)
 
     val iconIdList by mutableStateOf(
         listOf(
