@@ -47,7 +47,7 @@ fun SnapInstallmentTermSelectionMenu(
                 }
             }
 
-            val isCreditCard = binType == "CREDIT"
+            val isCreditCard = binType.contains("credit", true)
             var isError = false
             val errorMessage = mutableListOf<String>()
 
@@ -62,7 +62,6 @@ fun SnapInstallmentTermSelectionMenu(
             }
 
             termList
-                ?.takeIf { it.isNotEmpty() }
                 ?.map { term -> stringResource(id = R.string.installment_term, term) }
                 ?.toMutableList()
                 ?.let { options ->
@@ -80,7 +79,8 @@ fun SnapInstallmentTermSelectionMenu(
                         binType = binType,
                         isRequired = isRequired,
                         isError = isError,
-                        errorMessage = errorMessage,
+                        isErrorVisible = isError && isRequired && cardNumber.text.length >= 8,
+                        errorMessages = errorMessage,
                         cardNumber = cardNumber,
                         optionList = options.toList(),
                         onOptionsSelected = { selectedTerm ->
@@ -101,11 +101,9 @@ fun SnapInstallmentTermSelectionMenu(
 fun InstallmentDropdownMenu(
     title: String,
     isError: Boolean,
-    isRequired: Boolean,
-    errorMessage: List<String>,
-    binType: String?,
+    isErrorVisible: Boolean,
+    errorMessages: List<String>,
     optionList: List<String>,
-    cardNumber: TextFieldValue,
     onOptionsSelected: (String) -> Unit,
     onInstallmentAllowed: (Boolean) -> Unit
 ) {
@@ -166,17 +164,21 @@ fun InstallmentDropdownMenu(
             }
         }
 
-        binType?.let {
-            if(cardNumber.text.length >= 8){
-                if (isError && isRequired) {
-                    onInstallmentAllowed.invoke(false)
-                    errorMessage.forEach {
-                        ErrorTextInstallment(errorMessage = it)
-                    }
-                } else {
-                    onInstallmentAllowed.invoke(true)
-                }
-            }
+        if (isErrorVisible) {
+            onInstallmentAllowed.invoke(false)
+            errorMessages.forEach { ErrorTextInstallment(errorMessage = it) }
+        } else {
+            onInstallmentAllowed.invoke(true)
         }
     }
+}
+
+
+@Composable
+private fun ErrorTextInstallment(errorMessage: String) {
+    Text(
+        text = errorMessage,
+        style = SnapTypography.STYLES.snapTextSmallRegular,
+        color = SnapColors.getARGBColor(SnapColors.SUPPORT_DANGER_DEFAULT)
+    )
 }

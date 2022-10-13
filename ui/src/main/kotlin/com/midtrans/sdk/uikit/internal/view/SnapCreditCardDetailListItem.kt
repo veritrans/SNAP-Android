@@ -709,14 +709,3 @@ fun LabelledCheckBox(
         )
     }
 }
-
-@Composable
-fun ErrorTextInstallment(
-    errorMessage: String
-) {
-    Text(
-        text = errorMessage,
-        style = SnapTypography.STYLES.snapTextSmallRegular,
-        color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
-    )
-}
