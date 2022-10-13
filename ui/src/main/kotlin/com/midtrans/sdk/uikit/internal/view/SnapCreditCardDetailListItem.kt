@@ -160,12 +160,7 @@ fun InputNewCardItem(
                 NormalCardItem(
                     state = state,
                     bankIcon = bankIconState,
-                    creditCard = creditCard,
-                    onCardTextFieldFocusedChange = {
-                        state.isCardTexFieldFocused = it
-                    },
-                    onExpiryTextFieldFocusedChange = { state.isExpiryTextFieldFocused = it },
-                    onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it }
+                    creditCard = creditCard
                 )
             }
         }
@@ -422,9 +417,9 @@ fun NormalCardItem(
     state: CardItemState,
     bankIcon: Int?,
     creditCard: CreditCard?,
-    onCardTextFieldFocusedChange: (Boolean) -> Unit,
-    onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
-    onCvvTextFieldFocusedChange: (Boolean) -> Unit,
+//    onCardTextFieldFocusedChange: (Boolean) -> Unit,
+//    onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
+//    onCvvTextFieldFocusedChange: (Boolean) -> Unit,
 ) {
     var isBinBlocked by remember { mutableStateOf(false) }
     Column(
@@ -481,7 +476,7 @@ fun NormalCardItem(
                     },
                     isFocused = state.isCardTexFieldFocused,
                     onFocusChange = {
-                        onCardTextFieldFocusedChange(it)
+                        state.isCardTexFieldFocused = it
                     },
                     trailingIcon = bankIcon?.let {
                         {
@@ -540,7 +535,7 @@ fun NormalCardItem(
                         isError = state.isExpiryInvalid,
                         isFocused = state.isExpiryTextFieldFocused,
                         onFocusChange = {
-                            onExpiryTextFieldFocusedChange(it)
+                            state.isExpiryTextFieldFocused = it
                         },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
@@ -579,7 +574,7 @@ fun NormalCardItem(
                         isError = state.isCvvInvalid,
                         isFocused = state.isCvvTextFieldFocused,
                         onFocusChange = {
-                            onCvvTextFieldFocusedChange(it)
+                            state.isCvvTextFieldFocused = it
                         },
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)

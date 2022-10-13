@@ -466,12 +466,7 @@ internal class CreditCardActivity : BaseActivity() {
         NormalCardItem(
             state = state,
             bankIcon = bankCodeState,
-            creditCard = creditCard,
-            onCardTextFieldFocusedChange = { state.isCardTexFieldFocused = it },
-            onExpiryTextFieldFocusedChange = {
-                state.isExpiryTextFieldFocused = it
-            },
-            onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it }
+            creditCard = creditCard
         )
     }
     
