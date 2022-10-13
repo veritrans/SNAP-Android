@@ -103,7 +103,7 @@ internal class CreditCardViewModel @Inject constructor(
                                 cardNumber = binNumber,
                                 creditCard = creditCard,
                                 bank = data?.bank.orEmpty(),
-                                creditDebit = data?.binType.orEmpty()
+                                binType = data?.binType.orEmpty()
                             )
                     }
                 }
