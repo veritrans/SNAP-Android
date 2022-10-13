@@ -48,7 +48,7 @@ fun SnapInstallmentTermSelectionMenu(
             }
 
             val isCreditCard = binType == "CREDIT"
-            val isError: Boolean
+            var isError = false
             val errorMessage = mutableListOf<String>()
 
             if (!selectedBank.contains("offline")) {
@@ -59,8 +59,6 @@ fun SnapInstallmentTermSelectionMenu(
                 if (!isOnUs) {
                     errorMessage.add(stringResource(id = R.string.installment_cc_not_match_installment))
                 }
-            } else {
-                isError = false
             }
 
             termList
