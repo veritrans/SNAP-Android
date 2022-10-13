@@ -91,11 +91,11 @@ class SavedCardActivity: BaseActivity() {
         DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build().inject(this)
         initTransactionResultScreenObserver()
         setContent {
-            CreditCardPage(
+           /* CreditCardPage(
                 totalAmount = totalAmount,
                 orderId = transactionDetails?.orderId.toString(),
                 customerDetail = customerDetail
-            )
+            )*/
         }
     }
 
@@ -146,7 +146,7 @@ class SavedCardActivity: BaseActivity() {
         return "**** **** **** $lastFourDigit"
     }
 
-    @Composable
+  /*  @Composable
     private fun CreditCardPage(
         totalAmount: String,
         orderId: String,
@@ -340,7 +340,7 @@ class SavedCardActivity: BaseActivity() {
                 )
             }
         }
-    }
+    }*/
     private fun checkIsPayButtonEnabled(
         selectedFormData: FormData?,
         isSelectedSavedCardCvvInvalid: Boolean,
@@ -375,7 +375,7 @@ class SavedCardActivity: BaseActivity() {
     @Preview
     @Composable
     private fun Preview() {
-        CreditCardPage(
+       /* CreditCardPage(
             totalAmount = "10000",
             orderId = "Order ID #34345445554",
             customerDetail = CustomerInfo(
@@ -383,6 +383,6 @@ class SavedCardActivity: BaseActivity() {
                 "087788778212",
                 listOf("Jl. ABC", "Rumah DEF")
             )
-        )
+        )*/
     }
 }

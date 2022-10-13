@@ -37,9 +37,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
 
-object CreditCardDetailListItem {
-}
-
 @Composable
 fun SnapCCDetailListItem(
     @DrawableRes startIconId: Int?,
@@ -48,16 +45,8 @@ fun SnapCCDetailListItem(
     itemTitle: String,
     shouldReveal: Boolean,
     inputTitle: String,
-    isInputError: Boolean,
-    errorTitle: String,
-    onValueChange: (String) -> Unit,
     onEndIconClicked: () -> Unit,
-    onCardNumberValueChange: (TextFieldValue) -> Unit,
-    onExpiryDateValueChange: (TextFieldValue) -> Unit,
     onCvvValueChange: (TextFieldValue) -> Unit,
-    onCardTextFieldFocusedChange: (Boolean) -> Unit,
-    onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
-    onCvvTextFieldFocusedChange: (Boolean) -> Unit,
     onIsCvvInvalidValueChange: (Boolean) -> Unit
 ) {
     Column {
@@ -151,14 +140,7 @@ fun InputNewCardItem(
     shouldReveal: Boolean,
     state: CardItemState,
     bankIconState: Int?,
-    creditCard: CreditCard?,
-    onCardNumberValueChange: (TextFieldValue) -> Unit,
-    onExpiryDateValueChange: (TextFieldValue) -> Unit,
-    onCvvValueChange: (TextFieldValue) -> Unit,
-    onCardTextFieldFocusedChange: (Boolean) -> Unit,
-    onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
-    onCvvTextFieldFocusedChange: (Boolean) -> Unit,
-    onSavedCardCheckedChange: (Boolean) -> Unit
+    creditCard: CreditCard?
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 16.dp)
@@ -179,23 +161,11 @@ fun InputNewCardItem(
                     state = state,
                     bankIcon = bankIconState,
                     creditCard = creditCard,
-                    onCardNumberValueChange = {
-                        onCardNumberValueChange(it)
-                    },
-                    onExpiryDateValueChange = {
-                        onExpiryDateValueChange(it)
-                    },
-                    onCvvValueChange = {
-                        onCvvValueChange(it)
-                    },
                     onCardTextFieldFocusedChange = {
                         state.isCardTexFieldFocused = it
                     },
                     onExpiryTextFieldFocusedChange = { state.isExpiryTextFieldFocused = it },
-                    onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
-                    onSavedCardCheckedChange = {
-                        onSavedCardCheckedChange(it)
-                    }
+                    onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it }
                 )
             }
         }
@@ -244,13 +214,7 @@ fun SnapSavedCardRadioGroup(
     cardItemState: CardItemState,
     onItemRemoveClicked: (item: SavedCreditCardFormData) -> Unit,
     creditCard: CreditCard?,
-    onCardNumberOtherCardValueChange: (TextFieldValue) -> Unit,
-    onExpiryOtherCardValueChange: (TextFieldValue) -> Unit,
-    onCvvValueChange: (TextFieldValue) -> Unit,
     onSavedCardRadioSelected: (item: FormData?) -> Unit,
-    onIsCvvSavedCardInvalidValueChange: (Boolean) -> Unit,
-    onSavedCardCheckedChange: (Boolean) -> Unit,
-    onCvvSavedCardValueChange: ((TextFieldValue) -> Unit)? = null //Todo: delete later
 ) {
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(listStates[0].identifier) }
 
@@ -277,7 +241,7 @@ fun SnapSavedCardRadioGroup(
                                     cvvSavedCardTextFieldValue =
                                         formatCvvTextFieldBasedOnTokenType(item.tokenType)
                                     cardItemState.cvv = cvvSavedCardTextFieldValue
-                                    onCardNumberOtherCardValueChange(TextFieldValue(item.maskedCardNumber))
+                                    cardItemState.cardNumber = TextFieldValue(item.maskedCardNumber)
                                     onSavedCardRadioSelected(item)
                                     cardItemType = CardItemState.CardItemType.SAVED_CARD
                                 }
@@ -285,12 +249,10 @@ fun SnapSavedCardRadioGroup(
                                     cvvSavedCardTextFieldValue = TextFieldValue("")
                                     cardItemState.cvv = newCvvTextFieldValue
                                     cardItemState.cardNumber = newCardNumberTextFieldValue
-                                    onCardNumberOtherCardValueChange(newCardNumberTextFieldValue)
                                     onSavedCardRadioSelected(null)
                                     cardItemType = CardItemState.CardItemType.NORMAL_CARD
                                 }
                             }
-                            onCvvValueChange(cardItemState.cvv)
                         },
                         role = Role.RadioButton
                     ),
@@ -313,21 +275,13 @@ fun SnapSavedCardRadioGroup(
                                 shouldReveal = item.savedCardIdentifier == selectedOption,
                                 inputTitle = item.inputTitle,
                                 cvvTextField = cvvSavedCardTextFieldValue,
-                                isInputError = errorText.isNotBlank(),
-                                errorTitle = errorText,
-                                onValueChange = {},
                                 onEndIconClicked = { onItemRemoveClicked(item) },
-                                onCardNumberValueChange = {},
-                                onExpiryDateValueChange = {},
                                 onCvvValueChange = {
                                     cvvSavedCardTextFieldValue = it
-                                    onCvvValueChange(cvvSavedCardTextFieldValue)
+                                    cardItemState.cvv = cvvSavedCardTextFieldValue
                                 },
-                                onCardTextFieldFocusedChange = {},
-                                onExpiryTextFieldFocusedChange = {},
-                                onCvvTextFieldFocusedChange = {},
                                 onIsCvvInvalidValueChange = {
-                                    onIsCvvSavedCardInvalidValueChange(it)
+                                    cardItemState.isCvvInvalid = it
                                 }
                             )
                         }
@@ -337,22 +291,7 @@ fun SnapSavedCardRadioGroup(
                                 shouldReveal = item.identifier == selectedOption,
                                 state = cardItemState,
                                 creditCard = creditCard,
-                                bankIconState = bankIconState,
-                                onCardNumberValueChange = {
-                                    newCardNumberTextFieldValue = it
-                                    onCardNumberOtherCardValueChange(it)
-                                },
-                                onExpiryDateValueChange = { onExpiryOtherCardValueChange(it) },
-                                onCvvValueChange = {
-                                    newCvvTextFieldValue = it
-                                    onCvvValueChange(it)
-                                },
-                                onCardTextFieldFocusedChange = {},
-                                onExpiryTextFieldFocusedChange = {},
-                                onCvvTextFieldFocusedChange = {},
-                                onSavedCardCheckedChange = {
-                                    onSavedCardCheckedChange(it)
-                                }
+                                bankIconState = bankIconState
                             )
                         }
                     }
@@ -387,7 +326,7 @@ class NewCardFormData(
 
 
 open class FormData(
-    public val identifier: String
+    val identifier: String
 )
 
 class CardItemState(
@@ -483,13 +422,9 @@ fun NormalCardItem(
     state: CardItemState,
     bankIcon: Int?,
     creditCard: CreditCard?,
-    onCardNumberValueChange: (TextFieldValue) -> Unit,
-    onExpiryDateValueChange: (TextFieldValue) -> Unit,
-    onCvvValueChange: (TextFieldValue) -> Unit,
     onCardTextFieldFocusedChange: (Boolean) -> Unit,
     onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
     onCvvTextFieldFocusedChange: (Boolean) -> Unit,
-    onSavedCardCheckedChange: (Boolean) -> Unit
 ) {
     var isBinBlocked by remember { mutableStateOf(false) }
     Column(
@@ -542,7 +477,7 @@ fun NormalCardItem(
                             cardLength != SnapCreditCardUtil.FORMATTED_MAX_CARD_NUMBER_LENGTH
                                     || !SnapCreditCardUtil.isValidCardNumber(SnapCreditCardUtil.getCardNumberFromTextField(it))
                                     || isBinBlocked
-                        onCardNumberValueChange(formatCreditCard(it))
+                        state.cardNumber = formatCreditCard(it)
                     },
                     isFocused = state.isCardTexFieldFocused,
                     onFocusChange = {
@@ -593,7 +528,7 @@ fun NormalCardItem(
                         hint = stringResource(id = R.string.cc_dc_main_screen_placeholder_expiry),
                         value = state.expiry,
                         onValueChange = {
-                            onExpiryDateValueChange(formatExpiryDate(it))
+                            state.expiry = formatExpiryDate(it)
                             if (formatExpiryDate(it).text.length == 5) {
                                 isCardExpired = checkIsCardExpired(formatExpiryDate(it).text)
                             }
@@ -638,7 +573,7 @@ fun NormalCardItem(
                         value = state.cvv,
                         hint = stringResource(id = R.string.cc_dc_main_screen_placeholder_cvv),
                         onValueChange = {
-                            onCvvValueChange(formatCVV(it))
+                            state.cvv = formatCVV(it)
                             state.isCvvInvalid = formatCVV(it).text.length < SnapCreditCardUtil.FORMATTED_MIN_CVV_LENGTH
                         },
                         isError = state.isCvvInvalid,
@@ -672,7 +607,7 @@ fun NormalCardItem(
                     ) {
                         LabelledCheckBox(
                             checked = state.isSavedCardChecked,
-                            onCheckedChange = { onSavedCardCheckedChange(it) },
+                            onCheckedChange = { state.isSavedCardChecked = it },
                             label = stringResource(id = R.string.cc_dc_main_screen_save_this_card)
                         )
                     }
