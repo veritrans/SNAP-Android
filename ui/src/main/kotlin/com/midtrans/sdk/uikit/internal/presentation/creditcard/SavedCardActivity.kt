@@ -151,8 +151,8 @@ class SavedCardActivity: BaseActivity() {
     ){
         var previousEightDigitNumber = ""
         val bankCodeId by viewModel.bankIconId.observeAsState(null)
-        var isCvvSavedCardInvalid by remember { mutableStateOf(false)}
-        var savedTokenList = mutableListOf<FormData>()
+        val isCvvSavedCardInvalid by remember { mutableStateOf(false)}
+        val savedTokenList = mutableListOf<FormData>()
         var isExpanding by remember { mutableStateOf(false) }
         val state = remember {
             NormalCardItemState(
@@ -283,7 +283,8 @@ class SavedCardActivity: BaseActivity() {
                                 onCvvOtherCardValueChange = {
                                     state.cvv = it
                                 },
-                                onSavedCardCheckedChange = { state.isSavedCardChecked = it }
+                                onSavedCardCheckedChange = { state.isSavedCardChecked = it },
+                                binType = null
                             )
                             SnapButton(
                                 text = stringResource(id = R.string.cc_dc_main_screen_cta),

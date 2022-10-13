@@ -43,6 +43,12 @@ fun SnapTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
+    val backgroundColor: Color = if (enabled) {
+        SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY)
+    } else {
+        SnapColors.getARGBColor(SnapColors.INTERACTIVE_DISABLED)
+    }
+
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
@@ -60,7 +66,7 @@ fun SnapTextField(
                     },
                     RoundedCornerShape(4.dp)
                 )
-                .background(Color.White, RoundedCornerShape(4.dp))
+                .background(backgroundColor, RoundedCornerShape(4.dp))
                 .width(200.dp)
                 .height(39.dp)
                 .padding(top = 8.dp, bottom = 8.dp, start = 12.dp, end = 12.dp)

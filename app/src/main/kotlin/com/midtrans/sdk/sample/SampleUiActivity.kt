@@ -191,7 +191,7 @@ class SampleUiActivity : AppCompatActivity() {
 //                }
 //            )
 
-            InstallmentDropdownMenu(title = "Option", optionList = listOf("option_1", "option_2", "option_3"), onOptionsSelected = {} )
+            InstallmentDropdownMenu(title = "Option", optionList = listOf("option_1", "option_2", "option_3"), onOptionsSelected = {}, binType = null, isError = false, errorMessage = listOf(), isRequired = false, onInstallmentAllowed = {}, cardNumber = TextFieldValue())
 
             SnapNumberedListItem(
                 number = "1.",

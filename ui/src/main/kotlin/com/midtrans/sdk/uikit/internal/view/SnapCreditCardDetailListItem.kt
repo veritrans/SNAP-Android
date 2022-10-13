@@ -26,7 +26,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.core.text.isDigitsOnly
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.SavedToken
 import com.midtrans.sdk.uikit.R
@@ -176,7 +175,6 @@ fun InputNewCardItem(
                 NormalCardItem(
                     state = state,
                     bankIcon = bankIconState,
-                    cardIssuerBank = null,
                     creditCard = creditCard,
                     onCardNumberValueChange = {
                         onCardNumberValueChange(it)
@@ -194,8 +192,7 @@ fun InputNewCardItem(
                     onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
                     onSavedCardCheckedChange = {
                         onSavedCardCheckedChange(it)
-                    },
-                    onInstallmentTermSelected = { }
+                    }
                 )
             }
         }
@@ -243,6 +240,7 @@ fun SnapSavedCardRadioGroup(
     normalCardItemState: NormalCardItemState,
     onItemRemoveClicked: (item: SavedCreditCardFormData) -> Unit,
     creditCard: CreditCard?,
+    binType: String?,
     onCvvSavedCardValueChange: (TextFieldValue) -> Unit,
     onCardNumberOtherCardValueChange: (TextFieldValue) -> Unit,
     onExpiryOtherCardValueChange: (TextFieldValue) -> Unit,
@@ -454,7 +452,6 @@ fun formatCVV(input: TextFieldValue): TextFieldValue {
 fun NormalCardItem(
     state: NormalCardItemState,
     bankIcon: Int?,
-    cardIssuerBank: String?,
     creditCard: CreditCard?,
     onCardNumberValueChange: (TextFieldValue) -> Unit,
     onExpiryDateValueChange: (TextFieldValue) -> Unit,
@@ -462,8 +459,7 @@ fun NormalCardItem(
     onCardTextFieldFocusedChange: (Boolean) -> Unit,
     onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
     onCvvTextFieldFocusedChange: (Boolean) -> Unit,
-    onSavedCardCheckedChange: (Boolean) -> Unit,
-    onInstallmentTermSelected: (String) -> Unit
+    onSavedCardCheckedChange: (Boolean) -> Unit
 ) {
     var isBinBlocked by remember { mutableStateOf(false) }
     Column(
@@ -651,48 +647,6 @@ fun NormalCardItem(
                     }
                 }
             }
-
-            creditCard?.installment?.let { installment -> //TODO should create a method instead
-                val isRequired = installment.isRequired
-
-                installment.terms?.let { terms ->
-                    var selectedBank = ""
-                    val termList = when {
-                        terms.containsKey(cardIssuerBank?.lowercase()) -> {
-                            val key = terms.keys.toList()[0]
-                            selectedBank = key
-                            terms[key]
-                        }
-                        terms.containsKey("offline") -> {
-                            val key = terms.keys.toList()[0]
-                            selectedBank = key
-                            terms[key]
-                        }
-                        else -> listOf()
-                    }
-
-                    termList
-                        ?.takeIf { it.isNotEmpty() }
-                        ?.map { term -> stringResource(id = R.string.installment_term, term) }
-                        ?.toMutableList()
-                        ?.let { options ->
-                            if (!isRequired) {
-                                options.add(0, stringResource(id = R.string.installment_full_payment))
-                            }
-
-                            InstallmentDropdownMenu(
-                                title = stringResource(R.string.installment_title),
-                                optionList = options.toList(),
-                                onOptionsSelected = { selectedTerm ->
-                                    selectedTerm
-                                        .filter { it.isDigit() }
-                                        .takeIf { it.isDigitsOnly() }
-                                        ?.let { onInstallmentTermSelected("${selectedBank}_$it") }
-                                }
-                            )
-                        }
-                }
-            }
         }
     }
 }
@@ -733,65 +687,13 @@ fun LabelledCheckBox(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun InstallmentDropdownMenu(
-    title: String,
-    optionList: List<String>,
-    onOptionsSelected: (String) -> Unit
+fun ErrorTextInstallment(
+    errorMessage: String
 ) {
-    val options by remember { mutableStateOf(optionList) }
-    var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf(options[0]) }
-
-    Column(
-        modifier = Modifier.fillMaxWidth(1f),
-        horizontalAlignment = Alignment.Start
-    ) {
-        Text(
-            modifier = Modifier.padding(bottom = 20.dp),
-            text = title,
-            style = SnapTypography.STYLES.snapTextMediumMedium
-        )
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded }
-        ) {
-            SnapTextField(
-                modifier = Modifier.fillMaxWidth(1f),
-                readOnly = true,
-                value = TextFieldValue(selectedOptionText),
-                onValueChange = {},
-                isFocused = false,
-                onFocusChange = {},
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(
-                        expanded = expanded
-                    )
-                },
-                textStyle = SnapTypography.STYLES.snapTextMediumRegular
-            )
-
-            ExposedDropdownMenu(
-                modifier = Modifier.fillMaxWidth(1f),
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                options.forEach { selectionOption ->
-                    DropdownMenuItem(
-                        onClick = {
-                            selectedOptionText = selectionOption
-                            onOptionsSelected(selectionOption)
-                            expanded = false
-                        }
-                    ) {
-                        Text(
-                            text = selectionOption,
-                            style = SnapTypography.STYLES.snapTextMediumRegular
-                        )
-                    }
-                }
-            }
-        }
-    }
+    Text(
+        text = errorMessage,
+        style = SnapTypography.STYLES.snapTextSmallRegular,
+        color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+    )
 }
