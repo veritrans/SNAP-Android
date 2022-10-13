@@ -24,7 +24,7 @@ fun SnapInstallmentTermSelectionMenu(
     onInstallmentAllowed: (Boolean) -> Unit
 ) {
     creditCard?.installment?.let { installment ->
-        val isRequired = installment.isRequired
+        val isInstallmentRequired = installment.isRequired
 
         installment.terms?.let { terms ->
             var isOnUs = false
@@ -47,25 +47,21 @@ fun SnapInstallmentTermSelectionMenu(
                 }
             }
 
-            val isCreditCard = binType.contains("credit", true)
-            var isError = false
-            val errorMessage = mutableListOf<String>()
+            val isCreditCard = binType?.contains("credit", true) ?: false
+            val isOfflineInstallment = selectedBank.contains("offline")
+            val isError = !isOfflineInstallment && (!isOnUs || !isCreditCard)
+            val errorMessageIdList = getErrorMessageIdList(
+                isOfflineInstallment = isOfflineInstallment,
+                isCreditCard = isCreditCard,
+                isOnUs = isOnUs
+            )
 
-            if (!selectedBank.contains("offline")) {
-                isError = !isOnUs || !isCreditCard
-                if (!isCreditCard) {
-                    errorMessage.add(stringResource(id = R.string.installment_dc_error))
-                }
-                if (!isOnUs) {
-                    errorMessage.add(stringResource(id = R.string.installment_cc_not_match_installment))
-                }
-            }
 
             termList
                 ?.map { term -> stringResource(id = R.string.installment_term, term) }
                 ?.toMutableList()
                 ?.let { options ->
-                    if (!isRequired) {
+                    if (!isInstallmentRequired) {
                         options.add(0, stringResource(id = R.string.installment_full_payment))
                     }
 
@@ -76,12 +72,9 @@ fun SnapInstallmentTermSelectionMenu(
                     )
                     InstallmentDropdownMenu(
                         title = stringResource(R.string.installment_title),
-                        binType = binType,
-                        isRequired = isRequired,
-                        isError = isError,
-                        isErrorVisible = isError && isRequired && cardNumber.text.length >= 8,
-                        errorMessages = errorMessage,
-                        cardNumber = cardNumber,
+                        enabled = !isError,
+                        isErrorVisible = isError && isInstallmentRequired && cardNumber.text.length >= 8,
+                        errorMessageIdList = errorMessageIdList,
                         optionList = options.toList(),
                         onOptionsSelected = { selectedTerm ->
                             selectedTerm
@@ -96,13 +89,32 @@ fun SnapInstallmentTermSelectionMenu(
     }
 }
 
+private fun getErrorMessageIdList(
+    isCreditCard: Boolean,
+    isOnUs: Boolean,
+    isOfflineInstallment: Boolean
+): List<Int> {
+    val errorMessage = mutableListOf<Int>()
+
+    if (!isOfflineInstallment) {
+        if (!isCreditCard) {
+            errorMessage.add(R.string.installment_dc_error)
+        }
+        if (!isOnUs) {
+            errorMessage.add(R.string.installment_cc_not_match_installment)
+        }
+    }
+
+    return errorMessage
+}
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun InstallmentDropdownMenu(
+private fun InstallmentDropdownMenu(
     title: String,
-    isError: Boolean,
+    enabled: Boolean,
     isErrorVisible: Boolean,
-    errorMessages: List<String>,
+    errorMessageIdList: List<Int>,
     optionList: List<String>,
     onOptionsSelected: (String) -> Unit,
     onInstallmentAllowed: (Boolean) -> Unit
@@ -131,7 +143,7 @@ fun InstallmentDropdownMenu(
                 value = TextFieldValue(selectedOptionText),
                 onValueChange = {},
                 isFocused = false,
-                enabled = !isError,
+                enabled = !enabled,
                 onFocusChange = {},
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(
@@ -153,7 +165,7 @@ fun InstallmentDropdownMenu(
                             onOptionsSelected(selectionOption)
                             expanded = false
                         },
-                        enabled = !isError
+                        enabled = !enabled
                     ) {
                         Text(
                             text = selectionOption,
@@ -166,13 +178,14 @@ fun InstallmentDropdownMenu(
 
         if (isErrorVisible) {
             onInstallmentAllowed.invoke(false)
-            errorMessages.forEach { ErrorTextInstallment(errorMessage = it) }
+            errorMessageIdList.forEach {
+                ErrorTextInstallment(errorMessage = stringResource(id = it))
+            }
         } else {
             onInstallmentAllowed.invoke(true)
         }
     }
 }
-
 
 @Composable
 private fun ErrorTextInstallment(errorMessage: String) {
