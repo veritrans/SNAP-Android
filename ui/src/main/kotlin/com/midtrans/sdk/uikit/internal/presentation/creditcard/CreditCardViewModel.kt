@@ -30,9 +30,9 @@ internal class CreditCardViewModel @Inject constructor(
     private val errorCard: ErrorCard
 ) : ViewModel() {
 
-    private val bankIconId = MutableLiveData<Int>()
-    private val binType = MutableLiveData<String>()
-    private val cardIssuerBank = MutableLiveData<String>()
+    private val _bankIconId = MutableLiveData<Int>()
+    private val _binType = MutableLiveData<String>()
+    private val _cardIssuerBank = MutableLiveData<String>()
     private val _transactionResponse = MutableLiveData<TransactionResponse>()
     private val _transactionStatus = MutableLiveData<TransactionResponse>()
     private val _error = MutableLiveData<Int>()
@@ -47,12 +47,13 @@ internal class CreditCardViewModel @Inject constructor(
     val netAmountLiveData: LiveData<String> = _netAmountLiveData
     var creditCard: CreditCard? = null
 
-    fun getBankIconId(): LiveData<Int> = bankIconId
-    fun getBinType(): LiveData<String> = binType
-    fun getCardIssuerBank(): LiveData<String> = cardIssuerBank
+    val bankIconId: LiveData<Int> = _bankIconId
+    val binType: LiveData<String> = _binType
+    val cardIssuerBank: LiveData<String> = _cardIssuerBank
     val transactionResponseLiveData: LiveData<TransactionResponse> = _transactionResponse
     val transactionStatusLiveData: LiveData<TransactionResponse> = _transactionStatus
     val errorLiveData: LiveData<Int> = _error
+
     fun setExpiryTime(expireTime: String?) {
         expireTime?.let {
             expireTimeInMillis = parseTime(it)
@@ -99,11 +100,11 @@ internal class CreditCardViewModel @Inject constructor(
                 override fun onSuccess(result: BinResponse) {
                     result.run {
                         data?.bankCode?.let {
-                            bankIconId.value = snapCreditCardUtil.getBankIcon(it.lowercase())
-                            cardIssuerBank.value = it
+                            _bankIconId.value = snapCreditCardUtil.getBankIcon(it.lowercase())
+                            _cardIssuerBank.value = it
                         }
                         data?.binType?.let {
-                            binType.value = it
+                            _binType.value = it
                         }
                     }
                 }
@@ -115,7 +116,7 @@ internal class CreditCardViewModel @Inject constructor(
     }
 
     fun setBankIconToNull() {
-        bankIconId.value = null
+        _bankIconId.value = null
     }
 
     fun chargeUsingCreditCard(
@@ -220,8 +221,7 @@ internal class CreditCardViewModel @Inject constructor(
                 }
             )
         } else {
-
-            var tokenRequest = TwoClickCardTokenRequestBuilder()
+            val tokenRequest = TwoClickCardTokenRequestBuilder()
                 .withCardCvv(cardCvv.text)
                 .withTokenId(formData.tokenId)
 
@@ -237,7 +237,7 @@ internal class CreditCardViewModel @Inject constructor(
             snapCore.getCardToken(cardTokenRequestBuilder = tokenRequest ,
                 callback = object : Callback<CardTokenResponse> {
                     override fun onSuccess(result: CardTokenResponse) {
-                        var ccRequestBuilder = CreditCardPaymentRequestBuilder()
+                        val ccRequestBuilder = CreditCardPaymentRequestBuilder()
                             .withPaymentType(PaymentType.CREDIT_CARD)
                             .withCustomerEmail(customerEmail).apply {
                                 promos?.find { it.id == promoId }?.discountedGrossAmount?.let {
@@ -245,7 +245,7 @@ internal class CreditCardViewModel @Inject constructor(
                                 }
                             }
 
-                        result?.tokenId?.let {
+                        result.tokenId?.let {
                             ccRequestBuilder.withCardToken(it)
                         }
 
