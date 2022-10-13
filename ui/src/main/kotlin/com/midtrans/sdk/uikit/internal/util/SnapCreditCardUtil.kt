@@ -96,25 +96,27 @@ internal object SnapCreditCardUtil {
         return return value.text.substring(3, 5)
     }
 
-    fun isBinBlocked(cardNumber: String, creditCard: CreditCard?, bank: String = "", binType: String = ""): Boolean{
-        var whiteListBinAvailable = false
-        var blackListBinAvailable = false
+    private fun isBlockedByWhiteListedByCreditDebit(
+        creditCard: CreditCard?,
+        binType: String = ""
+    ): Boolean {
         var whiteListCreditDebitAvailable = false
-        var blackListCreditDebitAvailable = false
-        var whiteListBankAvailable = false
-        var blackListBankAvailable = false
-
-
-        val blockedByWhiteListedByCreditDebit = (creditCard?.whitelistBins
+        return (creditCard?.whitelistBins
             ?.map { it.lowercase() }
             ?.filter { whiteList -> whiteList == "debit" || whiteList == "credit" }
             ?.map { whiteListCreditDebitAvailable = true; it }
-            ?.filter { whiteListedCreditDebit -> whiteListedCreditDebit == binType.lowercase()}
+            ?.filter { whiteListedCreditDebit -> whiteListedCreditDebit == binType.lowercase() }
             .isNullOrEmpty())
             .and(whiteListCreditDebitAvailable)
             .and(binType.isNotBlank())
+    }
 
-        val blockedByWhiteListedByBank = (creditCard?.whitelistBins
+    private fun isBlockedByWhiteListedByBank(
+        creditCard: CreditCard?,
+        bank: String = ""
+    ): Boolean {
+        var whiteListBankAvailable = false
+        return (creditCard?.whitelistBins
             ?.map { it.lowercase() }
             ?.filter { whiteList -> whiteList.toIntOrNull() == null }
             ?.filter { whiteList -> whiteList != "debit" && whiteList != "credit" }
@@ -123,17 +125,29 @@ internal object SnapCreditCardUtil {
             .isNullOrEmpty())
             .and(whiteListBankAvailable)
             .and(bank.isNotBlank())
+    }
 
-        val blockedByBlackListedByCreditDebit = (!creditCard?.blacklistBins
+    private fun isBlockedByBlackListedByCreditDebit(
+        creditCard: CreditCard?,
+        binType: String = ""
+    ): Boolean {
+        var blackListCreditDebitAvailable = false
+        return (!creditCard?.blacklistBins
             ?.map { it.lowercase() }
             ?.filter { blackList -> blackList == "debit" || blackList == "credit" }
-            ?.map{blackListCreditDebitAvailable = true; it}
+            ?.map { blackListCreditDebitAvailable = true; it }
             ?.filter { blackListedCreditDebit -> blackListedCreditDebit == binType.lowercase() }
             .isNullOrEmpty())
             .and(blackListCreditDebitAvailable)
             .and(binType.isNotBlank())
+    }
 
-        val blockedByBlackListedByBank = (!creditCard?.blacklistBins
+    private fun isBlockedByBlackListedByBank(
+        creditCard: CreditCard?,
+        bank: String = ""
+    ): Boolean {
+        var blackListBankAvailable = false
+        return (!creditCard?.blacklistBins
             ?.map { it.lowercase() }
             ?.filter { blackList -> blackList.toIntOrNull() == null }
             ?.filter { blackList -> blackList != "debit" && blackList != "credit" }
@@ -142,20 +156,53 @@ internal object SnapCreditCardUtil {
             .isNullOrEmpty())
             .and(blackListBankAvailable)
             .and(bank.isNotBlank())
+    }
 
-        val blockedByWhiteListedByBinNumber = (creditCard?.whitelistBins
-            ?.filter { whiteList -> whiteList.isDigitsOnly() }
+    private fun isBlockedByWhiteListedByBinNumber(
+        cardNumber: String,
+        creditCard: CreditCard?
+    ): Boolean {
+        var whiteListBinAvailable =false
+        return (creditCard?.whitelistBins
+            ?.filter { whiteList -> whiteList.toIntOrNull() != null }
             ?.map { whiteListBinAvailable = true; it }
             ?.filter { whiteListedBin -> cardNumber.startsWith(whiteListedBin) }
             .isNullOrEmpty())
             .and(whiteListBinAvailable)
+    }
 
-        val blackListedByBinNumber = (!creditCard?.blacklistBins
-            ?.filter { whiteList -> whiteList.isDigitsOnly() }
+    private fun isBlackListedByBinNumber(
+        cardNumber: String,
+        creditCard: CreditCard?,
+    ): Boolean {
+        var blackListBinAvailable = false
+        return (!creditCard?.blacklistBins
+            ?.filter { whiteList -> whiteList.toIntOrNull() != null }
             ?.map { blackListBinAvailable = true; it }
             ?.filter { blacklistedBin -> cardNumber.startsWith(blacklistedBin) }
             .isNullOrEmpty())
             .and(blackListBinAvailable)
+    }
+
+    fun isBinBlocked(cardNumber: String, creditCard: CreditCard?, bank: String = "", binType: String = ""): Boolean{
+
+        val blockedByWhiteListedByCreditDebit =
+            isBlockedByWhiteListedByCreditDebit(creditCard = creditCard, binType = binType)
+
+        val blockedByWhiteListedByBank =
+            isBlockedByWhiteListedByBank(creditCard = creditCard, bank = bank)
+
+        val blockedByBlackListedByCreditDebit =
+            isBlockedByBlackListedByCreditDebit(creditCard = creditCard, binType = binType)
+
+        val blockedByBlackListedByBank =
+            isBlockedByBlackListedByBank(creditCard = creditCard, bank = bank)
+
+        val blockedByWhiteListedByBinNumber =
+            isBlockedByWhiteListedByBinNumber(cardNumber = cardNumber, creditCard = creditCard)
+
+        val blackListedByBinNumber =
+            isBlackListedByBinNumber(cardNumber = cardNumber, creditCard = creditCard)
 
         return blockedByWhiteListedByCreditDebit
                 || blockedByWhiteListedByBank
