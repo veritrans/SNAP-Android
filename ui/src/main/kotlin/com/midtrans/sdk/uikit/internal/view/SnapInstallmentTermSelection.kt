@@ -24,31 +24,29 @@ fun SnapInstallmentTermSelectionMenu(
     onInstallmentAllowed: (Boolean) -> Unit
 ) {
     creditCard?.installment?.let { installment ->
-        val isInstallmentRequired = installment.isRequired
+        val offline = "offline"
+        val isRequired = installment.isRequired
 
         installment.terms?.let { terms ->
             var isOnUs = false
             var selectedBank = ""
             val termList = when {
                 terms.containsKey(cardIssuerBank?.lowercase()) -> {
-                    val key = terms.keys.toList()[0]
-                    selectedBank = key
                     isOnUs = true
-                    terms[key]
+                    selectedBank = cardIssuerBank?.lowercase().orEmpty()
+                    terms[selectedBank]
                 }
-                terms.containsKey("offline") -> {
-                    val key = terms.keys.toList()[0]
-                    selectedBank = key
-                    terms[key]
+                terms.containsKey(offline) -> {
+                    selectedBank = offline
+                    terms[selectedBank]
                 }
                 else -> {
-                    val key = terms.keys.toList()[0]
-                    terms[key]
+                    terms.values.toList()[0]
                 }
             }
 
             val isCreditCard = binType?.contains("credit", true) ?: false
-            val isOfflineInstallment = selectedBank.contains("offline")
+            val isOfflineInstallment = selectedBank.contains(offline)
             val isError = !isOfflineInstallment && (!isOnUs || !isCreditCard)
             val errorMessageIdList = getErrorMessageIdList(
                 isOfflineInstallment = isOfflineInstallment,
@@ -61,7 +59,7 @@ fun SnapInstallmentTermSelectionMenu(
                 ?.map { term -> stringResource(id = R.string.installment_term, term) }
                 ?.toMutableList()
                 ?.let { options ->
-                    if (!isInstallmentRequired) {
+                    if (!isRequired) {
                         options.add(0, stringResource(id = R.string.installment_full_payment))
                     }
 
@@ -73,7 +71,7 @@ fun SnapInstallmentTermSelectionMenu(
                     InstallmentDropdownMenu(
                         title = stringResource(R.string.installment_title),
                         enabled = !isError,
-                        isErrorVisible = isError && isInstallmentRequired && cardNumber.text.length >= 8,
+                        isErrorVisible = isError && isRequired && cardNumber.text.length >= 8,
                         errorMessageIdList = errorMessageIdList,
                         optionList = options.toList(),
                         onOptionsSelected = { selectedTerm ->
@@ -143,7 +141,7 @@ private fun InstallmentDropdownMenu(
                 value = TextFieldValue(selectedOptionText),
                 onValueChange = {},
                 isFocused = false,
-                enabled = !enabled,
+                enabled = enabled,
                 onFocusChange = {},
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(
@@ -165,7 +163,7 @@ private fun InstallmentDropdownMenu(
                             onOptionsSelected(selectionOption)
                             expanded = false
                         },
-                        enabled = !enabled
+                        enabled = enabled
                     ) {
                         Text(
                             text = selectionOption,
