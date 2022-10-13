@@ -1,14 +1,19 @@
 package com.midtrans.sdk.uikit.internal.util
 
 import android.util.Patterns
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.toLowerCase
 import androidx.core.text.isDigitsOnly
 import com.midtrans.sdk.corekit.api.model.CreditCard
+import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.Promo
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
+import com.midtrans.sdk.uikit.internal.view.PromoData
 import java.util.*
 
-object SnapCreditCardUtil {
+internal object SnapCreditCardUtil {
 
     const val CARD_TYPE_VISA = "VISA"
     const val CARD_TYPE_MASTERCARD = "MASTERCARD"
@@ -175,7 +180,27 @@ object SnapCreditCardUtil {
         }
     }
 
+    fun getCreditCardApplicablePromosData(binNumber: String, promos: List<Promo>?): List<PromoData>?{
+        val creditCardPromos = promos?.filter { promo -> promo.paymentTypes?.contains(PaymentType.CREDIT_CARD)?: false }?.ifEmpty{ null }
+        return creditCardPromos?.map { promoResponse ->
+            PromoData(
+                identifier = promoResponse.id.toString(),
+                leftText = promoResponse.name.orEmpty(),
+                rightText = "-${promoResponse.calculatedDiscountAmount.currencyFormatRp()}",
+                enabled = mutableStateOf(
+                    (binNumber.isNotBlank().and(promoResponse.bins.isNullOrEmpty()))
+                        .or(promoResponse.bins?.any { binNumber.startsWith(it)}?: false )
+                )
+            )
+        }
+    }
+
     fun isValidEmail(target: String): Boolean {
         return target.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(target).matches()
+    }
+
+    fun formatMaskedCard(maskedCard: String): String {
+        val lastFourDigit = maskedCard.substring(startIndex = maskedCard.length - 4, endIndex = maskedCard.length)
+        return "**** **** **** $lastFourDigit"
     }
 }

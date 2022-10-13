@@ -18,7 +18,7 @@ data class TransactionResponse(
     var maskedCard: String? = null,
     var threeDsVersion: String? = null,
     var orderId: String? = null,
-    var grossAmount: String? = null,
+    var grossAmount: Double? = null,
     var paymentType: String? = null,
     var transactionTime: String? = null,
     var transactionStatus: String? = null,

@@ -2,6 +2,8 @@ package com.midtrans.sdk.uikit.internal.util
 
 import androidx.compose.ui.text.input.TextFieldValue
 import com.midtrans.sdk.corekit.api.model.CreditCard
+import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.Promo
 import com.midtrans.sdk.uikit.R
 import org.junit.Assert
 import org.junit.Test
@@ -139,5 +141,54 @@ class SnapCreditCardUtilTest {
         Assert.assertEquals(R.drawable.ic_bank_cimb_24, SnapCreditCardUtil.getBankIcon("CIMB"))
         Assert.assertEquals(R.drawable.ic_bank_mega_24, SnapCreditCardUtil.getBankIcon("MEGA"))
         Assert.assertEquals(null, SnapCreditCardUtil.getBankIcon("Bank X"))
+    }
+
+    @Test
+    fun getCreditCardApplicablePromosDataShouldQualifyBasedOnBinNumber(){
+        val promo1 = Promo(
+            id = 1L,
+            name = "promo",
+            bins = listOf("481111"),
+            calculatedDiscountAmount = 1000.0,
+            paymentTypes = listOf(PaymentType.CREDIT_CARD)
+        )
+
+       //Matched promo
+        val result1 = SnapCreditCardUtil.getCreditCardApplicablePromosData("4811111111111", listOf(promo1))
+        Assert.assertEquals("promo", result1?.get(0)?.leftText )
+        Assert.assertTrue(result1?.get(0)?.enabled?.value!!)
+
+        //promo not enabled
+        val result12 = SnapCreditCardUtil.getCreditCardApplicablePromosData("44111111111111", listOf(promo1))
+        Assert.assertFalse(result12?.get(0)?.enabled?.value!!)
+
+        //promo with empty bins
+        val promo2 = Promo(
+            id = 1L,
+            name = "promo",
+            bins = listOf(),
+            calculatedDiscountAmount = 1000.0,
+            paymentTypes = listOf(PaymentType.CREDIT_CARD)
+        )
+
+        //match whatever bins
+        val result2 = SnapCreditCardUtil.getCreditCardApplicablePromosData("44111111111111", listOf(promo2))
+        Assert.assertEquals("promo", result2?.get(0)?.leftText )
+        Assert.assertTrue(result2?.get(0)?.enabled?.value!!)
+
+        val result22 = SnapCreditCardUtil.getCreditCardApplicablePromosData("48111111111111", listOf(promo2))
+        Assert.assertEquals("promo", result22?.get(0)?.leftText )
+        Assert.assertTrue(result22?.get(0)?.enabled?.value!!)
+
+        //promo with no credit card payment type
+        val promo3 = Promo(
+            id = 1L,
+            name = "promo",
+            bins = listOf(),
+            calculatedDiscountAmount = 1000.0,
+            paymentTypes = listOf(PaymentType.ALFAMART)
+        )
+        val result3 = SnapCreditCardUtil.getCreditCardApplicablePromosData("44111111111111", listOf(promo3))
+        Assert.assertNull(result3)
     }
 }
