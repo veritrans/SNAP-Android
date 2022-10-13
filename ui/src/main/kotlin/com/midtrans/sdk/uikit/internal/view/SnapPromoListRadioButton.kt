@@ -33,9 +33,12 @@ fun SnapPromoListRadioButton(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 val enabled by item.enabled
+                if((!enabled).and(item.leftText == selectedOption)){
+                    onOptionSelected(states.filter { it.enabled.value }[0].also { onItemSelectedListener(it) }.leftText)
+                }
                 Row(
                     modifier = if (enabled) Modifier.selectable(
-                        selected = (item.leftText == selectedOption),
+                        selected = item.leftText == selectedOption,
                         onClick = {
                             onOptionSelected(item.leftText)
                             onItemSelectedListener(item)
@@ -91,6 +94,7 @@ fun SnapPromoListRadioButtonItem(promoData: PromoData) {
 }
 
 data class PromoData(
+    val identifier: String? = null,
     val leftText: String,
     val rightText: String,
     val subLeftText: String? = null,
