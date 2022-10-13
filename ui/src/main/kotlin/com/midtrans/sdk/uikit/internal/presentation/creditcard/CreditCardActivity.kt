@@ -401,7 +401,7 @@ internal class CreditCardActivity : BaseActivity() {
             modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY)),
         ) {
             val remainingTime by remember { remainingTimeState }
-            var installmentStatus by remember { mutableStateOf(true) }
+            var isInstallmentAllowed by remember { mutableStateOf(true) }
             SnapAppBar(
                 title = stringResource(id = R.string.payment_summary_cc_dc),
                 iconResId = R.drawable.ic_arrow_left
@@ -451,6 +451,7 @@ internal class CreditCardActivity : BaseActivity() {
                                 onSavedCardRadioSelected = onSavedCardRadioSelected
                             )
                         }
+
                         if (savedTokenListState == null) {
                             NormalCardFormLayout(
                                 state = state,
@@ -460,20 +461,18 @@ internal class CreditCardActivity : BaseActivity() {
                             )
                         }
 
-                        promoState.value?.let {
-                            PromoLayout(promoData = it, cardItemState = state)
-                        }
-
                         SnapInstallmentTermSelectionMenu(
                             creditCard = creditCard,
                             cardIssuerBank = cardIssuerBank,
                             binType = binType,
                             cardNumber = state.cardNumber,
                             onInstallmentTermSelected = { onInstallmentTermSelected(it) },
-                            onInstallmentAllowed = {
-                                installmentStatus = it
-                            }
+                            onInstallmentAllowed = { isInstallmentAllowed = it }
                         )
+
+                        promoState.value?.let {
+                            PromoLayout(promoData = it, cardItemState = state)
+                        }
                     }
                 },
                 modifier = Modifier
@@ -498,7 +497,7 @@ internal class CreditCardActivity : BaseActivity() {
                             .or(state.customerEmail.text.isBlank())
                     ))
                     .or((state.cardItemType == CardItemState.CardItemType.SAVED_CARD).and(!state.isCvvInvalid))
-                    .or(!installmentStatus),
+                    .or(!isInstallmentAllowed),
                 onClick = { onClick() }
             )
         }

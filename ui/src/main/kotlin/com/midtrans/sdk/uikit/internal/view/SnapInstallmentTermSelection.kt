@@ -63,11 +63,6 @@ fun SnapInstallmentTermSelectionMenu(
                         options.add(0, stringResource(id = R.string.installment_full_payment))
                     }
 
-                    Divider(
-                        thickness = 1.dp,
-                        color = SnapColors.getARGBColor(SnapColors.LINE_LIGHT_MUTED),
-                        modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
-                    )
                     InstallmentDropdownMenu(
                         title = stringResource(R.string.installment_title),
                         enabled = !isError,
@@ -126,7 +121,7 @@ private fun InstallmentDropdownMenu(
         horizontalAlignment = Alignment.Start
     ) {
         Text(
-            modifier = Modifier.padding(bottom = 20.dp),
+            modifier = Modifier.padding(top = 16.dp, bottom = 20.dp),
             text = title,
             style = SnapTypography.STYLES.snapTextMediumMedium
         )
