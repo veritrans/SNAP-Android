@@ -197,7 +197,7 @@ class SampleActivity : AppCompatActivity() {
                         saveCard = true,
                         secure = true,
                         installment = Installment(
-                            isRequired = true,
+                            isRequired = false,
                             terms = mapOf("mandiri" to listOf(3,6,9,12))
                         )
                     ),
