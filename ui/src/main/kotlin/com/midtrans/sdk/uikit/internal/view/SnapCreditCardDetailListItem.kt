@@ -573,6 +573,14 @@ fun NormalCardItem(
                         )
                     }
                 }
+
+                if (state.isBinBlocked && state.isCardTexFieldFocused) {
+                    Text(
+                        text = stringResource(id = R.string.card_error_bank_blacklisted_by_merchant),
+                        style = SnapTypography.STYLES.snapTextSmallRegular,
+                        color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                    )
+                }
             }
 
             Row(
