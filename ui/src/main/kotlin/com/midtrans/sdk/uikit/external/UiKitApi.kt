@@ -19,7 +19,8 @@ class UiKitApi { //TODO revisit this implementation, currently for getting callb
         creditCard: CreditCard,
         userId: String,
         uobEzpayCallback: PaymentCallback,
-        paymentCallback: Callback<TransactionResult>
+        paymentCallback: Callback<TransactionResult>,
+        paymentType: String? = null
     ) {
         this.paymentCallback = paymentCallback
 
@@ -29,7 +30,8 @@ class UiKitApi { //TODO revisit this implementation, currently for getting callb
             customerDetails = customerDetails,
             creditCard = creditCard,
             userId = userId,
-            uobEzpayCallback = uobEzpayCallback
+            uobEzpayCallback = uobEzpayCallback,
+            paymentType = paymentType
         )
         activityContext.startActivity(intent)
     }
