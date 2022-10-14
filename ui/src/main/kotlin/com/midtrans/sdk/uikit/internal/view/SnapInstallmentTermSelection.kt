@@ -177,26 +177,30 @@ private fun InstallmentDropdownMenu(
                 textStyle = SnapTypography.STYLES.snapTextMediumRegular
             )
 
-            ExposedDropdownMenu(
-                modifier = Modifier.fillMaxWidth(1f),
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                options.forEach { selectionOption ->
-                    DropdownMenuItem(
-                        onClick = {
-                            selectedOptionText = selectionOption
-                            onOptionsSelected(selectionOption)
-                            expanded = false
-                        },
-                        enabled = enabled
-                    ) {
-                        Text(
-                            text = selectionOption,
-                            style = SnapTypography.STYLES.snapTextMediumRegular
-                        )
+            if (enabled) {
+                ExposedDropdownMenu(
+                    modifier = Modifier.fillMaxWidth(1f),
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    options.forEach { selectionOption ->
+                        DropdownMenuItem(
+                            onClick = {
+                                selectedOptionText = selectionOption
+                                onOptionsSelected(selectionOption)
+                                expanded = false
+                            },
+                            enabled = enabled
+                        ) {
+                            Text(
+                                text = selectionOption,
+                                style = SnapTypography.STYLES.snapTextMediumRegular
+                            )
+                        }
                     }
                 }
+            } else {
+                selectedOptionText = options[0]
             }
         }
 
