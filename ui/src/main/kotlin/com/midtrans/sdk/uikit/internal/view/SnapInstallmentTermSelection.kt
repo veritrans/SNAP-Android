@@ -24,38 +24,34 @@ fun SnapInstallmentTermSelectionMenu(
     onInstallmentAllowed: (Boolean) -> Unit
 ) {
     creditCard?.installment?.let { installment ->
-        val offline = "offline"
         val isRequired = installment.isRequired
 
         installment.terms?.let { terms ->
-            var isOnUs = false
-            var selectedBank = ""
-            val termList = when {
-                terms.containsKey(cardIssuerBank?.lowercase()) -> {
-                    isOnUs = true
-                    selectedBank = cardIssuerBank?.lowercase().orEmpty()
-                    terms[selectedBank]
-                }
-                terms.containsKey(offline) -> {
-                    selectedBank = offline
-                    terms[selectedBank]
-                }
-                else -> {
-                    terms.values.toList()[0]
-                }
+            var selectedBank: String
+            var termList: List<Int>?
+
+            getSelectedBankAndTerms(cardIssuerBank.orEmpty(), terms).also {
+                selectedBank = it.first
+                termList = it.second
             }
 
+            val isOnUs = checkIsOnUs(
+                issuerBank = cardIssuerBank.orEmpty(),
+                enabledBanks = terms.keys.toList()
+            )
+            val isBinComplete = cardNumber.text.length >= 8
             val isCreditCard = binType?.contains("credit", true) ?: false
-            val isOfflineInstallment = selectedBank.contains(offline)
+            val isOfflineInstallment = selectedBank.contains("offline")
             val isError = !isOfflineInstallment && (!isOnUs || !isCreditCard)
+            val isEnabled = !isError && isBinComplete
             val errorMessageIdList = getErrorMessageIdList(
                 isOfflineInstallment = isOfflineInstallment,
                 isCreditCard = isCreditCard,
                 isOnUs = isOnUs
             )
 
-
             termList
+                ?.takeIf { it.isNotEmpty() }
                 ?.map { term -> stringResource(id = R.string.installment_term, term) }
                 ?.toMutableList()
                 ?.let { options ->
@@ -65,8 +61,8 @@ fun SnapInstallmentTermSelectionMenu(
 
                     InstallmentDropdownMenu(
                         title = stringResource(R.string.installment_title),
-                        enabled = !isError,
-                        isErrorVisible = isError && isRequired && cardNumber.text.length >= 8,
+                        enabled = isEnabled,
+                        isErrorVisible = isError && isRequired && isBinComplete,
                         errorMessageIdList = errorMessageIdList,
                         optionList = options.toList(),
                         onOptionsSelected = { selectedTerm ->
@@ -80,6 +76,41 @@ fun SnapInstallmentTermSelectionMenu(
                 }
         }
     }
+}
+
+private fun checkIsOnUs(
+    issuerBank: String,
+    enabledBanks: List<String>
+): Boolean {
+    return enabledBanks.contains(issuerBank.lowercase())
+}
+
+private fun getSelectedBankAndTerms(
+    issuerBank: String,
+    terms: Map<String, List<Int>>
+): Pair<String, List<Int>?> {
+    var selectedBank = ""
+
+    val termList = when {
+        terms.containsKey(issuerBank.lowercase()) -> {
+            terms
+                .filter { it.key.contains(issuerBank, true) }
+                .map { it.key }
+                .let {
+                    selectedBank = it[0]
+                    terms[selectedBank]
+                }
+        }
+        terms.containsKey("offline") -> {
+            selectedBank = "offline"
+            terms[selectedBank]
+        }
+        else -> {
+            terms.values.toList()[0]
+        }
+    }
+
+    return Pair(selectedBank, termList)
 }
 
 private fun getErrorMessageIdList(
