@@ -1,10 +1,12 @@
 package com.midtrans.sdk.uikit.internal.presentation.loadingpayment
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,9 +18,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferRequest
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity
+import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionViewModel
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.AnimatedIcon
 
 class LoadingPaymentActivity : BaseActivity() {
@@ -162,6 +167,10 @@ class LoadingPaymentActivity : BaseActivity() {
         ViewModelProvider(this).get(LoadingPaymentViewModel::class.java)
     }
 
+    private val paymentOptionViewModel: PaymentOptionViewModel by lazy {
+        ViewModelProvider(this).get(PaymentOptionViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initObserver()
@@ -191,23 +200,55 @@ class LoadingPaymentActivity : BaseActivity() {
         )
     }
 
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result?.data?.let {
+                    val transactionResult = it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT) as TransactionResult
+                    UiKitApi.getDefaultInstance().paymentCallback.onSuccess(transactionResult) //TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
+                }
+                finish()
+            }
+        }
+
     private fun initObserver() {
         viewModel.getPaymentOptionLiveData().observe(this, Observer {
-            val intent = PaymentOptionActivity.openPaymentOptionPage(
-                activityContext = this,
-                snapToken = it.token,
-                totalAmount = viewModel.getAmountInString(transactionDetails),
-                transactionDetail = it.transactionDetails,
-                orderId = viewModel.getOrderId(transactionDetails),
-                paymentList = it.options,
-                customerDetails = customerDetails,
-                creditCard = it.creditCard,
-                promos = it.promos,
-                merchant = it.merchantData,
-                expiryTime = it.expiryTme
-            )
-            startActivity(intent)
-            finish()
+            if (paymentType == null) {
+                val intent = PaymentOptionActivity.openPaymentOptionPage(
+                    activityContext = this,
+                    snapToken = it.token,
+                    totalAmount = viewModel.getAmountInString(transactionDetails),
+                    transactionDetail = it.transactionDetails,
+                    orderId = viewModel.getOrderId(transactionDetails),
+                    paymentList = it.options,
+                    customerDetails = customerDetails,
+                    creditCard = it.creditCard,
+                    promos = it.promos,
+                    merchant = it.merchantData,
+                    expiryTime = it.expiryTme
+                )
+                startActivity(intent)
+                finish()
+            } else {
+                val eWalletPaymentLauncher = {
+                    resultLauncher.launch(
+                        WalletActivity.getIntent(
+                            activityContext = this,
+                            snapToken = it.token,
+                            orderId = viewModel.getOrderId(transactionDetails),
+                            totalAmount = viewModel.getAmountInString(transactionDetails),
+                            paymentType = paymentType!!,
+                            customerInfo = paymentOptionViewModel.getCustomerInfo(customerDetails)
+                        )
+                    )
+                }
+                val paymentOptions = mapOf(
+                    Pair(PaymentType.SHOPEEPAY, eWalletPaymentLauncher),
+                    Pair(PaymentType.SHOPEEPAY_QRIS, eWalletPaymentLauncher),
+                    Pair(PaymentType.GOPAY, eWalletPaymentLauncher)
+                )
+                paymentOptions[paymentType]?.invoke()
+            }
         })
         viewModel.getErrorLiveData().observe(this, Observer {
             //TODO revisit this error handle after discussing how to handle error when we are unable to get snap token / trx detail during loading screen
