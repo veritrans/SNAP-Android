@@ -208,13 +208,15 @@ internal class CreditCardViewModel @Inject constructor(
         transactionDetails: TransactionDetails?,
         cardCvv: TextFieldValue,
         customerEmail: String,
+        installmentTerm: String,
         promoId: Long?
-        ){
+    ) {
         if (formData.tokenType == SavedToken.ONE_CLICK){
             snapCore.pay(
                 snapToken = snapToken,
                 paymentRequestBuilder = OneClickCardPaymentRequestBuilder()
                     .withPaymentType(PaymentType.CREDIT_CARD)
+                    .withInstallment(installmentTerm)
                     .withMaskedCard(formData.displayedMaskedCard).apply {
                         promos?.find { it.id == promoId }?.discountedGrossAmount?.let {
                             withPromo(discountedGrossAmount = it, promoId = promoId.toString())
@@ -248,6 +250,7 @@ internal class CreditCardViewModel @Inject constructor(
                     override fun onSuccess(result: CardTokenResponse) {
                         val ccRequestBuilder = CreditCardPaymentRequestBuilder()
                             .withPaymentType(PaymentType.CREDIT_CARD)
+                            .withInstallment(installmentTerm)
                             .withCustomerEmail(customerEmail).apply {
                                 promos?.find { it.id == promoId }?.discountedGrossAmount?.let {
                                     withPromo(discountedGrossAmount = it, promoId = promoId.toString())

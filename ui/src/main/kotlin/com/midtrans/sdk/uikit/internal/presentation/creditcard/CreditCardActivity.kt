@@ -305,6 +305,7 @@ internal class CreditCardActivity : BaseActivity() {
                             cardCvv = state.cvv,
                             customerEmail = state.customerEmail.text,
                             transactionDetails = transactionDetails,
+                            installmentTerm = installmentTerm,
                             promoId = state.promoId
                         )
                     }
