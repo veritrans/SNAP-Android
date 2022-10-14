@@ -222,7 +222,7 @@ class SampleActivity : AppCompatActivity() {
                             ).show()
                         }
                     },
-                    paymentType = PaymentType.SHOPEEPAY
+                    paymentType = PaymentType.ALFAMART
                 )
                 startActivity(
                     intent

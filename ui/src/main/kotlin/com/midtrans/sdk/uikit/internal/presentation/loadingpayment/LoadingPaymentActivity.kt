@@ -20,6 +20,7 @@ import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferReque
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
+import com.midtrans.sdk.uikit.internal.presentation.conveniencestore.ConvenienceStoreActivity
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionViewModel
@@ -242,10 +243,24 @@ class LoadingPaymentActivity : BaseActivity() {
                         )
                     )
                 }
+                val cStorePaymentLauncher = {
+                    resultLauncher.launch(
+                        ConvenienceStoreActivity.getIntent(
+                            activityContext = this,
+                            snapToken = it.token,
+                            orderId = viewModel.getOrderId(transactionDetails),
+                            totalAmount = viewModel.getAmountInString(transactionDetails),
+                            paymentType = paymentType!!,
+                            customerInfo = paymentOptionViewModel.getCustomerInfo(customerDetails)
+                        )
+                    )
+                }
                 val paymentOptions = mapOf(
                     Pair(PaymentType.SHOPEEPAY, eWalletPaymentLauncher),
                     Pair(PaymentType.SHOPEEPAY_QRIS, eWalletPaymentLauncher),
-                    Pair(PaymentType.GOPAY, eWalletPaymentLauncher)
+                    Pair(PaymentType.GOPAY, eWalletPaymentLauncher),
+                    Pair(PaymentType.ALFAMART, cStorePaymentLauncher),
+                    Pair(PaymentType.INDOMARET, cStorePaymentLauncher)
                 )
                 paymentOptions[paymentType]?.invoke()
             }
