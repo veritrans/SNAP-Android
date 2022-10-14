@@ -191,8 +191,6 @@ class SampleUiActivity : AppCompatActivity() {
 //                }
 //            )
 
-//            InstallmentDropdownMenu(title = "Option", optionList = listOf("option_1", "option_2", "option_3"), onOptionsSelected = {}, binType = null, isError = false, errorMessages = listOf(), isRequired = false, onInstallmentAllowed = {}, cardNumber = TextFieldValue())
-
             SnapNumberedListItem(
                 number = "1.",
                 paragraph = "This is <b>bolt</b> <i>italic</i> <u>underline</u> Lorem ipsumgalksnfdlsan jklnlkjfnasd lkj nfaklsdjnf ljkasndf n lad"
