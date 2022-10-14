@@ -238,6 +238,7 @@ internal class CreditCardActivity : BaseActivity() {
         var isExpanding by remember { mutableStateOf(false) }
         var selectedFormData: FormData? by remember { mutableStateOf(null) }
         var installmentTerm by remember { mutableStateOf("") }
+        state.isBinBlocked = viewModel?.binBlockedLiveData?.observeAsState(false)?.value?: false
 
         if (transactionResponse?.value?.statusCode == UiKitConstants.STATUS_CODE_201 && !transactionResponse.value?.redirectUrl.isNullOrEmpty()) {
             transactionResponse.value?.redirectUrl?.let {
