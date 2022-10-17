@@ -22,6 +22,8 @@ import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDetailActivity
 import com.midtrans.sdk.uikit.internal.presentation.conveniencestore.ConvenienceStoreActivity
+import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
+import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.presentation.paylater.PayLaterActivity
@@ -299,8 +301,38 @@ class LoadingPaymentActivity : BaseActivity() {
                         )
                     )
                 }
+                val creditCardPaymentLauncher = {
+                    resultLauncher.launch(
+                        //TODO: Need to revisit, if we need to enable adding a flag on sdk to force Normal Transaction like old ios sdk
+                        if (creditCard?.savedTokens.isNullOrEmpty().or(true)) {
+                            CreditCardActivity.getIntent(
+                                activityContext = this,
+                                snapToken = snapToken,
+                                transactionDetails = it.transactionDetails,
+                                totalAmount = totalAmount,
+                                customerInfo = customerInfo,
+                                creditCard = it.creditCard,
+                                expiryTime = it.expiryTme,
+                                withMerchantData = it.merchantData,
+                                promos = it.promos
+                            )
+                        } else {
+                            //TODO currently set to CreditCardActivity for testing purpose
+                            SavedCardActivity.getIntent(
+                                activityContext = this,
+                                snapToken = snapToken,
+                                transactionDetails = it.transactionDetails,
+                                totalAmount = totalAmount,
+                                customerInfo = customerInfo,
+                                creditCard = it.creditCard
+//                            expiryTime = expiryTime //TODO will be fixed by pak wahyu
+                            )
+                        }
+                    )
+                }
                 val paymentOptions = mapOf(
                     Pair(PaymentType.AKULAKU, paylaterPaymentLauncher),
+                    Pair(PaymentType.CREDIT_CARD, creditCardPaymentLauncher),
                     Pair(checkEWalletType(paymentType), eWalletPaymentLauncher),
                     Pair(checkCStoreType(paymentType), cStorePaymentLauncher),
                     Pair(checkDirectDebitType(paymentType), directDebitPaymentLauncher),
