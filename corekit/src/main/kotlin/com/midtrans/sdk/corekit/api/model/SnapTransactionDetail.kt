@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class SnapTransactionDetail(
+open class SnapTransactionDetail(
     val orderId: String,
     val grossAmount: Double,
     val currency: String = "IDR"

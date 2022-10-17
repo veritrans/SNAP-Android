@@ -17,10 +17,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
-import com.midtrans.sdk.corekit.SnapCore
-import com.midtrans.sdk.corekit.api.callback.Callback
-import com.midtrans.sdk.corekit.api.exception.SnapError
-import com.midtrans.sdk.corekit.api.model.*
+import com.midtrans.sdk.uikit.api.callback.Callback
+import com.midtrans.sdk.uikit.api.exception.SnapError
+import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import java.util.*
@@ -32,12 +31,12 @@ class SampleActivity : AppCompatActivity() {
     }
 
     private val uiKitApi: UiKitApi by lazy {
-        UiKitApi()
+        UiKitApi.getDefaultInstance()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        SnapCore.Builder()
+        UiKitApi.Builder()
             .withContext(this.applicationContext)
             .withMerchantUrl("https://fiesta-point-sample.herokuapp.com/")
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
