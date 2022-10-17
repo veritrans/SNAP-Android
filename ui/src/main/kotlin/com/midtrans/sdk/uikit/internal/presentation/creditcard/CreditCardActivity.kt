@@ -98,29 +98,51 @@ internal class CreditCardActivity : BaseActivity() {
         intent.getParcelableArrayListExtra<Promo>(EXTRA_PROMOS)
     }
 
-    private val savedTokenList: SnapshotStateList<FormData>? by lazy {
-        mutableListOf<FormData>()
-            .apply {
-            creditCard?.savedTokens?.forEachIndexed { index, savedToken ->
-                add(
-                    SavedCreditCardFormData(
-                        savedCardIdentifier = SnapCreditCardUtil.SAVED_CARD_IDENTIFIER + index.toString(),
-                        inputTitle = getString(R.string.cc_dc_saved_card_enter_cvv),
-                        endIcon = R.drawable.ic_trash,
-                        startIcon = SnapCreditCardUtil.getBankIcon(savedToken.binDetail?.bankCode.toString()),
-                        errorText = mutableStateOf(""),
-                        maskedCardNumber = savedToken.maskedCard.orEmpty(),
-                        displayedMaskedCard = savedToken.maskedCard.orEmpty(),
-                        tokenType = savedToken.tokenType.toString(),
-                        tokenId = savedToken.token.toString(),
-                        cvvSavedCardTextField = TextFieldValue(),
-                        isCvvSavedCardInvalid = false
-                    )
-                )
-            }
-                add(NewCardFormData(newCardIdentifier = SnapCreditCardUtil.NEW_CARD_FORM_IDENTIFIER))
+    fun aaaa(){
+        creditCard?.savedTokens?.mapIndexed { index, savedToken ->
+            SavedCreditCardFormData(
+                savedCardIdentifier = SnapCreditCardUtil.SAVED_CARD_IDENTIFIER + index.toString(),
+                inputTitle = getString(R.string.cc_dc_saved_card_enter_cvv),
+                endIcon = R.drawable.ic_trash,
+                startIcon = SnapCreditCardUtil.getBankIcon(savedToken.binDetail?.bankCode.toString()),
+                errorText = mutableStateOf(""),
+                maskedCardNumber = savedToken.maskedCard.orEmpty(),
+                displayedMaskedCard = savedToken.maskedCard.orEmpty(),
+                tokenType = savedToken.tokenType.toString(),
+                tokenId = savedToken.token.toString(),
+                cvvSavedCardTextField = TextFieldValue(),
+                isCvvSavedCardInvalid = false
+            ) as FormData
         }
-            .ifEmpty { null }?.toMutableStateList()
+            ?.toMutableList()
+            ?.apply {
+                add(NewCardFormData(newCardIdentifier = SnapCreditCardUtil.NEW_CARD_FORM_IDENTIFIER))
+            }
+            ?.ifEmpty { null }
+            ?.toMutableStateList()
+    }
+    private val savedTokenList: SnapshotStateList<FormData>? by lazy {
+        creditCard?.savedTokens?.mapIndexed { index, savedToken ->
+            SavedCreditCardFormData(
+                savedCardIdentifier = SnapCreditCardUtil.SAVED_CARD_IDENTIFIER + index.toString(),
+                inputTitle = getString(R.string.cc_dc_saved_card_enter_cvv),
+                endIcon = R.drawable.ic_trash,
+                startIcon = SnapCreditCardUtil.getBankIcon(savedToken.binDetail?.bankCode.toString()),
+                errorText = mutableStateOf(""),
+                maskedCardNumber = savedToken.maskedCard.orEmpty(),
+                displayedMaskedCard = savedToken.maskedCard.orEmpty(),
+                tokenType = savedToken.tokenType.toString(),
+                tokenId = savedToken.token.toString(),
+                cvvSavedCardTextField = TextFieldValue(),
+                isCvvSavedCardInvalid = false
+            ) as FormData
+        }
+            ?.ifEmpty { null }
+            ?.toMutableList()
+            ?.apply {
+                add(NewCardFormData(newCardIdentifier = SnapCreditCardUtil.NEW_CARD_FORM_IDENTIFIER))
+            }
+            ?.toMutableStateList()
         //For testing purpose: uncomment below to force non save card
 //        null
     }
