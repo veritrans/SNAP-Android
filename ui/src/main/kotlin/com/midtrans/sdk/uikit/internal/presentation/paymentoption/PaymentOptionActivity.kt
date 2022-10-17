@@ -153,13 +153,13 @@ class PaymentOptionActivity : BaseActivity() {
         customerInfo = viewModel.getCustomerInfo(customerDetail)
 
         paymentType?.let { paymentType ->
-            val paymentIndex = getPaymentMethodIndex(paymentType.type)
-            paymentIndex?.let { index ->
+            val paymentMethod = paymentMethods.paymentMethods.find { it.type == paymentType.type }
+            paymentMethod?.let {
                 getOnPaymentItemClick(
                     paymentType = paymentType.type,
                     customerInfo = customerInfo,
                     totalAmount = totalAmount,
-                    paymentMethodItem = paymentMethods.paymentMethods[index],
+                    paymentMethodItem = it,
                     orderId = orderId
                 )[paymentType.type]!!.invoke()
             }
@@ -173,15 +173,6 @@ class PaymentOptionActivity : BaseActivity() {
                 paymentMethods = paymentMethods
             )
         }
-    }
-
-    private fun getPaymentMethodIndex(paymentType: String): Int? {
-        var index = 0
-        paymentMethods.paymentMethods.forEach {
-            if (it.type == paymentType) return index
-            index++
-        }
-        return null
     }
 
     @Preview
