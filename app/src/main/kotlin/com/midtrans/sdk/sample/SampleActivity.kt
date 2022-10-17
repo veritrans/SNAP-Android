@@ -22,6 +22,7 @@ import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
+import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import java.util.*
 
@@ -222,7 +223,10 @@ class SampleActivity : AppCompatActivity() {
                             ).show()
                         }
                     },
-                    paymentType = PaymentType.ALFAMART
+                    paymentType = PaymentMethodItem(
+                        type = PaymentType.BANK_TRANSFER,
+                        methods = listOf(PaymentType.E_CHANNEL)
+                    )
                 )
                 startActivity(
                     intent

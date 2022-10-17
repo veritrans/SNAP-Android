@@ -26,6 +26,11 @@ class BankTransferListActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        paymentType?.let { paymentType ->
+            toBankTransferDetail(paymentType.methods[0])
+        }
+
         setContent {
             setupView(paymentMethodItem = paymentMethodItem)
         }
@@ -136,6 +141,10 @@ class BankTransferListActivity : BaseActivity() {
             ?: throw RuntimeException("Order ID must not be empty")
     }
 
+    private val paymentType: PaymentMethodItem? by lazy {
+        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE)
+    }
+
     private val bankNameMap by lazy {
         mapOf(
             Pair(PaymentType.BCA_VA, Pair(R.string.bank_bca, R.drawable.ic_bank_bca_40)),
@@ -164,6 +173,7 @@ class BankTransferListActivity : BaseActivity() {
         private const val EXTRA_ORDER_ID = "bankTransfer.extra.order_id"
         private const val EXTRA_CUSTOMER_INFO = "bankTransfer.extra.customer_info"
         private const val EXTRA_PAYMENT_METHOD_ITEM = "bankTransfer.extra.payment_method_item"
+        private const val EXTRA_PAYMENT_TYPE = "bankTransfer.extra.payment_type"
 
         fun getIntent(
             activityContext: Context,
@@ -171,7 +181,8 @@ class BankTransferListActivity : BaseActivity() {
             totalAmount: String,
             orderId: String,
             paymentMethodItem: PaymentMethodItem,
-            customerInfo: CustomerInfo? = null
+            customerInfo: CustomerInfo? = null,
+            paymentType: PaymentMethodItem? = null
         ): Intent {
             return Intent(activityContext, BankTransferListActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -182,6 +193,7 @@ class BankTransferListActivity : BaseActivity() {
                     EXTRA_CUSTOMER_INFO,
                     customerInfo
                 )
+                putExtra(EXTRA_PAYMENT_TYPE, paymentType)
             }
         }
     }

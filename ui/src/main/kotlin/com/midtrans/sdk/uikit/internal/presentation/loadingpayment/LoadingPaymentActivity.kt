@@ -17,6 +17,7 @@ import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferRequest
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
+import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity
 import com.midtrans.sdk.uikit.internal.view.AnimatedIcon
 
@@ -68,7 +69,7 @@ class LoadingPaymentActivity : BaseActivity() {
             gopayCallback: GopayPaymentCallback? = null,
             shopeepayCallback: PaymentCallback? = null,
             uobEzpayCallback: PaymentCallback? = null,
-            paymentType: String? = null
+            paymentType: PaymentMethodItem? = null
         ): Intent {
             return Intent(activityContext, LoadingPaymentActivity::class.java).apply {
                 putExtra(EXTRA_TRANSACTION_DETAIL, transactionDetails)
@@ -153,8 +154,8 @@ class LoadingPaymentActivity : BaseActivity() {
     private val uobEzpayCallback: PaymentCallback? by lazy {
         intent.getSerializableExtra(EXTRA_UOB_EZPAY_CALLBACK) as? PaymentCallback
     }
-    private val paymentType: String? by lazy {
-        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
+    private val paymentType: PaymentMethodItem? by lazy {
+        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE)
     }
     private val viewModel: LoadingPaymentViewModel by lazy {
         ViewModelProvider(this).get(LoadingPaymentViewModel::class.java)

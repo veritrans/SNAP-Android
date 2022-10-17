@@ -70,7 +70,7 @@ class PaymentOptionActivity : BaseActivity() {
             promos: List<Promo>?,
             merchant: Merchant?,
             expiryTime: String?,
-            paymentType: String?
+            paymentType: PaymentMethodItem?
         ): Intent {
             return Intent(activityContext, PaymentOptionActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -134,8 +134,8 @@ class PaymentOptionActivity : BaseActivity() {
         intent.getStringExtra(EXTRA_EXPIRY_TIME)
     }
 
-    private val paymentType: String? by lazy {
-        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
+    private val paymentType: PaymentMethodItem? by lazy {
+        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE)
     }
 
     private val merchant: Merchant? by lazy {
@@ -153,15 +153,15 @@ class PaymentOptionActivity : BaseActivity() {
         customerInfo = viewModel.getCustomerInfo(customerDetail)
 
         paymentType?.let { paymentType ->
-            val paymentIndex = getPaymentMethodIndex(paymentType)
+            val paymentIndex = getPaymentMethodIndex(paymentType.type)
             paymentIndex?.let { index ->
                 getOnPaymentItemClick(
-                    paymentType = paymentType,
+                    paymentType = paymentType.type,
                     customerInfo = customerInfo,
                     totalAmount = totalAmount,
                     paymentMethodItem = paymentMethods.paymentMethods[index],
                     orderId = orderId
-                )[paymentType]!!.invoke()
+                )[paymentType.type]!!.invoke()
             }
         }
 
@@ -381,7 +381,8 @@ class PaymentOptionActivity : BaseActivity() {
                         orderId = orderId,
                         totalAmount = totalAmount,
                         paymentMethodItem = paymentMethodItem,
-                        customerInfo = customerInfo
+                        customerInfo = customerInfo,
+                        paymentType = this.paymentType
                     )
                 )
             },
