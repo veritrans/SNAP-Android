@@ -20,6 +20,7 @@ import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferReque
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
+import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDetailActivity
 import com.midtrans.sdk.uikit.internal.presentation.conveniencestore.ConvenienceStoreActivity
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity
@@ -231,15 +232,20 @@ class LoadingPaymentActivity : BaseActivity() {
                 startActivity(intent)
                 finish()
             } else {
+                val paymentType = paymentType!!
+                val snapToken = it.token
+                val orderId = viewModel.getOrderId(transactionDetails)
+                val totalAmount = viewModel.getAmountInString(transactionDetails)
+                val customerInfo = paymentOptionViewModel.getCustomerInfo(customerDetails)
                 val eWalletPaymentLauncher = {
                     resultLauncher.launch(
                         WalletActivity.getIntent(
                             activityContext = this,
-                            snapToken = it.token,
-                            orderId = viewModel.getOrderId(transactionDetails),
-                            totalAmount = viewModel.getAmountInString(transactionDetails),
-                            paymentType = paymentType!!,
-                            customerInfo = paymentOptionViewModel.getCustomerInfo(customerDetails)
+                            snapToken = snapToken,
+                            orderId = orderId,
+                            totalAmount = totalAmount,
+                            paymentType = paymentType,
+                            customerInfo = customerInfo
                         )
                     )
                 }
@@ -247,11 +253,11 @@ class LoadingPaymentActivity : BaseActivity() {
                     resultLauncher.launch(
                         ConvenienceStoreActivity.getIntent(
                             activityContext = this,
-                            snapToken = it.token,
-                            orderId = viewModel.getOrderId(transactionDetails),
-                            totalAmount = viewModel.getAmountInString(transactionDetails),
-                            paymentType = paymentType!!,
-                            customerInfo = paymentOptionViewModel.getCustomerInfo(customerDetails)
+                            snapToken = snapToken,
+                            orderId = orderId,
+                            totalAmount = totalAmount,
+                            paymentType = paymentType,
+                            customerInfo = customerInfo
                         )
                     )
                 }
