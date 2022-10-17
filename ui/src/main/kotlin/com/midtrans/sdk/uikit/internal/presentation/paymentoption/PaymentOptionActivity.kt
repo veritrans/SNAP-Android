@@ -53,7 +53,8 @@ class PaymentOptionActivity : BaseActivity() {
         private const val EXTRA_CREDIT_CARD = "paymentOptionActivity.extra.credit_card"
         private const val EXTRA_PROMOS = "paymentOptionActivity.extra.promos"
         private const val EXTRA_MERCHANT_DATA = "paymentOptionActivity.extra.merchant_data"
-        private const val EXTRA_TRANSACTION_DETAILS = "paymentOptionActivity.extra.transaction_details"
+        private const val EXTRA_TRANSACTION_DETAILS =
+            "paymentOptionActivity.extra.transaction_details"
         private const val EXTRA_EXPIRY_TIME = "paymentOptionActivity.extra.expiry_time"
         private const val EXTRA_PAYMENT_TYPE = "paymentOptionActivity.extra.payment_type"
 
@@ -151,6 +152,19 @@ class PaymentOptionActivity : BaseActivity() {
         paymentMethods = viewModel.initiateList(paymentList, isTabletDevice())
         customerInfo = viewModel.getCustomerInfo(customerDetail)
 
+        paymentType?.let { paymentType ->
+            val paymentIndex = getPaymentMethodIndex(paymentType)
+            paymentIndex?.let { index ->
+                getOnPaymentItemClick(
+                    paymentType = paymentType,
+                    customerInfo = customerInfo,
+                    totalAmount = totalAmount,
+                    paymentMethodItem = paymentMethods.paymentMethods[index],
+                    orderId = orderId
+                )[paymentType]!!.invoke()
+            }
+        }
+
         setContent {
             PaymentOptionPage(
                 totalAmount = totalAmount,
@@ -159,6 +173,15 @@ class PaymentOptionActivity : BaseActivity() {
                 paymentMethods = paymentMethods
             )
         }
+    }
+
+    private fun getPaymentMethodIndex(paymentType: String): Int? {
+        var index = 0
+        paymentMethods.paymentMethods.forEach {
+            if (it.type == paymentType) return index
+            index++
+        }
+        return null
     }
 
     @Preview
