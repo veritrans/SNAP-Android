@@ -224,8 +224,8 @@ class SampleActivity : AppCompatActivity() {
                         }
                     },
                     paymentType = PaymentMethodItem(
-                        type = PaymentType.BANK_TRANSFER,
-                        methods = listOf(PaymentType.E_CHANNEL)
+                        type = PaymentType.UOB_EZPAY,
+                        methods = listOf(PaymentType.UOB_EZPAY_WEB)
                     )
                 )
                 startActivity(

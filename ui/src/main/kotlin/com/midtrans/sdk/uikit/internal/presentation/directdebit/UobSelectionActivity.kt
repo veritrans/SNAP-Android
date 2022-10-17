@@ -30,6 +30,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -65,6 +66,10 @@ class UobSelectionActivity : BaseActivity() {
             ?: throw RuntimeException("Missing Uob modes")
     }
 
+    private val paymentType: PaymentMethodItem? by lazy {
+        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE)
+    }
+
     private val viewModel: UobSelectionViewModel by lazy {
         ViewModelProvider(this, vmFactory).get(UobSelectionViewModel::class.java)
     }
@@ -75,6 +80,20 @@ class UobSelectionActivity : BaseActivity() {
             .applicationContext(this.applicationContext)
             .build()
             .inject(this)
+
+        paymentType?.let { paymentType ->
+            resultLauncher.launch(
+                UobPaymentActivity.getIntent(
+                    activityContext = this@UobSelectionActivity,
+                    snapToken = snapToken,
+                    uobMode = paymentType.methods[0],
+                    amount = amount,
+                    orderId = orderId,
+                    customerInfo = customerInfo,
+                    remainingTime = viewModel.getExpiredTime()
+                )
+            )
+        }
 
         setContent {
             UobSelectionContent(
@@ -224,6 +243,7 @@ class UobSelectionActivity : BaseActivity() {
         private const val EXTRA_ORDER_ID = "uobSelection.extra.order_id"
         private const val EXTRA_CUSTOMER_INFO = "uobSelection.extra.customer_info"
         private const val EXTRA_UOB_MODES = "uobSelection.extra.uob_modes"
+        private const val EXTRA_PAYMENT_TYPE = "uobSelection.extra.payment_type"
 
         fun getIntent(
             activityContext: Context,
@@ -231,13 +251,15 @@ class UobSelectionActivity : BaseActivity() {
             uobModes: ArrayList<String>,
             amount: String,
             orderId: String,
-            customerInfo: CustomerInfo?
+            customerInfo: CustomerInfo?,
+            paymentType: PaymentMethodItem?
         ): Intent {
             return Intent(activityContext, UobSelectionActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
                 putExtra(EXTRA_AMOUNT, amount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
+                putExtra(EXTRA_PAYMENT_TYPE, paymentType)
                 putStringArrayListExtra(EXTRA_UOB_MODES, uobModes)
             }
         }

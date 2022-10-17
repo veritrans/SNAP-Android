@@ -437,7 +437,8 @@ class PaymentOptionActivity : BaseActivity() {
                         uobModes = ArrayList(paymentMethodItem.methods),
                         amount = totalAmount,
                         orderId = orderId,
-                        customerInfo = customerInfo
+                        customerInfo = customerInfo,
+                        paymentType = this.paymentType
                     )
                 )
             },
