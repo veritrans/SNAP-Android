@@ -21,6 +21,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.presentation.conveniencestore.ConvenienceStoreActivity
+import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.presentation.paylater.PayLaterActivity
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity
@@ -273,13 +274,26 @@ class LoadingPaymentActivity : BaseActivity() {
                         )
                     )
                 }
+                val directDebitPaymentLauncher = {
+                    resultLauncher.launch(
+                        DirectDebitActivity.getIntent(
+                            activityContext = this,
+                            snapToken = snapToken,
+                            paymentType = paymentType,
+                            amount = totalAmount,
+                            orderId = orderId,
+                            customerInfo = customerInfo
+                        )
+                    )
+                }
                 val paymentOptions = mapOf(
                     Pair(PaymentType.SHOPEEPAY, eWalletPaymentLauncher),
                     Pair(PaymentType.SHOPEEPAY_QRIS, eWalletPaymentLauncher),
                     Pair(PaymentType.GOPAY, eWalletPaymentLauncher),
                     Pair(PaymentType.ALFAMART, cStorePaymentLauncher),
                     Pair(PaymentType.INDOMARET, cStorePaymentLauncher),
-                    Pair(PaymentType.AKULAKU, paylaterPaymentLauncher)
+                    Pair(PaymentType.AKULAKU, paylaterPaymentLauncher),
+                    Pair(checkDirectDebitType(paymentType), directDebitPaymentLauncher)
                 )
                 paymentOptions[paymentType]?.invoke()
             }
@@ -289,6 +303,17 @@ class LoadingPaymentActivity : BaseActivity() {
             Toast.makeText(this, "Error caught ${it.javaClass.simpleName}", Toast.LENGTH_SHORT)
                 .show()
         })
+    }
+
+    private fun checkDirectDebitType(paymentType: String): String {
+        return when (paymentType) {
+            PaymentType.KLIK_BCA,
+            PaymentType.BCA_KLIKPAY,
+            PaymentType.CIMB_CLICKS,
+            PaymentType.BRI_EPAY,
+            PaymentType.DANAMON_ONLINE -> paymentType
+            else -> ""
+        }
     }
 
     @Composable
