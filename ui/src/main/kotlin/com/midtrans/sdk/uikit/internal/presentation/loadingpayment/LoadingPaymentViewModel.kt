@@ -6,17 +6,10 @@ import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
-import com.midtrans.sdk.corekit.api.model.CreditCard
-import com.midtrans.sdk.corekit.api.model.CustomerDetails
-import com.midtrans.sdk.corekit.api.model.Expiry
-import com.midtrans.sdk.corekit.api.model.GopayPaymentCallback
-import com.midtrans.sdk.corekit.api.model.ItemDetails
-import com.midtrans.sdk.corekit.api.model.PaymentCallback
-import com.midtrans.sdk.corekit.api.model.PaymentOption
-import com.midtrans.sdk.corekit.api.model.PromoRequest
-import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
+import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
 import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferRequest
+import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 
 //TODO will add UT and SnapCore manager after DI is setup
@@ -87,5 +80,45 @@ class LoadingPaymentViewModel : ViewModel() {
 
     fun getOrderId(transactionDetails: SnapTransactionDetail): String {
         return transactionDetails.orderId
+    }
+
+    fun getCustomerInfo(customerDetails: CustomerDetails?): CustomerInfo? {
+        if (customerDetails == null)
+            return null
+
+        val nameList = mutableListOf<String>()
+        customerDetails.firstName?.run { nameList.add(this) }
+        customerDetails.lastName?.run { nameList.add(this) }
+        val name = nameList.joinToString(separator = " ")
+
+        val phone = customerDetails.phone.orEmpty()
+
+        val addressLines =
+            if (
+                isAddressProvided(customerDetails.shippingAddress)
+                || isAddressProvided(customerDetails.billingAddress)
+            ) {
+                if (isAddressProvided(customerDetails.shippingAddress)) {
+                    createAddressLines(customerDetails.shippingAddress!!)
+                } else {
+                    createAddressLines(customerDetails.billingAddress!!)
+                }
+            } else {
+                emptyList()
+            }
+
+        return CustomerInfo(name = name, phone = phone, addressLines = addressLines)
+    }
+
+    private fun isAddressProvided(address: Address?): Boolean {
+        return address != null && (!address.address.isNullOrBlank() || !address.city.isNullOrBlank() || !address.postalCode.isNullOrBlank())
+    }
+
+    private fun createAddressLines(address: Address): MutableList<String> {
+        val addresses = mutableListOf<String>()
+        address.address?.run { addresses.add(this) }
+        address.city?.run { addresses.add(this) }
+        address.postalCode?.run { addresses.add(this) }
+        return addresses
     }
 }

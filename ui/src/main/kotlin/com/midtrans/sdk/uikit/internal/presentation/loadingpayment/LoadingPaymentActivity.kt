@@ -28,7 +28,6 @@ import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActiv
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.presentation.paylater.PayLaterActivity
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity
-import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionViewModel
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.AnimatedIcon
 
@@ -173,10 +172,6 @@ class LoadingPaymentActivity : BaseActivity() {
         ViewModelProvider(this).get(LoadingPaymentViewModel::class.java)
     }
 
-    private val paymentOptionViewModel: PaymentOptionViewModel by lazy {
-        ViewModelProvider(this).get(PaymentOptionViewModel::class.java)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initObserver()
@@ -240,7 +235,7 @@ class LoadingPaymentActivity : BaseActivity() {
                 val snapToken = it.token
                 val orderId = viewModel.getOrderId(transactionDetails)
                 val totalAmount = viewModel.getAmountInString(transactionDetails)
-                val customerInfo = paymentOptionViewModel.getCustomerInfo(customerDetails)
+                val customerInfo = viewModel.getCustomerInfo(customerDetails)
                 val eWalletPaymentLauncher = {
                     resultLauncher.launch(
                         WalletActivity.getIntent(
