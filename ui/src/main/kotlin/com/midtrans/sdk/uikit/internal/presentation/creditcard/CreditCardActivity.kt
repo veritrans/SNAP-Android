@@ -229,6 +229,7 @@ internal class CreditCardActivity : BaseActivity() {
         val bankCodeId by bankCodeIdState
         var isExpanding by remember { mutableStateOf(false) }
         var selectedFormData : FormData? by remember { mutableStateOf(null)}
+        state.isBinBlocked = viewModel?.binBlockedLiveData?.observeAsState(false)?.value?: false
 
         if (transactionResponse?.value?.statusCode == UiKitConstants.STATUS_CODE_201 && !transactionResponse.value?.redirectUrl.isNullOrEmpty()) {
             transactionResponse.value?.redirectUrl?.let {
@@ -469,7 +470,7 @@ internal class CreditCardActivity : BaseActivity() {
             creditCard = creditCard
         )
     }
-    
+
     @Composable
     private fun promoLayout(
         promoData: List<PromoData>,
@@ -494,7 +495,7 @@ internal class CreditCardActivity : BaseActivity() {
             }
         )
     }
-    
+
     @Composable
     private fun customerPhoneLayout(
         state: CardItemState
