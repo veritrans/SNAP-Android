@@ -16,7 +16,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.times
 import org.mockito.kotlin.*
@@ -105,7 +104,7 @@ class CreditCardViewModelTest {
 
         val callback = callbackCaptor.firstValue
         callback.onSuccess(transactionResponse)
-        Assert.assertEquals(transactionResponse, creditCardViewModel.getTransactionResponseLiveData().getOrAwaitValue())
+        Assert.assertEquals(transactionResponse, creditCardViewModel.transactionResponseLiveData.getOrAwaitValue())
     }
 
 
@@ -146,7 +145,7 @@ class CreditCardViewModelTest {
         val bankIconResId = 1
         val bankCode = "009"
         val binResponse = BinResponse(
-            data = BinData(null, null, null, null, null, null, bankCode, null)
+            data = BinData(null, null, null, null, null, null, bankCode, null, null)
         )
         `when`(snapCreditCardUtil.getBankIcon(bankCode)).thenReturn(bankIconResId)
         val creditCardViewModel =

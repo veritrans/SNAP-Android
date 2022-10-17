@@ -112,6 +112,21 @@ class SnapCreditCardUtilTest {
                 creditCard5
             )
         )
+
+        val whiteListBank = listOf("bca", "debit")
+        val creditCard6 =
+            CreditCard( whitelistBins = whiteListBank)
+        Assert.assertFalse(SnapCreditCardUtil.isBinBlocked("4123456789989884", creditCard6, "bca", "debit"))
+        Assert.assertTrue(SnapCreditCardUtil.isBinBlocked("4123456789989884", creditCard6, "bca", "credit"))
+        Assert.assertTrue(SnapCreditCardUtil.isBinBlocked("4123456789989884", creditCard6, "mandiri", "debit"))
+
+        val blacklistListBank = listOf("bca", "debit")
+        val creditCard7 =
+            CreditCard( blacklistBins = blacklistListBank)
+
+        Assert.assertTrue(SnapCreditCardUtil.isBinBlocked("4123456789989884", creditCard7, "bca", "debit"))
+        Assert.assertTrue(SnapCreditCardUtil.isBinBlocked("4123456789989884", creditCard7, "bca", "credit"))
+        Assert.assertTrue(SnapCreditCardUtil.isBinBlocked("4123456789989884", creditCard7, "mandiri", "debit"))
     }
 
     @Test
