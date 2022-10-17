@@ -20,9 +20,9 @@ import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferReque
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
-import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDetailActivity
 import com.midtrans.sdk.uikit.internal.presentation.conveniencestore.ConvenienceStoreActivity
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
+import com.midtrans.sdk.uikit.internal.presentation.paylater.PayLaterActivity
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionViewModel
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
@@ -261,12 +261,25 @@ class LoadingPaymentActivity : BaseActivity() {
                         )
                     )
                 }
+                val paylaterPaymentLauncher = {
+                    resultLauncher.launch(
+                        PayLaterActivity.getIntent(
+                            activityContext = this,
+                            snapToken = snapToken,
+                            paymentType = paymentType,
+                            amount = totalAmount,
+                            orderId = orderId,
+                            customerInfo = customerInfo
+                        )
+                    )
+                }
                 val paymentOptions = mapOf(
                     Pair(PaymentType.SHOPEEPAY, eWalletPaymentLauncher),
                     Pair(PaymentType.SHOPEEPAY_QRIS, eWalletPaymentLauncher),
                     Pair(PaymentType.GOPAY, eWalletPaymentLauncher),
                     Pair(PaymentType.ALFAMART, cStorePaymentLauncher),
-                    Pair(PaymentType.INDOMARET, cStorePaymentLauncher)
+                    Pair(PaymentType.INDOMARET, cStorePaymentLauncher),
+                    Pair(PaymentType.AKULAKU, paylaterPaymentLauncher)
                 )
                 paymentOptions[paymentType]?.invoke()
             }
