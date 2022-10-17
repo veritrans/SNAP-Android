@@ -334,9 +334,6 @@ class LoadingPaymentActivity : BaseActivity() {
                     Pair(checkDirectDebitType(paymentType), directDebitPaymentLauncher),
                     Pair(checkBankTransferType(paymentType), bankTransferPaymentLauncher),
                 )
-//                paymentOptions[paymentType]?.let {
-//                    paymentOptions[paymentType]?.invoke()
-//                }
                 if (paymentOptions[paymentType] != null) {
                     paymentOptions[paymentType]?.invoke()
                 } else {
