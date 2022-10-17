@@ -55,6 +55,7 @@ class PaymentOptionActivity : BaseActivity() {
         private const val EXTRA_MERCHANT_DATA = "paymentOptionActivity.extra.merchant_data"
         private const val EXTRA_TRANSACTION_DETAILS = "paymentOptionActivity.extra.transaction_details"
         private const val EXTRA_EXPIRY_TIME = "paymentOptionActivity.extra.expiry_time"
+        private const val EXTRA_PAYMENT_TYPE = "paymentOptionActivity.extra.payment_type"
 
         fun openPaymentOptionPage(
             activityContext: Context,
@@ -67,7 +68,8 @@ class PaymentOptionActivity : BaseActivity() {
             creditCard: CreditCard?,
             promos: List<Promo>?,
             merchant: Merchant?,
-            expiryTime: String?
+            expiryTime: String?,
+            paymentType: String?
         ): Intent {
             return Intent(activityContext, PaymentOptionActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -79,6 +81,7 @@ class PaymentOptionActivity : BaseActivity() {
                 putExtra(EXTRA_MERCHANT_DATA, merchant)
                 putExtra(EXTRA_TRANSACTION_DETAILS, transactionDetail)
                 putExtra(EXTRA_EXPIRY_TIME, expiryTime)
+                putExtra(EXTRA_PAYMENT_TYPE, paymentType)
                 promos?.let {
                     putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it))
                 }
@@ -128,6 +131,10 @@ class PaymentOptionActivity : BaseActivity() {
 
     private val expiryTime: String? by lazy {
         intent.getStringExtra(EXTRA_EXPIRY_TIME)
+    }
+
+    private val paymentType: String? by lazy {
+        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
     }
 
     private val merchant: Merchant? by lazy {

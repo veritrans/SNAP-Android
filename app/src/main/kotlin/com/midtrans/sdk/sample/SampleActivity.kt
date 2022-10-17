@@ -221,7 +221,8 @@ class SampleActivity : AppCompatActivity() {
                                 Toast.LENGTH_LONG
                             ).show()
                         }
-                    }
+                    },
+                    paymentType = PaymentType.ALFAMART
                 )
                 startActivity(
                     intent

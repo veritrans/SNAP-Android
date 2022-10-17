@@ -45,6 +45,7 @@ class LoadingPaymentActivity : BaseActivity() {
             "loadingPaymentActivity.extra.shopeepay_callback"
         private const val EXTRA_UOB_EZPAY_CALLBACK =
             "loadingPaymentActivity.extra.uob_ezpay_callback"
+        private const val EXTRA_PAYMENT_TYPE = "loadingPaymentActivity.extra.payment_type"
 
         fun getLoadingPaymentIntent(
             activityContext: Context,
@@ -66,7 +67,8 @@ class LoadingPaymentActivity : BaseActivity() {
             customField3: String? = null,
             gopayCallback: GopayPaymentCallback? = null,
             shopeepayCallback: PaymentCallback? = null,
-            uobEzpayCallback: PaymentCallback? = null
+            uobEzpayCallback: PaymentCallback? = null,
+            paymentType: String? = null
         ): Intent {
             return Intent(activityContext, LoadingPaymentActivity::class.java).apply {
                 putExtra(EXTRA_TRANSACTION_DETAIL, transactionDetails)
@@ -88,6 +90,7 @@ class LoadingPaymentActivity : BaseActivity() {
                 putExtra(EXTRA_GOPAY_CALLBACK, gopayCallback)
                 putExtra(EXTRA_SHOPEEPAY_CALLBACK, shopeepayCallback)
                 putExtra(EXTRA_UOB_EZPAY_CALLBACK, uobEzpayCallback)
+                putExtra(EXTRA_PAYMENT_TYPE, paymentType)
             }
         }
     }
@@ -150,7 +153,9 @@ class LoadingPaymentActivity : BaseActivity() {
     private val uobEzpayCallback: PaymentCallback? by lazy {
         intent.getSerializableExtra(EXTRA_UOB_EZPAY_CALLBACK) as? PaymentCallback
     }
-
+    private val paymentType: String? by lazy {
+        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
+    }
     private val viewModel: LoadingPaymentViewModel by lazy {
         ViewModelProvider(this).get(LoadingPaymentViewModel::class.java)
     }
@@ -197,7 +202,8 @@ class LoadingPaymentActivity : BaseActivity() {
                 creditCard = it.creditCard,
                 promos = it.promos,
                 merchant = it.merchantData,
-                expiryTime = it.expiryTme
+                expiryTime = it.expiryTme,
+                paymentType = paymentType
             )
             startActivity(intent)
             finish()
