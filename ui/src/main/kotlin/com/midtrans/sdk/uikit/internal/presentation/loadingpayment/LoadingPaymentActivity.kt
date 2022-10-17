@@ -214,20 +214,21 @@ class LoadingPaymentActivity : BaseActivity() {
 
     private fun initObserver() {
         viewModel.getPaymentOptionLiveData().observe(this, Observer {
+            val intent = PaymentOptionActivity.openPaymentOptionPage(
+                activityContext = this,
+                snapToken = it.token,
+                totalAmount = viewModel.getAmountInString(transactionDetails),
+                transactionDetail = it.transactionDetails,
+                orderId = viewModel.getOrderId(transactionDetails),
+                paymentList = it.options,
+                customerDetails = customerDetails,
+                creditCard = it.creditCard,
+                promos = it.promos,
+                merchant = it.merchantData,
+                expiryTime = it.expiryTme
+            )
+
             if (paymentType == null) {
-                val intent = PaymentOptionActivity.openPaymentOptionPage(
-                    activityContext = this,
-                    snapToken = it.token,
-                    totalAmount = viewModel.getAmountInString(transactionDetails),
-                    transactionDetail = it.transactionDetails,
-                    orderId = viewModel.getOrderId(transactionDetails),
-                    paymentList = it.options,
-                    customerDetails = customerDetails,
-                    creditCard = it.creditCard,
-                    promos = it.promos,
-                    merchant = it.merchantData,
-                    expiryTime = it.expiryTme
-                )
                 startActivity(intent)
                 finish()
             } else {
@@ -333,7 +334,15 @@ class LoadingPaymentActivity : BaseActivity() {
                     Pair(checkDirectDebitType(paymentType), directDebitPaymentLauncher),
                     Pair(checkBankTransferType(paymentType), bankTransferPaymentLauncher),
                 )
-                paymentOptions[paymentType]?.invoke()
+//                paymentOptions[paymentType]?.let {
+//                    paymentOptions[paymentType]?.invoke()
+//                }
+                if (paymentOptions[paymentType] != null) {
+                    paymentOptions[paymentType]?.invoke()
+                } else {
+                    startActivity(intent)
+                    finish()
+                }
             }
         })
         viewModel.getErrorLiveData().observe(this, Observer {
@@ -343,35 +352,35 @@ class LoadingPaymentActivity : BaseActivity() {
         })
     }
 
-    private fun checkEWalletType(paymentType: String) : String {
+    private fun checkEWalletType(paymentType: String) : String? {
         return when (paymentType) {
             PaymentType.SHOPEEPAY,
             PaymentType.SHOPEEPAY_QRIS,
             PaymentType.GOPAY -> paymentType
-            else -> ""
+            else -> null
         }
     }
 
-    private fun checkCStoreType(paymentType: String) : String {
+    private fun checkCStoreType(paymentType: String) : String? {
         return when (paymentType) {
             PaymentType.ALFAMART,
             PaymentType.INDOMARET -> paymentType
-            else -> ""
+            else -> null
         }
     }
 
-    private fun checkDirectDebitType(paymentType: String): String {
+    private fun checkDirectDebitType(paymentType: String): String? {
         return when (paymentType) {
             PaymentType.KLIK_BCA,
             PaymentType.BCA_KLIKPAY,
             PaymentType.CIMB_CLICKS,
             PaymentType.BRI_EPAY,
             PaymentType.DANAMON_ONLINE -> paymentType
-            else -> ""
+            else -> null
         }
     }
 
-    private fun checkBankTransferType(paymentType: String) : String {
+    private fun checkBankTransferType(paymentType: String) : String? {
         return when (paymentType) {
             PaymentType.BCA_VA,
             PaymentType.E_CHANNEL,
@@ -379,7 +388,7 @@ class LoadingPaymentActivity : BaseActivity() {
             PaymentType.PERMATA_VA,
             PaymentType.BRI_VA,
             PaymentType.OTHER_VA -> paymentType
-            else -> ""
+            else -> null
         }
     }
 
