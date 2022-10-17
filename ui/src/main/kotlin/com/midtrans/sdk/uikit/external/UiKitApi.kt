@@ -21,7 +21,7 @@ class UiKitApi { //TODO revisit this implementation, currently for getting callb
         userId: String,
         uobEzpayCallback: PaymentCallback,
         paymentCallback: Callback<TransactionResult>,
-        paymentType: PaymentMethodItem?
+        paymentType: PaymentMethodItem? = null
     ) {
         this.paymentCallback = paymentCallback
 
