@@ -300,12 +300,9 @@ class LoadingPaymentActivity : BaseActivity() {
                     )
                 }
                 val paymentOptions = mapOf(
-                    Pair(PaymentType.SHOPEEPAY, eWalletPaymentLauncher),
-                    Pair(PaymentType.SHOPEEPAY_QRIS, eWalletPaymentLauncher),
-                    Pair(PaymentType.GOPAY, eWalletPaymentLauncher),
-                    Pair(PaymentType.ALFAMART, cStorePaymentLauncher),
-                    Pair(PaymentType.INDOMARET, cStorePaymentLauncher),
                     Pair(PaymentType.AKULAKU, paylaterPaymentLauncher),
+                    Pair(checkEWalletType(paymentType), eWalletPaymentLauncher),
+                    Pair(checkCStoreType(paymentType), cStorePaymentLauncher),
                     Pair(checkDirectDebitType(paymentType), directDebitPaymentLauncher),
                     Pair(checkBankTransferType(paymentType), bankTransferPaymentLauncher),
                 )
@@ -317,6 +314,23 @@ class LoadingPaymentActivity : BaseActivity() {
             Toast.makeText(this, "Error caught ${it.javaClass.simpleName}", Toast.LENGTH_SHORT)
                 .show()
         })
+    }
+
+    private fun checkEWalletType(paymentType: String) : String {
+        return when (paymentType) {
+            PaymentType.SHOPEEPAY,
+            PaymentType.SHOPEEPAY_QRIS,
+            PaymentType.GOPAY -> paymentType
+            else -> ""
+        }
+    }
+
+    private fun checkCStoreType(paymentType: String) : String {
+        return when (paymentType) {
+            PaymentType.ALFAMART,
+            PaymentType.INDOMARET -> paymentType
+            else -> ""
+        }
     }
 
     private fun checkDirectDebitType(paymentType: String): String {
