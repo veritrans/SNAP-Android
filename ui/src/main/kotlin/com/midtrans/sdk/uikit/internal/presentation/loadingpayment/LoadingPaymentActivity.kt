@@ -20,6 +20,7 @@ import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferReque
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
+import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDetailActivity
 import com.midtrans.sdk.uikit.internal.presentation.conveniencestore.ConvenienceStoreActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
@@ -286,6 +287,18 @@ class LoadingPaymentActivity : BaseActivity() {
                         )
                     )
                 }
+                val bankTransferPaymentLauncher = {
+                    resultLauncher.launch(
+                        BankTransferDetailActivity.getIntent(
+                            activityContext = this,
+                            paymentType = paymentType,
+                            customerInfo = customerInfo,
+                            orderId = orderId,
+                            totalAmount = totalAmount,
+                            snapToken = snapToken
+                        )
+                    )
+                }
                 val paymentOptions = mapOf(
                     Pair(PaymentType.SHOPEEPAY, eWalletPaymentLauncher),
                     Pair(PaymentType.SHOPEEPAY_QRIS, eWalletPaymentLauncher),
@@ -293,7 +306,8 @@ class LoadingPaymentActivity : BaseActivity() {
                     Pair(PaymentType.ALFAMART, cStorePaymentLauncher),
                     Pair(PaymentType.INDOMARET, cStorePaymentLauncher),
                     Pair(PaymentType.AKULAKU, paylaterPaymentLauncher),
-                    Pair(checkDirectDebitType(paymentType), directDebitPaymentLauncher)
+                    Pair(checkDirectDebitType(paymentType), directDebitPaymentLauncher),
+                    Pair(checkBankTransferType(paymentType), bankTransferPaymentLauncher),
                 )
                 paymentOptions[paymentType]?.invoke()
             }
@@ -312,6 +326,18 @@ class LoadingPaymentActivity : BaseActivity() {
             PaymentType.CIMB_CLICKS,
             PaymentType.BRI_EPAY,
             PaymentType.DANAMON_ONLINE -> paymentType
+            else -> ""
+        }
+    }
+
+    private fun checkBankTransferType(paymentType: String) : String {
+        return when (paymentType) {
+            PaymentType.BCA_VA,
+            PaymentType.E_CHANNEL,
+            PaymentType.BNI_VA,
+            PaymentType.PERMATA_VA,
+            PaymentType.BRI_VA,
+            PaymentType.OTHER_VA -> paymentType
             else -> ""
         }
     }
