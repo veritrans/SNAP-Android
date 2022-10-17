@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class CreditCard(
+open class CreditCard(
     val saveCard: Boolean = false,
     val tokenId: String? = null,
     val secure: Boolean = false,

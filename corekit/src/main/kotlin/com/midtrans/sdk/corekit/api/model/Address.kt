@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Address(
+open class Address(
     val firstName: String? = null,
     val lastName: String? = null,
     val address: String? = null,
