@@ -28,7 +28,7 @@ class BankTransferListActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        paymentType?.let { paymentType ->
+        paymentTypeItem?.let { paymentType ->
             paymentType.method?.let { paymentMethod ->
                 toBankTransferDetail(paymentMethod)
             }
@@ -144,8 +144,8 @@ class BankTransferListActivity : BaseActivity() {
             ?: throw RuntimeException("Order ID must not be empty")
     }
 
-    private val paymentType: PaymentTypeItem? by lazy {
-        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE)
+    private val paymentTypeItem: PaymentTypeItem? by lazy {
+        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE_ITEM)
     }
 
     private val bankNameMap by lazy {
@@ -176,7 +176,7 @@ class BankTransferListActivity : BaseActivity() {
         private const val EXTRA_ORDER_ID = "bankTransfer.extra.order_id"
         private const val EXTRA_CUSTOMER_INFO = "bankTransfer.extra.customer_info"
         private const val EXTRA_PAYMENT_METHOD_ITEM = "bankTransfer.extra.payment_method_item"
-        private const val EXTRA_PAYMENT_TYPE = "bankTransfer.extra.payment_type"
+        private const val EXTRA_PAYMENT_TYPE_ITEM = "bankTransfer.extra.payment_type_it"
 
         fun getIntent(
             activityContext: Context,
@@ -185,7 +185,7 @@ class BankTransferListActivity : BaseActivity() {
             orderId: String,
             paymentMethodItem: PaymentMethodItem,
             customerInfo: CustomerInfo? = null,
-            paymentType: PaymentTypeItem? = null
+            paymentTypeItem: PaymentTypeItem? = null
         ): Intent {
             return Intent(activityContext, BankTransferListActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -196,7 +196,7 @@ class BankTransferListActivity : BaseActivity() {
                     EXTRA_CUSTOMER_INFO,
                     customerInfo
                 )
-                putExtra(EXTRA_PAYMENT_TYPE, paymentType)
+                putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
             }
         }
     }

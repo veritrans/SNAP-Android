@@ -65,8 +65,8 @@ class UobSelectionActivity : BaseActivity() {
             ?: throw RuntimeException("Missing Uob modes")
     }
 
-    private val paymentType: PaymentTypeItem? by lazy {
-        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE)
+    private val paymentTypeItem: PaymentTypeItem? by lazy {
+        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE_ITEM)
     }
 
     private val viewModel: UobSelectionViewModel by lazy {
@@ -77,7 +77,7 @@ class UobSelectionActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         UiKitApi.daggerUiKitComponent.inject(this)
 
-        paymentType?.let { paymentType ->
+        paymentTypeItem?.let { paymentType ->
             paymentType.method?.let { uobMode ->
                 resultLauncher.launch(
                     UobPaymentActivity.getIntent(
@@ -241,7 +241,7 @@ class UobSelectionActivity : BaseActivity() {
         private const val EXTRA_ORDER_ID = "uobSelection.extra.order_id"
         private const val EXTRA_CUSTOMER_INFO = "uobSelection.extra.customer_info"
         private const val EXTRA_UOB_MODES = "uobSelection.extra.uob_modes"
-        private const val EXTRA_PAYMENT_TYPE = "uobSelection.extra.payment_type"
+        private const val EXTRA_PAYMENT_TYPE_ITEM = "uobSelection.extra.payment_type_item"
 
         fun getIntent(
             activityContext: Context,
@@ -250,14 +250,14 @@ class UobSelectionActivity : BaseActivity() {
             amount: String,
             orderId: String,
             customerInfo: CustomerInfo?,
-            paymentType: PaymentTypeItem?
+            paymentTypeItem: PaymentTypeItem?
         ): Intent {
             return Intent(activityContext, UobSelectionActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
                 putExtra(EXTRA_AMOUNT, amount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
-                putExtra(EXTRA_PAYMENT_TYPE, paymentType)
+                putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
                 putStringArrayListExtra(EXTRA_UOB_MODES, uobModes)
             }
         }

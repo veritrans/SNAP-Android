@@ -58,7 +58,7 @@ class PaymentOptionActivity : BaseActivity() {
         private const val EXTRA_TRANSACTION_DETAILS =
             "paymentOptionActivity.extra.transaction_details"
         private const val EXTRA_EXPIRY_TIME = "paymentOptionActivity.extra.expiry_time"
-        private const val EXTRA_PAYMENT_TYPE = "paymentOptionActivity.extra.payment_type"
+        private const val EXTRA_PAYMENT_TYPE_ITEM = "paymentOptionActivity.extra.payment_type_item"
 
         fun openPaymentOptionPage(
             activityContext: Context,
@@ -72,7 +72,7 @@ class PaymentOptionActivity : BaseActivity() {
             promos: List<Promo>?,
             merchant: Merchant?,
             expiryTime: String?,
-            paymentType: PaymentTypeItem?
+            paymentTypeItem: PaymentTypeItem?
         ): Intent {
             return Intent(activityContext, PaymentOptionActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -84,7 +84,7 @@ class PaymentOptionActivity : BaseActivity() {
                 putExtra(EXTRA_MERCHANT_DATA, merchant)
                 putExtra(EXTRA_TRANSACTION_DETAILS, transactionDetail)
                 putExtra(EXTRA_EXPIRY_TIME, expiryTime)
-                putExtra(EXTRA_PAYMENT_TYPE, paymentType)
+                putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
                 promos?.let {
                     putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it))
                 }
@@ -136,8 +136,8 @@ class PaymentOptionActivity : BaseActivity() {
         intent.getStringExtra(EXTRA_EXPIRY_TIME)
     }
 
-    private val paymentType: PaymentTypeItem? by lazy {
-        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE)
+    private val paymentTypeItem: PaymentTypeItem? by lazy {
+        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE_ITEM)
     }
 
     private val merchant: Merchant? by lazy {
@@ -155,7 +155,7 @@ class PaymentOptionActivity : BaseActivity() {
         customerInfo = viewModel.getCustomerInfo(customerDetail)
 
         //TODO: Find More Optimal way for PaymentType that have method (Bank transfer & UOB)
-        paymentType?.let { paymentType ->
+        paymentTypeItem?.let { paymentType ->
             val paymentMethod = paymentMethods.paymentMethods.find { it.type == paymentType.type }
             paymentMethod?.let {
                 getOnPaymentItemClick(
@@ -376,7 +376,7 @@ class PaymentOptionActivity : BaseActivity() {
                         totalAmount = totalAmount,
                         paymentMethodItem = paymentMethodItem,
                         customerInfo = customerInfo,
-                        paymentType = this.paymentType
+                        paymentTypeItem = this.paymentTypeItem
                     )
                 )
             },
@@ -432,7 +432,7 @@ class PaymentOptionActivity : BaseActivity() {
                         amount = totalAmount,
                         orderId = orderId,
                         customerInfo = customerInfo,
-                        paymentType = this.paymentType
+                        paymentTypeItem = this.paymentTypeItem
                     )
                 )
             },

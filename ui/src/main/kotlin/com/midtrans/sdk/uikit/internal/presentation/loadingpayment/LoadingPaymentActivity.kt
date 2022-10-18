@@ -204,7 +204,7 @@ class LoadingPaymentActivity : BaseActivity() {
                 promos = it.promos,
                 merchant = it.merchantData,
                 expiryTime = it.expiryTme,
-                paymentType = paymentType
+                paymentTypeItem = paymentType
             )
             startActivity(intent)
             finish()
