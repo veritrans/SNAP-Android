@@ -163,15 +163,15 @@ class PaymentOptionActivity : BaseActivity() {
                     orderId = orderId
                 )[paymentType.type]!!.invoke()
             }
-        }
-
-        setContent {
-            PaymentOptionPage(
-                totalAmount = totalAmount,
-                orderId = orderId,
-                customerInfo = customerInfo,
-                paymentMethods = paymentMethods
-            )
+        } ?: run {
+            setContent {
+                PaymentOptionPage(
+                    totalAmount = totalAmount,
+                    orderId = orderId,
+                    customerInfo = customerInfo,
+                    paymentMethods = paymentMethods
+                )
+            }
         }
     }
 
