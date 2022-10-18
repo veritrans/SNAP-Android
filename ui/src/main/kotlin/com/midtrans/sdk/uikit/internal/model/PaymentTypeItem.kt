@@ -6,5 +6,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class PaymentTypeItem(
     val type: String,
-    val methods: String? = null
+    val method: String? = null
 ): Parcelable

@@ -224,7 +224,8 @@ class SampleActivity : AppCompatActivity() {
                         }
                     },
                     paymentType = PaymentTypeItem(
-                        type = PaymentType.BANK_TRANSFER
+                        type = PaymentType.BANK_TRANSFER,
+                        method = PaymentType.BCA_VA
                     )
                 )
                 startActivity(

@@ -28,15 +28,14 @@ class BankTransferListActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        paymentType?.let { paymentType ->
-//            toBankTransferDetail(paymentType.methods[0])
-//        } ?: run {
-//            setContent {
-//                setupView(paymentMethodItem = paymentMethodItem)
-//            }
-//        }
-        setContent {
-            setupView(paymentMethodItem = paymentMethodItem)
+        paymentType?.let { paymentType ->
+            paymentType.method?.let { paymentMethod ->
+                toBankTransferDetail(paymentMethod)
+            }
+        } ?: run {
+            setContent {
+                setupView(paymentMethodItem = paymentMethodItem)
+            }
         }
     }
 
