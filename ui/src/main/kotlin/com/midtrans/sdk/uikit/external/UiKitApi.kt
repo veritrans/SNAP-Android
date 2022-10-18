@@ -5,6 +5,7 @@ import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.uikit.internal.di.UiKitComponent
 import com.midtrans.sdk.uikit.api.callback.Callback
 import com.midtrans.sdk.uikit.api.model.*
+import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.presentation.loadingpayment.LoadingPaymentActivity
 import java.lang.ref.WeakReference
 
@@ -60,6 +61,7 @@ class UiKitApi { //TODO revisit this implementation, currently for getting callb
                 .withMerchantUrl(merchantUrl)
                 .withMerchantClientKey(merchantClientKey)
                 .build()
+            daggerUiKitComponent = DaggerUiKitComponent.builder().applicationContext(context.applicationContext).build()
             UiKitApi()
             return instance
         }
