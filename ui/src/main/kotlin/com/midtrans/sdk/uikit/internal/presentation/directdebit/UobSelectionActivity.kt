@@ -77,35 +77,29 @@ class UobSelectionActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         UiKitApi.daggerUiKitComponent.inject(this)
 
-//        paymentType?.let { paymentType ->
-//            resultLauncher.launch(
-//                UobPaymentActivity.getIntent(
-//                    activityContext = this@UobSelectionActivity,
-//                    snapToken = snapToken,
-//                    uobMode = paymentType.methods[0],
-//                    amount = amount,
-//                    orderId = orderId,
-//                    customerInfo = customerInfo,
-//                    remainingTime = viewModel.getExpiredTime()
-//                )
-//            )
-//        } ?: run {
-//            setContent {
-//                UobSelectionContent(
-//                    amount = amount,
-//                    orderId = orderId,
-//                    customerInfo = customerInfo,
-//                    remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
-//                )
-//            }
-//        }
-        setContent {
-            UobSelectionContent(
-                amount = amount,
-                orderId = orderId,
-                customerInfo = customerInfo,
-                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
-            )
+        paymentType?.let { paymentType ->
+            paymentType.method?.let { uobMode ->
+                resultLauncher.launch(
+                    UobPaymentActivity.getIntent(
+                        activityContext = this@UobSelectionActivity,
+                        snapToken = snapToken,
+                        uobMode = uobMode,
+                        amount = amount,
+                        orderId = orderId,
+                        customerInfo = customerInfo,
+                        remainingTime = viewModel.getExpiredTime()
+                    )
+                )
+            }
+        } ?: run {
+            setContent {
+                UobSelectionContent(
+                    amount = amount,
+                    orderId = orderId,
+                    customerInfo = customerInfo,
+                    remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
+                )
+            }
         }
     }
 
