@@ -154,6 +154,7 @@ class PaymentOptionActivity : BaseActivity() {
         paymentMethods = viewModel.initiateList(paymentList, isTabletDevice())
         customerInfo = viewModel.getCustomerInfo(customerDetail)
 
+        //TODO: Find More Optimal way for PaymentType that have method (Bank transfer & UOB)
         paymentType?.let { paymentType ->
             val paymentMethod = paymentMethods.paymentMethods.find { it.type == paymentType.type }
             paymentMethod?.let {
