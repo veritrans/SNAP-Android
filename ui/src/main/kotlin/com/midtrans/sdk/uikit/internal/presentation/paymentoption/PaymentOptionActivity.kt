@@ -32,6 +32,7 @@ import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
+import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.conveniencestore.ConvenienceStoreActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
@@ -54,8 +55,10 @@ class PaymentOptionActivity : BaseActivity() {
         private const val EXTRA_CREDIT_CARD = "paymentOptionActivity.extra.credit_card"
         private const val EXTRA_PROMOS = "paymentOptionActivity.extra.promos"
         private const val EXTRA_MERCHANT_DATA = "paymentOptionActivity.extra.merchant_data"
-        private const val EXTRA_TRANSACTION_DETAILS = "paymentOptionActivity.extra.transaction_details"
+        private const val EXTRA_TRANSACTION_DETAILS =
+            "paymentOptionActivity.extra.transaction_details"
         private const val EXTRA_EXPIRY_TIME = "paymentOptionActivity.extra.expiry_time"
+        private const val EXTRA_PAYMENT_TYPE_ITEM = "paymentOptionActivity.extra.payment_type_item"
 
         fun openPaymentOptionPage(
             activityContext: Context,
@@ -68,7 +71,8 @@ class PaymentOptionActivity : BaseActivity() {
             creditCard: CreditCard?,
             promos: List<Promo>?,
             merchant: Merchant?,
-            expiryTime: String?
+            expiryTime: String?,
+            paymentTypeItem: PaymentTypeItem?
         ): Intent {
             return Intent(activityContext, PaymentOptionActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -80,6 +84,7 @@ class PaymentOptionActivity : BaseActivity() {
                 putExtra(EXTRA_MERCHANT_DATA, merchant)
                 putExtra(EXTRA_TRANSACTION_DETAILS, transactionDetail)
                 putExtra(EXTRA_EXPIRY_TIME, expiryTime)
+                putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
                 promos?.let {
                     putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it))
                 }
@@ -131,6 +136,10 @@ class PaymentOptionActivity : BaseActivity() {
         intent.getStringExtra(EXTRA_EXPIRY_TIME)
     }
 
+    private val paymentTypeItem: PaymentTypeItem? by lazy {
+        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE_ITEM)
+    }
+
     private val merchant: Merchant? by lazy {
         intent.getParcelableExtra(EXTRA_MERCHANT_DATA)
     }
@@ -145,13 +154,27 @@ class PaymentOptionActivity : BaseActivity() {
         paymentMethods = viewModel.initiateList(paymentList, isTabletDevice())
         customerInfo = viewModel.getCustomerInfo(customerDetail)
 
-        setContent {
-            PaymentOptionPage(
-                totalAmount = totalAmount,
-                orderId = orderId,
-                customerInfo = customerInfo,
-                paymentMethods = paymentMethods
-            )
+        //TODO: Find More Optimal way for PaymentType that have method (Bank transfer & UOB)
+        paymentTypeItem?.let { paymentType ->
+            val paymentMethod = paymentMethods.paymentMethods.find { it.type == paymentType.type }
+            paymentMethod?.let {
+                getOnPaymentItemClick(
+                    paymentType = paymentType.type,
+                    customerInfo = customerInfo,
+                    totalAmount = totalAmount,
+                    paymentMethodItem = it,
+                    orderId = orderId
+                )[paymentType.type]!!.invoke()
+            }
+        } ?: run {
+            setContent {
+                PaymentOptionPage(
+                    totalAmount = totalAmount,
+                    orderId = orderId,
+                    customerInfo = customerInfo,
+                    paymentMethods = paymentMethods
+                )
+            }
         }
     }
 
@@ -352,7 +375,8 @@ class PaymentOptionActivity : BaseActivity() {
                         orderId = orderId,
                         totalAmount = totalAmount,
                         paymentMethodItem = paymentMethodItem,
-                        customerInfo = customerInfo
+                        customerInfo = customerInfo,
+                        paymentTypeItem = this.paymentTypeItem
                     )
                 )
             },
@@ -407,7 +431,8 @@ class PaymentOptionActivity : BaseActivity() {
                         uobModes = ArrayList(paymentMethodItem.methods),
                         amount = totalAmount,
                         orderId = orderId,
-                        customerInfo = customerInfo
+                        customerInfo = customerInfo,
+                        paymentTypeItem = this.paymentTypeItem
                     )
                 )
             },

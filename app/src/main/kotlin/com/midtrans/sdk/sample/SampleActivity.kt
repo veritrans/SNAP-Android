@@ -11,10 +11,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.api.callback.Callback
 import com.midtrans.sdk.uikit.api.exception.SnapError
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
+import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import java.util.*
 
@@ -100,7 +102,11 @@ class SampleActivity : AppCompatActivity() {
                                 Toast.LENGTH_LONG
                             ).show()
                         }
-                    }
+                    },
+                    paymentType = PaymentTypeItem(
+                        type = PaymentType.BANK_TRANSFER,
+                        method = PaymentType.BCA_VA
+                    )
                 )
                 startActivity(
                     intent
