@@ -26,6 +26,7 @@ import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.api.model.PublicTransactionResult
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
@@ -324,7 +325,7 @@ class PaymentOptionActivity : BaseActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 result?.data?.let {
                     val transactionResult = it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT) as TransactionResult
-                    UiKitApi.getDefaultInstance().paymentCallback.onSuccess(transactionResult) //TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
+                    UiKitApi.paymentCallback?.onSuccess(PublicTransactionResult(transactionResult)) //TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
                 }
                 finish()
             }
