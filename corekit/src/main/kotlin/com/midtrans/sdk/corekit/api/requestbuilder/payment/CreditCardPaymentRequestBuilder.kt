@@ -61,7 +61,9 @@ class CreditCardPaymentRequestBuilder: PaymentRequestBuilder() {
     }
 
     fun withInstallment(value: String): CreditCardPaymentRequestBuilder = apply {
-        installment = value
+        if (value.isNotEmpty()) {
+            installment = value
+        }
     }
 
     override fun build(): PaymentRequest {

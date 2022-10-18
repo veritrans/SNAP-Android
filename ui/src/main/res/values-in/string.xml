@@ -110,8 +110,9 @@
 
     <string name="installment_title">Pilih cicilan</string>
     <string name="installment_full_payment">Bayar penuh</string>
-    <string name="installment_3x_installment">3 bulan</string>
-    <string name="installment_6x_installment">6 bulan</string>
+    <string name="installment_term">%s bulan</string>
+    <string name="installment_dc_error">Tidak berlaku untuk penggunaan kartu debit.</string>
+    <string name="installment_cc_not_match_installment">Opsi cicilan yang dipilih tidak berlaku untuk kartu yang dipakai.</string>
 
 
     <string name="point_loading">Memuat poin…</string>
