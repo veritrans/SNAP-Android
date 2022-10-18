@@ -11,9 +11,9 @@ data class PaymentMethodList(
 @Parcelize
 data class PaymentMethodItem(
     val type: String,
-    @StringRes val titleId: Int = 0,
+    @StringRes val titleId: Int,
     val methods: List<String> = listOf(),
-    val icons: List<Int> = listOf()
+    val icons: List<Int>
 ): Parcelable
 
 

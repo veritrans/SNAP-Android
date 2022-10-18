@@ -11,7 +11,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.api.callback.Callback
 import com.midtrans.sdk.uikit.api.exception.SnapError
