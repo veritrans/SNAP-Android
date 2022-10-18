@@ -17,7 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.uikit.internal.view.SnapColors.LINK
+import com.midtrans.sdk.uikit.internal.view.SnapColors.link
 import androidx.compose.runtime.*
 
 @Composable
@@ -46,14 +46,14 @@ fun SnapInstructionButton(
                 Icon(
                     painter = painterResource(id = iconResId),
                     contentDescription = null,
-                    tint = SnapColors.getARGBColor(LINK),
+                    tint = SnapColors.getARGBColor(link),
                     modifier = Modifier
                         .height(16.dp)
                         .width(16.dp)
                 )
                 Text(
                     text = title,
-                    color = SnapColors.getARGBColor(LINK),
+                    color = SnapColors.getARGBColor(link),
                     style = SnapTypography.STYLES.snapTextMediumMedium
                 )
             }
@@ -63,7 +63,7 @@ fun SnapInstructionButton(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_double_caret_vertical),
                     contentDescription = null,
-                    tint = SnapColors.getARGBColor(LINK)
+                    tint = SnapColors.getARGBColor(link)
                 )
             }
         }

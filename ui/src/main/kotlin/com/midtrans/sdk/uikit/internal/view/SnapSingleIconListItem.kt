@@ -37,13 +37,13 @@ fun SnapSingleIconListItem(
 
             Text(
                 text = title,
-                color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY),
+                color = SnapColors.getARGBColor(SnapColors.textPrimary),
                 style = SnapTypography.STYLES.snapTextBigRegular
             )
         }
         Divider(
             thickness = 1.dp,
-            color = SnapColors.getARGBColor(SnapColors.LINE_LIGHT_MUTED)
+            color = SnapColors.getARGBColor(SnapColors.lineLightMuted)
         )
     }
 }

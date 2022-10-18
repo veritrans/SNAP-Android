@@ -142,7 +142,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                             Text(
                                 text = stringResource(id = it),
                                 style = SnapTypography.STYLES.snapTextBigRegular,
-                                color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY)
+                                color = SnapColors.getARGBColor(SnapColors.textSecondary)
                             )
                         }
                         getInfoField(
@@ -179,7 +179,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                                                     text = stringResource(id = item.first),
                                                     modifier = Modifier.weight(1f),
                                                     style = SnapTypography.STYLES.snapTextMediumMedium,
-                                                    color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY)
+                                                    color = SnapColors.getARGBColor(SnapColors.textPrimary)
                                                 )
                                                 Icon(
                                                     painter = painterResource(id = if (selected) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down),
@@ -196,7 +196,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                                             }
                                             Divider(
                                                 thickness = 1.dp,
-                                                color = SnapColors.getARGBColor(SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY),
+                                                color = SnapColors.getARGBColor(SnapColors.backgroundBorderSolidSecondary),
                                                 modifier = Modifier.padding(top = 16.dp)
                                             )
                                         }

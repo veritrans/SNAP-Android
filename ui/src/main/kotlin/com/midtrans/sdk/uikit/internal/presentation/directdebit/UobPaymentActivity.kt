@@ -29,7 +29,6 @@ import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
-import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
@@ -165,7 +164,7 @@ class UobPaymentActivity : BaseActivity() {
         if (url.isEmpty()) {
             Column(
                 modifier = Modifier
-                    .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
+                    .background(SnapColors.getARGBColor(SnapColors.overlayWhite))
                     .fillMaxHeight(1f)
             ) {
                 SnapAppBar(

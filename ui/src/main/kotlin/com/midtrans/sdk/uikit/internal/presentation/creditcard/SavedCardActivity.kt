@@ -216,7 +216,7 @@ class SavedCardActivity: BaseActivity() {
             }
         } else {
             Column(
-                modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
+                modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.overlayWhite))
             ) {
                 SnapAppBar(
                     title = stringResource(id = R.string.payment_summary_cc_dc),

@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.uikit.internal.view.SnapColors.LINE_LIGHT_MUTED
+import com.midtrans.sdk.uikit.internal.view.SnapColors.lineLightMuted
 
 @Composable
 fun SnapMultiIconListItem(
@@ -49,7 +49,7 @@ fun SnapMultiIconListItem(
                     text = "${creditCard?.savedTokens?.count()} " + stringResource(id = R.string.payment_summary_saved_card),
                     modifier = Modifier.padding(top = 2.5.dp, bottom = 4.dp),
                     style = SnapTypography.STYLES.snapTextSmallRegular,
-                    color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY)
+                    color = SnapColors.getARGBColor(SnapColors.textSecondary)
                 )
             } else {
                 Text(
@@ -71,7 +71,7 @@ fun SnapMultiIconListItem(
             }
             Divider(
                 thickness = 1.dp,
-                color = SnapColors.getARGBColor(LINE_LIGHT_MUTED),
+                color = SnapColors.getARGBColor(lineLightMuted),
                 modifier = Modifier.padding(top = 16.dp)
             )
         }

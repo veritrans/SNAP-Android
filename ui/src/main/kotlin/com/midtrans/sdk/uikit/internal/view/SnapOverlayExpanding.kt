@@ -45,7 +45,7 @@ fun SnapOverlayExpandingBox(
             .constrainAs(expanding) {
                 top.linkTo(main.bottom)
             }
-            .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
+            .background(SnapColors.getARGBColor(SnapColors.overlayWhite))
             .padding(top = 24.dp)
             .zIndex(2f)) {
             AnimatedVisibility(
@@ -83,18 +83,18 @@ fun SnapTotal(
                 text = stringResource(id = R.string.payment_summary_total),
                 style = SnapTypography.STYLES.snapTextMediumMedium,
                 modifier = Modifier.weight(1f),
-                color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)
+                color = SnapColors.getARGBColor(SnapColors.textMuted)
             )
             remainingTime?.let {
                 Text(
                     text = stringResource(id = R.string.cc_dc_main_screen_remaining_payment_time),
                     style = SnapTypography.STYLES.snapTextSmallRegular,
-                    color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)
+                    color = SnapColors.getARGBColor(SnapColors.textMuted)
                 )
                 Text(
                     text = remainingTime,
                     style = SnapTypography.STYLES.snapTextSmallRegular,
-                    color = SnapColors.getARGBColor(SnapColors.SUPPORT_INFO_DEFAULT)
+                    color = SnapColors.getARGBColor(SnapColors.supportInfoDefault)
                 )
             }
         }
@@ -102,7 +102,7 @@ fun SnapTotal(
             Text(
                 text = amount,
                 style = SnapTypography.STYLES.snapBigNumberSemiBold,
-                color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY),
+                color = SnapColors.getARGBColor(SnapColors.textPrimary),
                 modifier = Modifier.weight(1f)
             )
             if (canExpand) {
@@ -123,7 +123,7 @@ fun SnapTotal(
         Text(
             text = String.format(stringResource(id = R.string.payment_summary_order_id)+"%s", orderId),
             style = SnapTypography.STYLES.snapTextSmallRegular,
-            color = SnapColors.getARGBColor(SnapColors.TEXT_MUTED)
+            color = SnapColors.getARGBColor(SnapColors.textMuted)
         )
     }
 }
@@ -135,29 +135,29 @@ fun SnapCustomerDetail(
     addressLines: List<String>
 ) {
     Column(
-        modifier = Modifier.background(color = SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY))
+        modifier = Modifier.background(color = SnapColors.getARGBColor(SnapColors.backgroundFillPrimary))
     ) {
         Text(
             text = stringResource(id = R.string.payment_details_customer_detail_title),
             style = SnapTypography.STYLES.snapTextSmallRegular,
-            color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY)
+            color = SnapColors.getARGBColor(SnapColors.textPrimary)
         )
         Row(modifier = Modifier.padding(top = 12.dp)) {
             Text(
                 text = name,
                 style = SnapTypography.STYLES.snapTextSmallRegular,
-                color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY),
+                color = SnapColors.getARGBColor(SnapColors.textSecondary),
                 modifier = Modifier.weight(1f)
             )
             Text(
                 text = phone, style = SnapTypography.STYLES.snapTextSmallRegular,
-                color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY)
+                color = SnapColors.getARGBColor(SnapColors.textSecondary)
             )
         }
         addressLines.forEach {
             Text(
                 text = it, style = SnapTypography.STYLES.snapTextSmallRegular,
-                color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY)
+                color = SnapColors.getARGBColor(SnapColors.textSecondary)
             )
         }
     }

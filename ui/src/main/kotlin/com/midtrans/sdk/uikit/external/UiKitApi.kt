@@ -44,6 +44,7 @@ class UiKitApi { //TODO revisit this implementation, currently for getting callb
         private lateinit var context: Context
         private lateinit var merchantUrl: String
         private lateinit var merchantClientKey: String
+        private var customColors: CustomColors? = null
 
         fun withContext(context: Context) = apply {
             this.context = context
@@ -57,6 +58,10 @@ class UiKitApi { //TODO revisit this implementation, currently for getting callb
             this.merchantClientKey = merchantClientKey
         }
 
+        fun withCustomColors(customColors: CustomColors) = apply {
+            this.customColors = customColors
+        }
+
         @Throws(RuntimeException::class)
         fun build(): UiKitApi {
             SnapCore.Builder()
@@ -66,22 +71,27 @@ class UiKitApi { //TODO revisit this implementation, currently for getting callb
                 .build()
             daggerUiKitComponent = DaggerUiKitComponent.builder().applicationContext(context.applicationContext).build()
             UiKitApi()
+            UiKitApi.customColors = customColors
             return instance
         }
     }
 
     companion object {
-        private var paymentCallbackWeakReference: WeakReference<Callback<TransactionResult>?> = WeakReference(null)
+        private var paymentCallbackWeakReference: WeakReference<Callback<TransactionResult>?> =
+            WeakReference(null)
         internal var paymentCallback: Callback<TransactionResult>?
-        private set(value) {
-            paymentCallbackWeakReference = WeakReference(value)
-        }
+            private set(value) {
+                paymentCallbackWeakReference = WeakReference(value)
+            }
             get() = paymentCallbackWeakReference.get()
 
         internal lateinit var daggerUiKitComponent: UiKitComponent
             private set
 
         private lateinit var instance: UiKitApi
+
+        internal var customColors: CustomColors? = null
+            private set
 
         fun getDefaultInstance(): UiKitApi {
             return instance
