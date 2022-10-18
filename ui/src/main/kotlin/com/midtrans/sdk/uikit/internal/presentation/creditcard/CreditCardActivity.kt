@@ -280,7 +280,7 @@ internal class CreditCardActivity : BaseActivity() {
                             viewModel?.getBinData(binNumber = eightDigitNumber)
                         }
                     } else {
-                        viewModel?.setBankIconToNull()
+                        viewModel?.resetCardNumberAttribute()
                         previousEightDigitNumber = cardNumberWithoutSpace
                     }
                 },

@@ -124,8 +124,9 @@ internal class CreditCardViewModel @Inject constructor(
         )
     }
 
-    fun setBankIconToNull() {
+    fun resetCardNumberAttribute() {
         _bankIconId.value = null
+        _binBlockedLiveData.value = false
     }
 
     fun chargeUsingCreditCard(
