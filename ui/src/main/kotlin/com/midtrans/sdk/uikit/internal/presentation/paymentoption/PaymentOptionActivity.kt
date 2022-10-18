@@ -294,7 +294,7 @@ class PaymentOptionActivity : BaseActivity() {
                 modifier = Modifier
                     .fillMaxHeight(1f)
                     .padding(all = 16.dp)
-                    .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
+                    .background(SnapColors.getARGBColor(SnapColors.overlayWhite))
             )
         }
     }

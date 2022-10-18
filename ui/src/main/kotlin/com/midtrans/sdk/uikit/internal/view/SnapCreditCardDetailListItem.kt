@@ -30,9 +30,9 @@ import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.SavedToken
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
-import com.midtrans.sdk.uikit.internal.view.SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY
-import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
-import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_NEUTRAL_FILL
+import com.midtrans.sdk.uikit.internal.view.SnapColors.backgroundBorderSolidSecondary
+import com.midtrans.sdk.uikit.internal.view.SnapColors.supportDangerDefault
+import com.midtrans.sdk.uikit.internal.view.SnapColors.supportNeutralFill
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
@@ -96,7 +96,7 @@ fun SnapCCDetailListItem(
             Column(
                 modifier = Modifier
                     .background(
-                        SnapColors.getARGBColor(SUPPORT_NEUTRAL_FILL),
+                        SnapColors.getARGBColor(supportNeutralFill),
                         RoundedCornerShape(4.dp)
                     )
                     .fillMaxWidth(1f)
@@ -131,13 +131,13 @@ fun SnapCCDetailListItem(
                         Text(
                             text = stringResource(id = R.string.card_error_empty_cvv),
                             style = SnapTypography.STYLES.snapTextSmallRegular,
-                            color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                            color = SnapColors.getARGBColor(supportDangerDefault)
                         )
                     } else {
                         Text(
                             text = stringResource(id = R.string.card_error_invalid_cvv),
                             style = SnapTypography.STYLES.snapTextSmallRegular,
-                            color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                            color = SnapColors.getARGBColor(supportDangerDefault)
                         )
                     }
                 }
@@ -360,7 +360,7 @@ fun SnapSavedCardRadioGroup(
 
                 Divider(
                     thickness = 1.dp,
-                    color = SnapColors.getARGBColor(BACKGROUND_BORDER_SOLID_SECONDARY)
+                    color = SnapColors.getARGBColor(backgroundBorderSolidSecondary)
                 )
             }
         }
@@ -563,13 +563,13 @@ fun NormalCardItem(
                         Text(
                             text = stringResource(id = R.string.card_error_empty_card_number),
                             style = SnapTypography.STYLES.snapTextSmallRegular,
-                            color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                            color = SnapColors.getARGBColor(supportDangerDefault)
                         )
                     } else {
                         Text(
                             text = stringResource(id = if (state.isBinBlocked) R.string.card_error_bank_blacklisted_by_merchant else R.string.card_error_invalid_card_number),
                             style = SnapTypography.STYLES.snapTextSmallRegular,
-                            color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                            color = SnapColors.getARGBColor(supportDangerDefault)
                         )
                     }
                 }
@@ -578,7 +578,7 @@ fun NormalCardItem(
                     Text(
                         text = stringResource(id = R.string.card_error_bank_blacklisted_by_merchant),
                         style = SnapTypography.STYLES.snapTextSmallRegular,
-                        color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                        color = SnapColors.getARGBColor(supportDangerDefault)
                     )
                 }
             }
@@ -620,13 +620,13 @@ fun NormalCardItem(
                             Text(
                                 text = stringResource(id = R.string.card_error_empty_expiry),
                                 style = SnapTypography.STYLES.snapTextSmallRegular,
-                                color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                                color = SnapColors.getARGBColor(supportDangerDefault)
                             )
                         } else {
                             Text(
                                 text = stringResource(id = R.string.card_error_invalid_expiry),
                                 style = SnapTypography.STYLES.snapTextSmallRegular,
-                                color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                                color = SnapColors.getARGBColor(supportDangerDefault)
                             )
                         }
                     }
@@ -660,13 +660,13 @@ fun NormalCardItem(
                             Text(
                                 text = stringResource(id = R.string.card_error_empty_cvv),
                                 style = SnapTypography.STYLES.snapTextSmallRegular,
-                                color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                                color = SnapColors.getARGBColor(supportDangerDefault)
                             )
                         } else {
                             Text(
                                 text = stringResource(id = R.string.card_error_invalid_cvv),
                                 style = SnapTypography.STYLES.snapTextSmallRegular,
-                                color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                                color = SnapColors.getARGBColor(supportDangerDefault)
                             )
                         }
                     }

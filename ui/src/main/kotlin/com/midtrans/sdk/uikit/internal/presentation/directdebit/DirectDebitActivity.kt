@@ -29,11 +29,10 @@ import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
-import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
-import com.midtrans.sdk.uikit.internal.view.SnapColors.SUPPORT_DANGER_DEFAULT
+import com.midtrans.sdk.uikit.internal.view.SnapColors.supportDangerDefault
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
@@ -127,7 +126,7 @@ class DirectDebitActivity : BaseActivity() {
         if (url.isEmpty()) {
             Column(
                 modifier = Modifier
-                    .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
+                    .background(SnapColors.getARGBColor(SnapColors.overlayWhite))
                     .fillMaxHeight(1f)
             ) {
                 SnapAppBar(
@@ -284,7 +283,7 @@ class DirectDebitActivity : BaseActivity() {
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(top = 12.dp)
-                    .background(color = SnapColors.getARGBColor(SnapColors.SUPPORT_NEUTRAL_FILL))
+                    .background(color = SnapColors.getARGBColor(SnapColors.supportNeutralFill))
             ) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -315,7 +314,7 @@ class DirectDebitActivity : BaseActivity() {
                         Text(
                             text = stringResource(id = R.string.klik_bca_validation_error),
                             style = SnapTypography.STYLES.snapTextSmallRegular,
-                            color = SnapColors.getARGBColor(SUPPORT_DANGER_DEFAULT)
+                            color = SnapColors.getARGBColor(supportDangerDefault)
                         )
                     }
                 }

@@ -93,7 +93,7 @@ class UobSelectionActivity : BaseActivity() {
         var isExpanded by remember { mutableStateOf(false) }
         val remainingTime by remember { remainingTimeState }
 
-        Column(modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))) {
+        Column(modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.overlayWhite))) {
             SnapAppBar(
                 title = stringResource(R.string.uob_ez_pay_title),
                 iconResId = R.drawable.ic_arrow_left
@@ -183,7 +183,7 @@ class UobSelectionActivity : BaseActivity() {
             }
             Divider(
                 thickness = 1.dp,
-                color = SnapColors.getARGBColor(SnapColors.LINE_LIGHT_MUTED)
+                color = SnapColors.getARGBColor(SnapColors.lineLightMuted)
             )
         }
     }

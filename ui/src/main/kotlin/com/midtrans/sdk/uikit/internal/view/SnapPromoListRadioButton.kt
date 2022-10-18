@@ -53,7 +53,7 @@ fun SnapPromoListRadioButton(
                         onClick = null,
                         colors = RadioButtonDefaults.colors(
                             selectedColor = if (enabled) Color.Black else SnapColors.getARGBColor(
-                                SnapColors.ICON_MUTED
+                                SnapColors.iconMuted
                             )
                         ),
                         enabled = enabled
@@ -74,19 +74,19 @@ fun SnapPromoListRadioButtonItem(promoData: PromoData) {
                 text = promoData.leftText,
                 modifier = Modifier.weight(1f),
                 style = SnapTypography.STYLES.snapTextMediumRegular,
-                color = SnapColors.getARGBColor(if (enabled) SnapColors.TEXT_PRIMARY else SnapColors.TEXT_MUTED)
+                color = SnapColors.getARGBColor(if (enabled) SnapColors.textPrimary else SnapColors.textMuted)
             )
             Text(
                 text = promoData.rightText,
                 style = SnapTypography.STYLES.snapTextMediumRegular,
-                color = SnapColors.getARGBColor(if (enabled) SnapColors.TEXT_PRIMARY else SnapColors.TEXT_MUTED)
+                color = SnapColors.getARGBColor(if (enabled) SnapColors.textPrimary else SnapColors.textMuted)
             )
         }
         promoData.subLeftText?.let {
             Text(
                 text = it,
                 style = SnapTypography.STYLES.snapTextSmallRegular,
-                color = SnapColors.getARGBColor(if (enabled) SnapColors.TEXT_PRIMARY else SnapColors.TEXT_MUTED)
+                color = SnapColors.getARGBColor(if (enabled) SnapColors.textPrimary else SnapColors.textMuted)
             )
         }
 

@@ -65,7 +65,7 @@ class SuccessScreenActivity : BaseActivity() {
         isWithBackButton: Boolean
     ) {
         Column(
-            modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.SUPPORT_SUCCESS_FILL))
+            modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.supportSuccessFill))
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -82,12 +82,12 @@ class SuccessScreenActivity : BaseActivity() {
                 Text(
                     text = stringResource(id = R.string.success_screen_v2_status),
                     style = SnapTypography.STYLES.snapHeadingL,
-                    color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY),
+                    color = SnapColors.getARGBColor(SnapColors.textSecondary),
                     modifier = Modifier.padding(top = 24.dp)
                 )
                 Divider(
                     thickness = 2.dp,
-                    color = SnapColors.getARGBColor(SnapColors.SUPPORT_SUCCESS_DEFAULT),
+                    color = SnapColors.getARGBColor(SnapColors.supportSuccessDefault),
                     modifier = Modifier
                         .width(40.dp)
                         .padding(top = 24.dp),
@@ -97,7 +97,7 @@ class SuccessScreenActivity : BaseActivity() {
                     Text(
                         text = total,
                         style = SnapTypography.STYLES.snapHeading2Xl,
-                        color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY),
+                        color = SnapColors.getARGBColor(SnapColors.textSecondary),
                         modifier = Modifier.padding(top = 24.dp)
                     )
                 }
@@ -106,7 +106,7 @@ class SuccessScreenActivity : BaseActivity() {
                     Text(
                         text = orderId,
                         style = SnapTypography.STYLES.snapTextMediumRegular,
-                        color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY),
+                        color = SnapColors.getARGBColor(SnapColors.textSecondary),
                         modifier = Modifier.padding(top = 12.dp)
                     )
                 }
@@ -124,7 +124,7 @@ class SuccessScreenActivity : BaseActivity() {
                 Text(
                     text = stringResource(id = R.string.success_screen_v2_info),
                     style = SnapTypography.STYLES.snapTextMediumMedium,
-                    color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY),
+                    color = SnapColors.getARGBColor(SnapColors.textPrimary),
                     modifier = Modifier
                         .fillMaxWidth(1f)
                         .padding(28.dp),

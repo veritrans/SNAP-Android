@@ -32,7 +32,6 @@ import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetai
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
-import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
@@ -373,7 +372,7 @@ internal class CreditCardActivity : BaseActivity() {
         onClick: () -> Unit
     ) {
         Column(
-            modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY)),
+            modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.backgroundFillPrimary)),
         ) {
             val remainingTime by remember { remainingTimeState }
             SnapAppBar(
@@ -408,7 +407,7 @@ internal class CreditCardActivity : BaseActivity() {
                     Column(
                         modifier = Modifier
                             .verticalScroll(scrollState)
-                            .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
+                            .background(SnapColors.getARGBColor(SnapColors.overlayWhite))
                             .padding(top = 24.dp)
                     ) {
                         if (withCustomerPhoneEmail) {
@@ -494,7 +493,7 @@ internal class CreditCardActivity : BaseActivity() {
         cardItemState: CardItemState
     ){
         Divider(
-            color = SnapColors.getARGBColor(SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY),
+            color = SnapColors.getARGBColor(SnapColors.backgroundBorderSolidSecondary),
             modifier = Modifier
                 .fillMaxWidth(1f)
                 .padding(top = 16.dp)
@@ -559,7 +558,7 @@ internal class CreditCardActivity : BaseActivity() {
             Text(
                 text = stringResource(id = R.string.cc_dc_main_screen_email_invalid),
                 style = SnapTypography.STYLES.snapTextSmallRegular,
-                color = SnapColors.getARGBColor(SnapColors.SUPPORT_DANGER_DEFAULT)
+                color = SnapColors.getARGBColor(SnapColors.supportDangerDefault)
             )
         }
         Box(modifier = Modifier.padding(8.dp))

@@ -102,7 +102,7 @@ class PayLaterActivity : BaseActivity() {
         if (url.isEmpty()) {
             Column(
                 modifier = Modifier
-                    .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
+                    .background(SnapColors.getARGBColor(SnapColors.overlayWhite))
                     .fillMaxHeight(1f)
             ) {
                 SnapAppBar(

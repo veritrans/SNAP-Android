@@ -52,11 +52,11 @@ fun SnapTextField(
                     1.dp,
                     when {
                         isError && !isFocused -> {
-                            SnapColors.getARGBColor(SnapColors.INTERACTIVE_BORDER_SUPPORT)
+                            SnapColors.getARGBColor(SnapColors.interactiveBorderSupport)
                         }
 
-                        isFocused -> SnapColors.getARGBColor(SnapColors.LINK_HOVER)
-                        else -> SnapColors.getARGBColor(SnapColors.INTERACTIVE_BORDER_INPUT)
+                        isFocused -> SnapColors.getARGBColor(SnapColors.linkHover)
+                        else -> SnapColors.getARGBColor(SnapColors.interactiveBorderInput)
                     },
                     RoundedCornerShape(4.dp)
                 )
