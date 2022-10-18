@@ -2,11 +2,11 @@ package com.midtrans.sdk.uikit.external
 
 import android.content.Context
 import com.midtrans.sdk.corekit.SnapCore
-import com.midtrans.sdk.uikit.internal.di.UiKitComponent
 import com.midtrans.sdk.uikit.api.callback.Callback
 import com.midtrans.sdk.uikit.api.model.*
-import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
+import com.midtrans.sdk.uikit.internal.di.UiKitComponent
+import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.presentation.loadingpayment.LoadingPaymentActivity
 import java.lang.ref.WeakReference
 
@@ -24,7 +24,7 @@ class UiKitApi { //TODO revisit this implementation, currently for getting callb
         userId: String,
         uobEzpayCallback: PaymentCallback,
         paymentCallback: Callback<TransactionResult>,
-        paymentType: PaymentMethodItem? = null
+        paymentType: PaymentTypeItem? = null
     ) {
         UiKitApi.paymentCallback = paymentCallback
 

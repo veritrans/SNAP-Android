@@ -17,11 +17,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.api.callback.Callback
 import com.midtrans.sdk.uikit.api.exception.SnapError
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
-import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
+import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import java.util.*
 
@@ -222,9 +223,8 @@ class SampleActivity : AppCompatActivity() {
                             ).show()
                         }
                     },
-                    paymentType = PaymentMethodItem(
-                        type = PaymentType.UOB_EZPAY,
-                        methods = listOf(PaymentType.UOB_EZPAY_WEB)
+                    paymentType = PaymentTypeItem(
+                        type = PaymentType.BANK_TRANSFER
                     )
                 )
                 startActivity(

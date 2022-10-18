@@ -32,6 +32,7 @@ import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
+import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.conveniencestore.ConvenienceStoreActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
@@ -71,7 +72,7 @@ class PaymentOptionActivity : BaseActivity() {
             promos: List<Promo>?,
             merchant: Merchant?,
             expiryTime: String?,
-            paymentType: PaymentMethodItem?
+            paymentType: PaymentTypeItem?
         ): Intent {
             return Intent(activityContext, PaymentOptionActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -135,7 +136,7 @@ class PaymentOptionActivity : BaseActivity() {
         intent.getStringExtra(EXTRA_EXPIRY_TIME)
     }
 
-    private val paymentType: PaymentMethodItem? by lazy {
+    private val paymentType: PaymentTypeItem? by lazy {
         intent.getParcelableExtra(EXTRA_PAYMENT_TYPE)
     }
 

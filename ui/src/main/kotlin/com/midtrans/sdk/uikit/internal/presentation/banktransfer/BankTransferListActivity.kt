@@ -20,6 +20,7 @@ import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
+import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.view.*
 
 class BankTransferListActivity : BaseActivity() {
@@ -27,12 +28,15 @@ class BankTransferListActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        paymentType?.let { paymentType ->
-            toBankTransferDetail(paymentType.methods[0])
-        } ?: run {
-            setContent {
-                setupView(paymentMethodItem = paymentMethodItem)
-            }
+//        paymentType?.let { paymentType ->
+//            toBankTransferDetail(paymentType.methods[0])
+//        } ?: run {
+//            setContent {
+//                setupView(paymentMethodItem = paymentMethodItem)
+//            }
+//        }
+        setContent {
+            setupView(paymentMethodItem = paymentMethodItem)
         }
     }
 
@@ -141,7 +145,7 @@ class BankTransferListActivity : BaseActivity() {
             ?: throw RuntimeException("Order ID must not be empty")
     }
 
-    private val paymentType: PaymentMethodItem? by lazy {
+    private val paymentType: PaymentTypeItem? by lazy {
         intent.getParcelableExtra(EXTRA_PAYMENT_TYPE)
     }
 
@@ -182,7 +186,7 @@ class BankTransferListActivity : BaseActivity() {
             orderId: String,
             paymentMethodItem: PaymentMethodItem,
             customerInfo: CustomerInfo? = null,
-            paymentType: PaymentMethodItem? = null
+            paymentType: PaymentTypeItem? = null
         ): Intent {
             return Intent(activityContext, BankTransferListActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)

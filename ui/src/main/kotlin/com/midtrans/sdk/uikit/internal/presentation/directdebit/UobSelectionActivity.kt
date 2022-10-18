@@ -29,7 +29,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
-import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
+import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -65,7 +65,7 @@ class UobSelectionActivity : BaseActivity() {
             ?: throw RuntimeException("Missing Uob modes")
     }
 
-    private val paymentType: PaymentMethodItem? by lazy {
+    private val paymentType: PaymentTypeItem? by lazy {
         intent.getParcelableExtra(EXTRA_PAYMENT_TYPE)
     }
 
@@ -77,29 +77,36 @@ class UobSelectionActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         UiKitApi.daggerUiKitComponent.inject(this)
 
-        paymentType?.let { paymentType ->
-            resultLauncher.launch(
-                UobPaymentActivity.getIntent(
-                    activityContext = this@UobSelectionActivity,
-                    snapToken = snapToken,
-                    uobMode = paymentType.methods[0],
-                    amount = amount,
-                    orderId = orderId,
-                    customerInfo = customerInfo,
-                    remainingTime = viewModel.getExpiredTime()
-                )
+//        paymentType?.let { paymentType ->
+//            resultLauncher.launch(
+//                UobPaymentActivity.getIntent(
+//                    activityContext = this@UobSelectionActivity,
+//                    snapToken = snapToken,
+//                    uobMode = paymentType.methods[0],
+//                    amount = amount,
+//                    orderId = orderId,
+//                    customerInfo = customerInfo,
+//                    remainingTime = viewModel.getExpiredTime()
+//                )
+//            )
+//        } ?: run {
+//            setContent {
+//                UobSelectionContent(
+//                    amount = amount,
+//                    orderId = orderId,
+//                    customerInfo = customerInfo,
+//                    remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
+//                )
+//            }
+//        }
+        setContent {
+            UobSelectionContent(
+                amount = amount,
+                orderId = orderId,
+                customerInfo = customerInfo,
+                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
             )
-        } ?: run {
-            setContent {
-                UobSelectionContent(
-                    amount = amount,
-                    orderId = orderId,
-                    customerInfo = customerInfo,
-                    remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
-                )
-            }
         }
-
     }
 
     @Preview(showBackground = true)
@@ -249,7 +256,7 @@ class UobSelectionActivity : BaseActivity() {
             amount: String,
             orderId: String,
             customerInfo: CustomerInfo?,
-            paymentType: PaymentMethodItem?
+            paymentType: PaymentTypeItem?
         ): Intent {
             return Intent(activityContext, UobSelectionActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
