@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
-import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.view.*
@@ -75,10 +75,7 @@ class UobSelectionActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerUiKitComponent.builder()
-            .applicationContext(this.applicationContext)
-            .build()
-            .inject(this)
+        UiKitApi.daggerUiKitComponent.inject(this)
 
         paymentType?.let { paymentType ->
             resultLauncher.launch(

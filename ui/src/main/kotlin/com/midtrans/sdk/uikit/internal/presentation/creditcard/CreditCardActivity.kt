@@ -30,6 +30,7 @@ import com.midtrans.sdk.corekit.api.model.Promo
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
@@ -98,29 +99,6 @@ internal class CreditCardActivity : BaseActivity() {
         intent.getParcelableArrayListExtra<Promo>(EXTRA_PROMOS)
     }
 
-    fun aaaa(){
-        creditCard?.savedTokens?.mapIndexed { index, savedToken ->
-            SavedCreditCardFormData(
-                savedCardIdentifier = SnapCreditCardUtil.SAVED_CARD_IDENTIFIER + index.toString(),
-                inputTitle = getString(R.string.cc_dc_saved_card_enter_cvv),
-                endIcon = R.drawable.ic_trash,
-                startIcon = SnapCreditCardUtil.getBankIcon(savedToken.binDetail?.bankCode.toString()),
-                errorText = mutableStateOf(""),
-                maskedCardNumber = savedToken.maskedCard.orEmpty(),
-                displayedMaskedCard = savedToken.maskedCard.orEmpty(),
-                tokenType = savedToken.tokenType.toString(),
-                tokenId = savedToken.token.toString(),
-                cvvSavedCardTextField = TextFieldValue(),
-                isCvvSavedCardInvalid = false
-            ) as FormData
-        }
-            ?.toMutableList()
-            ?.apply {
-                add(NewCardFormData(newCardIdentifier = SnapCreditCardUtil.NEW_CARD_FORM_IDENTIFIER))
-            }
-            ?.ifEmpty { null }
-            ?.toMutableStateList()
-    }
     private val savedTokenList: SnapshotStateList<FormData>? by lazy {
         creditCard?.savedTokens?.mapIndexed { index, savedToken ->
             SavedCreditCardFormData(
@@ -157,8 +135,7 @@ internal class CreditCardActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build()
-            .inject(this)
+        UiKitApi.daggerUiKitComponent.inject(this)
         viewModel.setExpiryTime(expiryTime)
         viewModel.setAllowRetry(allowRetry)
         viewModel.setPromos(promos = promos)
