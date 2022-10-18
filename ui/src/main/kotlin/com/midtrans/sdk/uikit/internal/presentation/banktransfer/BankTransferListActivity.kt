@@ -29,10 +29,10 @@ class BankTransferListActivity : BaseActivity() {
 
         paymentType?.let { paymentType ->
             toBankTransferDetail(paymentType.methods[0])
-        }
-
-        setContent {
-            setupView(paymentMethodItem = paymentMethodItem)
+        } ?: run {
+            setContent {
+                setupView(paymentMethodItem = paymentMethodItem)
+            }
         }
     }
 
