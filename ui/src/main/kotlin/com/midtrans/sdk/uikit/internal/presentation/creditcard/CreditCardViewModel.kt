@@ -30,7 +30,9 @@ internal class CreditCardViewModel @Inject constructor(
     private val errorCard: ErrorCard
 ) : ViewModel() {
 
-    val bankIconId = MutableLiveData<Int>()
+    private val _bankIconId = MutableLiveData<Int>()
+    private val _binType = MutableLiveData<String>()
+    private val _cardIssuerBank = MutableLiveData<String>()
     private val _transactionResponse = MutableLiveData<TransactionResponse>()
     private val _transactionStatus = MutableLiveData<TransactionResponse>()
     private val _error = MutableLiveData<Int>()
@@ -44,19 +46,23 @@ internal class CreditCardViewModel @Inject constructor(
 
     val promoDataLiveData: LiveData<List<PromoData>> = _promoDataLiveData
     val netAmountLiveData: LiveData<String> = _netAmountLiveData
-    var creditCard: CreditCard?  = null
+    var creditCard: CreditCard? = null
 
+    val bankIconId: LiveData<Int> = _bankIconId
+    val binType: LiveData<String> = _binType
+    val cardIssuerBank: LiveData<String> = _cardIssuerBank
     val transactionResponseLiveData: LiveData<TransactionResponse> = _transactionResponse
     val transactionStatusLiveData: LiveData<TransactionResponse> = _transactionStatus
     val errorLiveData: LiveData<Int> = _error
     val binBlockedLiveData: LiveData<Boolean> = _binBlockedLiveData
+
     fun setExpiryTime(expireTime: String?) {
         expireTime?.let {
             expireTimeInMillis = parseTime(it)
         }
     }
 
-    fun setAllowRetry(allowRetry: Boolean){
+    fun setAllowRetry(allowRetry: Boolean) {
         this.allowRetry = allowRetry
     }
 
@@ -89,14 +95,18 @@ internal class CreditCardViewModel @Inject constructor(
         _promoDataLiveData.value = snapCreditCardUtil.getCreditCardApplicablePromosData(binNumber, promos)
     }
 
-    fun getBankIconImage(binNumber: String) {
+    fun getBinData(binNumber: String) {
         snapCore.getBinData(
             binNumber = binNumber,
             callback = object : Callback<BinResponse> {
                 override fun onSuccess(result: BinResponse) {
                     result.run {
                         data?.bankCode?.let {
-                            bankIconId.value = snapCreditCardUtil.getBankIcon(it.lowercase())
+                            _bankIconId.value = snapCreditCardUtil.getBankIcon(it.lowercase())
+                            _cardIssuerBank.value = it
+                        }
+                        data?.binType?.let {
+                            _binType.value = it
                         }
                         _binBlockedLiveData.value = snapCreditCardUtil
                             .isBinBlocked(
@@ -114,8 +124,9 @@ internal class CreditCardViewModel @Inject constructor(
         )
     }
 
-    fun setBankIconToNull() {
-        bankIconId.value = null
+    fun resetCardNumberAttribute() {
+        _bankIconId.value = null
+        _binBlockedLiveData.value = false
     }
 
     fun chargeUsingCreditCard(
@@ -127,9 +138,10 @@ internal class CreditCardViewModel @Inject constructor(
         customerEmail: String,
         customerPhone: String,
         promoId: Long?,
+        installmentTerm: String,
         snapToken: String
     ) {
-        var tokenRequest = NormalCardTokenRequestBuilder()
+        val tokenRequest = NormalCardTokenRequestBuilder()
             .withCardNumber(snapCreditCardUtil.getCardNumberFromTextField(cardNumber))
             .withCardExpMonth(snapCreditCardUtil.getExpMonthFromTextField(cardExpiry))
             .withCardExpYear(snapCreditCardUtil.getExpYearFromTextField(cardExpiry))
@@ -150,17 +162,18 @@ internal class CreditCardViewModel @Inject constructor(
             callback = object : Callback<CardTokenResponse> {
                 override fun onSuccess(result: CardTokenResponse) {
 
-                    var ccRequestBuilder = CreditCardPaymentRequestBuilder()
+                    val ccRequestBuilder = CreditCardPaymentRequestBuilder()
                         .withSaveCard(isSavedCard)
                         .withPaymentType(PaymentType.CREDIT_CARD)
                         .withCustomerEmail(customerEmail)
                         .withCustomerPhone(customerPhone)
+                        .withInstallment(installmentTerm)
 
                     promos?.find { it.id == promoId }?.discountedGrossAmount?.let {
                         ccRequestBuilder.withPromo(discountedGrossAmount = it, promoId = promoId.toString())
                     }
 
-                    result?.tokenId?.let {
+                    result.tokenId?.let {
                         ccRequestBuilder.withCardToken(it)
                     }
                     snapCore.pay(
@@ -196,13 +209,15 @@ internal class CreditCardViewModel @Inject constructor(
         transactionDetails: TransactionDetails?,
         cardCvv: TextFieldValue,
         customerEmail: String,
+        installmentTerm: String,
         promoId: Long?
-        ){
+    ) {
         if (formData.tokenType == SavedToken.ONE_CLICK){
             snapCore.pay(
                 snapToken = snapToken,
                 paymentRequestBuilder = OneClickCardPaymentRequestBuilder()
                     .withPaymentType(PaymentType.CREDIT_CARD)
+                    .withInstallment(installmentTerm)
                     .withMaskedCard(formData.displayedMaskedCard).apply {
                         promos?.find { it.id == promoId }?.discountedGrossAmount?.let {
                             withPromo(discountedGrossAmount = it, promoId = promoId.toString())
@@ -218,8 +233,7 @@ internal class CreditCardViewModel @Inject constructor(
                 }
             )
         } else {
-
-            var tokenRequest = TwoClickCardTokenRequestBuilder()
+            val tokenRequest = TwoClickCardTokenRequestBuilder()
                 .withCardCvv(cardCvv.text)
                 .withTokenId(formData.tokenId)
 
@@ -235,15 +249,16 @@ internal class CreditCardViewModel @Inject constructor(
             snapCore.getCardToken(cardTokenRequestBuilder = tokenRequest ,
                 callback = object : Callback<CardTokenResponse> {
                     override fun onSuccess(result: CardTokenResponse) {
-                        var ccRequestBuilder = CreditCardPaymentRequestBuilder()
+                        val ccRequestBuilder = CreditCardPaymentRequestBuilder()
                             .withPaymentType(PaymentType.CREDIT_CARD)
+                            .withInstallment(installmentTerm)
                             .withCustomerEmail(customerEmail).apply {
                                 promos?.find { it.id == promoId }?.discountedGrossAmount?.let {
                                     withPromo(discountedGrossAmount = it, promoId = promoId.toString())
                                 }
                             }
 
-                        result?.tokenId?.let {
+                        result.tokenId?.let {
                             ccRequestBuilder.withCardToken(it)
                         }
 
@@ -269,11 +284,11 @@ internal class CreditCardViewModel @Inject constructor(
         }
     }
 
-    fun resetError(){
+    fun resetError() {
         _error.value = null
     }
 
-    fun getTransactionStatus(snapToken: String){
+    fun getTransactionStatus(snapToken: String) {
         snapCore.getTransactionStatus(
             snapToken = snapToken,
             callback = object : Callback<TransactionResponse> {
@@ -285,8 +300,9 @@ internal class CreditCardViewModel @Inject constructor(
                         null
                     }
                 }
+
                 override fun onError(error: SnapError) {
-                   _error.value = errorCard.getErrorCardType(error, allowRetry)
+                    _error.value = errorCard.getErrorCardType(error, allowRetry)
                 }
             }
         )

@@ -171,21 +171,20 @@ fun InputNewCardItem(
 fun formatExpiryDate(input: TextFieldValue): TextFieldValue {
     val maxNumberOfMonth = 12
 
-    var digit = input.text.filter {
+    val digit = input.text.filter {
         it.isDigit()
     }
     if (digit.length >= 2) {
-        var firstTwoDigit = digit.substring(0 until 2)
+        val firstTwoDigit = digit.substring(0 until 2)
         var processed = if (firstTwoDigit.toInt() <= maxNumberOfMonth) {
             digit.replace("/", "")
         } else {
-            var adjustedDigit = "0" + digit
+            val adjustedDigit = "0$digit"
             adjustedDigit.replace("/", "")
         }
         processed = processed.replace("(\\d{2})(?=\\d)".toRegex(), "$1/")
         val length = min(processed.length, 5)
-        val output = input.copy(processed.substring(0 until length), TextRange(length))
-        return output
+        return input.copy(processed.substring(0 until length), TextRange(length))
     } else {
         return if (input.text.isEmpty()) {
             input.copy()
@@ -196,8 +195,8 @@ fun formatExpiryDate(input: TextFieldValue): TextFieldValue {
 }
 
 fun checkIsCardExpired(cardExpiry: String): Boolean {
-    val sdf = SimpleDateFormat("MM/yy")
-    var currentDate = sdf.format(Date())
+    val sdf = SimpleDateFormat("MM/yy", Locale.getDefault())
+    val currentDate = sdf.format(Date())
     return sdf.parse(cardExpiry).before(sdf.parse(currentDate))
 }
 
@@ -218,8 +217,6 @@ fun SnapSavedCardRadioGroup(
     ) {
         var newCardNumberTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
         var newCvvTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
-        var cardItemType by remember { mutableStateOf(CardItemState.CardItemType.SAVED_CARD)}
-        cardItemState.cardItemType = cardItemType
 
         listStates.forEach { item ->
             var cvvSavedCardTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
@@ -238,14 +235,14 @@ fun SnapSavedCardRadioGroup(
                                     cardItemState.cvv = cvvSavedCardTextFieldValue
                                     cardItemState.cardNumber = TextFieldValue(item.maskedCardNumber)
                                     onSavedCardRadioSelected(item)
-                                    cardItemType = CardItemState.CardItemType.SAVED_CARD
+                                    cardItemState.cardItemType = CardItemState.CardItemType.SAVED_CARD
                                 }
                                 is NewCardFormData -> {
                                     cvvSavedCardTextFieldValue = TextFieldValue("")
                                     cardItemState.cvv = newCvvTextFieldValue
                                     cardItemState.cardNumber = newCardNumberTextFieldValue
                                     onSavedCardRadioSelected(null)
-                                    cardItemType = CardItemState.CardItemType.NORMAL_CARD
+                                    cardItemState.cardItemType = CardItemState.CardItemType.NORMAL_CARD
                                 }
                             }
                         },
@@ -313,7 +310,7 @@ data class SavedCreditCardFormData(
     var tokenId: String,
     var cvvSavedCardTextField: TextFieldValue,
     var isCvvSavedCardInvalid: Boolean
-) : FormData(savedCardIdentifier) {}
+) : FormData(savedCardIdentifier)
 
 class NewCardFormData(
     var newCardIdentifier: String
@@ -340,6 +337,7 @@ class CardItemState(
     customerEmail: TextFieldValue,
     customerPhone: TextFieldValue,
     promoId: Long,
+    isInstallmentAllowed: Boolean,
     cardItemType: CardItemType = CardItemType.NORMAL_CARD
 ) {
     var cardNumber by mutableStateOf(cardNumber)
@@ -357,6 +355,7 @@ class CardItemState(
     var customerPhone by mutableStateOf(customerPhone)
     var promoId by mutableStateOf(promoId)
     var cardItemType by mutableStateOf(cardItemType)
+    var isInstallmentAllowed by mutableStateOf(isInstallmentAllowed)
     var isBinBlocked by mutableStateOf(isBinBlocked)
 
     val iconIdList by mutableStateOf(
@@ -374,7 +373,7 @@ class CardItemState(
 }
 
 private fun formatCvvTextFieldBasedOnTokenType(tokenType: String): TextFieldValue {
-    var output = if (tokenType == SavedToken.ONE_CLICK) {
+    val output = if (tokenType == SavedToken.ONE_CLICK) {
         TextFieldValue(
             SnapCreditCardUtil.DEFAULT_ONE_CLICK_CVV_VALUE, selection = TextRange(
                 SnapCreditCardUtil.DEFAULT_ONE_CLICK_CVV_VALUE.length
@@ -393,25 +392,22 @@ private fun formatMaskedCard(maskedCard: String): String {
 }
 
 fun formatCreditCard(input: TextFieldValue): TextFieldValue {
-    var digit = input.text.filter {
+    val digit = input.text.filter {
         it.isDigit()
     }
     var processed: String = digit.replace("\\D", "").replace(" ", "")
     // insert a space after all groups of 4 digits that are followed by another digit
     processed = processed.replace("(\\d{4})(?=\\d)".toRegex(), "$1 ")
     val length = min(processed.length, SnapCreditCardUtil.FORMATTED_MAX_CARD_NUMBER_LENGTH)
-    val output = input.copy(text = processed.substring(0 until length), selection = TextRange(length))
-    return output
+    return input.copy(text = processed.substring(0 until length), selection = TextRange(length))
 }
 
 fun formatCVV(input: TextFieldValue): TextFieldValue {
-
-    var digit = input.text.filter {
+    val digit = input.text.filter {
         it.isDigit()
     }
     val length = min(digit.length, SnapCreditCardUtil.FORMATTED_MAX_CVV_LENGTH)
-    val output = input.copy(digit.substring(0 until length), TextRange(length))
-    return output
+    return input.copy(digit.substring(0 until length), TextRange(length))
 }
 
 @Composable
@@ -462,7 +458,7 @@ fun NormalCardItem(
                     onValueChange = {
                         state.principalIconId =
                             SnapCreditCardUtil.getPrincipalIcon(SnapCreditCardUtil.getCardType(it.text))
-                        var cardLength = formatCreditCard(it).text.length
+                        val cardLength = formatCreditCard(it).text.length
                         state.isCardNumberInvalid =
                             cardLength != SnapCreditCardUtil.FORMATTED_MAX_CARD_NUMBER_LENGTH
                                     || !SnapCreditCardUtil.isValidCardNumber(SnapCreditCardUtil.getCardNumberFromTextField(it))
@@ -599,10 +595,9 @@ fun NormalCardItem(
                     }
                 }
             }
-            creditCard?.saveCard?.let {
-                if (it) {
-                    Row(
-                    ) {
+            creditCard?.saveCard?.let { isCardSaved ->
+                if (isCardSaved) {
+                    Row {
                         LabelledCheckBox(
                             checked = state.isSavedCardChecked,
                             onCheckedChange = { state.isSavedCardChecked = it },
@@ -611,7 +606,6 @@ fun NormalCardItem(
                     }
                 }
             }
-
         }
     }
 }
@@ -624,7 +618,7 @@ fun LabelledCheckBox(
     modifier: Modifier = Modifier
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = CenterVertically,
         modifier = modifier
             .clip(MaterialTheme.shapes.small)
             .clickable(

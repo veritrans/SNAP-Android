@@ -1,10 +1,11 @@
 package com.midtrans.sdk.corekit.api.model
 
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Installment(
-    val isRequired: Boolean = false,
-    val terms: Map<String, List<Int>>? = null,
+    @SerializedName("required") val isRequired: Boolean = false,
+    @SerializedName("terms") val terms: Map<String, List<Int>>? = null,
 ) : Parcelable

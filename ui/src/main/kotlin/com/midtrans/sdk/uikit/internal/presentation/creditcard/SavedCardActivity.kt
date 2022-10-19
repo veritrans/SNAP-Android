@@ -41,24 +41,24 @@ class SavedCardActivity: BaseActivity() {
     lateinit var viewModel: SavedCardViewModel
 
     private val creditCard: CreditCard? by lazy {
-        intent.getParcelableExtra(SavedCardActivity.EXTRA_CREDIT_CARD) as? CreditCard
+        intent.getParcelableExtra(EXTRA_CREDIT_CARD) as? CreditCard
     }
 
     private val transactionDetails: TransactionDetails? by lazy {
-        intent.getParcelableExtra(SavedCardActivity.EXTRA_TRANSACTION_DETAILS) as? TransactionDetails
+        intent.getParcelableExtra(EXTRA_TRANSACTION_DETAILS) as? TransactionDetails
     }
 
     private val snapToken: String by lazy {
-        intent.getStringExtra(SavedCardActivity.EXTRA_SNAP_TOKEN).orEmpty()
+        intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
     }
 
     private val totalAmount: String by lazy {
-        intent.getStringExtra(SavedCardActivity.EXTRA_TOTAL_AMOUNT)
+        intent.getStringExtra(EXTRA_TOTAL_AMOUNT)
             ?: throw RuntimeException("Total amount must not be empty")
     }
 
     private val customerDetail: CustomerInfo? by lazy {
-        intent.getParcelableExtra(SavedCardActivity.EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
+        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
     }
 
     companion object {
@@ -154,8 +154,8 @@ class SavedCardActivity: BaseActivity() {
     ){
         var previousEightDigitNumber = ""
         val bankCodeId by viewModel.bankIconId.observeAsState(null)
-        var isCvvSavedCardInvalid by remember { mutableStateOf(false)}
-        var savedTokenList = mutableListOf<FormData>()
+        val isCvvSavedCardInvalid by remember { mutableStateOf(false)}
+        val savedTokenList = mutableListOf<FormData>()
         var isExpanding by remember { mutableStateOf(false) }
         val state = remember {
             CardItemState(
@@ -171,6 +171,7 @@ class SavedCardActivity: BaseActivity() {
                 principalIconId = null,
                 isSaveCardChecked = true,
                 promoId = 0,
+                isInstallmentAllowed = false,
                 customerPhone = TextFieldValue(),
                 customerEmail = TextFieldValue()
             )
@@ -196,7 +197,7 @@ class SavedCardActivity: BaseActivity() {
         savedTokenList.add(NewCardFormData(
             newCardIdentifier = SnapCreditCardUtil.NEW_CARD_FORM_IDENTIFIER,
         ))
-        var savedTokenListState = savedTokenList.toMutableStateList()
+        val savedTokenListState = savedTokenList.toMutableStateList()
         var selectedFormData : FormData? = savedTokenList.first()
         var isSelectedSavedCardCvvInvalid by remember { mutableStateOf(false) }
         var selectedCvvTextFieldValue by remember{ mutableStateOf(TextFieldValue())}
@@ -224,7 +225,7 @@ class SavedCardActivity: BaseActivity() {
                 ) {
                     onBackPressed()
                 }
-                var scrollState = rememberScrollState()
+                val scrollState = rememberScrollState()
                 SnapOverlayExpandingBox(
                     isExpanded = isExpanding,
                     mainContent = {
@@ -267,9 +268,9 @@ class SavedCardActivity: BaseActivity() {
                                 },
                                 onCardNumberOtherCardValueChange = {
                                     state.cardNumber = it
-                                    var cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
+                                    val cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
                                     if(cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER){
-                                        var eightDigitNumber = cardNumberWithoutSpace.substring(0, SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER)
+                                        val eightDigitNumber = cardNumberWithoutSpace.substring(0, SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER)
                                         if (eightDigitNumber != previousEightDigitNumber){
                                             previousEightDigitNumber = eightDigitNumber
                                             viewModel.getBankIconImage(

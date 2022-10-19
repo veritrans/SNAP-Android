@@ -27,7 +27,7 @@ import java.util.*
 class CreditCardViewModelTest {
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
-    val time = 1609866000000L //"Wed Jan 6 2021 11:32:50 +0700"// (Asia/Jakarta)
+    private val time = 1609866000000L //"Wed Jan 6 2021 11:32:50 +0700"// (Asia/Jakarta)
 
     @Before
     fun setup() {
@@ -85,6 +85,7 @@ class CreditCardViewModelTest {
             customerEmail = customerEmail,
             customerPhone = customerPhone,
             snapToken = snapToken,
+            installmentTerm = "",
             promoId = null
         )
         val callbackCaptor: KArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
@@ -109,7 +110,7 @@ class CreditCardViewModelTest {
 
 
     @Test
-    fun getExpiredHourShouldReturnhhmmss() {
+    fun getExpiredHourShouldReturnHHMMSS() {
         val snapCore: SnapCore = mock()
         val dateTimeUtil: DateTimeUtil = mock()
         val snapCreditCardUtil: SnapCreditCardUtil = mock()
@@ -145,13 +146,13 @@ class CreditCardViewModelTest {
         val bankIconResId = 1
         val bankCode = "009"
         val binResponse = BinResponse(
-            data = BinData(null, null, null, null, null, null, bankCode, null, null)
+            data = BinData(null, null, null, null, null, null, null, bankCode, null, null)
         )
         `when`(snapCreditCardUtil.getBankIcon(bankCode)).thenReturn(bankIconResId)
         val creditCardViewModel =
             CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil, errorCard)
 
-        creditCardViewModel.getBankIconImage(binNumber)
+        creditCardViewModel.getBinData(binNumber)
         val callbackCaptor: KArgumentCaptor<Callback<BinResponse>> = argumentCaptor()
 
         verify(snapCore).getBinData(
