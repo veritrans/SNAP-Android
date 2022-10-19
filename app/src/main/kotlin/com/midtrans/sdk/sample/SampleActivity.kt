@@ -11,7 +11,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.api.callback.Callback
 import com.midtrans.sdk.uikit.api.exception.SnapError
 import com.midtrans.sdk.uikit.api.model.*
@@ -76,7 +75,9 @@ class SampleActivity : AppCompatActivity() {
                     ),
                     creditCard = CreditCard(
                         saveCard = true,
-                        secure = true
+                        secure = true,
+                        blacklistBins = listOf("debit", "maybank"),
+                        whitelistBins = listOf("credit", "48111111", "521111")
                     ),
                     userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
                     customerDetails = CustomerDetails(
@@ -102,11 +103,7 @@ class SampleActivity : AppCompatActivity() {
                                 Toast.LENGTH_LONG
                             ).show()
                         }
-                    },
-                    paymentType = PaymentTypeItem(
-                        type = PaymentType.BANK_TRANSFER,
-                        method = PaymentType.BCA_VA
-                    )
+                    }
                 )
                 startActivity(
                     intent
