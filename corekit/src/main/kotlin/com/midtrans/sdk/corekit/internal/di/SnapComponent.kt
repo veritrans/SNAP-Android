@@ -14,7 +14,8 @@ import javax.inject.Singleton
         AndroidInjectionModule::class,
         UsecaseModule::class,
         RestClientModule::class,
-        RepositoryModule::class
+        RepositoryModule::class,
+        AnalyticsModule::class
     ]
 )
 interface SnapComponent {
