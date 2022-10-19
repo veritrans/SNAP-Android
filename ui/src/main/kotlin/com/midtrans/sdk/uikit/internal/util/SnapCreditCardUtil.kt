@@ -3,7 +3,6 @@ package com.midtrans.sdk.uikit.internal.util
 import android.util.Patterns
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.core.text.isDigitsOnly
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.Promo
@@ -96,37 +95,25 @@ internal object SnapCreditCardUtil {
         return return value.text.substring(3, 5)
     }
 
-    private fun isBlockedByWhiteListedByCreditDebit(
+    private fun isWhiteListedByCreditDebit(
         creditCard: CreditCard?,
         binType: String = ""
     ): Boolean {
-        var whiteListCreditDebitAvailable = false
-        return (
-                creditCard?.whitelistBins
-                    ?.map { it.lowercase() }
-                    ?.filter { whiteList -> whiteList == "debit" || whiteList == "credit" }
-                    ?.map { whiteListCreditDebitAvailable = true; it }
-                    ?.filter { whiteListedCreditDebit -> whiteListedCreditDebit == binType.lowercase() }
-                    .isNullOrEmpty())
-            .and(whiteListCreditDebitAvailable)
-            .and(binType.isNotBlank())
+        return creditCard?.whitelistBins
+            ?.map { it.lowercase() }
+            ?.filter { whiteList -> whiteList == "debit" || whiteList == "credit" }
+            ?.any { whiteListedCreditDebit -> whiteListedCreditDebit == binType.lowercase() } ?:false
     }
 
-    private fun isBlockedByWhiteListedByBank(
+    private fun isBWhiteListedByBank(
         creditCard: CreditCard?,
         bank: String = ""
     ): Boolean {
-        var whiteListBankAvailable = false
-        return (
-                creditCard?.whitelistBins
-                    ?.map { it.lowercase() }
-                    ?.filter { whiteList -> whiteList.toIntOrNull() == null }
-                    ?.filter { whiteList -> whiteList != "debit" && whiteList != "credit" }
-                    ?.map { whiteListBankAvailable = true; it }
-                    ?.filter { whiteListedBank -> whiteListedBank == bank.lowercase() }
-                    .isNullOrEmpty())
-            .and(whiteListBankAvailable)
-            .and(bank.isNotBlank())
+        return creditCard?.whitelistBins
+            ?.map { it.lowercase() }
+            ?.filter { whiteList -> whiteList.toIntOrNull() == null }
+            ?.filter { whiteList -> whiteList != "debit" && whiteList != "credit" }
+            ?.any { whiteListedBank -> whiteListedBank == bank.lowercase() } ?:false
     }
 
     private fun isBlockedByBlackListedByCreditDebit(
@@ -162,18 +149,13 @@ internal object SnapCreditCardUtil {
             .and(bank.isNotBlank())
     }
 
-    private fun isBlockedByWhiteListedByBinNumber(
+    private fun isWhiteListedByBinNumber(
         cardNumber: String,
         creditCard: CreditCard?
     ): Boolean {
-        var whiteListBinAvailable = false
-        return (
-                creditCard?.whitelistBins
-                    ?.filter { whiteList -> whiteList.toIntOrNull() != null }
-                    ?.map { whiteListBinAvailable = true; it }
-                    ?.filter { whiteListedBin -> cardNumber.startsWith(whiteListedBin) }
-                    .isNullOrEmpty())
-            .and(whiteListBinAvailable)
+        return creditCard?.whitelistBins
+            ?.filter { whiteList -> whiteList.toIntOrNull() != null }
+            ?.any { whiteListedBin -> cardNumber.startsWith(whiteListedBin) } ?:false
     }
 
     private fun isBlackListedByBinNumber(
@@ -197,29 +179,30 @@ internal object SnapCreditCardUtil {
         binType: String = ""
     ): Boolean {
 
-        val blockedByWhiteListedByCreditDebit =
-            isBlockedByWhiteListedByCreditDebit(creditCard = creditCard, binType = binType)
+        val isWhiteListedByCreditDebit =
+            isWhiteListedByCreditDebit(creditCard = creditCard, binType = binType)
 
-        val blockedByWhiteListedByBank =
-            isBlockedByWhiteListedByBank(creditCard = creditCard, bank = bank)
+        val isWhiteListedByBank =
+            isBWhiteListedByBank(creditCard = creditCard, bank = bank)
 
+        val isWhiteListedByBinNumber =
+            isWhiteListedByBinNumber(cardNumber = cardNumber, creditCard = creditCard)
+
+        val cardIsWhitelisted = isWhiteListedByBank || isWhiteListedByCreditDebit || isWhiteListedByBinNumber
+        val whitelistAvailable = creditCard?.whitelistBins?.isNotEmpty()?: false
+        val isBlockedByWhitelist = whitelistAvailable && !cardIsWhitelisted
         val blockedByBlackListedByCreditDebit =
             isBlockedByBlackListedByCreditDebit(creditCard = creditCard, binType = binType)
 
         val blockedByBlackListedByBank =
             isBlockedByBlackListedByBank(creditCard = creditCard, bank = bank)
 
-        val blockedByWhiteListedByBinNumber =
-            isBlockedByWhiteListedByBinNumber(cardNumber = cardNumber, creditCard = creditCard)
-
         val blackListedByBinNumber =
             isBlackListedByBinNumber(cardNumber = cardNumber, creditCard = creditCard)
 
-        return blockedByWhiteListedByCreditDebit
-                || blockedByWhiteListedByBank
+        return isBlockedByWhitelist
                 || blockedByBlackListedByCreditDebit
                 || blockedByBlackListedByBank
-                || blockedByWhiteListedByBinNumber
                 || blackListedByBinNumber
     }
 
