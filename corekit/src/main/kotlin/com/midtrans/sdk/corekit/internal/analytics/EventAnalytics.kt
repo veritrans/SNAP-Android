@@ -1,6 +1,6 @@
 package com.midtrans.sdk.corekit.internal.analytics
 
-internal class EventAnalytics(
+class EventAnalytics(
     private val mixpanelTracker: MixpanelTracker
 ) {
     fun setUserIdentity(

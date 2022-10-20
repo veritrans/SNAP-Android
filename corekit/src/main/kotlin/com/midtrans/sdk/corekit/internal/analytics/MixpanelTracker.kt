@@ -3,7 +3,7 @@ package com.midtrans.sdk.corekit.internal.analytics
 import com.mixpanel.android.mpmetrics.MixpanelAPI
 import org.json.JSONObject
 
-internal class MixpanelTracker(private val mixpanelApi: MixpanelAPI) {
+class MixpanelTracker(private val mixpanelApi: MixpanelAPI) {
     fun setUserIdentity(
         id: String,
         name: String,
