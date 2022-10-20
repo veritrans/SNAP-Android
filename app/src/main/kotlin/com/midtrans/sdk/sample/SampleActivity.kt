@@ -1,9 +1,14 @@
 package com.midtrans.sdk.sample
 
+import android.app.Activity
+import android.content.res.Configuration
+import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
@@ -11,6 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.os.LocaleListCompat
 import com.midtrans.sdk.uikit.api.callback.Callback
 import com.midtrans.sdk.uikit.api.exception.SnapError
 import com.midtrans.sdk.uikit.api.model.*
@@ -19,14 +25,21 @@ import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import java.util.*
 
+
 class SampleActivity : AppCompatActivity() {
 
     private val uiKitApi: UiKitApi by lazy {
         UiKitApi.getDefaultInstance()
     }
 
+    private fun setLocaleNew(languageCode: String?) {
+        val locales = LocaleListCompat.forLanguageTags(languageCode)
+        AppCompatDelegate.setApplicationLocales(locales)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setLocaleNew("id")
         UiKitApi.Builder()
             .withContext(this.applicationContext)
             .withMerchantUrl("https://fiesta-point-sample.herokuapp.com/")

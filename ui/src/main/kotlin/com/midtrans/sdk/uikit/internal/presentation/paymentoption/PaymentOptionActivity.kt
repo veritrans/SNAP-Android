@@ -265,7 +265,7 @@ class PaymentOptionActivity : BaseActivity() {
     ) {
         var isExpand by remember { mutableStateOf(false) }
         Column {
-            SnapAppBar(title = "Payment Methods", iconResId = R.drawable.ic_arrow_left) {
+            SnapAppBar(title = stringResource(id = R.string.payment_summary_select_method), iconResId = R.drawable.ic_arrow_left) {
                 onBackPressed()
             }
             SnapOverlayExpandingBox(
