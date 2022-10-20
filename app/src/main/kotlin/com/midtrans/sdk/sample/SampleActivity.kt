@@ -15,7 +15,7 @@ import com.midtrans.sdk.uikit.api.callback.Callback
 import com.midtrans.sdk.uikit.api.exception.SnapError
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
-import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
+import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import java.util.*
 
@@ -31,6 +31,7 @@ class SampleActivity : AppCompatActivity() {
             .withContext(this.applicationContext)
             .withMerchantUrl("https://fiesta-point-sample.herokuapp.com/")
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
+            .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
             .withCustomColors(
                 CustomColors(
                     interactiveFillInverse = 0xff0000,

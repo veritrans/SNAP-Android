@@ -49,7 +49,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        UiKitApi.daggerUiKitComponent.inject(this)
+        UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         setContent {
             Content(
                 totalAmount = totalAmount,

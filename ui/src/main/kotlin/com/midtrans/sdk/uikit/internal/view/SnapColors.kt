@@ -70,24 +70,24 @@ internal object SnapColors {
     private const val LINE_LIGHT_MUTED = 0XE8E8E8
 
     val backgroundBorderSolidSecondary
-        get() = UiKitApi.customColors?.backgroundBorderSolidSecondary
+        get() = UiKitApi.getDefaultInstance().customColors?.backgroundBorderSolidSecondary
             ?: BACKGROUND_BORDER_SOLID_SECONDARY
     val backgroundBorderSolidPrimary
-        get() = UiKitApi.customColors?.backgroundBorderSolidPrimary
+        get() = UiKitApi.getDefaultInstance().customColors?.backgroundBorderSolidPrimary
             ?: BACKGROUND_BORDER_SOLID_PRIMARY
     val backgroundFillPrimary
-        get() = UiKitApi.customColors?.backgroundFillPrimary ?: BACKGROUND_FILL_PRIMARY
+        get() = UiKitApi.getDefaultInstance().customColors?.backgroundFillPrimary ?: BACKGROUND_FILL_PRIMARY
     val backgroundFillSecondary = 0XEFF2F6
     val backgroundFillHighlight = 0XE8EBEF
     val backgroundFillBrand = 0X3A5EAB
     val backgroundFillInverse = 0X2044
     val backgroundFillLight
-        get() = UiKitApi.customColors?.backgroundFillLight ?: BACKGROUND_FILL_LIGHT
+        get() = UiKitApi.getDefaultInstance().customColors?.backgroundFillLight ?: BACKGROUND_FILL_LIGHT
 
     val textPrimary = 0X2D2E34
     val textSecondary = 0X4F515C
     val textMuted = 0X8E919B
-    val textInverse get() = UiKitApi.customColors?.textInverse ?: TEXT_INVERSE
+    val textInverse get() = UiKitApi.getDefaultInstance().customColors?.textInverse ?: TEXT_INVERSE
     val textBrand = 0X07ADDC
     val textDisabled = 0X9A9EAA
     val iconPrimary = 0X2D2E34
@@ -102,7 +102,7 @@ internal object SnapColors {
     val linkVisited = 0XC643C1
 
     val interactiveFillBrandDefault
-        get() = UiKitApi.customColors?.interactiveFillBrandDefault ?: INTERACTIVE_FILL_BRAND_DEFAULT
+        get() = UiKitApi.getDefaultInstance().customColors?.interactiveFillBrandDefault ?: INTERACTIVE_FILL_BRAND_DEFAULT
     val interactiveFillBrandHover = 0X41CFF8
     val interactiveFillBrandActive = 0X054FBF
 
@@ -110,42 +110,42 @@ internal object SnapColors {
     val interactiveFillHover = 0X85A2F9
     val interactiveFillActive = 0X1C3ABB
     val interactiveBorderInput
-        get() = UiKitApi.customColors?.interactiveBorderInput ?: INTERACTIVE_BORDER_INPUT
+        get() = UiKitApi.getDefaultInstance().customColors?.interactiveBorderInput ?: INTERACTIVE_BORDER_INPUT
     val interactiveBorderDotted = 0XDCDFE6
     val interactiveDisabled = 0XF1F3F6
     val interactiveFocus = 0X054FBF
     val interactiveBorderSupport
-        get() = UiKitApi.customColors?.interactiveBorderSupport ?: INTERACTIVE_BORDER_SUPPORT
+        get() = UiKitApi.getDefaultInstance().customColors?.interactiveBorderSupport ?: INTERACTIVE_BORDER_SUPPORT
     val interactiveBorderAction
-        get() = UiKitApi.customColors?.interactiveBorderAction ?: INTERACTIVE_BORDER_ACTION
+        get() = UiKitApi.getDefaultInstance().customColors?.interactiveBorderAction ?: INTERACTIVE_BORDER_ACTION
     val interactiveFillInverse
-        get() = UiKitApi.customColors?.interactiveFillInverse ?: INTERACTIVE_FILL_INVERSE
+        get() = UiKitApi.getDefaultInstance().customColors?.interactiveFillInverse ?: INTERACTIVE_FILL_INVERSE
     val supportDangerDefault
-        get() = UiKitApi.customColors?.supportDangerDefault ?: SUPPORT_DANGER_DEFAULT
+        get() = UiKitApi.getDefaultInstance().customColors?.supportDangerDefault ?: SUPPORT_DANGER_DEFAULT
     val supportDangerHover = 0XF3637A
     val supportDangerActive = 0XC32E52
-    val supportDangerFill get() = UiKitApi.customColors?.supportDangerFill ?: SUPPORT_DANGER_FILL
+    val supportDangerFill get() = UiKitApi.getDefaultInstance().customColors?.supportDangerFill ?: SUPPORT_DANGER_FILL
     val supportWarningDefault = 0XFFCE45
     val supportWarningHover = 0XFFDD80
     val supportWarningActive = 0XD8991F
     val supportWarningFill = 0XFFF5E3
     val supportSuccessDefault
-        get() = UiKitApi.customColors?.supportSuccessDefault ?: SUPPORT_SUCCESS_DEFAULT
+        get() = UiKitApi.getDefaultInstance().customColors?.supportSuccessDefault ?: SUPPORT_SUCCESS_DEFAULT
     val supportSuccessHover = 0X84E1CC
     val supportSuccessActive = 0X87973
-    val supportSuccessFill get() = UiKitApi.customColors?.supportSuccessFill ?: SUPPORT_DANGER_FILL
-    val supportInfoDefault get() = UiKitApi.customColors?.supportInfoDefault ?: SUPPORT_INFO_DEFAULT
+    val supportSuccessFill get() = UiKitApi.getDefaultInstance().customColors?.supportSuccessFill ?: SUPPORT_DANGER_FILL
+    val supportInfoDefault get() = UiKitApi.getDefaultInstance().customColors?.supportInfoDefault ?: SUPPORT_INFO_DEFAULT
     val supportInfoHover = 0X85A2F9
     val supportInfoActive = 0X1C3ABB
     val supportInfoFill = 0XE3EDFF
-    val supportNeutralFill get() = UiKitApi.customColors?.supportNeutralFill ?: SUPPORT_NEUTRAL_FILL
+    val supportNeutralFill get() = UiKitApi.getDefaultInstance().customColors?.supportNeutralFill ?: SUPPORT_NEUTRAL_FILL
 
-    val transparent get() = UiKitApi.customColors?.transparent ?: TRANSPARENT
+    val transparent get() = UiKitApi.getDefaultInstance().customColors?.transparent ?: TRANSPARENT
 
     val overlayBlack = 0X32333A
-    val overlayWhite get() = UiKitApi.customColors?.overlayWhite ?: OVERLAY_WHITE
+    val overlayWhite get() = UiKitApi.getDefaultInstance().customColors?.overlayWhite ?: OVERLAY_WHITE
 
-    val lineLightMuted get() = UiKitApi.customColors?.lineLightMuted ?: LINE_LIGHT_MUTED
+    val lineLightMuted get() = UiKitApi.getDefaultInstance().customColors?.lineLightMuted ?: LINE_LIGHT_MUTED
 
     fun getARGBColor(color: Int): Color {
         return Color((color.toLong() + (0xFF000000).toLong()))

@@ -75,7 +75,7 @@ class UobSelectionActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        UiKitApi.daggerUiKitComponent.inject(this)
+        UiKitApi.getDefaultInstance().daggerComponent.inject(this)
 
         paymentTypeItem?.let { paymentType ->
             paymentType.method?.let { uobMode ->

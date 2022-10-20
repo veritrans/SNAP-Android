@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.external.UiKitApi
 
 @OptIn(ExperimentalTextApi::class)
 private fun getGoogleFontFamily(
@@ -46,7 +47,7 @@ private val googleFontProvider: GoogleFont.Provider by lazy {
 
 @OptIn(ExperimentalTextApi::class)
 fun getPoppinsFontFamily(): FontFamily {
-    return getGoogleFontFamily(
+    return UiKitApi.getDefaultInstance().customFontFamily ?: getGoogleFontFamily(
         name = "Poppins",
         weights = listOf(
             FontWeight.Normal,

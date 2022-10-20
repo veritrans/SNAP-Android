@@ -78,7 +78,7 @@ class UobPaymentActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        UiKitApi.daggerUiKitComponent.inject(this)
+        UiKitApi.getDefaultInstance().daggerComponent.inject(this)
 
         setContent {
             UobPaymentContent(
