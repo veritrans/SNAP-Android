@@ -1,6 +1,6 @@
 package com.midtrans.sdk.corekit.internal.analytics
 
-internal object AnalyticsEvent {
+internal object EventName {
     const val EVENT_SNAP_PAGE_VIEWED = "SNAP Page Viewed"
     const val EVENT_SNAP_ORDER_DETAILS_VIEWED = "SNAP Order Details Viewed"
     const val EVENT_SNAP_CHARGE_REQUEST = "SNAP Charge Request"
