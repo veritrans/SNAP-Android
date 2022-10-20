@@ -1,6 +1,7 @@
 package com.midtrans.sdk.uikit.external
 
 import android.content.Context
+import androidx.compose.ui.text.font.FontFamily
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.uikit.api.callback.Callback
 import com.midtrans.sdk.uikit.api.model.*
@@ -10,11 +11,30 @@ import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.presentation.loadingpayment.LoadingPaymentActivity
 import java.lang.ref.WeakReference
 
-class UiKitApi { //TODO revisit this implementation, currently for getting callback in Sample App
+class UiKitApi private constructor(val builder: Builder){ //TODO revisit this implementation, currently for getting callback in Sample App
 
     init {
         setInstance(this)
+        buildCoreKit(builder)
     }
+
+    private fun buildCoreKit(builder: Builder){
+        builder.run {
+            SnapCore.Builder()
+                .withContext(context)
+                .withMerchantUrl(merchantUrl)
+                .withMerchantClientKey(merchantClientKey)
+                .build()
+        }
+    }
+
+    internal val daggerComponent: UiKitComponent by lazy {
+        DaggerUiKitComponent.builder().applicationContext(builder.context).build()
+    }
+
+    internal val paymentCallback = UiKitApi.paymentCallback
+    internal val customColors = builder.customColors
+    internal val customFontFamily = builder.fontFamily
 
     fun startPayment(
         activityContext: Context,
@@ -41,13 +61,14 @@ class UiKitApi { //TODO revisit this implementation, currently for getting callb
     }
 
     class Builder {
-        private lateinit var context: Context
-        private lateinit var merchantUrl: String
-        private lateinit var merchantClientKey: String
-        private var customColors: CustomColors? = null
+        internal lateinit var context: Context
+        internal lateinit var merchantUrl: String
+        internal lateinit var merchantClientKey: String
+        internal var customColors: CustomColors? = null
+        internal var fontFamily: FontFamily? = null
 
         fun withContext(context: Context) = apply {
-            this.context = context
+            this.context = context.applicationContext
         }
 
         fun withMerchantUrl(merchantUrl: String) = apply {
@@ -62,16 +83,14 @@ class UiKitApi { //TODO revisit this implementation, currently for getting callb
             this.customColors = customColors
         }
 
+        fun withFontFamily(fontFamily: FontFamily) = apply {
+            this.fontFamily = fontFamily
+        }
+
         @Throws(RuntimeException::class)
         fun build(): UiKitApi {
-            SnapCore.Builder()
-                .withContext(context)
-                .withMerchantUrl(merchantUrl)
-                .withMerchantClientKey(merchantClientKey)
-                .build()
-            daggerUiKitComponent = DaggerUiKitComponent.builder().applicationContext(context.applicationContext).build()
-            UiKitApi()
-            UiKitApi.customColors = customColors
+            UiKitApi(this)
+
             return instance
         }
     }
@@ -79,19 +98,14 @@ class UiKitApi { //TODO revisit this implementation, currently for getting callb
     companion object {
         private var paymentCallbackWeakReference: WeakReference<Callback<TransactionResult>?> =
             WeakReference(null)
-        internal var paymentCallback: Callback<TransactionResult>?
+        private var paymentCallback: Callback<TransactionResult>?
             private set(value) {
                 paymentCallbackWeakReference = WeakReference(value)
             }
             get() = paymentCallbackWeakReference.get()
 
-        internal lateinit var daggerUiKitComponent: UiKitComponent
-            private set
-
         private lateinit var instance: UiKitApi
 
-        internal var customColors: CustomColors? = null
-            private set
 
         fun getDefaultInstance(): UiKitApi {
             return instance
