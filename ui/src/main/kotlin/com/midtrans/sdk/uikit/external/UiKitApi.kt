@@ -89,6 +89,15 @@ class UiKitApi private constructor(val builder: Builder){ //TODO revisit this im
 
         @Throws(RuntimeException::class)
         fun build(): UiKitApi {
+            if(!this::context.isInitialized){
+                throw Throwable(message = "context is required")
+            }
+            if(!this::merchantUrl.isInitialized){
+                throw Throwable(message = "merchantUrl is required")
+            }
+            if(!this::merchantClientKey.isInitialized){
+                throw Throwable(message = "merchantClientKey is required")
+            }
             UiKitApi(this)
 
             return instance
