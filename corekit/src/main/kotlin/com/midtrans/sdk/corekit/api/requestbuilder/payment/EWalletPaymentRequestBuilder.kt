@@ -20,6 +20,12 @@ class EWalletPaymentRequestBuilder : PaymentRequestBuilder() {
                     paymentParams = PaymentParam(acquirer = listOf(PaymentType.SHOPEEPAY))
                 )
             }
+            PaymentType.GOPAY_QRIS -> {
+                PaymentRequest(
+                    paymentType = PaymentType.QRIS,
+                    paymentParams = PaymentParam(acquirer = listOf(PaymentType.GOPAY))
+                )
+            }
             PaymentType.SHOPEEPAY,
             PaymentType.GOPAY -> PaymentRequest(paymentType = paymentType)
             else -> throw InvalidPaymentTypeException("Supported PaymentType are: GOPAY, SHOPEEPAY, SHOPEEPAY_QRIS")
