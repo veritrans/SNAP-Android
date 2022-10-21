@@ -300,7 +300,6 @@ internal class WalletActivity : BaseActivity() {
             Pair(PaymentType.GOPAY_QRIS, R.string.payment_title_gopay),
             Pair(PaymentType.SHOPEEPAY, R.string.payment_title_shopeepay),
             Pair(PaymentType.SHOPEEPAY_QRIS, R.string.payment_title_shopeepay)
-
             )
     }
 
