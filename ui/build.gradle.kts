@@ -106,4 +106,5 @@ dependencies {
 
     implementation(com.gtf.snap.CommonLibraries.zxing)
 
+    debugImplementation(com.gtf.snap.CommonLibraries.leakCanary)
 }

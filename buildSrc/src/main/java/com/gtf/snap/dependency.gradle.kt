@@ -47,6 +47,7 @@ object Dependencies {
     const val coilComposeVersion = "2.1.0"
     const val hamcrestVersion = "2.2"
     const val coreLibraryDesugaringVersion = "1.1.5"
+    const val leakCanaryVersion = "2.9.1"
 }
 
 object CommonLibraries {
@@ -66,8 +67,7 @@ object CommonLibraries {
     const val androidxDatastore =
         "androidx.datastore:datastore-preferences:${Dependencies.androidxDatastoreVersion}"
     const val coreLibraryDesugaring = "com.android.tools:desugar_jdk_libs:${Dependencies.coreLibraryDesugaringVersion}"
-
-
+    const val leakCanary = "com.squareup.leakcanary:leakcanary-android:${Dependencies.leakCanaryVersion}"
 }
 
 object AndroidSupportLibraries {
