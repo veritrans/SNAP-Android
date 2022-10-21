@@ -21,10 +21,20 @@ object SnapPromoListRadioButton {
 fun SnapPromoListRadioButton(
     states: List<PromoData>,
     onItemSelectedListener: (promodata: PromoData) -> Unit
-) {
+): () -> Unit {
     val (selectedOption, onOptionSelected) = remember {
         mutableStateOf(states.filter { it.enabled.value }[0].leftText)
     }
+
+    var needReset by remember {
+        mutableStateOf(false)
+    }
+
+    if(needReset){
+        needReset = false
+        onOptionSelected(states.filter { it.enabled.value }[0].also { onItemSelectedListener(it) }.leftText)
+    }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
@@ -63,6 +73,9 @@ fun SnapPromoListRadioButton(
             }
         }
     }
+    return {
+        needReset = true
+    }
 }
 
 @Composable
@@ -76,11 +89,13 @@ fun SnapPromoListRadioButtonItem(promoData: PromoData) {
                 style = SnapTypography.STYLES.snapTextMediumRegular,
                 color = SnapColors.getARGBColor(if (enabled) SnapColors.TEXT_PRIMARY else SnapColors.TEXT_MUTED)
             )
-            Text(
-                text = promoData.rightText,
-                style = SnapTypography.STYLES.snapTextMediumRegular,
-                color = SnapColors.getARGBColor(if (enabled) SnapColors.TEXT_PRIMARY else SnapColors.TEXT_MUTED)
-            )
+            if(enabled) {
+                Text(
+                    text = promoData.rightText,
+                    style = SnapTypography.STYLES.snapTextMediumRegular,
+                    color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY)
+                )
+            }
         }
         promoData.subLeftText?.let {
             Text(

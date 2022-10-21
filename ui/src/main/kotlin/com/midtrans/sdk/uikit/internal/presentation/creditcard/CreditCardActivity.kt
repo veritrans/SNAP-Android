@@ -97,8 +97,13 @@ internal class CreditCardActivity : BaseActivity() {
     }
 
     private val promos: List<Promo>? by lazy {
-        intent.getParcelableArrayListExtra(EXTRA_PROMOS)
+        intent.getParcelableArrayListExtra<Promo?>(EXTRA_PROMOS)
+            ?.apply {
+                sortByDescending { it.calculatedDiscountAmount }
+            }
     }
+
+    private var onPromoReset: () -> Unit = {}
 
     private val savedTokenList: SnapshotStateList<FormData>? by lazy {
         mutableListOf<FormData>()
@@ -125,14 +130,6 @@ internal class CreditCardActivity : BaseActivity() {
             .ifEmpty { null }?.toMutableStateList()
         //For testing purpose: uncomment below to force non save card
 //        null
-    }
-
-    private val noPromo by lazy {
-        PromoData(
-            identifier = "0",
-            leftText = getString(R.string.cant_continue_promo_dont_want_to_use_promo),
-            rightText = ""
-        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -278,6 +275,7 @@ internal class CreditCardActivity : BaseActivity() {
                         if (eightDigitNumber != previousEightDigitNumber) {
                             previousEightDigitNumber = eightDigitNumber
                             viewModel?.getBinData(binNumber = eightDigitNumber)
+                            onPromoReset.invoke()
                         }
                     } else {
                         viewModel?.resetCardNumberAttribute()
@@ -420,6 +418,7 @@ internal class CreditCardActivity : BaseActivity() {
                         orderId = orderId,
                         remainingTime = remainingTime,
                         canExpand = customerDetail != null,
+                        isPromo = state.promoId != 0L
                     ) {
                         onExpand(it)
                     }
@@ -473,8 +472,10 @@ internal class CreditCardActivity : BaseActivity() {
                             onInstallmentAllowed = { state.isInstallmentAllowed = it }
                         )
 
-                        promoState.value?.let {
-                            PromoLayout(promoData = it, cardItemState = state)
+                        promoState.value?.let { it ->
+                            PromoLayout(promoData = it, cardItemState = state).let { reset ->
+                               onPromoReset = reset
+                            }
                         }
                     }
                 },
@@ -545,31 +546,6 @@ internal class CreditCardActivity : BaseActivity() {
             },
             onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
             onSavedCardCheckedChange = { state.isSavedCardChecked = it }
-        )
-    }
-
-    @Composable
-    private fun PromoLayout(
-        promoData: List<PromoData>,
-        cardItemState: CardItemState
-    ) {
-        Divider(
-            color = SnapColors.getARGBColor(SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY),
-            modifier = Modifier
-                .fillMaxWidth(1f)
-                .padding(top = 16.dp)
-        )
-        Text(
-            text = stringResource(id = R.string.promo_select_promo_title),
-            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
-            style = SnapTypography.STYLES.snapTextMediumRegular
-        )
-
-        SnapPromoListRadioButton(
-            states = promoData.toMutableList().apply { add(noPromo) },
-            onItemSelectedListener = {
-                cardItemState.promoId = it.identifier.orEmpty().toLong()
-            }
         )
     }
 
