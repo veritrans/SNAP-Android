@@ -22,6 +22,7 @@ fun SnapAppBar(
     title: String,
     @DrawableRes
     iconResId: Int,
+    rightIconRestId: Int? = null,
     onClick: () -> Unit
 ) {
     Row(
@@ -44,5 +45,13 @@ fun SnapAppBar(
             text = title,
             style = SnapTypography.STYLES.snapAppBar
         )
+
+        rightIconRestId?.let {
+            Icon(
+                painter = painterResource(id = it),
+                contentDescription = null,
+                tint = Color.Unspecified
+            )
+        }
     }
 }

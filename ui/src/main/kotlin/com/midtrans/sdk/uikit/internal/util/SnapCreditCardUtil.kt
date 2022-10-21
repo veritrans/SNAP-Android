@@ -230,7 +230,7 @@ internal object SnapCreditCardUtil {
                         .or(promoResponse.bins?.any { binNumber.startsWith(it)}?: false )
                 )
             )
-        }
+        }?.sortedByDescending { it.enabled.value }
     }
 
     fun isValidEmail(target: String): Boolean {

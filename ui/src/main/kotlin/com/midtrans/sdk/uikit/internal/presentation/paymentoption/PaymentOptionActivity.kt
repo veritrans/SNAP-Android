@@ -251,7 +251,8 @@ class PaymentOptionActivity : BaseActivity() {
                         amount = totalAmount,
                         orderId = orderId,
                         canExpand = customerInfo != null,
-                        remainingTime = null
+                        remainingTime = null,
+                        isPromo = !promos.isNullOrEmpty()
                     ) {
                         isExpand = it
                     }
