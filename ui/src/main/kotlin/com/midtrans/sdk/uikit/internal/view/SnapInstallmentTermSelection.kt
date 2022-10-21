@@ -68,7 +68,7 @@ fun SnapInstallmentTermSelectionMenu(
                         onOptionsSelected = { selectedTerm ->
                             selectedTerm
                                 .filter { it.isDigit() }
-                                .takeIf { it.isDigitsOnly() }
+                                .takeIf { it.isDigitsOnly() && it.isNotEmpty() }
                                 ?.let { onInstallmentTermSelected("${selectedBank}_$it") }
                         },
                         onInstallmentAllowed = { onInstallmentAllowed(it) }
@@ -187,7 +187,6 @@ private fun InstallmentDropdownMenu(
                         DropdownMenuItem(
                             onClick = {
                                 selectedOptionText = selectionOption
-                                onOptionsSelected(selectionOption)
                                 expanded = false
                             },
                             enabled = enabled
@@ -202,6 +201,7 @@ private fun InstallmentDropdownMenu(
             } else {
                 selectedOptionText = options[0]
             }
+            onOptionsSelected(selectedOptionText)
         }
 
         if (isErrorVisible) {

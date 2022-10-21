@@ -212,7 +212,7 @@ internal class CreditCardViewModel @Inject constructor(
         installmentTerm: String,
         promoId: Long?
     ) {
-        if (formData.tokenType == SavedToken.ONE_CLICK){
+        if (formData.tokenType == SavedToken.ONE_CLICK) {
             snapCore.pay(
                 snapToken = snapToken,
                 paymentRequestBuilder = OneClickCardPaymentRequestBuilder()
