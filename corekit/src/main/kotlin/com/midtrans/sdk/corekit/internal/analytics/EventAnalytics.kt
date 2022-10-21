@@ -1,50 +1,41 @@
 package com.midtrans.sdk.corekit.internal.analytics
 
-import androidx.annotation.Keep
-import com.midtrans.sdk.corekit.internal.config.Config
-
-@Keep
-internal class EventAnalytics(builder: Builder) {
-    @Keep
-    class Builder {
-        private lateinit var cleverTapTracker: CleverTapTracker
-        private lateinit var config: Config
-
-
-        fun getCleverTapTracker(): CleverTapTracker = cleverTapTracker
-        fun getConfig(): Config = config
-
-        fun withCleverTapTracker(tracker: CleverTapTracker) = apply { cleverTapTracker = tracker }
-
-
-        fun build() = EventAnalytics(this)
-    }
-
-    private val cleverTapTracker: CleverTapTracker
-    private val config: Config
-
-    init {
-        cleverTapTracker = builder.getCleverTapTracker()
-        config = builder.getConfig()
-
-        instance = this
-    }
-
-    private fun trackEvent(
-        eventName: String,
-        values: Map<String, Any>? = null,
-        customHostEventProperties: Map<String, Any>? = null
+class EventAnalytics(
+    private val mixpanelTracker: MixpanelTracker
+) {
+    fun setUserIdentity(
+        id: String,
+        name: String,
+        extras: Map<String, String>
     ) {
-        cleverTapTracker.pushSdkEvent(eventName, values)
-        cleverTapTracker.pushHostEvent(
-            eventName,
-            values,
-            customHostEventProperty = customHostEventProperties
+        mixpanelTracker.setUserIdentity(
+            id = id,
+            name = name,
+            extras = extras
         )
     }
 
-    companion object {
-        private var instance: EventAnalytics? = null
+    fun testTracker() {
+        mixpanelTracker.trackEvent("testEvent")
     }
 
+    //TODO will be implemented separately
+    fun trackSnapPageViewed() {}
+    fun trackSnapOrderDetailsViewed() {}
+    fun trackSnapChargeRequest() {}
+    fun trackSnapCtaClicked() {}
+    fun trackSnapChargeResult() {}
+    fun trackSnapHowToPayViewed() {}
+    fun trackSnapAccountNumberCopied() {}
+    fun trackSnapPaymentNumberButtonRetried() {}
+    fun trackSnapExbinResponse() {}
+    fun trackSnapPageClosed() {}
+    fun trackSnapOpenDeeplink() {}
+    fun trackSnapError() {}
+    fun trackSnap3dsResult() {}
+    fun trackSnapTokenizationResult() {}
+    fun trackSnapCtaError() {}
+    fun trackSnapGetTokenRequest() {}
+    fun trackSnapGetTokenResult() {}
+    fun trackSnapCustomerDataInput() {}
 }
