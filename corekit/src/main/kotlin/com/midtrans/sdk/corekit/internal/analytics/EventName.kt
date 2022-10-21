@@ -21,7 +21,6 @@ internal object EventName {
     const val EVENT_SNAP_CUSTOMER_DATA_INPUT = "SNAP Customer data input"
 
     const val PROPERTY_SDK_VERSION = "sdkVersion"
-    const val PROPERTY_SNAP_MODE = "snapMode"
     const val PROPERTY_SDK_TYPE = "sdkType"
     const val PROPERTY_COLOUR_SCHEME = "colourScheme"
     const val PROPERTY_MERCHANT_ID = "merchantId"
@@ -90,4 +89,5 @@ internal object EventName {
     const val PROPERTY_STATUS_TEXT = "statusText"
     const val PROPERTY_TOKEN_ID = "tokenId"
     const val PROPERTY_RESPONSE_TIME = "responseTime"
+    const val PROPERTY_PLATFORM = "Platform"
 }
