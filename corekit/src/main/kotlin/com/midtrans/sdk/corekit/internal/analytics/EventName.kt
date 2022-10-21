@@ -18,7 +18,7 @@ internal object EventName {
     const val EVENT_SNAP_CTA_ERROR = "SNAP CTA Error"
     const val EVENT_SNAP_GET_TOKEN_REQUEST = "SNAP Get Token Request"
     const val EVENT_SNAP_GET_TOKEN_RESULT = "SNAP Get Token Result"
-    const val EVENT_SNAP_CUSTOMER_DATA_INPUT = "Customer data input"
+    const val EVENT_SNAP_CUSTOMER_DATA_INPUT = "SNAP Customer data input"
 
     const val PROPERTY_SDK_VERSION = "sdkVersion"
     const val PROPERTY_SNAP_MODE = "snapMode"
@@ -44,7 +44,7 @@ internal object EventName {
     const val PROPERTY_PAGE_NAME = "pageName"
     const val PROPERTY_ONE_CLICK_TOKEN_AVAILABLE = "cardOneClickTokenAvailable"
     const val PROPERTY_TWO_CLICK_TOKEN_AVAILABLE = "cardTwoClickTokenAvailable"
-    const val PROPERTY_PAYMENT_METHOD_NAME = "paymentMethodName" //TODO ASK WHAT IS PAYMENT METHOD NAME HOW TO GET THIS IN LOADING PAYMENT OPTIONS?
+    const val PROPERTY_PAYMENT_METHOD_NAME = "paymentMethodName"
     const val PROPERTY_OTHER_VA_PROCESSOR = "otherVaProcessor"
     const val PROPERTY_ALLOW_RETRY = "allowRetry"
     const val PROPERTY_PRIORITY_CARD_FEATURE = "priorityCardFeature"
@@ -59,16 +59,13 @@ internal object EventName {
     const val PROPERTY_INSTALLMENT_REQUIRED = "installmentRequired"
     const val PROPERTY_SOURCE_TYPE = "sourceType"
     const val PROPERTY_SERVICE_TYPE = "serviceType"
-    const val PROPERTY_STEP_NUMBER = "stepNumber" //TODO ASK WHAT IS STEP NUMBER
+    const val PROPERTY_STEP_NUMBER = "stepNumber"
     const val PROPERTY_SNAP_TOKEN = "snapToken"
-
     const val PROPERTY_PROMO_NAME = "promoName"
     const val PROPERTY_PROMO_AMOUNT = "promoAmount"
     const val PROPERTY_PROMO_ID = "promoID"
     const val PROPERTY_CREDIT_CARD_POINT = "creditCardPoint"
-
     const val PROPERTY_CTA_NAME = "ctaName"
-
     const val PROPERTY_CHARGE_RESPONSE_BANK = "bank"
     const val PROPERTY_CHANNEL_RESPONSE_CODE = "channelResponseCode"
     const val PROPERTY_CHANNEL_RESPONSE_MESSAGE = "channelResponseMessage"
@@ -78,7 +75,6 @@ internal object EventName {
     const val PROPERTY_CARD_TYPE = "cardType"
     const val PROPERTY_3DS_VERSION = "3DSVersion"
     const val PROPERTY_STATUS_CODE = "statusCode"
-
     const val PROPERTY_REGISTRATION_REQUIRED = "registrationRequired"
     const val PROPERTY_EXBIN_MESSAGE = "message"
     const val PROPERTY_CARD_COUNTRY_CODE = "countryCode"
@@ -88,12 +84,10 @@ internal object EventName {
     const val PROPERTY_CARD_BIN_CLASSS = "binClass"
     const val PROPERTY_CARD_BIN_TYPE = "binType"
     const val PROPERTY_CARD_BIN = "bin"
-
     const val PROPERTY_ERROR_MESSAGE = "errorMessage"
-    const val PROPERTY_ECI = "ECI" //TODO ASK WHAT IS ECI
-
-    const val PROPERTY_NOTICE_MESSAGE = "noticeMessage" //TODO ASK NEED TO TRACK NOTICE?
-    const val PROPERTY_STATUS_TEXT = "statusText" //TODO ASK NEED TO TRACK NOTICE?
-    const val PROPERTY_TOKEN_ID = "tokenId" //TODO ASK HOW TO TRACK TOKENIZATION
+    const val PROPERTY_ECI = "ECI"
+    const val PROPERTY_NOTICE_MESSAGE = "noticeMessage"
+    const val PROPERTY_STATUS_TEXT = "statusText"
+    const val PROPERTY_TOKEN_ID = "tokenId"
     const val PROPERTY_RESPONSE_TIME = "responseTime"
 }
