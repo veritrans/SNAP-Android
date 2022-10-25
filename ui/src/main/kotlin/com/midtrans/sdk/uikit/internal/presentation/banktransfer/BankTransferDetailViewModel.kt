@@ -26,11 +26,13 @@ internal class BankTransferDetailViewModel @Inject constructor(
     private val _billingNumberLiveData = MutableLiveData<String>()
     private val _bankCodeLiveData = MutableLiveData<String>()
     private val _transactionResult = MutableLiveData<TransactionResult>()
+    private val _errorLiveData = MutableLiveData<SnapError>()
     val vaNumberLiveData: LiveData<String> = _vaNumberLiveData
     val companyCodeLiveData: LiveData<String> = _companyCodeLiveData
     val billingNumberLiveData: LiveData<String> = _billingNumberLiveData
     val bankCodeLiveData: LiveData<String> = _bankCodeLiveData
     val transactionResult: LiveData<TransactionResult> = _transactionResult
+    val errorLiveData: LiveData<SnapError> = _errorLiveData
 
     var expiredTime = datetimeUtil.plusDateBy(datetimeUtil.getCurrentMillis(), 1)
 
@@ -73,7 +75,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
                 }
 
                 override fun onError(error: SnapError) {
-                    // TODO: error dialog etc
+                    _errorLiveData.value = error
                 }
             }
         )

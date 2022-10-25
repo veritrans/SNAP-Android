@@ -100,7 +100,15 @@ class UobPaymentActivity : BaseActivity() {
             when (status) {
                 UiKitConstants.STATUS_SUCCESS,
                 UiKitConstants.STATUS_SETTLEMENT -> {
-                    goToSuccessScreen(amount, orderId)
+                    goToSuccessScreen(
+                        amount,
+                        orderId,
+                        TransactionResult(
+                            status = status,
+                            transactionId = transactionId,
+                            paymentType = PaymentType.UOB_EZPAY
+                        )
+                    )
                 }
                 UiKitConstants.STATUS_PENDING,
                 UiKitConstants.STATUS_FAILED -> {
@@ -135,13 +143,15 @@ class UobPaymentActivity : BaseActivity() {
 
     private fun goToSuccessScreen(
         amount: String,
-        orderId: String
+        orderId: String,
+        transactionResult: TransactionResult
     ) {
         successScreenLauncher.launch(
             SuccessScreenActivity.getIntent(
                 activityContext = this,
                 total = amount,
-                orderId = orderId
+                orderId = orderId,
+                transactionResult = transactionResult
             )
         )
     }

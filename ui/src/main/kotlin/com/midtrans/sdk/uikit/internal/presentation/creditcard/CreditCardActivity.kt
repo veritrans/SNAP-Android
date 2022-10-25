@@ -27,6 +27,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.Promo
+import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
@@ -152,44 +154,59 @@ internal class CreditCardActivity : BaseActivity() {
                 totalAmount = viewModel.netAmountLiveData.observeAsState(initial = totalAmount),
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
                 withCustomerPhoneEmail = withCustomerPhoneEmail,
-                errorTypeState = viewModel.errorLiveData.observeAsState(initial = null),
+                errorTypeState = viewModel.errorTypeLiveData.observeAsState(initial = null),
                 promoState = viewModel.promoDataLiveData.observeAsState(initial = null)
             )
         }
     }
 
+    private fun launchSuccessScreen(it: TransactionResponse) {
+        val intent = SuccessScreenActivity.getIntent(
+            activityContext = this@CreditCardActivity,
+            total = it.grossAmount?.currencyFormatRp().orEmpty(),
+            orderId = it?.orderId.toString(),
+            transactionResult = TransactionResult(
+                status = it.transactionStatus.orEmpty(),
+                transactionId = it.transactionId.orEmpty(),
+                paymentType = it.paymentType.orEmpty()
+            )
+        )
+        resultLauncher.launch(intent)
+    }
+
     private fun initTransactionResultScreenObserver() {
         viewModel.transactionResponseLiveData.observe(this, Observer {
             if (it.statusCode != UiKitConstants.STATUS_CODE_201 && it.redirectUrl.isNullOrEmpty()) {
-                val intent = SuccessScreenActivity.getIntent(
-                    activityContext = this@CreditCardActivity,
-                    total = it.grossAmount?.currencyFormatRp().orEmpty(),
-                    orderId = it?.orderId.toString()
-                )
-                resultLauncher.launch(intent)
+                launchSuccessScreen(it)
             }
         })
         viewModel.transactionStatusLiveData.observe(this, Observer {
-            var intent: Intent
             when (it.statusCode) {
                 UiKitConstants.STATUS_CODE_200 -> {
-                    intent = SuccessScreenActivity.getIntent(
-                        activityContext = this@CreditCardActivity,
-                        total = it.grossAmount?.currencyFormatRp().orEmpty(),
-                        orderId = it?.orderId.toString()
-                    )
-                    resultLauncher.launch(intent)
+                   launchSuccessScreen(it)
                 }
             }
         })
+
+        //TODO: handle error ui/dialog
+        viewModel.errorLiveData.observe(this) {
+            val data = Intent()
+            data.putExtra(
+                UiKitConstants.KEY_ERROR_NAME,
+                it::class.java.simpleName
+            )
+            data.putExtra(
+                UiKitConstants.KEY_ERROR_MESSAGE,
+                it.message
+            )
+            setResult(Activity.RESULT_CANCELED, data)
+        }
     }
 
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                setResult(RESULT_OK)
-                finish()
-            }
+            setResult(result.resultCode, result.data)
+            finish()
         }
 
     @Composable

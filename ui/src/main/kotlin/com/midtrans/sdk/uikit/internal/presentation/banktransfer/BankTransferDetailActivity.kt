@@ -76,14 +76,28 @@ internal class BankTransferDetailActivity : BaseActivity() {
     }
 
     private fun observeData() {
-        viewModel.transactionResult.observe(this, Observer {
+        viewModel.transactionResult.observe(this) {
             val data = Intent()
             data.putExtra(
                 UiKitConstants.KEY_TRANSACTION_RESULT,
                 it
             )
             setResult(Activity.RESULT_OK, data)
-        })
+        }
+
+        //TODO: handle error ui/dialog
+        viewModel.errorLiveData.observe(this) {
+            val data = Intent()
+            data.putExtra(
+                UiKitConstants.KEY_ERROR_NAME,
+                it::class.java.simpleName
+            )
+            data.putExtra(
+                UiKitConstants.KEY_ERROR_MESSAGE,
+                it.message
+            )
+            setResult(Activity.RESULT_CANCELED, data)
+        }
     }
 
     private fun updateExpiredTime(): Observable<String> {
