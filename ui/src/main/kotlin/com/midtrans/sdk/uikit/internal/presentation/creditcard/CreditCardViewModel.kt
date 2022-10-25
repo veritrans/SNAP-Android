@@ -112,7 +112,7 @@ internal class CreditCardViewModel @Inject constructor(
                             .isBinBlocked(
                                 cardNumber = binNumber,
                                 creditCard = creditCard,
-                                bank = data?.bank.orEmpty(),
+                                bank = data?.bankCode.orEmpty(),
                                 binType = data?.binType.orEmpty()
                             )
                     }

@@ -28,6 +28,13 @@ internal class EWalletRequestBuilderTest {
     }
 
     @Test
+    fun shouldConstructGopayQrisRequest() {
+        val obj = EWalletPaymentRequestBuilder().withPaymentType(PaymentType.GOPAY_QRIS).build()
+        Assert.assertEquals(PaymentType.QRIS, obj.paymentType)
+        Assert.assertEquals(PaymentType.GOPAY, obj.paymentParams!!.acquirer!![0])
+    }
+
+    @Test
     fun shouldErrorOnUnsupportedPaymentType() {
         Assert.assertThrows(
             InvalidPaymentTypeException::class.java

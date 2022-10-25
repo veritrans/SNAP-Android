@@ -251,7 +251,8 @@ class PaymentOptionActivity : BaseActivity() {
                         amount = totalAmount,
                         orderId = orderId,
                         canExpand = customerInfo != null,
-                        remainingTime = null
+                        remainingTime = null,
+                        isPromo = !promos.isNullOrEmpty()
                     ) {
                         isExpand = it
                     }
@@ -413,6 +414,7 @@ class PaymentOptionActivity : BaseActivity() {
             Pair(PaymentType.SHOPEEPAY, eWalletPaymentLauncher),
             Pair(PaymentType.SHOPEEPAY_QRIS, eWalletPaymentLauncher),
             Pair(PaymentType.GOPAY, eWalletPaymentLauncher),
+            Pair(PaymentType.GOPAY_QRIS, eWalletPaymentLauncher),
             Pair(PaymentType.AKULAKU) {
                 resultLauncher.launch(
                     PayLaterActivity.getIntent(

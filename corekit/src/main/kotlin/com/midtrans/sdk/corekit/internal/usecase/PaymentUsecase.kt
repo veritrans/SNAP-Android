@@ -141,6 +141,13 @@ internal class PaymentUsecase(
                         channels = emptyList()
                     )
                 )
+            } else if (payment.acquirer == PaymentType.GOPAY) {
+                methods.add(
+                    PaymentMethod(
+                        type = PaymentType.GOPAY_QRIS,
+                        channels = emptyList()
+                    )
+                )
             }
         } else {
             methods.add(

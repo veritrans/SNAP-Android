@@ -6,6 +6,7 @@ import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.CreditCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.PaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
+import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.di.DaggerSnapComponent
 import com.midtrans.sdk.corekit.internal.di.SnapComponent
 import com.midtrans.sdk.corekit.internal.usecase.PaymentUsecase
@@ -15,6 +16,9 @@ class SnapCore private constructor(builder: Builder) {
 
     @Inject
     internal lateinit var paymentUsecase: PaymentUsecase
+
+    @Inject
+    internal lateinit var eventAnalytics: EventAnalytics
 
     init {
         buildDaggerComponent(
@@ -81,6 +85,8 @@ class SnapCore private constructor(builder: Builder) {
     ){
         paymentUsecase.getTransactionStatus(snapToken, callback)
     }
+
+    fun getEventAnalytics() = eventAnalytics
 
     companion object {
         private var INSTANCE: SnapCore? = null

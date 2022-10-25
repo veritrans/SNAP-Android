@@ -645,3 +645,39 @@ fun LabelledCheckBox(
         )
     }
 }
+
+@Composable
+fun PromoLayout(
+    promoData: List<PromoData>,
+    cardItemState: CardItemState
+): () -> Unit {
+    Divider(
+        color = SnapColors.getARGBColor(SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY),
+        modifier = Modifier
+            .fillMaxWidth(1f)
+            .padding(top = 16.dp)
+    )
+    Text(
+        text = stringResource(id = R.string.promo_select_promo_title),
+        modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
+        style = SnapTypography.STYLES.snapTextMediumRegular
+    )
+
+    val promoReset= SnapPromoListRadioButton(
+        states = promoData.toMutableList().apply {
+            add(
+                PromoData(
+                    identifier = "0",
+                    leftText = stringResource(R.string.cant_continue_promo_dont_want_to_use_promo),
+                    rightText = ""
+                )
+            )
+        },
+        onItemSelectedListener = {
+            cardItemState.promoId = it.identifier.orEmpty().toLong()
+        }
+    )
+    return {
+        promoReset.invoke()
+    }
+}
