@@ -327,7 +327,15 @@ class PaymentOptionActivity : BaseActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 result?.data?.let {
                     val transactionResult = it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT) as TransactionResult
-                    UiKitApi.getDefaultInstance().getPaymentCallback()?.onSuccess(PublicTransactionResult(transactionResult)) //TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
+                    val intentBaru = Intent()
+                    val resultForHost = PublicTransactionResult(
+                        transactionResult.status,
+                        transactionResult.transactionId,
+                        transactionResult.paymentType
+                    )
+                    intentBaru.putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, transactionResult)
+                    setResult(RESULT_OK, intentBaru)
+                    UiKitApi.getDefaultInstance().getPaymentCallback()?.onSuccess(resultForHost) //TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
                 }
                 finish()
             }
