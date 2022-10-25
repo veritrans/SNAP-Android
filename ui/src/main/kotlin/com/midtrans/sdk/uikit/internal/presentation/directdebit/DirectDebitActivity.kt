@@ -235,7 +235,7 @@ class DirectDebitActivity : BaseActivity() {
     ) {
         if (status != null && transactionId != null) {
             val data = Intent()
-            data.putExtra( ///TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
+            data.putExtra(
                 UiKitConstants.KEY_TRANSACTION_RESULT,
                 TransactionResult(
                     status = status,
