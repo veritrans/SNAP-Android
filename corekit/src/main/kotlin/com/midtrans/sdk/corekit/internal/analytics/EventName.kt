@@ -24,6 +24,7 @@ internal object EventName {
     const val PROPERTY_SDK_TYPE = "sdkType"
     const val PROPERTY_COLOUR_SCHEME = "colourScheme"
     const val PROPERTY_MERCHANT_ID = "merchantId"
+    const val PROPERTY_MERCHANT_NAME = "merchantName"
     const val PROPERTY_TRANSACTION_ID = "transactionId"
     const val PROPERTY_ORDER_ID = "orderId"
     const val PROPERTY_GROSS_AMOUNT = "grossAmount"
