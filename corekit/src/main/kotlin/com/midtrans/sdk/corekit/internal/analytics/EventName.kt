@@ -75,6 +75,7 @@ internal object EventName {
     const val PROPERTY_CARD_TYPE = "cardType"
     const val PROPERTY_3DS_VERSION = "3DSVersion"
     const val PROPERTY_STATUS_CODE = "statusCode"
+    const val PROPERTY_STATUS_MESSAGE = "statusMessage"
     const val PROPERTY_REGISTRATION_REQUIRED = "registrationRequired"
     const val PROPERTY_EXBIN_MESSAGE = "message"
     const val PROPERTY_CARD_COUNTRY_CODE = "countryCode"
