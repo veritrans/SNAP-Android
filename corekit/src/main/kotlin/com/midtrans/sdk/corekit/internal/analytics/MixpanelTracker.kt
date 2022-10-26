@@ -23,7 +23,7 @@ class MixpanelTracker(private val mixpanelApi: MixpanelAPI) {
         mixpanelApi.track(eventName, JSONObject(properties))
     }
 
-    fun registerSuperProperties(
+    fun registerCommonProperties(
         properties: Map<String, Any>
     ) {
         mixpanelApi.registerSuperProperties(JSONObject(properties))
