@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.utils.toSetOrEmpty
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -7,6 +9,9 @@ plugins {
 
 android {
     compileSdk = 32
+    project.property("sdkVersion")?.let {
+        version = it
+    }
 
     defaultConfig {
         minSdk = 21

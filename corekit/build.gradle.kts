@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.utils.toSetOrEmpty
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -8,6 +10,9 @@ plugins {
 
 android {
     compileSdk = 32
+    project.property("sdkVersion")?.let {
+        version = it
+    }
 
     defaultConfig {
         minSdk = 21
@@ -26,12 +31,14 @@ android {
             buildConfigField("String", "SNAP_BASE_URL", "\"https://app.midtrans.com/snap/\"")
             buildConfigField("String", "CORE_API_BASE_URL", "\"https://api.midtrans.com/\"")
             buildConfigField("String", "MIXPANEL_TOKEN", "\"84ed63a9507c49b373945b13633b8a0c\"")
+            buildConfigField("String", "SDK_VERSION", "${project.property("sdkVersion")}")
         }
 
         debug {
             buildConfigField("String", "SNAP_BASE_URL", "\"https://app.sandbox.midtrans.com/snap/\"")
             buildConfigField("String", "CORE_API_BASE_URL", "\"https://api.sandbox.midtrans.com/\"")
             buildConfigField("String", "MIXPANEL_TOKEN", "\"f070570da8b882fda74c77541f0926a0\"")
+            buildConfigField("String", "SDK_VERSION", "${project.property("sdkVersion")}")
 
         }
     }
