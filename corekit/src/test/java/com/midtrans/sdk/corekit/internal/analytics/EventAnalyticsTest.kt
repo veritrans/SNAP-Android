@@ -30,6 +30,23 @@ internal class EventAnalyticsTest {
     }
 
     @Test
+    fun verifySetUserIdentity() {
+        val commonProperties = mapOf(
+            EventName.PROPERTY_PLATFORM to "Mobile",
+            EventName.PROPERTY_SDK_VERSION to "2.0.0",
+            EventName.PROPERTY_SDK_TYPE to "UI",
+            EventName.PROPERTY_MERCHANT_ID to "id",
+            EventName.PROPERTY_MERCHANT_NAME to "name",
+            EventName.PROPERTY_SOURCE_TYPE to "midtrans-mobile",
+            EventName.PROPERTY_SERVICE_TYPE to "snap",
+            EventName.PROPERTY_SNAP_TYPE to "Mobile"
+        )
+        eventAnalytics.setUserIdentity("id", "name", mapOf())
+        verify(mixpanelTracker).setUserIdentity("id", "name", mapOf())
+        verify(mixpanelTracker).registerCommonProperties(commonProperties)
+    }
+
+    @Test
     fun verifyTrackSnapGetTokenRequest() {
         eventAnalytics.trackSnapGetTokenRequest("token")
         verify(mixpanelTracker).trackEvent(
