@@ -7,10 +7,12 @@ import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.CreditCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.PaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
+import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.data.repository.CoreApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.MerchantApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.SnapRepository
 import com.midtrans.sdk.corekit.internal.network.model.response.EnabledPayment
+import com.midtrans.sdk.corekit.internal.network.model.response.Transaction
 import com.midtrans.sdk.corekit.internal.scheduler.BaseSdkScheduler
 import io.reactivex.Single
 
@@ -19,7 +21,8 @@ internal class PaymentUsecase(
     private val snapRepository: SnapRepository,
     private val coreApiRepository: CoreApiRepository,
     private val merchantApiRepository: MerchantApiRepository,
-    private val clientKey: String
+    private val clientKey: String,
+    private val eventAnalytics: EventAnalytics
 ) {
 
     @SuppressLint("CheckResult")
@@ -30,6 +33,7 @@ internal class PaymentUsecase(
     ) {
         if (snapToken.isNullOrBlank()) {
             merchantApiRepository
+                .also { eventAnalytics.trackSnapGetTokenRequest("") }//TODO check whether need to track property snaptoken or not
                 .getSnapToken(requestBuilder.build())
                 .onErrorResumeNext {
                     Single.error(
@@ -42,9 +46,8 @@ internal class PaymentUsecase(
                 .flatMap { response ->
                     snapRepository
                         .getTransactionDetail(response.token.orEmpty())
-                        .map {
-                            Pair(response.token, it)
-                        }
+                        .map (setAnalyticsUserIdentity())
+                        .map { Pair(response.token, it) }
                 }
                 .subscribeOn(scheduler.io())
                 .observeOn(scheduler.ui())
@@ -56,6 +59,7 @@ internal class PaymentUsecase(
                         responseData.enabledPayments?.forEach {
                             addPaymentMethod(it, methods)
                         }
+                        eventAnalytics.trackSnapGetTokenResult(token.orEmpty())
                         callback.onSuccess(
                             PaymentOption(
                                 token = token.orEmpty(),
@@ -98,6 +102,21 @@ internal class PaymentUsecase(
                         deliverError(it, callback)
                     }
                 )
+        }
+    }
+
+    private fun setAnalyticsUserIdentity(): (Transaction) -> Transaction {
+        return { transaction ->
+            transaction.merchant?.let { merchant ->
+                val merchantName = merchant.preference?.displayName.orEmpty()
+                merchant.merchantId?.let { id ->
+                    eventAnalytics.setUserIdentity(
+                        id = id,
+                        name = merchantName
+                    )
+                }
+            }
+            transaction
         }
     }
 
