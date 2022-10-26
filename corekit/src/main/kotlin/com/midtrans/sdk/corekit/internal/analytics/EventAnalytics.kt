@@ -1,7 +1,8 @@
 package com.midtrans.sdk.corekit.internal.analytics
 
+import com.midtrans.sdk.corekit.BuildConfig
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
-import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_TOKENIZATION_RESULT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_MERCHANT_ID
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_MERCHANT_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PLATFORM
@@ -12,8 +13,6 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SERVICE_TY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TOKEN
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SOURCE_TYPE
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STATUS_CODE
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STATUS_MESSAGE
 
 class EventAnalytics(
     private val mixpanelTracker: MixpanelTracker
@@ -21,14 +20,14 @@ class EventAnalytics(
     fun setUserIdentity(
         id: String,
         name: String,
-        extras: Map<String, String>
+        extras: Map<String, String> = mapOf()
     ) {
         mixpanelTracker.setUserIdentity(
             id = id,
             name = name,
             extras = extras
         )
-        registerSuperProperties(saudagarId = id, merchantName = name)
+        registerCommonProperties(saudagarId = id, merchantName = name)
     }
 
     fun testTracker() {
@@ -55,35 +54,31 @@ class EventAnalytics(
 
     fun trackSnapGetTokenRequest(snapToken: String) {
         mixpanelTracker.trackEvent(
-            eventName = EVENT_SNAP_TOKENIZATION_RESULT,
+            eventName = EVENT_SNAP_GET_TOKEN_REQUEST,
             properties = mapOf(PROPERTY_SNAP_TOKEN to snapToken)
         )
     }
 
     fun trackSnapGetTokenResult(
-        snapToken: String,
-        statusCode: String?,
-        statusMessage: String?,
+        snapToken: String
     ) {
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_GET_TOKEN_RESULT,
             properties = mapOf(
                 PROPERTY_SNAP_TOKEN to snapToken,
-                PROPERTY_STATUS_CODE to statusCode.orEmpty(),
-                PROPERTY_STATUS_MESSAGE to statusMessage.orEmpty(),
                 PROPERTY_RESPONSE_TIME to "" //TODO ask how to track response time?
             )
         )
     }
 
-    private fun registerSuperProperties(
+    private fun registerCommonProperties(
         saudagarId: String,
         merchantName: String
     ) {
-        mixpanelTracker.registerSuperProperties(
+        mixpanelTracker.registerCommonProperties(
             mapOf(
                 PROPERTY_PLATFORM to "Mobile",
-                PROPERTY_SDK_VERSION to "1.1.1", //TODO get sdk version
+                PROPERTY_SDK_VERSION to BuildConfig.SDK_VERSION,
                 PROPERTY_SDK_TYPE to "UI",
                 PROPERTY_MERCHANT_ID to saudagarId,
                 PROPERTY_MERCHANT_NAME to merchantName,
