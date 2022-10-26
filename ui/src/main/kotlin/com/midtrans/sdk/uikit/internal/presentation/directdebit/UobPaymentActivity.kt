@@ -130,10 +130,8 @@ class UobPaymentActivity : BaseActivity() {
 
     private val successScreenLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                setResult(RESULT_OK, result?.data)
+                setResult(result.resultCode, result?.data)
                 finish()
-            }
         }
 
     private val webLinkLauncher =
@@ -247,7 +245,17 @@ class UobPaymentActivity : BaseActivity() {
                 }
             }
         } else {
-            openDeeplink(uobMode, url)
+            response?.run {
+                openDeeplink(
+                    uobMode,
+                    url,
+                    TransactionResult(
+                        status = transactionStatus.orEmpty(),
+                        transactionId = transactionId.orEmpty(),
+                        paymentType = paymentType.orEmpty()
+                    )
+                )
+            }
         }
     }
 
@@ -264,7 +272,8 @@ class UobPaymentActivity : BaseActivity() {
 
     private fun openDeeplink(
         uobMode: String,
-        url: String
+        url: String,
+        transactionResult: TransactionResult
     ) {
         if (uobMode == PaymentType.UOB_EZPAY_WEB) {
             try {
@@ -272,7 +281,10 @@ class UobPaymentActivity : BaseActivity() {
                 intent.data = Uri.parse(url)
                 startActivity(intent)
 
-                setResult(RESULT_OK)
+                val resultIntent = Intent().putExtra(
+                    UiKitConstants.KEY_TRANSACTION_RESULT, transactionResult
+                )
+                setResult(RESULT_OK, resultIntent)
                 finish()
             } catch (e: Throwable) {
                 //TODO implement error handling later

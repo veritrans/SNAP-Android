@@ -37,7 +37,8 @@ class SampleActivity : AppCompatActivity() {
         if (result?.resultCode == RESULT_OK) {
             result.data?.let {
                 val transactionResult = it.getParcelableExtra<TransactionResult>(
-                    UiKitConstants.KEY_TRANSACTION_RESULT)
+                    UiKitConstants.KEY_TRANSACTION_RESULT
+                )
                 Toast.makeText(this@SampleActivity, "Coba trxid ${transactionResult?.transactionId.orEmpty()}", Toast.LENGTH_LONG).show()
             }
         }

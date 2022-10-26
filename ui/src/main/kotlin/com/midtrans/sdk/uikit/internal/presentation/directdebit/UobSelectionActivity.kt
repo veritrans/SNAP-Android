@@ -222,10 +222,8 @@ class UobSelectionActivity : BaseActivity() {
 
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                setResult(RESULT_OK, result?.data)
+                setResult(result.resultCode, result?.data)
                 finish()
-            }
         }
 
     private fun updateExpiredTime(): Observable<String> {

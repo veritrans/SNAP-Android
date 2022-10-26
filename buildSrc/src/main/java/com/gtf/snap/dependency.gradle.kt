@@ -43,7 +43,11 @@ object Dependencies {
     const val nanohttpd = "2.2.0"
     const val nanolets = "2.3.1"
     const val androidxDatastoreVersion = "1.0.0"
-    const val composeVersion = "1.2.0-rc02"
+    const val composeRuntimeVersion = "1.2.1"
+    const val composeCompilerVersion = "1.2.0"
+    const val composeUiVersion = "1.2.1"
+    const val composeFoundationVersion = "1.2.1"
+    const val composeMaterialVersion = "1.2.1"
     const val coilComposeVersion = "2.1.0"
     const val hamcrestVersion = "2.2"
     const val coreLibraryDesugaringVersion = "1.1.5"
@@ -150,31 +154,31 @@ object ApacheLibraries {
 }
 
 object ComposeUiLibraries {
-    const val compose = "androidx.compose.ui:ui:${Dependencies.composeVersion}"
+    const val compose = "androidx.compose.ui:ui:${Dependencies.composeRuntimeVersion}"
     const val composeFoundation =
-        "androidx.compose.foundation:foundation:${Dependencies.composeVersion}"
-    const val composeTool = "androidx.compose.ui:ui-tooling:${Dependencies.composeVersion}"
-    const val composeMaterial = "androidx.compose.material:material:${Dependencies.composeVersion}"
+        "androidx.compose.foundation:foundation:${Dependencies.composeRuntimeVersion}"
+    const val composeTool = "androidx.compose.ui:ui-tooling:${Dependencies.composeRuntimeVersion}"
+    const val composeMaterial = "androidx.compose.material:material:${Dependencies.composeRuntimeVersion}"
     const val composeActivity = "androidx.activity:activity-compose:1.4.0"
-    const val composeFramework = "androidx.ui:ui-framework:${Dependencies.composeVersion}"
+    const val composeFramework = "androidx.ui:ui-framework:${Dependencies.composeRuntimeVersion}"
 
 
-    const val composeRuntime = "androidx.compose.runtime:runtime:${Dependencies.composeVersion}"
+    const val composeRuntime = "androidx.compose.runtime:runtime:${Dependencies.composeRuntimeVersion}"
     const val composeLayout =
-        "androidx.compose.foundation:foundation-layout:${Dependencies.composeVersion}"
+        "androidx.compose.foundation:foundation-layout:${Dependencies.composeRuntimeVersion}"
 
     const val composeMaterialIconsExtended =
-        "androidx.compose.material:material-icons-extended:${Dependencies.composeVersion}"
+        "androidx.compose.material:material-icons-extended:${Dependencies.composeRuntimeVersion}"
 
     const val composeToolingPreview =
-        "androidx.compose.ui:ui-tooling-preview:${Dependencies.composeVersion}"
+        "androidx.compose.ui:ui-tooling-preview:${Dependencies.composeRuntimeVersion}"
     const val composeGoogleFont =
-        "androidx.compose.ui:ui-text-google-fonts:${Dependencies.composeVersion}"
-    const val composeLiveData = "androidx.compose.runtime:runtime-livedata:${Dependencies.composeVersion}"
+        "androidx.compose.ui:ui-text-google-fonts:${Dependencies.composeRuntimeVersion}"
+    const val composeLiveData = "androidx.compose.runtime:runtime-livedata:${Dependencies.composeRuntimeVersion}"
     const val composeConstraintLayout = "androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha03"
-    const val composeAnimatedDrawable = "androidx.compose.animation:animation-graphics:${Dependencies.composeVersion}"
-    const val composeAnimation = "androidx.compose.animation:animation:${Dependencies.composeVersion}"
-    const val composeRxjava = "androidx.compose.runtime:runtime-rxjava2:${Dependencies.composeVersion}"
+    const val composeAnimatedDrawable = "androidx.compose.animation:animation-graphics:${Dependencies.composeRuntimeVersion}"
+    const val composeAnimation = "androidx.compose.animation:animation:${Dependencies.composeRuntimeVersion}"
+    const val composeRxjava = "androidx.compose.runtime:runtime-rxjava2:${Dependencies.composeRuntimeVersion}"
     const val coilCompose = "io.coil-kt:coil-compose:${Dependencies.coilComposeVersion}"
     const val coilComposeGif = "io.coil-kt:coil-gif:${Dependencies.coilComposeVersion}"
 

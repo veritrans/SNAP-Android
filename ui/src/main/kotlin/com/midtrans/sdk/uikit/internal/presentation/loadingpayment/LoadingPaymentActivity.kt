@@ -172,6 +172,10 @@ class LoadingPaymentActivity : BaseActivity() {
         setContent {
             LoadAnimation()
         }
+       loadPaymentOptions()
+    }
+
+    private fun loadPaymentOptions(){
         viewModel.getPaymentOption(
             transactionDetails = transactionDetails,
             snapToken = snapToken,
@@ -199,18 +203,18 @@ class LoadingPaymentActivity : BaseActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 result?.data?.let {
-                    val transactionResult = it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT) as TransactionResult
-                    val intentBaru = Intent()
-                    val resultForHost = PublicTransactionResult(
-                        transactionResult.status,
-                        transactionResult.transactionId,
-                        transactionResult.paymentType
-                    )
-                    intentBaru.putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, resultForHost)
-                    setResult(RESULT_OK, intentBaru)
-                    UiKitApi.getDefaultInstance().getPaymentCallback()?.onSuccess(resultForHost) //TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
+                    val transactionResult = it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT)
+                    val resultIntent = Intent()
+                    transactionResult?.let {
+                        val resultForHost = PublicTransactionResult(transactionResult)
+                        resultIntent.putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, resultForHost)
+                        setResult(RESULT_OK, resultIntent)
+                        UiKitApi.getDefaultInstance().getPaymentCallback()?.onSuccess(resultForHost) //TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
+                    }
                 }
                 finish()
+            } else {
+                loadPaymentOptions()
             }
         }
 

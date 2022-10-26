@@ -335,8 +335,12 @@ class PaymentOptionActivity : BaseActivity() {
                     )
                     intentBaru.putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, transactionResult)
                     setResult(RESULT_OK, intentBaru)
-                    UiKitApi.getDefaultInstance().getPaymentCallback()?.onSuccess(resultForHost) //TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
+                    UiKitApi.getDefaultInstance().getPaymentCallback()
+                        ?.onSuccess(resultForHost) //TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
                 }
+                finish()
+            } else {
+                setResult(Activity.RESULT_CANCELED)
                 finish()
             }
         }

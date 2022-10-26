@@ -94,7 +94,7 @@ class WalletViewModelTest {
             )
         )
 
-        Assert.assertEquals(qrCodeUrl, walletViewModel.qrCodeUrlLiveData.getOrAwaitValue())
+        Assert.assertEquals(qrCodeUrl, walletViewModel._qrCodeUrlLiveData.getOrAwaitValue())
         Assert.assertEquals("00:00:01", walletViewModel.getExpiredHour())
 
     }
@@ -137,8 +137,8 @@ class WalletViewModelTest {
             )
         )
 
-        Assert.assertEquals(qrCodeUrl, walletViewModel.qrCodeUrlLiveData.getOrAwaitValue())
-        Assert.assertEquals(deepLinkUrl, walletViewModel.deepLinkUrlLiveData.getOrAwaitValue())
+        Assert.assertEquals(qrCodeUrl, walletViewModel._qrCodeUrlLiveData.getOrAwaitValue())
+        Assert.assertEquals(deepLinkUrl, walletViewModel._deepLinkUrlLiveData.getOrAwaitValue())
         Assert.assertEquals("00:00:01", walletViewModel.getExpiredHour())
 
     }

@@ -151,6 +151,11 @@ class DeepLinkActivity : BaseActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
+
     companion object {
         private const val EXTRA_URL = "deeplinkactivity.extra.url"
         private const val EXTRA_PAYMENT_TYPE = "deeplinkactivity.extra.payment_type"

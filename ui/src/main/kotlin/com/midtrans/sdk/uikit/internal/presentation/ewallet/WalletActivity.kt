@@ -74,6 +74,10 @@ internal class WalletActivity : BaseActivity() {
         }
     }
 
+    private fun observeTransactionResult(){
+
+    }
+
     private fun updateExpiredTime(): Observable<String> {
         return Observable
             .interval(1L, TimeUnit.SECONDS)

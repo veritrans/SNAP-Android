@@ -1,5 +1,6 @@
 package com.midtrans.sdk.uikit.internal.presentation.ewallet
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.corekit.SnapCore
@@ -7,10 +8,10 @@ import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.EWalletPaymentRequestBuilder
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.TIME_ZONE_UTC
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -19,8 +20,12 @@ internal class WalletViewModel @Inject constructor(
     private val datetimeUtil: DateTimeUtil
 ) : ViewModel() {
 
-    val qrCodeUrlLiveData = MutableLiveData<String>()
-    val deepLinkUrlLiveData = MutableLiveData<String>()
+    private val _qrCodeUrlLiveData = MutableLiveData<String>()
+    private val _deepLinkUrlLiveData = MutableLiveData<String>()
+    private val _transactionResultLiveData = MutableLiveData<TransactionResult>()
+    val qrCodeUrlLiveData: LiveData<String> = _qrCodeUrlLiveData
+    val deepLinkUrlLiveData: LiveData<String> = _deepLinkUrlLiveData
+    val transactionResultLiveData: LiveData<TransactionResult> = _transactionResultLiveData
     var expiredTime = datetimeUtil.getCurrentMillis() + TimeUnit.MINUTES.toMillis(15)
 
     fun chargeQrPayment(
@@ -34,10 +39,15 @@ internal class WalletViewModel @Inject constructor(
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
                     result.run {
-                        qrCodeUrl?.let { qrCodeUrlLiveData.value = it }
-                        qrisUrl?.let { qrCodeUrlLiveData.value = it }
-                        deeplinkUrl?.let { deepLinkUrlLiveData.value = it }
+                        qrCodeUrl?.let { _qrCodeUrlLiveData.value = it }
+                        qrisUrl?.let { _qrCodeUrlLiveData.value = it }
+                        deeplinkUrl?.let { _deepLinkUrlLiveData.value = it }
                         gopayExpirationRaw?.let { expiredTime = parseTime(it) }
+                        _transactionResultLiveData.value = TransactionResult(
+                            status = transactionStatus.orEmpty(),
+                            transactionId = transactionId.orEmpty(),
+                            paymentType = paymentType.orEmpty()
+                        )
                     }
                 }
 
