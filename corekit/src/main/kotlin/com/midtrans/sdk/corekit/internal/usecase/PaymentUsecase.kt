@@ -79,6 +79,7 @@ internal class PaymentUsecase(
                 )
         } else {
             snapRepository.getTransactionDetail(snapToken)
+                .map (setAnalyticsUserIdentity())
                 .subscribe(
                     { responseData ->
                         val methods = mutableListOf<PaymentMethod>()
