@@ -37,7 +37,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = com.gtf.snap.Dependencies.composeVersion
+        kotlinCompilerExtensionVersion = com.gtf.snap.Dependencies.composeCompilerVersion
     }
 
     kotlinOptions {
