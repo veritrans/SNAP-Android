@@ -11,6 +11,7 @@ import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.UOB_EZPAY
 import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
+import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.data.repository.CoreApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.MerchantApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.SnapRepository
@@ -46,12 +47,15 @@ class PaymentUsecaseTest {
     @Mock
     private lateinit var mockMerchantApiRepository: MerchantApiRepository
 
+    @Mock
+    private lateinit var eventAnalytics: EventAnalytics
+
     @Before
     fun setUp() {
         closeable = MockitoAnnotations.openMocks(this)
         scheduler = TestSdkScheduler()
         usecase = PaymentUsecase(
-            scheduler, mockSnapRepository, mockCoreApiRepository, mockMerchantApiRepository, "clientKey"
+            scheduler, mockSnapRepository, mockCoreApiRepository, mockMerchantApiRepository, "clientKey", eventAnalytics
         )
     }
 
