@@ -1,5 +1,6 @@
 package com.midtrans.sdk.uikit.internal.presentation.conveniencestore
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -32,6 +33,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -66,7 +68,14 @@ internal class ConvenienceStoreActivity : BaseActivity() {
             )
         }
         charge()
-        setResult(RESULT_OK)
+        observeTransactionResultLiveData()
+    }
+
+    private fun observeTransactionResultLiveData(){
+        viewModel.transactionResultLiveData.observe(this){
+            val resultIntent = Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, it)
+            setResult(Activity.RESULT_OK, resultIntent)
+        }
     }
 
     private fun charge(){
