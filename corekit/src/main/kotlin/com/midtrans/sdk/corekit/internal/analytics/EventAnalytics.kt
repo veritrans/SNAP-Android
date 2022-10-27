@@ -54,19 +54,20 @@ class EventAnalytics(
 
     fun trackSnapGetTokenRequest(snapToken: String) {
         mixpanelTracker.trackEvent(
-            eventName = EVENT_SNAP_GET_TOKEN_REQUEST,
+            eventName = EVENT_SNAP_GET_TOKEN_REQUEST, //TODO currently no snap token because generate token happened inside sdk, check is it still needed
             properties = mapOf(PROPERTY_SNAP_TOKEN to snapToken)
         )
     }
 
     fun trackSnapGetTokenResult(
-        snapToken: String
+        snapToken: String,
+        responseTime: String
     ) {
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_GET_TOKEN_RESULT,
             properties = mapOf(
                 PROPERTY_SNAP_TOKEN to snapToken,
-                PROPERTY_RESPONSE_TIME to "" //TODO ask how to track response time?
+                PROPERTY_RESPONSE_TIME to responseTime
             )
         )
     }
