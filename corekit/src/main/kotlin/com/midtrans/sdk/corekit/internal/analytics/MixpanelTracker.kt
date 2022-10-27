@@ -23,6 +23,12 @@ class MixpanelTracker(private val mixpanelApi: MixpanelAPI) {
         mixpanelApi.track(eventName, JSONObject(properties))
     }
 
+    fun registerCommonProperties(
+        properties: Map<String, Any>
+    ) {
+        mixpanelApi.registerSuperProperties(JSONObject(properties))
+    }
+
     companion object {
         private const val PROPERTY_NAME = "\$name"
     }

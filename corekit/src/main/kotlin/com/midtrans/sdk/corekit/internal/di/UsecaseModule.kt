@@ -1,5 +1,6 @@
 package com.midtrans.sdk.corekit.internal.di
 
+import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.data.repository.CoreApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.MerchantApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.SnapRepository
@@ -16,14 +17,16 @@ internal class UsecaseModule {
         snapRepository: SnapRepository,
         coreApiRepository: CoreApiRepository,
         merchantApiRepository: MerchantApiRepository,
-        @Named("merchant_client_key") clientKey: String
+        @Named("merchant_client_key") clientKey: String,
+        eventAnalytics: EventAnalytics
     ): PaymentUsecase {
         return PaymentUsecase(
             SdkScheduler(),
             snapRepository,
             coreApiRepository,
             merchantApiRepository,
-            clientKey
+            clientKey,
+            eventAnalytics
         )
     }
 }

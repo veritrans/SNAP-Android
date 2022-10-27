@@ -7,6 +7,9 @@ plugins {
 
 android {
     compileSdk = 32
+    project.property("sdkVersion")?.let {
+        version = it
+    }
 
     defaultConfig {
         minSdk = 21
