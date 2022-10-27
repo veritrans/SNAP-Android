@@ -21,7 +21,13 @@ class PageName {
         UOB_PAGE,
         REDIRECTION_PAGE,
         SUCCESS_PAGE,
-        PROCESSING_PAGE
+        PROCESSING_PAGE,
+        BCA_VA_PAGE,
+        BNI_VA_PAGE,
+        BRI_VA_PAGE,
+        OTHER_VA_PAGE,
+        THREE_DS_PAGE,
+        NOT_LISTED_PAGE
     )
     @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
     annotation class Def
@@ -50,5 +56,6 @@ class PageName {
         const val BNI_VA_PAGE = "BNI VA Page"
         const val BRI_VA_PAGE = "BRI VA Page"
         const val OTHER_VA_PAGE = "Other VA Page"
+        const val NOT_LISTED_PAGE = "Page Not Listed"
     }
 }
