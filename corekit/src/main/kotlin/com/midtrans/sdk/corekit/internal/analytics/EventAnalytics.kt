@@ -1,10 +1,15 @@
 package com.midtrans.sdk.corekit.internal.analytics
 
 import com.midtrans.sdk.corekit.BuildConfig
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_GROSS_AMOUNT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_MERCHANT_ID
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_MERCHANT_NAME
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ORDER_ID
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAGE_NAME
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAYMENT_METHOD_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PLATFORM
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_RESPONSE_TIME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SDK_TYPE
@@ -13,6 +18,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SERVICE_TY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TOKEN
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SOURCE_TYPE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TRANSACTION_ID
 
 class EventAnalytics(
     private val mixpanelTracker: MixpanelTracker
@@ -38,9 +44,7 @@ class EventAnalytics(
     fun trackSnapPageViewed() {}
     fun trackSnapCustomerDataInput() {}
     fun trackSnapOrderDetailsViewed() {}
-    fun trackSnapChargeRequest() {}
     fun trackSnapCtaClicked() {}
-    fun trackSnapChargeResult() {}
     fun trackSnapHowToPayViewed() {}
     fun trackSnapAccountNumberCopied() {}
     fun trackSnapPaymentNumberButtonRetried() {}
@@ -51,6 +55,25 @@ class EventAnalytics(
     fun trackSnap3dsResult() {}
     fun trackSnapTokenizationResult() {}
     fun trackSnapCtaError() {}
+
+    fun trackSnapChargeRequest(
+        pageName: String,
+        paymentMethodName: String,
+        promoInfo: Map<String, String> = mapOf()
+    ) {
+        val properties = mapOf(
+            PROPERTY_PAGE_NAME to pageName,
+            PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
+        ) + promoInfo
+        mixpanelTracker.trackEvent(
+            eventName = EVENT_SNAP_CHARGE_REQUEST,
+            properties = properties
+        )
+    }
+
+    fun trackSnapChargeResult() {
+
+    }
 
     fun trackSnapGetTokenRequest(snapToken: String) {
         mixpanelTracker.trackEvent(
@@ -86,6 +109,22 @@ class EventAnalytics(
                 PROPERTY_SOURCE_TYPE to "midtrans-mobile",
                 PROPERTY_SERVICE_TYPE to "snap",
                 PROPERTY_SNAP_TYPE to "Mobile"
+            )
+        )
+    }
+
+    fun registerCommonTransactionProperties(
+        snapToken: String,
+        orderId: String,
+        transactionId: String,
+        grossAmount: String,
+    ) {
+        mixpanelTracker.registerCommonProperties(
+            mapOf(
+                PROPERTY_SNAP_TOKEN to snapToken,
+                PROPERTY_ORDER_ID to orderId,
+                PROPERTY_TRANSACTION_ID to transactionId,
+                PROPERTY_GROSS_AMOUNT to grossAmount
             )
         )
     }
