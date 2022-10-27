@@ -31,14 +31,11 @@ internal class PaymentUsecase(
         requestBuilder: SnapTokenRequestBuilder,
         callback: Callback<PaymentOption>
     ) {
-        var requestTime: Long = 0
-
         if (snapToken.isNullOrBlank()) {
+            val requestTime = System.currentTimeMillis()
+
             merchantApiRepository
-                .also {
-                    eventAnalytics.trackSnapGetTokenRequest("")
-                    requestTime = System.currentTimeMillis()
-                }
+                .also { eventAnalytics.trackSnapGetTokenRequest("") }
                 .getSnapToken(requestBuilder.build())
                 .onErrorResumeNext {
                     Single.error(
@@ -52,6 +49,7 @@ internal class PaymentUsecase(
                     snapRepository
                         .getTransactionDetail(response.token.orEmpty())
                         .map (setAnalyticsUserIdentity())
+                        .map (trackCommonTransactionProperties())
                         .map { Pair(response.token, it) }
                 }
                 .subscribeOn(scheduler.io())
@@ -86,6 +84,7 @@ internal class PaymentUsecase(
         } else {
             snapRepository.getTransactionDetail(snapToken)
                 .map (setAnalyticsUserIdentity())
+                .map (trackCommonTransactionProperties())
                 .subscribe(
                     { responseData ->
                         val methods = mutableListOf<PaymentMethod>()
@@ -123,6 +122,17 @@ internal class PaymentUsecase(
                     )
                 }
             }
+            transaction
+        }
+    }
+
+    private fun trackCommonTransactionProperties(): (Transaction) -> Transaction {
+        return { transaction ->
+            eventAnalytics.registerCommonTransactionProperties(
+                snapToken = transaction.token.orEmpty(),
+                orderId = transaction.transactionDetails?.orderId.orEmpty(),
+                grossAmount = transaction.transactionDetails?.grossAmount.toString()
+            )
             transaction
         }
     }

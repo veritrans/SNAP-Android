@@ -80,6 +80,7 @@ class EventAnalytics(
         fraudStatus: String,
         currency: String,
         statusCode: String,
+        transactionId: String,
         pageName: String,
         paymentMethodName: String,
         creditCardInfo: Map<String, String> = mapOf()
@@ -89,8 +90,9 @@ class EventAnalytics(
             PROPERTY_FRAUD_STATUS to fraudStatus,
             PROPERTY_CURRENCY to currency,
             PROPERTY_STATUS_CODE to statusCode,
+            PROPERTY_TRANSACTION_ID to transactionId,
             PROPERTY_PAGE_NAME to pageName,
-            PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
+            PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName,
         ) + creditCardInfo
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_CHARGE_REQUEST,
@@ -139,14 +141,12 @@ class EventAnalytics(
     fun registerCommonTransactionProperties(
         snapToken: String,
         orderId: String,
-        transactionId: String,
         grossAmount: String
     ) {
         mixpanelTracker.registerCommonProperties(
             mapOf(
                 PROPERTY_SNAP_TOKEN to snapToken,
                 PROPERTY_ORDER_ID to orderId,
-                PROPERTY_TRANSACTION_ID to transactionId,
                 PROPERTY_GROSS_AMOUNT to grossAmount
             )
         )
