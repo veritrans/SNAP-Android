@@ -78,7 +78,7 @@ class PayLaterActivity : BaseActivity() {
                 amount = amount,
                 orderId = orderId,
                 customerInfo = customerInfo,
-                response =  viewModel.getTransactionResponse().observeAsState().value,
+                response =  viewModel.transactionResponseLiveData.observeAsState().value,
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
             )
         }
