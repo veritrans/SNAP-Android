@@ -151,15 +151,4 @@ class EventAnalytics(
             )
         )
     }
-
-    fun unregisterCommonTransactionProperties() {
-        val propertyNames = listOf(
-            PROPERTY_SNAP_TOKEN,
-            PROPERTY_ORDER_ID,
-            PROPERTY_TRANSACTION_ID,
-            PROPERTY_GROSS_AMOUNT,
-            PROPERTY_PAYMENT_METHOD_NAME
-        )
-        mixpanelTracker.unregisterCommonProperties(propertyNames)
-    }
 }

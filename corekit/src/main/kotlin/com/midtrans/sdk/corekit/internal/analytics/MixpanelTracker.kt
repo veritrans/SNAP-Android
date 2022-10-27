@@ -29,14 +29,6 @@ class MixpanelTracker(private val mixpanelApi: MixpanelAPI) {
         mixpanelApi.registerSuperProperties(JSONObject(properties))
     }
 
-    fun unregisterCommonProperties(
-        propertyNames: List<String>
-    ) {
-        propertyNames.forEach { property ->
-            mixpanelApi.unregisterSuperProperty(property)
-        }
-    }
-
     companion object {
         private const val PROPERTY_NAME = "\$name"
     }
