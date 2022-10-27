@@ -2,7 +2,6 @@ package com.midtrans.sdk.uikit.internal.presentation.paylater
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
@@ -38,7 +37,7 @@ internal class PayLaterViewModel @Inject constructor(
             paymentRequestBuilder = builder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
-                    trackSnapChargeResult(result)
+                    trackSnapChargeResult(result, PageName.AKULAKU_PAGE)
                     _transactionResponseLiveData.value = result
                 }
 
