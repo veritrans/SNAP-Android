@@ -2,7 +2,6 @@ package com.midtrans.sdk.uikit.internal.presentation.banktransfer
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
@@ -11,6 +10,7 @@ import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.BankTransferPaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.analytics.PageName
+import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.DATE_FORMAT
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.TIME_ZONE_WIB
@@ -20,7 +20,7 @@ import javax.inject.Inject
 internal class BankTransferDetailViewModel @Inject constructor(
     private val snapCore: SnapCore,
     private val datetimeUtil: DateTimeUtil
-) : ViewModel() {
+) : BaseViewModel(snapCore) {
 
     private val _vaNumberLiveData = MutableLiveData<String>()
     private val _companyCodeLiveData = MutableLiveData<String>()
@@ -36,7 +36,6 @@ internal class BankTransferDetailViewModel @Inject constructor(
     val errorLiveData: LiveData<SnapError> = _errorLiveData
 
     var expiredTime = datetimeUtil.plusDateBy(datetimeUtil.getCurrentMillis(), 1)
-    private val eventAnalytics = snapCore.getEventAnalytics()
 
     fun chargeBankTransfer(
         snapToken: String,
@@ -47,7 +46,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
         customerEmail?.let {
             requestBuilder.withCustomerEmail(it)
         }
-        eventAnalytics.trackSnapChargeRequest(
+        trackSnapChargeRequest(
             pageName = PageName.BANK_TRANSFER_DETAIL_PAGE,
             paymentMethodName = paymentType
         )
@@ -56,7 +55,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
             paymentRequestBuilder = requestBuilder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
-                    trackBankTransferChargeResult(result)
+                    trackSnapChargeResult(result)
                     result.run {
                         bcaVaNumber?.let { _vaNumberLiveData.value = it }
                         bniVaNumber?.let {
@@ -99,27 +98,6 @@ internal class BankTransferDetailViewModel @Inject constructor(
             )
         expCalendar.set(Calendar.YEAR, datetimeUtil.getCalendar().get(Calendar.YEAR))
         return expCalendar.timeInMillis
-    }
-
-    private fun trackBankTransferChargeResult(response: TransactionResponse) {
-        eventAnalytics.trackSnapChargeResult(
-            transactionStatus = response.transactionStatus.orEmpty(),
-            fraudStatus = response.fraudStatus.orEmpty(),
-            currency = response.currency.orEmpty(),
-            statusCode = response.statusCode.orEmpty(),
-            transactionId = response.transactionId.orEmpty(),
-            pageName = getPageName(response.paymentType.orEmpty()),
-            paymentMethodName = response.paymentType.orEmpty()
-        )
-    }
-
-    private fun getPageName(paymentType: String): String {
-        return when(paymentType) {
-            PaymentType.BCA_VA -> PageName.BCA_VA_PAGE
-            PaymentType.BNI_VA -> PageName.BNI_VA_PAGE
-            PaymentType.BRI_VA -> PageName.BRI_VA_PAGE
-            else -> PageName.OTHER_VA_PAGE
-        }
     }
 
     fun getExpiredHour() = datetimeUtil.getExpiredHour(expiredTime)
