@@ -4,6 +4,8 @@ import com.midtrans.sdk.corekit.BuildConfig
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CURRENCY
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_FRAUD_STATUS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_GROSS_AMOUNT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_MERCHANT_ID
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_MERCHANT_NAME
@@ -18,7 +20,9 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SERVICE_TY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TOKEN
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SOURCE_TYPE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STATUS_CODE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TRANSACTION_ID
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TRANSACTION_STATUS
 
 class EventAnalytics(
     private val mixpanelTracker: MixpanelTracker
@@ -58,12 +62,10 @@ class EventAnalytics(
 
     fun trackSnapChargeRequest(
         pageName: String,
-        paymentMethodName: String,
         promoInfo: Map<String, String> = mapOf()
     ) {
         val properties = mapOf(
-            PROPERTY_PAGE_NAME to pageName,
-            PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
+            PROPERTY_PAGE_NAME to pageName
         ) + promoInfo
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_CHARGE_REQUEST,
@@ -77,10 +79,19 @@ class EventAnalytics(
         currency: String,
         statusCode: String,
         pageName: String,
-        paymentMethodName: String
         creditCardInfo: Map<String, String> = mapOf()
     ) {
-
+        val properties = mapOf(
+            PROPERTY_TRANSACTION_STATUS to transactionStatus,
+            PROPERTY_FRAUD_STATUS to fraudStatus,
+            PROPERTY_CURRENCY to currency,
+            PROPERTY_STATUS_CODE to statusCode,
+            PROPERTY_PAGE_NAME to pageName
+        ) + creditCardInfo
+        mixpanelTracker.trackEvent(
+            eventName = EVENT_SNAP_CHARGE_REQUEST,
+            properties = properties
+        )
     }
 
     fun trackSnapGetTokenRequest(snapToken: String) {
