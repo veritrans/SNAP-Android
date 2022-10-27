@@ -3,7 +3,6 @@ package com.midtrans.sdk.uikit.internal.presentation.ewallet
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
@@ -11,6 +10,8 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.EWalletPaymentRequestBuilder
+import com.midtrans.sdk.corekit.internal.analytics.PageName
+import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.TIME_ZONE_UTC
 import java.util.concurrent.TimeUnit
@@ -19,7 +20,7 @@ import javax.inject.Inject
 internal class WalletViewModel @Inject constructor(
     private val snapCore: SnapCore,
     private val datetimeUtil: DateTimeUtil
-) : ViewModel() {
+) : BaseViewModel(snapCore) {
 
     private val _qrCodeUrlLiveData = MutableLiveData<String>()
     private val _deepLinkUrlLiveData = MutableLiveData<String>()
@@ -33,7 +34,13 @@ internal class WalletViewModel @Inject constructor(
         snapToken: String,
         @PaymentType.Def paymentType: String
     ) {
+        val pageName = getPageName(paymentType)
         val requestBuilder = EWalletPaymentRequestBuilder().withPaymentType(paymentType)
+        trackSnapChargeRequest(
+            pageName = pageName,
+            paymentMethodName = paymentType
+        )
+
         snapCore.pay(
             snapToken = snapToken,
             paymentRequestBuilder = requestBuilder,
@@ -50,6 +57,10 @@ internal class WalletViewModel @Inject constructor(
                             paymentType = paymentType.orEmpty()
                         )
                     }
+                    trackSnapChargeResult(
+                        response = result,
+                        pageName = pageName
+                    )
                 }
 
                 override fun onError(error: SnapError) {
@@ -87,6 +98,16 @@ internal class WalletViewModel @Inject constructor(
             timeZone = TIME_ZONE_UTC
         )
         return date.time
+    }
+
+    private fun getPageName(paymentType: String): String {
+        return when (paymentType) {
+            PaymentType.GOPAY -> PageName.GOPAY_DEEPLINK_PAGE
+            PaymentType.GOPAY_QRIS -> PageName.GOPAY_QR_PAGE
+            PaymentType.SHOPEEPAY -> PageName.SHOPEEPAY_DEEPLINK_PAGE
+            PaymentType.SHOPEEPAY_QRIS -> PageName.SHOPEEPAY_QR_PAGE
+            else -> ""
+        }
     }
 
     fun getExpiredHour(): String = datetimeUtil.getExpiredHour(expiredTime)
