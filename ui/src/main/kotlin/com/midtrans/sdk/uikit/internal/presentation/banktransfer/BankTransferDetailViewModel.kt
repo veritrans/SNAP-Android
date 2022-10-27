@@ -10,7 +10,6 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.BankTransferPaymentRequestBuilder
-import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.DATE_FORMAT
@@ -20,8 +19,7 @@ import javax.inject.Inject
 
 internal class BankTransferDetailViewModel @Inject constructor(
     private val snapCore: SnapCore,
-    private val datetimeUtil: DateTimeUtil,
-    private val eventAnalytics: EventAnalytics
+    private val datetimeUtil: DateTimeUtil
 ) : ViewModel() {
 
     private val _vaNumberLiveData = MutableLiveData<String>()
@@ -38,6 +36,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
     val errorLiveData: LiveData<SnapError> = _errorLiveData
 
     var expiredTime = datetimeUtil.plusDateBy(datetimeUtil.getCurrentMillis(), 1)
+    private val eventAnalytics = snapCore.getEventAnalytics()
 
     fun chargeBankTransfer(
         snapToken: String,
@@ -57,6 +56,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
             paymentRequestBuilder = requestBuilder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
+                    trackBankTransferChargeResult(result)
                     result.run {
                         bcaVaNumber?.let { _vaNumberLiveData.value = it }
                         bniVaNumber?.let {
@@ -99,6 +99,27 @@ internal class BankTransferDetailViewModel @Inject constructor(
             )
         expCalendar.set(Calendar.YEAR, datetimeUtil.getCalendar().get(Calendar.YEAR))
         return expCalendar.timeInMillis
+    }
+
+    private fun trackBankTransferChargeResult(response: TransactionResponse) {
+        eventAnalytics.trackSnapChargeResult(
+            transactionStatus = response.transactionStatus.orEmpty(),
+            fraudStatus = response.fraudStatus.orEmpty(),
+            currency = response.currency.orEmpty(),
+            statusCode = response.statusCode.orEmpty(),
+            transactionId = response.transactionId.orEmpty(),
+            pageName = getPageName(response.paymentType.orEmpty()),
+            paymentMethodName = response.paymentType.orEmpty()
+        )
+    }
+
+    private fun getPageName(paymentType: String): String {
+        return when(paymentType) {
+            PaymentType.BCA_VA -> PageName.BCA_VA_PAGE
+            PaymentType.BNI_VA -> PageName.BNI_VA_PAGE
+            PaymentType.BRI_VA -> PageName.BRI_VA_PAGE
+            else -> PageName.OTHER_VA_PAGE
+        }
     }
 
     fun getExpiredHour() = datetimeUtil.getExpiredHour(expiredTime)
