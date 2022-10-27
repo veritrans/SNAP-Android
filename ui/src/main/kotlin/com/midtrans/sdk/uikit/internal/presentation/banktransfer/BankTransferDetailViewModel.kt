@@ -55,7 +55,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
             paymentRequestBuilder = requestBuilder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
-                    trackSnapChargeResult(result)
+                    trackSnapChargeResult(result, getPageName(paymentType))
                     result.run {
                         bcaVaNumber?.let { _vaNumberLiveData.value = it }
                         bniVaNumber?.let {
@@ -98,6 +98,15 @@ internal class BankTransferDetailViewModel @Inject constructor(
             )
         expCalendar.set(Calendar.YEAR, datetimeUtil.getCalendar().get(Calendar.YEAR))
         return expCalendar.timeInMillis
+    }
+
+    private fun getPageName(paymentType: String): String {
+        return when(paymentType) {
+            PaymentType.BCA_VA -> PageName.BCA_VA_PAGE
+            PaymentType.BNI_VA -> PageName.BNI_VA_PAGE
+            PaymentType.BRI_VA -> PageName.BRI_VA_PAGE
+            else -> PageName.OTHER_VA_PAGE
+        }
     }
 
     fun getExpiredHour() = datetimeUtil.getExpiredHour(expiredTime)
