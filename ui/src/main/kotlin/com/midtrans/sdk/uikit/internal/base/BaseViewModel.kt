@@ -40,24 +40,18 @@ internal open class BaseViewModel(
         )
     }
 
-    protected fun trackSnapChargeResult(response: TransactionResponse) {
+    protected fun trackSnapChargeResult(
+        response: TransactionResponse,
+        pageName: String
+    ) {
         eventAnalytics.trackSnapChargeResult(
+            pageName = pageName,
             transactionStatus = response.transactionStatus.orEmpty(),
             fraudStatus = response.fraudStatus.orEmpty(),
             currency = response.currency.orEmpty(),
             statusCode = response.statusCode.orEmpty(),
             transactionId = response.transactionId.orEmpty(),
-            pageName = getPageName(response.paymentType.orEmpty()),
             paymentMethodName = response.paymentType.orEmpty()
         )
-    }
-
-    private fun getPageName(paymentType: String): String {
-        return when(paymentType) {
-            PaymentType.BCA_VA -> PageName.BCA_VA_PAGE
-            PaymentType.BNI_VA -> PageName.BNI_VA_PAGE
-            PaymentType.BRI_VA -> PageName.BRI_VA_PAGE
-            else -> PageName.OTHER_VA_PAGE
-        }
     }
 }
