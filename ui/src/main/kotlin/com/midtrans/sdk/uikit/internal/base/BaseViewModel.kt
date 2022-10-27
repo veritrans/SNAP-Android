@@ -11,6 +11,7 @@ import io.reactivex.disposables.Disposable
 internal open class BaseViewModel(
     snapCore: SnapCore
 ) : ViewModel() {
+    private var requestTime = 0L
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     private val eventAnalytics = snapCore.getEventAnalytics()
 
@@ -28,6 +29,14 @@ internal open class BaseViewModel(
         compositeDisposable.add(execute())
     }
 
+    private fun initRequestTime() {
+        requestTime = System.currentTimeMillis()
+    }
+
+    private fun getResponseTime(): String {
+        return (System.currentTimeMillis() - requestTime).toString()
+    }
+
     protected fun trackSnapChargeRequest(
         pageName: String,
         paymentMethodName: String,
@@ -37,7 +46,9 @@ internal open class BaseViewModel(
             pageName = pageName,
             paymentMethodName = paymentMethodName,
             promoInfo = promoInfo
-        )
+        ).also {
+            initRequestTime()
+        }
     }
 
     protected fun trackSnapChargeResult(
@@ -51,7 +62,8 @@ internal open class BaseViewModel(
             currency = response.currency.orEmpty(),
             statusCode = response.statusCode.orEmpty(),
             transactionId = response.transactionId.orEmpty(),
-            paymentMethodName = response.paymentType.orEmpty()
+            paymentMethodName = response.paymentType.orEmpty(),
+            responseTime = getResponseTime()
         )
     }
 }

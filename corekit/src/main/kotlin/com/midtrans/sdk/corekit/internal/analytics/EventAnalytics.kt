@@ -2,6 +2,7 @@ package com.midtrans.sdk.corekit.internal.analytics
 
 import com.midtrans.sdk.corekit.BuildConfig
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_REQUEST
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_RESULTS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CURRENCY
@@ -83,6 +84,7 @@ class EventAnalytics(
         transactionId: String,
         @PageName.Def pageName: String,
         paymentMethodName: String,
+        responseTime: String,
         creditCardInfo: Map<String, String> = mapOf()
     ) {
         val properties = mapOf(
@@ -93,9 +95,10 @@ class EventAnalytics(
             PROPERTY_TRANSACTION_ID to transactionId,
             PROPERTY_PAGE_NAME to pageName,
             PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName,
+            PROPERTY_RESPONSE_TIME to responseTime
         ) + creditCardInfo
         mixpanelTracker.trackEvent(
-            eventName = EVENT_SNAP_CHARGE_REQUEST,
+            eventName = EVENT_SNAP_CHARGE_RESULTS,
             properties = properties
         )
     }
