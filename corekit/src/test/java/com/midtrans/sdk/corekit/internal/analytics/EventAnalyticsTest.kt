@@ -57,12 +57,12 @@ internal class EventAnalyticsTest {
 
     @Test
     fun verifyTrackSnapGetTokenResult() {
-        eventAnalytics.trackSnapGetTokenResult("token")
+        eventAnalytics.trackSnapGetTokenResult("token", "1000")
         verify(mixpanelTracker).trackEvent(
             eventName = EVENT_SNAP_GET_TOKEN_RESULT,
             properties = mapOf(
                 PROPERTY_SNAP_TOKEN to "token",
-                PROPERTY_RESPONSE_TIME to ""
+                PROPERTY_RESPONSE_TIME to "1000"
             )
         )
     }

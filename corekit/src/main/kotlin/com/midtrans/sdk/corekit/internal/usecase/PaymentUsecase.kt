@@ -31,9 +31,14 @@ internal class PaymentUsecase(
         requestBuilder: SnapTokenRequestBuilder,
         callback: Callback<PaymentOption>
     ) {
+        var requestTime: Long = 0
+
         if (snapToken.isNullOrBlank()) {
             merchantApiRepository
-                .also { eventAnalytics.trackSnapGetTokenRequest("") }//TODO check whether need to track property snaptoken or not
+                .also {
+                    eventAnalytics.trackSnapGetTokenRequest("")
+                    requestTime = System.currentTimeMillis()
+                }
                 .getSnapToken(requestBuilder.build())
                 .onErrorResumeNext {
                     Single.error(
@@ -59,7 +64,8 @@ internal class PaymentUsecase(
                         responseData.enabledPayments?.forEach {
                             addPaymentMethod(it, methods)
                         }
-                        eventAnalytics.trackSnapGetTokenResult(token.orEmpty())
+                        val responseTime = System.currentTimeMillis() - requestTime
+                        eventAnalytics.trackSnapGetTokenResult(token.orEmpty(), responseTime.toString())
                         callback.onSuccess(
                             PaymentOption(
                                 token = token.orEmpty(),
