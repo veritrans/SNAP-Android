@@ -25,19 +25,14 @@ android {
             ) //TODO: check this working or not
             buildConfigField("String", "SNAP_BASE_URL", "\"https://app.midtrans.com/snap/\"")
             buildConfigField("String", "CORE_API_BASE_URL", "\"https://api.midtrans.com/\"")
+            buildConfigField("String", "MIXPANEL_TOKEN", "\"84ed63a9507c49b373945b13633b8a0c\"")
         }
 
         debug {
-            buildConfigField(
-                "String",
-                "SNAP_BASE_URL",
-                "\"https://app.sandbox.midtrans.com/snap/\""
-            )
-            buildConfigField(
-                "String",
-                "CORE_API_BASE_URL",
-                "\"https://api.sandbox.midtrans.com/\""
-            )
+            buildConfigField("String", "SNAP_BASE_URL", "\"https://app.sandbox.midtrans.com/snap/\"")
+            buildConfigField("String", "CORE_API_BASE_URL", "\"https://api.sandbox.midtrans.com/\"")
+            buildConfigField("String", "MIXPANEL_TOKEN", "\"f070570da8b882fda74c77541f0926a0\"")
+
         }
     }
     compileOptions {
@@ -85,7 +80,7 @@ dependencies {
     implementation(com.gtf.snap.CommonLibraries.androidxDatastore)
     implementation(com.gtf.snap.JodaTimeLibraries.jodaTime)
     implementation(com.gtf.snap.CommonLibraries.uuid)
-    implementation(com.gtf.snap.CommonLibraries.clevertap)
+    implementation(com.gtf.snap.CommonLibraries.mixpanel)
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")

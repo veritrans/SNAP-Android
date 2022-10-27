@@ -110,8 +110,10 @@
 
     <string name="installment_title">Choose installment</string>
     <string name="installment_full_payment">Full payment</string>
-    <string name="installment_3x_installment">3 months</string>
-    <string name="installment_6x_installment">6 months</string>
+    <string name="installment_term">%s months</string>
+    <string name="installment_dc_error">Installment is not available for debit card.</string>
+    <string name="installment_cc_not_match_installment">The selected installment is not supported by the card.</string>
+
 
 
     <string name="point_loading">Loading points…</string>

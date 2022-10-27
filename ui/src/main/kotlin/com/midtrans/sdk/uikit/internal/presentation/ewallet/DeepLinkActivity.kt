@@ -19,7 +19,10 @@ import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
-import com.midtrans.sdk.uikit.internal.view.*
+import com.midtrans.sdk.uikit.internal.view.GifImage
+import com.midtrans.sdk.uikit.internal.view.SnapButton
+import com.midtrans.sdk.uikit.internal.view.SnapColors
+import com.midtrans.sdk.uikit.internal.view.SnapWebView
 
 class DeepLinkActivity : BaseActivity() {
 
@@ -104,6 +107,7 @@ class DeepLinkActivity : BaseActivity() {
     private fun getAppPackageName(): String {
         return when (paymentType) {
             PaymentType.GOPAY -> GOJEK_PACKAGE_NAME
+            PaymentType.GOPAY_QRIS -> GOJEK_PACKAGE_NAME
             PaymentType.SHOPEEPAY -> SHOPEE_PACKAGE_NAME
             PaymentType.SHOPEEPAY_QRIS -> SHOPEE_PACKAGE_NAME
             else -> GOJEK_PACKAGE_NAME

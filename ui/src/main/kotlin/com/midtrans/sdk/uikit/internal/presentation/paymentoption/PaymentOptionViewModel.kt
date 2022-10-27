@@ -6,7 +6,6 @@ import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.PaymentMethod
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.AKULAKU
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.ALFAMART
-import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.OTHER_VA
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.BANK_TRANSFER
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.BCA_KLIKPAY
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.BCA_VA
@@ -15,12 +14,13 @@ import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.BRI_EPAY
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.BRI_VA
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.CIMB_CLICKS
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.CREDIT_CARD
-import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.CSTORE
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.DANAMON_ONLINE
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.E_CHANNEL
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.GOPAY
+import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.GOPAY_QRIS
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.INDOMARET
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.KLIK_BCA
+import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.OTHER_VA
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.PERMATA_VA
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY_QRIS
@@ -65,7 +65,8 @@ class PaymentOptionViewModel : ViewModel() {
                 || type == UOB_EZPAY
                 || type == CREDIT_CARD
                 || type == AKULAKU
-                || type == GOPAY
+                || (type == GOPAY && !isTabletDevice)
+                || (type == GOPAY_QRIS && isTabletDevice)
                 || (type == SHOPEEPAY && !isTabletDevice)
                 || (type == SHOPEEPAY_QRIS && isTabletDevice)
     }
@@ -86,13 +87,13 @@ class PaymentOptionViewModel : ViewModel() {
                 R.drawable.ic_outline_amex_40
             )
             AKULAKU -> listOf(R.drawable.ic_outline_akulaku_40)
-            GOPAY -> if (isTabletDevice)
+            GOPAY -> listOf(R.drawable.ic_outline_gopaylogo_40)
+            GOPAY_QRIS -> {
                 listOf(
                     R.drawable.ic_outline_gopaylogo_40,
                     R.drawable.ic_outline_qris_40
                 )
-            else
-                listOf(R.drawable.ic_outline_gopaylogo_40)
+            }
             SHOPEEPAY -> { listOf(R.drawable.ic_outline_shopeepaylogo_40) }
             SHOPEEPAY_QRIS -> {
                 listOf(
@@ -125,7 +126,8 @@ class PaymentOptionViewModel : ViewModel() {
             ALFAMART -> R.string.payment_summary_alfamart
             SHOPEEPAY -> R.string.payment_title_shopeepay
             SHOPEEPAY_QRIS -> R.string.payment_summary_shopeepay
-            else -> if(isTabletDevice)R.string.payment_summary_gopay else R.string.payment_title_gopay
+            GOPAY -> R.string.payment_title_gopay
+            else -> R.string.payment_summary_gopay
         }
     }
 
