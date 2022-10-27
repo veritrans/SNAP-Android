@@ -68,6 +68,7 @@ class CreditCardViewModelTest {
         val transactionResponse = TransactionResponse(
             statusCode = "200"
         )
+        whenever(errorCard.getErrorCardType(transactionResponse, false)).thenReturn(null)
 
         val transactionDetail = TransactionDetails(
             orderId = "orderId",
