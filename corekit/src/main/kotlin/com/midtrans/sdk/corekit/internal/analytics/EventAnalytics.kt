@@ -71,14 +71,22 @@ class EventAnalytics(
         )
     }
 
-    fun trackSnapChargeResult() {
+    fun trackSnapChargeResult(
+        transactionStatus: String,
+        fraudStatus: String,
+        currency: String,
+        statusCode: String,
+        pageName: String,
+        paymentMethodName: String
+        creditCardInfo: Map<String, String> = mapOf()
+    ) {
 
     }
 
     fun trackSnapGetTokenRequest(snapToken: String) {
         mixpanelTracker.trackEvent(
-            eventName = EVENT_SNAP_GET_TOKEN_REQUEST, //TODO currently no snap token because generate token happened inside sdk, check is it still needed
-            properties = mapOf(PROPERTY_SNAP_TOKEN to snapToken)
+            eventName = EVENT_SNAP_GET_TOKEN_REQUEST,
+            properties = mapOf(PROPERTY_SNAP_TOKEN to snapToken) //TODO currently snap token is empty because generate token happened inside sdk, check if it is still needed
         )
     }
 
@@ -118,14 +126,27 @@ class EventAnalytics(
         orderId: String,
         transactionId: String,
         grossAmount: String,
+        paymentMethodName: String
     ) {
         mixpanelTracker.registerCommonProperties(
             mapOf(
                 PROPERTY_SNAP_TOKEN to snapToken,
                 PROPERTY_ORDER_ID to orderId,
                 PROPERTY_TRANSACTION_ID to transactionId,
-                PROPERTY_GROSS_AMOUNT to grossAmount
+                PROPERTY_GROSS_AMOUNT to grossAmount,
+                PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
             )
         )
+    }
+
+    fun unregisterCommonTransactionProperties() {
+        val propertyNames = listOf(
+            PROPERTY_SNAP_TOKEN,
+            PROPERTY_ORDER_ID,
+            PROPERTY_TRANSACTION_ID,
+            PROPERTY_GROSS_AMOUNT,
+            PROPERTY_PAYMENT_METHOD_NAME
+        )
+        mixpanelTracker.unregisterCommonProperties(propertyNames)
     }
 }
