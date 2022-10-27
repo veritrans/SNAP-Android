@@ -81,7 +81,7 @@ class EventAnalytics(
         currency: String,
         statusCode: String,
         transactionId: String,
-        pageName: String,
+        @PageName.Def pageName: String,
         paymentMethodName: String,
         creditCardInfo: Map<String, String> = mapOf()
     ) {
