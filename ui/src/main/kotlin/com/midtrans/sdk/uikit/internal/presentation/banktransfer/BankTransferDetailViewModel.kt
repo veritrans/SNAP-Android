@@ -49,7 +49,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
             requestBuilder.withCustomerEmail(it)
         }
         eventAnalytics.trackSnapChargeRequest(
-            pageName = getPageName(paymentType),
+            pageName = PageName.BANK_TRANSFER_DETAIL_PAGE,
             paymentMethodName = paymentType
         )
         snapCore.pay(
@@ -99,15 +99,6 @@ internal class BankTransferDetailViewModel @Inject constructor(
             )
         expCalendar.set(Calendar.YEAR, datetimeUtil.getCalendar().get(Calendar.YEAR))
         return expCalendar.timeInMillis
-    }
-
-    private fun getPageName(paymentType: String): String {
-        return when(paymentType) {
-            PaymentType.BCA_VA -> PageName.BCA_VA_PAGE
-            PaymentType.BNI_VA -> PageName.BNI_VA_PAGE
-            PaymentType.BRI_VA -> PageName.BRI_VA_PAGE
-            else -> PageName.OTHER_VA_PAGE
-        }
     }
 
     fun getExpiredHour() = datetimeUtil.getExpiredHour(expiredTime)
