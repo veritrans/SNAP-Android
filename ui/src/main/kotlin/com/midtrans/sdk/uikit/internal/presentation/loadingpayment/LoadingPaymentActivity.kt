@@ -209,7 +209,7 @@ class LoadingPaymentActivity : BaseActivity() {
                         val resultForHost = PublicTransactionResult(transactionResult)
                         resultIntent.putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, resultForHost)
                         setResult(RESULT_OK, resultIntent)
-                        UiKitApi.getDefaultInstance().getPaymentCallback()?.onSuccess(resultForHost) //TODO temporary for direct debit, revisit after real callback like the one in MidtransSdk implemented
+                        UiKitApi.getDefaultInstance().getPaymentCallback()?.onSuccess(resultForHost)
                     }
                 }
                 finish()

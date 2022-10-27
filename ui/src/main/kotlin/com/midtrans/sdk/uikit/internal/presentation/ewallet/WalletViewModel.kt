@@ -1,5 +1,6 @@
 package com.midtrans.sdk.uikit.internal.presentation.ewallet
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -53,6 +54,27 @@ internal class WalletViewModel @Inject constructor(
 
                 override fun onError(error: SnapError) {
                     // TODO: error dialog etc
+                }
+            }
+        )
+    }
+
+    fun checkStatus(snapToken: String) {
+        snapCore.getTransactionStatus(
+            snapToken = snapToken,
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    result.run {
+                        _transactionResultLiveData.value =  TransactionResult(
+                            status = transactionStatus.orEmpty(),
+                            transactionId = transactionId.orEmpty(),
+                            paymentType = paymentType.orEmpty()
+                        )
+                    }
+                }
+
+                override fun onError(error: SnapError) {
+                    Log.e("Wallet payment status", error.javaClass.name)
                 }
             }
         )

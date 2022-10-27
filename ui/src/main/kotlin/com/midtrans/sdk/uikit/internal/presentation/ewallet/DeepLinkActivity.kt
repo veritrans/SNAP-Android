@@ -1,5 +1,6 @@
 package com.midtrans.sdk.uikit.internal.presentation.ewallet
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -7,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -22,6 +24,12 @@ import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.view.*
 
 class DeepLinkActivity : BaseActivity() {
+
+    private val deepLinkLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            setResult(Activity.RESULT_OK)
+            finish()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,11 +54,11 @@ class DeepLinkActivity : BaseActivity() {
                 urlLoadingOverride = { webview, url ->
                     Log.e("urlOverload", url)
 
-                    if (url.contains("gojek") || url.contains("shopee")) {  // TODO: fill with exact scheme
+                    if (true){//(url.contains("gojek") || url.contains("shopee")) {  // TODO: fill with exact scheme
                         try {
                             intent = Intent(Intent.ACTION_VIEW)
                             intent.setData(Uri.parse(url))
-                            startActivity(intent)
+                            deepLinkLauncher.launch(intent)
                             true
                         } catch (e: Throwable) {
                             openAppInPlayStore()
@@ -135,14 +143,14 @@ class DeepLinkActivity : BaseActivity() {
 
     private fun openAppInPlayStore() {
         try {
-            startActivity(
+            deepLinkLauncher.launch(
                 Intent(
                     Intent.ACTION_VIEW,
                     Uri.parse("market://details?id=${getAppPackageName()}")
                 )
             )
         } catch (error: ActivityNotFoundException) {
-            startActivity(
+            deepLinkLauncher.launch(
                 Intent(
                     Intent.ACTION_VIEW,
                     Uri.parse("https://play.google.com/store/apps/details?id=${getAppPackageName()}")

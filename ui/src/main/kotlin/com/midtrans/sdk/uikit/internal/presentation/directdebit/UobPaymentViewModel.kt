@@ -67,7 +67,7 @@ internal class UobPaymentViewModel @Inject constructor(
                 status.contains(UiKitConstants.STATUS_FAILED, true) -> UiKitConstants.STATUS_FAILED
                 else -> UiKitConstants.STATUS_FAILED
             }
-        } ?: ""
+        } ?: UiKitConstants.STATUS_FAILED
     }
 
     fun getExpiredHour(remainingTime: Long) = dateTimeUtil.getExpiredHour(remainingTime)
