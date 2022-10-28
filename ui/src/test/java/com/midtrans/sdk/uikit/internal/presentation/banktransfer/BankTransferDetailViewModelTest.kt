@@ -7,6 +7,8 @@ import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
+import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import org.junit.Assert
 import org.junit.Before
@@ -45,8 +47,11 @@ internal class BankTransferDetailViewModelTest {
         val dateTimeUtil: DateTimeUtil = mock()
         val snapToken = "SnapToken"
         val paymentType = PaymentType.BNI_VA
-        val bankTransferDetailViewModel =
-            BankTransferDetailViewModel(snapCore = snapCore, dateTimeUtil)
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+
+        val bankTransferDetailViewModel = BankTransferDetailViewModel(snapCore = snapCore, dateTimeUtil)
         bankTransferDetailViewModel.chargeBankTransfer(
             snapToken = snapToken,
             paymentType = paymentType
@@ -56,6 +61,14 @@ internal class BankTransferDetailViewModelTest {
             snapToken = eq(snapToken),
             paymentRequestBuilder = any(),
             callback = callbackCaptor.capture()
+        )
+        verify(eventAnalytics).trackSnapChargeRequest(
+            pageName = PageName.BANK_TRANSFER_DETAIL_PAGE,
+            paymentMethodName = PaymentType.BNI_VA,
+            promoName = null,
+            promoAmount = null,
+            promoId = null,
+            creditCardPoint = null
         )
     }
 

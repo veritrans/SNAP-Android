@@ -46,7 +46,14 @@ internal class DirectDebitViewModelTest {
             paymentRequestBuilder = any(),
             callback = callbackCaptor.capture()
         )
-        verify(eventAnalytics).trackSnapChargeRequest(PageName.BCA_KLIK_PAY_PAGE, "bca_klikpay", null, null, null, null)
+        verify(eventAnalytics).trackSnapChargeRequest(
+            pageName = PageName.BCA_KLIK_PAY_PAGE,
+            paymentMethodName = "bca_klikpay",
+            promoName = null,
+            promoAmount = null,
+            promoId = null,
+            creditCardPoint = null
+        )
         val callback = callbackCaptor.firstValue
         callback.onSuccess(TransactionResponse(redirectUrl = "redirect-url"))
         Assert.assertEquals("redirect-url", viewModel.getTransactionResponse().getOrAwaitValue().redirectUrl)

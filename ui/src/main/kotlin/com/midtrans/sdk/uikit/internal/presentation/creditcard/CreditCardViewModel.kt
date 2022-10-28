@@ -202,7 +202,7 @@ internal class CreditCardViewModel @Inject constructor(
                         paymentMethodName = PaymentType.CREDIT_CARD,
                         promoName = promoName,
                         promoAmount = promoAmount?.toString(),
-                        promoId = promoId.toString(),
+                        promoId = promoId?.toString(),
                         creditCardPoint = null //TODO add this after point implemented
                     )
 
@@ -270,7 +270,7 @@ internal class CreditCardViewModel @Inject constructor(
                 paymentMethodName = PaymentType.CREDIT_CARD,
                 promoName = promoName,
                 promoAmount = promoAmount?.toString(),
-                promoId = promoId.toString(),
+                promoId = promoId?.toString(),
                 creditCardPoint = null //TODO add this after point implemented
             )
 
@@ -337,7 +337,7 @@ internal class CreditCardViewModel @Inject constructor(
                             paymentMethodName = PaymentType.CREDIT_CARD,
                             promoName = promoName,
                             promoAmount = promoAmount?.toString(),
-                            promoId = promoId.toString(),
+                            promoId = promoId?.toString(),
                             creditCardPoint = null
                         )
 

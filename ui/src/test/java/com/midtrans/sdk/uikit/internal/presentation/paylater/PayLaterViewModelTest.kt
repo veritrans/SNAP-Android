@@ -4,6 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
+import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.getOrAwaitValue
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import org.junit.Assert.assertEquals
@@ -21,10 +23,13 @@ internal class PayLaterViewModelTest {
 
     private val dateTimeUtil: DateTimeUtil = mock()
 
+    private val eventAnalytics: EventAnalytics = mock()
+
     private lateinit var viewModel: PayLaterViewModel
 
     @Before
     fun setup() {
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
         viewModel = PayLaterViewModel(snapCore, dateTimeUtil)
     }
 
@@ -40,6 +45,15 @@ internal class PayLaterViewModelTest {
             snapToken = eq(snapToken),
             paymentRequestBuilder = any(),
             callback = callbackCaptor.capture()
+        )
+
+        verify(eventAnalytics).trackSnapChargeRequest(
+            pageName = PageName.AKULAKU_PAGE,
+            paymentMethodName = "akulaku",
+            promoName = null,
+            promoAmount = null,
+            promoId = null,
+            creditCardPoint = null
         )
 
         val callback = callbackCaptor.firstValue

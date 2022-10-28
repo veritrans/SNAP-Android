@@ -4,6 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
+import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.getOrAwaitValue
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import org.junit.Assert
@@ -20,10 +22,12 @@ internal class UobPaymentViewModelTest {
 
     private val snapCore: SnapCore = mock()
     private val dateTimeUtil: DateTimeUtil = mock()
+    private val eventAnalytics: EventAnalytics = mock()
     private lateinit var viewModel: UobPaymentViewModel
 
     @Before
     fun setup() {
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
         viewModel = UobPaymentViewModel(snapCore, dateTimeUtil)
     }
 
@@ -38,6 +42,15 @@ internal class UobPaymentViewModelTest {
             snapToken = eq(snapToken),
             paymentRequestBuilder = any(),
             callback = callbackCaptor.capture()
+        )
+
+        verify(eventAnalytics).trackSnapChargeRequest(
+            pageName = PageName.UOB_PAGE,
+            paymentMethodName = "uob_ezpay",
+            promoName = null,
+            promoAmount = null,
+            promoId = null,
+            creditCardPoint = null
         )
 
         val callback = callbackCaptor.firstValue

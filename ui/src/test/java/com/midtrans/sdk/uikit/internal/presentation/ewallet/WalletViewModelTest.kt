@@ -7,6 +7,8 @@ import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
+import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import org.junit.Assert
 import org.junit.Before
@@ -43,9 +45,12 @@ class WalletViewModelTest {
         val snapCore: SnapCore = mock()
         val dateTimeUtil: DateTimeUtil = mock()
         val snapToken = "SnapToken"
-        val paymentType = PaymentType.BNI_VA
-        val walletViewModel =
-            WalletViewModel(snapCore = snapCore, dateTimeUtil)
+        val paymentType = PaymentType.GOPAY
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+
+        val walletViewModel = WalletViewModel(snapCore = snapCore, dateTimeUtil)
         walletViewModel.chargeQrPayment(
             snapToken = snapToken,
             paymentType = paymentType
@@ -55,6 +60,14 @@ class WalletViewModelTest {
             snapToken = eq(snapToken),
             paymentRequestBuilder = any(),
             callback = callbackCaptor.capture()
+        )
+        verify(eventAnalytics).trackSnapChargeRequest(
+            pageName = PageName.GOPAY_DEEPLINK_PAGE,
+            paymentMethodName = PaymentType.GOPAY,
+            promoName = null,
+            promoAmount = null,
+            promoId = null,
+            creditCardPoint = null
         )
     }
 

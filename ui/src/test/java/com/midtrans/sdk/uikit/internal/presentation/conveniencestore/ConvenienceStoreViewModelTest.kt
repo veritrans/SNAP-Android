@@ -5,6 +5,8 @@ import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
+import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.getOrAwaitValue
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.BarcodeEncoder
@@ -44,8 +46,11 @@ class ConvenienceStoreViewModelTest {
         val dateTimeUtil: DateTimeUtil = mock()
         val snapToken = "SnapToken"
         val paymentType = PaymentType.INDOMARET
-        val convenienceStoreViewModel =
-            ConvenienceStoreViewModel(snapCore = snapCore, dateTimeUtil, errorCard, barcodeEncoder)
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+
+        val convenienceStoreViewModel = ConvenienceStoreViewModel(snapCore = snapCore, dateTimeUtil, errorCard, barcodeEncoder)
         convenienceStoreViewModel.chargeConvenienceStorePayment(
             snapToken = snapToken,
             paymentType = paymentType
@@ -56,8 +61,15 @@ class ConvenienceStoreViewModelTest {
             paymentRequestBuilder = any(),
             callback = callbackCaptor.capture()
         )
+        verify(eventAnalytics).trackSnapChargeRequest(
+            pageName = PageName.INDOMARET_PAGE,
+            paymentMethodName = PaymentType.INDOMARET,
+            promoName = null,
+            promoAmount = null,
+            promoId = null,
+            creditCardPoint = null
+        )
     }
-
 
     @Test
     fun getExpiredHourShouldReturnhhmmss() {
