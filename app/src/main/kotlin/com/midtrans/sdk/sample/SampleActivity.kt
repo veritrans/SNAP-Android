@@ -1,15 +1,9 @@
 package com.midtrans.sdk.sample
 
-import android.app.Activity
 import android.content.Intent
-import android.content.res.Configuration
-import android.content.res.Resources
-import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -21,8 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.LocaleListCompat
-import com.midtrans.sdk.uikit.api.callback.Callback
-import com.midtrans.sdk.uikit.api.exception.SnapError
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
@@ -115,7 +107,11 @@ class SampleActivity : AppCompatActivity() {
                     ),
                     creditCard = CreditCard(
                         saveCard = true,
-                        secure = true
+                        secure = true,
+                        installment = Installment(
+                            isRequired = false,
+                            terms = mapOf("offline" to listOf(3,6,9,12))
+                        )
                     ),
                     userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
                     customerDetails = CustomerDetails(

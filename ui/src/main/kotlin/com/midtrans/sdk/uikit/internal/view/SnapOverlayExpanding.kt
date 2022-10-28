@@ -10,6 +10,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,6 +74,7 @@ fun SnapTotal(
     orderId: String,
     remainingTime: String?,
     canExpand: Boolean,
+    isPromo: Boolean = false,
     onExpandClick: (isExpand: Boolean) -> Unit
 ) {
     var isExpand by remember { mutableStateOf(false) }
@@ -102,9 +104,17 @@ fun SnapTotal(
             Text(
                 text = amount,
                 style = SnapTypography.STYLES.snapBigNumberSemiBold,
-                color = SnapColors.getARGBColor(SnapColors.textPrimary),
-                modifier = Modifier.weight(1f)
+                color = SnapColors.getARGBColor(SnapColors.textPrimary)
             )
+            if(isPromo){
+                Icon(
+                    modifier = Modifier.padding(start = 8.dp, top = 8.dp),
+                    painter = painterResource(id = R.drawable.ic_promo),
+                    contentDescription = null,
+                    tint = Color.Unspecified
+                )
+            }
+            Box(modifier = Modifier.weight(1f))
             if (canExpand) {
                 IconButton(onClick = {
                     isExpand = !isExpand

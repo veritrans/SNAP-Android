@@ -41,7 +41,9 @@ class OneClickCardPaymentRequestBuilder: PaymentRequestBuilder() {
     }
 
     fun withInstallment(value: String): OneClickCardPaymentRequestBuilder = apply {
-        installment = value
+        if (value.isNotEmpty()) {
+            installment = value
+        }
     }
 
     fun withMaskedCard(value: String): OneClickCardPaymentRequestBuilder = apply {

@@ -297,7 +297,7 @@ internal class WalletActivity : BaseActivity() {
 
     private val paymentInstructionQr by lazy {
         mapOf(
-            Pair(PaymentType.GOPAY, R.array.scan_qr_instruction_gopay),
+            Pair(PaymentType.GOPAY_QRIS, R.array.scan_qr_instruction_gopay),
             Pair(PaymentType.SHOPEEPAY_QRIS, R.array.scan_qr_instruction_shopeepay_message)
         )
     }
@@ -312,9 +312,9 @@ internal class WalletActivity : BaseActivity() {
     private val title by lazy {
         mapOf(
             Pair(PaymentType.GOPAY, R.string.payment_title_gopay),
+            Pair(PaymentType.GOPAY_QRIS, R.string.payment_title_gopay),
             Pair(PaymentType.SHOPEEPAY, R.string.payment_title_shopeepay),
             Pair(PaymentType.SHOPEEPAY_QRIS, R.string.payment_title_shopeepay)
-
             )
     }
 

@@ -15,7 +15,7 @@ object Dependencies {
     const val daggerVersion = "2.42"
     const val mockitoVersion = "2.25.0"
     const val mockitoKotlinVersion = "4.0.0"
-    const val clevertapVersion = "4.4.0"
+    const val mixpanelVersion = "6.5.2"
     const val okHttpVersion = "3.12.1"
     const val curlLoggerInterceptorVersion = "0.1"
     const val chuckVersion = "3.5.2"
@@ -57,19 +57,15 @@ object Dependencies {
 object CommonLibraries {
     const val kotlinStdlib = "org.jetbrains.kotlin:kotlin:stdlib:111"
     const val appCompat = "androidx.appcompat:appcompat:${Dependencies.appCompatVersion}"
-    const val materialDesignComponent =
-        "com.google.android.material:material:${Dependencies.materialDesignComponentVersion}"
-    const val constraintLayout =
-        "androidx.constraintlayout:constraintlayout:${Dependencies.constraintLayoutVersion}"
+    const val materialDesignComponent = "com.google.android.material:material:${Dependencies.materialDesignComponentVersion}"
+    const val constraintLayout = "androidx.constraintlayout:constraintlayout:${Dependencies.constraintLayoutVersion}"
     const val uuid = "com.fasterxml.uuid:java-uuid-generator:${Dependencies.uuidVersion}"
-    const val clevertap =
-        "com.clevertap.android:clevertap-android-sdk:${Dependencies.clevertapVersion}"
+    const val mixpanel = "com.mixpanel.android:mixpanel-android:${Dependencies.mixpanelVersion}"
     const val roomRuntime = "androidx.room:room-runtime:${Dependencies.roomVersion}"
     const val roomRxJava2 = "androidx.room:room-rxjava2:${Dependencies.roomVersion}"
     const val timber = "com.jakewharton.timber:timber:${Dependencies.timberVersion}"
     const val zxing = "com.google.zxing:core:${Dependencies.zxingVersion}"
-    const val androidxDatastore =
-        "androidx.datastore:datastore-preferences:${Dependencies.androidxDatastoreVersion}"
+    const val androidxDatastore = "androidx.datastore:datastore-preferences:${Dependencies.androidxDatastoreVersion}"
     const val coreLibraryDesugaring = "com.android.tools:desugar_jdk_libs:${Dependencies.coreLibraryDesugaringVersion}"
     const val leakCanary = "com.squareup.leakcanary:leakcanary-android:${Dependencies.leakCanaryVersion}"
 }

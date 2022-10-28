@@ -11,6 +11,7 @@ class CreditCard(
     bank: String? = null,
     whitelistBins: List<String>? = null,
     blacklistBins: List<String>? = null,
+    installment: Installment? = null,
     type: String? = null,
 ) : CreditCard(
     saveCard = saveCard,
@@ -20,5 +21,6 @@ class CreditCard(
     bank = bank,
     whitelistBins = whitelistBins,
     blacklistBins = blacklistBins,
+    installment = installment,
     type = type
 )
