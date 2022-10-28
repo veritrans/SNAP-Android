@@ -11,13 +11,12 @@ import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.UOB_EZPAY
 import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
+import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.data.repository.CoreApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.MerchantApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.SnapRepository
 import com.midtrans.sdk.corekit.internal.network.model.request.SnapTokenRequest
-import com.midtrans.sdk.corekit.internal.network.model.response.EnabledPayment
-import com.midtrans.sdk.corekit.internal.network.model.response.SnapTokenResponse
-import com.midtrans.sdk.corekit.internal.network.model.response.Transaction
+import com.midtrans.sdk.corekit.internal.network.model.response.*
 import com.midtrans.sdk.corekit.internal.scheduler.BaseSdkScheduler
 import com.midtrans.sdk.corekit.internal.scheduler.TestSdkScheduler
 import io.reactivex.Single
@@ -46,12 +45,15 @@ class PaymentUsecaseTest {
     @Mock
     private lateinit var mockMerchantApiRepository: MerchantApiRepository
 
+    @Mock
+    private lateinit var eventAnalytics: EventAnalytics
+
     @Before
     fun setUp() {
         closeable = MockitoAnnotations.openMocks(this)
         scheduler = TestSdkScheduler()
         usecase = PaymentUsecase(
-            scheduler, mockSnapRepository, mockCoreApiRepository, mockMerchantApiRepository, "clientKey"
+            scheduler, mockSnapRepository, mockCoreApiRepository, mockMerchantApiRepository, "clientKey", eventAnalytics
         )
     }
 
@@ -66,7 +68,13 @@ class PaymentUsecaseTest {
         val mockCallback: Callback<PaymentOption> = mock()
         whenever(mockSnapRepository.getTransactionDetail("snap-token")) doReturn Single.just(
             Transaction(
-                enabledPayments = provideEnabledPayments()
+                enabledPayments = provideEnabledPayments(),
+                merchant = Merchant(
+                    merchantId = "merchant-id",
+                    preference = MerchantPreferences(
+                        displayName = "merchant-name"
+                    )
+                )
             )
         )
         usecase.getPaymentOption(
@@ -76,6 +84,7 @@ class PaymentUsecaseTest {
         )
         verify(mockSnapRepository).getTransactionDetail("snap-token")
         verify(mockMerchantApiRepository, never()).getSnapToken(any())
+        verify(eventAnalytics).setUserIdentity("merchant-id", "merchant-name", mapOf())
         verify(mockCallback).onSuccess(paymentOptionCaptor.capture())
         val result = paymentOptionCaptor.firstValue
         assertPaymentOption(result, "snap-token")
@@ -93,7 +102,13 @@ class PaymentUsecaseTest {
         )
         whenever(mockSnapRepository.getTransactionDetail("snap-token-generated")) doReturn Single.just(
             Transaction(
-                enabledPayments = provideEnabledPayments()
+                enabledPayments = provideEnabledPayments(),
+                merchant = Merchant(
+                    merchantId = "merchant-id",
+                    preference = MerchantPreferences(
+                        displayName = "merchant-name"
+                    )
+                )
             )
         )
         usecase.getPaymentOption(
@@ -113,6 +128,9 @@ class PaymentUsecaseTest {
                 )
             )
         )
+        verify(eventAnalytics).setUserIdentity("merchant-id", "merchant-name", mapOf())
+        verify(eventAnalytics).trackSnapGetTokenRequest(any())
+        verify(eventAnalytics).trackSnapGetTokenResult("snap-token-generated", "1000")
         verify(mockCallback).onSuccess(paymentOptionCaptor.capture())
         val result = paymentOptionCaptor.firstValue
         assertPaymentOption(result, "snap-token-generated")
@@ -242,7 +260,7 @@ class PaymentUsecaseTest {
         assertEquals(snapToken, result.token)
     }
 
-    private fun provideEnabledPayments(): List<EnabledPayment>? {
+    private fun provideEnabledPayments(): List<EnabledPayment> {
         return listOf(
             EnabledPayment(
                 type = "bni_va",
