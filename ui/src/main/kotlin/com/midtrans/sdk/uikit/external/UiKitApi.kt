@@ -60,6 +60,24 @@ class UiKitApi private constructor(val builder: Builder){ //TODO revisit this im
         activityContext.startActivity(intent)
     }
 
+    //Snap Token Flow
+    fun startPayment(
+        activityContext: Context,
+        snapToken: String? = null,
+        paymentType: PaymentTypeItem? = null,
+        paymentCallback: Callback<TransactionResult>
+        ) {
+        UiKitApi.paymentCallback = paymentCallback
+
+        val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
+            activityContext = activityContext,
+            snapToken = snapToken,
+            transactionDetails = com.midtrans.sdk.corekit.api.model.SnapTransactionDetail("", 0.0),
+            paymentType = paymentType
+        )
+        activityContext.startActivity(intent)
+    }
+
     class Builder {
         internal lateinit var context: Context
         internal lateinit var merchantUrl: String
