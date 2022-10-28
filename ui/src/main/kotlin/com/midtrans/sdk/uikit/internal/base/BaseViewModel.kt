@@ -2,9 +2,7 @@ package com.midtrans.sdk.uikit.internal.base
 
 import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.corekit.SnapCore
-import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
-import com.midtrans.sdk.corekit.internal.analytics.PageName
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -40,13 +38,19 @@ internal open class BaseViewModel(
     protected fun trackSnapChargeRequest(
         pageName: String,
         paymentMethodName: String,
-        promoInfo: Map<String, String> = mapOf()
+        promoName: String? = null,
+        promoAmount: String? = null,
+        promoId: String? = null,
+        creditCardPoint: String? = null
     ) {
         eventAnalytics.trackSnapChargeRequest(
             pageName = pageName,
             paymentMethodName = paymentMethodName,
-            promoInfo = promoInfo
-        ).also {
+            promoName = promoName,
+            promoAmount = promoAmount,
+            promoId = promoId,
+            creditCardPoint = creditCardPoint
+        ).apply {
             initRequestTime()
         }
     }

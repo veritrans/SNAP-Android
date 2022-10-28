@@ -5,6 +5,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_R
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_RESULTS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CREDIT_CARD_POINT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CURRENCY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_FRAUD_STATUS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_GROSS_AMOUNT
@@ -14,6 +15,9 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ORDER_ID
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAGE_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAYMENT_METHOD_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PLATFORM
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PROMO_AMOUNT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PROMO_ID
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PROMO_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_RESPONSE_TIME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SDK_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SDK_VERSION
@@ -64,12 +68,22 @@ class EventAnalytics(
     fun trackSnapChargeRequest(
         pageName: String,
         paymentMethodName: String,
-        promoInfo: Map<String, String> = mapOf()
+        promoName: String? = null,
+        promoAmount: String? = null,
+        promoId: String? = null,
+        creditCardPoint: String? = null
     ) {
+        val optional = mutableMapOf<String, String>()
+        promoName?.also { optional[PROPERTY_PROMO_NAME] = it }
+        promoAmount?.also { optional[PROPERTY_PROMO_AMOUNT] = it }
+        promoId?.also { optional[PROPERTY_PROMO_ID] = it }
+        creditCardPoint?.also { optional[PROPERTY_CREDIT_CARD_POINT] = it }
+
         val properties = mapOf(
             PROPERTY_PAGE_NAME to pageName,
             PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
-        ) + promoInfo
+        ) + optional
+
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_CHARGE_REQUEST,
             properties = properties
