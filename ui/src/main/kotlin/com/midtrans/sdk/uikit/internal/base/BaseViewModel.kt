@@ -1,17 +1,17 @@
 package com.midtrans.sdk.uikit.internal.base
 
 import androidx.lifecycle.ViewModel
-import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-internal open class BaseViewModel(
-    snapCore: SnapCore
-) : ViewModel() {
+internal open class BaseViewModel : ViewModel() {
+
+    protected var eventAnalytics: EventAnalytics? = null
+
     private var requestTime = 0L
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-    private val eventAnalytics = snapCore.getEventAnalytics()
 
     override fun onCleared() {
         super.onCleared()
@@ -43,14 +43,14 @@ internal open class BaseViewModel(
         promoId: String? = null,
         creditCardPoint: String? = null
     ) {
-        eventAnalytics.trackSnapChargeRequest(
+        eventAnalytics?.trackSnapChargeRequest(
             pageName = pageName,
             paymentMethodName = paymentMethodName,
             promoName = promoName,
             promoAmount = promoAmount,
             promoId = promoId,
             creditCardPoint = creditCardPoint
-        ).apply {
+        )?.apply {
             initRequestTime()
         }
     }
@@ -59,7 +59,7 @@ internal open class BaseViewModel(
         response: TransactionResponse,
         pageName: String
     ) {
-        eventAnalytics.trackSnapChargeResult(
+        eventAnalytics?.trackSnapChargeResult(
             pageName = pageName,
             transactionStatus = response.transactionStatus.orEmpty(),
             fraudStatus = response.fraudStatus.orEmpty(),
