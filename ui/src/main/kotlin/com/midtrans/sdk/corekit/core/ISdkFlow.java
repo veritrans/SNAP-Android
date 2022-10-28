@@ -217,7 +217,6 @@ public class ISdkFlow {
 
     }
 
-    @Deprecated
     public void runAkulaku(Context context, String snapToken) {
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
@@ -227,7 +226,6 @@ public class ISdkFlow {
         );
     }
 
-    @Deprecated
     public void runAlfamart(Context context, String snapToken) {
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
