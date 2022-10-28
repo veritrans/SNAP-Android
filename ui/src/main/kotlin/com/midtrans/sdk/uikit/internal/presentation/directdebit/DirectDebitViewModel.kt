@@ -17,7 +17,12 @@ import javax.inject.Inject
 internal class DirectDebitViewModel @Inject constructor(
     private val snapCore: SnapCore,
     private val dateTimeUtil: DateTimeUtil
-): BaseViewModel(snapCore) {
+): BaseViewModel() {
+
+    init {
+        eventAnalytics = snapCore.getEventAnalytics()
+    }
+
     private val transactionResponse = MutableLiveData<TransactionResponse>()
     private val exception = MutableLiveData<SnapError>()
 

@@ -15,7 +15,12 @@ import javax.inject.Inject
 internal class PayLaterViewModel @Inject constructor(
     private val snapCore: SnapCore,
     private val dateTimeUtil: DateTimeUtil
-): BaseViewModel(snapCore) {
+): BaseViewModel() {
+
+    init {
+        eventAnalytics = snapCore.getEventAnalytics()
+    }
+
     private val _transactionResponseLiveData = MutableLiveData<TransactionResponse>()
     private var expiredTime = dateTimeUtil.plusDateBy(dateTimeUtil.getCurrentMillis(), 1) //TODO later get value from request snap if set
 

@@ -20,7 +20,11 @@ import javax.inject.Inject
 internal class BankTransferDetailViewModel @Inject constructor(
     private val snapCore: SnapCore,
     private val datetimeUtil: DateTimeUtil
-) : BaseViewModel(snapCore) {
+) : BaseViewModel() {
+
+    init {
+        eventAnalytics = snapCore.getEventAnalytics()
+    }
 
     private val _vaNumberLiveData = MutableLiveData<String>()
     private val _companyCodeLiveData = MutableLiveData<String>()

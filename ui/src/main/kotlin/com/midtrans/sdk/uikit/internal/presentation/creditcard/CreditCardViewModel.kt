@@ -29,7 +29,11 @@ internal class CreditCardViewModel @Inject constructor(
     private val datetimeUtil: DateTimeUtil,
     private val snapCreditCardUtil: SnapCreditCardUtil,
     private val errorCard: ErrorCard
-) : BaseViewModel(snapCore) {
+) : BaseViewModel() {
+
+    init {
+        eventAnalytics = snapCore.getEventAnalytics()
+    }
 
     private val _bankIconId = MutableLiveData<Int>()
     private val _binType = MutableLiveData<String>()

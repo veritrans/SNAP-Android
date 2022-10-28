@@ -20,7 +20,11 @@ import javax.inject.Inject
 internal class WalletViewModel @Inject constructor(
     private val snapCore: SnapCore,
     private val datetimeUtil: DateTimeUtil
-) : BaseViewModel(snapCore) {
+) : BaseViewModel() {
+
+    init {
+        eventAnalytics = snapCore.getEventAnalytics()
+    }
 
     private val _qrCodeUrlLiveData = MutableLiveData<String>()
     private val _deepLinkUrlLiveData = MutableLiveData<String>()

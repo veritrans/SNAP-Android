@@ -26,7 +26,11 @@ internal class ConvenienceStoreViewModel @Inject constructor(
     private val datetimeUtil: DateTimeUtil,
     private val errorCard: ErrorCard,
     private val barcodeEncoder: BarcodeEncoder
-) : BaseViewModel(snapCore) {
+) : BaseViewModel() {
+
+    init {
+        eventAnalytics = snapCore.getEventAnalytics()
+    }
 
     private val _barCodeBitmapLiveData = MutableLiveData<Bitmap>()
     private val _pdfUrlLiveData = MutableLiveData<String>()
