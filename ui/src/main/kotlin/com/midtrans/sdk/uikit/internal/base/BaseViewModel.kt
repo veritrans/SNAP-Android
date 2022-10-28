@@ -67,7 +67,12 @@ internal open class BaseViewModel(
             statusCode = response.statusCode.orEmpty(),
             transactionId = response.transactionId.orEmpty(),
             paymentMethodName = response.paymentType.orEmpty(),
-            responseTime = getResponseTime()
+            responseTime = getResponseTime(),
+            bank = response.bank,
+            channelResponseCode = response.channelResponseCode,
+            channelResponseMessage = response.channelResponseMessage,
+            cardType = response.cardType,
+            threeDsVersion = response.threeDsVersion
         )
     }
 }

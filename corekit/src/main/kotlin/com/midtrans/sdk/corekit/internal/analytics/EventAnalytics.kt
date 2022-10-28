@@ -5,6 +5,11 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_R
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_RESULTS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_3DS_VERSION
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_TYPE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CHANNEL_RESPONSE_CODE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CHANNEL_RESPONSE_MESSAGE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CHARGE_RESPONSE_BANK
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CREDIT_CARD_POINT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CURRENCY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_FRAUD_STATUS
@@ -99,8 +104,19 @@ class EventAnalytics(
         @PageName.Def pageName: String,
         paymentMethodName: String,
         responseTime: String,
-        creditCardInfo: Map<String, String> = mapOf()
+        bank: String? = null,
+        channelResponseCode: String? = null,
+        channelResponseMessage: String? = null,
+        cardType: String? = null,
+        threeDsVersion: String? = null
     ) {
+        val optional = mutableMapOf<String, String>()
+        bank?.also { optional[PROPERTY_CHARGE_RESPONSE_BANK] = it }
+        channelResponseCode?.also { optional[PROPERTY_CHANNEL_RESPONSE_CODE] = it }
+        channelResponseMessage?.also { optional[PROPERTY_CHANNEL_RESPONSE_MESSAGE] = it }
+        cardType?.also { optional[PROPERTY_CARD_TYPE] = it }
+        threeDsVersion?.also { optional[PROPERTY_3DS_VERSION] = it }
+
         val properties = mapOf(
             PROPERTY_TRANSACTION_STATUS to transactionStatus,
             PROPERTY_FRAUD_STATUS to fraudStatus,
@@ -109,8 +125,9 @@ class EventAnalytics(
             PROPERTY_TRANSACTION_ID to transactionId,
             PROPERTY_PAGE_NAME to pageName,
             PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName,
-            PROPERTY_RESPONSE_TIME to responseTime
-        ) + creditCardInfo
+            PROPERTY_RESPONSE_TIME to responseTime,
+        ) + optional
+
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_CHARGE_RESULTS,
             properties = properties
