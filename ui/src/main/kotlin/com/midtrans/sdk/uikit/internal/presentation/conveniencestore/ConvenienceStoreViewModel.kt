@@ -3,7 +3,6 @@ package com.midtrans.sdk.uikit.internal.presentation.conveniencestore
 import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.google.zxing.BarcodeFormat
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
@@ -12,6 +11,8 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.ConvenienceStorePaymentRequestBuilder
+import com.midtrans.sdk.corekit.internal.analytics.PageName
+import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.BarcodeEncoder
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
@@ -25,7 +26,7 @@ internal class ConvenienceStoreViewModel @Inject constructor(
     private val datetimeUtil: DateTimeUtil,
     private val errorCard: ErrorCard,
     private val barcodeEncoder: BarcodeEncoder
-) : ViewModel() {
+) : BaseViewModel(snapCore) {
 
     private val _barCodeBitmapLiveData = MutableLiveData<Bitmap>()
     private val _pdfUrlLiveData = MutableLiveData<String>()
@@ -44,6 +45,10 @@ internal class ConvenienceStoreViewModel @Inject constructor(
         @PaymentType.Def paymentType: String
     ) {
         val requestBuilder = ConvenienceStorePaymentRequestBuilder().withPaymentType(paymentType)
+        trackSnapChargeRequest(
+            pageName = getPageName(paymentType),
+            paymentMethodName = paymentType
+        )
         snapCore.pay(
             snapToken = snapToken,
             paymentRequestBuilder = requestBuilder,
@@ -61,6 +66,10 @@ internal class ConvenienceStoreViewModel @Inject constructor(
                             paymentType = paymentType.orEmpty()
                         )
                     }
+                    trackSnapChargeResult(
+                        response = result,
+                        pageName = getPageName(paymentType)
+                    )
                 }
 
                 override fun onError(error: SnapError) {
@@ -78,6 +87,7 @@ internal class ConvenienceStoreViewModel @Inject constructor(
         } catch (e: Exception) {
         }
     }
+
     private fun parseTime(dateString: String): Long {
         val date = datetimeUtil.getDate(
             date = dateString,
@@ -85,6 +95,14 @@ internal class ConvenienceStoreViewModel @Inject constructor(
             timeZone = TIME_ZONE_UTC
         )
         return date.time
+    }
+
+    private fun getPageName(paymentType: String): String {
+        return when (paymentType) {
+            PaymentType.ALFAMART -> PageName.ALFAMART_PAGE
+            PaymentType.INDOMARET -> PageName.INDOMARET_PAGE
+            else -> ""
+        }
     }
 
     fun resetError(){
