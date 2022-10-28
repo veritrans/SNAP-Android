@@ -30,7 +30,7 @@ fun ErrorContent(type: Int, onClick: () -> Unit = {}) {
     errorComponentMap[type]?.run {
         Column(
             modifier = Modifier
-                .background(SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY))
+                .background(SnapColors.getARGBColor(SnapColors.backgroundFillPrimary))
                 .padding(16.dp)
         ) {
             Text(

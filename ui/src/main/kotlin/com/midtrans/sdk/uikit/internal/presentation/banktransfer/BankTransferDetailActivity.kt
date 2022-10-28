@@ -30,7 +30,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
+import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
@@ -49,9 +49,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //TODO: create Dagger component holder for global access
-        DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build()
-            .inject(this)
+        UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         setContent {
             Content(
                 totalAmount = totalAmount,
@@ -144,7 +142,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                             Text(
                                 text = stringResource(id = it),
                                 style = SnapTypography.STYLES.snapTextBigRegular,
-                                color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY)
+                                color = SnapColors.getARGBColor(SnapColors.textSecondary)
                             )
                         }
                         getInfoField(
@@ -181,7 +179,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                                                     text = stringResource(id = item.first),
                                                     modifier = Modifier.weight(1f),
                                                     style = SnapTypography.STYLES.snapTextMediumMedium,
-                                                    color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY)
+                                                    color = SnapColors.getARGBColor(SnapColors.textPrimary)
                                                 )
                                                 Icon(
                                                     painter = painterResource(id = if (selected) R.drawable.ic_chevron_up else R.drawable.ic_chevron_down),
@@ -198,7 +196,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                                             }
                                             Divider(
                                                 thickness = 1.dp,
-                                                color = SnapColors.getARGBColor(SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY),
+                                                color = SnapColors.getARGBColor(SnapColors.backgroundBorderSolidSecondary),
                                                 modifier = Modifier.padding(top = 16.dp)
                                             )
                                         }

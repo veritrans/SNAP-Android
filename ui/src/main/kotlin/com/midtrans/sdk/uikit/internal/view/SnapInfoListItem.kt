@@ -35,7 +35,7 @@ fun SnapCopyableInfoListItem(
             Text(
                 text = it,
                 style = SnapTypography.STYLES.snapTextSmallRegular,
-                color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY)
+                color = SnapColors.getARGBColor(SnapColors.textSecondary)
             )
         }
 
@@ -44,7 +44,7 @@ fun SnapCopyableInfoListItem(
                 Text(
                     text = it,
                     modifier = Modifier.weight(1f),
-                    color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY),
+                    color = SnapColors.getARGBColor(SnapColors.textPrimary),
                     style = SnapTypography.STYLES.snapTextMediumRegular
                 )
             }
@@ -58,14 +58,14 @@ fun SnapCopyableInfoListItem(
                     Text(
                         text = stringResource(id = R.string.general_instruction_copied_icon_text),
                         modifier = Modifier.clickable(onClick = { onCopyClicked(info.orEmpty()) }),
-                        color = SnapColors.getARGBColor(SnapColors.INTERACTIVE_FILL_BRAND_DEFAULT),
+                        color = SnapColors.getARGBColor(SnapColors.interactiveFillBrandDefault),
                         style = SnapTypography.STYLES.snapTextMediumMedium
                     )
 
                     Icon(
                         painter = painterResource(id = R.drawable.ic_tick_circle),
                         contentDescription = null,
-                        tint = SnapColors.getARGBColor(SnapColors.INTERACTIVE_FILL_BRAND_DEFAULT),
+                        tint = SnapColors.getARGBColor(SnapColors.interactiveFillBrandDefault),
                         modifier = Modifier.padding(start = 8.dp)
                     )
                 }
@@ -76,7 +76,7 @@ fun SnapCopyableInfoListItem(
                 Text(
                     text = stringResource(id = R.string.general_instruction_copy_icon_text),
                     modifier = Modifier.clickable(onClick = { onCopyClicked(info.orEmpty()) }),
-                    color = SnapColors.getARGBColor(SnapColors.LINK),
+                    color = SnapColors.getARGBColor(SnapColors.link),
                     style = SnapTypography.STYLES.snapTextMediumMedium
                 )
             }
@@ -85,7 +85,7 @@ fun SnapCopyableInfoListItem(
         if(withDivider) {
             Divider(
                 thickness = 1.dp,
-                color = SnapColors.getARGBColor(SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY),
+                color = SnapColors.getARGBColor(SnapColors.backgroundBorderSolidSecondary),
                 modifier = Modifier.padding(top = 16.dp)
             )
         }

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -27,9 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
-import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -65,24 +65,41 @@ class UobSelectionActivity : BaseActivity() {
             ?: throw RuntimeException("Missing Uob modes")
     }
 
+    private val paymentTypeItem: PaymentTypeItem? by lazy {
+        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE_ITEM)
+    }
+
     private val viewModel: UobSelectionViewModel by lazy {
         ViewModelProvider(this, vmFactory).get(UobSelectionViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerUiKitComponent.builder()
-            .applicationContext(this.applicationContext)
-            .build()
-            .inject(this)
+        UiKitApi.getDefaultInstance().daggerComponent.inject(this)
 
-        setContent {
-            UobSelectionContent(
-                amount = amount,
-                orderId = orderId,
-                customerInfo = customerInfo,
-                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
-            )
+        paymentTypeItem?.let { paymentType ->
+            paymentType.method?.let { uobMode ->
+                resultLauncher.launch(
+                    UobPaymentActivity.getIntent(
+                        activityContext = this@UobSelectionActivity,
+                        snapToken = snapToken,
+                        uobMode = uobMode,
+                        amount = amount,
+                        orderId = orderId,
+                        customerInfo = customerInfo,
+                        remainingTime = viewModel.getExpiredTime()
+                    )
+                )
+            }
+        } ?: run {
+            setContent {
+                UobSelectionContent(
+                    amount = amount,
+                    orderId = orderId,
+                    customerInfo = customerInfo,
+                    remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
+                )
+            }
         }
     }
 
@@ -97,7 +114,7 @@ class UobSelectionActivity : BaseActivity() {
         var isExpanded by remember { mutableStateOf(false) }
         val remainingTime by remember { remainingTimeState }
 
-        Column(modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))) {
+        Column(modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.overlayWhite))) {
             SnapAppBar(
                 title = stringResource(R.string.uob_ez_pay_title),
                 iconResId = R.drawable.ic_arrow_left
@@ -187,7 +204,7 @@ class UobSelectionActivity : BaseActivity() {
             }
             Divider(
                 thickness = 1.dp,
-                color = SnapColors.getARGBColor(SnapColors.LINE_LIGHT_MUTED)
+                color = SnapColors.getARGBColor(SnapColors.lineLightMuted)
             )
         }
     }
@@ -224,6 +241,7 @@ class UobSelectionActivity : BaseActivity() {
         private const val EXTRA_ORDER_ID = "uobSelection.extra.order_id"
         private const val EXTRA_CUSTOMER_INFO = "uobSelection.extra.customer_info"
         private const val EXTRA_UOB_MODES = "uobSelection.extra.uob_modes"
+        private const val EXTRA_PAYMENT_TYPE_ITEM = "uobSelection.extra.payment_type_item"
 
         fun getIntent(
             activityContext: Context,
@@ -231,13 +249,15 @@ class UobSelectionActivity : BaseActivity() {
             uobModes: ArrayList<String>,
             amount: String,
             orderId: String,
-            customerInfo: CustomerInfo?
+            customerInfo: CustomerInfo?,
+            paymentTypeItem: PaymentTypeItem?
         ): Intent {
             return Intent(activityContext, UobSelectionActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
                 putExtra(EXTRA_AMOUNT, amount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
+                putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
                 putStringArrayListExtra(EXTRA_UOB_MODES, uobModes)
             }
         }

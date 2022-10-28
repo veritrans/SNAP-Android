@@ -6,14 +6,14 @@ plugins {
 }
 
 android {
-    compileSdk = 32
+    compileSdk = 33
     project.property("sdkVersion")?.let {
         version = it
     }
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 32
+        targetSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -51,7 +51,7 @@ android {
 dependencies {
 
     implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.4.1")
+    implementation(com.gtf.snap.CommonLibraries.appCompat)
     testImplementation(com.gtf.snap.TestLibraries.junit)
     testImplementation(com.gtf.snap.TestLibraries.hamcrest)
     implementation(com.gtf.snap.CommonLibraries.coreLibraryDesugaring)

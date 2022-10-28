@@ -69,7 +69,7 @@ class DeepLinkActivity : BaseActivity() {
                     modifier = Modifier
                         .fillMaxWidth(1f)
                         .fillMaxHeight(1f)
-                        .background(color = SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY))
+                        .background(color = SnapColors.getARGBColor(SnapColors.backgroundFillPrimary))
                 ) {
                     Column(
                         modifier = Modifier.align(Alignment.Center),

@@ -20,14 +20,22 @@ import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
+import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.view.*
 
 class BankTransferListActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            setupView(paymentMethodItem = paymentMethodItem)
+
+        paymentTypeItem?.let { paymentType ->
+            paymentType.method?.let { paymentMethod ->
+                toBankTransferDetail(paymentMethod)
+            }
+        } ?: run {
+            setContent {
+                setupView(paymentMethodItem = paymentMethodItem)
+            }
         }
     }
 
@@ -136,6 +144,10 @@ class BankTransferListActivity : BaseActivity() {
             ?: throw RuntimeException("Order ID must not be empty")
     }
 
+    private val paymentTypeItem: PaymentTypeItem? by lazy {
+        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE_ITEM)
+    }
+
     private val bankNameMap by lazy {
         mapOf(
             Pair(PaymentType.BCA_VA, Pair(R.string.bank_bca, R.drawable.ic_bank_bca_40)),
@@ -164,6 +176,7 @@ class BankTransferListActivity : BaseActivity() {
         private const val EXTRA_ORDER_ID = "bankTransfer.extra.order_id"
         private const val EXTRA_CUSTOMER_INFO = "bankTransfer.extra.customer_info"
         private const val EXTRA_PAYMENT_METHOD_ITEM = "bankTransfer.extra.payment_method_item"
+        private const val EXTRA_PAYMENT_TYPE_ITEM = "bankTransfer.extra.payment_type_it"
 
         fun getIntent(
             activityContext: Context,
@@ -171,7 +184,8 @@ class BankTransferListActivity : BaseActivity() {
             totalAmount: String,
             orderId: String,
             paymentMethodItem: PaymentMethodItem,
-            customerInfo: CustomerInfo? = null
+            customerInfo: CustomerInfo? = null,
+            paymentTypeItem: PaymentTypeItem? = null
         ): Intent {
             return Intent(activityContext, BankTransferListActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -182,6 +196,7 @@ class BankTransferListActivity : BaseActivity() {
                     EXTRA_CUSTOMER_INFO,
                     customerInfo
                 )
+                putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
             }
         }
     }

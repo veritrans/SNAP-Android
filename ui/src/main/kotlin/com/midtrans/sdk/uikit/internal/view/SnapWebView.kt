@@ -47,7 +47,7 @@ fun SnapWebView(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
-                    .background(color = SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_LIGHT))
+                    .background(color = SnapColors.getARGBColor(SnapColors.backgroundFillLight))
                     .fillMaxWidth(1f)
                     .height(64.dp)
             ) {

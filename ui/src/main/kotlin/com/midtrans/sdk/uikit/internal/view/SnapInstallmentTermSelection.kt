@@ -220,6 +220,6 @@ private fun ErrorTextInstallment(errorMessage: String) {
     Text(
         text = errorMessage,
         style = SnapTypography.STYLES.snapTextSmallRegular,
-        color = SnapColors.getARGBColor(SnapColors.SUPPORT_DANGER_DEFAULT)
+        color = SnapColors.getARGBColor(SnapColors.supportDangerDefault)
     )
 }

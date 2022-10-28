@@ -44,9 +44,9 @@ fun SnapTextField(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val backgroundColor: Color = if (enabled) {
-        SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY)
+        SnapColors.getARGBColor(SnapColors.backgroundFillPrimary)
     } else {
-        SnapColors.getARGBColor(SnapColors.INTERACTIVE_DISABLED)
+        SnapColors.getARGBColor(SnapColors.interactiveDisabled)
     }
 
     BasicTextField(
@@ -58,11 +58,11 @@ fun SnapTextField(
                     1.dp,
                     when {
                         isError && !isFocused -> {
-                            SnapColors.getARGBColor(SnapColors.INTERACTIVE_BORDER_SUPPORT)
+                            SnapColors.getARGBColor(SnapColors.interactiveBorderSupport)
                         }
 
-                        isFocused -> SnapColors.getARGBColor(SnapColors.LINK_HOVER)
-                        else -> SnapColors.getARGBColor(SnapColors.INTERACTIVE_BORDER_INPUT)
+                        isFocused -> SnapColors.getARGBColor(SnapColors.linkHover)
+                        else -> SnapColors.getARGBColor(SnapColors.interactiveBorderInput)
                     },
                     RoundedCornerShape(4.dp)
                 )

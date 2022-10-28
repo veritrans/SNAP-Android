@@ -27,8 +27,8 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
-import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
@@ -78,10 +78,7 @@ class UobPaymentActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        DaggerUiKitComponent.builder()
-            .applicationContext(this.applicationContext)
-            .build()
-            .inject(this)
+        UiKitApi.getDefaultInstance().daggerComponent.inject(this)
 
         setContent {
             UobPaymentContent(
@@ -167,7 +164,7 @@ class UobPaymentActivity : BaseActivity() {
         if (url.isEmpty()) {
             Column(
                 modifier = Modifier
-                    .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
+                    .background(SnapColors.getARGBColor(SnapColors.overlayWhite))
                     .fillMaxHeight(1f)
             ) {
                 SnapAppBar(

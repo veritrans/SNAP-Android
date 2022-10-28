@@ -9,7 +9,7 @@ object Dependencies {
     const val androidxJunitVersion = "1.1.2"
     const val androidxArchTestingVersion = "2.1.0"
     const val espressoCoreVersion = "3.3.0"
-    const val appCompatVersion = "1.2.0"
+    const val appCompatVersion = "1.6.0-rc01"
     const val materialDesignComponentVersion = "1.2.1"
     const val constraintLayoutVersion = "2.0.4"
     const val daggerVersion = "2.42"

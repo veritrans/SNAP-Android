@@ -7,14 +7,10 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -32,8 +28,8 @@ import com.midtrans.sdk.corekit.api.model.Promo
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
-import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
@@ -106,36 +102,34 @@ internal class CreditCardActivity : BaseActivity() {
     private var onPromoReset: () -> Unit = {}
 
     private val savedTokenList: SnapshotStateList<FormData>? by lazy {
-        mutableListOf<FormData>()
-            .apply {
-                creditCard?.savedTokens?.forEachIndexed { index, savedToken ->
-                    add(
-                        SavedCreditCardFormData(
-                            savedCardIdentifier = SnapCreditCardUtil.SAVED_CARD_IDENTIFIER + index.toString(),
-                            inputTitle = getString(R.string.cc_dc_saved_card_enter_cvv),
-                            endIcon = R.drawable.ic_trash,
-                            startIcon = SnapCreditCardUtil.getBankIcon(savedToken.binDetail?.bankCode.toString()),
-                            errorText = mutableStateOf(""),
-                            maskedCardNumber = savedToken.maskedCard.orEmpty(),
-                            displayedMaskedCard = savedToken.maskedCard.orEmpty(),
-                            tokenType = savedToken.tokenType.toString(),
-                            tokenId = savedToken.token.toString(),
-                            cvvSavedCardTextField = TextFieldValue(),
-                            isCvvSavedCardInvalid = false
-                        )
-                    )
-                }
-                add(NewCardFormData(newCardIdentifier = SnapCreditCardUtil.NEW_CARD_FORM_IDENTIFIER))
+        creditCard?.savedTokens?.mapIndexed { index, savedToken ->
+                    SavedCreditCardFormData(
+                        savedCardIdentifier = SnapCreditCardUtil.SAVED_CARD_IDENTIFIER + index.toString(),
+                        inputTitle = getString(R.string.cc_dc_saved_card_enter_cvv),
+                        endIcon = R.drawable.ic_trash,
+                        startIcon = SnapCreditCardUtil.getBankIcon(savedToken.binDetail?.bankCode.toString()),
+                        errorText = mutableStateOf(""),
+                        maskedCardNumber = savedToken.maskedCard.orEmpty(),
+                        displayedMaskedCard = savedToken.maskedCard.orEmpty(),
+                        tokenType = savedToken.tokenType.toString(),
+                        tokenId = savedToken.token.toString(),
+                        cvvSavedCardTextField = TextFieldValue(),
+                        isCvvSavedCardInvalid = false
+            ) as FormData
             }
-            .ifEmpty { null }?.toMutableStateList()
+            ?.ifEmpty { null }
+            ?.toMutableList()
+            ?.apply {
+                add(NewCardFormData(newCardIdentifier = SnapCreditCardUtil.NEW_CARD_FORM_IDENTIFIER))
+        }
+            ?.toMutableStateList()
         //For testing purpose: uncomment below to force non save card
 //        null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build()
-            .inject(this)
+        UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.setExpiryTime(expiryTime)
         viewModel.setAllowRetry(allowRetry)
         viewModel.setPromos(promos = promos)
@@ -399,7 +393,7 @@ internal class CreditCardActivity : BaseActivity() {
         onClick: () -> Unit
     ) {
         Column(
-            modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY)),
+            modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.backgroundFillPrimary)),
         ) {
             val remainingTime by remember { remainingTimeState }
 
@@ -436,7 +430,7 @@ internal class CreditCardActivity : BaseActivity() {
                     Column(
                         modifier = Modifier
                             .verticalScroll(scrollState)
-                            .background(SnapColors.getARGBColor(SnapColors.OVERLAY_WHITE))
+                            .background(SnapColors.getARGBColor(SnapColors.overlayWhite))
                             .padding(top = 24.dp)
                     ) {
                         if (withCustomerPhoneEmail) {
@@ -598,7 +592,7 @@ internal class CreditCardActivity : BaseActivity() {
             Text(
                 text = stringResource(id = R.string.cc_dc_main_screen_email_invalid),
                 style = SnapTypography.STYLES.snapTextSmallRegular,
-                color = SnapColors.getARGBColor(SnapColors.SUPPORT_DANGER_DEFAULT)
+                color = SnapColors.getARGBColor(SnapColors.supportDangerDefault)
             )
         }
         Box(modifier = Modifier.padding(8.dp))

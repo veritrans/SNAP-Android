@@ -2,14 +2,12 @@ package com.midtrans.sdk.uikit.internal.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.midtrans.sdk.uikit.internal.view.SnapColors.BACKGROUND_BORDER_SOLID_SECONDARY
+import com.midtrans.sdk.uikit.internal.view.SnapColors.backgroundBorderSolidSecondary
 import kotlinx.coroutines.launch
 
 
@@ -38,7 +36,7 @@ fun SnapPointRedeemDialogContent(
         Text(
             text = data.title,
             style = SnapTypography.STYLES.snapAppBar,
-            color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY),
+            color = SnapColors.getARGBColor(SnapColors.textPrimary),
             modifier = Modifier.padding(bottom = 24.dp)
         )
         Row(
@@ -66,13 +64,13 @@ fun SnapPointRedeemDialogContent(
         Text(
             text = info,
             style = SnapTypography.STYLES.snapTextSmallRegular,
-            color = SnapColors.getARGBColor(if (!isError) SnapColors.SUPPORT_INFO_DEFAULT else SnapColors.SUPPORT_DANGER_DEFAULT),
+            color = SnapColors.getARGBColor(if (!isError) SnapColors.supportInfoDefault else SnapColors.supportDangerDefault),
             modifier = Modifier.padding(top = 16.dp)
         )
 
         Divider(
             thickness = 1.dp,
-            color = SnapColors.getARGBColor(BACKGROUND_BORDER_SOLID_SECONDARY),
+            color = SnapColors.getARGBColor(backgroundBorderSolidSecondary),
             modifier = Modifier.padding(top = 24.dp, bottom = 24.dp)
         )
 

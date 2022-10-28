@@ -17,7 +17,7 @@ fun SnapNumberedListItem(number: String, paragraph: String) {
         Text(
             text = number,
             style = SnapTypography.STYLES.snapTextMediumRegular,
-            color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY),
+            color = SnapColors.getARGBColor(SnapColors.textSecondary),
             modifier = Modifier.width(20.dp)
         )
 
@@ -25,7 +25,7 @@ fun SnapNumberedListItem(number: String, paragraph: String) {
         Text(
             text = Html.fromHtml(paragraph).toAnnotatedString(),
             style = SnapTypography.STYLES.snapTextMediumRegular,
-            color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY),
+            color = SnapColors.getARGBColor(SnapColors.textSecondary),
             modifier = Modifier.fillMaxWidth(fraction = 1.0f)
         )
     }

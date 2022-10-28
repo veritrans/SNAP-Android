@@ -60,7 +60,7 @@ class ErrorScreenActivity : BaseActivity() {
         content: String
     ) {
         Column(
-            modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.SUPPORT_DANGER_FILL))
+            modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.supportDangerFill))
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -77,12 +77,12 @@ class ErrorScreenActivity : BaseActivity() {
                 Text(
                     text = title,
                     style = SnapTypography.STYLES.snapHeadingL,
-                    color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY),
+                    color = SnapColors.getARGBColor(SnapColors.textSecondary),
                     modifier = Modifier.padding(top = 24.dp)
                 )
                 Divider(
                     thickness = 2.dp,
-                    color = SnapColors.getARGBColor(SnapColors.SUPPORT_DANGER_DEFAULT),
+                    color = SnapColors.getARGBColor(SnapColors.supportDangerDefault),
                     modifier = Modifier
                         .width(40.dp)
                         .padding(top = 24.dp),
@@ -90,7 +90,7 @@ class ErrorScreenActivity : BaseActivity() {
                 Text(
                     text = content,
                     style = SnapTypography.STYLES.snapTextMediumRegular,
-                    color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY),
+                    color = SnapColors.getARGBColor(SnapColors.textSecondary),
                     modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
                     textAlign = TextAlign.Center
                 )
@@ -98,7 +98,7 @@ class ErrorScreenActivity : BaseActivity() {
             Text(
                 text = resources.getString(R.string.success_screen_v2_info),
                 style = SnapTypography.STYLES.snapTextMediumMedium,
-                color = SnapColors.getARGBColor(SnapColors.TEXT_PRIMARY),
+                color = SnapColors.getARGBColor(SnapColors.textPrimary),
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(28.dp),

@@ -23,7 +23,7 @@ import coil.compose.AsyncImage
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
+import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
@@ -39,9 +39,7 @@ internal class WalletActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //TODO: create Dagger component holder for global access
-        DaggerUiKitComponent.builder().applicationContext(this.applicationContext).build()
-            .inject(this)
+        UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         setContent {
             Content(
                 totalAmount = totalAmount,
@@ -102,7 +100,7 @@ internal class WalletActivity : BaseActivity() {
         Column(
             modifier = Modifier
                 .fillMaxHeight(1f)
-                .background(color = SnapColors.getARGBColor(SnapColors.BACKGROUND_FILL_PRIMARY))
+                .background(color = SnapColors.getARGBColor(SnapColors.backgroundFillPrimary))
         ) {
             title[paymentType]?.let {
                 SnapAppBar(title = stringResource(id = it), iconResId = R.drawable.ic_cross) {
@@ -166,7 +164,7 @@ internal class WalletActivity : BaseActivity() {
                                 Text(
                                     text = stringResource(id = R.string.qr_failed_load),
                                     style = SnapTypography.STYLES.snapTextSmallRegular,
-                                    color = SnapColors.getARGBColor(SnapColors.TEXT_SECONDARY)
+                                    color = SnapColors.getARGBColor(SnapColors.textSecondary)
                                 )
                             }
 

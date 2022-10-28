@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.midtrans.sdk.uikit.internal.view.SnapColors.BACKGROUND_FILL_LIGHT
+import com.midtrans.sdk.uikit.internal.view.SnapColors.backgroundFillLight
 
 @Composable
 fun SnapAppBar(
@@ -30,7 +30,7 @@ fun SnapAppBar(
         horizontalArrangement = Arrangement.Start,
         modifier = Modifier
             .height(64.dp)
-            .background(color = SnapColors.getARGBColor(BACKGROUND_FILL_LIGHT))
+            .background(color = SnapColors.getARGBColor(backgroundFillLight))
             .fillMaxWidth(fraction = 1.0f)
     ) {
         IconButton(onClick = onClick) {
