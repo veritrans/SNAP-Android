@@ -121,6 +121,7 @@ class SampleActivity : AppCompatActivity() {
                         phone = "087788778212"
                     )
                 )
+                //For Testing using androidX Result launcher
 //                uiKitApi.startPaymentWithAndroidX(
 //                    activity = this@SampleActivity,
 //                    launcher = launcher,
