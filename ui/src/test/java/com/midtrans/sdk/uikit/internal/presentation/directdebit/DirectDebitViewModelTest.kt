@@ -4,6 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
+import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.getOrAwaitValue
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import org.junit.Assert
@@ -21,10 +23,13 @@ internal class DirectDebitViewModelTest {
 
     private val dateTimeUtil: DateTimeUtil = mock()
 
+    private val eventAnalytics: EventAnalytics = mock()
+
     private lateinit var viewModel: DirectDebitViewModel
 
     @Before
     fun setup() {
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
         viewModel = DirectDebitViewModel(snapCore, dateTimeUtil)
     }
 
@@ -41,7 +46,7 @@ internal class DirectDebitViewModelTest {
             paymentRequestBuilder = any(),
             callback = callbackCaptor.capture()
         )
-
+        verify(eventAnalytics).trackSnapChargeRequest(PageName.BCA_KLIK_PAY_PAGE, "bca_klikpay", null, null, null, null)
         val callback = callbackCaptor.firstValue
         callback.onSuccess(TransactionResponse(redirectUrl = "redirect-url"))
         Assert.assertEquals("redirect-url", viewModel.getTransactionResponse().getOrAwaitValue().redirectUrl)

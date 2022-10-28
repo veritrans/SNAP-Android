@@ -147,7 +147,7 @@ class CreditCardViewModelTest {
         val bankIconResId = 1
         val bankCode = "009"
         val binResponse = BinResponse(
-            data = BinData(null, null, null, null, null, null, null, bankCode, null, null)
+            data = BinData(null, null, null, null, null, null, null, bankCode, null)
         )
         `when`(snapCreditCardUtil.getBankIcon(bankCode)).thenReturn(bankIconResId)
         val creditCardViewModel =
