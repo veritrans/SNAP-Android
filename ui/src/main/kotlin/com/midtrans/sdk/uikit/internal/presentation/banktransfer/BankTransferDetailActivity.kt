@@ -1,6 +1,7 @@
 package com.midtrans.sdk.uikit.internal.presentation.banktransfer
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -26,12 +27,15 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -68,7 +72,32 @@ internal class BankTransferDetailActivity : BaseActivity() {
             paymentType = paymentType,
             customerEmail = null
         )
-        setResult(RESULT_OK)
+        observeData()
+    }
+
+    private fun observeData() {
+        viewModel.transactionResult.observe(this) {
+            val data = Intent()
+            data.putExtra(
+                UiKitConstants.KEY_TRANSACTION_RESULT,
+                it
+            )
+            setResult(Activity.RESULT_OK, data)
+        }
+
+        //TODO: handle error ui/dialog
+        viewModel.errorLiveData.observe(this) {
+            val data = Intent()
+            data.putExtra(
+                UiKitConstants.KEY_ERROR_NAME,
+                it::class.java.simpleName
+            )
+            data.putExtra(
+                UiKitConstants.KEY_ERROR_MESSAGE,
+                it.message
+            )
+            setResult(Activity.RESULT_CANCELED, data)
+        }
     }
 
     private fun updateExpiredTime(): Observable<String> {

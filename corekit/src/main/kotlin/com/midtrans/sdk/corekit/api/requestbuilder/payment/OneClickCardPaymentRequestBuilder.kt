@@ -36,7 +36,7 @@ class OneClickCardPaymentRequestBuilder: PaymentRequestBuilder() {
 
     fun withPromo(discountedGrossAmount: Double, promoId: String): OneClickCardPaymentRequestBuilder = apply {
         promoDetailRequest = PromoDetailRequest(
-            discountedGrossAmount = discountedGrossAmount?.let { NumberUtil.formatDoubleToString(it) },
+            discountedGrossAmount = discountedGrossAmount.let { NumberUtil.formatDoubleToString(it) },
             promoId = promoId)
     }
 

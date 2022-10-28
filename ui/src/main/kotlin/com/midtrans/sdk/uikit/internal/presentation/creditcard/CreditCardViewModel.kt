@@ -35,10 +35,11 @@ internal class CreditCardViewModel @Inject constructor(
     private val _cardIssuerBank = MutableLiveData<String>()
     private val _transactionResponse = MutableLiveData<TransactionResponse>()
     private val _transactionStatus = MutableLiveData<TransactionResponse>()
-    private val _error = MutableLiveData<Int>()
+    private val _errorTypeLiveData = MutableLiveData<Int>()
     private val _promoDataLiveData = MutableLiveData<List<PromoData>>()
     private val _netAmountLiveData = MutableLiveData<String>()
     private val _binBlockedLiveData = MutableLiveData<Boolean>()
+    private val _errorLiveData = MutableLiveData<SnapError>()
     private var expireTimeInMillis = 0L
     private var allowRetry = false
     private var promos: List<Promo>? = null
@@ -53,8 +54,10 @@ internal class CreditCardViewModel @Inject constructor(
     val cardIssuerBank: LiveData<String> = _cardIssuerBank
     val transactionResponseLiveData: LiveData<TransactionResponse> = _transactionResponse
     val transactionStatusLiveData: LiveData<TransactionResponse> = _transactionStatus
-    val errorLiveData: LiveData<Int> = _error
+    val errorTypeLiveData: LiveData<Int> = _errorTypeLiveData
     val binBlockedLiveData: LiveData<Boolean> = _binBlockedLiveData
+    val errorLiveData: LiveData<SnapError> = _errorLiveData
+
 
     fun setExpiryTime(expireTime: String?) {
         expireTime?.let {
@@ -119,6 +122,7 @@ internal class CreditCardViewModel @Inject constructor(
                 }
 
                 override fun onError(error: SnapError) {
+                    _errorLiveData.value = error
                 }
             }
         )
@@ -182,7 +186,7 @@ internal class CreditCardViewModel @Inject constructor(
                         callback = object : Callback<TransactionResponse> {
                             override fun onSuccess(result: TransactionResponse) {
                                 errorCard.getErrorCardType(result, allowRetry)?.let {
-                                    _error.value = it
+                                    _errorTypeLiveData.value = it
                                 } ?: run {
                                     _transactionResponse.value = result
                                     null
@@ -190,14 +194,15 @@ internal class CreditCardViewModel @Inject constructor(
                             }
 
                             override fun onError(error: SnapError) {
-                                _error.value = errorCard.getErrorCardType(error, allowRetry)
+                                _errorTypeLiveData.value = errorCard.getErrorCardType(error, allowRetry)
                             }
                         }
                     )
                 }
 
                 override fun onError(error: SnapError) {
-                    _error.value = errorCard.getErrorCardType(error, allowRetry)
+                    _errorTypeLiveData.value = errorCard.getErrorCardType(error, allowRetry)
+                    _errorLiveData.value = error
                 }
             }
         )
@@ -228,7 +233,8 @@ internal class CreditCardViewModel @Inject constructor(
                         _transactionResponse.value = result
                     }
                     override fun onError(error: SnapError) {
-                        _error.value = errorCard.getErrorCardType(error, allowRetry)
+                        _errorTypeLiveData.value = errorCard.getErrorCardType(error, allowRetry)
+                        _errorLiveData.value = error
                     }
                 }
             )
@@ -270,7 +276,8 @@ internal class CreditCardViewModel @Inject constructor(
                                     _transactionResponse.value = result
                                 }
                                 override fun onError(error: SnapError) {
-                                    _error.value = errorCard.getErrorCardType(error, allowRetry)
+                                    _errorTypeLiveData.value = errorCard.getErrorCardType(error, allowRetry)
+                                    _errorLiveData.value = error
                                 }
                             }
                         )
@@ -278,14 +285,15 @@ internal class CreditCardViewModel @Inject constructor(
                     override fun onError(error: SnapError) {
                         //TODO: Need to confirm how to handle get token error on UI
                         Log.e("error get 2click token", "error, error, error")
+                        _errorLiveData.value = error
                     }
                 }
             )
         }
     }
 
-    fun resetError() {
-        _error.value = null
+    fun resetError(){
+        _errorTypeLiveData.value = null
     }
 
     fun getTransactionStatus(snapToken: String) {
@@ -294,7 +302,7 @@ internal class CreditCardViewModel @Inject constructor(
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
                     errorCard.getErrorCardType(result, allowRetry)?.let {
-                        _error.value = it
+                        _errorTypeLiveData.value = it
                     } ?: run {
                         _transactionResponse.value = result
                         null
@@ -302,7 +310,8 @@ internal class CreditCardViewModel @Inject constructor(
                 }
 
                 override fun onError(error: SnapError) {
-                    _error.value = errorCard.getErrorCardType(error, allowRetry)
+                    _errorTypeLiveData.value = errorCard.getErrorCardType(error, allowRetry)
+                    _errorLiveData.value = error
                 }
             }
         )
@@ -318,6 +327,7 @@ internal class CreditCardViewModel @Inject constructor(
                 }
                 override fun onError(error: SnapError) {
                     Log.e("Delete Card Error", "Delete Card Error")
+                    _errorLiveData.value = error
                 }
             }
         )

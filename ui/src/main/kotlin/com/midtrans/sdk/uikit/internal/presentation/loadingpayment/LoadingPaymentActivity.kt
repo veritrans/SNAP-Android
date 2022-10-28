@@ -1,10 +1,12 @@
 package com.midtrans.sdk.uikit.internal.presentation.loadingpayment
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,9 +18,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferRequest
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.api.model.PublicTransactionResult
+import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.AnimatedIcon
 
 class LoadingPaymentActivity : BaseActivity() {
@@ -167,6 +172,10 @@ class LoadingPaymentActivity : BaseActivity() {
         setContent {
             LoadAnimation()
         }
+       loadPaymentOptions()
+    }
+
+    private fun loadPaymentOptions(){
         viewModel.getPaymentOption(
             transactionDetails = transactionDetails,
             snapToken = snapToken,
@@ -190,6 +199,25 @@ class LoadingPaymentActivity : BaseActivity() {
         )
     }
 
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result?.data?.let {
+                    val transactionResult = it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT)
+                    val resultIntent = Intent()
+                    transactionResult?.let {
+                        val resultForHost = PublicTransactionResult(transactionResult)
+                        resultIntent.putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, resultForHost)
+                        setResult(RESULT_OK, resultIntent)
+                        UiKitApi.getDefaultInstance().getPaymentCallback()?.onSuccess(resultForHost)
+                    }
+                }
+                finish()
+            } else {
+                loadPaymentOptions()
+            }
+        }
+
     private fun initObserver() {
         viewModel.getPaymentOptionLiveData().observe(this, Observer {
             val intent = PaymentOptionActivity.openPaymentOptionPage(
@@ -206,8 +234,8 @@ class LoadingPaymentActivity : BaseActivity() {
                 expiryTime = it.expiryTme,
                 paymentTypeItem = paymentType
             )
-            startActivity(intent)
-            finish()
+
+            resultLauncher.launch(intent)
         })
         viewModel.getErrorLiveData().observe(this, Observer {
             //TODO revisit this error handle after discussing how to handle error when we are unable to get snap token / trx detail during loading screen

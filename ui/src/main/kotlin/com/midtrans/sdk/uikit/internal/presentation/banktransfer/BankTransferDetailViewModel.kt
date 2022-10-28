@@ -1,5 +1,6 @@
 package com.midtrans.sdk.uikit.internal.presentation.banktransfer
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.corekit.SnapCore
@@ -7,6 +8,7 @@ import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.BankTransferPaymentRequestBuilder
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.DATE_FORMAT
@@ -19,10 +21,19 @@ internal class BankTransferDetailViewModel @Inject constructor(
     private val datetimeUtil: DateTimeUtil
 ) : ViewModel() {
 
-    val vaNumberLiveData = MutableLiveData<String>()
-    val companyCodeLiveData = MutableLiveData<String>()
-    val billingNumberLiveData = MutableLiveData<String>()
-    val bankCodeLiveData = MutableLiveData<String>()
+    private val _vaNumberLiveData = MutableLiveData<String>()
+    private val _companyCodeLiveData = MutableLiveData<String>()
+    private val _billingNumberLiveData = MutableLiveData<String>()
+    private val _bankCodeLiveData = MutableLiveData<String>()
+    private val _transactionResult = MutableLiveData<TransactionResult>()
+    private val _errorLiveData = MutableLiveData<SnapError>()
+    val vaNumberLiveData: LiveData<String> = _vaNumberLiveData
+    val companyCodeLiveData: LiveData<String> = _companyCodeLiveData
+    val billingNumberLiveData: LiveData<String> = _billingNumberLiveData
+    val bankCodeLiveData: LiveData<String> = _bankCodeLiveData
+    val transactionResult: LiveData<TransactionResult> = _transactionResult
+    val errorLiveData: LiveData<SnapError> = _errorLiveData
+
     var expiredTime = datetimeUtil.plusDateBy(datetimeUtil.getCurrentMillis(), 1)
 
     fun chargeBankTransfer(
@@ -40,30 +51,31 @@ internal class BankTransferDetailViewModel @Inject constructor(
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
                     result.run {
-                        bcaVaNumber?.let { vaNumberLiveData.value = it }
+                        bcaVaNumber?.let { _vaNumberLiveData.value = it }
                         bniVaNumber?.let {
-                            vaNumberLiveData.value = it
-                            bankCodeLiveData.value = BANK_CODE_BNI
+                            _vaNumberLiveData.value = it
+                            _bankCodeLiveData.value = BANK_CODE_BNI
                         }
                         briVaNumber?.let {
-                            vaNumberLiveData.value = it
-                            bankCodeLiveData.value = BANK_CODE_BRI
+                            _vaNumberLiveData.value = it
+                            _bankCodeLiveData.value = BANK_CODE_BRI
                         }
                         permataVaNumber?.let {
-                            vaNumberLiveData.value = it
-                            bankCodeLiveData.value = BANK_CODE_PERMATA
+                            _vaNumberLiveData.value = it
+                            _bankCodeLiveData.value = BANK_CODE_PERMATA
                         }
-                        billerCode?.let { companyCodeLiveData.value = it }
-                        billKey?.let { billingNumberLiveData.value = it }
+                        billerCode?.let { _companyCodeLiveData.value = it }
+                        billKey?.let { _billingNumberLiveData.value = it }
                         bcaExpiration?.let { expiredTime = parseTime(it) }
                         bniExpiration?.let { expiredTime = parseTime(it) }
                         briExpiration?.let { expiredTime = parseTime(it) }
                         permataExpiration?.let { expiredTime = parseTime(it) }
+                        _transactionResult.value = TransactionResult(status = transactionStatus.orEmpty(), transactionId = transactionId.orEmpty(), paymentType = paymentType)
                     }
                 }
 
                 override fun onError(error: SnapError) {
-                    // TODO: error dialog etc
+                    _errorLiveData.value = error
                 }
             }
         )

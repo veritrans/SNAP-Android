@@ -1,6 +1,9 @@
 package com.midtrans.sdk.uikit.external
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.ui.text.font.FontFamily
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.uikit.api.callback.Callback
@@ -11,14 +14,18 @@ import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.presentation.loadingpayment.LoadingPaymentActivity
 import java.lang.ref.WeakReference
 
-class UiKitApi private constructor(val builder: Builder){ //TODO revisit this implementation, currently for getting callback in Sample App
+class UiKitApi private constructor(val builder: Builder) {
+
+    internal val daggerComponent: UiKitComponent by lazy {
+        DaggerUiKitComponent.builder().applicationContext(builder.context).build()
+    }
 
     init {
         setInstance(this)
         buildCoreKit(builder)
     }
 
-    private fun buildCoreKit(builder: Builder){
+    private fun buildCoreKit(builder: Builder) {
         builder.run {
             SnapCore.Builder()
                 .withContext(context)
@@ -28,13 +35,46 @@ class UiKitApi private constructor(val builder: Builder){ //TODO revisit this im
         }
     }
 
-    internal val daggerComponent: UiKitComponent by lazy {
-        DaggerUiKitComponent.builder().applicationContext(builder.context).build()
-    }
-
-    internal val paymentCallback = UiKitApi.paymentCallback
+    internal fun getPaymentCallback() = paymentCallback
     internal val customColors = builder.customColors
     internal val customFontFamily = builder.fontFamily
+
+    fun startPaymentWithAndroidX(
+        activity: Activity,
+        launcher: ActivityResultLauncher<Intent>,
+        transactionDetails: SnapTransactionDetail,
+        customerDetails: CustomerDetails,
+        creditCard: CreditCard,
+        userId: String
+    ) {
+        val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
+            activityContext = activity,
+            transactionDetails = transactionDetails,
+            customerDetails = customerDetails,
+            creditCard = creditCard,
+            userId = userId
+        )
+        launcher.launch(intent)
+    }
+
+    fun startPaymentWithLegacyAndroid(
+        activity: Activity,
+        requestCode: Int,
+        transactionDetails: SnapTransactionDetail,
+        customerDetails: CustomerDetails,
+        creditCard: CreditCard,
+        userId: String
+    ) {
+
+        val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
+            activityContext = activity,
+            transactionDetails = transactionDetails,
+            customerDetails = customerDetails,
+            creditCard = creditCard,
+            userId = userId
+        )
+        activity.startActivityForResult(intent, requestCode)
+    }
 
     fun startPayment(
         activityContext: Context,
@@ -89,13 +129,13 @@ class UiKitApi private constructor(val builder: Builder){ //TODO revisit this im
 
         @Throws(RuntimeException::class)
         fun build(): UiKitApi {
-            if(!this::context.isInitialized){
+            if (!this::context.isInitialized) {
                 throw Throwable(message = "context is required")
             }
-            if(!this::merchantUrl.isInitialized){
+            if (!this::merchantUrl.isInitialized) {
                 throw Throwable(message = "merchantUrl is required")
             }
-            if(!this::merchantClientKey.isInitialized){
+            if (!this::merchantClientKey.isInitialized) {
                 throw Throwable(message = "merchantClientKey is required")
             }
             UiKitApi(this)

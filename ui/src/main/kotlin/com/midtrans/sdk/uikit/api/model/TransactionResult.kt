@@ -1,17 +1,20 @@
 package com.midtrans.sdk.uikit.api.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 
-
-class TransactionResult internal constructor(transactionResult: TransactionResult) //TODO temporary for direct debit only, revisit when updating callback for host app
-{
-    val status: String
-    val transactionId: String
+@Parcelize
+class TransactionResult internal constructor(
+    val status: String,
+    val transactionId: String,
     val paymentType: String
-    init {
-        status = transactionResult.status
-        transactionId = transactionResult.transactionId
+) : Parcelable {
+    constructor(transactionResult: TransactionResult) : this(
+        transactionId = transactionResult.transactionId,
+        status = transactionResult.status,
         paymentType = transactionResult.paymentType
-    }
+    )
 }
+//TODO check if alias is still needed
 typealias PublicTransactionResult = com.midtrans.sdk.uikit.api.model.TransactionResult

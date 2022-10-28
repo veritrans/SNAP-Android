@@ -22,8 +22,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapColors
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
@@ -36,6 +38,10 @@ class SuccessScreenActivity : BaseActivity() {
             ?: throw RuntimeException("Input data must not be empty")
     }
 
+    private val transactionResult: TransactionResult? by lazy {
+        intent.getParcelableExtra(UiKitConstants.KEY_TRANSACTION_RESULT) as? TransactionResult
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -45,7 +51,8 @@ class SuccessScreenActivity : BaseActivity() {
                 isWithBackButton = !data.total.isNullOrEmpty() && !data.orderId.isNullOrEmpty()
             )
         }
-        setResult(RESULT_OK)
+
+        setResult(RESULT_OK, Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, transactionResult))
     }
 
     @Preview
@@ -139,7 +146,8 @@ class SuccessScreenActivity : BaseActivity() {
         fun getIntent(
             activityContext: Context,
             total: String,
-            orderId: String
+            orderId: String,
+            transactionResult: TransactionResult
         ): Intent {
             return Intent(activityContext, SuccessScreenActivity::class.java).apply {
                 putExtra(
@@ -148,6 +156,7 @@ class SuccessScreenActivity : BaseActivity() {
                         orderId = orderId
                     )
                 )
+                putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, transactionResult)
             }
         }
     }

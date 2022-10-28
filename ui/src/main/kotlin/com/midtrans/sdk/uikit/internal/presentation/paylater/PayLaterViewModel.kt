@@ -15,10 +15,10 @@ internal class PayLaterViewModel @Inject constructor(
     private val snapCore: SnapCore,
     private val dateTimeUtil: DateTimeUtil
 ): ViewModel() {
-    private val transactionResponse = MutableLiveData<TransactionResponse>()
+    private val _transactionResponseLiveData = MutableLiveData<TransactionResponse>()
     private var expiredTime = dateTimeUtil.plusDateBy(dateTimeUtil.getCurrentMillis(), 1) //TODO later get value from request snap if set
 
-    fun getTransactionResponse(): LiveData<TransactionResponse> = transactionResponse
+    val transactionResponseLiveData: LiveData<TransactionResponse> = _transactionResponseLiveData
 
     fun payPayLater(
         snapToken: String,
@@ -32,7 +32,7 @@ internal class PayLaterViewModel @Inject constructor(
             paymentRequestBuilder = builder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
-                    transactionResponse.value = result
+                    _transactionResponseLiveData.value = result
                 }
 
                 override fun onError(error: SnapError) {
