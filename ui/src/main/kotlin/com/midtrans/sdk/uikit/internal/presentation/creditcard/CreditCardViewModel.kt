@@ -207,12 +207,16 @@ internal class CreditCardViewModel @Inject constructor(
                         paymentRequestBuilder = ccRequestBuilder,
                         callback = object : Callback<TransactionResponse> {
                             override fun onSuccess(result: TransactionResponse) {
-                                errorCard.getErrorCardType(result, allowRetry)?.let {
-                                    _errorTypeLiveData.value = it
-                                } ?: run {
-                                    _transactionResponse.value = result
-                                    null
-                                }
+                                trackSnapChargeResult(
+                                    response = result,
+                                    pageName = PageName.CREDIT_DEBIT_CARD_PAGE
+                                )
+                                errorCard.getErrorCardType(result, allowRetry)
+                                    ?.let { _errorTypeLiveData.value = it }
+                                    ?: run {
+                                        _transactionResponse.value = result
+                                        null
+                                    }
                             }
 
                             override fun onError(error: SnapError) {
@@ -240,10 +244,6 @@ internal class CreditCardViewModel @Inject constructor(
         promoId: Long?
     ) {
         if (formData.tokenType == SavedToken.ONE_CLICK) {
-            trackSnapChargeRequest(
-                pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
-                paymentMethodName = PaymentType.CREDIT_CARD
-            )
             val oneClickRequestBuilder = OneClickCardPaymentRequestBuilder()
                 .withPaymentType(PaymentType.CREDIT_CARD)
                 .withInstallment(installmentTerm)
@@ -272,17 +272,14 @@ internal class CreditCardViewModel @Inject constructor(
 
             snapCore.pay(
                 snapToken = snapToken,
-                paymentRequestBuilder = OneClickCardPaymentRequestBuilder()
-                    .withPaymentType(PaymentType.CREDIT_CARD)
-                    .withInstallment(installmentTerm)
-                    .withMaskedCard(formData.displayedMaskedCard).apply {
-                        promos?.find { it.id == promoId }?.discountedGrossAmount?.let {
-                            withPromo(discountedGrossAmount = it, promoId = promoId.toString())
-                        }
-                    },
+                paymentRequestBuilder = oneClickRequestBuilder,
                 callback = object : Callback<TransactionResponse> {
                     override fun onSuccess(result: TransactionResponse) {
                         _transactionResponse.value = result
+                        trackSnapChargeResult(
+                            response = result,
+                            pageName = PageName.CREDIT_DEBIT_CARD_PAGE
+                        )
                     }
                     override fun onError(error: SnapError) {
                         _errorTypeLiveData.value = errorCard.getErrorCardType(error, allowRetry)
@@ -346,6 +343,10 @@ internal class CreditCardViewModel @Inject constructor(
                             callback = object : Callback<TransactionResponse> {
                                 override fun onSuccess(result: TransactionResponse) {
                                     _transactionResponse.value = result
+                                    trackSnapChargeResult(
+                                        response = result,
+                                        pageName = PageName.CREDIT_DEBIT_CARD_PAGE
+                                    )
                                 }
                                 override fun onError(error: SnapError) {
                                     _errorTypeLiveData.value = errorCard.getErrorCardType(error, allowRetry)
