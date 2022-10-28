@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
@@ -13,7 +12,9 @@ import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.NormalCardTokenRequ
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.TwoClickCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.OneClickCardPaymentRequestBuilder
+import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
+import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
@@ -28,7 +29,7 @@ internal class CreditCardViewModel @Inject constructor(
     private val datetimeUtil: DateTimeUtil,
     private val snapCreditCardUtil: SnapCreditCardUtil,
     private val errorCard: ErrorCard
-) : ViewModel() {
+) : BaseViewModel(snapCore) {
 
     private val _bankIconId = MutableLiveData<Int>()
     private val _binType = MutableLiveData<String>()
@@ -58,6 +59,9 @@ internal class CreditCardViewModel @Inject constructor(
     val binBlockedLiveData: LiveData<Boolean> = _binBlockedLiveData
     val errorLiveData: LiveData<SnapError> = _errorLiveData
 
+
+    private var promoName: String? = null
+    private var promoAmount: Double? = null
 
     fun setExpiryTime(expireTime: String?) {
         expireTime?.let {
@@ -173,13 +177,31 @@ internal class CreditCardViewModel @Inject constructor(
                         .withCustomerPhone(customerPhone)
                         .withInstallment(installmentTerm)
 
-                    promos?.find { it.id == promoId }?.discountedGrossAmount?.let {
-                        ccRequestBuilder.withPromo(discountedGrossAmount = it, promoId = promoId.toString())
-                    }
+                    promos
+                        ?.find { it.id == promoId }
+                        ?.also { promoName = it.name }
+                        ?.discountedGrossAmount
+                        ?.let {
+                            promoAmount = it
+                            ccRequestBuilder.withPromo(
+                                discountedGrossAmount = it,
+                                promoId = promoId.toString()
+                            )
+                        }
 
                     result.tokenId?.let {
                         ccRequestBuilder.withCardToken(it)
                     }
+
+                    trackSnapChargeRequest(
+                        pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+                        paymentMethodName = PaymentType.CREDIT_CARD,
+                        promoName = promoName,
+                        promoAmount = promoAmount?.toString(),
+                        promoId = promoId.toString(),
+                        creditCardPoint = null //TODO add this after point implemented
+                    )
+
                     snapCore.pay(
                         snapToken = snapToken,
                         paymentRequestBuilder = ccRequestBuilder,
@@ -218,6 +240,36 @@ internal class CreditCardViewModel @Inject constructor(
         promoId: Long?
     ) {
         if (formData.tokenType == SavedToken.ONE_CLICK) {
+            trackSnapChargeRequest(
+                pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+                paymentMethodName = PaymentType.CREDIT_CARD
+            )
+            val oneClickRequestBuilder = OneClickCardPaymentRequestBuilder()
+                .withPaymentType(PaymentType.CREDIT_CARD)
+                .withInstallment(installmentTerm)
+                .withMaskedCard(formData.displayedMaskedCard)
+
+            promos
+                ?.find { it.id == promoId }
+                ?.also { promoName = it.name }
+                ?.discountedGrossAmount
+                ?.let {
+                    promoAmount = it
+                    oneClickRequestBuilder.withPromo(
+                        discountedGrossAmount = it,
+                        promoId = promoId.toString()
+                    )
+                }
+
+            trackSnapChargeRequest(
+                pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+                paymentMethodName = PaymentType.CREDIT_CARD,
+                promoName = promoName,
+                promoAmount = promoAmount?.toString(),
+                promoId = promoId.toString(),
+                creditCardPoint = null //TODO add this after point implemented
+            )
+
             snapCore.pay(
                 snapToken = snapToken,
                 paymentRequestBuilder = OneClickCardPaymentRequestBuilder()
@@ -255,18 +307,38 @@ internal class CreditCardViewModel @Inject constructor(
             snapCore.getCardToken(cardTokenRequestBuilder = tokenRequest ,
                 callback = object : Callback<CardTokenResponse> {
                     override fun onSuccess(result: CardTokenResponse) {
+                        var promoName: String? = null
+                        var promoAmount: Double? = null
+
                         val ccRequestBuilder = CreditCardPaymentRequestBuilder()
                             .withPaymentType(PaymentType.CREDIT_CARD)
                             .withInstallment(installmentTerm)
                             .withCustomerEmail(customerEmail).apply {
-                                promos?.find { it.id == promoId }?.discountedGrossAmount?.let {
-                                    withPromo(discountedGrossAmount = it, promoId = promoId.toString())
-                                }
+                                promos
+                                    ?.find { it.id == promoId }
+                                    ?.also { promoName = it.name }
+                                    ?.discountedGrossAmount
+                                    ?.let {
+                                        promoAmount = it
+                                        withPromo(
+                                            discountedGrossAmount = it,
+                                            promoId = promoId.toString()
+                                        )
+                                    }
                             }
 
                         result.tokenId?.let {
                             ccRequestBuilder.withCardToken(it)
                         }
+
+                        trackSnapChargeRequest(
+                            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+                            paymentMethodName = PaymentType.CREDIT_CARD,
+                            promoName = promoName,
+                            promoAmount = promoAmount?.toString(),
+                            promoId = promoId.toString(),
+                            creditCardPoint = null
+                        )
 
                         snapCore.pay(
                             snapToken = snapToken,
