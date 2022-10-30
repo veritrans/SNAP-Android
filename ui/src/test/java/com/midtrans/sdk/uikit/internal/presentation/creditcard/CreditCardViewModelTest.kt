@@ -71,7 +71,12 @@ class CreditCardViewModelTest {
         )
 
         val transactionResponse = TransactionResponse(
-            statusCode = "200"
+            statusCode = "200",
+            paymentType = paymentType,
+            transactionStatus = "transaction-status",
+            fraudStatus = "fraud-status",
+            currency = "currency",
+            transactionId = "transaction-id"
         )
         whenever(errorCard.getErrorCardType(transactionResponse, false)).thenReturn(null)
 
@@ -122,6 +127,21 @@ class CreditCardViewModelTest {
         val callback = callbackCaptor.firstValue
         callback.onSuccess(transactionResponse)
         Assert.assertEquals(transactionResponse, creditCardViewModel.transactionResponseLiveData.getOrAwaitValue())
+        verify(eventAnalytics).trackSnapChargeResult(
+            transactionStatus = eq("transaction-status"),
+            fraudStatus = eq("fraud-status"),
+            currency = eq("currency"),
+            statusCode = eq("200"),
+            transactionId = eq("transaction-id"),
+            pageName = eq(PageName.CREDIT_DEBIT_CARD_PAGE),
+            paymentMethodName = eq(paymentType),
+            responseTime = any(),
+            bank = eq(null),
+            channelResponseCode = eq(null),
+            channelResponseMessage = eq(null),
+            cardType = eq(null),
+            threeDsVersion = eq(null)
+        )
     }
 
 

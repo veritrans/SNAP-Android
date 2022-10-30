@@ -48,14 +48,39 @@ internal class DirectDebitViewModelTest {
         )
         verify(eventAnalytics).trackSnapChargeRequest(
             pageName = PageName.BCA_KLIK_PAY_PAGE,
-            paymentMethodName = "bca_klikpay",
+            paymentMethodName = paymentType,
             promoName = null,
             promoAmount = null,
             promoId = null,
             creditCardPoint = null
         )
         val callback = callbackCaptor.firstValue
-        callback.onSuccess(TransactionResponse(redirectUrl = "redirect-url"))
+        callback.onSuccess(
+            TransactionResponse(
+                redirectUrl = "redirect-url",
+                paymentType = paymentType,
+                transactionStatus = "transaction-status",
+                fraudStatus = "fraud-status",
+                currency = "currency",
+                statusCode = "status-code",
+                transactionId = "transaction-id"
+            )
+        )
         Assert.assertEquals("redirect-url", viewModel.getTransactionResponse().getOrAwaitValue().redirectUrl)
+        verify(eventAnalytics).trackSnapChargeResult(
+            transactionStatus = eq("transaction-status"),
+            fraudStatus = eq("fraud-status"),
+            currency = eq("currency"),
+            statusCode = eq("status-code"),
+            transactionId = eq("transaction-id"),
+            pageName = eq(PageName.BCA_KLIK_PAY_PAGE),
+            paymentMethodName = eq(paymentType),
+            responseTime = any(),
+            bank = eq(null),
+            channelResponseCode = eq(null),
+            channelResponseMessage = eq(null),
+            cardType = eq(null),
+            threeDsVersion = eq(null)
+        )
     }
 }

@@ -43,7 +43,6 @@ internal class UobPaymentViewModelTest {
             paymentRequestBuilder = any(),
             callback = callbackCaptor.capture()
         )
-
         verify(eventAnalytics).trackSnapChargeRequest(
             pageName = PageName.UOB_PAGE,
             paymentMethodName = "uob_ezpay",
@@ -52,20 +51,46 @@ internal class UobPaymentViewModelTest {
             promoId = null,
             creditCardPoint = null
         )
-
         val callback = callbackCaptor.firstValue
         callback.onSuccess(
             TransactionResponse(
                 uobEzpayWebUrl = "uob-web-url",
-                uobEzpayDeeplinkUrl = "uob-deeplink-url"
+                uobEzpayDeeplinkUrl = "uob-deeplink-url",
+                paymentType = "uob_ezpay",
+                transactionStatus = "transaction-status",
+                fraudStatus = "fraud-status",
+                currency = "currency",
+                statusCode = "status-code",
+                transactionId = "transaction-id"
             )
         )
         Assert.assertEquals(
             TransactionResponse(
                 uobEzpayWebUrl = "uob-web-url",
-                uobEzpayDeeplinkUrl = "uob-deeplink-url"
+                uobEzpayDeeplinkUrl = "uob-deeplink-url",
+                paymentType = "uob_ezpay",
+                transactionStatus = "transaction-status",
+                fraudStatus = "fraud-status",
+                currency = "currency",
+                statusCode = "status-code",
+                transactionId = "transaction-id"
             ),
             viewModel.getTransactionResponse().getOrAwaitValue()
+        )
+        verify(eventAnalytics).trackSnapChargeResult(
+            transactionStatus = eq("transaction-status"),
+            fraudStatus = eq("fraud-status"),
+            currency = eq("currency"),
+            statusCode = eq("status-code"),
+            transactionId = eq("transaction-id"),
+            pageName = eq(PageName.UOB_PAGE),
+            paymentMethodName = eq("uob_ezpay"),
+            responseTime = any(),
+            bank = eq(null),
+            channelResponseCode = eq(null),
+            channelResponseMessage = eq(null),
+            cardType = eq(null),
+            threeDsVersion = eq(null)
         )
     }
 
