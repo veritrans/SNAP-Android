@@ -53,5 +53,16 @@ internal class PayLaterViewModel @Inject constructor(
         )
     }
 
+    fun trackSnapButtonClicked(
+        ctaName: String,
+        paymentType: String
+    ) {
+        trackCtaClicked(
+            ctaName = ctaName,
+            paymentMethodName = paymentType,
+            pageName = PageName.AKULAKU_PAGE
+        )
+    }
+
     fun getExpiredHour() = dateTimeUtil.getExpiredHour(expiredTime)
 }
