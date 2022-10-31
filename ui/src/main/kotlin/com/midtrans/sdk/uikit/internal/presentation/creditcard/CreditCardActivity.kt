@@ -296,6 +296,7 @@ internal class CreditCardActivity : BaseActivity() {
                     }
                 },
                 onClick = {
+                    viewModel?.trackSnapButtonClicked(getString(R.string.cc_dc_main_screen_cta))
                     if (selectedFormData == null) {
                         viewModel?.chargeUsingCreditCard(
                             transactionDetails = transactionDetails,

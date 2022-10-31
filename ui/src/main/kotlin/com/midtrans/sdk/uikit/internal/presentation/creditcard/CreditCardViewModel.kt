@@ -410,6 +410,14 @@ internal class CreditCardViewModel @Inject constructor(
         )
     }
 
+    fun trackSnapButtonClicked(ctaName: String) {
+        trackCtaClicked(
+            ctaName = ctaName,
+            paymentMethodName = PaymentType.CREDIT_CARD,
+            pageName = PageName.CREDIT_DEBIT_CARD_PAGE
+        )
+    }
+
     fun getExpiredHour(): String {
         val duration = datetimeUtil.getDuration(
             datetimeUtil.getTimeDiffInMillis(
