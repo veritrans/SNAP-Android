@@ -119,6 +119,7 @@ class SuccessScreenActivity : BaseActivity() {
                 }
             }
             if (isWithBackButton) {
+                //TODO track cta here - jordy
                 SnapButton(
                     text = stringResource(id = R.string.success_screen_v1_cta),
                     modifier = Modifier

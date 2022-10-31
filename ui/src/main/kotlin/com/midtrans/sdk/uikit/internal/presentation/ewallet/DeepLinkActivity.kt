@@ -112,6 +112,7 @@ internal class DeepLinkActivity : BaseActivity() {
                         }
                     }
                     redirectionCta[paymentType]?.let {
+                        //TODO track cta here - jordy
                         SnapButton(
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
