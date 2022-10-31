@@ -250,14 +250,19 @@ internal class WalletActivity : BaseActivity() {
                 }
             }
 
+            val ctaName = stringResource(id = if (isTablet) R.string.i_have_already_paid else R.string.redirection_instruction_gopay_cta)
             SnapButton(
-                text = stringResource(id = if (isTablet) R.string.i_have_already_paid else R.string.redirection_instruction_gopay_cta),
+                text = ctaName,
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(16.dp),
                 enabled = !error && !loading,
                 style = if (!error && !loading) SnapButton.Style.PRIMARY else SnapButton.Style.PRIMARY
             ) {
+                viewModel.trackSnapButtonClicked(
+                    ctaName = ctaName,
+                    paymentType = paymentType
+                )
                 if (!isTablet) {
                     openDeepLink()
                 }else{
