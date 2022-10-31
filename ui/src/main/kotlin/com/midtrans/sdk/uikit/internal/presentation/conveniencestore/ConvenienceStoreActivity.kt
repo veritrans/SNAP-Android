@@ -264,15 +264,19 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                     )
                 }
             }
+            val ctaName = stringResource(getCtaName(paymentType))
             SnapButton(
-                text = stringResource(id = R.string.indomaret_cta_1),
+                text = ctaName,
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(top = 16.dp, start = 16.dp, end = 16.dp),
                 enabled = errorState.value==null && !loading,
                 style = SnapButton.Style.TERTIARY
             ) {
-
+                viewModel?.trackSnapButtonClicked(
+                    ctaName = ctaName,
+                    paymentType = paymentType
+                )
                 startActivity(
                     Intent(
                         Intent.ACTION_VIEW,
@@ -293,6 +297,14 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 onBackPressed()
 
             }
+        }
+    }
+
+    private fun getCtaName(paymentType: String): Int {
+        return when(paymentType) {
+            PaymentType.INDOMARET -> R.string.indomaret_cta_2
+            PaymentType.ALFAMART -> R.string.alfa_group_cta_2
+            else -> 0
         }
     }
 
