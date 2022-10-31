@@ -1,6 +1,5 @@
 package com.midtrans.sdk.uikit.internal.presentation.directdebit
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -233,14 +232,17 @@ class UobPaymentActivity : BaseActivity() {
                         }
                     }
                 )
+
+                val ctaName = stringResource(id = getUobCta(uobMode))
                 SnapButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 40.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
                     enabled = true,
-                    text = stringResource(id = getUobCta(uobMode)),
+                    text = ctaName,
                     style = SnapButton.Style.PRIMARY
                 ) {
+                    viewModel.trackSnapButtonClicked(ctaName)
                     viewModel.payUob(snapToken)
                 }
             }

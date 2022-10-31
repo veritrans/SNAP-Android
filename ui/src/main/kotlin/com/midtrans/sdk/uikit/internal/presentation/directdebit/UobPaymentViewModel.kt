@@ -84,5 +84,13 @@ internal class UobPaymentViewModel @Inject constructor(
         } ?: UiKitConstants.STATUS_FAILED
     }
 
+    fun trackSnapButtonClicked(ctaName: String) {
+        trackCtaClicked(
+            ctaName = ctaName,
+            paymentMethodName = PaymentType.UOB_EZPAY,
+            pageName = PageName.UOB_PAGE
+        )
+    }
+
     fun getExpiredHour(remainingTime: Long) = dateTimeUtil.getExpiredHour(remainingTime)
 }
