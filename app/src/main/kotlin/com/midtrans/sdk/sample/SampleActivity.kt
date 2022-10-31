@@ -1,5 +1,6 @@
 package com.midtrans.sdk.sample
 
+import android.app.Activity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
@@ -13,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.LocaleListCompat
+import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.callback.Callback
 import com.midtrans.sdk.uikit.api.exception.SnapError
 import com.midtrans.sdk.uikit.api.model.*
@@ -20,6 +22,7 @@ import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import java.util.*
+import com.midtrans.sdk.uikit.api.model.CustomColors
 
 
 class SampleActivity : AppCompatActivity() {
@@ -35,7 +38,14 @@ class SampleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setLocaleNew("id")
+//        setLocaleNew("id") // commented for now. conflict with buildLegacyUiKit
+
+        buildLegacyUiKit()
+
+        setContent { Greeting() }
+    }
+
+    private fun buildUiKit(){
         UiKitApi.Builder()
             .withContext(this.applicationContext)
             .withMerchantUrl("https://fiesta-point-sample.herokuapp.com/")
@@ -46,10 +56,23 @@ class SampleActivity : AppCompatActivity() {
                     interactiveFillInverse = 0xff0000,
                     textInverse = 0x00ff00,
                     supportNeutralFill = 0xffdddd
-            )
+                )
             )
             .build()
-        setContent { Greeting() }
+    }
+
+    private fun buildLegacyUiKit(){
+        SdkUIFlowBuilder.init()
+            ?.setContext(this)
+            ?.setMerchantBaseUrl("https://fiesta-point-sample.herokuapp.com/")
+            ?.setClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
+//            .setExternalScanner { _, _ -> TODO("Not yet implemented") }
+            ?.enableLog(true)
+            ?.setDefaultText("fonts/SourceSansPro-Regular.ttf")
+            ?.setBoldText("fonts/SourceSansPro-Bold.ttf")
+            ?.setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
+            ?.setLanguage("en") //setLanguage to either "en" for english or "id" for bahasa
+            ?.buildSDK()
     }
 
     @Preview
