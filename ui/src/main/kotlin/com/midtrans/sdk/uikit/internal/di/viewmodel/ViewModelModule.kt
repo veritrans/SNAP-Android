@@ -8,6 +8,7 @@ import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardViewMode
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitViewModel
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobPaymentViewModel
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobSelectionViewModel
+import com.midtrans.sdk.uikit.internal.presentation.ewallet.DeepLinkViewModel
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletViewModel
 import com.midtrans.sdk.uikit.internal.presentation.loadingpayment.LoadingPaymentViewModel
 import com.midtrans.sdk.uikit.internal.presentation.paylater.PayLaterViewModel
@@ -68,6 +69,11 @@ internal abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SuccessScreenViewModel::class)
     abstract fun bindSuccessScreenViewModel(viewModel: SuccessScreenViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DeepLinkViewModel::class)
+    abstract fun bindDeepLinkViewModel(viewModel: DeepLinkViewModel): ViewModel
 
     @Binds
     @IntoMap

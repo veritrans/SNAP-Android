@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.R
@@ -34,6 +35,13 @@ internal class DeepLinkActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModel: DeepLinkViewModel
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel: DeepLinkViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory).get(DeepLinkViewModel::class.java)
+    }
 
     private val deepLinkLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -112,15 +120,20 @@ internal class DeepLinkActivity : BaseActivity() {
                         }
                     }
                     redirectionCta[paymentType]?.let {
-                        //TODO track cta here - jordy
+                        val ctaName = stringResource(id = it)
                         SnapButton(
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
                                 .fillMaxWidth(1f)
                                 .padding(16.dp),
-                            text = stringResource(id = it),
+                            text = ctaName,
                             style = SnapButton.Style.TERTIARY
-                        ) {}
+                        ) {
+                            viewModel.trackSnapButtonClicked(
+                                ctaName = ctaName,
+                                paymentType = paymentType
+                            )
+                        }
                     }
                 }
             }
@@ -129,7 +142,7 @@ internal class DeepLinkActivity : BaseActivity() {
 
     @Preview
     @Composable
-    private fun forPreview() {
+    private fun ForPreview() {
         Content(paymentType = PaymentType.GOPAY, url = "http://")
     }
 

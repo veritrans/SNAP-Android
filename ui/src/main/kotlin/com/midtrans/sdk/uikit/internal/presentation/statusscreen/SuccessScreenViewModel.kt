@@ -6,7 +6,7 @@ import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import javax.inject.Inject
 
 internal class SuccessScreenViewModel @Inject constructor(
-    private val snapCore: SnapCore
+    snapCore: SnapCore
 ): BaseViewModel() {
 
     init {
