@@ -184,10 +184,15 @@ internal class WalletActivity : BaseActivity() {
                                 modifier = Modifier.fillMaxWidth(1f),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
+                                val ctaName = stringResource(id = R.string.qr_reload)
                                 SnapButton(
                                     style = SnapButton.Style.TERTIARY,
-                                    text = stringResource(id = R.string.qr_reload),
+                                    text = ctaName,
                                     onClick = {
+                                        viewModel.trackSnapButtonClicked(
+                                            ctaName = ctaName,
+                                            paymentType = paymentType
+                                        )
                                         error = false
                                     }
                                 )

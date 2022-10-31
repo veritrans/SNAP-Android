@@ -195,10 +195,15 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                                     color = SnapColors.getARGBColor(SnapColors.supportDangerDefault),
                                     modifier = Modifier.weight(1f)
                                 )
+                                val ctaName = stringResource(id = R.string.qr_reload)
                                 SnapButton(
                                     style = SnapButton.Style.TERTIARY,
-                                    text = stringResource(id = R.string.qr_reload),
+                                    text = ctaName,
                                     onClick = {
+                                        viewModel?.trackSnapButtonClicked(
+                                            ctaName = ctaName,
+                                            paymentType = paymentType
+                                        )
                                         viewModel?.resetError()
                                         loading = true
                                         charge()
