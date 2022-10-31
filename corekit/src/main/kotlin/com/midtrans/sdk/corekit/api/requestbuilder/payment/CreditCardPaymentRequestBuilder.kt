@@ -48,7 +48,7 @@ class CreditCardPaymentRequestBuilder: PaymentRequestBuilder() {
 
     fun withPromo(discountedGrossAmount: Double, promoId: String): CreditCardPaymentRequestBuilder = apply {
          promoDetailRequest = PromoDetailRequest(
-             discountedGrossAmount = discountedGrossAmount?.let { NumberUtil.formatDoubleToString(it) },
+             discountedGrossAmount = discountedGrossAmount.let { NumberUtil.formatDoubleToString(it) },
              promoId = promoId)
     }
 

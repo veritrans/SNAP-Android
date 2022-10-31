@@ -40,7 +40,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = com.gtf.snap.Dependencies.composeVersion
+        kotlinCompilerExtensionVersion = com.gtf.snap.Dependencies.composeCompilerVersion
     }
 
     kotlinOptions {
@@ -109,4 +109,5 @@ dependencies {
 
     implementation(com.gtf.snap.CommonLibraries.zxing)
 
+    debugImplementation(com.gtf.snap.CommonLibraries.leakCanary)
 }

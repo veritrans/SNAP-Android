@@ -3,6 +3,8 @@ package com.midtrans.sdk.uikit.internal.util
 object UiKitConstants {
     //Intent Key
     const val KEY_TRANSACTION_RESULT = "UiKitConstants.key_transaction_result"
+    const val KEY_ERROR_NAME = "UiKitConstant.key_error_name"
+    const val KEY_ERROR_MESSAGE ="UiKitConstant.key_error_message"
 
     //Transaction Status
     const val STATUS_PENDING = "pending"

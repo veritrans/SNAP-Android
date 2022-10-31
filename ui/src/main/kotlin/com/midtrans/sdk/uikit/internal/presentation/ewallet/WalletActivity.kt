@@ -1,9 +1,11 @@
 package com.midtrans.sdk.uikit.internal.presentation.ewallet
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -25,6 +27,7 @@ import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -36,6 +39,11 @@ internal class WalletActivity : BaseActivity() {
     @Inject
     lateinit var viewModel: WalletViewModel
     var deepLinkUrl: String? = null
+
+    private val deepLinkLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            viewModel.checkStatus(snapToken)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +66,7 @@ internal class WalletActivity : BaseActivity() {
         if (!isTabletDevice()) {
             observerDeepLinkUrl()
         }
-        setResult(RESULT_OK)
+        observeTransactionResult()
     }
 
     private fun observerDeepLinkUrl() {
@@ -70,7 +78,14 @@ internal class WalletActivity : BaseActivity() {
     private fun openDeepLink() {
         deepLinkUrl?.let {
             val intent = DeepLinkActivity.getIntent(this, paymentType, it)
-            startActivity(intent)
+            deepLinkLauncher.launch(intent)
+        }
+    }
+
+    private fun observeTransactionResult() {
+        viewModel.transactionResultLiveData.observe(this) {
+            val resultIntent = Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, it)
+            setResult(Activity.RESULT_OK, resultIntent)
         }
     }
 
@@ -193,7 +208,9 @@ internal class WalletActivity : BaseActivity() {
                         if (loading) {
                             GifImage(
                                 gifResId = R.drawable.gif_loading_ios,
-                                modifier = Modifier.width(50.dp).height(50.dp)
+                                modifier = Modifier
+                                    .width(50.dp)
+                                    .height(50.dp)
                             )
                         }
                     }

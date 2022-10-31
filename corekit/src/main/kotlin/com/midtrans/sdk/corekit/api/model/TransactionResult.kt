@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-open class TransactionResult( //TODO temporary for direct debit only, revisit when updating callback for host app
+open class TransactionResult(
     val status: String,
     val transactionId: String,
     val paymentType: String

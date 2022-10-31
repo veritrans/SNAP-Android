@@ -38,7 +38,7 @@ class SavedCardViewModel @Inject constructor(
                 override fun onSuccess(result: BinResponse) {
                     result.run {
                         data?.bankCode?.let {
-                            bankIconId.value = SnapCreditCardUtil.getBankIcon(it?.lowercase())
+                            bankIconId.value = SnapCreditCardUtil.getBankIcon(it.lowercase())
                         }
                     }
                 }
