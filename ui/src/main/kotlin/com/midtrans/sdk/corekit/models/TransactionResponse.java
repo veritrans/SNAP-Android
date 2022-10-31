@@ -42,7 +42,7 @@ public class TransactionResponse {
     }
 
     public TransactionResponse(TransactionResult transactionResult){
-        this.statusCode = "200";
+        this.statusCode = "200";  //TODO: the status code is not supported by the transaction results, and the status code is misleading
         this.transactionId = transactionResult.getTransactionId();
         this.paymentType = transactionResult.getPaymentType();
         this.transactionStatus = transactionResult.getStatus();
