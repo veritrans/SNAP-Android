@@ -1,6 +1,6 @@
 
 buildscript {
-    val kotlin_version = "1.6.21"
+    val kotlin_version = "1.7.0"
     val jacoco_version = "0.8.4"
     repositories {
         google()

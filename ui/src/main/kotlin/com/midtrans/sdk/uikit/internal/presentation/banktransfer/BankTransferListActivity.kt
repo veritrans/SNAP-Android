@@ -164,10 +164,8 @@ class BankTransferListActivity : BaseActivity() {
 
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                setResult(RESULT_OK)
-                finish()
-            }
+            setResult(result.resultCode, result.data)
+            finish()
         }
 
     companion object {

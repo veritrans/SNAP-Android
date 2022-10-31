@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
 import com.midtrans.sdk.corekit.api.model.CreditCard
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
@@ -106,7 +107,8 @@ class SavedCardActivity: BaseActivity() {
                 val intent = SuccessScreenActivity.getIntent(
                     activityContext = this@SavedCardActivity,
                     total = totalAmount,
-                    orderId = it?.orderId.toString()
+                    orderId = it?.orderId.toString(),
+                    transactionResult = TransactionResult("","","")
                 )
                 startActivity(intent)
             }
@@ -118,7 +120,8 @@ class SavedCardActivity: BaseActivity() {
                     intent = SuccessScreenActivity.getIntent(
                         activityContext = this@SavedCardActivity,
                         total = totalAmount,
-                        orderId = it?.orderId.toString()
+                        orderId = it?.orderId.toString(),
+                        transactionResult = TransactionResult("","","")
                     )
                 }
                 else -> {

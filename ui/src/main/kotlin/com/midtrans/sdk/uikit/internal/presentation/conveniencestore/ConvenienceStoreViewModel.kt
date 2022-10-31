@@ -1,6 +1,7 @@
 package com.midtrans.sdk.uikit.internal.presentation.conveniencestore
 
 import android.graphics.Bitmap
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.zxing.BarcodeFormat
@@ -9,6 +10,7 @@ import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.ConvenienceStorePaymentRequestBuilder
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.BarcodeEncoder
@@ -25,11 +27,17 @@ internal class ConvenienceStoreViewModel @Inject constructor(
     private val barcodeEncoder: BarcodeEncoder
 ) : ViewModel() {
 
-    val barCodeBitmapLiveData = MutableLiveData<Bitmap>()
-    val pdfUrlLiveData = MutableLiveData<String>()
-    val paymentCodeLiveData = MutableLiveData<String>()
-    var expiredTime = datetimeUtil.getCurrentMillis() + TimeUnit.MINUTES.toMillis(15)
-    val errorLiveData = MutableLiveData<Int?>()
+    private val _barCodeBitmapLiveData = MutableLiveData<Bitmap>()
+    private val _pdfUrlLiveData = MutableLiveData<String>()
+    private val _paymentCodeLiveData = MutableLiveData<String>()
+    private val _transactionResultLiveData = MutableLiveData<TransactionResult>()
+    private var expiredTime = datetimeUtil.getCurrentMillis() + TimeUnit.MINUTES.toMillis(15)
+    private val _errorLiveData = MutableLiveData<Int?>()
+    val barCodeBitmapLiveData: LiveData<Bitmap> = _barCodeBitmapLiveData
+    val pdfUrlLiveData: MutableLiveData<String> = _pdfUrlLiveData
+    val paymentCodeLiveData: MutableLiveData<String> = _paymentCodeLiveData
+    val errorLiveData: LiveData<Int?> = _errorLiveData
+    val transactionResultLiveData: LiveData<TransactionResult> = _transactionResultLiveData
 
     fun chargeConvenienceStorePayment(
         snapToken: String,
@@ -43,15 +51,20 @@ internal class ConvenienceStoreViewModel @Inject constructor(
                 override fun onSuccess(result: TransactionResponse) {
                     result.run {
                         paymentCode?.let { generateBarcode(it) }
-                        paymentCode?.let { paymentCodeLiveData.value = it }
+                        paymentCode?.let { _paymentCodeLiveData.value = it }
                         indomaretExpirationRaw?.let { expiredTime = parseTime(it) }
                         alfamartExpirationRaw?.let { expiredTime = parseTime(it) }
-                        pdfUrl.let { pdfUrlLiveData.value = it }
+                        pdfUrl.let { _pdfUrlLiveData.value = it }
+                        _transactionResultLiveData.value = TransactionResult(
+                            status = statusCode.orEmpty(),
+                            transactionId = transactionId.orEmpty(),
+                            paymentType = paymentType.orEmpty()
+                        )
                     }
                 }
 
                 override fun onError(error: SnapError) {
-                    errorLiveData.value = errorCard.getErrorCardType(error)
+                    _errorLiveData.value = errorCard.getErrorCardType(error)
                 }
             }
         )
@@ -61,7 +74,7 @@ internal class ConvenienceStoreViewModel @Inject constructor(
         try {
             val bitmap: Bitmap =
                 barcodeEncoder.encodeBitmap(barcode, BarcodeFormat.CODE_39, 1000, 100)
-            barCodeBitmapLiveData.value = bitmap
+            _barCodeBitmapLiveData.value = bitmap
         } catch (e: Exception) {
         }
     }
@@ -75,7 +88,7 @@ internal class ConvenienceStoreViewModel @Inject constructor(
     }
 
     fun resetError(){
-        errorLiveData.value = null
+        _errorLiveData.value = null
     }
     fun getExpiredHour(): String = datetimeUtil.getExpiredHour(expiredTime)
 
