@@ -1,4 +1,4 @@
-package com.midtrans.sdk.uikit.internal.presentation
+package com.midtrans.sdk.uikit.internal.presentation.statusscreen
 
 import android.content.Context
 import android.content.Intent
@@ -22,16 +22,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapColors
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import kotlinx.parcelize.Parcelize
+import javax.inject.Inject
 
 class SuccessScreenActivity : BaseActivity() {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel: SuccessScreenViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory).get(SuccessScreenViewModel::class.java)
+    }
 
     private val data: SuccessData by lazy {
         intent.getParcelableExtra(EXTRA_TOTAL) as? SuccessData
@@ -44,6 +54,7 @@ class SuccessScreenActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         setContent {
             SuccessContent(
                 total = data.total,
@@ -119,13 +130,17 @@ class SuccessScreenActivity : BaseActivity() {
                 }
             }
             if (isWithBackButton) {
-                //TODO track cta here - jordy
+                val ctaName = stringResource(id = R.string.success_screen_v1_cta)
                 SnapButton(
-                    text = stringResource(id = R.string.success_screen_v1_cta),
+                    text = ctaName,
                     modifier = Modifier
                         .fillMaxWidth(1f)
                         .padding(16.dp)
                 ) {
+                    viewModel.trackSnapButtonClicked(
+                        ctaName = ctaName,
+                        paymentType = transactionResult?.paymentType.orEmpty()
+                    )
                     finish()
                 }
             } else {
