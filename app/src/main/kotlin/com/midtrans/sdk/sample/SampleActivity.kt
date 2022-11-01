@@ -74,7 +74,7 @@ class SampleActivity : AppCompatActivity() {
 
     private fun buildLegacyUiKit(){
         SdkUIFlowBuilder.init()
-            ?.setContext(this)
+            ?.setContext(this.applicationContext)
             ?.setMerchantBaseUrl("https://fiesta-point-sample.herokuapp.com/")
             ?.setClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
 //            .setExternalScanner { _, _ -> TODO("Not yet implemented") }
