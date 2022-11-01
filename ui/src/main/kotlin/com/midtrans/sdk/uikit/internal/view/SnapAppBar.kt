@@ -43,7 +43,8 @@ fun SnapAppBar(
 
         Text(
             text = title,
-            style = SnapTypography.STYLES.snapAppBar
+            style = SnapTypography.STYLES.snapAppBar,
+            color = SnapColors.getARGBColor(SnapColors.textPrimary)
         )
 
         rightIconRestId?.let {

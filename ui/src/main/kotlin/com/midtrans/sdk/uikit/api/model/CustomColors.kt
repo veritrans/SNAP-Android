@@ -73,6 +73,12 @@ data class CustomColors(
         backgroundBorderSolidPrimary = baseColorTheme.primaryColor,
         textPrimary = baseColorTheme.primaryDarkColor,
         interactiveBorderInput = baseColorTheme.primaryColor,
-        textMuted = baseColorTheme.secondaryColor
+        textMuted = baseColorTheme.secondaryColor,
+        lineLightMuted = HslConverter.addSaturation(
+            HslConverter.addBrightness(
+                baseColorTheme.primaryColor,
+                0.2f
+            ), -0.2f
+        )
     )
 }
