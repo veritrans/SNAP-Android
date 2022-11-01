@@ -52,8 +52,28 @@ class EventAnalytics(
         registerCommonProperties(saudagarId = merchantId, merchantName = merchantName)
     }
 
-    fun testTracker() {
-        mixpanelTracker.trackEvent("testEvent")
+    fun registerPropertyPlatform(isTablet: Boolean) {
+        val platform = if (isTablet) "Tablet" else "Mobile"
+        mixpanelTracker.registerCommonProperties(
+            mapOf(PROPERTY_PLATFORM to platform)
+        )
+    }
+
+    private fun registerCommonProperties(
+        saudagarId: String,
+        merchantName: String
+    ) {
+        mixpanelTracker.registerCommonProperties(
+            mapOf(
+                PROPERTY_SDK_VERSION to BuildConfig.SDK_VERSION,
+                PROPERTY_SDK_TYPE to "UI",
+                PROPERTY_MERCHANT_ID to saudagarId,
+                PROPERTY_MERCHANT_NAME to merchantName,
+                PROPERTY_SOURCE_TYPE to "midtrans-mobile",
+                PROPERTY_SERVICE_TYPE to "snap",
+                PROPERTY_SNAP_TYPE to "Sdk"
+            )
+        )
     }
 
     //TODO will be implemented separately
@@ -152,24 +172,6 @@ class EventAnalytics(
             properties = mapOf(
                 PROPERTY_SNAP_TOKEN to snapToken,
                 PROPERTY_RESPONSE_TIME to responseTime
-            )
-        )
-    }
-
-    private fun registerCommonProperties(
-        saudagarId: String,
-        merchantName: String
-    ) {
-        mixpanelTracker.registerCommonProperties(
-            mapOf(
-                PROPERTY_PLATFORM to "Mobile",
-                PROPERTY_SDK_VERSION to BuildConfig.SDK_VERSION,
-                PROPERTY_SDK_TYPE to "UI",
-                PROPERTY_MERCHANT_ID to saudagarId,
-                PROPERTY_MERCHANT_NAME to merchantName,
-                PROPERTY_SOURCE_TYPE to "midtrans-mobile",
-                PROPERTY_SERVICE_TYPE to "snap",
-                PROPERTY_SNAP_TYPE to "Mobile"
             )
         )
     }
