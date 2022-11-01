@@ -100,16 +100,16 @@ class EventAnalytics(
         promoId: String? = null,
         creditCardPoint: String? = null
     ) {
-        val optional = mutableMapOf<String, String>()
-        promoName?.also { optional[PROPERTY_PROMO_NAME] = it }
-        promoAmount?.also { optional[PROPERTY_PROMO_AMOUNT] = it }
-        promoId?.also { optional[PROPERTY_PROMO_ID] = it }
-        creditCardPoint?.also { optional[PROPERTY_CREDIT_CARD_POINT] = it }
+        val optionalProperties = mutableMapOf<String, String>()
+        promoName?.also { optionalProperties[PROPERTY_PROMO_NAME] = it }
+        promoAmount?.also { optionalProperties[PROPERTY_PROMO_AMOUNT] = it }
+        promoId?.also { optionalProperties[PROPERTY_PROMO_ID] = it }
+        creditCardPoint?.also { optionalProperties[PROPERTY_CREDIT_CARD_POINT] = it }
 
         val properties = mapOf(
             PROPERTY_PAGE_NAME to pageName,
             PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
-        ) + optional
+        ) + optionalProperties
 
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_CHARGE_REQUEST,
@@ -132,12 +132,12 @@ class EventAnalytics(
         cardType: String? = null,
         threeDsVersion: String? = null
     ) {
-        val optional = mutableMapOf<String, String>()
-        bank?.also { optional[PROPERTY_CHARGE_RESPONSE_BANK] = it }
-        channelResponseCode?.also { optional[PROPERTY_CHANNEL_RESPONSE_CODE] = it }
-        channelResponseMessage?.also { optional[PROPERTY_CHANNEL_RESPONSE_MESSAGE] = it }
-        cardType?.also { optional[PROPERTY_CARD_TYPE] = it }
-        threeDsVersion?.also { optional[PROPERTY_3DS_VERSION] = it }
+        val optionalProperties = mutableMapOf<String, String>()
+        bank?.also { optionalProperties[PROPERTY_CHARGE_RESPONSE_BANK] = it }
+        channelResponseCode?.also { optionalProperties[PROPERTY_CHANNEL_RESPONSE_CODE] = it }
+        channelResponseMessage?.also { optionalProperties[PROPERTY_CHANNEL_RESPONSE_MESSAGE] = it }
+        cardType?.also { optionalProperties[PROPERTY_CARD_TYPE] = it }
+        threeDsVersion?.also { optionalProperties[PROPERTY_3DS_VERSION] = it }
 
         val properties = mapOf(
             PROPERTY_TRANSACTION_STATUS to transactionStatus,
@@ -148,7 +148,7 @@ class EventAnalytics(
             PROPERTY_PAGE_NAME to pageName,
             PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName,
             PROPERTY_RESPONSE_TIME to responseTime,
-        ) + optional
+        ) + optionalProperties
 
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_CHARGE_RESULTS,
