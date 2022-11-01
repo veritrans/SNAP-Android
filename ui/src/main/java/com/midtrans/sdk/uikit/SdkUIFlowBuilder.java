@@ -162,12 +162,19 @@ public class SdkUIFlowBuilder {
 
     public MidtransSDK buildSDK() {
         if (isValidData()) {
-            new UiKitApi.Builder()
+            UiKitApi.Builder builder = new UiKitApi.Builder()
                     .withContext(context)
-                    .withMerchantUrl("https://fiesta-point-sample.herokuapp.com/")
-                    .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
-                    .withFontFamily(AssetFontLoader.INSTANCE.fontFamily("fonts/SourceSansPro-Regular.ttf", context))
-                    .build();
+                    .withMerchantUrl(merchantServerUrl)
+                    .withMerchantClientKey(clientKey);
+            if (defaultText != null) {
+                builder.withFontFamily(AssetFontLoader.INSTANCE.fontFamily(defaultText, context));
+            }
+            if (colorTheme != null) {
+                builder.withCustomColors(baseColorThemeToCustomColors(colorTheme));
+            }
+
+            builder.build();
+
             MidtransSDK midtransSDK = MidtransSDK.delegateInstance(this);
             setLocaleNew(languageCode);
             return midtransSDK;
@@ -194,5 +201,9 @@ public class SdkUIFlowBuilder {
         }
 
         return true;
+    }
+
+    private CustomColors baseColorThemeToCustomColors(BaseColorTheme baseColorTheme){
+        return new CustomColors(baseColorTheme);
     }
 }

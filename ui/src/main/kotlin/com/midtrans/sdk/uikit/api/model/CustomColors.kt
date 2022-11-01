@@ -1,5 +1,8 @@
 package com.midtrans.sdk.uikit.api.model
 
+import com.midtrans.sdk.corekit.core.themes.BaseColorTheme
+import com.midtrans.sdk.uikit.internal.util.HslConverter
+
 data class CustomColors(
     val backgroundBorderSolidSecondary: Int? = null,
     val backgroundBorderSolidPrimary: Int? = null,
@@ -58,4 +61,18 @@ data class CustomColors(
     val overlayBlack: Int? = null,
     val overlayWhite: Int? = null,
     val lineLightMuted: Int? = null
-)
+){
+    constructor(baseColorTheme: BaseColorTheme) : this(
+        interactiveFillInverse = baseColorTheme.primaryColor,
+        supportNeutralFill = HslConverter.addSaturation(
+            HslConverter.addBrightness(
+                baseColorTheme.primaryColor,
+                0.38f
+            ), -0.3f
+        ),
+        backgroundBorderSolidPrimary = baseColorTheme.primaryColor,
+        textPrimary = baseColorTheme.primaryDarkColor,
+        interactiveBorderInput = baseColorTheme.primaryColor,
+        textMuted = baseColorTheme.secondaryColor
+    )
+}
