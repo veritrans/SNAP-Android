@@ -130,7 +130,7 @@ class PaymentUsecaseTest {
         )
         verify(eventAnalytics).setUserIdentity("merchant-id", "merchant-name", mapOf())
         verify(eventAnalytics).trackSnapGetTokenRequest(any())
-        verify(eventAnalytics).trackSnapGetTokenResult("snap-token-generated", "1000")
+        verify(eventAnalytics).trackSnapGetTokenResult(eq("snap-token-generated"), any())
         verify(mockCallback).onSuccess(paymentOptionCaptor.capture())
         val result = paymentOptionCaptor.firstValue
         assertPaymentOption(result, "snap-token-generated")

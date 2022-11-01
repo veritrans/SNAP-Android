@@ -7,6 +7,8 @@ import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
+import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import org.junit.Assert
 import org.junit.Before
@@ -26,7 +28,7 @@ class WalletViewModelTest {
 
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
-    val time = 1609866000000L //"Wed Jan 6 2021 11:32:50 +0700"// (Asia/Jakarta)
+    private val time = 1609866000000L //"Wed Jan 6 2021 11:32:50 +0700"// (Asia/Jakarta)
 
     @Before
     fun setup() {
@@ -43,18 +45,56 @@ class WalletViewModelTest {
         val snapCore: SnapCore = mock()
         val dateTimeUtil: DateTimeUtil = mock()
         val snapToken = "SnapToken"
-        val paymentType = PaymentType.BNI_VA
-        val walletViewModel =
-            WalletViewModel(snapCore = snapCore, dateTimeUtil)
+        val paymentType = PaymentType.GOPAY
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+
+        val walletViewModel = WalletViewModel(snapCore = snapCore, dateTimeUtil)
         walletViewModel.chargeQrPayment(
             snapToken = snapToken,
             paymentType = paymentType
+        )
+        verify(eventAnalytics).trackSnapChargeRequest(
+            pageName = PageName.GOPAY_DEEPLINK_PAGE,
+            paymentMethodName = PaymentType.GOPAY,
+            promoName = null,
+            promoAmount = null,
+            promoId = null,
+            creditCardPoint = null
         )
         val callbackCaptor: KArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
         verify(snapCore).pay(
             snapToken = eq(snapToken),
             paymentRequestBuilder = any(),
             callback = callbackCaptor.capture()
+        )
+        val callback = callbackCaptor.firstValue
+        callback.onSuccess(
+            TransactionResponse(
+                redirectUrl = "redirect-url",
+                paymentType = paymentType,
+                transactionStatus = "transaction-status",
+                fraudStatus = "fraud-status",
+                currency = "currency",
+                statusCode = "status-code",
+                transactionId = "transaction-id"
+            )
+        )
+        verify(eventAnalytics).trackSnapChargeResult(
+            transactionStatus = eq("transaction-status"),
+            fraudStatus = eq("fraud-status"),
+            currency = eq("currency"),
+            statusCode = eq("status-code"),
+            transactionId = eq("transaction-id"),
+            pageName = eq(PageName.GOPAY_DEEPLINK_PAGE),
+            paymentMethodName = eq(paymentType),
+            responseTime = any(),
+            bank = eq(null),
+            channelResponseCode = eq(null),
+            channelResponseMessage = eq(null),
+            cardType = eq(null),
+            threeDsVersion = eq(null)
         )
     }
 

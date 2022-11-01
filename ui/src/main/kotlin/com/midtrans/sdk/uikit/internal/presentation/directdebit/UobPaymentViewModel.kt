@@ -3,13 +3,14 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.DirectDebitPaymentRequestBuilder
+import com.midtrans.sdk.corekit.internal.analytics.PageName
+import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import javax.inject.Inject
@@ -17,7 +18,12 @@ import javax.inject.Inject
 internal class UobPaymentViewModel @Inject constructor(
     private val snapCore: SnapCore,
     private val dateTimeUtil: DateTimeUtil
-): ViewModel() {
+): BaseViewModel() {
+
+    init {
+        eventAnalytics = snapCore.getEventAnalytics()
+    }
+
     private val transactionResponse = MutableLiveData<TransactionResponse>()
     private val transactionResult = MutableLiveData<Pair<String, String>>()
 
@@ -28,12 +34,20 @@ internal class UobPaymentViewModel @Inject constructor(
         val builder = DirectDebitPaymentRequestBuilder()
             .withPaymentType(PaymentType.UOB_EZPAY)
 
+        trackSnapChargeRequest(
+            pageName = PageName.UOB_PAGE,
+            paymentMethodName = PaymentType.UOB_EZPAY
+        )
         snapCore.pay(
             snapToken = snapToken,
             paymentRequestBuilder = builder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
                     transactionResponse.value = result
+                    trackSnapChargeResult(
+                        response = result,
+                        pageName = PageName.UOB_PAGE
+                    )
                 }
 
                 override fun onError(error: SnapError) {

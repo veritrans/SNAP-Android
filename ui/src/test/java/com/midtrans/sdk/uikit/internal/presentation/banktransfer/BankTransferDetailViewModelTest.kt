@@ -7,6 +7,8 @@ import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
+import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import org.junit.Assert
 import org.junit.Before
@@ -26,7 +28,7 @@ internal class BankTransferDetailViewModelTest {
 
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
-    val time = 1609866000000L //"Wed Jan 6 2021 11:32:50 +0700"// (Asia/Jakarta)
+    private val time = 1609866000000L //"Wed Jan 6 2021 11:32:50 +0700"// (Asia/Jakarta)
 
     @Before
     fun setup() {
@@ -35,7 +37,6 @@ internal class BankTransferDetailViewModelTest {
             Clock.fixed(
                 Instant.ofEpochMilli(time),
                 timeZone.toZoneId()))
-//        DateTimeZone.setDefault(DateTimeZone.forTimeZone(timeZone))
         Locale.setDefault(Locale("en", "US"))
     }
 
@@ -45,8 +46,11 @@ internal class BankTransferDetailViewModelTest {
         val dateTimeUtil: DateTimeUtil = mock()
         val snapToken = "SnapToken"
         val paymentType = PaymentType.BNI_VA
-        val bankTransferDetailViewModel =
-            BankTransferDetailViewModel(snapCore = snapCore, dateTimeUtil)
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+
+        val bankTransferDetailViewModel = BankTransferDetailViewModel(snapCore = snapCore, dateTimeUtil)
         bankTransferDetailViewModel.chargeBankTransfer(
             snapToken = snapToken,
             paymentType = paymentType
@@ -56,6 +60,41 @@ internal class BankTransferDetailViewModelTest {
             snapToken = eq(snapToken),
             paymentRequestBuilder = any(),
             callback = callbackCaptor.capture()
+        )
+        verify(eventAnalytics).trackSnapChargeRequest(
+            pageName = PageName.BANK_TRANSFER_DETAIL_PAGE,
+            paymentMethodName = PaymentType.BNI_VA,
+            promoName = null,
+            promoAmount = null,
+            promoId = null,
+            creditCardPoint = null
+        )
+        val callback = callbackCaptor.firstValue
+        callback.onSuccess(
+            TransactionResponse(
+                redirectUrl = "redirect-url",
+                paymentType = paymentType,
+                transactionStatus = "transaction-status",
+                fraudStatus = "fraud-status",
+                currency = "currency",
+                statusCode = "status-code",
+                transactionId = "transaction-id"
+            )
+        )
+        verify(eventAnalytics).trackSnapChargeResult(
+            transactionStatus = eq("transaction-status"),
+            fraudStatus = eq("fraud-status"),
+            currency = eq("currency"),
+            statusCode = eq("status-code"),
+            transactionId = eq("transaction-id"),
+            pageName = eq(PageName.BNI_VA_PAGE),
+            paymentMethodName = eq(paymentType),
+            responseTime = any(),
+            bank = eq(null),
+            channelResponseCode = eq(null),
+            channelResponseMessage = eq(null),
+            cardType = eq(null),
+            threeDsVersion = eq(null)
         )
     }
 
