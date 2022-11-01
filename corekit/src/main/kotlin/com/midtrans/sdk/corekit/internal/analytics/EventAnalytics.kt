@@ -137,7 +137,7 @@ class EventAnalytics(
     fun trackSnapGetTokenRequest(snapToken: String) {
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_GET_TOKEN_REQUEST,
-            properties = mapOf(PROPERTY_SNAP_TOKEN to snapToken) //TODO currently snap token is empty because generate token happened inside sdk, check if it is still needed
+            properties = mapOf(PROPERTY_SNAP_TOKEN to snapToken)
         )
     }
 
