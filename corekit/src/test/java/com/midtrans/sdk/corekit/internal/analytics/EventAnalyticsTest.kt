@@ -45,14 +45,14 @@ internal class EventAnalyticsTest {
             EventName.PROPERTY_PLATFORM to "Mobile",
             EventName.PROPERTY_SDK_VERSION to "2.0.0",
             EventName.PROPERTY_SDK_TYPE to "UI",
-            EventName.PROPERTY_MERCHANT_ID to "id",
-            EventName.PROPERTY_MERCHANT_NAME to "name",
+            EventName.PROPERTY_MERCHANT_ID to "merchant_id",
+            EventName.PROPERTY_MERCHANT_NAME to "merchant_name",
             EventName.PROPERTY_SOURCE_TYPE to "midtrans-mobile",
             EventName.PROPERTY_SERVICE_TYPE to "snap",
             EventName.PROPERTY_SNAP_TYPE to "Mobile"
         )
-        eventAnalytics.setUserIdentity("id", "name", mapOf())
-        verify(mixpanelTracker).setUserIdentity("id", "name", mapOf())
+        eventAnalytics.setUserIdentity("user_id", "user_name","merchant_id", "merchant_name", mapOf())
+        verify(mixpanelTracker).setUserIdentity("user_id", "user_name", mapOf())
         verify(mixpanelTracker).registerCommonProperties(commonProperties)
     }
 
