@@ -113,12 +113,16 @@ internal class PaymentUsecase(
 
     private fun setAnalyticsUserIdentity(): (Transaction) -> Transaction {
         return { transaction ->
-            transaction.merchant?.let { merchant ->
-                val merchantName = merchant.preference?.displayName.orEmpty()
-                merchant.merchantId?.let { id ->
+            val merchantName = transaction.merchant?.preference?.displayName.orEmpty()
+            val merchantId = transaction.merchant?.merchantId.orEmpty()
+            transaction.customerDetails?.apply {
+                val customerName = "$firstName $lastName"
+                email?.also { email ->
                     eventAnalytics.setUserIdentity(
-                        id = id,
-                        name = merchantName
+                        userId = email,
+                        userName = customerName,
+                        merchantId = merchantId,
+                        merchantName = merchantName
                     )
                 }
             }

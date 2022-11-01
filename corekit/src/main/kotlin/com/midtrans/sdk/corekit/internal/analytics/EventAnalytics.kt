@@ -38,16 +38,18 @@ class EventAnalytics(
     private val mixpanelTracker: MixpanelTracker
 ) {
     fun setUserIdentity(
-        id: String,
-        name: String,
+        userId: String,
+        userName: String,
+        merchantId: String,
+        merchantName: String,
         extras: Map<String, String> = mapOf()
     ) {
         mixpanelTracker.setUserIdentity(
-            id = id,
-            name = name,
+            id = userId,
+            name = userName,
             extras = extras
         )
-        registerCommonProperties(saudagarId = id, merchantName = name)
+        registerCommonProperties(saudagarId = merchantId, merchantName = merchantName)
     }
 
     fun testTracker() {
