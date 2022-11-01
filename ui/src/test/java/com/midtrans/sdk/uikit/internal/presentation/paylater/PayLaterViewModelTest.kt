@@ -85,4 +85,14 @@ internal class PayLaterViewModelTest {
             threeDsVersion = eq(null)
         )
     }
+
+    @Test
+    fun verifySnapButtonClicked() {
+        viewModel.trackSnapButtonClicked("cta-name", "payment-type")
+        verify(eventAnalytics).trackSnapCtaClicked(
+            ctaName = "cta-name",
+            pageName = PageName.AKULAKU_PAGE,
+            paymentMethodName = "payment-type"
+        )
+    }
 }
