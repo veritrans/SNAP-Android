@@ -30,8 +30,9 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
+import javax.inject.Inject
 
-class PaymentOptionViewModel(
+class PaymentOptionViewModel @Inject constructor(
     private val snapCore: SnapCore
 ) : ViewModel() {
 

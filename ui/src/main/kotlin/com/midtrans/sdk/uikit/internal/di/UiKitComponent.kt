@@ -13,6 +13,7 @@ import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActiv
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobPaymentActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobSelectionActivity
 import com.midtrans.sdk.uikit.internal.presentation.paylater.PayLaterActivity
+import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -46,4 +47,5 @@ internal interface UiKitComponent {
     fun inject(activity: UobSelectionActivity)
     fun inject(activity: PayLaterActivity)
     fun inject(activity: ConvenienceStoreActivity)
+    fun inject(activity: PaymentOptionActivity)
 }
