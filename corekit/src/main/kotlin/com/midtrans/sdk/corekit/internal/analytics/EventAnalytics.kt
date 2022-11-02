@@ -40,8 +40,6 @@ class EventAnalytics(
     fun setUserIdentity(
         userId: String,
         userName: String,
-        merchantId: String,
-        merchantName: String,
         extras: Map<String, String> = mapOf()
     ) {
         mixpanelTracker.setUserIdentity(
@@ -49,7 +47,7 @@ class EventAnalytics(
             name = userName,
             extras = extras
         )
-        registerCommonMerchantProperty(saudagarId = merchantId, merchantName = merchantName)
+
     }
 
     fun registerCommonProperties(platform: String) {
@@ -68,24 +66,16 @@ class EventAnalytics(
     fun registerCommonTransactionProperties(
         snapToken: String,
         orderId: String,
-        grossAmount: String
+        grossAmount: String,
+        merchantId: String,
+        merchantName: String
     ) {
         mixpanelTracker.registerCommonProperties(
             mapOf(
                 PROPERTY_SNAP_TOKEN to snapToken,
                 PROPERTY_ORDER_ID to orderId,
-                PROPERTY_GROSS_AMOUNT to grossAmount
-            )
-        )
-    }
-
-    private fun registerCommonMerchantProperty(//TODO separate this with merchant info
-        saudagarId: String,
-        merchantName: String
-    ) {
-        mixpanelTracker.registerCommonProperties(
-            mapOf(
-                PROPERTY_MERCHANT_ID to saudagarId,
+                PROPERTY_GROSS_AMOUNT to grossAmount,
+                PROPERTY_MERCHANT_ID to merchantId,
                 PROPERTY_MERCHANT_NAME to merchantName
             )
         )
