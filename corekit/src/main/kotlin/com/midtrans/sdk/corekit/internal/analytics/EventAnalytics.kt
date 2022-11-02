@@ -49,29 +49,44 @@ class EventAnalytics(
             name = userName,
             extras = extras
         )
-        registerCommonProperties(saudagarId = merchantId, merchantName = merchantName)
+        registerCommonMerchantProperty(saudagarId = merchantId, merchantName = merchantName)
     }
 
-    fun registerPropertyPlatform(isTablet: Boolean) {
-        val platform = if (isTablet) "Tablet" else "Mobile"
+    fun registerCommonProperties(platform: String) {
         mixpanelTracker.registerCommonProperties(
-            mapOf(PROPERTY_PLATFORM to platform)
+            mapOf(
+                PROPERTY_SDK_VERSION to BuildConfig.SDK_VERSION,
+                PROPERTY_SDK_TYPE to "UI",
+                PROPERTY_SOURCE_TYPE to "midtrans-mobile",
+                PROPERTY_SERVICE_TYPE to "snap",
+                PROPERTY_SNAP_TYPE to "Sdk",
+                PROPERTY_PLATFORM to platform
+            )
         )
     }
 
-    private fun registerCommonProperties(
+    fun registerCommonTransactionProperties(
+        snapToken: String,
+        orderId: String,
+        grossAmount: String
+    ) {
+        mixpanelTracker.registerCommonProperties(
+            mapOf(
+                PROPERTY_SNAP_TOKEN to snapToken,
+                PROPERTY_ORDER_ID to orderId,
+                PROPERTY_GROSS_AMOUNT to grossAmount
+            )
+        )
+    }
+
+    private fun registerCommonMerchantProperty(//TODO separate this with merchant info
         saudagarId: String,
         merchantName: String
     ) {
         mixpanelTracker.registerCommonProperties(
             mapOf(
-                PROPERTY_SDK_VERSION to BuildConfig.SDK_VERSION,
-                PROPERTY_SDK_TYPE to "UI",
                 PROPERTY_MERCHANT_ID to saudagarId,
-                PROPERTY_MERCHANT_NAME to merchantName,
-                PROPERTY_SOURCE_TYPE to "midtrans-mobile",
-                PROPERTY_SERVICE_TYPE to "snap",
-                PROPERTY_SNAP_TYPE to "Sdk"
+                PROPERTY_MERCHANT_NAME to merchantName
             )
         )
     }
@@ -176,17 +191,4 @@ class EventAnalytics(
         )
     }
 
-    fun registerCommonTransactionProperties(
-        snapToken: String,
-        orderId: String,
-        grossAmount: String
-    ) {
-        mixpanelTracker.registerCommonProperties(
-            mapOf(
-                PROPERTY_SNAP_TOKEN to snapToken,
-                PROPERTY_ORDER_ID to orderId,
-                PROPERTY_GROSS_AMOUNT to grossAmount
-            )
-        )
-    }
 }
