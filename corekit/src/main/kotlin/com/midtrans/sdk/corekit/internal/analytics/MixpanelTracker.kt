@@ -10,8 +10,10 @@ class MixpanelTracker(private val mixpanelApi: MixpanelAPI) {
         extras: Map<String, String>
     ) {
         mixpanelApi.apply {
-            identify(id)
-            alias(anonymousId, id)
+            if (!people.isIdentified) {
+                alias(id, distinctId)
+            }
+            identify(id, true)
             people.set(PROPERTY_NAME, name)
             people.setMap(extras)
         }
