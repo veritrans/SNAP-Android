@@ -38,20 +38,42 @@ class EventAnalytics(
     private val mixpanelTracker: MixpanelTracker
 ) {
     fun setUserIdentity(
-        id: String,
-        name: String,
+        userId: String,
+        userName: String,
+        merchantId: String,
+        merchantName: String,
         extras: Map<String, String> = mapOf()
     ) {
         mixpanelTracker.setUserIdentity(
-            id = id,
-            name = name,
+            id = userId,
+            name = userName,
             extras = extras
         )
-        registerCommonProperties(saudagarId = id, merchantName = name)
+        registerCommonProperties(saudagarId = merchantId, merchantName = merchantName)
     }
 
-    fun testTracker() {
-        mixpanelTracker.trackEvent("testEvent")
+    fun registerPropertyPlatform(isTablet: Boolean) {
+        val platform = if (isTablet) "Tablet" else "Mobile"
+        mixpanelTracker.registerCommonProperties(
+            mapOf(PROPERTY_PLATFORM to platform)
+        )
+    }
+
+    private fun registerCommonProperties(
+        saudagarId: String,
+        merchantName: String
+    ) {
+        mixpanelTracker.registerCommonProperties(
+            mapOf(
+                PROPERTY_SDK_VERSION to BuildConfig.SDK_VERSION,
+                PROPERTY_SDK_TYPE to "UI",
+                PROPERTY_MERCHANT_ID to saudagarId,
+                PROPERTY_MERCHANT_NAME to merchantName,
+                PROPERTY_SOURCE_TYPE to "midtrans-mobile",
+                PROPERTY_SERVICE_TYPE to "snap",
+                PROPERTY_SNAP_TYPE to "Sdk"
+            )
+        )
     }
 
     //TODO will be implemented separately
@@ -78,16 +100,16 @@ class EventAnalytics(
         promoId: String? = null,
         creditCardPoint: String? = null
     ) {
-        val optional = mutableMapOf<String, String>()
-        promoName?.also { optional[PROPERTY_PROMO_NAME] = it }
-        promoAmount?.also { optional[PROPERTY_PROMO_AMOUNT] = it }
-        promoId?.also { optional[PROPERTY_PROMO_ID] = it }
-        creditCardPoint?.also { optional[PROPERTY_CREDIT_CARD_POINT] = it }
+        val optionalProperties = mutableMapOf<String, String>()
+        promoName?.also { optionalProperties[PROPERTY_PROMO_NAME] = it }
+        promoAmount?.also { optionalProperties[PROPERTY_PROMO_AMOUNT] = it }
+        promoId?.also { optionalProperties[PROPERTY_PROMO_ID] = it }
+        creditCardPoint?.also { optionalProperties[PROPERTY_CREDIT_CARD_POINT] = it }
 
         val properties = mapOf(
             PROPERTY_PAGE_NAME to pageName,
             PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
-        ) + optional
+        ) + optionalProperties
 
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_CHARGE_REQUEST,
@@ -110,12 +132,12 @@ class EventAnalytics(
         cardType: String? = null,
         threeDsVersion: String? = null
     ) {
-        val optional = mutableMapOf<String, String>()
-        bank?.also { optional[PROPERTY_CHARGE_RESPONSE_BANK] = it }
-        channelResponseCode?.also { optional[PROPERTY_CHANNEL_RESPONSE_CODE] = it }
-        channelResponseMessage?.also { optional[PROPERTY_CHANNEL_RESPONSE_MESSAGE] = it }
-        cardType?.also { optional[PROPERTY_CARD_TYPE] = it }
-        threeDsVersion?.also { optional[PROPERTY_3DS_VERSION] = it }
+        val optionalProperties = mutableMapOf<String, String>()
+        bank?.also { optionalProperties[PROPERTY_CHARGE_RESPONSE_BANK] = it }
+        channelResponseCode?.also { optionalProperties[PROPERTY_CHANNEL_RESPONSE_CODE] = it }
+        channelResponseMessage?.also { optionalProperties[PROPERTY_CHANNEL_RESPONSE_MESSAGE] = it }
+        cardType?.also { optionalProperties[PROPERTY_CARD_TYPE] = it }
+        threeDsVersion?.also { optionalProperties[PROPERTY_3DS_VERSION] = it }
 
         val properties = mapOf(
             PROPERTY_TRANSACTION_STATUS to transactionStatus,
@@ -126,7 +148,7 @@ class EventAnalytics(
             PROPERTY_PAGE_NAME to pageName,
             PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName,
             PROPERTY_RESPONSE_TIME to responseTime,
-        ) + optional
+        ) + optionalProperties
 
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_CHARGE_RESULTS,
@@ -150,24 +172,6 @@ class EventAnalytics(
             properties = mapOf(
                 PROPERTY_SNAP_TOKEN to snapToken,
                 PROPERTY_RESPONSE_TIME to responseTime
-            )
-        )
-    }
-
-    private fun registerCommonProperties(
-        saudagarId: String,
-        merchantName: String
-    ) {
-        mixpanelTracker.registerCommonProperties(
-            mapOf(
-                PROPERTY_PLATFORM to "Mobile",
-                PROPERTY_SDK_VERSION to BuildConfig.SDK_VERSION,
-                PROPERTY_SDK_TYPE to "UI",
-                PROPERTY_MERCHANT_ID to saudagarId,
-                PROPERTY_MERCHANT_NAME to merchantName,
-                PROPERTY_SOURCE_TYPE to "midtrans-mobile",
-                PROPERTY_SERVICE_TYPE to "snap",
-                PROPERTY_SNAP_TYPE to "Mobile"
             )
         )
     }

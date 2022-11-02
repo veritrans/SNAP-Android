@@ -1,6 +1,7 @@
 package com.midtrans.sdk.uikit.internal.presentation.paymentoption
 
 import androidx.lifecycle.ViewModel
+import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.model.Address
 import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.PaymentMethod
@@ -29,14 +30,19 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
+import javax.inject.Inject
 
-class PaymentOptionViewModel : ViewModel() {
+class PaymentOptionViewModel @Inject constructor(
+    private val snapCore: SnapCore
+) : ViewModel() {
 
     fun initiateList(
         paymentList: List<PaymentMethod>,
         isTabletDevice: Boolean
     ): PaymentMethodList {
         val paymentMethodItems = mutableListOf<PaymentMethodItem>()
+
+        snapCore.getEventAnalytics().registerPropertyPlatform(isTabletDevice)
 
         paymentList.forEach {
             if (isValidMethod(it.type, isTabletDevice)) {
@@ -55,20 +61,20 @@ class PaymentOptionViewModel : ViewModel() {
 
     private fun isValidMethod(type: String, isTabletDevice: Boolean): Boolean {
         return type == INDOMARET
-                || type == ALFAMART
-                || type == BANK_TRANSFER
-                || type == KLIK_BCA
-                || type == BCA_KLIKPAY
-                || type == CIMB_CLICKS
-                || type == BRI_EPAY
-                || type == DANAMON_ONLINE
-                || type == UOB_EZPAY
-                || type == CREDIT_CARD
-                || type == AKULAKU
-                || (type == GOPAY && !isTabletDevice)
-                || (type == GOPAY_QRIS && isTabletDevice)
-                || (type == SHOPEEPAY && !isTabletDevice)
-                || (type == SHOPEEPAY_QRIS && isTabletDevice)
+            || type == ALFAMART
+            || type == BANK_TRANSFER
+            || type == KLIK_BCA
+            || type == BCA_KLIKPAY
+            || type == CIMB_CLICKS
+            || type == BRI_EPAY
+            || type == DANAMON_ONLINE
+            || type == UOB_EZPAY
+            || type == CREDIT_CARD
+            || type == AKULAKU
+            || (type == GOPAY && !isTabletDevice)
+            || (type == GOPAY_QRIS && isTabletDevice)
+            || (type == SHOPEEPAY && !isTabletDevice)
+            || (type == SHOPEEPAY_QRIS && isTabletDevice)
     }
 
     private fun getIcons(type: String, channels: List<String>, isTabletDevice: Boolean): List<Int> {
@@ -94,7 +100,9 @@ class PaymentOptionViewModel : ViewModel() {
                     R.drawable.ic_outline_qris_40
                 )
             }
-            SHOPEEPAY -> { listOf(R.drawable.ic_outline_shopeepaylogo_40) }
+            SHOPEEPAY -> {
+                listOf(R.drawable.ic_outline_shopeepaylogo_40)
+            }
             SHOPEEPAY_QRIS -> {
                 listOf(
                     R.drawable.ic_outline_shopeepaylogo_40,

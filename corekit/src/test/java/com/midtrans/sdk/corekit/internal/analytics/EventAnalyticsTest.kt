@@ -5,6 +5,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_R
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_RESULTS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PLATFORM
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CURRENCY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_FRAUD_STATUS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAGE_NAME
@@ -42,18 +43,26 @@ internal class EventAnalyticsTest {
     @Test
     fun verifySetUserIdentity() {
         val commonProperties = mapOf(
-            EventName.PROPERTY_PLATFORM to "Mobile",
             EventName.PROPERTY_SDK_VERSION to "2.0.0",
             EventName.PROPERTY_SDK_TYPE to "UI",
-            EventName.PROPERTY_MERCHANT_ID to "id",
-            EventName.PROPERTY_MERCHANT_NAME to "name",
+            EventName.PROPERTY_MERCHANT_ID to "merchant_id",
+            EventName.PROPERTY_MERCHANT_NAME to "merchant_name",
             EventName.PROPERTY_SOURCE_TYPE to "midtrans-mobile",
             EventName.PROPERTY_SERVICE_TYPE to "snap",
-            EventName.PROPERTY_SNAP_TYPE to "Mobile"
+            EventName.PROPERTY_SNAP_TYPE to "Sdk"
         )
-        eventAnalytics.setUserIdentity("id", "name", mapOf())
-        verify(mixpanelTracker).setUserIdentity("id", "name", mapOf())
+        eventAnalytics.setUserIdentity("user_id", "user_name","merchant_id", "merchant_name", mapOf())
+        verify(mixpanelTracker).setUserIdentity("user_id", "user_name", mapOf())
         verify(mixpanelTracker).registerCommonProperties(commonProperties)
+    }
+
+    @Test
+    fun verifyRegisterPropertyPlatform() {
+        val isTablet = true
+        eventAnalytics.registerPropertyPlatform(isTablet)
+        verify(mixpanelTracker).registerCommonProperties(
+            mapOf(PROPERTY_PLATFORM to "Tablet")
+        )
     }
 
     @Test
