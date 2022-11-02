@@ -226,7 +226,7 @@ internal object SnapCreditCardUtil {
                 identifier = promoResponse.id.toString(),
                 leftText = promoResponse.name.orEmpty(),
                 rightText = "-${promoResponse.calculatedDiscountAmount.currencyFormatRp()}",
-                subLeftText = promoResponse.bins?.let { subLeftText(it, binNumber) },
+                subLeftText = promoResponse.bins?.let { getSubLeftText(promoResponse, binNumber) },
                 enabled = mutableStateOf(
                     (binNumber.isNotBlank().and(promoResponse.bins.isNullOrEmpty()))
                         .or(promoResponse.bins?.any { binNumber.startsWith(it)}?: false )
@@ -236,12 +236,12 @@ internal object SnapCreditCardUtil {
         }?.sortedByDescending { it.enabled.value }
     }
 
-    private fun subLeftText(promoBins: List<String>, binNumber: String) : String?{
+    private fun getSubLeftText(promoResponse: Promo, binNumber: String) : String?{
         var output: String? = null
         val cardNotEligibleMessage = "Can't use this promo with selected card"
 
-        if(promoBins.isNotEmpty() && binNumber.isNotBlank()){
-            if (!promoBins.any { binNumber.startsWith(it) }) {
+        if(promoResponse.bins!!.isNotEmpty() && binNumber.isNotBlank()){
+            if (!promoResponse.bins!!.any { binNumber.startsWith(it) }) {
                 output = cardNotEligibleMessage
             }
         }
