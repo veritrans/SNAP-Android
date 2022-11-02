@@ -5,6 +5,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.model.*
+import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
+import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.internal.getOrAwaitValue
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
@@ -45,6 +47,7 @@ class CreditCardViewModelTest {
         val errorCard: ErrorCard = mock()
         val snapCreditCardUtil: SnapCreditCardUtil = mock()
         val dateTimeUtil: DateTimeUtil = mock()
+        val eventAnalytics: EventAnalytics = mock()
         val snapToken = "SnapToken"
         val paymentType = PaymentType.CREDIT_CARD
         val cardNumber = TextFieldValue(text = "1111 1111 1111")
@@ -55,6 +58,8 @@ class CreditCardViewModelTest {
         `when`(snapCreditCardUtil.getCardNumberFromTextField(any())).thenReturn("")
         `when`(snapCreditCardUtil.getExpMonthFromTextField(any())).thenReturn("")
         `when`(snapCreditCardUtil.getExpYearFromTextField(any())).thenReturn("")
+        `when`(snapCore.getEventAnalytics()).thenReturn(eventAnalytics)
+        `when`(errorCard.getErrorCardType(transactionResponse = any(), allowRetry = any())).thenReturn(null)
 
         val cardTokenResponse = CardTokenResponse(
             statusCode = "200",
@@ -66,7 +71,12 @@ class CreditCardViewModelTest {
         )
 
         val transactionResponse = TransactionResponse(
-            statusCode = "200"
+            statusCode = "200",
+            paymentType = paymentType,
+            transactionStatus = "transaction-status",
+            fraudStatus = "fraud-status",
+            currency = "currency",
+            transactionId = "transaction-id"
         )
         whenever(errorCard.getErrorCardType(transactionResponse, false)).thenReturn(null)
 
@@ -75,8 +85,10 @@ class CreditCardViewModelTest {
             grossAmount = 5000.0,
             currency = "IDR"
         )
+
         val creditCardViewModel =
             CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil, errorCard)
+
         creditCardViewModel.chargeUsingCreditCard(
             transactionDetails = transactionDetail,
             cardNumber = cardNumber,
@@ -103,10 +115,33 @@ class CreditCardViewModelTest {
             paymentRequestBuilder = any(),
             callback = callbackCaptor.capture()
         )
+        verify(eventAnalytics).trackSnapChargeRequest(
+            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+            paymentMethodName = paymentType,
+            promoName = null,
+            promoAmount = null,
+            promoId = null,
+            creditCardPoint = null
+        )
 
         val callback = callbackCaptor.firstValue
         callback.onSuccess(transactionResponse)
         Assert.assertEquals(transactionResponse, creditCardViewModel.transactionResponseLiveData.getOrAwaitValue())
+        verify(eventAnalytics).trackSnapChargeResult(
+            transactionStatus = eq("transaction-status"),
+            fraudStatus = eq("fraud-status"),
+            currency = eq("currency"),
+            statusCode = eq("200"),
+            transactionId = eq("transaction-id"),
+            pageName = eq(PageName.CREDIT_DEBIT_CARD_PAGE),
+            paymentMethodName = eq(paymentType),
+            responseTime = any(),
+            bank = eq(null),
+            channelResponseCode = eq(null),
+            channelResponseMessage = eq(null),
+            cardType = eq(null),
+            threeDsVersion = eq(null)
+        )
     }
 
 
@@ -147,7 +182,7 @@ class CreditCardViewModelTest {
         val bankIconResId = 1
         val bankCode = "009"
         val binResponse = BinResponse(
-            data = BinData(null, null, null, null, null, null, null, bankCode, null, null)
+            data = BinData(null, null, null, null, null, null, null, bankCode, null)
         )
         `when`(snapCreditCardUtil.getBankIcon(bankCode)).thenReturn(bankIconResId)
         val creditCardViewModel =
