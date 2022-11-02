@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class ItemDetails(
+open class ItemDetails(
     val id: String? = null,
     val price: Double? = null,
     val quantity: Int = 0,
