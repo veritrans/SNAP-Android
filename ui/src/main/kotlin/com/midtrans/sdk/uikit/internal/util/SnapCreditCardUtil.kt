@@ -228,6 +228,7 @@ internal object SnapCreditCardUtil {
                 leftText = promoResponse.name.orEmpty(),
                 rightText = "-${promoResponse.calculatedDiscountAmount.currencyFormatRp()}",
                 subLeftText = getSubLeftText(promoResponse, binNumber, selectedTerm),
+                installmentTerm = promoResponse.installmentTerms,
                 enabled = mutableStateOf(
                     (binNumber.isNotBlank().and(promoResponse.bins.isNullOrEmpty()))
                         .or(promoResponse.bins?.any { binNumber.startsWith(it) } ?: false)
@@ -237,15 +238,16 @@ internal object SnapCreditCardUtil {
         }?.sortedByDescending { it.enabled.value }
     }
 
-    private fun getSubLeftText(promoResponse: Promo, binNumber: String, selectedTerm: String): String? {
-        var output: String? = null
-        val cardNotEligibleMessage = "Can't use this promo with selected card"
+    private fun getSubLeftText(promoResponse: Promo, binNumber: String, selectedTerm: String): Int? {
+        var output: Int? = null
+        val promoInstallmentNotSupported = R.string.cant_continue_promo_installment_condition
+        val cardNotEligibleMessage = R.string.cant_continue_promo_card_not_eligible
 
         promoResponse.bins?.let { promoBins ->
             promoResponse.installmentTerms?.let { installmentTerms ->
                 if (promoBins.isNotEmpty() && binNumber.isNotBlank()) {
                     if (!installmentTerms.any { selectedTerm == it }) {
-                        output = "Only available for $installmentTerms installment"
+                        output = promoInstallmentNotSupported
                     } else if (!promoBins.any { binNumber.startsWith(it) }) {
                         output = cardNotEligibleMessage
                     }

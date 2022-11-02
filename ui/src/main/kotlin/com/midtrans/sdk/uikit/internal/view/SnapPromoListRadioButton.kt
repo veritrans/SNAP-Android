@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 
@@ -97,9 +98,13 @@ fun SnapPromoListRadioButtonItem(promoData: PromoData) {
                 )
             }
         }
-        promoData.subLeftText?.let {
+        promoData.subLeftText?.let { subLeftText ->
             Text(
-                text = it,
+                text = promoData.installmentTerm?.let {
+                    stringResource(id = subLeftText, getInstallmentTermsString(it))
+                } ?: run {
+                    stringResource(id = subLeftText)
+                 },
                 style = SnapTypography.STYLES.snapTextSmallRegular,
                 color = SnapColors.getARGBColor(if (enabled) SnapColors.textPrimary else SnapColors.textMuted)
             )
@@ -108,10 +113,19 @@ fun SnapPromoListRadioButtonItem(promoData: PromoData) {
     }
 }
 
+private fun getInstallmentTermsString(installmentTerms: List<String>) : String {
+    var string = ""
+    for (term in installmentTerms){
+        string += "$term,"
+    }
+    return string.dropLast(1)
+}
+
 data class PromoData(
     val identifier: String? = null,
     val leftText: String,
     val rightText: String,
-    val subLeftText: String? = null,
+    val subLeftText: Int? = null,
+    val installmentTerm: List<String>? = null,
     var enabled: MutableState<Boolean> = mutableStateOf(true)
 )
