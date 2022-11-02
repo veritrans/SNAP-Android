@@ -226,23 +226,29 @@ internal object SnapCreditCardUtil {
                 identifier = promoResponse.id.toString(),
                 leftText = promoResponse.name.orEmpty(),
                 rightText = "-${promoResponse.calculatedDiscountAmount.currencyFormatRp()}",
-                subLeftText = promoResponse.bins?.let { getSubLeftText(promoResponse, binNumber) },
+                subLeftText = getSubLeftText(promoResponse, binNumber, selectedTerm),
                 enabled = mutableStateOf(
                     (binNumber.isNotBlank().and(promoResponse.bins.isNullOrEmpty()))
-                        .or(promoResponse.bins?.any { binNumber.startsWith(it)}?: false )
-                        .and(promoResponse.installmentTerms?.any { selectedTerm == it }?: false)
+                        .or(promoResponse.bins?.any { binNumber.startsWith(it) } ?: false)
+                        .and(promoResponse.installmentTerms?.any { selectedTerm == it } ?: false)
                 )
             )
         }?.sortedByDescending { it.enabled.value }
     }
 
-    private fun getSubLeftText(promoResponse: Promo, binNumber: String) : String?{
+    private fun getSubLeftText(promoResponse: Promo, binNumber: String, selectedTerm: String): String? {
         var output: String? = null
         val cardNotEligibleMessage = "Can't use this promo with selected card"
 
-        if(promoResponse.bins!!.isNotEmpty() && binNumber.isNotBlank()){
-            if (!promoResponse.bins!!.any { binNumber.startsWith(it) }) {
-                output = cardNotEligibleMessage
+        promoResponse.bins?.let { promoBins ->
+            promoResponse.installmentTerms?.let { installmentTerms ->
+                if (promoBins.isNotEmpty() && binNumber.isNotBlank()) {
+                    if (!installmentTerms.any { selectedTerm == it }) {
+                        output = "Only available for $installmentTerms installment"
+                    } else if (!promoBins.any { binNumber.startsWith(it) }) {
+                        output = cardNotEligibleMessage
+                    }
+                }
             }
         }
         return output
