@@ -32,17 +32,13 @@ import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
 import javax.inject.Inject
 
-class PaymentOptionViewModel @Inject constructor(
-    private val snapCore: SnapCore
-) : ViewModel() {
+class PaymentOptionViewModel : ViewModel() {
 
     fun initiateList(
         paymentList: List<PaymentMethod>,
         isTabletDevice: Boolean
     ): PaymentMethodList {
         val paymentMethodItems = mutableListOf<PaymentMethodItem>()
-
-        snapCore.getEventAnalytics().registerPropertyPlatform(isTabletDevice)
 
         paymentList.forEach {
             if (isValidMethod(it.type, isTabletDevice)) {

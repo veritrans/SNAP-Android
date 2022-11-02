@@ -9,6 +9,7 @@ import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitViewM
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobPaymentViewModel
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobSelectionViewModel
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletViewModel
+import com.midtrans.sdk.uikit.internal.presentation.loadingpayment.LoadingPaymentViewModel
 import com.midtrans.sdk.uikit.internal.presentation.paylater.PayLaterViewModel
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionViewModel
 import dagger.Binds
@@ -65,6 +66,6 @@ internal abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(PaymentOptionViewModel::class)
-    abstract fun bindPaymentOptionViewModel(viewModel: PaymentOptionViewModel): ViewModel
+    @ViewModelKey(LoadingPaymentViewModel::class)
+    abstract fun bindLoadingPaymentViewModel(viewModel: LoadingPaymentViewModel): ViewModel
 }

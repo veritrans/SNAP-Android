@@ -25,12 +25,12 @@ import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.AnimatedIcon
+import javax.inject.Inject
 
 class LoadingPaymentActivity : BaseActivity() {
 
     companion object {
-        private const val EXTRA_TRANSACTION_DETAIL =
-            "loadingPaymentActivity.extra.transaction_detail"
+        private const val EXTRA_TRANSACTION_DETAIL = "loadingPaymentActivity.extra.transaction_detail"
         private const val EXTRA_SNAP_TOKEN = "loadingPaymentActivity.extra.snap_token"
         private const val EXTRA_CUSTOMER_DETAILS = "loadingPaymentActivity.extra.customer_details"
         private const val EXTRA_ITEM_DETAILS = "loadingPaymentActivity.extra.item_details"
@@ -47,10 +47,8 @@ class LoadingPaymentActivity : BaseActivity() {
         private const val EXTRA_CUSTOM_FIELD2 = "loadingPaymentActivity.extra.custom_field2"
         private const val EXTRA_CUSTOM_FIELD3 = "loadingPaymentActivity.extra.custom_field3"
         private const val EXTRA_GOPAY_CALLBACK = "loadingPaymentActivity.extra.gopay_callback"
-        private const val EXTRA_SHOPEEPAY_CALLBACK =
-            "loadingPaymentActivity.extra.shopeepay_callback"
-        private const val EXTRA_UOB_EZPAY_CALLBACK =
-            "loadingPaymentActivity.extra.uob_ezpay_callback"
+        private const val EXTRA_SHOPEEPAY_CALLBACK = "loadingPaymentActivity.extra.shopeepay_callback"
+        private const val EXTRA_UOB_EZPAY_CALLBACK = "loadingPaymentActivity.extra.uob_ezpay_callback"
         private const val EXTRA_PAYMENT_TYPE = "loadingPaymentActivity.extra.payment_type"
 
         fun getLoadingPaymentIntent(
@@ -100,6 +98,9 @@ class LoadingPaymentActivity : BaseActivity() {
             }
         }
     }
+
+    @Inject
+    internal lateinit var vmFactory: ViewModelProvider.Factory
 
     private val transactionDetails: SnapTransactionDetail by lazy {
         intent.getParcelableExtra(EXTRA_TRANSACTION_DETAIL) as? SnapTransactionDetail
@@ -163,19 +164,23 @@ class LoadingPaymentActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_PAYMENT_TYPE)
     }
     private val viewModel: LoadingPaymentViewModel by lazy {
-        ViewModelProvider(this).get(LoadingPaymentViewModel::class.java)
+        ViewModelProvider(this, vmFactory).get(LoadingPaymentViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        UiKitApi.getDefaultInstance().daggerComponent.inject(this)
+
         initObserver()
         setContent {
             LoadAnimation()
         }
-       loadPaymentOptions()
+        loadPaymentOptions()
     }
 
     private fun loadPaymentOptions(){
+        viewModel.registerCommonProperties(isTabletDevice())
         viewModel.getPaymentOption(
             transactionDetails = transactionDetails,
             snapToken = snapToken,
