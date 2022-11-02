@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
@@ -41,8 +42,9 @@ internal class WalletActivity : BaseActivity() {
     var deepLinkUrl: String? = null
 
     private val deepLinkLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            viewModel.checkStatus(snapToken)
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            setResult(result.resultCode, result.data)
+            finish()
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,13 +65,17 @@ internal class WalletActivity : BaseActivity() {
             snapToken = snapToken,
             paymentType = paymentType
         )
-        if (!isTabletDevice()) {
-            observerDeepLinkUrl()
-        }
-        observeTransactionResult()
+        observeLiveData()
     }
 
-    private fun observerDeepLinkUrl() {
+    private fun observeLiveData() {
+        if (!isTabletDevice()) {
+            observeDeepLinkUrl()
+        }
+        observeChargeResult()
+    }
+
+    private fun observeDeepLinkUrl() {
         viewModel.deepLinkUrlLiveData.observe(this) { url ->
             deepLinkUrl = url
         }
@@ -77,16 +83,25 @@ internal class WalletActivity : BaseActivity() {
 
     private fun openDeepLink() {
         deepLinkUrl?.let {
-            val intent = DeepLinkActivity.getIntent(this, paymentType, it)
+            val intent = DeepLinkActivity.getIntent(
+                activityContext = this,
+                paymentType = paymentType,
+                url = it,
+                snapToken = snapToken
+            )
             deepLinkLauncher.launch(intent)
         }
     }
 
-    private fun observeTransactionResult() {
-        viewModel.transactionResultLiveData.observe(this) {
-            val resultIntent = Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, it)
-            setResult(Activity.RESULT_OK, resultIntent)
+    private fun observeChargeResult() {
+        viewModel.chargeResultLiveData.observe(this) {
+            setResult(it)
         }
+    }
+
+    private fun setResult(data: TransactionResult) {
+        val resultIntent = Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, data)
+        setResult(Activity.RESULT_OK, resultIntent)
     }
 
     private fun updateExpiredTime(): Observable<String> {

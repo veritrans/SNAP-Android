@@ -76,7 +76,7 @@ class SampleActivity : AppCompatActivity() {
         if (resultCode == RESULT_OK) {
             val transactionResult = data?.getParcelableExtra<TransactionResult>(
                 UiKitConstants.KEY_TRANSACTION_RESULT)
-            Toast.makeText(this@SampleActivity, "Coba trxid pake legacy kode $requestCode ${transactionResult?.transactionId.orEmpty()}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@SampleActivity, "Transaction ${transactionResult?.transactionId.orEmpty()} status ${transactionResult?.status.orEmpty()}", Toast.LENGTH_LONG).show()
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
