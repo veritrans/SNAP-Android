@@ -88,7 +88,7 @@ internal class CreditCardViewModel @Inject constructor(
 
     fun setPromos(promos: List<Promo>?){
         this.promos = promos
-        getPromosData("")
+        getPromosData("", "")
     }
 
     fun setTransactionDetails(transactionDetails: TransactionDetails?){
@@ -102,8 +102,8 @@ internal class CreditCardViewModel @Inject constructor(
         }
     }
 
-    fun getPromosData(binNumber: String) {
-        _promoDataLiveData.value = snapCreditCardUtil.getCreditCardApplicablePromosData(binNumber, promos)
+    fun getPromosData(binNumber: String, installmentTerm: String) {
+        _promoDataLiveData.value = snapCreditCardUtil.getCreditCardApplicablePromosData(binNumber, promos, installmentTerm)
     }
 
     fun getBinData(binNumber: String) {

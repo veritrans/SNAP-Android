@@ -278,7 +278,7 @@ internal class CreditCardActivity : BaseActivity() {
 
                     state.cardNumber = it
                     val cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
-                    viewModel?.getPromosData(binNumber = cardNumberWithoutSpace)
+                    viewModel?.getPromosData(binNumber = cardNumberWithoutSpace, installmentTerm = installmentTerm)
                     if (cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER) {
                         val eightDigitNumber = cardNumberWithoutSpace.substring(
                             0,
@@ -320,7 +320,10 @@ internal class CreditCardActivity : BaseActivity() {
                         )
                     }
                 },
-                onInstallmentTermSelected = { installmentTerm = it },
+                onInstallmentTermSelected = {
+                    installmentTerm = it
+                    viewModel?.getPromosData(binNumber = SnapCreditCardUtil.getCardNumberFromTextField(state.cardNumber), installmentTerm = installmentTerm)
+                },
                 withCustomerPhoneEmail = withCustomerPhoneEmail,
                 promoState = promoState,
                 onSavedCardRadioSelected = { selectedFormData = it }
