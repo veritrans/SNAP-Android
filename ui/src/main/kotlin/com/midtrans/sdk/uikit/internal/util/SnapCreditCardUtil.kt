@@ -218,8 +218,9 @@ internal object SnapCreditCardUtil {
         }
     }
 
-    fun getCreditCardApplicablePromosData(binNumber: String, promos: List<Promo>?): List<PromoData>?{
+    fun getCreditCardApplicablePromosData(binNumber: String, promos: List<Promo>?, installmentTerm: String): List<PromoData>?{
         val creditCardPromos = promos?.filter { promo -> promo.paymentTypes?.contains(PaymentType.CREDIT_CARD)?: false }?.ifEmpty{ null }
+        val selectedTerm = installmentTerm.substringAfter("_")
         return creditCardPromos?.map { promoResponse ->
             PromoData(
                 identifier = promoResponse.id.toString(),
@@ -229,6 +230,7 @@ internal object SnapCreditCardUtil {
                 enabled = mutableStateOf(
                     (binNumber.isNotBlank().and(promoResponse.bins.isNullOrEmpty()))
                         .or(promoResponse.bins?.any { binNumber.startsWith(it)}?: false )
+                        .and(promoResponse.installmentTerms?.any { selectedTerm == it }?: false)
                 )
             )
         }?.sortedByDescending { it.enabled.value }

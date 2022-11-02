@@ -11,6 +11,7 @@ data class Promo(
     val paymentTypes: List<String>? = null,
     val calculatedDiscountAmount: Double = 0.0,
     val discountedGrossAmount: Double = 0.0,
+    val installmentTerms: List<String>? = null,
     val discountType: String? = null,
     val startDate: String? = null,
     val endDate: String? = null,
