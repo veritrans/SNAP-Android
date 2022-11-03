@@ -231,12 +231,13 @@ class CreditCardViewModelTest {
         val errorCard: ErrorCard = mock()
         val snapCreditCardUtil: SnapCreditCardUtil = mock()
         val promoData: List<PromoData> = mock()
-        `when`(snapCreditCardUtil.getCreditCardApplicablePromosData(any(), any())).thenReturn(promoData)
+        `when`(snapCreditCardUtil.getCreditCardApplicablePromosData(any(), any(), any())).thenReturn(promoData)
 
         val promo = Promo(
             id = 1L,
             name = "promo",
             bins = listOf("481111"),
+            installmentTerms = listOf("0", "3", "6", "12"),
             calculatedDiscountAmount = 1000.0,
             paymentTypes = listOf(PaymentType.CREDIT_CARD),
             discountedGrossAmount = 9000.0
@@ -245,8 +246,8 @@ class CreditCardViewModelTest {
             CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil, errorCard)
 
         creditCardViewModel.setPromos(listOf(promo))
-        creditCardViewModel.getPromosData("12121")
-        verify(snapCreditCardUtil, times(2)).getCreditCardApplicablePromosData(any(), any())
+        creditCardViewModel.getPromosData("12121", "bni_6")
+        verify(snapCreditCardUtil, times(2)).getCreditCardApplicablePromosData(any(), any(), any())
         Assert.assertEquals(promoData, creditCardViewModel.promoDataLiveData.getOrAwaitValue())
     }
 }

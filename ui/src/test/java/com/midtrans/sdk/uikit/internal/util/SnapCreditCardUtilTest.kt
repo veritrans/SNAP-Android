@@ -170,7 +170,7 @@ class SnapCreditCardUtilTest {
             id = 1L,
             name = "promo",
             bins = listOf(),
-            installmentTerms = listOf("0", "3", "6", "12"),
+            installmentTerms = supportedInstallment,
             calculatedDiscountAmount = 1000.0,
             paymentTypes = listOf(PaymentType.CREDIT_CARD)
         )
@@ -189,7 +189,7 @@ class SnapCreditCardUtilTest {
             id = 1L,
             name = "promo",
             bins = listOf(),
-            installmentTerms = listOf("0", "3", "6", "12"),
+            installmentTerms = supportedInstallment,
             calculatedDiscountAmount = 1000.0,
             paymentTypes = listOf(PaymentType.ALFAMART)
         )
