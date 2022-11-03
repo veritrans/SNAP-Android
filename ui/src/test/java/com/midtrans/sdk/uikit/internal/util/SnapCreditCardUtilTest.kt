@@ -196,4 +196,32 @@ class SnapCreditCardUtilTest {
         val result3 = SnapCreditCardUtil.getCreditCardApplicablePromosData("44111111111111", listOf(promo3), selectedTerm)
         Assert.assertNull(result3)
     }
+
+    @Test
+    fun getCreditCardApplicablePromosDataShouldQualifyBasedOnInstallmentTermCondition() {
+        val supportedInstallment = listOf("3", "12")
+        val promo = Promo(
+            id = 1L,
+            name = "promo",
+            bins = listOf("481111"),
+            installmentTerms = supportedInstallment,
+            calculatedDiscountAmount = 1000.0,
+            paymentTypes = listOf(PaymentType.CREDIT_CARD)
+        )
+
+        //Supported Condition
+        val result1 = SnapCreditCardUtil.getCreditCardApplicablePromosData("4811111111111", listOf(promo), "bni_3")
+        Assert.assertEquals("promo", result1?.get(0)?.leftText )
+        Assert.assertTrue(result1?.get(0)?.enabled?.value!!)
+
+        //Not Selected Installment
+        val result2 = SnapCreditCardUtil.getCreditCardApplicablePromosData("4811111111111", listOf(promo), "")
+        Assert.assertEquals("promo", result2?.get(0)?.leftText )
+        Assert.assertFalse(result2?.get(0)?.enabled?.value!!)
+
+        //Unsupported Condition
+        val result3 = SnapCreditCardUtil.getCreditCardApplicablePromosData("4811111111111", listOf(promo), "bni_6")
+        Assert.assertEquals("promo", result3?.get(0)?.leftText )
+        Assert.assertFalse(result3?.get(0)?.enabled?.value!!)
+    }
 }
