@@ -42,7 +42,6 @@ import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.presentation.paylater.PayLaterActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
-import javax.inject.Inject
 
 class PaymentOptionActivity : BaseActivity() {
 
@@ -55,8 +54,7 @@ class PaymentOptionActivity : BaseActivity() {
         private const val EXTRA_CREDIT_CARD = "paymentOptionActivity.extra.credit_card"
         private const val EXTRA_PROMOS = "paymentOptionActivity.extra.promos"
         private const val EXTRA_MERCHANT_DATA = "paymentOptionActivity.extra.merchant_data"
-        private const val EXTRA_TRANSACTION_DETAILS =
-            "paymentOptionActivity.extra.transaction_details"
+        private const val EXTRA_TRANSACTION_DETAILS = "paymentOptionActivity.extra.transaction_details"
         private const val EXTRA_EXPIRY_TIME = "paymentOptionActivity.extra.expiry_time"
         private const val EXTRA_PAYMENT_TYPE_ITEM = "paymentOptionActivity.extra.payment_type_item"
 
@@ -92,11 +90,8 @@ class PaymentOptionActivity : BaseActivity() {
         }
     }
 
-    @Inject
-    internal lateinit var vmFactory: ViewModelProvider.Factory
-
     private val viewModel: PaymentOptionViewModel by lazy {
-        ViewModelProvider(this, vmFactory).get(PaymentOptionViewModel::class.java)
+        ViewModelProvider(this).get(PaymentOptionViewModel::class.java)
     }
 
     private val snapToken: String by lazy {
@@ -153,8 +148,6 @@ class PaymentOptionActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        UiKitApi.getDefaultInstance().daggerComponent.inject(this)
 
         paymentMethods = viewModel.initiateList(paymentList, isTabletDevice())
         customerInfo = viewModel.getCustomerInfo(customerDetail)

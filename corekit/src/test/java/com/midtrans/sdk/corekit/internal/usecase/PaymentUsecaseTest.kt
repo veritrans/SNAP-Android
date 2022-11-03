@@ -63,6 +63,16 @@ class PaymentUsecaseTest {
     fun getPaymentOptionWhenSnapTokenProvidedShouldNotGenerateNewSnapToken() {
         val paymentOptionCaptor = argumentCaptor<PaymentOption>()
         val mockCallback: Callback<PaymentOption> = mock()
+        val snapTransactionDetail = SnapTransactionDetail(
+            orderId = "order-id",
+            grossAmount = 1234.00,
+            currency = "currency"
+        )
+        val customerDetails = CustomerDetails(
+            firstName = "first",
+            lastName = "last",
+            email = "email"
+        )
         whenever(mockSnapRepository.getTransactionDetail("snap-token")) doReturn Single.just(
             Transaction(
                 enabledPayments = provideEnabledPayments(),
@@ -70,23 +80,20 @@ class PaymentUsecaseTest {
                     merchantId = "merchant-id",
                     preference = MerchantPreferences(
                         displayName = "merchant-name"
-                    ),
-                ),
-                customerDetails = CustomerDetails(
-                    firstName = "first",
-                    lastName = "last",
-                    email = "email"
+                    )
                 )
             )
         )
         usecase.getPaymentOption(
             "snap-token",
-            provideRequestBuilder(),
+            SnapTokenRequestBuilder()
+                .withTransactionDetails(value = snapTransactionDetail)
+                .withCustomerDetails(value = customerDetails),
             mockCallback
         )
         verify(mockSnapRepository).getTransactionDetail("snap-token")
         verify(mockMerchantApiRepository, never()).getSnapToken(any())
-        verify(eventAnalytics).setUserIdentity("email", "first last", "merchant-id", "merchant-name", mapOf())
+        verify(eventAnalytics).setUserIdentity("email", "first last", mapOf())
         verify(mockCallback).onSuccess(paymentOptionCaptor.capture())
         val result = paymentOptionCaptor.firstValue
         assertPaymentOption(result, "snap-token")
@@ -100,6 +107,11 @@ class PaymentUsecaseTest {
             orderId = "order-id",
             grossAmount = 1234.00,
             currency = "currency"
+        )
+        val customerDetails = CustomerDetails(
+            firstName = "first",
+            lastName = "last",
+            email = "email"
         )
         whenever(mockMerchantApiRepository.getSnapToken(any())) doReturn Single.just(
             SnapTokenResponse(
@@ -115,24 +127,26 @@ class PaymentUsecaseTest {
                     preference = MerchantPreferences(
                         displayName = "merchant-name"
                     )
-                ),
-                customerDetails = CustomerDetails(
-                    firstName = "first",
-                    lastName = "last",
-                    email = "email"
                 )
             )
         )
         usecase.getPaymentOption(
             null,
-            SnapTokenRequestBuilder().withTransactionDetails(value = snapTransactionDetail),
+            SnapTokenRequestBuilder()
+                .withTransactionDetails(value = snapTransactionDetail)
+                .withCustomerDetails(value = customerDetails),
             mockCallback
         )
         verify(mockSnapRepository).getTransactionDetail("snap-token-generated")
         verify(mockMerchantApiRepository).getSnapToken(
-            eq(SnapTokenRequest(transactionDetails = snapTransactionDetail))
+            eq(
+                SnapTokenRequest(
+                    transactionDetails = snapTransactionDetail,
+                    customerDetails = customerDetails
+                )
+            )
         )
-        verify(eventAnalytics).setUserIdentity("email", "first last", "merchant-id", "merchant-name", mapOf())
+        verify(eventAnalytics).setUserIdentity("email", "first last", mapOf())
         verify(eventAnalytics).trackSnapGetTokenRequest(any())
         verify(eventAnalytics).trackSnapGetTokenResult(eq("snap-token-generated"), any())
         verify(mockCallback).onSuccess(paymentOptionCaptor.capture())
@@ -252,7 +266,7 @@ class PaymentUsecaseTest {
             provideRequestBuilder(),
             mockCallback
         )
-        verify(eventAnalytics).setUserIdentity("snap-token", "", "merchant-id", "merchant-name", mapOf())
+        verify(eventAnalytics).setUserIdentity("snap-token", "", mapOf())
     }
 
     private fun assertPaymentOption(result: PaymentOption, snapToken: String) {
