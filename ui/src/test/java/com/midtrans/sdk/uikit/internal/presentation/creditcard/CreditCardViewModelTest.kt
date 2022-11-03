@@ -9,10 +9,10 @@ import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.internal.getOrAwaitValue
+import com.midtrans.sdk.uikit.internal.model.PromoData
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
-import com.midtrans.sdk.uikit.internal.view.PromoData
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule

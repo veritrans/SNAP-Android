@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import com.midtrans.sdk.uikit.internal.model.PromoData
 
 object SnapPromoListRadioButton {
 }
@@ -120,12 +121,3 @@ private fun getInstallmentTermsString(installmentTerms: List<String>) : String {
     }
     return string.dropLast(1)
 }
-
-data class PromoData(
-    val identifier: String? = null,
-    val leftText: String,
-    val rightText: String,
-    val subLeftText: Int? = null,
-    val installmentTerm: List<String>? = null,
-    var enabled: MutableState<Boolean> = mutableStateOf(true)
-)
