@@ -47,7 +47,7 @@ class SampleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setLocaleNew("id")
+        setLocaleNew("en")
         UiKitApi.Builder()
             .withContext(this.applicationContext)
             .withMerchantUrl("https://fiesta-point-sample.herokuapp.com/")
@@ -110,7 +110,7 @@ class SampleActivity : AppCompatActivity() {
                         secure = true,
                         installment = Installment(
                             isRequired = false,
-                            terms = mapOf("offline" to listOf(3,6,9,12))
+                            terms = mapOf("bni" to listOf(3,6,9,12))
                         )
                     ),
                     userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
