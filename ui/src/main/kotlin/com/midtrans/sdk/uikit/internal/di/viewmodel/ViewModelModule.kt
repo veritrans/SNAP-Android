@@ -11,7 +11,6 @@ import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobSelectionView
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletViewModel
 import com.midtrans.sdk.uikit.internal.presentation.loadingpayment.LoadingPaymentViewModel
 import com.midtrans.sdk.uikit.internal.presentation.paylater.PayLaterViewModel
-import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
