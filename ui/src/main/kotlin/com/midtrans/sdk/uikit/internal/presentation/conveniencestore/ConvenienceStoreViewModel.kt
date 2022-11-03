@@ -120,6 +120,13 @@ internal class ConvenienceStoreViewModel @Inject constructor(
         )
     }
 
+    fun trackHowToPayClicked(paymentType: String) {
+        trackHowToPayViewed(
+            paymentMethodName = paymentType,
+            pageName = getPageName(paymentType)
+        )
+    }
+
     fun resetError(){
         _errorLiveData.value = null
     }
