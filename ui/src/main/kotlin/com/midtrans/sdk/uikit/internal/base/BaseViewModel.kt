@@ -87,4 +87,14 @@ internal open class BaseViewModel : ViewModel() {
             paymentMethodName = paymentMethodName
         )
     }
+
+    protected fun trackHowToPayViewed(
+        pageName: String,
+        paymentMethodName: String
+    ) {
+        eventAnalytics?.trackSnapHowToPayViewed(
+            pageName = pageName,
+            paymentMethodName = paymentMethodName
+        )
+    }
 }
