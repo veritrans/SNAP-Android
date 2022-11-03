@@ -10,7 +10,7 @@ class MixpanelTracker(private val mixpanelApi: MixpanelAPI) {
         extras: Map<String, String>
     ) {
         mixpanelApi.apply {
-            if (!people.isIdentified) {
+            if (!people.isIdentified || id != distinctId) {
                 alias(id, distinctId)
             }
             identify(id, true)
