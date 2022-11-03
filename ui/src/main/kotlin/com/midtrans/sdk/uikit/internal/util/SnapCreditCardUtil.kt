@@ -225,9 +225,9 @@ internal object SnapCreditCardUtil {
         return creditCardPromos?.map { promoResponse ->
             PromoData(
                 identifier = promoResponse.id.toString(),
-                leftText = promoResponse.name.orEmpty(),
-                rightText = "-${promoResponse.calculatedDiscountAmount.currencyFormatRp()}",
-                subLeftText = getPromoErrorMessage(promoResponse, binNumber, selectedTerm),
+                promoName = promoResponse.name.orEmpty(),
+                discountAmount = "-${promoResponse.calculatedDiscountAmount.currencyFormatRp()}",
+                errorMessage = getPromoErrorMessage(promoResponse, binNumber, selectedTerm),
                 installmentTerm = promoResponse.installmentTerms,
                 enabled = mutableStateOf(
                     (binNumber.isNotBlank().and(promoResponse.bins.isNullOrEmpty()))

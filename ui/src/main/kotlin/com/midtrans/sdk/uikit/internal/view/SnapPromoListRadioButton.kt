@@ -25,7 +25,7 @@ fun SnapPromoListRadioButton(
     onItemSelectedListener: (promodata: PromoData) -> Unit
 ): () -> Unit {
     val (selectedOption, onOptionSelected) = remember {
-        mutableStateOf(states.filter { it.enabled.value }[0].leftText)
+        mutableStateOf(states.filter { it.enabled.value }[0].promoName)
     }
 
     var needReset by remember {
@@ -34,7 +34,7 @@ fun SnapPromoListRadioButton(
 
     if(needReset){
         needReset = false
-        onOptionSelected(states.filter { it.enabled.value }[0].also { onItemSelectedListener(it) }.leftText)
+        onOptionSelected(states.filter { it.enabled.value }[0].also { onItemSelectedListener(it) }.promoName)
     }
 
     Column(
@@ -45,14 +45,14 @@ fun SnapPromoListRadioButton(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 val enabled by item.enabled
-                if((!enabled).and(item.leftText == selectedOption)){
-                    onOptionSelected(states.filter { it.enabled.value }[0].also { onItemSelectedListener(it) }.leftText)
+                if((!enabled).and(item.promoName == selectedOption)){
+                    onOptionSelected(states.filter { it.enabled.value }[0].also { onItemSelectedListener(it) }.promoName)
                 }
                 Row(
                     modifier = if (enabled) Modifier.selectable(
-                        selected = item.leftText == selectedOption,
+                        selected = item.promoName == selectedOption,
                         onClick = {
-                            onOptionSelected(item.leftText)
+                            onOptionSelected(item.promoName)
                             onItemSelectedListener(item)
                         },
                         role = Role.RadioButton
@@ -61,7 +61,7 @@ fun SnapPromoListRadioButton(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     RadioButton(
-                        selected = item.leftText == selectedOption,
+                        selected = item.promoName == selectedOption,
                         onClick = null,
                         colors = RadioButtonDefaults.colors(
                             selectedColor = if (enabled) Color.Black else SnapColors.getARGBColor(
@@ -86,20 +86,20 @@ fun SnapPromoListRadioButtonItem(promoData: PromoData) {
     Column {
         Row() {
             Text(
-                text = promoData.leftText,
+                text = promoData.promoName,
                 modifier = Modifier.weight(1f),
                 style = SnapTypography.STYLES.snapTextMediumRegular,
                 color = SnapColors.getARGBColor(if (enabled) SnapColors.textPrimary else SnapColors.textMuted)
             )
             if(enabled) {
                 Text(
-                    text = promoData.rightText,
+                    text = promoData.discountAmount,
                     style = SnapTypography.STYLES.snapTextMediumRegular,
                     color = SnapColors.getARGBColor(SnapColors.textPrimary)
                 )
             }
         }
-        promoData.subLeftText?.let { subLeftText ->
+        promoData.errorMessage?.let { subLeftText ->
             Text(
                 text = promoData.installmentTerm?.let {
                     stringResource(id = subLeftText, getInstallmentTermsString(it))

@@ -739,8 +739,8 @@ fun PromoLayout(
             add(
                 PromoData(
                     identifier = "0",
-                    leftText = stringResource(R.string.cant_continue_promo_dont_want_to_use_promo),
-                    rightText = ""
+                    promoName = stringResource(R.string.cant_continue_promo_dont_want_to_use_promo),
+                    discountAmount = ""
                 )
             )
         },

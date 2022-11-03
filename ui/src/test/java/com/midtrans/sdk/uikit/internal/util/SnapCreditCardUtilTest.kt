@@ -158,7 +158,7 @@ class SnapCreditCardUtilTest {
 
        //Matched promo
         val result1 = SnapCreditCardUtil.getCreditCardApplicablePromosData("4811111111111", listOf(promo1), selectedTerm)
-        Assert.assertEquals("promo", result1?.get(0)?.leftText )
+        Assert.assertEquals("promo", result1?.get(0)?.promoName )
         Assert.assertTrue(result1?.get(0)?.enabled?.value!!)
 
         //promo not enabled
@@ -177,11 +177,11 @@ class SnapCreditCardUtilTest {
 
         //match whatever bins
         val result2 = SnapCreditCardUtil.getCreditCardApplicablePromosData("44111111111111", listOf(promo2), selectedTerm)
-        Assert.assertEquals("promo", result2?.get(0)?.leftText )
+        Assert.assertEquals("promo", result2?.get(0)?.promoName )
         Assert.assertTrue(result2?.get(0)?.enabled?.value!!)
 
         val result22 = SnapCreditCardUtil.getCreditCardApplicablePromosData("48111111111111", listOf(promo2), selectedTerm)
-        Assert.assertEquals("promo", result22?.get(0)?.leftText )
+        Assert.assertEquals("promo", result22?.get(0)?.promoName )
         Assert.assertTrue(result22?.get(0)?.enabled?.value!!)
 
         //promo with no credit card payment type
@@ -211,17 +211,17 @@ class SnapCreditCardUtilTest {
 
         //Supported Condition
         val result1 = SnapCreditCardUtil.getCreditCardApplicablePromosData("4811111111111", listOf(promo), "bni_3")
-        Assert.assertEquals("promo", result1?.get(0)?.leftText )
+        Assert.assertEquals("promo", result1?.get(0)?.promoName )
         Assert.assertTrue(result1?.get(0)?.enabled?.value!!)
 
         //Not Selected Installment
         val result2 = SnapCreditCardUtil.getCreditCardApplicablePromosData("4811111111111", listOf(promo), "")
-        Assert.assertEquals("promo", result2?.get(0)?.leftText )
+        Assert.assertEquals("promo", result2?.get(0)?.promoName )
         Assert.assertFalse(result2?.get(0)?.enabled?.value!!)
 
         //Unsupported Condition
         val result3 = SnapCreditCardUtil.getCreditCardApplicablePromosData("4811111111111", listOf(promo), "bni_6")
-        Assert.assertEquals("promo", result3?.get(0)?.leftText )
+        Assert.assertEquals("promo", result3?.get(0)?.promoName )
         Assert.assertFalse(result3?.get(0)?.enabled?.value!!)
     }
 }
