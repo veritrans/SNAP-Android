@@ -184,13 +184,12 @@ internal class WalletActivity : BaseActivity() {
                                 modifier = Modifier.fillMaxWidth(1f),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                val ctaName = stringResource(id = R.string.qr_reload)
                                 SnapButton(
                                     style = SnapButton.Style.TERTIARY,
-                                    text = ctaName,
+                                    text = stringResource(id = R.string.qr_reload),
                                     onClick = {
                                         viewModel.trackSnapButtonClicked(
-                                            ctaName = ctaName,
+                                            ctaName = getStringResourceInEnglish(R.string.qr_reload),
                                             paymentType = paymentType
                                         )
                                         error = false
@@ -255,9 +254,9 @@ internal class WalletActivity : BaseActivity() {
                 }
             }
 
-            val ctaName = stringResource(id = if (isTablet) R.string.i_have_already_paid else R.string.redirection_instruction_gopay_cta)
+            val ctaId = if (isTablet) R.string.i_have_already_paid else R.string.redirection_instruction_gopay_cta
             SnapButton(
-                text = ctaName,
+                text = stringResource(ctaId),
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(16.dp),
@@ -265,7 +264,7 @@ internal class WalletActivity : BaseActivity() {
                 style = if (!error && !loading) SnapButton.Style.PRIMARY else SnapButton.Style.PRIMARY
             ) {
                 viewModel.trackSnapButtonClicked(
-                    ctaName = ctaName,
+                    ctaName = getStringResourceInEnglish(ctaId),
                     paymentType = paymentType
                 )
                 if (!isTablet) {

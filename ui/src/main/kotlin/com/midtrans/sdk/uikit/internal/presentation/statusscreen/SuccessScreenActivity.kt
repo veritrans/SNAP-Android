@@ -130,15 +130,14 @@ class SuccessScreenActivity : BaseActivity() {
                 }
             }
             if (isWithBackButton) {
-                val ctaName = stringResource(id = R.string.success_screen_v1_cta)
                 SnapButton(
-                    text = ctaName,
+                    text = stringResource(id = R.string.success_screen_v1_cta),
                     modifier = Modifier
                         .fillMaxWidth(1f)
                         .padding(16.dp)
                 ) {
                     viewModel.trackSnapButtonClicked(
-                        ctaName = ctaName,
+                        ctaName = getStringResourceInEnglish(R.string.success_screen_v1_cta),
                         paymentType = transactionResult?.paymentType.orEmpty()
                     )
                     finish()

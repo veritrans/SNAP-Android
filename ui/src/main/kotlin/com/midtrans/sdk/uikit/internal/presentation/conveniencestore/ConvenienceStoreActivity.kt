@@ -195,13 +195,13 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                                     color = SnapColors.getARGBColor(SnapColors.supportDangerDefault),
                                     modifier = Modifier.weight(1f)
                                 )
-                                val ctaName = stringResource(id = R.string.qr_reload)
+
                                 SnapButton(
                                     style = SnapButton.Style.TERTIARY,
-                                    text = ctaName,
+                                    text = stringResource(id = R.string.qr_reload),
                                     onClick = {
                                         viewModel?.trackSnapButtonClicked(
-                                            ctaName = ctaName,
+                                            ctaName = getStringResourceInEnglish(R.string.qr_reload),
                                             paymentType = paymentType
                                         )
                                         viewModel?.resetError()
@@ -269,9 +269,8 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                     )
                 }
             }
-            val ctaName = stringResource(getCtaName(paymentType))
             SnapButton(
-                text = ctaName,
+                text = stringResource(getCtaName(paymentType)),
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(top = 16.dp, start = 16.dp, end = 16.dp),
@@ -279,7 +278,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 style = SnapButton.Style.TERTIARY
             ) {
                 viewModel?.trackSnapButtonClicked(
-                    ctaName = ctaName,
+                    ctaName = getStringResourceInEnglish(getCtaName(paymentType)),
                     paymentType = paymentType
                 )
                 startActivity(

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -233,16 +234,17 @@ class UobPaymentActivity : BaseActivity() {
                     }
                 )
 
-                val ctaName = stringResource(id = getUobCta(uobMode))
                 SnapButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 40.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
                     enabled = true,
-                    text = ctaName,
+                    text = stringResource(id = getUobCta(uobMode)),
                     style = SnapButton.Style.PRIMARY
                 ) {
-                    viewModel.trackSnapButtonClicked(ctaName)
+                    viewModel.trackSnapButtonClicked(
+                        ctaName = getStringResourceInEnglish(getUobCta(uobMode))
+                    )
                     viewModel.payUob(snapToken)
                 }
             }

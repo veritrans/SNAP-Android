@@ -34,9 +34,6 @@ import javax.inject.Inject
 internal class DeepLinkActivity : BaseActivity() {
 
     @Inject
-    lateinit var viewModel: DeepLinkViewModel
-
-    @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel: DeepLinkViewModel by lazy {
@@ -120,17 +117,16 @@ internal class DeepLinkActivity : BaseActivity() {
                         }
                     }
                     redirectionCta[paymentType]?.let {
-                        val ctaName = stringResource(id = it)
                         SnapButton(
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
                                 .fillMaxWidth(1f)
                                 .padding(16.dp),
-                            text = ctaName,
+                            text = stringResource(id = it),
                             style = SnapButton.Style.TERTIARY
                         ) {
                             viewModel.trackSnapButtonClicked(
-                                ctaName = ctaName,
+                                ctaName = getStringResourceInEnglish(it),
                                 paymentType = paymentType
                             )
                         }

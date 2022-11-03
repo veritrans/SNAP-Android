@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -188,17 +189,17 @@ class DirectDebitActivity : BaseActivity() {
                         }
                     }
                 )
-                val ctaName = stringResource(getCta(paymentType))
+
                 SnapButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 40.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
                     enabled = enableButton(paymentType, userId),
-                    text = ctaName,
+                    text = stringResource(getCta(paymentType)),
                     style = SnapButton.Style.PRIMARY
                 ) {
                     viewModel.trackSnapButtonClicked(
-                        ctaName = ctaName,
+                        ctaName = getStringResourceInEnglish(getCta(paymentType)),
                         paymentType = paymentType
                     )
                     viewModel.payDirectDebit(

@@ -299,7 +299,9 @@ internal class CreditCardActivity : BaseActivity() {
                     }
                 },
                 onClick = {
-                    viewModel?.trackSnapButtonClicked(getString(R.string.cc_dc_main_screen_cta))
+                    viewModel?.trackSnapButtonClicked(
+                        ctaName = getStringResourceInEnglish(R.string.cc_dc_main_screen_cta)
+                    )
                     if (selectedFormData == null) {
                         viewModel?.chargeUsingCreditCard(
                             transactionDetails = transactionDetails,
@@ -341,8 +343,8 @@ internal class CreditCardActivity : BaseActivity() {
             }
             ErrorCard(
                 type = type,
-                onClick = { ctaName ->
-                    viewModel?.trackSnapButtonClicked(ctaName)
+                onClick = {
+                    viewModel?.trackSnapButtonClicked(getStringResourceInEnglish(it))
                     getErrorCta(
                         type = type,
                         state = state,

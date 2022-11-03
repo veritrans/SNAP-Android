@@ -19,21 +19,20 @@ import retrofit2.HttpException
 import java.net.UnknownHostException
 
 @Composable
-fun ErrorCard(type: Int, onClick: (String) -> Unit = {}): DialogToggle {
+fun ErrorCard(type: Int, onClick: (Int) -> Unit = {}): DialogToggle {
     return SnapBottomSheet {
         ErrorContent(type = type, onClick = onClick)
     }
 }
 
 @Composable
-private fun ErrorContent(type: Int, onClick: (String) -> Unit = {}) {
+private fun ErrorContent(type: Int, onClick: (Int) -> Unit = {}) {
     errorComponentMap[type]?.run {
         Column(
             modifier = Modifier
                 .background(SnapColors.getARGBColor(SnapColors.backgroundFillPrimary))
                 .padding(16.dp)
         ) {
-            val ctaName = stringResource(id = cta)
             Text(
                 text = stringResource(title),
                 style = SnapTypography.STYLES.snapTextLabelMedium
@@ -44,10 +43,10 @@ private fun ErrorContent(type: Int, onClick: (String) -> Unit = {}) {
                 modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
             )
             SnapButton(
-                text = ctaName,
+                text = stringResource(id = cta),
                 modifier = Modifier.fillMaxWidth(1f)
             ) {
-                onClick.invoke(ctaName)
+                onClick.invoke(cta)
             }
         }
     }

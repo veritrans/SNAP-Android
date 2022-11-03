@@ -236,13 +236,12 @@ internal class BankTransferDetailActivity : BaseActivity() {
                     }
                 }
 
-                val ctaName = stringResource(id = R.string.i_have_already_paid)
                 SnapButton(
-                    text = ctaName,
+                    text = stringResource(id = R.string.i_have_already_paid),
                     modifier = Modifier.fillMaxWidth(1f)
                 ) {
                     viewModel.trackSnapButtonClicked(
-                        ctaName = ctaName,
+                        ctaName = getStringResourceInEnglish(R.string.i_have_already_paid),
                         paymentType = paymentType
                     )
                     onBackPressed()
