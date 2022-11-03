@@ -1,5 +1,6 @@
 package com.midtrans.sdk.uikit.internal.presentation.paymentoption
 
+import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.model.Address
 import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.PaymentMethod
@@ -13,16 +14,31 @@ import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY_QRIS
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.hamcrest.beans.HasPropertyWithValue
+import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 
 internal class PaymentOptionViewModelTest {
+
+    @Mock
+    private lateinit var snapCore: SnapCore
+
     private lateinit var viewModel: PaymentOptionViewModel
 
+    private lateinit var closeable: AutoCloseable
+
     @Before
-    fun setUp() {
-        viewModel = PaymentOptionViewModel()
+    fun setup() {
+        closeable = MockitoAnnotations.openMocks(this)
+        viewModel = PaymentOptionViewModel(snapCore)
+    }
+
+    @After
+    fun teardown() {
+        closeable.close()
     }
 
     @Test
