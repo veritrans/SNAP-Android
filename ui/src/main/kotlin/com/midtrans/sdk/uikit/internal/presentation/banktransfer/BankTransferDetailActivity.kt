@@ -186,7 +186,10 @@ internal class BankTransferDetailActivity : BaseActivity() {
                             isExpanded = isExpanded,
                             iconResId = R.drawable.ic_help,
                             title = stringResource(id = R.string.kredivo_how_to_pay_title),
-                            onExpandClick = { isExpanded = !isExpanded },
+                            onExpandClick = {
+                                viewModel.trackHowToPayClicked(paymentType)
+                                isExpanded = !isExpanded
+                            },
                             expandingContent = {
                                 val (selectedOption, onOptionSelected) = remember { mutableStateOf(0) }
                                 Column(

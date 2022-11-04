@@ -92,7 +92,7 @@ internal class UobPaymentViewModel @Inject constructor(
         )
     }
 
-    fun trackHowToPayClicked(paymentType: String) {
+    fun trackHowToPayClicked() {
         trackHowToPayViewed(
             paymentMethodName = PaymentType.UOB_EZPAY,
             pageName = PageName.UOB_PAGE

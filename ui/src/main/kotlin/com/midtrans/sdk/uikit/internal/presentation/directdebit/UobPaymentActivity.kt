@@ -219,7 +219,10 @@ class UobPaymentActivity : BaseActivity() {
                                 isExpanded = isInstructionExpanded,
                                 iconResId = R.drawable.ic_help,
                                 title = stringResource(R.string.payment_instruction_how_to_pay_title),
-                                onExpandClick = { isInstructionExpanded = !isInstructionExpanded },
+                                onExpandClick = {
+                                    viewModel.trackHowToPayClicked()
+                                    isInstructionExpanded = !isInstructionExpanded
+                                },
                                 expandingContent = {
                                     Column {
                                         AnimatedVisibility(visible = isInstructionExpanded) {
