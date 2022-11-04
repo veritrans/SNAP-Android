@@ -45,7 +45,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-//TODO: refactor, state on value change listener is not required, compose will do the magic
 internal class CreditCardActivity : BaseActivity() {
 
     @Inject
@@ -274,26 +273,6 @@ internal class CreditCardActivity : BaseActivity() {
                 cardIssuerBank = cardIssuerBank.value,
                 remainingTimeState = remainingTimeState,
                 onExpand = { isExpanding = it },
-                onCardNumberValueChange = {
-
-                    state.cardNumber = it
-                    val cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
-                    viewModel?.getPromosData(binNumber = cardNumberWithoutSpace)
-                    if (cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER) {
-                        val eightDigitNumber = cardNumberWithoutSpace.substring(
-                            0,
-                            SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER
-                        )
-                        if (eightDigitNumber != previousEightDigitNumber) {
-                            previousEightDigitNumber = eightDigitNumber
-                            viewModel?.getBinData(binNumber = eightDigitNumber)
-                            onPromoReset.invoke()
-                        }
-                    } else {
-                        viewModel?.resetCardNumberAttribute()
-                        previousEightDigitNumber = cardNumberWithoutSpace
-                    }
-                },
                 onClick = {
                     if (selectedFormData == null) {
                         viewModel?.chargeUsingCreditCard(
@@ -325,6 +304,24 @@ internal class CreditCardActivity : BaseActivity() {
                 promoState = promoState,
                 onSavedCardRadioSelected = { selectedFormData = it }
             )
+            state.cardNumber.let {
+                var cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
+                viewModel?.getPromosData(binNumber = cardNumberWithoutSpace)
+                if (cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER) {
+                    var eightDigitNumber = cardNumberWithoutSpace.substring(
+                        0,
+                        SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER
+                    )
+                    if (eightDigitNumber != previousEightDigitNumber) {
+                        previousEightDigitNumber = eightDigitNumber
+                        viewModel?.getBinData(binNumber = eightDigitNumber)
+                        onPromoReset.invoke()
+                    }
+                } else {
+                    viewModel?.resetCardNumberAttribute()
+                    previousEightDigitNumber = cardNumberWithoutSpace
+                }
+            }
         }
         val errorState by errorTypeState
         errorState?.let {
@@ -405,7 +402,6 @@ internal class CreditCardActivity : BaseActivity() {
         cardIssuerBank: String?,
         remainingTimeState: State<String>,
         onExpand: (Boolean) -> Unit,
-        onCardNumberValueChange: (TextFieldValue) -> Unit,
         onSavedCardRadioSelected: (item: FormData?) -> Unit,
         onInstallmentTermSelected: (String) -> Unit,
         onClick: () -> Unit
@@ -461,7 +457,6 @@ internal class CreditCardActivity : BaseActivity() {
                                 state = state,
                                 savedTokenListState = it,
                                 bankCodeId = bankCodeState,
-                                onCardNumberValueChange = onCardNumberValueChange,
                                 onSavedCardRadioSelected = onSavedCardRadioSelected
                             )
                         }
@@ -470,8 +465,7 @@ internal class CreditCardActivity : BaseActivity() {
                             NormalCardFormLayout(
                                 state = state,
                                 creditCard = creditCard,
-                                bankCodeState = bankCodeState,
-                                onCardNumberValueChange = onCardNumberValueChange
+                                bankCodeState = bankCodeState
                             )
                         }
 
@@ -541,23 +535,11 @@ internal class CreditCardActivity : BaseActivity() {
         state: CardItemState,
         bankCodeState: Int?,
         creditCard: CreditCard?,
-        onCardNumberValueChange: (TextFieldValue) -> Unit
     ) {
         NormalCardItem(
             state = state,
             bankIcon = bankCodeState,
-            creditCard = creditCard,
-            onCardNumberValueChange = {
-                onCardNumberValueChange(it)
-            },
-            onExpiryDateValueChange = { state.expiry = it },
-            onCvvValueChange = { state.cvv = it },
-            onCardTextFieldFocusedChange = { state.isCardTexFieldFocused = it },
-            onExpiryTextFieldFocusedChange = {
-                state.isExpiryTextFieldFocused = it
-            },
-            onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
-            onSavedCardCheckedChange = { state.isSavedCardChecked = it }
+            creditCard = creditCard
         )
     }
 
@@ -622,7 +604,6 @@ internal class CreditCardActivity : BaseActivity() {
         state: CardItemState,
         savedTokenListState: SnapshotStateList<FormData>,
         bankCodeId: Int?,
-        onCardNumberValueChange: (TextFieldValue) -> Unit,
         onSavedCardRadioSelected: (item: FormData?) -> Unit
     ) {
         SnapSavedCardRadioGroup(
@@ -639,14 +620,7 @@ internal class CreditCardActivity : BaseActivity() {
                 )
                 savedTokenListState.remove(it)
             },
-            onCardNumberOtherCardValueChange = onCardNumberValueChange,
-            onExpiryOtherCardValueChange = { state.expiry = it },
-            onSavedCardRadioSelected = onSavedCardRadioSelected,
-            onIsCvvSavedCardInvalidValueChange = { state.isCvvInvalid = it },
-            onCvvValueChange = {
-                state.cvv = it
-            },
-            onSavedCardCheckedChange = { state.isSavedCardChecked = it }
+            onSavedCardRadioSelected = onSavedCardRadioSelected
         )
     }
 
