@@ -3,6 +3,7 @@ package com.midtrans.sdk.uikit.internal.base
 import android.util.DisplayMetrics
 import androidx.appcompat.app.AppCompatActivity
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.external.UiKitApi
 import kotlin.math.sqrt
 
 open class BaseActivity : AppCompatActivity(){
@@ -17,4 +18,6 @@ open class BaseActivity : AppCompatActivity(){
 
         return diagonalInches >= 6.5 && hasTabletAttribute
     }
+
+    protected fun getUikitSetting() = UiKitApi.getDefaultInstance().uiKitSetting
 }
