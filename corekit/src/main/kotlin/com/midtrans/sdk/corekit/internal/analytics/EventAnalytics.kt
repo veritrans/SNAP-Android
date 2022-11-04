@@ -4,10 +4,18 @@ import com.midtrans.sdk.corekit.BuildConfig
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_RESULTS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CTA_CLICKED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_EXBIN_RESPONSE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_HOW_TO_PAY_VIEWED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_3DS_VERSION
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BANK_CODE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BIN
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BIN_CLASSS
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BIN_TYPE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BRAND
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_CHANNEL
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_COUNTRY_CODE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CHANNEL_RESPONSE_CODE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CHANNEL_RESPONSE_MESSAGE
@@ -26,6 +34,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PLATFORM
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PROMO_AMOUNT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PROMO_ID
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PROMO_NAME
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_REGISTRATION_REQUIRED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_RESPONSE_TIME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SDK_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SDK_VERSION
@@ -90,13 +99,43 @@ class EventAnalytics(
     fun trackSnapOrderDetailsViewed() {}
     fun trackSnapAccountNumberCopied() {}
     fun trackSnapPaymentNumberButtonRetried() {}
-    fun trackSnapExbinResponse() {}
     fun trackSnapPageClosed() {}
     fun trackSnapOpenDeeplink() {}
     fun trackSnapError() {}
     fun trackSnap3dsResult() {}
     fun trackSnapTokenizationResult() {}
     fun trackSnapCtaError() {}
+
+    fun trackSnapExbinResponse(
+        pageName: String,
+        paymentMethodName: String,
+        registrationRequired: String?,
+        countryCode: String?,
+        channel: String?,
+        brand: String?,
+        binType: String?,
+        binClass: String?,
+        bin: String?,
+        bankCode: String?
+    ) {
+        val optionalProperties = mutableMapOf<String, String>()
+        registrationRequired?.also { optionalProperties[PROPERTY_REGISTRATION_REQUIRED] = it }
+        countryCode?.also { optionalProperties[PROPERTY_CARD_COUNTRY_CODE] = it }
+        channel?.also { optionalProperties[PROPERTY_CARD_CHANNEL] = it }
+        brand?.also { optionalProperties[PROPERTY_CARD_BRAND] = it }
+        binType?.also { optionalProperties[PROPERTY_CARD_BIN_TYPE] = it }
+        binClass?.also { optionalProperties[PROPERTY_CARD_BIN_CLASSS] = it }
+        bin?.also { optionalProperties[PROPERTY_CARD_BIN] = it }
+        bankCode?.also { optionalProperties[PROPERTY_CARD_BANK_CODE] = it }
+
+        mixpanelTracker.trackEvent(
+            eventName = EVENT_SNAP_EXBIN_RESPONSE,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to pageName,
+                PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
+            ) + optionalProperties
+        )
+    }
 
     fun trackSnapHowToPayViewed(
         pageName: String,
