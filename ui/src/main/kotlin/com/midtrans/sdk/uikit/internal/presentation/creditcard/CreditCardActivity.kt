@@ -34,6 +34,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.model.PromoData
 import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
@@ -278,7 +279,7 @@ internal class CreditCardActivity : BaseActivity() {
 
                     state.cardNumber = it
                     val cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
-                    viewModel?.getPromosData(binNumber = cardNumberWithoutSpace)
+                    viewModel?.getPromosData(binNumber = cardNumberWithoutSpace, installmentTerm = installmentTerm)
                     if (cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER) {
                         val eightDigitNumber = cardNumberWithoutSpace.substring(
                             0,
@@ -320,7 +321,10 @@ internal class CreditCardActivity : BaseActivity() {
                         )
                     }
                 },
-                onInstallmentTermSelected = { installmentTerm = it },
+                onInstallmentTermSelected = {
+                    installmentTerm = it
+                    viewModel?.getPromosData(binNumber = SnapCreditCardUtil.getCardNumberFromTextField(state.cardNumber), installmentTerm = installmentTerm)
+                },
                 withCustomerPhoneEmail = withCustomerPhoneEmail,
                 promoState = promoState,
                 onSavedCardRadioSelected = { selectedFormData = it }
