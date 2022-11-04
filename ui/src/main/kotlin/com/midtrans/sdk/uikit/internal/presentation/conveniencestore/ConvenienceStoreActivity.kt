@@ -117,6 +117,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         ) {
             title[paymentType]?.let {
                 SnapAppBar(title = stringResource(id = it), iconResId = R.drawable.ic_cross) {
+                    viewModel?.trackPageClosed(paymentType)
                     onBackPressed()
                 }
             }
