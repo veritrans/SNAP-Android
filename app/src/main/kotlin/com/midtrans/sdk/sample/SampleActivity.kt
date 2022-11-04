@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.LocaleListCompat
+import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
@@ -73,7 +74,7 @@ class SampleActivity : AppCompatActivity() {
 
     private fun buildLegacyUiKit(){
         SdkUIFlowBuilder.init()
-            ?.setContext(this)
+            ?.setContext(this.applicationContext)
             ?.setMerchantBaseUrl("https://fiesta-point-sample.herokuapp.com/")
             ?.setClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
 //            .setExternalScanner { _, _ -> TODO("Not yet implemented") }
@@ -81,6 +82,7 @@ class SampleActivity : AppCompatActivity() {
             ?.setDefaultText("fonts/SourceSansPro-Regular.ttf")
             ?.setBoldText("fonts/SourceSansPro-Bold.ttf")
             ?.setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
+            ?.setColorTheme(CustomColorTheme("#0e4e95","#0b3b70", "#3e71aa"))
             ?.setLanguage("en") //setLanguage to either "en" for english or "id" for bahasa
             ?.buildSDK()
     }
