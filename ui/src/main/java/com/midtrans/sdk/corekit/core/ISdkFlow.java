@@ -57,6 +57,7 @@ public class ISdkFlow {
                     transactionRequest.getCustomerDetails().getCustomerIdentifier(),
                     new PaymentCallback(""),
                     wrapperCallback,
+                    transactionRequest.getExpiry(),
                     null
 
             );
