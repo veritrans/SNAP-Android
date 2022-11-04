@@ -1,6 +1,7 @@
 package com.midtrans.sdk.uikit.internal.base
 
 import androidx.lifecycle.ViewModel
+import com.midtrans.sdk.corekit.api.model.BinData
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import io.reactivex.disposables.CompositeDisposable
@@ -97,4 +98,24 @@ internal open class BaseViewModel : ViewModel() {
             paymentMethodName = paymentMethodName
         )
     }
+
+    protected fun trackExbinResponse(
+        pageName: String,
+        paymentMethodName: String,
+        binData: BinData?
+    ) {
+        eventAnalytics?.trackSnapExbinResponse(
+            pageName = pageName,
+            paymentMethodName = paymentMethodName,
+            registrationRequired = binData?.registrationRequired,
+            countryCode = binData?.countryCode,
+            channel = binData?.channel,
+            brand = binData?.brand,
+            binType = binData?.binType,
+            binClass = binData?.binClass,
+            bin = binData?.bin,
+            bankCode = binData?.bankCode,
+        )
+    }
+
 }
