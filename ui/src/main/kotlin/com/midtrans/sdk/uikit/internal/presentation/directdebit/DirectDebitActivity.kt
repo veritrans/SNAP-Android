@@ -175,7 +175,10 @@ class DirectDebitActivity : BaseActivity() {
                                 isExpanded = isInstructionExpanded,
                                 iconResId = R.drawable.ic_help,
                                 title = stringResource(getCta(paymentType = paymentType)),
-                                onExpandClick = { isInstructionExpanded = !isInstructionExpanded },
+                                onExpandClick = {
+                                    viewModel.trackHowToPayClicked(paymentType)
+                                    isInstructionExpanded = !isInstructionExpanded
+                                },
                                 expandingContent = {
                                     Column {
                                         AnimatedVisibility(visible = isInstructionExpanded) {

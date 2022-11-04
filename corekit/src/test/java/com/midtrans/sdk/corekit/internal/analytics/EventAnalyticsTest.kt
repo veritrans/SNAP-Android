@@ -6,6 +6,8 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_R
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CTA_CLICKED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_HOW_TO_PAY_VIEWED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CTA_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CURRENCY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_FRAUD_STATUS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAGE_NAME
@@ -152,7 +154,22 @@ internal class EventAnalyticsTest {
         verify(mixpanelTracker).trackEvent(
             eventName = EVENT_SNAP_CTA_CLICKED,
             properties = mapOf(
-                EventName.PROPERTY_CTA_NAME to "cta-name",
+                PROPERTY_CTA_NAME to "cta-name",
+                PROPERTY_PAGE_NAME to "page-name",
+                PROPERTY_PAYMENT_METHOD_NAME to "payment-type"
+            )
+        )
+    }
+
+    @Test
+    fun verifyTrackHowToPayViewed() {
+        eventAnalytics.trackSnapHowToPayViewed(
+            pageName = "page-name",
+            paymentMethodName = "payment-type"
+        )
+        verify(mixpanelTracker).trackEvent(
+            eventName = EVENT_SNAP_HOW_TO_PAY_VIEWED,
+            properties = mapOf(
                 PROPERTY_PAGE_NAME to "page-name",
                 PROPERTY_PAYMENT_METHOD_NAME to "payment-type"
             )

@@ -183,7 +183,7 @@ class WalletViewModelTest {
     }
 
     @Test
-    fun verifySnapButtonClicked() {
+    fun verifyTrackSnapButtonClicked() {
         val snapCore: SnapCore = mock()
         val dateTimeUtil: DateTimeUtil = mock()
         val eventAnalytics: EventAnalytics = mock()
@@ -197,6 +197,22 @@ class WalletViewModelTest {
         )
         verify(eventAnalytics).trackSnapCtaClicked(
             ctaName = "cta-name",
+            pageName = PageName.GOPAY_DEEPLINK_PAGE,
+            paymentMethodName = PaymentType.GOPAY
+        )
+    }
+
+    @Test
+    fun verifyTrackHowToPayClicked() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil)
+
+        walletViewModel.trackHowToPayClicked(paymentType = PaymentType.GOPAY)
+        verify(eventAnalytics).trackSnapHowToPayViewed(
             pageName = PageName.GOPAY_DEEPLINK_PAGE,
             paymentMethodName = PaymentType.GOPAY
         )

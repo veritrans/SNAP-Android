@@ -103,6 +103,13 @@ internal class WalletViewModel @Inject constructor(
         )
     }
 
+    fun trackHowToPayClicked(paymentType: String) {
+        trackHowToPayViewed(
+            paymentMethodName = paymentType,
+            pageName = getPageName(paymentType)
+        )
+    }
+
     fun getExpiredHour(): String = datetimeUtil.getExpiredHour(expiredTime)
 
     companion object {

@@ -245,7 +245,9 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                                 )
                                 GifImage(
                                     gifResId = R.drawable.gif_loading_ios,
-                                    modifier = Modifier.width(40.dp).height(40.dp)
+                                    modifier = Modifier
+                                        .width(40.dp)
+                                        .height(40.dp)
                                 )
                             }
                         }
@@ -257,7 +259,10 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                         isExpanded = isExpanded,
                         iconResId = R.drawable.ic_help,
                         title = stringResource(id = R.string.kredivo_how_to_pay_title),
-                        onExpandClick = { isExpanded = !isExpanded },
+                        onExpandClick = {
+                            viewModel?.trackHowToPayClicked(paymentType)
+                            isExpanded = !isExpanded
+                        },
                         expandingContent = {
                             AnimatedVisibility(visible = isExpanded) {
                                 val instruction = paymentHowToPay
