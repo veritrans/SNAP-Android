@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.LocaleListCompat
+import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
@@ -47,7 +48,14 @@ class SampleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setLocaleNew("en")
+//        setLocaleNew("id") // commented for now. conflict with buildLegacyUiKit
+
+        buildLegacyUiKit()
+
+        setContent { Greeting() }
+    }
+
+    private fun buildUiKit(){
         UiKitApi.Builder()
             .withContext(this.applicationContext)
             .withMerchantUrl("https://fiesta-point-sample.herokuapp.com/")
@@ -58,10 +66,23 @@ class SampleActivity : AppCompatActivity() {
                     interactiveFillInverse = 0xff0000,
                     textInverse = 0x00ff00,
                     supportNeutralFill = 0xffdddd
-            )
+                )
             )
             .build()
-        setContent { Greeting() }
+    }
+
+    private fun buildLegacyUiKit(){
+        SdkUIFlowBuilder.init()
+            ?.setContext(this)
+            ?.setMerchantBaseUrl("https://fiesta-point-sample.herokuapp.com/")
+            ?.setClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
+//            .setExternalScanner { _, _ -> TODO("Not yet implemented") }
+            ?.enableLog(true)
+            ?.setDefaultText("fonts/SourceSansPro-Regular.ttf")
+            ?.setBoldText("fonts/SourceSansPro-Bold.ttf")
+            ?.setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
+            ?.setLanguage("en") //setLanguage to either "en" for english or "id" for bahasa
+            ?.buildSDK()
     }
 
     @Preview
@@ -76,7 +97,7 @@ class SampleActivity : AppCompatActivity() {
         if (resultCode == RESULT_OK) {
             val transactionResult = data?.getParcelableExtra<TransactionResult>(
                 UiKitConstants.KEY_TRANSACTION_RESULT)
-            Toast.makeText(this@SampleActivity, "Coba trxid pake legacy kode $requestCode ${transactionResult?.transactionId.orEmpty()}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@SampleActivity, "Transaction ${transactionResult?.transactionId.orEmpty()} status ${transactionResult?.status.orEmpty()}", Toast.LENGTH_LONG).show()
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -115,9 +136,9 @@ class SampleActivity : AppCompatActivity() {
                     ),
                     userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
                     customerDetails = CustomerDetails(
-                        firstName = "Ari",
-                        lastName = "Bhakti",
-                        email = "aribhakti@email.com",
+                        firstName = "Aris",
+                        lastName = "Bhaktis",
+                        email = "arisbhaktis@email.com",
                         phone = "087788778212"
                     )
                 )

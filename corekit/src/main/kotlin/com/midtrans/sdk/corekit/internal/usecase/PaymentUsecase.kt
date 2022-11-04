@@ -11,6 +11,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.data.repository.CoreApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.MerchantApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.SnapRepository
+import com.midtrans.sdk.corekit.internal.network.model.request.SnapTokenRequest
 import com.midtrans.sdk.corekit.internal.network.model.response.EnabledPayment
 import com.midtrans.sdk.corekit.internal.network.model.response.Transaction
 import com.midtrans.sdk.corekit.internal.scheduler.BaseSdkScheduler
@@ -31,12 +32,15 @@ internal class PaymentUsecase(
         requestBuilder: SnapTokenRequestBuilder,
         callback: Callback<PaymentOption>
     ) {
+        val snapTokenRequest = requestBuilder.build()
+
+        val isUserSet = setAnalyticsUserIdentityWithCustomerDetail(snapToken, snapTokenRequest)
         if (snapToken.isNullOrBlank()) {
             val requestTime = System.currentTimeMillis()
 
             merchantApiRepository
                 .also { eventAnalytics.trackSnapGetTokenRequest("") }
-                .getSnapToken(requestBuilder.build())
+                .getSnapToken(snapTokenRequest)
                 .onErrorResumeNext {
                     Single.error(
                         SnapError(
@@ -48,7 +52,7 @@ internal class PaymentUsecase(
                 .flatMap { response ->
                     snapRepository
                         .getTransactionDetail(response.token.orEmpty())
-                        .map (setAnalyticsUserIdentity())
+                        .map (setAnalyticsUserIdentityWithSnapToken(isUserSet))
                         .map (trackCommonTransactionProperties())
                         .map { Pair(response.token, it) }
                 }
@@ -83,7 +87,7 @@ internal class PaymentUsecase(
                 )
         } else {
             snapRepository.getTransactionDetail(snapToken)
-                .map (setAnalyticsUserIdentity())
+                .map (setAnalyticsUserIdentityWithSnapToken(isUserSet))
                 .map (trackCommonTransactionProperties())
                 .subscribe(
                     { responseData ->
@@ -111,27 +115,36 @@ internal class PaymentUsecase(
         }
     }
 
-    private fun setAnalyticsUserIdentity(): (Transaction) -> Transaction {
-        return { transaction ->
-            val merchantName = transaction.merchant?.preference?.displayName.orEmpty()
-            val merchantId = transaction.merchant?.merchantId.orEmpty()
-            val snapToken = transaction.token.orEmpty()
-            val customerName = transaction.customerDetails?.let { "${it.firstName} ${it.lastName}" }
-            val customerPhone = transaction.customerDetails?.phone
-            val customerEmail = transaction.customerDetails?.email
-            val id = when {
-                !customerEmail.isNullOrEmpty() -> customerEmail
-                !customerPhone.isNullOrEmpty() -> customerPhone
-                else -> snapToken
-            }
-
+    private fun setAnalyticsUserIdentityWithCustomerDetail(snapToken: String?, request: SnapTokenRequest): Boolean {
+        var isUserSet = false
+        val customerName = request.customerDetails?.let { "${it.firstName} ${it.lastName}" }
+        val customerPhone = request.customerDetails?.phone
+        val customerEmail = request.customerDetails?.email
+        val id = when {
+            !customerEmail.isNullOrEmpty() -> customerEmail
+            !customerPhone.isNullOrEmpty() -> customerPhone
+            else -> snapToken
+        }
+        id?.let {
             eventAnalytics.setUserIdentity(
-                userId = id,
-                userName = customerName.orEmpty(),
-                merchantId = merchantId,
-                merchantName = merchantName
+                userId = it,
+                userName = customerName.orEmpty()
             )
+            isUserSet = true
+        }
+        return isUserSet
+    }
 
+    private fun setAnalyticsUserIdentityWithSnapToken(isUserSet: Boolean): (Transaction) -> Transaction {
+        return { transaction ->
+            if (!isUserSet) {
+                val snapToken = transaction.token.orEmpty()
+                val customerName = transaction.customerDetails?.let { "${it.firstName} ${it.lastName}" }
+                eventAnalytics.setUserIdentity(
+                    userId = snapToken,
+                    userName = customerName.orEmpty(),
+                )
+            }
             transaction
         }
     }
@@ -141,7 +154,9 @@ internal class PaymentUsecase(
             eventAnalytics.registerCommonTransactionProperties(
                 snapToken = transaction.token.orEmpty(),
                 orderId = transaction.transactionDetails?.orderId.orEmpty(),
-                grossAmount = transaction.transactionDetails?.grossAmount.toString()
+                grossAmount = transaction.transactionDetails?.grossAmount.toString(),
+                merchantId = transaction.merchant?.merchantId.orEmpty(),
+                merchantName = transaction.merchant?.preference?.displayName.orEmpty()
             )
             transaction
         }
