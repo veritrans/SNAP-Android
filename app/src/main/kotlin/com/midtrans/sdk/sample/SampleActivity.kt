@@ -18,6 +18,7 @@ import androidx.core.os.LocaleListCompat
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
+import com.midtrans.sdk.corekit.models.ExpiryModel
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
@@ -123,7 +124,7 @@ class SampleActivity : AppCompatActivity() {
                 style = SnapButton.Style.TERTIARY
             ) {
 //                payWithOldSnapLegacyApi()
-                payWithLegacyActivityStartActivityForResult()
+                payWithOldSnapLegacyApi()
             }
 
             SnapButton(
@@ -189,14 +190,18 @@ class SampleActivity : AppCompatActivity() {
             3000.0
         )
         transactionRequest.customerDetails = com.midtrans.sdk.corekit.models.CustomerDetails(
-            "Ari", "Bhakti", "aribhakti@email.com", "087788778212"
+            "3A8788CE-B96F-449C-8180-B5901A08B50A",
+            "Ari",
+            "Bhakti",
+            "aribhakti@email.com",
+            "087788778212"
         )
         transactionRequest.creditCard = com.midtrans.sdk.corekit.models.snap.CreditCard(
             true,
             null,
             true,
             null,
-            null,
+            "MANDIRI", //Acquiring Bank by Mandiri
             null,
             null,
             null,
@@ -207,7 +212,14 @@ class SampleActivity : AppCompatActivity() {
             null,
             null
         )
-        MidtransSDK.getInstance().setTransactionRequest(transactionRequest)
+        //Setting Snap token custon expiry
+        transactionRequest.expiry = ExpiryModel(
+            Utils.getFormattedTime(System.currentTimeMillis()),
+            "hour",
+            1
+        )
+        MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
+        MidtransSDK.getInstance().transactionRequest = transactionRequest
         MidtransSDK.getInstance().startPaymentUiFlow(this.applicationContext)
     }
 }

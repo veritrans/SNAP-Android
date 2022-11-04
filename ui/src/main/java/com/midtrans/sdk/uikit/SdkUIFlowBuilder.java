@@ -50,7 +50,7 @@ public class SdkUIFlowBuilder {
     protected String flow;
     protected BaseColorTheme colorTheme;
     protected String languageCode = "en";
-    protected UIKitCustomSetting uiKitCustomSetting;
+    public UIKitCustomSetting uiKitCustomSetting;
 
     private SdkUIFlowBuilder(Context context, String clientKey, String merchantServerUrl, TransactionFinishedCallback callback) {
         this.context = context;
