@@ -86,10 +86,19 @@ internal class DirectDebitViewModelTest {
     }
 
     @Test
-    fun verifySnapButtonClicked() {
+    fun verifyTrackSnapButtonClicked() {
         viewModel.trackSnapButtonClicked("cta-name", PaymentType.DANAMON_ONLINE)
         verify(eventAnalytics).trackSnapCtaClicked(
             ctaName = "cta-name",
+            pageName = PageName.DANAMON_ONLINE_PAGE,
+            paymentMethodName = PaymentType.DANAMON_ONLINE
+        )
+    }
+
+    @Test
+    fun verifyTrackHowToPayClicked() {
+        viewModel.trackHowToPayClicked(PaymentType.DANAMON_ONLINE)
+        verify(eventAnalytics).trackSnapHowToPayViewed(
             pageName = PageName.DANAMON_ONLINE_PAGE,
             paymentMethodName = PaymentType.DANAMON_ONLINE
         )
