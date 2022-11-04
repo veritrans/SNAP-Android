@@ -68,7 +68,7 @@ internal class PayLaterViewModelTest {
                 transactionId = "transaction-id"
             )
         )
-        assertEquals("redirect-url", viewModel.getTransactionResponse().getOrAwaitValue().redirectUrl)
+        assertEquals("redirect-url", viewModel.transactionResponseLiveData.getOrAwaitValue().redirectUrl)
         verify(eventAnalytics).trackSnapChargeResult(
             transactionStatus = eq("transaction-status"),
             fraudStatus = eq("fraud-status"),

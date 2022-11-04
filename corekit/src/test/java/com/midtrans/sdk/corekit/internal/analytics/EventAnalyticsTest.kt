@@ -1,10 +1,11 @@
 package com.midtrans.sdk.corekit.internal.analytics
 
-import com.midtrans.sdk.corekit.api.model.PaymentMethod
+import com.midtrans.sdk.corekit.BuildConfig
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_RESULTS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PLATFORM
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CURRENCY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_FRAUD_STATUS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAGE_NAME
@@ -41,19 +42,43 @@ internal class EventAnalyticsTest {
 
     @Test
     fun verifySetUserIdentity() {
-        val commonProperties = mapOf(
-            EventName.PROPERTY_PLATFORM to "Mobile",
-            EventName.PROPERTY_SDK_VERSION to "2.0.0",
-            EventName.PROPERTY_SDK_TYPE to "UI",
-            EventName.PROPERTY_MERCHANT_ID to "id",
-            EventName.PROPERTY_MERCHANT_NAME to "name",
-            EventName.PROPERTY_SOURCE_TYPE to "midtrans-mobile",
-            EventName.PROPERTY_SERVICE_TYPE to "snap",
-            EventName.PROPERTY_SNAP_TYPE to "Mobile"
+        eventAnalytics.setUserIdentity("user_id", "user_name", mapOf())
+        verify(mixpanelTracker).setUserIdentity("user_id", "user_name", mapOf())
+    }
+
+    @Test
+    fun verifyRegisterCommonProperties() {
+        eventAnalytics.registerCommonProperties("tablet")
+        verify(mixpanelTracker).registerCommonProperties(
+            mapOf(
+                EventName.PROPERTY_SDK_VERSION to BuildConfig.SDK_VERSION,
+                EventName.PROPERTY_SDK_TYPE to "UI",
+                EventName.PROPERTY_SOURCE_TYPE to "midtrans-mobile",
+                EventName.PROPERTY_SERVICE_TYPE to "snap",
+                EventName.PROPERTY_SNAP_TYPE to "Sdk",
+                PROPERTY_PLATFORM to "tablet"
+            )
         )
-        eventAnalytics.setUserIdentity("id", "name", mapOf())
-        verify(mixpanelTracker).setUserIdentity("id", "name", mapOf())
-        verify(mixpanelTracker).registerCommonProperties(commonProperties)
+    }
+
+    @Test
+    fun verifyRegisterCommonTransactionProperties() {
+        eventAnalytics.registerCommonTransactionProperties(
+            snapToken = "snap-token",
+            orderId = "order-id",
+            grossAmount = "gross-amount",
+            merchantId = "merchant-id",
+            merchantName = "merchant-name"
+        )
+        verify(mixpanelTracker).registerCommonProperties(
+            mapOf(
+                PROPERTY_SNAP_TOKEN to "snap-token",
+                EventName.PROPERTY_ORDER_ID to "order-id",
+                EventName.PROPERTY_GROSS_AMOUNT to "gross-amount",
+                EventName.PROPERTY_MERCHANT_ID to "merchant-id",
+                EventName.PROPERTY_MERCHANT_NAME to "merchant-name"
+            )
+        )
     }
 
     @Test

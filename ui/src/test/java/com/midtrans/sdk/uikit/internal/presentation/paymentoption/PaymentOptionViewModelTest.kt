@@ -13,16 +13,27 @@ import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY_QRIS
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.hamcrest.beans.HasPropertyWithValue
+import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+import org.mockito.MockitoAnnotations
 
 internal class PaymentOptionViewModelTest {
+
     private lateinit var viewModel: PaymentOptionViewModel
 
+    private lateinit var closeable: AutoCloseable
+
     @Before
-    fun setUp() {
+    fun setup() {
+        closeable = MockitoAnnotations.openMocks(this)
         viewModel = PaymentOptionViewModel()
+    }
+
+    @After
+    fun teardown() {
+        closeable.close()
     }
 
     @Test
