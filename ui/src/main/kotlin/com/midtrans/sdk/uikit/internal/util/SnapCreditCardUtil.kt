@@ -24,6 +24,8 @@ internal object SnapCreditCardUtil {
     const val SUPPORTED_MAX_BIN_NUMBER = 8
     const val NEW_CARD_FORM_IDENTIFIER = "newCardFormIdentifier"
     const val SAVED_CARD_IDENTIFIER = "savedCardIdentifier"
+    const val INSTALLMENT_NOT_SUPPORTED = "installmentNotSupported"
+    const val CARD_NOT_ELIGIBLE = "cardNotEligible"
 
     /**
      * Return validation of a given card number.
@@ -227,7 +229,7 @@ internal object SnapCreditCardUtil {
                 identifier = promoResponse.id.toString(),
                 promoName = promoResponse.name.orEmpty(),
                 discountAmount = "-${promoResponse.calculatedDiscountAmount.currencyFormatRp()}",
-                errorMessage = getPromoErrorMessage(promoResponse, binNumber, selectedTerm),
+                errorType = getPromoError(promoResponse, binNumber, selectedTerm),
                 installmentTerm = promoResponse.installmentTerms,
                 enabled = mutableStateOf(
                     (binNumber.isNotBlank().and(promoResponse.bins.isNullOrEmpty()))
@@ -238,18 +240,16 @@ internal object SnapCreditCardUtil {
         }?.sortedByDescending { it.enabled.value }
     }
 
-    private fun getPromoErrorMessage(promoResponse: Promo, binNumber: String, selectedTerm: String): Int? {
-        var output: Int? = null
-        val promoInstallmentNotSupported = R.string.cant_continue_promo_installment_condition
-        val cardNotEligibleMessage = R.string.cant_continue_promo_card_not_eligible
+    private fun getPromoError(promoResponse: Promo, binNumber: String, selectedTerm: String): String? {
+        var output: String? = null
 
         promoResponse.bins?.let { promoBins ->
             promoResponse.installmentTerms?.let { installmentTerms ->
                 if (promoBins.isNotEmpty() && binNumber.isNotBlank()) {
                     if (!installmentTerms.any { selectedTerm == it }) {
-                        output = promoInstallmentNotSupported
+                        output = INSTALLMENT_NOT_SUPPORTED
                     } else if (!promoBins.any { binNumber.startsWith(it) }) {
-                        output = cardNotEligibleMessage
+                        output = CARD_NOT_ELIGIBLE
                     }
                 }
             }

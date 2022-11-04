@@ -14,7 +14,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.PromoData
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.CARD_NOT_ELIGIBLE
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.INSTALLMENT_NOT_SUPPORTED
 
 object SnapPromoListRadioButton {
 }
@@ -99,25 +102,31 @@ fun SnapPromoListRadioButtonItem(promoData: PromoData) {
                 )
             }
         }
-        promoData.errorMessage?.let { subLeftText ->
-            Text(
-                text = promoData.installmentTerm?.let {
-                    stringResource(id = subLeftText, getInstallmentTermsString(it))
-                } ?: run {
-                    stringResource(id = subLeftText)
-                 },
-                style = SnapTypography.STYLES.snapTextSmallRegular,
-                color = SnapColors.getARGBColor(if (enabled) SnapColors.textPrimary else SnapColors.textMuted)
-            )
+        promoData.errorType?.let { errorType ->
+            if (errorType == INSTALLMENT_NOT_SUPPORTED){
+                Text(
+                    text = stringResource(id = R.string.cant_continue_promo_installment_condition, getInstallmentTermsString(promoData.installmentTerm)),
+                    style = SnapTypography.STYLES.snapTextSmallRegular,
+                    color = SnapColors.getARGBColor(if (enabled) SnapColors.textPrimary else SnapColors.textMuted)
+                )
+            } else if (errorType == CARD_NOT_ELIGIBLE) {
+                Text(
+                    text = stringResource(id = R.string.cant_continue_promo_card_not_eligible),
+                    style = SnapTypography.STYLES.snapTextSmallRegular,
+                    color = SnapColors.getARGBColor(if (enabled) SnapColors.textPrimary else SnapColors.textMuted)
+                )
+            }
         }
-
     }
 }
 
-private fun getInstallmentTermsString(installmentTerms: List<String>) : String {
+private fun getInstallmentTermsString(installmentTerms: List<String>?) : String {
     var string = ""
-    for (term in installmentTerms){
-        string += "$term,"
+    installmentTerms?.let {
+        for (term in it) {
+            string += "$term,"
+        }
     }
+
     return string.dropLast(1)
 }
