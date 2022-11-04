@@ -54,7 +54,7 @@ public class ISdkFlow {
                     ),
                     transactionRequest.getCustomerDetails(),
                     transactionRequest.getCreditCard(),
-                    "userId", //TODO: what is user id?
+                    transactionRequest.getCustomerDetails().getCustomerIdentifier(),
                     new PaymentCallback(""),
                     wrapperCallback,
                     null

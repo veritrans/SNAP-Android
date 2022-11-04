@@ -59,6 +59,7 @@ public class TransactionRequest {
 
     private boolean useUi = true;
     private CreditCard creditCard;
+    private ExpiryModel expiry;
 
     private List<String> enabledPayments;
 
@@ -167,6 +168,14 @@ public class TransactionRequest {
 
     public void setCreditCard(CreditCard creditCard) {
         this.creditCard = creditCard;
+    }
+
+    public ExpiryModel getExpiry() {
+        return expiry;
+    }
+
+    public void setExpiry(ExpiryModel expiry) {
+        this.expiry = expiry;
     }
 
     public void setCurrency(String currency) {

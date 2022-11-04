@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Expiry(
+open class Expiry(
     val startTime: String,
     val unit: String,
     val duration: Int
