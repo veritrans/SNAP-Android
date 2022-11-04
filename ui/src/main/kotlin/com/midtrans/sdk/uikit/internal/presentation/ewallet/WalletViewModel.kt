@@ -92,6 +92,17 @@ internal class WalletViewModel @Inject constructor(
         }
     }
 
+    fun trackSnapButtonClicked(
+        ctaName: String,
+        paymentType: String
+    ) {
+        trackCtaClicked(
+            ctaName = ctaName,
+            paymentMethodName = paymentType,
+            pageName = getPageName(paymentType)
+        )
+    }
+
     fun getExpiredHour(): String = datetimeUtil.getExpiredHour(expiredTime)
 
     companion object {

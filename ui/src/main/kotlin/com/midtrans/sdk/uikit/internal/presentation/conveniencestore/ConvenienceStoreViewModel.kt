@@ -109,6 +109,17 @@ internal class ConvenienceStoreViewModel @Inject constructor(
         }
     }
 
+    fun trackSnapButtonClicked(
+        ctaName: String,
+        paymentType: String
+    ) {
+        trackCtaClicked(
+            ctaName = ctaName,
+            paymentMethodName = paymentType,
+            pageName = getPageName(paymentType)
+        )
+    }
+
     fun resetError(){
         _errorLiveData.value = null
     }

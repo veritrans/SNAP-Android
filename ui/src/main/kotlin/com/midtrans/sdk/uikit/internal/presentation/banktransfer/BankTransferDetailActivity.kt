@@ -240,6 +240,10 @@ internal class BankTransferDetailActivity : BaseActivity() {
                     text = stringResource(id = R.string.i_have_already_paid),
                     modifier = Modifier.fillMaxWidth(1f)
                 ) {
+                    viewModel.trackSnapButtonClicked(
+                        ctaName = getStringResourceInEnglish(R.string.i_have_already_paid),
+                        paymentType = paymentType
+                    )
                     onBackPressed()
                 }
             }

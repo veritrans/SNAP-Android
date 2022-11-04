@@ -195,10 +195,15 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                                     color = SnapColors.getARGBColor(SnapColors.supportDangerDefault),
                                     modifier = Modifier.weight(1f)
                                 )
+
                                 SnapButton(
                                     style = SnapButton.Style.TERTIARY,
                                     text = stringResource(id = R.string.qr_reload),
                                     onClick = {
+                                        viewModel?.trackSnapButtonClicked(
+                                            ctaName = getStringResourceInEnglish(R.string.qr_reload),
+                                            paymentType = paymentType
+                                        )
                                         viewModel?.resetError()
                                         loading = true
                                         charge()
@@ -265,14 +270,17 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 }
             }
             SnapButton(
-                text = stringResource(id = R.string.indomaret_cta_1),
+                text = stringResource(getCtaName(paymentType)),
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(top = 16.dp, start = 16.dp, end = 16.dp),
                 enabled = errorState.value==null && !loading,
                 style = SnapButton.Style.TERTIARY
             ) {
-
+                viewModel?.trackSnapButtonClicked(
+                    ctaName = getStringResourceInEnglish(getCtaName(paymentType)),
+                    paymentType = paymentType
+                )
                 startActivity(
                     Intent(
                         Intent.ACTION_VIEW,
@@ -293,6 +301,14 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 onBackPressed()
 
             }
+        }
+    }
+
+    private fun getCtaName(paymentType: String): Int {
+        return when(paymentType) {
+            PaymentType.INDOMARET -> R.string.indomaret_cta_2
+            PaymentType.ALFAMART -> R.string.alfa_group_cta_2
+            else -> 0
         }
     }
 

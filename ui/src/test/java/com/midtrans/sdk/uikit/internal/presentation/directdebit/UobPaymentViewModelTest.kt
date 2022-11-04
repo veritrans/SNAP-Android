@@ -3,6 +3,7 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
@@ -119,6 +120,16 @@ internal class UobPaymentViewModelTest {
                 "transaction-id"
             ),
             viewModel.getTransactionResult().getOrAwaitValue()
+        )
+    }
+
+    @Test
+    fun verifySnapButtonClicked() {
+        viewModel.trackSnapButtonClicked("cta-name")
+        verify(eventAnalytics).trackSnapCtaClicked(
+            ctaName = "cta-name",
+            pageName = PageName.UOB_PAGE,
+            paymentMethodName = PaymentType.UOB_EZPAY
         )
     }
 

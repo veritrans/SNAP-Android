@@ -7,7 +7,10 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -22,7 +25,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.Promo
@@ -35,8 +37,8 @@ import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PromoData
-import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
@@ -163,7 +165,7 @@ internal class CreditCardActivity : BaseActivity() {
         val intent = SuccessScreenActivity.getIntent(
             activityContext = this@CreditCardActivity,
             total = it.grossAmount?.currencyFormatRp().orEmpty(),
-            orderId = it?.orderId.toString(),
+            orderId = it.orderId.toString(),
             transactionResult = TransactionResult(
                 status = it.transactionStatus.orEmpty(),
                 transactionId = it.transactionId.orEmpty(),
@@ -174,18 +176,18 @@ internal class CreditCardActivity : BaseActivity() {
     }
 
     private fun initTransactionResultScreenObserver() {
-        viewModel.transactionResponseLiveData.observe(this, Observer {
+        viewModel.transactionResponseLiveData.observe(this) {
             if (it.statusCode != UiKitConstants.STATUS_CODE_201 && it.redirectUrl.isNullOrEmpty()) {
                 launchSuccessScreen(it)
             }
-        })
-        viewModel.transactionStatusLiveData.observe(this, Observer {
+        }
+        viewModel.transactionStatusLiveData.observe(this) {
             when (it.statusCode) {
                 UiKitConstants.STATUS_CODE_200 -> {
                     launchSuccessScreen(it)
                 }
             }
-        })
+        }
 
         //TODO: handle error ui/dialog
         viewModel.errorLiveData.observe(this) {
@@ -296,6 +298,9 @@ internal class CreditCardActivity : BaseActivity() {
                     }
                 },
                 onClick = {
+                    viewModel?.trackSnapButtonClicked(
+                        ctaName = getStringResourceInEnglish(R.string.cc_dc_main_screen_cta)
+                    )
                     if (selectedFormData == null) {
                         viewModel?.chargeUsingCreditCard(
                             transactionDetails = transactionDetails,
@@ -331,18 +336,21 @@ internal class CreditCardActivity : BaseActivity() {
             )
         }
         val errorState by errorTypeState
-        errorState?.let {
+        errorState?.let { type ->
             val clicked = remember {
                 mutableStateOf(false)
             }
             ErrorCard(
-                type = it,
-                getErrorCta(
-                    type = it,
-                    state = state,
-                    clicked = clicked,
-                    installmentTerm = installmentTerm
-                )
+                type = type,
+                onClick = {
+                    viewModel?.trackSnapButtonClicked(getStringResourceInEnglish(it))
+                    getErrorCta(
+                        type = type,
+                        state = state,
+                        clicked = clicked,
+                        installmentTerm = installmentTerm
+                    )
+                }
             ).apply {
                 show()
                 if (clicked.value) {
@@ -362,13 +370,15 @@ internal class CreditCardActivity : BaseActivity() {
         clicked: MutableState<Boolean>
     ): () -> Unit {
         return when (type) {
-            ErrorCard.CARD_ERROR_DECLINED_DISALLOW_RETRY, ErrorCard.SYSTEM_ERROR_DIALOG_DISALLOW_RETRY -> { ->
+            ErrorCard.CARD_ERROR_DECLINED_DISALLOW_RETRY,
+            ErrorCard.SYSTEM_ERROR_DIALOG_DISALLOW_RETRY -> { ->
                 setResult(RESULT_OK)
                 clicked.value = true
                 finish()
             }
 
-            ErrorCard.TID_MID_ERROR_OTHER_PAY_METHOD_AVAILABLE, ErrorCard.TIMEOUT_ERROR_DIALOG_FROM_BANK -> { ->
+            ErrorCard.TID_MID_ERROR_OTHER_PAY_METHOD_AVAILABLE,
+            ErrorCard.TIMEOUT_ERROR_DIALOG_FROM_BANK -> { ->
                 setResult(RESULT_CANCELED)
                 clicked.value = true
                 finish()

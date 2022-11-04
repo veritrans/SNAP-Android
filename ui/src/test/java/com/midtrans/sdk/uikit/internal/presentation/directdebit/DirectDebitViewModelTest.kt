@@ -3,6 +3,7 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
@@ -81,6 +82,16 @@ internal class DirectDebitViewModelTest {
             channelResponseMessage = eq(null),
             cardType = eq(null),
             threeDsVersion = eq(null)
+        )
+    }
+
+    @Test
+    fun verifySnapButtonClicked() {
+        viewModel.trackSnapButtonClicked("cta-name", PaymentType.DANAMON_ONLINE)
+        verify(eventAnalytics).trackSnapCtaClicked(
+            ctaName = "cta-name",
+            pageName = PageName.DANAMON_ONLINE_PAGE,
+            paymentMethodName = PaymentType.DANAMON_ONLINE
         )
     }
 }

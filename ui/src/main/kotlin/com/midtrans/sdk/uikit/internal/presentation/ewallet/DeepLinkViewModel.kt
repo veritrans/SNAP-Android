@@ -8,12 +8,19 @@ import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResult
+import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import javax.inject.Inject
 
 internal class DeepLinkViewModel @Inject constructor(
     private val snapCore: SnapCore
 ) : BaseViewModel() {
+
+    init {
+        eventAnalytics = snapCore.getEventAnalytics()
+    }
+
     private val _checkStatusResultLiveData = MutableLiveData<TransactionResult>()
     val checkStatusResultLiveData: LiveData<TransactionResult> = _checkStatusResultLiveData
 
@@ -36,5 +43,26 @@ internal class DeepLinkViewModel @Inject constructor(
                 }
             }
         )
+    }
+
+    fun trackSnapButtonClicked(
+        ctaName: String,
+        paymentType: String
+    ) {
+        trackCtaClicked(
+            ctaName = ctaName,
+            paymentMethodName = paymentType,
+            pageName = getPageName(paymentType)
+        )
+    }
+
+    private fun getPageName(paymentType: String): String {
+        return when (paymentType) {
+            PaymentType.GOPAY -> PageName.GOPAY_DEEPLINK_PAGE
+            PaymentType.GOPAY_QRIS -> PageName.GOPAY_QR_PAGE
+            PaymentType.SHOPEEPAY -> PageName.SHOPEEPAY_DEEPLINK_PAGE
+            PaymentType.SHOPEEPAY_QRIS -> PageName.SHOPEEPAY_QR_PAGE
+            else -> ""
+        }
     }
 }

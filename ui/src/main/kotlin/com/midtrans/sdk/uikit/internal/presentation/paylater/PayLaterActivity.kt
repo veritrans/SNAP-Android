@@ -163,6 +163,7 @@ class PayLaterActivity : BaseActivity() {
                         }
                     }
                 )
+
                 SnapButton(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -171,6 +172,10 @@ class PayLaterActivity : BaseActivity() {
                     text = stringResource(getCta(paymentType)),
                     style = SnapButton.Style.PRIMARY
                 ) {
+                    viewModel.trackSnapButtonClicked(
+                        ctaName = getStringResourceInEnglish(getCta(paymentType)),
+                        paymentType = paymentType
+                    )
                     viewModel.payPayLater(
                         snapToken = snapToken,
                         paymentType = paymentType

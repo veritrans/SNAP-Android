@@ -193,7 +193,27 @@ internal class BankTransferDetailViewModelTest {
         Assert.assertEquals(bniVa, bankTransferDetailViewModel.vaNumberLiveData.getOrAwaitValue())
         Assert.assertEquals(BANK_CODE_BNI, bankTransferDetailViewModel.bankCodeLiveData.getOrAwaitValue())
         Assert.assertEquals("00:00:01", bankTransferDetailViewModel.getExpiredHour())
+    }
 
+    @Test
+    fun verifySnapButtonClicked() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+        val bankTransferDetailViewModel =
+            BankTransferDetailViewModel(snapCore = snapCore, dateTimeUtil)
+
+        bankTransferDetailViewModel.trackSnapButtonClicked(
+            ctaName = "cta-name",
+            paymentType = PaymentType.BRI_VA
+        )
+        verify(eventAnalytics).trackSnapCtaClicked(
+            ctaName = "cta-name",
+            pageName = PageName.BRI_VA_PAGE,
+            paymentMethodName = PaymentType.BRI_VA
+        )
     }
 
     fun <T> LiveData<T>.getOrAwaitValue(

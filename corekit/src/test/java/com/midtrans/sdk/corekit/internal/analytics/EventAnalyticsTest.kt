@@ -3,13 +3,14 @@ package com.midtrans.sdk.corekit.internal.analytics
 import com.midtrans.sdk.corekit.BuildConfig
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_RESULTS
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CTA_CLICKED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PLATFORM
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CURRENCY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_FRAUD_STATUS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAGE_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAYMENT_METHOD_NAME
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PLATFORM
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_RESPONSE_TIME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TOKEN
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STATUS_CODE
@@ -137,6 +138,23 @@ internal class EventAnalyticsTest {
                 PROPERTY_PAGE_NAME to PageName.CREDIT_DEBIT_CARD_PAGE,
                 PROPERTY_PAYMENT_METHOD_NAME to "payment-type",
                 PROPERTY_RESPONSE_TIME to "response-time"
+            )
+        )
+    }
+
+    @Test
+    fun verifyTrackCtaClicked() {
+        eventAnalytics.trackSnapCtaClicked(
+            ctaName = "cta-name",
+            pageName = "page-name",
+            paymentMethodName = "payment-type"
+        )
+        verify(mixpanelTracker).trackEvent(
+            eventName = EVENT_SNAP_CTA_CLICKED,
+            properties = mapOf(
+                EventName.PROPERTY_CTA_NAME to "cta-name",
+                PROPERTY_PAGE_NAME to "page-name",
+                PROPERTY_PAYMENT_METHOD_NAME to "payment-type"
             )
         )
     }
