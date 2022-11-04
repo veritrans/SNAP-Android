@@ -1,6 +1,5 @@
 package com.midtrans.sdk.uikit.internal.presentation.ewallet
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.midtrans.sdk.corekit.SnapCore
@@ -28,10 +27,10 @@ internal class WalletViewModel @Inject constructor(
 
     private val _qrCodeUrlLiveData = MutableLiveData<String>()
     private val _deepLinkUrlLiveData = MutableLiveData<String>()
-    private val _transactionResultLiveData = MutableLiveData<TransactionResult>()
+    private val _chargeResultLiveData = MutableLiveData<TransactionResult>()
     val qrCodeUrlLiveData: LiveData<String> = _qrCodeUrlLiveData
     val deepLinkUrlLiveData: LiveData<String> = _deepLinkUrlLiveData
-    val transactionResultLiveData: LiveData<TransactionResult> = _transactionResultLiveData
+    val chargeResultLiveData: LiveData<TransactionResult> = _chargeResultLiveData
     var expiredTime = datetimeUtil.getCurrentMillis() + TimeUnit.MINUTES.toMillis(15)
 
     fun chargeQrPayment(
@@ -55,7 +54,7 @@ internal class WalletViewModel @Inject constructor(
                         qrisUrl?.let { _qrCodeUrlLiveData.value = it }
                         deeplinkUrl?.let { _deepLinkUrlLiveData.value = it }
                         gopayExpirationRaw?.let { expiredTime = parseTime(it) }
-                        _transactionResultLiveData.value = TransactionResult(
+                        _chargeResultLiveData.value = TransactionResult(
                             status = transactionStatus.orEmpty(),
                             transactionId = transactionId.orEmpty(),
                             paymentType = paymentType.orEmpty()
@@ -69,27 +68,6 @@ internal class WalletViewModel @Inject constructor(
 
                 override fun onError(error: SnapError) {
                     // TODO: error dialog etc
-                }
-            }
-        )
-    }
-
-    fun checkStatus(snapToken: String) {
-        snapCore.getTransactionStatus(
-            snapToken = snapToken,
-            callback = object : Callback<TransactionResponse> {
-                override fun onSuccess(result: TransactionResponse) {
-                    result.run {
-                        _transactionResultLiveData.value =  TransactionResult(
-                            status = transactionStatus.orEmpty(),
-                            transactionId = transactionId.orEmpty(),
-                            paymentType = paymentType.orEmpty()
-                        )
-                    }
-                }
-
-                override fun onError(error: SnapError) {
-                    Log.e("Wallet payment status", error.javaClass.name)
                 }
             }
         )
