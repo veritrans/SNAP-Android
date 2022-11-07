@@ -36,7 +36,7 @@ public class ISdkFlow {
     };
 
     public void runUIFlow(Context context, String snapToken) {
-        if(snapToken != null) {
+        if (snapToken != null) {
             UiKitApi.Companion.getDefaultInstance().startPayment(
                     context,
                     snapToken,
