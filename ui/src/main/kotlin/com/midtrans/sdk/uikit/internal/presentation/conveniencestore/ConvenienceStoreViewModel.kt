@@ -128,13 +128,6 @@ internal class ConvenienceStoreViewModel @Inject constructor(
         )
     }
 
-    fun trackPageClosed(paymentType: String) {
-        trackPageClosed(
-            paymentMethodName = paymentType,
-            pageName = getPageName(paymentType)
-        )
-    }
-
     fun resetError(){
         _errorLiveData.value = null
     }
