@@ -109,6 +109,8 @@ internal class BankTransferDetailViewModel @Inject constructor(
             PaymentType.BCA_VA -> PageName.BCA_VA_PAGE
             PaymentType.BNI_VA -> PageName.BNI_VA_PAGE
             PaymentType.BRI_VA -> PageName.BRI_VA_PAGE
+            PaymentType.PERMATA_VA -> PageName.PERMATA_VA_PAGE
+            PaymentType.E_CHANNEL -> PageName.MANDIRI_E_CHANNEL_PAGE
             else -> PageName.OTHER_VA_PAGE
         }
     }
