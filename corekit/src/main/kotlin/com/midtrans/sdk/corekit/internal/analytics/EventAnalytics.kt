@@ -106,16 +106,10 @@ class EventAnalytics(
     fun trackSnapTokenizationResult() {}
     fun trackSnapCtaError() {}
 
-    fun trackSnapPageClosed(
-        pageName: String,
-        paymentMethodName: String
-    ) {
+    fun trackSnapPageClosed(pageName: String) {
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_PAGE_CLOSED,
-            properties = mapOf(
-                PROPERTY_PAGE_NAME to pageName,
-                PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
-            )
+            properties = mapOf(PROPERTY_PAGE_NAME to pageName)
         )
     }
 

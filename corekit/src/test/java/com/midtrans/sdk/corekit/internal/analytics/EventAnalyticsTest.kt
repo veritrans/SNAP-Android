@@ -220,15 +220,11 @@ internal class EventAnalyticsTest {
     @Test
     fun verifyTrackSnapPageClosed() {
         eventAnalytics.trackSnapPageClosed(
-            pageName = "page-name",
-            paymentMethodName = "payment-type"
+            pageName = "page-name"
         )
         verify(mixpanelTracker).trackEvent(
             eventName = EVENT_SNAP_PAGE_CLOSED,
-            properties = mapOf(
-                PROPERTY_PAGE_NAME to "page-name",
-                PROPERTY_PAYMENT_METHOD_NAME to "payment-type"
-            )
+            properties = mapOf(PROPERTY_PAGE_NAME to "page-name")
         )
     }
 }
