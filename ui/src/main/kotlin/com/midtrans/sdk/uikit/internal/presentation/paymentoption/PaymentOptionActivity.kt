@@ -175,6 +175,13 @@ class PaymentOptionActivity : BaseActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        setResult(Activity.RESULT_OK)
+        //TODO set transaction result
+        //Track page closed here
+        super.onBackPressed()
+    }
+
     @Preview
     @Composable
     private fun Preview() {
