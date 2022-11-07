@@ -70,6 +70,7 @@ fun SnapInstallmentTermSelectionMenu(
                                 .filter { it.isDigit() }
                                 .takeIf { it.isDigitsOnly() && it.isNotEmpty() }
                                 ?.let { onInstallmentTermSelected("${selectedBank}_$it") }
+                                ?: run { onInstallmentTermSelected("") }
                         },
                         onInstallmentAllowed = { onInstallmentAllowed(it) }
                     )

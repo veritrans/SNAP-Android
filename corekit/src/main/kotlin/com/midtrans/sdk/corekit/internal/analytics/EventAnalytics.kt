@@ -3,14 +3,17 @@ package com.midtrans.sdk.corekit.internal.analytics
 import com.midtrans.sdk.corekit.BuildConfig
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_RESULTS
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CTA_CLICKED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_HOW_TO_PAY_VIEWED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_3DS_VERSION
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CHANNEL_RESPONSE_CODE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CHANNEL_RESPONSE_MESSAGE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CHARGE_RESPONSE_BANK
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CREDIT_CARD_POINT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CTA_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CURRENCY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_FRAUD_STATUS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_GROSS_AMOUNT
@@ -85,8 +88,6 @@ class EventAnalytics(
     fun trackSnapPageViewed() {}
     fun trackSnapCustomerDataInput() {}
     fun trackSnapOrderDetailsViewed() {}
-    fun trackSnapCtaClicked() {}
-    fun trackSnapHowToPayViewed() {}
     fun trackSnapAccountNumberCopied() {}
     fun trackSnapPaymentNumberButtonRetried() {}
     fun trackSnapExbinResponse() {}
@@ -96,6 +97,34 @@ class EventAnalytics(
     fun trackSnap3dsResult() {}
     fun trackSnapTokenizationResult() {}
     fun trackSnapCtaError() {}
+
+    fun trackSnapHowToPayViewed(
+        pageName: String,
+        paymentMethodName: String
+    ) {
+        mixpanelTracker.trackEvent(
+            eventName = EVENT_SNAP_HOW_TO_PAY_VIEWED,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to pageName,
+                PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
+            )
+        )
+    }
+
+    fun trackSnapCtaClicked(
+        ctaName: String,
+        pageName: String,
+        paymentMethodName: String
+    ) {
+        mixpanelTracker.trackEvent(
+            eventName = EVENT_SNAP_CTA_CLICKED,
+            properties = mapOf(
+                PROPERTY_CTA_NAME to ctaName,
+                PROPERTY_PAGE_NAME to pageName,
+                PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
+            )
+        )
+    }
 
     fun trackSnapChargeRequest(
         pageName: String,

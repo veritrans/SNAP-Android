@@ -1,10 +1,10 @@
 package com.midtrans.sdk.uikit.internal.presentation.directdebit
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -30,7 +30,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
-import com.midtrans.sdk.uikit.internal.presentation.SuccessScreenActivity
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
@@ -219,7 +219,10 @@ class UobPaymentActivity : BaseActivity() {
                                 isExpanded = isInstructionExpanded,
                                 iconResId = R.drawable.ic_help,
                                 title = stringResource(R.string.payment_instruction_how_to_pay_title),
-                                onExpandClick = { isInstructionExpanded = !isInstructionExpanded },
+                                onExpandClick = {
+                                    viewModel.trackHowToPayClicked()
+                                    isInstructionExpanded = !isInstructionExpanded
+                                },
                                 expandingContent = {
                                     Column {
                                         AnimatedVisibility(visible = isInstructionExpanded) {
@@ -233,6 +236,7 @@ class UobPaymentActivity : BaseActivity() {
                         }
                     }
                 )
+
                 SnapButton(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -241,6 +245,9 @@ class UobPaymentActivity : BaseActivity() {
                     text = stringResource(id = getUobCta(uobMode)),
                     style = SnapButton.Style.PRIMARY
                 ) {
+                    viewModel.trackSnapButtonClicked(
+                        ctaName = getStringResourceInEnglish(getUobCta(uobMode))
+                    )
                     viewModel.payUob(snapToken)
                 }
             }

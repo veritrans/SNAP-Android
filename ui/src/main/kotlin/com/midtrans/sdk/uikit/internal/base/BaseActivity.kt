@@ -1,9 +1,11 @@
 package com.midtrans.sdk.uikit.internal.base
 
+import android.content.res.Configuration
 import android.util.DisplayMetrics
 import androidx.appcompat.app.AppCompatActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
+import java.util.*
 import kotlin.math.sqrt
 
 open class BaseActivity : AppCompatActivity(){
@@ -20,4 +22,11 @@ open class BaseActivity : AppCompatActivity(){
     }
 
     protected fun getUikitSetting() = UiKitApi.getDefaultInstance().uiKitSetting
+
+    fun getStringResourceInEnglish(id: Int): String {
+        val config = Configuration(resources.configuration)
+        config.setLocale(Locale("en"))
+        val localizedContext = createConfigurationContext(config)
+        return localizedContext.getString(id)
+    }
 }

@@ -139,7 +139,6 @@ class WalletViewModelTest {
 
     }
 
-
     @Test
     fun deeplinkShouldDeliveredViaLiveData() {
         val snapCore: SnapCore = mock()
@@ -181,6 +180,42 @@ class WalletViewModelTest {
         Assert.assertEquals(deepLinkUrl, walletViewModel.deepLinkUrlLiveData.getOrAwaitValue())
         Assert.assertEquals("00:00:01", walletViewModel.getExpiredHour())
 
+    }
+
+    @Test
+    fun verifyTrackSnapButtonClicked() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil)
+
+        walletViewModel.trackSnapButtonClicked(
+            ctaName = "cta-name",
+            paymentType = PaymentType.GOPAY
+        )
+        verify(eventAnalytics).trackSnapCtaClicked(
+            ctaName = "cta-name",
+            pageName = PageName.GOPAY_DEEPLINK_PAGE,
+            paymentMethodName = PaymentType.GOPAY
+        )
+    }
+
+    @Test
+    fun verifyTrackHowToPayClicked() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil)
+
+        walletViewModel.trackHowToPayClicked(paymentType = PaymentType.GOPAY)
+        verify(eventAnalytics).trackSnapHowToPayViewed(
+            pageName = PageName.GOPAY_DEEPLINK_PAGE,
+            paymentMethodName = PaymentType.GOPAY
+        )
     }
 
     fun <T> LiveData<T>.getOrAwaitValue(

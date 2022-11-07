@@ -7,8 +7,7 @@ import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import org.junit.After
-import org.junit.Assert
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -16,11 +15,9 @@ import org.junit.rules.TestRule
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.KArgumentCaptor
-import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException

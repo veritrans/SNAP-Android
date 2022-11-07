@@ -149,7 +149,10 @@ class PayLaterActivity : BaseActivity() {
                                 isExpanded = isInstructionExpanded,
                                 iconResId = R.drawable.ic_help,
                                 title = stringResource(R.string.payment_instruction_how_to_pay_title),
-                                onExpandClick = { isInstructionExpanded = !isInstructionExpanded },
+                                onExpandClick = {
+                                    viewModel.trackHowToPayClicked(paymentType)
+                                    isInstructionExpanded = !isInstructionExpanded
+                                },
                                 expandingContent = {
                                     Column {
                                         AnimatedVisibility(visible = isInstructionExpanded) {
@@ -163,6 +166,7 @@ class PayLaterActivity : BaseActivity() {
                         }
                     }
                 )
+
                 SnapButton(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -171,6 +175,10 @@ class PayLaterActivity : BaseActivity() {
                     text = stringResource(getCta(paymentType)),
                     style = SnapButton.Style.PRIMARY
                 ) {
+                    viewModel.trackSnapButtonClicked(
+                        ctaName = getStringResourceInEnglish(getCta(paymentType)),
+                        paymentType = paymentType
+                    )
                     viewModel.payPayLater(
                         snapToken = snapToken,
                         paymentType = paymentType

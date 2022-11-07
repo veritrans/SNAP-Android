@@ -1,4 +1,4 @@
-package com.midtrans.sdk.uikit.internal.presentation
+package com.midtrans.sdk.uikit.internal.presentation.statusscreen
 
 import android.content.Context
 import android.content.Intent

@@ -19,14 +19,14 @@ import retrofit2.HttpException
 import java.net.UnknownHostException
 
 @Composable
-fun ErrorCard(type: Int, onClick: () -> Unit = {}): DialogToggle {
+fun ErrorCard(type: Int, onClick: (Int) -> Unit = {}): DialogToggle {
     return SnapBottomSheet {
         ErrorContent(type = type, onClick = onClick)
     }
 }
 
 @Composable
-fun ErrorContent(type: Int, onClick: () -> Unit = {}) {
+private fun ErrorContent(type: Int, onClick: (Int) -> Unit = {}) {
     errorComponentMap[type]?.run {
         Column(
             modifier = Modifier
@@ -42,8 +42,11 @@ fun ErrorContent(type: Int, onClick: () -> Unit = {}) {
                 style = SnapTypography.STYLES.snaTextBodySmall,
                 modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
             )
-            SnapButton(text = stringResource(id = cta), modifier = Modifier.fillMaxWidth(1f)) {
-                onClick.invoke()
+            SnapButton(
+                text = stringResource(id = cta),
+                modifier = Modifier.fillMaxWidth(1f)
+            ) {
+                onClick.invoke(cta)
             }
         }
     }
@@ -141,8 +144,7 @@ object ErrorCard {
         httpException: HttpException,
         allowRetry: Boolean = false
     ): Int {
-        val httpCode = httpException.code()
-        return when (httpCode) {
+        return when (httpException.code()) {
             503 -> TIMEOUT_ERROR_DIALOG_FROM_BANK
             500 -> if (allowRetry) SYSTEM_ERROR_DIALOG_ALLOW_RETRY else SYSTEM_ERROR_DIALOG_DISALLOW_RETRY
             else -> SYSTEM_ERROR_DIALOG_ALLOW_RETRY

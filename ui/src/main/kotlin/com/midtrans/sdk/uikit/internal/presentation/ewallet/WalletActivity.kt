@@ -188,6 +188,10 @@ internal class WalletActivity : BaseActivity() {
                                     style = SnapButton.Style.TERTIARY,
                                     text = stringResource(id = R.string.qr_reload),
                                     onClick = {
+                                        viewModel.trackSnapButtonClicked(
+                                            ctaName = getStringResourceInEnglish(R.string.qr_reload),
+                                            paymentType = paymentType
+                                        )
                                         error = false
                                     }
                                 )
@@ -236,7 +240,10 @@ internal class WalletActivity : BaseActivity() {
                         isExpanded = isExpanded,
                         iconResId = R.drawable.ic_help,
                         title = stringResource(id = R.string.kredivo_how_to_pay_title),
-                        onExpandClick = { isExpanded = !isExpanded },
+                        onExpandClick = {
+                            viewModel.trackHowToPayClicked(paymentType)
+                            isExpanded = !isExpanded
+                        },
                         expandingContent = {
                             AnimatedVisibility(visible = isExpanded) {
                                 val instruction =
@@ -250,14 +257,19 @@ internal class WalletActivity : BaseActivity() {
                 }
             }
 
+            val ctaId = if (isTablet) R.string.i_have_already_paid else R.string.redirection_instruction_gopay_cta
             SnapButton(
-                text = stringResource(id = if (isTablet) R.string.i_have_already_paid else R.string.redirection_instruction_gopay_cta),
+                text = stringResource(ctaId),
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(16.dp),
                 enabled = !error && !loading,
                 style = if (!error && !loading) SnapButton.Style.PRIMARY else SnapButton.Style.PRIMARY
             ) {
+                viewModel.trackSnapButtonClicked(
+                    ctaName = getStringResourceInEnglish(ctaId),
+                    paymentType = paymentType
+                )
                 if (!isTablet) {
                     openDeepLink()
                 }else{

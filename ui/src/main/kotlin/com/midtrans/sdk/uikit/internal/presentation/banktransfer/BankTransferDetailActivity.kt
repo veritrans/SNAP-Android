@@ -186,7 +186,10 @@ internal class BankTransferDetailActivity : BaseActivity() {
                             isExpanded = isExpanded,
                             iconResId = R.drawable.ic_help,
                             title = stringResource(id = R.string.kredivo_how_to_pay_title),
-                            onExpandClick = { isExpanded = !isExpanded },
+                            onExpandClick = {
+                                viewModel.trackHowToPayClicked(paymentType)
+                                isExpanded = !isExpanded
+                            },
                             expandingContent = {
                                 val (selectedOption, onOptionSelected) = remember { mutableStateOf(0) }
                                 Column(
@@ -240,6 +243,10 @@ internal class BankTransferDetailActivity : BaseActivity() {
                     text = stringResource(id = R.string.i_have_already_paid),
                     modifier = Modifier.fillMaxWidth(1f)
                 ) {
+                    viewModel.trackSnapButtonClicked(
+                        ctaName = getStringResourceInEnglish(R.string.i_have_already_paid),
+                        paymentType = paymentType
+                    )
                     onBackPressed()
                 }
             }

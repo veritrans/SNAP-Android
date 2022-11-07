@@ -15,11 +15,11 @@ import com.midtrans.sdk.corekit.api.requestbuilder.payment.OneClickCardPaymentRe
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
+import com.midtrans.sdk.uikit.internal.model.PromoData
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
-import com.midtrans.sdk.uikit.internal.view.PromoData
 import com.midtrans.sdk.uikit.internal.view.SavedCreditCardFormData
 import java.util.*
 import javax.inject.Inject
@@ -88,7 +88,7 @@ internal class CreditCardViewModel @Inject constructor(
 
     fun setPromos(promos: List<Promo>?){
         this.promos = promos
-        getPromosData("")
+        getPromosData("", "")
     }
 
     fun setTransactionDetails(transactionDetails: TransactionDetails?){
@@ -102,8 +102,8 @@ internal class CreditCardViewModel @Inject constructor(
         }
     }
 
-    fun getPromosData(binNumber: String) {
-        _promoDataLiveData.value = snapCreditCardUtil.getCreditCardApplicablePromosData(binNumber, promos)
+    fun getPromosData(binNumber: String, installmentTerm: String) {
+        _promoDataLiveData.value = snapCreditCardUtil.getCreditCardApplicablePromosData(binNumber, promos, installmentTerm)
     }
 
     fun getBinData(binNumber: String) {
@@ -407,6 +407,14 @@ internal class CreditCardViewModel @Inject constructor(
                     _errorLiveData.value = error
                 }
             }
+        )
+    }
+
+    fun trackSnapButtonClicked(ctaName: String) {
+        trackCtaClicked(
+            ctaName = ctaName,
+            paymentMethodName = PaymentType.CREDIT_CARD,
+            pageName = PageName.CREDIT_DEBIT_CARD_PAGE
         )
     }
 
