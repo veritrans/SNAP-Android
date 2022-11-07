@@ -1,6 +1,6 @@
 package com.midtrans.sdk.uikit.internal.presentation.paymentoption
 
-import androidx.lifecycle.ViewModel
+import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.model.Address
 import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.PaymentMethod
@@ -26,11 +26,19 @@ import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY_QRIS
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.UOB_EZPAY
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
+import javax.inject.Inject
 
-class PaymentOptionViewModel : ViewModel() {
+internal class PaymentOptionViewModel @Inject constructor(
+    snapCore: SnapCore
+) : BaseViewModel() {
+
+    init {
+        eventAnalytics = snapCore.getEventAnalytics()
+    }
 
     fun initiateList(
         paymentList: List<PaymentMethod>,
