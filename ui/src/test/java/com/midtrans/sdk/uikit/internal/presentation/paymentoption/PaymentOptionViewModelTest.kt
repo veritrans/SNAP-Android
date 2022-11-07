@@ -1,5 +1,6 @@
 package com.midtrans.sdk.uikit.internal.presentation.paymentoption
 
+import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.model.Address
 import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.PaymentMethod
@@ -11,6 +12,8 @@ import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.GOPAY_QRIS
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.KLIK_BCA
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY_QRIS
+import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
+import com.midtrans.sdk.corekit.internal.analytics.PageName
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.hamcrest.beans.HasPropertyWithValue
@@ -19,8 +22,16 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 internal class PaymentOptionViewModelTest {
+
+    private var snapCore: SnapCore = mock()
+
+    private var eventAnalytics: EventAnalytics = mock()
 
     private lateinit var viewModel: PaymentOptionViewModel
 
@@ -29,7 +40,8 @@ internal class PaymentOptionViewModelTest {
     @Before
     fun setup() {
         closeable = MockitoAnnotations.openMocks(this)
-        viewModel = PaymentOptionViewModel()
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+        viewModel = PaymentOptionViewModel(snapCore)
     }
 
     @After
@@ -297,6 +309,12 @@ internal class PaymentOptionViewModelTest {
                 )
             )
         )
+    }
+
+    @Test
+    fun trackPaymentListPageClosed() {
+        viewModel.trackPaymentListPageClosed()
+        verify(eventAnalytics).trackSnapPageClosed(PageName.PAYMENT_LIST_PAGE, "")
     }
 
     private fun providePaymentMethodList(): List<PaymentMethod> {

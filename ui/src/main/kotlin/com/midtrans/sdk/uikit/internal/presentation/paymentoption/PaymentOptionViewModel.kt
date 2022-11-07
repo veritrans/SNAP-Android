@@ -25,6 +25,7 @@ import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.PERMATA_VA
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY_QRIS
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.UOB_EZPAY
+import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
@@ -195,5 +196,12 @@ internal class PaymentOptionViewModel @Inject constructor(
         address.city?.run { addresses.add(this) }
         address.postalCode?.run { addresses.add(this) }
         return addresses
+    }
+
+    fun trackPaymentListPageClosed() {
+        trackPageClosed(
+            pageName = PageName.PAYMENT_LIST_PAGE,
+            paymentMethodName = ""
+        )
     }
 }
