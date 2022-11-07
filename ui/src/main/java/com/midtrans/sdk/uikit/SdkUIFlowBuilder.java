@@ -9,6 +9,7 @@ import androidx.core.os.LocaleListCompat;
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
 import com.midtrans.sdk.corekit.core.IScanner;
 import com.midtrans.sdk.corekit.core.ISdkFlow;
+import com.midtrans.sdk.corekit.core.Logger;
 import com.midtrans.sdk.corekit.core.MidtransSDK;
 import com.midtrans.sdk.corekit.core.UIKitCustomSetting;
 import com.midtrans.sdk.corekit.core.themes.BaseColorTheme;
@@ -180,7 +181,7 @@ public class SdkUIFlowBuilder {
             return midtransSDK;
 
         } else {
-//            Logger.e("already performing an transaction");
+            Logger.e("already performing an transaction");
         }
         return null;
     }
