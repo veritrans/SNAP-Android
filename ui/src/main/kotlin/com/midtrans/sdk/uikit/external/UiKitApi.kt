@@ -86,7 +86,8 @@ class UiKitApi private constructor(val builder: Builder) {
         uobEzpayCallback: PaymentCallback,
         paymentCallback: Callback<TransactionResult>,
         snapTokenExpiry: Expiry? = null,
-        paymentType: PaymentTypeItem? = null
+        paymentType: PaymentTypeItem? = null,
+        enabledPayment: List<String>? = null
     ) {
         UiKitApi.paymentCallback = paymentCallback
 
@@ -98,7 +99,8 @@ class UiKitApi private constructor(val builder: Builder) {
             userId = userId,
             uobEzpayCallback = uobEzpayCallback,
             paymentType = paymentType,
-            expiry = snapTokenExpiry
+            expiry = snapTokenExpiry,
+            enabledPayments = enabledPayment
         )
         activityContext.startActivity(intent)
     }

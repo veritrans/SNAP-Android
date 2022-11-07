@@ -186,4 +186,13 @@ public class TransactionRequest {
         return currency;
     }
 
+    public List<String> getEnabledPayments() {
+        return enabledPayments;
+    }
+
+    public void setEnabledPayments(List<String> enabledPayments) {
+        this.enabledPayments = enabledPayments;
+    }
+
+
 }

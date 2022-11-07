@@ -162,7 +162,7 @@ class PaymentOptionActivity : BaseActivity() {
                     totalAmount = totalAmount,
                     paymentMethodItem = it,
                     orderId = orderId
-                )[paymentType.type]!!.invoke()
+                )[paymentType.type]?.invoke()
             }
         } ?: run {
             setContent {

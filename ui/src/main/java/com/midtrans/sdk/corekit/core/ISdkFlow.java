@@ -58,8 +58,8 @@ public class ISdkFlow {
                     new PaymentCallback(""),
                     wrapperCallback,
                     transactionRequest.getExpiry(),
-                    null
-
+                    null,
+                    transactionRequest.getEnabledPayments()
             );
 
         }
