@@ -112,7 +112,7 @@ internal class CreditCardViewModel @Inject constructor(
             callback = object : Callback<BinResponse> {
                 override fun onSuccess(result: BinResponse) {
                     result.run {
-                        trackExbinResponse(data)
+                        trackCreditDebitCardExbinResponse(data)
                         data?.bankCode?.let {
                             _bankIconId.value = snapCreditCardUtil.getBankIcon(it.lowercase())
                             _cardIssuerBank.value = it

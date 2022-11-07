@@ -101,7 +101,7 @@ internal open class BaseViewModel : ViewModel() {
         )
     }
 
-    protected fun trackExbinResponse(binData: BinData?) {
+    protected fun trackCreditDebitCardExbinResponse(binData: BinData?) {
         eventAnalytics?.trackSnapExbinResponse(
             pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
             paymentMethodName = PaymentType.CREDIT_CARD,
