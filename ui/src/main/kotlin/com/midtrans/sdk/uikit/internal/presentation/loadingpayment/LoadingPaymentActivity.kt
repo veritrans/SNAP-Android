@@ -218,7 +218,7 @@ class LoadingPaymentActivity : BaseActivity() {
                     }
                 }
                 finish()
-            } else { //TODO check with pak wahyu whether press back should load payment options again?
+            } else {
                 loadPaymentOptions()
             }
         }
