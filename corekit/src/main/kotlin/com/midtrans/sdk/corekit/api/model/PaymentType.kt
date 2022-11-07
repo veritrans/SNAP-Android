@@ -42,7 +42,7 @@ class PaymentType {
         const val BNI_VA = "bni_va"
         const val BRI_VA = "bri_va"
         const val OTHER_VA = "other_va"
-        const val E_CHANNEL = "echannel"
+        const val E_CHANNEL = "echannel" //NOTE: This is Mandiri E-Channel
 
         //DIRECT DEBIT
         const val KLIK_BCA = "bca_klikbca"
