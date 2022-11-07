@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
@@ -41,8 +42,9 @@ internal class WalletActivity : BaseActivity() {
     var deepLinkUrl: String? = null
 
     private val deepLinkLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            viewModel.checkStatus(snapToken)
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            setResult(result.resultCode, result.data)
+            finish()
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,13 +65,17 @@ internal class WalletActivity : BaseActivity() {
             snapToken = snapToken,
             paymentType = paymentType
         )
-        if (!isTabletDevice()) {
-            observerDeepLinkUrl()
-        }
-        observeTransactionResult()
+        observeLiveData()
     }
 
-    private fun observerDeepLinkUrl() {
+    private fun observeLiveData() {
+        if (!isTabletDevice()) {
+            observeDeepLinkUrl()
+        }
+        observeChargeResult()
+    }
+
+    private fun observeDeepLinkUrl() {
         viewModel.deepLinkUrlLiveData.observe(this) { url ->
             deepLinkUrl = url
         }
@@ -77,16 +83,25 @@ internal class WalletActivity : BaseActivity() {
 
     private fun openDeepLink() {
         deepLinkUrl?.let {
-            val intent = DeepLinkActivity.getIntent(this, paymentType, it)
+            val intent = DeepLinkActivity.getIntent(
+                activityContext = this,
+                paymentType = paymentType,
+                url = it,
+                snapToken = snapToken
+            )
             deepLinkLauncher.launch(intent)
         }
     }
 
-    private fun observeTransactionResult() {
-        viewModel.transactionResultLiveData.observe(this) {
-            val resultIntent = Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, it)
-            setResult(Activity.RESULT_OK, resultIntent)
+    private fun observeChargeResult() {
+        viewModel.chargeResultLiveData.observe(this) {
+            setResult(it)
         }
+    }
+
+    private fun setResult(data: TransactionResult) {
+        val resultIntent = Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, data)
+        setResult(Activity.RESULT_OK, resultIntent)
     }
 
     private fun updateExpiredTime(): Observable<String> {
@@ -173,6 +188,10 @@ internal class WalletActivity : BaseActivity() {
                                     style = SnapButton.Style.TERTIARY,
                                     text = stringResource(id = R.string.qr_reload),
                                     onClick = {
+                                        viewModel.trackSnapButtonClicked(
+                                            ctaName = getStringResourceInEnglish(R.string.qr_reload),
+                                            paymentType = paymentType
+                                        )
                                         error = false
                                     }
                                 )
@@ -221,7 +240,10 @@ internal class WalletActivity : BaseActivity() {
                         isExpanded = isExpanded,
                         iconResId = R.drawable.ic_help,
                         title = stringResource(id = R.string.kredivo_how_to_pay_title),
-                        onExpandClick = { isExpanded = !isExpanded },
+                        onExpandClick = {
+                            viewModel.trackHowToPayClicked(paymentType)
+                            isExpanded = !isExpanded
+                        },
                         expandingContent = {
                             AnimatedVisibility(visible = isExpanded) {
                                 val instruction =
@@ -235,14 +257,19 @@ internal class WalletActivity : BaseActivity() {
                 }
             }
 
+            val ctaId = if (isTablet) R.string.i_have_already_paid else R.string.redirection_instruction_gopay_cta
             SnapButton(
-                text = stringResource(id = if (isTablet) R.string.i_have_already_paid else R.string.redirection_instruction_gopay_cta),
+                text = stringResource(ctaId),
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(16.dp),
                 enabled = !error && !loading,
                 style = if (!error && !loading) SnapButton.Style.PRIMARY else SnapButton.Style.PRIMARY
             ) {
+                viewModel.trackSnapButtonClicked(
+                    ctaName = getStringResourceInEnglish(ctaId),
+                    paymentType = paymentType
+                )
                 if (!isTablet) {
                     openDeepLink()
                 }else{

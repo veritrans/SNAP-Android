@@ -18,9 +18,12 @@ import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
 import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferRequest
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
+import javax.inject.Inject
 
 //TODO will add UT and SnapCore manager after DI is setup
-class LoadingPaymentViewModel : ViewModel() {
+class LoadingPaymentViewModel @Inject constructor(
+    private val snapCore: SnapCore
+): ViewModel() {
     private val _paymentOptionLiveData = MutableLiveData<PaymentOption>()
     private val _error = MutableLiveData<SnapError>()
 
@@ -87,5 +90,10 @@ class LoadingPaymentViewModel : ViewModel() {
 
     fun getOrderId(transactionDetails: SnapTransactionDetail): String {
         return transactionDetails.orderId
+    }
+
+    fun registerCommonProperties(isTablet: Boolean) {
+        val platform = if (isTablet) "Tablet" else "Mobile"
+        snapCore.getEventAnalytics().registerCommonProperties(platform)
     }
 }

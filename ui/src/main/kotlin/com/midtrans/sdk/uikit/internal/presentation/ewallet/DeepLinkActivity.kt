@@ -18,25 +18,50 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.GifImage
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapColors
 import com.midtrans.sdk.uikit.internal.view.SnapWebView
+import javax.inject.Inject
 
-class DeepLinkActivity : BaseActivity() {
+internal class DeepLinkActivity : BaseActivity() {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel: DeepLinkViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory).get(DeepLinkViewModel::class.java)
+    }
 
     private val deepLinkLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            setResult(Activity.RESULT_OK)
-            finish()
+            viewModel.checkStatus(snapToken)
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         setContent { Content(paymentType = paymentType, url = url) }
+        observeData()
+    }
+
+    private fun observeData() {
+        viewModel.checkStatusResultLiveData.observe(this) {
+            setResult(it)
+            finish()
+        }
+    }
+
+    private fun setResult(data: TransactionResult) {
+        val resultIntent = Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, data)
+        setResult(Activity.RESULT_OK, resultIntent)
     }
 
     @Composable
@@ -92,6 +117,7 @@ class DeepLinkActivity : BaseActivity() {
                         }
                     }
                     redirectionCta[paymentType]?.let {
+                        //TODO track cta here - jordy
                         SnapButton(
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
@@ -99,7 +125,12 @@ class DeepLinkActivity : BaseActivity() {
                                 .padding(16.dp),
                             text = stringResource(id = it),
                             style = SnapButton.Style.TERTIARY
-                        ) {}
+                        ) {
+                            viewModel.trackSnapButtonClicked(
+                                ctaName = getStringResourceInEnglish(it),
+                                paymentType = paymentType
+                            )
+                        }
                     }
                 }
             }
@@ -108,7 +139,7 @@ class DeepLinkActivity : BaseActivity() {
 
     @Preview
     @Composable
-    private fun forPreview() {
+    private fun ForPreview() {
         Content(paymentType = PaymentType.GOPAY, url = "http://")
     }
 
@@ -129,6 +160,10 @@ class DeepLinkActivity : BaseActivity() {
     private val paymentType: String by lazy {
         intent.getStringExtra(EXTRA_PAYMENT_TYPE)
             ?: throw RuntimeException("Payment type must not be empty")
+    }
+
+    private val snapToken: String by lazy {
+        intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
     }
 
     private val redirectionTitle by lazy {
@@ -164,26 +199,26 @@ class DeepLinkActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
+        viewModel.checkStatus(snapToken)
     }
 
     companion object {
         private const val EXTRA_URL = "deeplinkactivity.extra.url"
         private const val EXTRA_PAYMENT_TYPE = "deeplinkactivity.extra.payment_type"
+        private const val EXTRA_SNAP_TOKEN = "deeplinkactivity.extra.snap_token"
         private const val GOJEK_PACKAGE_NAME = "com.gojek.app"
         private const val SHOPEE_PACKAGE_NAME = "com.shopee.id"
-
 
         fun getIntent(
             activityContext: Context,
             paymentType: String,
-            url: String
-
+            url: String,
+            snapToken: String
         ): Intent {
             return Intent(activityContext, DeepLinkActivity::class.java).apply {
                 putExtra(EXTRA_URL, url)
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
+                putExtra(EXTRA_SNAP_TOKEN, snapToken)
             }
         }
     }

@@ -7,8 +7,8 @@ import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.Promo
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.model.PromoData
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
-import com.midtrans.sdk.uikit.internal.view.PromoData
 
 internal object SnapCreditCardUtil {
 
@@ -24,6 +24,8 @@ internal object SnapCreditCardUtil {
     const val SUPPORTED_MAX_BIN_NUMBER = 8
     const val NEW_CARD_FORM_IDENTIFIER = "newCardFormIdentifier"
     const val SAVED_CARD_IDENTIFIER = "savedCardIdentifier"
+    const val INSTALLMENT_NOT_SUPPORTED = "installmentNotSupported"
+    const val CARD_NOT_ELIGIBLE = "cardNotEligible"
 
     /**
      * Return validation of a given card number.
@@ -218,19 +220,41 @@ internal object SnapCreditCardUtil {
         }
     }
 
-    fun getCreditCardApplicablePromosData(binNumber: String, promos: List<Promo>?): List<PromoData>?{
+    fun getCreditCardApplicablePromosData(binNumber: String, promos: List<Promo>?, installmentTerm: String): List<PromoData>?{
         val creditCardPromos = promos?.filter { promo -> promo.paymentTypes?.contains(PaymentType.CREDIT_CARD)?: false }?.ifEmpty{ null }
+        var selectedTerm = installmentTerm.substringAfter("_")
+        if (selectedTerm.isBlank()) selectedTerm = "0"
         return creditCardPromos?.map { promoResponse ->
             PromoData(
                 identifier = promoResponse.id.toString(),
-                leftText = promoResponse.name.orEmpty(),
-                rightText = "-${promoResponse.calculatedDiscountAmount.currencyFormatRp()}",
+                promoName = promoResponse.name.orEmpty(),
+                discountAmount = "-${promoResponse.calculatedDiscountAmount.currencyFormatRp()}",
+                errorType = getPromoError(promoResponse, binNumber, selectedTerm),
+                installmentTerm = promoResponse.installmentTerms,
                 enabled = mutableStateOf(
                     (binNumber.isNotBlank().and(promoResponse.bins.isNullOrEmpty()))
-                        .or(promoResponse.bins?.any { binNumber.startsWith(it)}?: false )
+                        .or(promoResponse.bins?.any { binNumber.startsWith(it) } ?: false)
+                        .and(promoResponse.installmentTerms?.any { selectedTerm == it } ?: false)
                 )
             )
         }?.sortedByDescending { it.enabled.value }
+    }
+
+    private fun getPromoError(promoResponse: Promo, binNumber: String, selectedTerm: String): String? {
+        var output: String? = null
+
+        promoResponse.bins?.let { promoBins ->
+            promoResponse.installmentTerms?.let { installmentTerms ->
+                if (promoBins.isNotEmpty() && binNumber.isNotBlank()) {
+                    if (!installmentTerms.any { selectedTerm == it }) {
+                        output = INSTALLMENT_NOT_SUPPORTED
+                    } else if (!promoBins.any { binNumber.startsWith(it) }) {
+                        output = CARD_NOT_ELIGIBLE
+                    }
+                }
+            }
+        }
+        return output
     }
 
     fun isValidEmail(target: String): Boolean {

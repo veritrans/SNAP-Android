@@ -7,22 +7,34 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.BANK_TRANSFER
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.CREDIT_CARD
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.GOPAY
+import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.GOPAY_QRIS
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.KLIK_BCA
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY_QRIS
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.hamcrest.beans.HasPropertyWithValue
+import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+import org.mockito.MockitoAnnotations
 
 internal class PaymentOptionViewModelTest {
+
     private lateinit var viewModel: PaymentOptionViewModel
 
+    private lateinit var closeable: AutoCloseable
+
     @Before
-    fun setUp() {
+    fun setup() {
+        closeable = MockitoAnnotations.openMocks(this)
         viewModel = PaymentOptionViewModel()
+    }
+
+    @After
+    fun teardown() {
+        closeable.close()
     }
 
     @Test
@@ -249,7 +261,7 @@ internal class PaymentOptionViewModelTest {
                     HasPropertyWithValue.hasProperty("icons", hasSize<String>(2))
                 ),
                 allOf(
-                    HasPropertyWithValue("type", equalTo(GOPAY)),
+                    HasPropertyWithValue("type", equalTo(GOPAY_QRIS)),
                     HasPropertyWithValue.hasProperty("icons", hasSize<String>(2))
                 )
             )
@@ -311,6 +323,10 @@ internal class PaymentOptionViewModelTest {
             ),
             PaymentMethod(
                 type = GOPAY,
+                channels = emptyList()
+            ),
+            PaymentMethod(
+                type = GOPAY_QRIS,
                 channels = emptyList()
             )
         )

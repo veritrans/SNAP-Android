@@ -68,7 +68,7 @@ internal class PayLaterViewModelTest {
                 transactionId = "transaction-id"
             )
         )
-        assertEquals("redirect-url", viewModel.getTransactionResponse().getOrAwaitValue().redirectUrl)
+        assertEquals("redirect-url", viewModel.transactionResponseLiveData.getOrAwaitValue().redirectUrl)
         verify(eventAnalytics).trackSnapChargeResult(
             transactionStatus = eq("transaction-status"),
             fraudStatus = eq("fraud-status"),
@@ -83,6 +83,25 @@ internal class PayLaterViewModelTest {
             channelResponseMessage = eq(null),
             cardType = eq(null),
             threeDsVersion = eq(null)
+        )
+    }
+
+    @Test
+    fun verifyTrackSnapButtonClicked() {
+        viewModel.trackSnapButtonClicked("cta-name", "payment-type")
+        verify(eventAnalytics).trackSnapCtaClicked(
+            ctaName = "cta-name",
+            pageName = PageName.AKULAKU_PAGE,
+            paymentMethodName = "payment-type"
+        )
+    }
+
+    @Test
+    fun verifyTrackHowToPayClicked() {
+        viewModel.trackHowToPayClicked("payment-type")
+        verify(eventAnalytics).trackSnapHowToPayViewed(
+            pageName = PageName.AKULAKU_PAGE,
+            paymentMethodName = "payment-type"
         )
     }
 }

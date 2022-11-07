@@ -195,10 +195,15 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                                     color = SnapColors.getARGBColor(SnapColors.supportDangerDefault),
                                     modifier = Modifier.weight(1f)
                                 )
+
                                 SnapButton(
                                     style = SnapButton.Style.TERTIARY,
                                     text = stringResource(id = R.string.qr_reload),
                                     onClick = {
+                                        viewModel?.trackSnapButtonClicked(
+                                            ctaName = getStringResourceInEnglish(R.string.qr_reload),
+                                            paymentType = paymentType
+                                        )
                                         viewModel?.resetError()
                                         loading = true
                                         charge()
@@ -240,7 +245,9 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                                 )
                                 GifImage(
                                     gifResId = R.drawable.gif_loading_ios,
-                                    modifier = Modifier.width(40.dp).height(40.dp)
+                                    modifier = Modifier
+                                        .width(40.dp)
+                                        .height(40.dp)
                                 )
                             }
                         }
@@ -252,7 +259,10 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                         isExpanded = isExpanded,
                         iconResId = R.drawable.ic_help,
                         title = stringResource(id = R.string.kredivo_how_to_pay_title),
-                        onExpandClick = { isExpanded = !isExpanded },
+                        onExpandClick = {
+                            viewModel?.trackHowToPayClicked(paymentType)
+                            isExpanded = !isExpanded
+                        },
                         expandingContent = {
                             AnimatedVisibility(visible = isExpanded) {
                                 val instruction = paymentHowToPay
@@ -265,14 +275,17 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 }
             }
             SnapButton(
-                text = stringResource(id = R.string.indomaret_cta_1),
+                text = stringResource(getCtaName(paymentType)),
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(top = 16.dp, start = 16.dp, end = 16.dp),
                 enabled = errorState.value==null && !loading,
                 style = SnapButton.Style.TERTIARY
             ) {
-
+                viewModel?.trackSnapButtonClicked(
+                    ctaName = getStringResourceInEnglish(getCtaName(paymentType)),
+                    paymentType = paymentType
+                )
                 startActivity(
                     Intent(
                         Intent.ACTION_VIEW,
@@ -293,6 +306,14 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 onBackPressed()
 
             }
+        }
+    }
+
+    private fun getCtaName(paymentType: String): Int {
+        return when(paymentType) {
+            PaymentType.INDOMARET -> R.string.indomaret_cta_2
+            PaymentType.ALFAMART -> R.string.alfa_group_cta_2
+            else -> 0
         }
     }
 

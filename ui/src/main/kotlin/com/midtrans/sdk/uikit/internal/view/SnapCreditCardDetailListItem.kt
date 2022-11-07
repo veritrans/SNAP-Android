@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.SavedToken
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.model.PromoData
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.view.SnapColors.backgroundBorderSolidSecondary
 import com.midtrans.sdk.uikit.internal.view.SnapColors.lineLightMuted
@@ -739,8 +740,8 @@ fun PromoLayout(
             add(
                 PromoData(
                     identifier = "0",
-                    leftText = stringResource(R.string.cant_continue_promo_dont_want_to_use_promo),
-                    rightText = ""
+                    promoName = stringResource(R.string.cant_continue_promo_dont_want_to_use_promo),
+                    discountAmount = ""
                 )
             )
         },

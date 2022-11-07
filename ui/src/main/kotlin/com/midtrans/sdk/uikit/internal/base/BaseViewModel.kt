@@ -75,4 +75,26 @@ internal open class BaseViewModel : ViewModel() {
             threeDsVersion = response.threeDsVersion
         )
     }
+
+    protected fun trackCtaClicked(
+        ctaName: String,
+        pageName: String,
+        paymentMethodName: String
+    ) {
+        eventAnalytics?.trackSnapCtaClicked(
+            ctaName = ctaName,
+            pageName = pageName,
+            paymentMethodName = paymentMethodName
+        )
+    }
+
+    protected fun trackHowToPayViewed(
+        pageName: String,
+        paymentMethodName: String
+    ) {
+        eventAnalytics?.trackSnapHowToPayViewed(
+            pageName = pageName,
+            paymentMethodName = paymentMethodName
+        )
+    }
 }

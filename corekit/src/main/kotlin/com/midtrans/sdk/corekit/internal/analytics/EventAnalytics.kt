@@ -3,14 +3,17 @@ package com.midtrans.sdk.corekit.internal.analytics
 import com.midtrans.sdk.corekit.BuildConfig
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_RESULTS
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CTA_CLICKED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_HOW_TO_PAY_VIEWED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_3DS_VERSION
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CHANNEL_RESPONSE_CODE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CHANNEL_RESPONSE_MESSAGE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CHARGE_RESPONSE_BANK
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CREDIT_CARD_POINT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CTA_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CURRENCY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_FRAUD_STATUS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_GROSS_AMOUNT
@@ -38,28 +41,53 @@ class EventAnalytics(
     private val mixpanelTracker: MixpanelTracker
 ) {
     fun setUserIdentity(
-        id: String,
-        name: String,
+        userId: String,
+        userName: String,
         extras: Map<String, String> = mapOf()
     ) {
         mixpanelTracker.setUserIdentity(
-            id = id,
-            name = name,
+            id = userId,
+            name = userName,
             extras = extras
         )
-        registerCommonProperties(saudagarId = id, merchantName = name)
+
     }
 
-    fun testTracker() {
-        mixpanelTracker.trackEvent("testEvent")
+    fun registerCommonProperties(platform: String) {
+        mixpanelTracker.registerCommonProperties(
+            mapOf(
+                PROPERTY_SDK_VERSION to BuildConfig.SDK_VERSION,
+                PROPERTY_SDK_TYPE to "UI",
+                PROPERTY_SOURCE_TYPE to "midtrans-mobile",
+                PROPERTY_SERVICE_TYPE to "snap",
+                PROPERTY_SNAP_TYPE to "Sdk",
+                PROPERTY_PLATFORM to platform
+            )
+        )
+    }
+
+    fun registerCommonTransactionProperties(
+        snapToken: String,
+        orderId: String,
+        grossAmount: String,
+        merchantId: String,
+        merchantName: String
+    ) {
+        mixpanelTracker.registerCommonProperties(
+            mapOf(
+                PROPERTY_SNAP_TOKEN to snapToken,
+                PROPERTY_ORDER_ID to orderId,
+                PROPERTY_GROSS_AMOUNT to grossAmount,
+                PROPERTY_MERCHANT_ID to merchantId,
+                PROPERTY_MERCHANT_NAME to merchantName
+            )
+        )
     }
 
     //TODO will be implemented separately
     fun trackSnapPageViewed() {}
     fun trackSnapCustomerDataInput() {}
     fun trackSnapOrderDetailsViewed() {}
-    fun trackSnapCtaClicked() {}
-    fun trackSnapHowToPayViewed() {}
     fun trackSnapAccountNumberCopied() {}
     fun trackSnapPaymentNumberButtonRetried() {}
     fun trackSnapExbinResponse() {}
@@ -70,6 +98,34 @@ class EventAnalytics(
     fun trackSnapTokenizationResult() {}
     fun trackSnapCtaError() {}
 
+    fun trackSnapHowToPayViewed(
+        pageName: String,
+        paymentMethodName: String
+    ) {
+        mixpanelTracker.trackEvent(
+            eventName = EVENT_SNAP_HOW_TO_PAY_VIEWED,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to pageName,
+                PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
+            )
+        )
+    }
+
+    fun trackSnapCtaClicked(
+        ctaName: String,
+        pageName: String,
+        paymentMethodName: String
+    ) {
+        mixpanelTracker.trackEvent(
+            eventName = EVENT_SNAP_CTA_CLICKED,
+            properties = mapOf(
+                PROPERTY_CTA_NAME to ctaName,
+                PROPERTY_PAGE_NAME to pageName,
+                PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
+            )
+        )
+    }
+
     fun trackSnapChargeRequest(
         pageName: String,
         paymentMethodName: String,
@@ -78,16 +134,16 @@ class EventAnalytics(
         promoId: String? = null,
         creditCardPoint: String? = null
     ) {
-        val optional = mutableMapOf<String, String>()
-        promoName?.also { optional[PROPERTY_PROMO_NAME] = it }
-        promoAmount?.also { optional[PROPERTY_PROMO_AMOUNT] = it }
-        promoId?.also { optional[PROPERTY_PROMO_ID] = it }
-        creditCardPoint?.also { optional[PROPERTY_CREDIT_CARD_POINT] = it }
+        val optionalProperties = mutableMapOf<String, String>()
+        promoName?.also { optionalProperties[PROPERTY_PROMO_NAME] = it }
+        promoAmount?.also { optionalProperties[PROPERTY_PROMO_AMOUNT] = it }
+        promoId?.also { optionalProperties[PROPERTY_PROMO_ID] = it }
+        creditCardPoint?.also { optionalProperties[PROPERTY_CREDIT_CARD_POINT] = it }
 
         val properties = mapOf(
             PROPERTY_PAGE_NAME to pageName,
             PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
-        ) + optional
+        ) + optionalProperties
 
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_CHARGE_REQUEST,
@@ -110,12 +166,12 @@ class EventAnalytics(
         cardType: String? = null,
         threeDsVersion: String? = null
     ) {
-        val optional = mutableMapOf<String, String>()
-        bank?.also { optional[PROPERTY_CHARGE_RESPONSE_BANK] = it }
-        channelResponseCode?.also { optional[PROPERTY_CHANNEL_RESPONSE_CODE] = it }
-        channelResponseMessage?.also { optional[PROPERTY_CHANNEL_RESPONSE_MESSAGE] = it }
-        cardType?.also { optional[PROPERTY_CARD_TYPE] = it }
-        threeDsVersion?.also { optional[PROPERTY_3DS_VERSION] = it }
+        val optionalProperties = mutableMapOf<String, String>()
+        bank?.also { optionalProperties[PROPERTY_CHARGE_RESPONSE_BANK] = it }
+        channelResponseCode?.also { optionalProperties[PROPERTY_CHANNEL_RESPONSE_CODE] = it }
+        channelResponseMessage?.also { optionalProperties[PROPERTY_CHANNEL_RESPONSE_MESSAGE] = it }
+        cardType?.also { optionalProperties[PROPERTY_CARD_TYPE] = it }
+        threeDsVersion?.also { optionalProperties[PROPERTY_3DS_VERSION] = it }
 
         val properties = mapOf(
             PROPERTY_TRANSACTION_STATUS to transactionStatus,
@@ -126,7 +182,7 @@ class EventAnalytics(
             PROPERTY_PAGE_NAME to pageName,
             PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName,
             PROPERTY_RESPONSE_TIME to responseTime,
-        ) + optional
+        ) + optionalProperties
 
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_CHARGE_RESULTS,
@@ -154,35 +210,4 @@ class EventAnalytics(
         )
     }
 
-    private fun registerCommonProperties(
-        saudagarId: String,
-        merchantName: String
-    ) {
-        mixpanelTracker.registerCommonProperties(
-            mapOf(
-                PROPERTY_PLATFORM to "Mobile",
-                PROPERTY_SDK_VERSION to BuildConfig.SDK_VERSION,
-                PROPERTY_SDK_TYPE to "UI",
-                PROPERTY_MERCHANT_ID to saudagarId,
-                PROPERTY_MERCHANT_NAME to merchantName,
-                PROPERTY_SOURCE_TYPE to "midtrans-mobile",
-                PROPERTY_SERVICE_TYPE to "snap",
-                PROPERTY_SNAP_TYPE to "Mobile"
-            )
-        )
-    }
-
-    fun registerCommonTransactionProperties(
-        snapToken: String,
-        orderId: String,
-        grossAmount: String
-    ) {
-        mixpanelTracker.registerCommonProperties(
-            mapOf(
-                PROPERTY_SNAP_TOKEN to snapToken,
-                PROPERTY_ORDER_ID to orderId,
-                PROPERTY_GROSS_AMOUNT to grossAmount
-            )
-        )
-    }
 }

@@ -11,8 +11,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.model.PromoData
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.CARD_NOT_ELIGIBLE
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.INSTALLMENT_NOT_SUPPORTED
 
 object SnapPromoListRadioButton {
 }
@@ -23,7 +28,7 @@ fun SnapPromoListRadioButton(
     onItemSelectedListener: (promodata: PromoData) -> Unit
 ): () -> Unit {
     val (selectedOption, onOptionSelected) = remember {
-        mutableStateOf(states.filter { it.enabled.value }[0].leftText)
+        mutableStateOf(states.filter { it.enabled.value }[0].promoName)
     }
 
     var needReset by remember {
@@ -32,7 +37,7 @@ fun SnapPromoListRadioButton(
 
     if(needReset){
         needReset = false
-        onOptionSelected(states.filter { it.enabled.value }[0].also { onItemSelectedListener(it) }.leftText)
+        onOptionSelected(states.filter { it.enabled.value }[0].also { onItemSelectedListener(it) }.promoName)
     }
 
     Column(
@@ -43,14 +48,14 @@ fun SnapPromoListRadioButton(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 val enabled by item.enabled
-                if((!enabled).and(item.leftText == selectedOption)){
-                    onOptionSelected(states.filter { it.enabled.value }[0].also { onItemSelectedListener(it) }.leftText)
+                if((!enabled).and(item.promoName == selectedOption)){
+                    onOptionSelected(states.filter { it.enabled.value }[0].also { onItemSelectedListener(it) }.promoName)
                 }
                 Row(
                     modifier = if (enabled) Modifier.selectable(
-                        selected = item.leftText == selectedOption,
+                        selected = item.promoName == selectedOption,
                         onClick = {
-                            onOptionSelected(item.leftText)
+                            onOptionSelected(item.promoName)
                             onItemSelectedListener(item)
                         },
                         role = Role.RadioButton
@@ -59,7 +64,7 @@ fun SnapPromoListRadioButton(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     RadioButton(
-                        selected = item.leftText == selectedOption,
+                        selected = item.promoName == selectedOption,
                         onClick = null,
                         colors = RadioButtonDefaults.colors(
                             selectedColor = if (enabled) Color.Black else SnapColors.getARGBColor(
@@ -84,34 +89,44 @@ fun SnapPromoListRadioButtonItem(promoData: PromoData) {
     Column {
         Row() {
             Text(
-                text = promoData.leftText,
+                text = promoData.promoName,
                 modifier = Modifier.weight(1f),
                 style = SnapTypography.STYLES.snapTextMediumRegular,
                 color = SnapColors.getARGBColor(if (enabled) SnapColors.textPrimary else SnapColors.textMuted)
             )
             if(enabled) {
                 Text(
-                    text = promoData.rightText,
+                    text = promoData.discountAmount,
                     style = SnapTypography.STYLES.snapTextMediumRegular,
                     color = SnapColors.getARGBColor(SnapColors.textPrimary)
                 )
             }
         }
-        promoData.subLeftText?.let {
-            Text(
-                text = it,
-                style = SnapTypography.STYLES.snapTextSmallRegular,
-                color = SnapColors.getARGBColor(if (enabled) SnapColors.textPrimary else SnapColors.textMuted)
-            )
+        promoData.errorType?.let { errorType ->
+            if (errorType == INSTALLMENT_NOT_SUPPORTED){
+                Text(
+                    text = stringResource(id = R.string.cant_continue_promo_installment_condition, getInstallmentTermsString(promoData.installmentTerm)),
+                    style = SnapTypography.STYLES.snapTextSmallRegular,
+                    color = SnapColors.getARGBColor(if (enabled) SnapColors.textPrimary else SnapColors.textMuted)
+                )
+            } else if (errorType == CARD_NOT_ELIGIBLE) {
+                Text(
+                    text = stringResource(id = R.string.cant_continue_promo_card_not_eligible),
+                    style = SnapTypography.STYLES.snapTextSmallRegular,
+                    color = SnapColors.getARGBColor(if (enabled) SnapColors.textPrimary else SnapColors.textMuted)
+                )
+            }
         }
-
     }
 }
 
-data class PromoData(
-    val identifier: String? = null,
-    val leftText: String,
-    val rightText: String,
-    val subLeftText: String? = null,
-    var enabled: MutableState<Boolean> = mutableStateOf(true)
-)
+private fun getInstallmentTermsString(installmentTerms: List<String>?) : String {
+    var string = ""
+    installmentTerms?.let {
+        for (term in it) {
+            string += "$term,"
+        }
+    }
+
+    return string.dropLast(1)
+}
