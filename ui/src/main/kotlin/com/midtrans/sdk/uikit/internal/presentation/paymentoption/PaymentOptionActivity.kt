@@ -41,6 +41,7 @@ import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobSelectionActi
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.presentation.paylater.PayLaterActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CANCELED
 import com.midtrans.sdk.uikit.internal.view.*
 import javax.inject.Inject
 
@@ -183,9 +184,16 @@ class PaymentOptionActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        setResult(Activity.RESULT_OK)
-        //TODO set transaction result
-        //Track page closed here
+        viewModel.trackPaymentListPageClosed()
+        val resultIntent = Intent().putExtra(
+            UiKitConstants.KEY_TRANSACTION_RESULT,
+            TransactionResult(
+                status = STATUS_CANCELED,
+                transactionId = "",
+                paymentType = ""
+            )
+        )
+        setResult(Activity.RESULT_OK, resultIntent)
         super.onBackPressed()
     }
 
