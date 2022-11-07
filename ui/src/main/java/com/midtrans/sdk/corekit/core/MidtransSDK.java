@@ -1,7 +1,13 @@
 package com.midtrans.sdk.corekit.core;
 
+import static com.midtrans.sdk.corekit.core.Logger.TAG;
+
+import android.content.Context;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 
+import com.midtrans.sdk.corekit.models.snap.TransactionResult;
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder;
 
 
@@ -9,10 +15,13 @@ import com.midtrans.sdk.uikit.SdkUIFlowBuilder;
  * Created by shivam on 10/19/15.
  */
 public class MidtransSDK {
+    private static final String ADD_TRANSACTION_DETAILS = "Add transaction request details.";
 
     private static SdkUIFlowBuilder sdkBuilder;
     private static volatile MidtransSDK midtransSDK;
     private static boolean sdkNotAvailable = false;
+    private TransactionRequest transactionRequest = null;
+    private ISdkFlow uiflow;
 
     private MidtransSDK() {
 
@@ -23,6 +32,54 @@ public class MidtransSDK {
     }
 
     /**
+     * Set transaction information that you want to execute.
+     *
+     * @param transactionRequest transaction request  object
+     */
+    public void setTransactionRequest(TransactionRequest transactionRequest) {
+
+        if (transactionRequest != null) {
+            this.transactionRequest = transactionRequest;
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    public TransactionRequest getTransactionRequest() {
+        return transactionRequest;
+    }
+
+    /**
+     * This will start actual execution of transaction. if you have enabled an ui then it will start
+     * activity according to it.
+     *
+     * @param context current activity.
+     */
+    public void startPaymentUiFlow(Context context) {
+
+        runUiSdk(context, null);
+
+    }
+
+    public void startPaymentUiFlow(Context context, String snapToken) {
+            runUiSdk(context, snapToken);
+
+    }
+
+    private void runUiSdk(Context context, String snapToken) {
+        if (isTransactionRequestAvailable() && uiflow != null) {
+            uiflow.runUIFlow(context, snapToken);
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private boolean isTransactionRequestAvailable() {
+        return transactionRequest != null;
+    }
+
+
+    /**
      * get Veritrans SDK instance
      *
      * @param newSdkBuilder SDK Coreflow Builder
@@ -31,8 +88,9 @@ public class MidtransSDK {
         if (newSdkBuilder != null) {
             midtransSDK = new MidtransSDK(newSdkBuilder);
             sdkBuilder = newSdkBuilder;
+            midtransSDK.uiflow = new ISdkFlow();
         } else {
-//            Logger.e("sdk is not initialized.");
+            Logger.e("sdk is not initialized.");
         }
 
         return midtransSDK;

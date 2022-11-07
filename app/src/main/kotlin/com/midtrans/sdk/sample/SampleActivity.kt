@@ -15,6 +15,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.LocaleListCompat
+import com.midtrans.sdk.corekit.core.MidtransSDK
+import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.model.*
@@ -120,71 +122,8 @@ class SampleActivity : AppCompatActivity() {
                 text = "To Payment Options",
                 style = SnapButton.Style.TERTIARY
             ) {
-
-                uiKitApi.startPaymentWithLegacyAndroid(
-                    activity = this@SampleActivity,
-                    requestCode = 1151,
-                    transactionDetails = SnapTransactionDetail(
-                        orderId = UUID.randomUUID().toString(),
-                        grossAmount = 15005.00
-                    ),
-                    creditCard = CreditCard(
-                        saveCard = true,
-                        secure = true,
-                        installment = Installment(
-                            isRequired = false,
-                            terms = mapOf("bni" to listOf(3,6,9,12))
-                        )
-                    ),
-                    userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
-                    customerDetails = CustomerDetails(
-                        firstName = "Aris",
-                        lastName = "Bhaktis",
-                        email = "arisbhaktis@email.com",
-                        phone = "087788778212"
-                    )
-                )
-                //For Testing using androidX Result launcher
-//                uiKitApi.startPaymentWithAndroidX(
-//                    activity = this@SampleActivity,
-//                    launcher = launcher,
-//                    transactionDetails = SnapTransactionDetail(
-//                        orderId = UUID.randomUUID().toString(),
-//                        grossAmount = 15005.00
-//                    ),
-//                    creditCard = CreditCard(
-//                        saveCard = true,
-//                        secure = true
-//                    ),
-//                    userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
-//                    customerDetails = CustomerDetails(
-//                        firstName = "Ari",
-//                        lastName = "Bhakti",
-//                        email = "aribhakti@email.com",
-//                        phone = "087788778212"
-//                    )
-//                    uobEzpayCallback = PaymentCallback(callbackUrl = "demo://snap"),
-//                    paymentCallback = object : Callback<TransactionResult> {
-//                        override fun onSuccess(result: TransactionResult) {
-//                            Toast.makeText(
-//                                this@SampleActivity,
-//                                "Transaction Pending. ID: " + result.transactionId,
-//                                Toast.LENGTH_LONG
-//                            ).show()
-//                        }
-//
-//                        override fun onError(error: SnapError) {
-//                            Toast.makeText(
-//                                this@SampleActivity,
-//                                "Error: " + error.javaClass.name,
-//                                Toast.LENGTH_LONG
-//                            ).show()
-//                        }
-//                    }
-//                )
-//                startActivity(
-//                    intent
-//                )
+//                payWithOldSnapLegacyApi()
+                payWithLegacyActivityStartActivityForResult()
             }
 
             SnapButton(
@@ -194,5 +133,81 @@ class SampleActivity : AppCompatActivity() {
             ) {
             }
         }
+    }
+
+    private fun payWithLegacyActivityStartActivityForResult(){
+        uiKitApi.startPaymentWithLegacyAndroid(
+            activity = this@SampleActivity,
+            requestCode = 1151,
+            transactionDetails = SnapTransactionDetail(
+                orderId = UUID.randomUUID().toString(),
+                grossAmount = 15005.00
+            ),
+            creditCard = CreditCard(
+                saveCard = true,
+                secure = true,
+                installment = Installment(
+                    isRequired = false,
+                            terms = mapOf("bni" to listOf(3,6,9,12))
+                )
+            ),
+            userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
+            customerDetails = CustomerDetails(
+                        firstName = "Aris",
+                        lastName = "Bhaktis",
+                        email = "arisbhaktis@email.com",
+                phone = "087788778212"
+            )
+        )
+    }
+
+    private fun payWithAndroidxActivityResultLauncher() {
+        uiKitApi.startPaymentWithAndroidX(
+            activity = this@SampleActivity,
+            launcher = launcher,
+            transactionDetails = SnapTransactionDetail(
+                orderId = UUID.randomUUID().toString(),
+                grossAmount = 15005.00
+            ),
+            creditCard = CreditCard(
+                saveCard = true,
+                secure = true
+            ),
+            userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
+            customerDetails = CustomerDetails(
+                firstName = "Ari",
+                lastName = "Bhakti",
+                email = "aribhakti@email.com",
+                phone = "087788778212"
+            )
+        )
+    }
+
+    private fun payWithOldSnapLegacyApi() {
+        val transactionRequest = TransactionRequest(
+            UUID.randomUUID().toString(),
+            3000.0
+        )
+        transactionRequest.customerDetails = com.midtrans.sdk.corekit.models.CustomerDetails(
+            "Ari", "Bhakti", "aribhakti@email.com", "087788778212"
+        )
+        transactionRequest.creditCard = com.midtrans.sdk.corekit.models.snap.CreditCard(
+            true,
+            null,
+            true,
+            null,
+            null,
+            null,
+            null,
+            null,
+            com.midtrans.sdk.corekit.models.snap.Installment(
+                false,
+                null
+            ),
+            null,
+            null
+        )
+        MidtransSDK.getInstance().setTransactionRequest(transactionRequest)
+        MidtransSDK.getInstance().startPaymentUiFlow(this.applicationContext)
     }
 }

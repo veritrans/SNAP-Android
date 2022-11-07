@@ -4,13 +4,13 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class SavedToken(
+open class SavedToken(
     val token: String? = null,
     val tokenType: String? = null,
     val maskedCard: String? = null,
     val expiresAt: String? = null,
     val fromHostApp: Boolean = false,
-    val binDetail: BinDetail?
+    val binDetail: BinDetail? = null
 ) : Parcelable {
     companion object {
         const val ONE_CLICK = "one_click"

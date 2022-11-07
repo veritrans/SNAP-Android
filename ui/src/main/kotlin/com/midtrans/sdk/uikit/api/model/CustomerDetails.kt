@@ -3,7 +3,7 @@ package com.midtrans.sdk.uikit.api.model
 import com.midtrans.sdk.corekit.api.model.CustomerDetails
 
 
-class CustomerDetails(
+open class CustomerDetails(
     customerIdentifier: String? = null,
     firstName: String? = null,
     lastName: String? = null,

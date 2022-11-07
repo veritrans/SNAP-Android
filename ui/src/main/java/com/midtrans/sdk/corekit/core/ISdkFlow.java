@@ -9,6 +9,8 @@ import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
 import com.midtrans.sdk.corekit.models.TransactionResponse;
 import com.midtrans.sdk.uikit.api.callback.Callback;
 import com.midtrans.sdk.uikit.api.exception.SnapError;
+import com.midtrans.sdk.uikit.api.model.PaymentCallback;
+import com.midtrans.sdk.uikit.api.model.SnapTransactionDetail;
 import com.midtrans.sdk.uikit.api.model.TransactionResult;
 import com.midtrans.sdk.uikit.external.UiKitApi;
 import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem;
@@ -34,12 +36,32 @@ public class ISdkFlow {
     };
 
     public void runUIFlow(Context context, String snapToken) {
-        UiKitApi.Companion.getDefaultInstance().startPayment(
-                context,
-                snapToken,
-                null,
-                wrapperCallback
-        );
+        if (snapToken != null) {
+            UiKitApi.Companion.getDefaultInstance().startPayment(
+                    context,
+                    snapToken,
+                    null,
+                    wrapperCallback
+            );
+        } else {
+            TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
+            UiKitApi.Companion.getDefaultInstance().startPayment(
+                    context,
+                    new SnapTransactionDetail(
+                            transactionRequest.getOrderId(),
+                            transactionRequest.getAmount(),
+                            transactionRequest.getCurrency()
+                    ),
+                    transactionRequest.getCustomerDetails(),
+                    transactionRequest.getCreditCard(),
+                    "userId", //TODO: what is user id?
+                    new PaymentCallback(""),
+                    wrapperCallback,
+                    null
+
+            );
+
+        }
     }
 
     public void runCreditCard(Context context, String snapToken) {
