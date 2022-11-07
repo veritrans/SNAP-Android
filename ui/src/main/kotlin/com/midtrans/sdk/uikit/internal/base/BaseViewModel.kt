@@ -117,13 +117,7 @@ internal open class BaseViewModel : ViewModel() {
         )
     }
 
-    protected fun trackPageClosed(
-        pageName: String,
-        paymentMethodName: String
-    ) {
-        eventAnalytics?.trackSnapPageClosed(
-            pageName = pageName,
-            paymentMethodName = paymentMethodName
-        )
+    protected fun trackPageClosed(pageName: String) {
+        eventAnalytics?.trackSnapPageClosed(pageName)
     }
 }
