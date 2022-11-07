@@ -314,7 +314,7 @@ internal class PaymentOptionViewModelTest {
     @Test
     fun trackPaymentListPageClosed() {
         viewModel.trackPaymentListPageClosed()
-        verify(eventAnalytics).trackSnapPageClosed(PageName.PAYMENT_LIST_PAGE, "")
+        verify(eventAnalytics).trackSnapPageClosed(PageName.PAYMENT_LIST_PAGE)
     }
 
     private fun providePaymentMethodList(): List<PaymentMethod> {

@@ -199,9 +199,6 @@ internal class PaymentOptionViewModel @Inject constructor(
     }
 
     fun trackPaymentListPageClosed() {
-        trackPageClosed(
-            pageName = PageName.PAYMENT_LIST_PAGE,
-            paymentMethodName = ""
-        )
+        trackPageClosed(PageName.PAYMENT_LIST_PAGE)
     }
 }
