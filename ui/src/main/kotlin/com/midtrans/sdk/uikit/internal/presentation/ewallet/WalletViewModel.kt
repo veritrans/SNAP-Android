@@ -62,7 +62,8 @@ internal class WalletViewModel @Inject constructor(
                     }
                     trackSnapChargeResult(
                         response = result,
-                        pageName = pageName
+                        pageName = pageName,
+                        paymentMethodName = paymentType
                     )
                 }
 

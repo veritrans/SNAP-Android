@@ -60,7 +60,8 @@ internal open class BaseViewModel : ViewModel() {
 
     protected fun trackSnapChargeResult(
         response: TransactionResponse,
-        pageName: String
+        pageName: String,
+        paymentMethodName: String
     ) {
         eventAnalytics?.trackSnapChargeResult(
             pageName = pageName,
@@ -69,7 +70,7 @@ internal open class BaseViewModel : ViewModel() {
             currency = response.currency.orEmpty(),
             statusCode = response.statusCode.orEmpty(),
             transactionId = response.transactionId.orEmpty(),
-            paymentMethodName = response.paymentType.orEmpty(),
+            paymentMethodName = paymentMethodName,
             responseTime = getResponseTime(),
             bank = response.bank,
             channelResponseCode = response.channelResponseCode,

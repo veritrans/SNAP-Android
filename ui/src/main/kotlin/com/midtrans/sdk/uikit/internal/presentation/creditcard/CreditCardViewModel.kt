@@ -212,10 +212,7 @@ internal class CreditCardViewModel @Inject constructor(
                         paymentRequestBuilder = ccRequestBuilder,
                         callback = object : Callback<TransactionResponse> {
                             override fun onSuccess(result: TransactionResponse) {
-                                trackSnapChargeResult(
-                                    response = result,
-                                    pageName = PageName.CREDIT_DEBIT_CARD_PAGE
-                                )
+                                trackSnapChargeResult(result)
                                 errorCard.getErrorCardType(result, allowRetry)
                                     ?.let { _errorTypeLiveData.value = it }
                                     ?: run {
@@ -281,10 +278,7 @@ internal class CreditCardViewModel @Inject constructor(
                 callback = object : Callback<TransactionResponse> {
                     override fun onSuccess(result: TransactionResponse) {
                         _transactionResponse.value = result
-                        trackSnapChargeResult(
-                            response = result,
-                            pageName = PageName.CREDIT_DEBIT_CARD_PAGE
-                        )
+                        trackSnapChargeResult(result)
                     }
                     override fun onError(error: SnapError) {
                         _errorTypeLiveData.value = errorCard.getErrorCardType(error, allowRetry)
@@ -348,10 +342,7 @@ internal class CreditCardViewModel @Inject constructor(
                             callback = object : Callback<TransactionResponse> {
                                 override fun onSuccess(result: TransactionResponse) {
                                     _transactionResponse.value = result
-                                    trackSnapChargeResult(
-                                        response = result,
-                                        pageName = PageName.CREDIT_DEBIT_CARD_PAGE
-                                    )
+                                    trackSnapChargeResult(result)
                                 }
                                 override fun onError(error: SnapError) {
                                     _errorTypeLiveData.value = errorCard.getErrorCardType(error, allowRetry)
@@ -414,6 +405,14 @@ internal class CreditCardViewModel @Inject constructor(
     fun trackSnapButtonClicked(ctaName: String) {
         trackCtaClicked(
             ctaName = ctaName,
+            paymentMethodName = PaymentType.CREDIT_CARD,
+            pageName = PageName.CREDIT_DEBIT_CARD_PAGE
+        )
+    }
+
+    private fun trackSnapChargeResult(response: TransactionResponse) {
+        trackSnapChargeResult(
+            response = response,
             paymentMethodName = PaymentType.CREDIT_CARD,
             pageName = PageName.CREDIT_DEBIT_CARD_PAGE
         )
