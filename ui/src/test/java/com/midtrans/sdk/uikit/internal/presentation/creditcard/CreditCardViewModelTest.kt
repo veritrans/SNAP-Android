@@ -176,15 +176,17 @@ class CreditCardViewModelTest {
     fun getBankIconShouldReturnBankIconResId(){
         val snapCore: SnapCore = mock()
         val dateTimeUtil: DateTimeUtil = mock()
+        val eventAnalytics: EventAnalytics = mock()
         val errorCard: ErrorCard = mock()
         val snapCreditCardUtil: SnapCreditCardUtil = mock()
         val binNumber = "12345678"
         val bankIconResId = 1
         val bankCode = "009"
         val binResponse = BinResponse(
-            data = BinData(null, null, null, null, null, null, null, bankCode, null)
+            data = BinData(null, null, null, null, null, null, null, bankCode, null, null)
         )
         `when`(snapCreditCardUtil.getBankIcon(bankCode)).thenReturn(bankIconResId)
+        `when`(snapCore.getEventAnalytics()).thenReturn(eventAnalytics)
         val creditCardViewModel =
             CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil, errorCard)
 
@@ -195,10 +197,21 @@ class CreditCardViewModelTest {
             eq(binNumber),
             callbackCaptor.capture()
         )
-
         val callback = callbackCaptor.firstValue
         callback.onSuccess(binResponse)
         Assert.assertEquals(bankIconResId, creditCardViewModel.bankIconId.getOrAwaitValue())
+        verify(eventAnalytics).trackSnapExbinResponse(
+            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+            paymentMethodName = PaymentType.CREDIT_CARD,
+            registrationRequired = null,
+            countryCode = null,
+            channel = null,
+            brand = null,
+            binType = null,
+            binClass = null,
+            bin = null,
+            bankCode = bankCode,
+        )
     }
 
     @Test
