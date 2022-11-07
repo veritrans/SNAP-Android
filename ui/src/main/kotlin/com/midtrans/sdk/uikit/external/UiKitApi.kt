@@ -46,14 +46,22 @@ class UiKitApi private constructor(val builder: Builder) {
         transactionDetails: SnapTransactionDetail,
         customerDetails: CustomerDetails,
         creditCard: CreditCard,
-        userId: String
+        userId: String,
+        uobEzpayCallback: PaymentCallback? = null,
+        snapTokenExpiry: Expiry? = null,
+        paymentType: PaymentTypeItem? = null,
+        enabledPayment: List<String>? = null
     ) {
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
             activityContext = activity,
             transactionDetails = transactionDetails,
             customerDetails = customerDetails,
             creditCard = creditCard,
-            userId = userId
+            userId = userId,
+            uobEzpayCallback = uobEzpayCallback,
+            paymentType = paymentType,
+            expiry = snapTokenExpiry,
+            enabledPayments = enabledPayment
         )
         launcher.launch(intent)
     }
@@ -64,7 +72,11 @@ class UiKitApi private constructor(val builder: Builder) {
         transactionDetails: SnapTransactionDetail,
         customerDetails: CustomerDetails,
         creditCard: CreditCard,
-        userId: String
+        userId: String,
+        uobEzpayCallback: PaymentCallback? = null,
+        snapTokenExpiry: Expiry? = null,
+        paymentType: PaymentTypeItem? = null,
+        enabledPayment: List<String>? = null
     ) {
 
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
@@ -72,7 +84,11 @@ class UiKitApi private constructor(val builder: Builder) {
             transactionDetails = transactionDetails,
             customerDetails = customerDetails,
             creditCard = creditCard,
-            userId = userId
+            userId = userId,
+            uobEzpayCallback = uobEzpayCallback,
+            paymentType = paymentType,
+            expiry = snapTokenExpiry,
+            enabledPayments = enabledPayment
         )
         activity.startActivityForResult(intent, requestCode)
     }

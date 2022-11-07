@@ -16,7 +16,7 @@ import com.midtrans.sdk.corekit.api.model.PaymentOption
 import com.midtrans.sdk.corekit.api.model.PromoRequest
 import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
-import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferRequest
+import com.midtrans.sdk.corekit.api.model.BankTransferRequest
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 import javax.inject.Inject
 
