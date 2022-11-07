@@ -46,7 +46,8 @@ internal class UobPaymentViewModel @Inject constructor(
                     transactionResponse.value = result
                     trackSnapChargeResult(
                         response = result,
-                        pageName = PageName.UOB_PAGE
+                        pageName = PageName.UOB_PAGE,
+                        paymentMethodName = PaymentType.UOB_EZPAY
                     )
                 }
 

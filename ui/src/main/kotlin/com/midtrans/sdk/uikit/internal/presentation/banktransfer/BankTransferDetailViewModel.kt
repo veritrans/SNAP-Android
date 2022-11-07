@@ -59,7 +59,11 @@ internal class BankTransferDetailViewModel @Inject constructor(
             paymentRequestBuilder = requestBuilder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
-                    trackSnapChargeResult(result, getPageName(paymentType))
+                    trackSnapChargeResult(
+                        response = result,
+                        pageName = getPageName(paymentType),
+                        paymentMethodName = paymentType
+                    )
                     result.run {
                         bcaVaNumber?.let { _vaNumberLiveData.value = it }
                         bniVaNumber?.let {
