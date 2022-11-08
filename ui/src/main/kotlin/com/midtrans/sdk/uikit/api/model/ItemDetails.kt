@@ -4,7 +4,7 @@ import com.midtrans.sdk.corekit.api.model.ItemDetails
 
 open class ItemDetails(
     id: String? = null,
-    price: Double? = null,
+    price: Double = 0.00,
     quantity: Int = 0,
     name: String? = null,
 ) : ItemDetails(
