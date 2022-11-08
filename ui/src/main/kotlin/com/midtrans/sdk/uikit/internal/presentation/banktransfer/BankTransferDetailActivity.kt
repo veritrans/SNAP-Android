@@ -27,10 +27,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
-import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
@@ -387,12 +385,12 @@ internal class BankTransferDetailActivity : BaseActivity() {
     }
 
     private val paymentType: String by lazy {
-        intent.getStringExtra(EXTRA_PAYMENTTYPE)
+        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
             ?: throw RuntimeException("Bank name must not be empty")
     }
 
     private val snapToken: String by lazy {
-        intent.getStringExtra(EXTRA_SNAPTOKEN).orEmpty()
+        intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
     }
 
     private val paymentInstruction by lazy {
@@ -534,8 +532,8 @@ internal class BankTransferDetailActivity : BaseActivity() {
         private const val EXTRA_TOTAL_AMOUNT = "bankTransfer.extra.total_amount"
         private const val EXTRA_ORDER_ID = "bankTransfer.extra.order_id"
         private const val EXTRA_CUSTOMER_DETAIL = "bankTransfer.extra.customer_detail"
-        private const val EXTRA_PAYMENTTYPE = "bankTransfer.extra.paymenttype"
-        private const val EXTRA_SNAPTOKEN = "bankTransfer.extra.snaptoken"
+        private const val EXTRA_PAYMENT_TYPE = "bankTransfer.extra.payment_type"
+        private const val EXTRA_SNAP_TOKEN = "bankTransfer.extra.snap_token"
         private const val BANK_CODE_MARK = "--BANK_CODE--"
 
         fun getIntent(
@@ -550,12 +548,12 @@ internal class BankTransferDetailActivity : BaseActivity() {
             return Intent(activityContext, BankTransferDetailActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
-                putExtra(EXTRA_SNAPTOKEN, snapToken)
+                putExtra(EXTRA_SNAP_TOKEN, snapToken)
                 putExtra(
                     EXTRA_CUSTOMER_DETAIL,
                     customerInfo
                 )
-                putExtra(EXTRA_PAYMENTTYPE, paymentType)
+                putExtra(EXTRA_PAYMENT_TYPE, paymentType)
             }
         }
     }

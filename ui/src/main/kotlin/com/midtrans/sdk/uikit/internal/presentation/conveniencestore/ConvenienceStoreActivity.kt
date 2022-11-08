@@ -364,12 +364,12 @@ internal class ConvenienceStoreActivity : BaseActivity() {
     }
 
     private val paymentType: String by lazy {
-        intent.getStringExtra(EXTRA_PAYMENTTYPE)
+        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
             ?: throw RuntimeException("Payment Type must not be empty")
     }
 
     private val snapToken: String by lazy {
-        intent.getStringExtra(EXTRA_SNAPTOKEN).orEmpty()
+        intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
     }
 
     private val paymentHowToPay by lazy {
@@ -397,8 +397,8 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         private const val EXTRA_TOTAL_AMOUNT = "convenience_store.extra.total_amount"
         private const val EXTRA_ORDER_ID = "convenience_store.extra.order_id"
         private const val EXTRA_CUSTOMER_DETAIL = "convenience_store.extra.customer_detail"
-        private const val EXTRA_PAYMENTTYPE = "convenience_store.extra.payment_type"
-        private const val EXTRA_SNAPTOKEN = "convenience_store.extra.snap_token"
+        private const val EXTRA_PAYMENT_TYPE = "convenience_store.extra.payment_type"
+        private const val EXTRA_SNAP_TOKEN = "convenience_store.extra.snap_token"
 
         fun getIntent(
             activityContext: Context,
@@ -412,12 +412,12 @@ internal class ConvenienceStoreActivity : BaseActivity() {
             return Intent(activityContext, ConvenienceStoreActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
-                putExtra(EXTRA_SNAPTOKEN, snapToken)
+                putExtra(EXTRA_SNAP_TOKEN, snapToken)
                 putExtra(
                     EXTRA_CUSTOMER_DETAIL,
                     customerInfo
                 )
-                putExtra(EXTRA_PAYMENTTYPE, paymentType)
+                putExtra(EXTRA_PAYMENT_TYPE, paymentType)
             }
         }
     }

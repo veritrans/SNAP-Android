@@ -315,12 +315,12 @@ internal class WalletActivity : BaseActivity() {
     }
 
     private val paymentType: String by lazy {
-        intent.getStringExtra(EXTRA_PAYMENTTYPE)
+        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
             ?: throw RuntimeException("Payment Type must not be empty")
     }
 
     private val snapToken: String by lazy {
-        intent.getStringExtra(EXTRA_SNAPTOKEN).orEmpty()
+        intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
     }
 
     private val paymentInstructionQr by lazy {
@@ -350,8 +350,8 @@ internal class WalletActivity : BaseActivity() {
         private const val EXTRA_TOTAL_AMOUNT = "wallet.extra.total_amount"
         private const val EXTRA_ORDER_ID = "wallet.extra.order_id"
         private const val EXTRA_CUSTOMER_DETAIL = "wallet.extra.customer_detail"
-        private const val EXTRA_PAYMENTTYPE = "wallet.extra.paymenttype"
-        private const val EXTRA_SNAPTOKEN = "wallet.extra.snaptoken"
+        private const val EXTRA_PAYMENT_TYPE = "wallet.extra.payment_type"
+        private const val EXTRA_SNAP_TOKEN = "wallet.extra.snap_token"
 
         fun getIntent(
             activityContext: Context,
@@ -365,12 +365,12 @@ internal class WalletActivity : BaseActivity() {
             return Intent(activityContext, WalletActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
-                putExtra(EXTRA_SNAPTOKEN, snapToken)
+                putExtra(EXTRA_SNAP_TOKEN, snapToken)
                 putExtra(
                     EXTRA_CUSTOMER_DETAIL,
                     customerInfo
                 )
-                putExtra(EXTRA_PAYMENTTYPE, paymentType)
+                putExtra(EXTRA_PAYMENT_TYPE, paymentType)
             }
         }
     }
