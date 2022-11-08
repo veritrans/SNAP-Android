@@ -116,4 +116,8 @@ internal open class BaseViewModel : ViewModel() {
             bankCode = binData?.bankCode,
         )
     }
+
+    protected fun trackPageClosed(pageName: String) {
+        eventAnalytics?.trackSnapPageClosed(pageName)
+    }
 }

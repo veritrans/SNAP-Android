@@ -41,7 +41,9 @@ import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobSelectionActi
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.presentation.paylater.PayLaterActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CANCELED
 import com.midtrans.sdk.uikit.internal.view.*
+import javax.inject.Inject
 
 class PaymentOptionActivity : BaseActivity() {
 
@@ -90,8 +92,11 @@ class PaymentOptionActivity : BaseActivity() {
         }
     }
 
+    @Inject
+    internal lateinit var vmFactory: ViewModelProvider.Factory
+
     private val viewModel: PaymentOptionViewModel by lazy {
-        ViewModelProvider(this).get(PaymentOptionViewModel::class.java)
+        ViewModelProvider(this, vmFactory).get(PaymentOptionViewModel::class.java)
     }
 
     private val snapToken: String by lazy {
@@ -149,6 +154,8 @@ class PaymentOptionActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        UiKitApi.getDefaultInstance().daggerComponent.inject(this)
+
         paymentMethods = viewModel.initiateList(paymentList, isTabletDevice())
         customerInfo = viewModel.getCustomerInfo(customerDetail)
 
@@ -174,6 +181,20 @@ class PaymentOptionActivity : BaseActivity() {
                 )
             }
         }
+    }
+
+    override fun onBackPressed() {
+        viewModel.trackPaymentListPageClosed()
+        val resultIntent = Intent().putExtra(
+            UiKitConstants.KEY_TRANSACTION_RESULT,
+            TransactionResult(
+                status = STATUS_CANCELED,
+                transactionId = "",
+                paymentType = ""
+            )
+        )
+        setResult(Activity.RESULT_OK, resultIntent)
+        super.onBackPressed()
     }
 
     @Preview

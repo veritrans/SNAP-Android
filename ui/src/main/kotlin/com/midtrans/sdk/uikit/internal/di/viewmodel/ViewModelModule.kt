@@ -12,6 +12,7 @@ import com.midtrans.sdk.uikit.internal.presentation.ewallet.DeepLinkViewModel
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletViewModel
 import com.midtrans.sdk.uikit.internal.presentation.loadingpayment.LoadingPaymentViewModel
 import com.midtrans.sdk.uikit.internal.presentation.paylater.PayLaterViewModel
+import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionViewModel
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenViewModel
 import dagger.Binds
 import dagger.Module
@@ -79,4 +80,9 @@ internal abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(LoadingPaymentViewModel::class)
     abstract fun bindLoadingPaymentViewModel(viewModel: LoadingPaymentViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PaymentOptionViewModel::class)
+    abstract fun bindPaymentOptionViewModel(viewModel: PaymentOptionViewModel): ViewModel
 }

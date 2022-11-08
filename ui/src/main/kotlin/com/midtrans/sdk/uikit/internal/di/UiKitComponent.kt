@@ -15,6 +15,7 @@ import com.midtrans.sdk.uikit.internal.presentation.ewallet.DeepLinkActivity
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.presentation.loadingpayment.LoadingPaymentActivity
 import com.midtrans.sdk.uikit.internal.presentation.paylater.PayLaterActivity
+import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenActivity
 import dagger.BindsInstance
 import dagger.Component
@@ -51,4 +52,5 @@ internal interface UiKitComponent {
     fun inject(activity: ConvenienceStoreActivity)
     fun inject(activity: SuccessScreenActivity)
     fun inject(activity: LoadingPaymentActivity)
+    fun inject(activity: PaymentOptionActivity)
 }
