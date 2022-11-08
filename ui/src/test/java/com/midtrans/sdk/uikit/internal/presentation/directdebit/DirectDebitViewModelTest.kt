@@ -103,4 +103,13 @@ internal class DirectDebitViewModelTest {
             paymentMethodName = PaymentType.DANAMON_ONLINE
         )
     }
+
+    @Test
+    fun verifyTrackOpenWebView() {
+        viewModel.trackOpenWebView(PaymentType.BCA_KLIKPAY)
+        verify(eventAnalytics).trackSnapOpenDeeplink(
+            pageName = PageName.BCA_KLIK_PAY_PAGE,
+            paymentMethodName = PaymentType.BCA_KLIKPAY
+        )
+    }
 }

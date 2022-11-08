@@ -84,6 +84,13 @@ internal class DirectDebitViewModel @Inject constructor(
         )
     }
 
+    fun trackOpenWebView(paymentType: String) {
+        trackOpenDeeplink(
+            pageName = getPageName(paymentType),
+            paymentMethodName = paymentType
+        )
+    }
+
     private fun getPageName(paymentType: String): String {
         return when(paymentType) {
             PaymentType.KLIK_BCA -> PageName.KLIK_BCA_PAGE
