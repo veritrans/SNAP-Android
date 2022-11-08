@@ -350,16 +350,7 @@ class PaymentOptionActivity : BaseActivity() {
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                result?.run {
-                    data?.also {
-//                        val transactionResult =
-//                            it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT) as TransactionResult
-//                        Intent().apply {
-//                            this.putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, transactionResult)
-                            setResult(RESULT_OK, it)
-//                        }
-                    } ?: setResult(Activity.RESULT_OK)
-                }
+                setResult(Activity.RESULT_OK, result.data)
                 finish()
             } else {
                 setResult(Activity.RESULT_CANCELED)
