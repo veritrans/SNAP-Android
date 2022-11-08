@@ -45,6 +45,7 @@ class UiKitApi private constructor(val builder: Builder) {
         launcher: ActivityResultLauncher<Intent>,
         transactionDetails: SnapTransactionDetail,
         customerDetails: CustomerDetails,
+        itemDetails: ItemDetails,
         creditCard: CreditCard,
         userId: String,
         expiry: Expiry? = null
@@ -78,6 +79,7 @@ class UiKitApi private constructor(val builder: Builder) {
         requestCode: Int,
         transactionDetails: SnapTransactionDetail,
         customerDetails: CustomerDetails,
+        itemDetails: ItemDetails,
         creditCard: CreditCard,
         userId: String
     ) {
@@ -97,6 +99,7 @@ class UiKitApi private constructor(val builder: Builder) {
         transactionDetails: SnapTransactionDetail,
         customerDetails: CustomerDetails,
         creditCard: CreditCard,
+        itemDetails: ItemDetails,
         userId: String,
         uobEzpayCallback: PaymentCallback,
         paymentCallback: Callback<TransactionResult>,
