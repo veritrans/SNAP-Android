@@ -8,6 +8,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_EXBIN_RE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_HOW_TO_PAY_VIEWED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_OPEN_DEEPLINK
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_CLOSED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_3DS_VERSION
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BANK_CODE
@@ -100,11 +101,23 @@ class EventAnalytics(
     fun trackSnapOrderDetailsViewed() {}
     fun trackSnapAccountNumberCopied() {}
     fun trackSnapPaymentNumberButtonRetried() {}
-    fun trackSnapOpenDeeplink() {}
     fun trackSnapError() {}
     fun trackSnap3dsResult() {}
     fun trackSnapTokenizationResult() {}
     fun trackSnapCtaError() {}
+
+    fun trackSnapOpenDeeplink(
+        pageName: String,
+        paymentMethodName: String
+    ) {
+        mixpanelTracker.trackEvent(
+            eventName = EVENT_SNAP_OPEN_DEEPLINK,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to pageName,
+                PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
+            )
+        )
+    }
 
     fun trackSnapPageClosed(pageName: String) {
         mixpanelTracker.trackEvent(
