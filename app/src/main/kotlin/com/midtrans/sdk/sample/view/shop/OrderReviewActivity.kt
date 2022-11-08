@@ -1,5 +1,6 @@
-package com.midtrans.sdk.sample
+package com.midtrans.sdk.sample.view.shop
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -11,6 +12,7 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,6 +20,7 @@ import androidx.core.os.LocaleListCompat
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
+import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
@@ -27,7 +30,7 @@ import com.midtrans.sdk.uikit.internal.view.SnapButton
 import java.util.*
 
 
-class SampleActivity : AppCompatActivity() {
+class OrderReviewActivity : AppCompatActivity() {
 
     private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result?.resultCode == RESULT_OK) {
@@ -35,9 +38,14 @@ class SampleActivity : AppCompatActivity() {
                 val transactionResult = it.getParcelableExtra<TransactionResult>(
                     UiKitConstants.KEY_TRANSACTION_RESULT
                 )
-                Toast.makeText(this@SampleActivity, "Coba trxid ${transactionResult?.transactionId.orEmpty()}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@OrderReviewActivity, "Coba trxid ${transactionResult?.transactionId.orEmpty()}", Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private val product: Product by lazy {
+        intent.getParcelableExtra(EXTRA_PRODUCT) as? Product
+            ?: throw RuntimeException("Order ID must not be empty")
     }
 
     private val uiKitApi: UiKitApi by lazy {
@@ -101,7 +109,7 @@ class SampleActivity : AppCompatActivity() {
         if (resultCode == RESULT_OK) {
             val transactionResult = data?.getParcelableExtra<TransactionResult>(
                 UiKitConstants.KEY_TRANSACTION_RESULT)
-            Toast.makeText(this@SampleActivity, "Transaction ${transactionResult?.transactionId.orEmpty()} status ${transactionResult?.status.orEmpty()}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@OrderReviewActivity, "Transaction ${transactionResult?.transactionId.orEmpty()} status ${transactionResult?.status.orEmpty()}", Toast.LENGTH_LONG).show()
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -116,6 +124,8 @@ class SampleActivity : AppCompatActivity() {
         Column(
             modifier = Modifier.verticalScroll(state)
         ) {
+
+            Text(text = product.name)
 
             SnapButton(
                 enabled = true,
@@ -137,7 +147,7 @@ class SampleActivity : AppCompatActivity() {
 
     private fun payWithLegacyActivityStartActivityForResult(){
         uiKitApi.startPaymentWithLegacyAndroid(
-            activity = this@SampleActivity,
+            activity = this@OrderReviewActivity,
             requestCode = 1151,
             transactionDetails = SnapTransactionDetail(
                 orderId = UUID.randomUUID().toString(),
@@ -163,7 +173,7 @@ class SampleActivity : AppCompatActivity() {
 
     private fun payWithAndroidxActivityResultLauncher() {
         uiKitApi.startPaymentWithAndroidX(
-            activity = this@SampleActivity,
+            activity = this@OrderReviewActivity,
             launcher = launcher,
             transactionDetails = SnapTransactionDetail(
                 orderId = UUID.randomUUID().toString(),
@@ -209,5 +219,18 @@ class SampleActivity : AppCompatActivity() {
         )
         MidtransSDK.getInstance().setTransactionRequest(transactionRequest)
         MidtransSDK.getInstance().startPaymentUiFlow(this.applicationContext)
+    }
+
+    companion object {
+        private const val EXTRA_PRODUCT = "orderReview.extra.product"
+
+        fun getOrderReviewActivityIntent(
+            activityContext: Context,
+            product: Product
+        ): Intent {
+            return Intent(activityContext, OrderReviewActivity::class.java).apply {
+                putExtra(EXTRA_PRODUCT, product)
+            }
+        }
     }
 }

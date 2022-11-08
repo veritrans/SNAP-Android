@@ -34,7 +34,10 @@
                     android:scheme="demo" />
             </intent-filter>
         </activity>
-        <activity android:name=".SampleActivity" />
+        <activity
+            android:name=".view.shop.OrderReviewActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat.Light" />
 
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
