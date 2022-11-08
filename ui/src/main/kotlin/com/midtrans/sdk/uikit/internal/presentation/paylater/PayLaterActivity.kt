@@ -188,6 +188,8 @@ class PayLaterActivity : BaseActivity() {
         } else {
             val status = response?.transactionStatus
             val transactionId = response?.transactionId
+
+            viewModel.trackOpenWebView(paymentType)
             SnapWebView(
                 title = title,
                 paymentType = paymentType,
