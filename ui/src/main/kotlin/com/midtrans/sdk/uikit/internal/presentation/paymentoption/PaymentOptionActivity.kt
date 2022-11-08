@@ -58,6 +58,7 @@ class PaymentOptionActivity : BaseActivity() {
         private const val EXTRA_ORDER_ID = "paymentOptionActivity.extra.order_id"
         private const val EXTRA_PAYMENT_LIST = "paymentOptionActivity.extra.payment_list"
         private const val EXTRA_CUSTOMER_DETAILS = "paymentOptionActivity.extra.customer_details"
+        private const val EXTRA_ITEM_DETAILS = "paymentOptionActivity.extra.item_details"
         private const val EXTRA_CREDIT_CARD = "paymentOptionActivity.extra.credit_card"
         private const val EXTRA_PROMOS = "paymentOptionActivity.extra.promos"
         private const val EXTRA_MERCHANT_DATA = "paymentOptionActivity.extra.merchant_data"
@@ -73,6 +74,7 @@ class PaymentOptionActivity : BaseActivity() {
             orderId: String,
             paymentList: List<PaymentMethod>,
             customerDetails: CustomerDetails?,
+            itemDetails: List<ItemDetails>?,
             creditCard: CreditCard?,
             promos: List<Promo>?,
             merchant: Merchant?,
@@ -90,9 +92,8 @@ class PaymentOptionActivity : BaseActivity() {
                 putExtra(EXTRA_TRANSACTION_DETAILS, transactionDetail)
                 putExtra(EXTRA_EXPIRY_TIME, expiryTime)
                 putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
-                promos?.let {
-                    putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it))
-                }
+                promos?.also { putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it)) }
+                itemDetails?.also { putParcelableArrayListExtra(EXTRA_ITEM_DETAILS, ArrayList(it)) }
             }
         }
     }
@@ -125,7 +126,11 @@ class PaymentOptionActivity : BaseActivity() {
     }
 
     private val promos: List<Promo>? by lazy {
-        intent.getParcelableArrayListExtra<Promo>(EXTRA_PROMOS)
+        intent.getParcelableArrayListExtra(EXTRA_PROMOS)
+    }
+
+    private val itemDetails: List<ItemDetails>? by lazy {
+        intent.getParcelableArrayListExtra(EXTRA_ITEM_DETAILS)
     }
 
     private val customerDetail: CustomerDetails? by lazy {
