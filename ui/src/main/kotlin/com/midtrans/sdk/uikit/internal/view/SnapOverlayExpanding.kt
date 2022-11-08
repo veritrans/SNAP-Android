@@ -19,13 +19,14 @@ import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 
 @Composable
 @Preview
 fun SnapOverlayExpandingBox(
+    modifier: Modifier = Modifier,
     isExpanded: Boolean = true,
     mainContent: @Composable (() -> Unit)? = null,
-    modifier: Modifier = Modifier,
     expandingContent: @Composable (() -> Unit)? = null,
     followingContent: @Composable (() -> Unit)? = null
 ) {
@@ -167,6 +168,36 @@ fun SnapCustomerDetail(
         addressLines.forEach {
             Text(
                 text = it, style = SnapTypography.STYLES.snapTextSmallRegular,
+                color = SnapColors.getARGBColor(SnapColors.textSecondary)
+            )
+        }
+    }
+}
+
+@Composable
+fun SnapItemDetail(
+    quantity: Int,
+    itemName: String,
+    price: Double
+) {
+    Column(
+        modifier = Modifier.background(color = SnapColors.getARGBColor(SnapColors.backgroundFillPrimary))
+    ) {
+        Text(
+            text = stringResource(id = R.string.payment_details_title),
+            style = SnapTypography.STYLES.snapTextSmallRegular,
+            color = SnapColors.getARGBColor(SnapColors.textPrimary)
+        )
+        Row(modifier = Modifier.padding(top = 12.dp)) {
+            Text(
+                text = "$quantity $itemName",
+                style = SnapTypography.STYLES.snapTextSmallRegular,
+                color = SnapColors.getARGBColor(SnapColors.textSecondary),
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = price.currencyFormatRp(),
+                style = SnapTypography.STYLES.snapTextSmallRegular,
                 color = SnapColors.getARGBColor(SnapColors.textSecondary)
             )
         }
