@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -215,6 +214,8 @@ class DirectDebitActivity : BaseActivity() {
         } else {
             val status = response?.transactionStatus
             val transactionId = response?.transactionId
+
+            viewModel.trackOpenRedirectionUrl(paymentType)
             if (paymentType == PaymentType.KLIK_BCA) {
                 openWebLink(
                     url = url,

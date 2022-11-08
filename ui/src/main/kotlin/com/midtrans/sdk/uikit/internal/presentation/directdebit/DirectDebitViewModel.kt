@@ -84,7 +84,7 @@ internal class DirectDebitViewModel @Inject constructor(
         )
     }
 
-    fun trackOpenWebView(paymentType: String) {
+    fun trackOpenRedirectionUrl(paymentType: String) {
         trackOpenDeeplink(
             pageName = getPageName(paymentType),
             paymentMethodName = paymentType
