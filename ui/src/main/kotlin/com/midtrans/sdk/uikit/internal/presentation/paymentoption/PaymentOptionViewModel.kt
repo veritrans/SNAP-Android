@@ -3,6 +3,7 @@ package com.midtrans.sdk.uikit.internal.presentation.paymentoption
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.model.Address
 import com.midtrans.sdk.corekit.api.model.CustomerDetails
+import com.midtrans.sdk.corekit.api.model.ItemDetails
 import com.midtrans.sdk.corekit.api.model.PaymentMethod
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.AKULAKU
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.ALFAMART
@@ -29,6 +30,7 @@ import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
 import javax.inject.Inject
@@ -184,6 +186,16 @@ internal class PaymentOptionViewModel @Inject constructor(
             }
 
         return CustomerInfo(name = name, phone = phone, addressLines = addressLines)
+    }
+
+    fun getItemInfo(itemDetails: List<ItemDetails>?): ItemInfo? {
+        return itemDetails?.let { itemList ->
+            val totalAmount = itemList.sumOf { it.price }
+            ItemInfo(
+                itemDetails = itemList,
+                totalAmount = totalAmount
+            )
+        }
     }
 
     private fun isAddressProvided(address: Address?): Boolean {

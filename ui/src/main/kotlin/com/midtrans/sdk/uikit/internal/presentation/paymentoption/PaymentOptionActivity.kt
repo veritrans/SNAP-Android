@@ -33,10 +33,7 @@ import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetai
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
-import com.midtrans.sdk.uikit.internal.model.CustomerInfo
-import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
-import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
-import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
+import com.midtrans.sdk.uikit.internal.model.*
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.conveniencestore.ConvenienceStoreActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
@@ -158,6 +155,7 @@ class PaymentOptionActivity : BaseActivity() {
     }
 
     private var customerInfo: CustomerInfo? = null
+    private var itemInfo: ItemInfo? = null
 
     private lateinit var paymentMethods: PaymentMethodList
 
@@ -168,6 +166,7 @@ class PaymentOptionActivity : BaseActivity() {
 
         paymentMethods = viewModel.initiateList(paymentList, isTabletDevice())
         customerInfo = viewModel.getCustomerInfo(customerDetail)
+        itemInfo = viewModel.getItemInfo(itemDetails)
 
         //TODO: Find More Optimal way for PaymentType that have method (Bank transfer & UOB)
         paymentTypeItem?.let { paymentType ->
