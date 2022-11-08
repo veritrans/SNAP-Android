@@ -281,6 +281,7 @@ class UobPaymentActivity : BaseActivity() {
         url: String,
         transactionResult: TransactionResult
     ) {
+        viewModel.trackOpenDeeplink()
         if (uobMode == PaymentType.UOB_EZPAY_WEB) {
             try {
                 intent = Intent(Intent.ACTION_VIEW)
