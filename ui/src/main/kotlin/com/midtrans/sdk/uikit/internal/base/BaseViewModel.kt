@@ -1,9 +1,7 @@
 package com.midtrans.sdk.uikit.internal.base
 
 import androidx.lifecycle.ViewModel
-import com.midtrans.sdk.corekit.api.model.BinData
-import com.midtrans.sdk.corekit.api.model.PaymentType
-import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import io.reactivex.disposables.CompositeDisposable
@@ -147,6 +145,28 @@ internal open class BaseViewModel : ViewModel() {
             channelResponseCode = channelResponseCode,
             eci = eci,
             paymentMethodName = PaymentType.CREDIT_CARD
+        )
+    }
+
+    protected fun trackOrderDetailsViewed(
+        pageName: String,
+        paymentMethodName: String?,
+        transactionId: String?,
+        customerDetails: CustomerDetails?,
+        itemDetails: ItemDetails?
+    ) {
+        eventAnalytics?.trackSnapOrderDetailsViewed(
+            pageName = pageName,
+            paymentMethodName = paymentMethodName,
+            transactionId = transactionId,
+            customerName = customerDetails?.let { "${it.firstName} ${it.lastName}" },
+            customerEmail = customerDetails?.email,
+            customerPhoneNumber = customerDetails?.phone,
+            customerCity = customerDetails?.billingAddress?.city,
+            customerPostCode = customerDetails?.billingAddress?.postalCode,
+            totalItems = null, //TODO wait for item details implementation
+            totalQuantity = null, //TODO wait for item details implementation
+            netAmount = null //TODO check how to get net amount
         )
     }
 }
