@@ -7,5 +7,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class ItemInfo(
     val itemDetails: List<ItemDetails>,
-    val totalAmount: Long
+    val totalAmount: Double
 ): Parcelable
