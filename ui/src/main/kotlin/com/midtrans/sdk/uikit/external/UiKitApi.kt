@@ -45,7 +45,7 @@ class UiKitApi private constructor(val builder: Builder) {
         launcher: ActivityResultLauncher<Intent>,
         transactionDetails: SnapTransactionDetail,
         customerDetails: CustomerDetails,
-        itemDetails: ItemDetails,
+        itemDetails: List<ItemDetails>,
         creditCard: CreditCard,
         userId: String,
         expiry: Expiry? = null
@@ -54,6 +54,7 @@ class UiKitApi private constructor(val builder: Builder) {
             activityContext = activity,
             transactionDetails = transactionDetails,
             customerDetails = customerDetails,
+            itemDetails = itemDetails,
             creditCard = creditCard,
             userId = userId,
             expiry = expiry
@@ -79,7 +80,7 @@ class UiKitApi private constructor(val builder: Builder) {
         requestCode: Int,
         transactionDetails: SnapTransactionDetail,
         customerDetails: CustomerDetails,
-        itemDetails: ItemDetails,
+        itemDetails: List<ItemDetails>,
         creditCard: CreditCard,
         userId: String
     ) {
@@ -88,6 +89,7 @@ class UiKitApi private constructor(val builder: Builder) {
             activityContext = activity,
             transactionDetails = transactionDetails,
             customerDetails = customerDetails,
+            itemDetails = itemDetails,
             creditCard = creditCard,
             userId = userId
         )
@@ -99,7 +101,7 @@ class UiKitApi private constructor(val builder: Builder) {
         transactionDetails: SnapTransactionDetail,
         customerDetails: CustomerDetails,
         creditCard: CreditCard,
-        itemDetails: ItemDetails,
+        itemDetails: List<ItemDetails>,
         userId: String,
         uobEzpayCallback: PaymentCallback,
         paymentCallback: Callback<TransactionResult>,
@@ -112,6 +114,7 @@ class UiKitApi private constructor(val builder: Builder) {
             activityContext = activityContext,
             transactionDetails = transactionDetails,
             customerDetails = customerDetails,
+            itemDetails = itemDetails,
             creditCard = creditCard,
             userId = userId,
             uobEzpayCallback = uobEzpayCallback,
