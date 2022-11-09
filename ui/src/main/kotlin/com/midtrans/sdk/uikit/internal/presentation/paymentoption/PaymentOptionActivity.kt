@@ -100,7 +100,7 @@ class PaymentOptionActivity : BaseActivity() {
     internal lateinit var vmFactory: ViewModelProvider.Factory
 
     private val viewModel: PaymentOptionViewModel by lazy {
-        ViewModelProvider(this, vmFactory).get(PaymentOptionViewModel::class.java)
+        ViewModelProvider(this, vmFactory)[PaymentOptionViewModel::class.java]
     }
 
     private val snapToken: String by lazy {
@@ -187,6 +187,7 @@ class PaymentOptionActivity : BaseActivity() {
                     totalAmount = totalAmount,
                     orderId = orderId,
                     customerInfo = customerInfo,
+                    itemInfo = itemInfo,
                     paymentMethods = paymentMethods,
                     promos = promos,
                     creditCard = creditCard
@@ -220,8 +221,11 @@ class PaymentOptionActivity : BaseActivity() {
                 "087788778212",
                 listOf("Jl. ABC", "Rumah DEF")
             ),
-            creditCard = CreditCard()
-            ,
+            itemInfo = ItemInfo(
+                itemDetails = listOf(ItemDetails("001", 890.00, 1, "item")),
+                totalAmount = 890.00
+            ),
+            creditCard = CreditCard(),
             paymentMethods = PaymentMethodList(
                 listOf(
                     PaymentMethodItem(
@@ -295,12 +299,16 @@ class PaymentOptionActivity : BaseActivity() {
         orderId: String,
         creditCard: CreditCard?,
         customerInfo: CustomerInfo?,
+        itemInfo: ItemInfo?,
         paymentMethods: PaymentMethodList,
         promos: List<Promo>? = null
     ) {
         var isExpand by remember { mutableStateOf(false) }
         Column {
-            SnapAppBar(title = stringResource(id = R.string.payment_summary_select_method), iconResId = R.drawable.ic_arrow_left) {
+            SnapAppBar(
+                title = stringResource(id = R.string.payment_summary_select_method),
+                iconResId = R.drawable.ic_arrow_left
+            ) {
                 onBackPressed()
             }
             SnapOverlayExpandingBox(
@@ -316,14 +324,11 @@ class PaymentOptionActivity : BaseActivity() {
                         isExpand = it
                     }
                 },
-                expandingContent = customerInfo?.let {
-                    {
-                        SnapCustomerDetail(
-                            name = it.name,
-                            phone = it.phone,
-                            addressLines = it.addressLines
-                        )
-                    }
+                expandingContent = {
+                    SnapPaymentOrderDetails(
+                        itemInfo = itemInfo,
+                        customerInfo = customerInfo
+                    )
                 },
                 followingContent = {
                     LazyColumn {

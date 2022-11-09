@@ -285,7 +285,7 @@ private fun DashedDivider(
     color: Color,
     thickness: Dp = 1.dp
 ) {
-    val pathEffect = PathEffect.dashPathEffect(floatArrayOf(5f, 2f), 0f)
+    val pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
     Canvas(
         modifier
             .fillMaxWidth()
