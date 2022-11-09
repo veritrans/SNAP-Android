@@ -8,14 +8,21 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
@@ -29,6 +36,8 @@ import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapButton
+import com.midtrans.sdk.uikit.internal.view.SnapText
+import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import java.util.*
 
 
@@ -95,26 +104,57 @@ class OrderReviewActivity : ComponentActivity() {
         Column(
             modifier = Modifier.verticalScroll(state)
         ) {
-            SnapAppBar(title = "Order Review", iconResId = R.drawable.ic_arrow_left) {
-                onBackPressed()
-            }
+            OrderSummary()
 
-            Text(text = product.name)
 
-            SnapButton(
-                enabled = true,
-                text = "To Payment Options",
-                style = SnapButton.Style.TERTIARY
-            ) {
-//                payWithOldSnapLegacyApi()
-                payWithAndroidxActivityResultLauncher()
-            }
+//            SnapButton(
+//                enabled = true,
+//                text = "To Payment Options",
+//                style = SnapButton.Style.TERTIARY
+//            ) {
+////                payWithOldSnapLegacyApi()
+//                payWithAndroidxActivityResultLauncher()
+//            }
+//
+//            SnapButton(
+//                enabled = true,
+//                text = "To WebView",
+//                style = SnapButton.Style.PRIMARY
+//            ) {
+//            }
+        }
+    }
 
-            SnapButton(
-                enabled = true,
-                text = "To WebView",
-                style = SnapButton.Style.PRIMARY
-            ) {
+    @Composable
+    fun OrderSummary(modifier: Modifier = Modifier){
+        SnapAppBar(title = "Order Review", iconResId = R.drawable.ic_arrow_left) {
+            onBackPressed()
+        }
+        Column(modifier = modifier
+            .padding(16.dp)
+            .fillMaxWidth()) {
+            Text(text = "Order Review & Delivery Options", style = SnapTypography.STYLES.snaTextBodySmall)
+            Spacer(modifier = modifier.height(8.dp))
+            Row {
+                Image(
+                    painter = painterResource(id = product.image),
+                    contentDescription = product.name,
+                    contentScale = ContentScale.FillBounds,
+                    modifier = modifier
+                        .height(50.dp)
+                        .width(50.dp)
+                        .padding(end = 10.dp)
+                )
+                Column {
+                    Text(text = product.name, style = SnapTypography.STYLES.snapTextMediumMedium)
+                    Text(text = "Qty 1", style = SnapTypography.STYLES.snapTextMediumRegular)
+                }
+                Spacer(
+                    modifier
+                        .weight(1f)
+                        .fillMaxHeight())
+
+                Text(text = "Rp.${(product.price).toString().dropLast(2)}", style = SnapTypography.STYLES.snapTextMediumRegular)
             }
         }
     }
