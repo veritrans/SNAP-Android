@@ -4,8 +4,8 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class BankTransferRequest(
+open class BankTransferRequest(
     val vaNumber: String,
-    val freeText: String? = null,
+    val freeText: FreeText? = null,
     val subCompanyCode: String? = null
 ) : Parcelable

@@ -59,7 +59,11 @@ public class ISdkFlow {
                     wrapperCallback,
                     transactionRequest.getExpiry(),
                     null,
-                    transactionRequest.getEnabledPayments()
+                    transactionRequest.getEnabledPayments(),
+                    transactionRequest.getPermataVa(),
+                    transactionRequest.getBcaVa(),
+                    transactionRequest.getBniVa(),
+                    transactionRequest.getBriVa()
             );
 
         }

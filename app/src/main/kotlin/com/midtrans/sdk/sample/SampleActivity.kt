@@ -18,7 +18,10 @@ import androidx.core.os.LocaleListCompat
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
+import com.midtrans.sdk.corekit.models.BcaBankTransferRequestModel
 import com.midtrans.sdk.corekit.models.ExpiryModel
+import com.midtrans.sdk.corekit.models.FreeText
+import com.midtrans.sdk.corekit.models.FreeTextLanguage
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
@@ -218,8 +221,51 @@ class SampleActivity : AppCompatActivity() {
             "hour",
             1
         )
+
+
+        // set free text on BCA VA Payment
+        // un-comment for testing custom va
+        /**
+        val freeText = createSampleBcaFreeText()
+        val vaNumber = "12345678"
+        val subCompanyCode = "123"
+        val bcaVaRequestModel = BcaBankTransferRequestModel(vaNumber, freeText, subCompanyCode)
+        transactionRequest.bcaVa = bcaVaRequestModel
+        */
         MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().transactionRequest = transactionRequest
         MidtransSDK.getInstance().startPaymentUiFlow(this.applicationContext)
+    }
+
+    private fun createSampleBcaFreeText(): FreeText {
+        val inquiryLang: MutableList<FreeTextLanguage> =
+            ArrayList()
+        inquiryLang.add(
+            FreeTextLanguage(
+                "Text ID inquiry 0",
+                "Text EN inquiry 0"
+            )
+        )
+        inquiryLang.add(
+            FreeTextLanguage(
+                "Text ID inquiry 1",
+                "Text EN inquiry 1"
+            )
+        )
+        val paymentLang: MutableList<FreeTextLanguage> =
+            ArrayList()
+        paymentLang.add(
+            FreeTextLanguage(
+                "Text ID payment 0",
+                "Text EN payment 0"
+            )
+        )
+        paymentLang.add(
+            FreeTextLanguage(
+                "Text ID payment 1",
+                "Text EN payment 1"
+            )
+        )
+        return FreeText(inquiryLang, paymentLang)
     }
 }

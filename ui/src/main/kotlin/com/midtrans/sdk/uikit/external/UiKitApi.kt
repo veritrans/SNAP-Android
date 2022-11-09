@@ -50,7 +50,11 @@ class UiKitApi private constructor(val builder: Builder) {
         uobEzpayCallback: PaymentCallback? = null,
         snapTokenExpiry: Expiry? = null,
         paymentType: PaymentTypeItem? = null,
-        enabledPayment: List<String>? = null
+        enabledPayment: List<String>? = null,
+        permataVa: BankTransferRequest? = null,
+        bcaVa: BankTransferRequest? = null,
+        bniVa: BankTransferRequest? = null,
+        briVa: BankTransferRequest? = null
     ) {
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
             activityContext = activity,
@@ -61,7 +65,11 @@ class UiKitApi private constructor(val builder: Builder) {
             uobEzpayCallback = uobEzpayCallback,
             paymentType = paymentType,
             expiry = snapTokenExpiry,
-            enabledPayments = enabledPayment
+            enabledPayments = enabledPayment,
+            permataVa = permataVa,
+            bcaVa = bcaVa,
+            bniVa = bniVa,
+            briVa = briVa
         )
         launcher.launch(intent)
     }
@@ -76,7 +84,11 @@ class UiKitApi private constructor(val builder: Builder) {
         uobEzpayCallback: PaymentCallback? = null,
         snapTokenExpiry: Expiry? = null,
         paymentType: PaymentTypeItem? = null,
-        enabledPayment: List<String>? = null
+        enabledPayment: List<String>? = null,
+        permataVa: BankTransferRequest? = null,
+        bcaVa: BankTransferRequest? = null,
+        bniVa: BankTransferRequest? = null,
+        briVa: BankTransferRequest? = null
     ) {
 
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
@@ -88,7 +100,11 @@ class UiKitApi private constructor(val builder: Builder) {
             uobEzpayCallback = uobEzpayCallback,
             paymentType = paymentType,
             expiry = snapTokenExpiry,
-            enabledPayments = enabledPayment
+            enabledPayments = enabledPayment,
+            permataVa = permataVa,
+            bcaVa = bcaVa,
+            bniVa = bniVa,
+            briVa = briVa
         )
         activity.startActivityForResult(intent, requestCode)
     }
@@ -103,7 +119,11 @@ class UiKitApi private constructor(val builder: Builder) {
         paymentCallback: Callback<TransactionResult>,
         snapTokenExpiry: Expiry? = null,
         paymentType: PaymentTypeItem? = null,
-        enabledPayment: List<String>? = null
+        enabledPayment: List<String>? = null,
+        permataVa: BankTransferRequest? = null,
+        bcaVa: BankTransferRequest? = null,
+        bniVa: BankTransferRequest? = null,
+        briVa: BankTransferRequest? = null
     ) {
         UiKitApi.paymentCallback = paymentCallback
 
@@ -116,7 +136,11 @@ class UiKitApi private constructor(val builder: Builder) {
             uobEzpayCallback = uobEzpayCallback,
             paymentType = paymentType,
             expiry = snapTokenExpiry,
-            enabledPayments = enabledPayment
+            enabledPayments = enabledPayment,
+            permataVa = permataVa,
+            bcaVa = bcaVa,
+            bniVa = bniVa,
+            briVa = briVa
         )
         activityContext.startActivity(intent)
     }
