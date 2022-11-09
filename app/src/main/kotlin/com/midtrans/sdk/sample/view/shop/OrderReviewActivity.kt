@@ -80,6 +80,9 @@ class OrderReviewActivity : ComponentActivity() {
         UiKitApi.getDefaultInstance()
     }
 
+    private lateinit var customerDetails: CustomerDetails
+    private lateinit var transactionDetails: SnapTransactionDetail
+
     private fun setLocaleNew(languageCode: String?) {
         val locales = LocaleListCompat.forLanguageTags(languageCode)
         AppCompatDelegate.setApplicationLocales(locales)
@@ -87,8 +90,8 @@ class OrderReviewActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setLocaleNew("id") // commented for now. conflict with buildLegacyUiKit
 
+        setLocaleNew("id") // commented for now. conflict with buildLegacyUiKit
         buildUiKit()
 
         setContent { OrderListPage() }
@@ -97,40 +100,19 @@ class OrderReviewActivity : ComponentActivity() {
     @Preview
     @Composable
     fun OrderListPage() {
-        var text by remember { mutableStateOf("") }
         val state = rememberScrollState()
-        ShowChargeContent(text = text, state = state, onTextFieldValueChange = { text = it })
+        ShowChargeContent(state = state)
     }
 
     @Composable
     fun ShowChargeContent(
-        text: String,
-        state: ScrollState,
-        onTextFieldValueChange: (String) -> Unit
+        state: ScrollState
     ) {
-
         Column(
             modifier = Modifier.verticalScroll(state)
         ) {
             OrderSummary()
             CustomerDetailsForm()
-
-
-//            SnapButton(
-//                enabled = true,
-//                text = "To Payment Options",
-//                style = SnapButton.Style.TERTIARY
-//            ) {
-////                payWithOldSnapLegacyApi()
-//                payWithAndroidxActivityResultLauncher()
-//            }
-//
-//            SnapButton(
-//                enabled = true,
-//                text = "To WebView",
-//                style = SnapButton.Style.PRIMARY
-//            ) {
-//            }
         }
     }
 
@@ -179,10 +161,10 @@ class OrderReviewActivity : ComponentActivity() {
 
     @Composable
     fun CustomerDetailsForm(modifier: Modifier = Modifier) {
-        var fullName by remember { mutableStateOf(TextFieldValue("Ferdian")) }
+        var fullName by remember { mutableStateOf(TextFieldValue("Ferdian Julianto")) }
         var fullNameFieldFocused by remember { mutableStateOf(false) }
 
-        var phoneNumber by remember { mutableStateOf(TextFieldValue("083890769297")) }
+        var phoneNumber by remember { mutableStateOf(TextFieldValue("083812345678")) }
         var phoneNumberFieldFocused by remember { mutableStateOf(false) }
 
         var email by remember { mutableStateOf(TextFieldValue("hobinyabelajar@gmail.com")) }
@@ -266,12 +248,30 @@ class OrderReviewActivity : ComponentActivity() {
             )
 
             SnapButton(
-                text = "To Payment Options",
+                text = "Pay Rp.${(product.price).toString().dropLast(2)}",
                 style = SnapButton.Style.PRIMARY,
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
-                onClick = { payWithAndroidxActivityResultLauncher() }
+                onClick = {
+                    val name = fullName.text
+                    val index = name.lastIndexOf(' ')
+                    val firstName = index.let { name.substring(0, it) }
+                    val lastName = index.plus(1).let { name.substring(it) }
+
+                    transactionDetails = SnapTransactionDetail(
+                        orderId = UUID.randomUUID().toString(),
+                        grossAmount = product.price
+                    )
+                    customerDetails = CustomerDetails(
+                        firstName = firstName,
+                        lastName = lastName,
+                        email = email.text,
+                        phone = phoneNumber.text,
+                        shippingAddress = Address(address = address.text)
+                    )
+                    payWithAndroidxActivityResultLauncher()
+                }
             )
         }
     }
@@ -337,21 +337,13 @@ class OrderReviewActivity : ComponentActivity() {
         uiKitApi.startPaymentWithAndroidX(
             activity = this@OrderReviewActivity,
             launcher = launcher,
-            transactionDetails = SnapTransactionDetail(
-                orderId = UUID.randomUUID().toString(),
-                grossAmount = 15005.00
-            ),
+            transactionDetails = transactionDetails,
             creditCard = CreditCard(
                 saveCard = true,
                 secure = true
             ),
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
-            customerDetails = CustomerDetails(
-                firstName = "Ari",
-                lastName = "Bhakti",
-                email = "aribhakti@email.com",
-                phone = "087788778212"
-            )
+            customerDetails = customerDetails
         )
     }
 
