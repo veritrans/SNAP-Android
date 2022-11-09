@@ -463,7 +463,8 @@ class PaymentOptionActivity : BaseActivity() {
                             paymentType = it,
                             amount = totalAmount,
                             orderId = orderId,
-                            customerInfo = customerInfo
+                            customerInfo = customerInfo,
+                            itemInfo = itemInfo
                         )
                     )
                 }
