@@ -173,6 +173,9 @@ class OrderReviewActivity : ComponentActivity() {
         var address by remember { mutableStateOf(TextFieldValue("Pasaraya Blok M Gedung B Lt. 3")) }
         var addressFocused by remember { mutableStateOf(false) }
 
+        var snapToken by remember { mutableStateOf(TextFieldValue()) }
+        var snapTokenFocused by remember { mutableStateOf(false) }
+
         Column(
             modifier
                 .padding(16.dp)
@@ -247,6 +250,32 @@ class OrderReviewActivity : ComponentActivity() {
                     .padding(bottom = 8.dp)
             )
 
+            Text(
+                text = "Snap Token",
+                style = SnapTypography.STYLES.snapTextSmallRegular,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            SnapTextField(
+                value = snapToken,
+                onValueChange = { snapToken = it },
+                isFocused = snapTokenFocused,
+                onFocusChange = {
+                    snapTokenFocused = it
+                },
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            )
+
+            SnapButton(
+                text = "pay with snap token", style = SnapButton.Style.TERTIARY,
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
+                onClick = {
+//                    payWithAndroidxActivityResultLauncherToken(snapToken.text)
+                }
+            )
             SnapButton(
                 text = "Pay Rp.${(product.price).toString().dropLast(2)}",
                 style = SnapButton.Style.PRIMARY,
@@ -344,6 +373,14 @@ class OrderReviewActivity : ComponentActivity() {
             ),
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
             customerDetails = customerDetails
+        )
+    }
+
+    private fun payWithAndroidxActivityResultLauncherToken(token: String?) {
+        uiKitApi.startPaymentWithAndroidXToken(
+            activity = this@OrderReviewActivity,
+            launcher = launcher,
+            snapToken = token
         )
     }
 
