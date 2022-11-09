@@ -22,7 +22,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
-import com.midtrans.sdk.corekit.api.model.*
+import com.midtrans.sdk.corekit.api.model.CreditCard
+import com.midtrans.sdk.corekit.api.model.CustomerDetails
+import com.midtrans.sdk.corekit.api.model.PaymentMethod
+import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.Promo
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
@@ -345,13 +350,7 @@ class PaymentOptionActivity : BaseActivity() {
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                result?.data?.let {
-                    val transactionResult = it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT) as TransactionResult
-                    Intent().apply {
-                        putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, transactionResult)
-                        setResult(RESULT_OK, this)
-                    }
-                }
+                setResult(Activity.RESULT_OK, result.data)
                 finish()
             } else {
                 setResult(Activity.RESULT_CANCELED)
