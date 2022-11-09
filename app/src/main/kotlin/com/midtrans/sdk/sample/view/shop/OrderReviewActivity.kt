@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
@@ -30,7 +30,7 @@ import com.midtrans.sdk.uikit.internal.view.SnapButton
 import java.util.*
 
 
-class OrderReviewActivity : AppCompatActivity() {
+class OrderReviewActivity : ComponentActivity() {
 
     private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result?.resultCode == RESULT_OK) {
@@ -41,6 +41,15 @@ class OrderReviewActivity : AppCompatActivity() {
                 Toast.makeText(this@OrderReviewActivity, "Coba trxid ${transactionResult?.transactionId.orEmpty()}", Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == RESULT_OK) {
+            val transactionResult = data?.getParcelableExtra<TransactionResult>(
+                UiKitConstants.KEY_TRANSACTION_RESULT)
+            Toast.makeText(this@OrderReviewActivity, "Transaction ${transactionResult?.transactionId.orEmpty()} status ${transactionResult?.status.orEmpty()}", Toast.LENGTH_LONG).show()
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private val product: Product by lazy {
@@ -59,11 +68,50 @@ class OrderReviewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setLocaleNew("id") // commented for now. conflict with buildLegacyUiKit
+        setLocaleNew("id") // commented for now. conflict with buildLegacyUiKit
 
-        buildLegacyUiKit()
+        buildUiKit()
 
         setContent { Greeting() }
+    }
+
+    @Preview
+    @Composable
+    fun Greeting() {
+        var text by remember { mutableStateOf("") }
+        val state = rememberScrollState()
+        ShowChargeContent(text = text, state = state, onTextFieldValueChange = { text = it })
+    }
+
+    @Composable
+    fun ShowChargeContent(
+        text: String,
+        state: ScrollState,
+        onTextFieldValueChange: (String) -> Unit
+    ) {
+
+        Column(
+            modifier = Modifier.verticalScroll(state)
+        ) {
+
+            Text(text = product.name)
+
+            SnapButton(
+                enabled = true,
+                text = "To Payment Options",
+                style = SnapButton.Style.TERTIARY
+            ) {
+//                payWithOldSnapLegacyApi()
+                payWithAndroidxActivityResultLauncher()
+            }
+
+            SnapButton(
+                enabled = true,
+                text = "To WebView",
+                style = SnapButton.Style.PRIMARY
+            ) {
+            }
+        }
     }
 
     private fun buildUiKit(){
@@ -95,54 +143,6 @@ class OrderReviewActivity : AppCompatActivity() {
             ?.setColorTheme(CustomColorTheme("#0e4e95","#0b3b70", "#3e71aa"))
             ?.setLanguage("en") //setLanguage to either "en" for english or "id" for bahasa
             ?.buildSDK()
-    }
-
-    @Preview
-    @Composable
-    fun Greeting() {
-        var text by remember { mutableStateOf("") }
-        val state = rememberScrollState()
-        ShowChargeContent(text = text, state = state, onTextFieldValueChange = { text = it })
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == RESULT_OK) {
-            val transactionResult = data?.getParcelableExtra<TransactionResult>(
-                UiKitConstants.KEY_TRANSACTION_RESULT)
-            Toast.makeText(this@OrderReviewActivity, "Transaction ${transactionResult?.transactionId.orEmpty()} status ${transactionResult?.status.orEmpty()}", Toast.LENGTH_LONG).show()
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
-
-    @Composable
-    fun ShowChargeContent(
-        text: String,
-        state: ScrollState,
-        onTextFieldValueChange: (String) -> Unit
-    ) {
-
-        Column(
-            modifier = Modifier.verticalScroll(state)
-        ) {
-
-            Text(text = product.name)
-
-            SnapButton(
-                enabled = true,
-                text = "To Payment Options",
-                style = SnapButton.Style.TERTIARY
-            ) {
-//                payWithOldSnapLegacyApi()
-                payWithLegacyActivityStartActivityForResult()
-            }
-
-            SnapButton(
-                enabled = true,
-                text = "To WebView",
-                style = SnapButton.Style.PRIMARY
-            ) {
-            }
-        }
     }
 
     private fun payWithLegacyActivityStartActivityForResult(){
