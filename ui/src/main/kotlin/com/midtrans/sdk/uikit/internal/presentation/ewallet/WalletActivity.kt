@@ -83,6 +83,7 @@ internal class WalletActivity : BaseActivity() {
 
     private fun openDeepLink() {
         deepLinkUrl?.let {
+            viewModel.trackOpenDeeplink(paymentType)
             val intent = DeepLinkActivity.getIntent(
                 activityContext = this,
                 paymentType = paymentType,

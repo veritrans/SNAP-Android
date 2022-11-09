@@ -111,6 +111,13 @@ internal class WalletViewModel @Inject constructor(
         )
     }
 
+    fun trackOpenDeeplink(paymentType: String) {
+        trackOpenDeeplink(
+            pageName = getPageName(paymentType),
+            paymentMethodName = paymentType
+        )
+    }
+
     fun getExpiredHour(): String = datetimeUtil.getExpiredHour(expiredTime)
 
     companion object {

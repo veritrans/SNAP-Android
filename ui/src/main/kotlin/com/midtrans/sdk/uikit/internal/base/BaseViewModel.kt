@@ -120,4 +120,14 @@ internal open class BaseViewModel : ViewModel() {
     protected fun trackPageClosed(pageName: String) {
         eventAnalytics?.trackSnapPageClosed(pageName)
     }
+
+    protected fun trackOpenDeeplink(
+        pageName: String,
+        paymentMethodName: String
+    ) {
+        eventAnalytics?.trackSnapOpenDeeplink(
+            pageName = pageName,
+            paymentMethodName = paymentMethodName
+        )
+    }
 }

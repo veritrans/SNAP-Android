@@ -136,10 +136,18 @@ internal class UobPaymentViewModelTest {
     @Test
     fun verifyTrackHowToPayClicked() {
         viewModel.trackHowToPayClicked()
-        org.mockito.kotlin.verify(eventAnalytics).trackSnapHowToPayViewed(
+        verify(eventAnalytics).trackSnapHowToPayViewed(
             pageName = PageName.UOB_PAGE,
             paymentMethodName = PaymentType.UOB_EZPAY
         )
     }
 
+    @Test
+    fun verifyTrackOpenDeeplink() {
+        viewModel.trackOpenDeeplink()
+        verify(eventAnalytics).trackSnapOpenDeeplink(
+            pageName = PageName.UOB_PAGE,
+            paymentMethodName = PaymentType.UOB_EZPAY
+        )
+    }
 }

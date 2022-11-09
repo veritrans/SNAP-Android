@@ -3,6 +3,7 @@ package com.midtrans.sdk.uikit.internal.presentation.paylater
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
@@ -88,20 +89,29 @@ internal class PayLaterViewModelTest {
 
     @Test
     fun verifyTrackSnapButtonClicked() {
-        viewModel.trackSnapButtonClicked("cta-name", "payment-type")
+        viewModel.trackSnapButtonClicked("cta-name", PaymentType.AKULAKU)
         verify(eventAnalytics).trackSnapCtaClicked(
             ctaName = "cta-name",
             pageName = PageName.AKULAKU_PAGE,
-            paymentMethodName = "payment-type"
+            paymentMethodName = PaymentType.AKULAKU
         )
     }
 
     @Test
     fun verifyTrackHowToPayClicked() {
-        viewModel.trackHowToPayClicked("payment-type")
+        viewModel.trackHowToPayClicked(PaymentType.AKULAKU)
         verify(eventAnalytics).trackSnapHowToPayViewed(
             pageName = PageName.AKULAKU_PAGE,
-            paymentMethodName = "payment-type"
+            paymentMethodName = PaymentType.AKULAKU
+        )
+    }
+
+    @Test
+    fun verifyTrackOpenWebView() {
+        viewModel.trackOpenWebView(PaymentType.AKULAKU)
+        verify(eventAnalytics).trackSnapOpenDeeplink(
+            pageName = PageName.AKULAKU_PAGE,
+            paymentMethodName = PaymentType.AKULAKU
         )
     }
 }
