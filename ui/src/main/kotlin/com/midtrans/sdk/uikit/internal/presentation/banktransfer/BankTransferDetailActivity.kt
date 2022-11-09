@@ -173,7 +173,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                         SnapTotal(
                             amount = totalAmount,
                             orderId = orderId,
-                            canExpand = customerInfo != null,
+                            canExpand = customerInfo != null || itemInfo != null,
                             remainingTime = remainingTime
                         ) {
                             expanding = it
