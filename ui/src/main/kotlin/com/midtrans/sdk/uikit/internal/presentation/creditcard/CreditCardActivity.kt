@@ -479,7 +479,7 @@ internal class CreditCardActivity : BaseActivity() {
                         amount = totalAmount,
                         orderId = orderId,
                         remainingTime = remainingTime,
-                        canExpand = customerDetail != null,
+                        canExpand = customerDetail != null || itemInfo != null,
                         isPromo = state.promoId != 0L
                     ) {
                         onExpand(it)
