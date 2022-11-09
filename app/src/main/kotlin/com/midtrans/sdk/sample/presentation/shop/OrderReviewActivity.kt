@@ -396,6 +396,10 @@ class OrderReviewActivity : ComponentActivity() {
                 lastName = "Bhaktis",
                 email = "arisbhaktis@email.com",
                 phone = "087788778212"
+            ),
+            itemDetails = listOf(
+                ItemDetails("id01", 3999.00, 1, "Cappuccino"),
+                ItemDetails("id02", 2888.00, 1, "Americano")
             )
         )
     }
@@ -414,6 +418,10 @@ class OrderReviewActivity : ComponentActivity() {
                 startTime = Utils.getFormattedTime(System.currentTimeMillis()),
                 unit = Expiry.UNIT_MINUTE,
                 duration = 5
+            ),
+            itemDetails = listOf(
+                ItemDetails("id01", 3999.00, 1, "Cappuccino"),
+                ItemDetails("id02", 2888.00, 1, "Americano")
             ),
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
             customerDetails = customerDetails
@@ -439,6 +447,10 @@ class OrderReviewActivity : ComponentActivity() {
             "Bhakti",
             "aribhakti@email.com",
             "087788778212"
+        )
+        transactionRequest.itemDetails = arrayListOf<com.midtrans.sdk.corekit.models.ItemDetails>(
+            com.midtrans.sdk.corekit.models.ItemDetails("id01", 3999.00, 1, "Cappuccino"),
+            com.midtrans.sdk.corekit.models.ItemDetails("id02", 2888.00, 1, "Americano")
         )
         transactionRequest.creditCard = com.midtrans.sdk.corekit.models.snap.CreditCard(
             true,
