@@ -13,14 +13,12 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
@@ -36,29 +34,39 @@ import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapButton
-import com.midtrans.sdk.uikit.internal.view.SnapText
+import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import java.util.*
 
 
 class OrderReviewActivity : ComponentActivity() {
 
-    private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result?.resultCode == RESULT_OK) {
-            result.data?.let {
-                val transactionResult = it.getParcelableExtra<TransactionResult>(
-                    UiKitConstants.KEY_TRANSACTION_RESULT
-                )
-                Toast.makeText(this@OrderReviewActivity, "Coba trxid ${transactionResult?.transactionId.orEmpty()}", Toast.LENGTH_LONG).show()
+    private val launcher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result?.resultCode == RESULT_OK) {
+                result.data?.let {
+                    val transactionResult = it.getParcelableExtra<TransactionResult>(
+                        UiKitConstants.KEY_TRANSACTION_RESULT
+                    )
+                    Toast.makeText(
+                        this@OrderReviewActivity,
+                        "Coba trxid ${transactionResult?.transactionId.orEmpty()}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == RESULT_OK) {
             val transactionResult = data?.getParcelableExtra<TransactionResult>(
-                UiKitConstants.KEY_TRANSACTION_RESULT)
-            Toast.makeText(this@OrderReviewActivity, "Transaction ${transactionResult?.transactionId.orEmpty()} status ${transactionResult?.status.orEmpty()}", Toast.LENGTH_LONG).show()
+                UiKitConstants.KEY_TRANSACTION_RESULT
+            )
+            Toast.makeText(
+                this@OrderReviewActivity,
+                "Transaction ${transactionResult?.transactionId.orEmpty()} status ${transactionResult?.status.orEmpty()}",
+                Toast.LENGTH_LONG
+            ).show()
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -105,6 +113,7 @@ class OrderReviewActivity : ComponentActivity() {
             modifier = Modifier.verticalScroll(state)
         ) {
             OrderSummary()
+            CustomerDetailsForm()
 
 
 //            SnapButton(
@@ -126,14 +135,19 @@ class OrderReviewActivity : ComponentActivity() {
     }
 
     @Composable
-    fun OrderSummary(modifier: Modifier = Modifier){
+    fun OrderSummary(modifier: Modifier = Modifier) {
         SnapAppBar(title = "Order Review", iconResId = R.drawable.ic_arrow_left) {
             onBackPressed()
         }
-        Column(modifier = modifier
-            .padding(16.dp)
-            .fillMaxWidth()) {
-            Text(text = "Order Review & Delivery Options", style = SnapTypography.STYLES.snaTextBodySmall)
+        Column(
+            modifier = modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = "Order Review & Delivery Options",
+                style = SnapTypography.STYLES.snaTextBodySmall
+            )
             Spacer(modifier = modifier.height(8.dp))
             Row {
                 Image(
@@ -152,14 +166,117 @@ class OrderReviewActivity : ComponentActivity() {
                 Spacer(
                     modifier
                         .weight(1f)
-                        .fillMaxHeight())
+                        .fillMaxHeight()
+                )
 
-                Text(text = "Rp.${(product.price).toString().dropLast(2)}", style = SnapTypography.STYLES.snapTextMediumRegular)
+                Text(
+                    text = "Rp.${(product.price).toString().dropLast(2)}",
+                    style = SnapTypography.STYLES.snapTextMediumRegular
+                )
             }
         }
     }
 
-    private fun buildUiKit(){
+    @Composable
+    fun CustomerDetailsForm(modifier: Modifier = Modifier) {
+        var fullName by remember { mutableStateOf(TextFieldValue("Ferdian")) }
+        var fullNameFieldFocused by remember { mutableStateOf(false) }
+
+        var phoneNumber by remember { mutableStateOf(TextFieldValue("083890769297")) }
+        var phoneNumberFieldFocused by remember { mutableStateOf(false) }
+
+        var email by remember { mutableStateOf(TextFieldValue("hobinyabelajar@gmail.com")) }
+        var emailFocused by remember { mutableStateOf(false) }
+
+        var address by remember { mutableStateOf(TextFieldValue("Pasaraya Blok M Gedung B Lt. 3")) }
+        var addressFocused by remember { mutableStateOf(false) }
+
+        Column(
+            modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = "Customer Details",
+                style = SnapTypography.STYLES.snaTextBodySmall
+            )
+            Text(
+                text = "Full Name", style = SnapTypography.STYLES.snapTextSmallRegular,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            SnapTextField(
+                value = fullName,
+                onValueChange = { fullName = it },
+                isFocused = fullNameFieldFocused,
+                onFocusChange = {
+                    fullNameFieldFocused = it
+                },
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            )
+
+            Text(
+                text = "Phone Number", style = SnapTypography.STYLES.snapTextSmallRegular,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            SnapTextField(
+                value = phoneNumber,
+                onValueChange = { phoneNumber = it },
+                isFocused = phoneNumberFieldFocused,
+                onFocusChange = {
+                    phoneNumberFieldFocused = it
+                },
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            )
+
+            Text(
+                text = "Email", style = SnapTypography.STYLES.snapTextSmallRegular,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            SnapTextField(
+                value = email,
+                onValueChange = { email = it },
+                isFocused = emailFocused,
+                onFocusChange = {
+                    emailFocused = it
+                },
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            )
+
+            Text(
+                text = "Your Delivery Address",
+                style = SnapTypography.STYLES.snapTextSmallRegular,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            SnapTextField(
+                value = address,
+                onValueChange = { address = it },
+                isFocused = addressFocused,
+                onFocusChange = {
+                    addressFocused = it
+                },
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            )
+
+            SnapButton(
+                text = "To Payment Options",
+                style = SnapButton.Style.PRIMARY,
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
+                onClick = { payWithAndroidxActivityResultLauncher() }
+            )
+        }
+    }
+
+    private fun buildUiKit() {
         UiKitApi.Builder()
             .withContext(this.applicationContext)
             .withMerchantUrl("https://fiesta-point-sample.herokuapp.com/")
@@ -175,7 +292,7 @@ class OrderReviewActivity : ComponentActivity() {
             .build()
     }
 
-    private fun buildLegacyUiKit(){
+    private fun buildLegacyUiKit() {
         SdkUIFlowBuilder.init()
             ?.setContext(this.applicationContext)
             ?.setMerchantBaseUrl("https://fiesta-point-sample.herokuapp.com/")
@@ -185,12 +302,12 @@ class OrderReviewActivity : ComponentActivity() {
             ?.setDefaultText("fonts/SourceSansPro-Regular.ttf")
             ?.setBoldText("fonts/SourceSansPro-Bold.ttf")
             ?.setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
-            ?.setColorTheme(CustomColorTheme("#0e4e95","#0b3b70", "#3e71aa"))
+            ?.setColorTheme(CustomColorTheme("#0e4e95", "#0b3b70", "#3e71aa"))
             ?.setLanguage("en") //setLanguage to either "en" for english or "id" for bahasa
             ?.buildSDK()
     }
 
-    private fun payWithLegacyActivityStartActivityForResult(){
+    private fun payWithLegacyActivityStartActivityForResult() {
         uiKitApi.startPaymentWithLegacyAndroid(
             activity = this@OrderReviewActivity,
             requestCode = 1151,
@@ -203,14 +320,14 @@ class OrderReviewActivity : ComponentActivity() {
                 secure = true,
                 installment = Installment(
                     isRequired = false,
-                            terms = mapOf("bni" to listOf(3,6,9,12))
+                    terms = mapOf("bni" to listOf(3, 6, 9, 12))
                 )
             ),
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
             customerDetails = CustomerDetails(
-                        firstName = "Aris",
-                        lastName = "Bhaktis",
-                        email = "arisbhaktis@email.com",
+                firstName = "Aris",
+                lastName = "Bhaktis",
+                email = "arisbhaktis@email.com",
                 phone = "087788778212"
             )
         )
