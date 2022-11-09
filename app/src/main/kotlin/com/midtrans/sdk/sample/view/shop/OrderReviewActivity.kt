@@ -21,11 +21,13 @@ import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
 import com.midtrans.sdk.sample.model.Product
+import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import java.util.*
 
@@ -72,12 +74,12 @@ class OrderReviewActivity : ComponentActivity() {
 
         buildUiKit()
 
-        setContent { Greeting() }
+        setContent { OrderListPage() }
     }
 
     @Preview
     @Composable
-    fun Greeting() {
+    fun OrderListPage() {
         var text by remember { mutableStateOf("") }
         val state = rememberScrollState()
         ShowChargeContent(text = text, state = state, onTextFieldValueChange = { text = it })
@@ -93,6 +95,9 @@ class OrderReviewActivity : ComponentActivity() {
         Column(
             modifier = Modifier.verticalScroll(state)
         ) {
+            SnapAppBar(title = "Order Review", iconResId = R.drawable.ic_arrow_left) {
+                onBackPressed()
+            }
 
             Text(text = product.name)
 

@@ -3,7 +3,7 @@ package com.midtrans.sdk.sample.view.shop
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.midtrans.sdk.sample.view.shop.component.ProductList
+import com.midtrans.sdk.sample.view.shop.component.ProductListPage
 
 class ProductListActivity : ComponentActivity() {
 
@@ -11,7 +11,7 @@ class ProductListActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            ProductList {
+            ProductListPage {
                 val intent = OrderReviewActivity.getOrderReviewActivityIntent(this, it)
                 startActivity(intent)
             }

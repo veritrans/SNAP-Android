@@ -23,7 +23,7 @@ import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.model.getData
 
 @Composable
-fun ProductList(onClick: (Product) -> Unit) {
+fun ProductListPage(onClick: (Product) -> Unit) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy((-30).dp),
         contentPadding = PaddingValues(vertical = 24.dp, horizontal = 24.dp),
