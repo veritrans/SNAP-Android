@@ -427,7 +427,7 @@ class PaymentOptionActivity : BaseActivity() {
                     )
                 )
             },
-            Pair("credit_card") {
+            Pair(PaymentType.CREDIT_CARD) {
                 resultLauncher.launch(
                     //TODO: Need to revisit, if we need to enable adding a flag on sdk to force Normal Transaction like old ios sdk
                     if (creditCard?.savedTokens.isNullOrEmpty().or(true)) {
