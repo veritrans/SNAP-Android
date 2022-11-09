@@ -192,7 +192,7 @@ class UiKitApi private constructor(val builder: Builder) {
         }
 
         //TODO: should getDefault Instance always not - null?
-        fun getDefaultInstanceNullAble(): UiKitApi? {
+        internal fun getDefaultInstanceNullAble(): UiKitApi? {
             return instance
         }
 
