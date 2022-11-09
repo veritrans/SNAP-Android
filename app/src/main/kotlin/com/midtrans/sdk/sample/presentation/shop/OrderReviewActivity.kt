@@ -30,7 +30,6 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
-import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapButton
@@ -92,7 +91,6 @@ class OrderReviewActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setLocaleNew("id") // commented for now. conflict with buildLegacyUiKit
-        buildUiKit()
 
         setContent { OrderListPage() }
     }
@@ -305,22 +303,6 @@ class OrderReviewActivity : ComponentActivity() {
         }
     }
 
-    private fun buildUiKit() {
-        UiKitApi.Builder()
-            .withContext(this.applicationContext)
-            .withMerchantUrl("https://fiesta-point-sample.herokuapp.com/")
-            .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
-            .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
-            .withCustomColors(
-                CustomColors(
-                    interactiveFillInverse = 0xff0000,
-                    textInverse = 0x00ff00,
-                    supportNeutralFill = 0xffdddd
-                )
-            )
-            .build()
-    }
-
     private fun buildLegacyUiKit() {
         SdkUIFlowBuilder.init()
             ?.setContext(this.applicationContext)
@@ -369,7 +351,11 @@ class OrderReviewActivity : ComponentActivity() {
             transactionDetails = transactionDetails,
             creditCard = CreditCard(
                 saveCard = true,
-                secure = true
+                secure = true,
+                installment = Installment(
+                    isRequired = false,
+                    terms = mapOf("bni" to listOf(3, 6, 12))
+                )
             ),
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
             customerDetails = customerDetails
