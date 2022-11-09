@@ -38,25 +38,10 @@ class DemoConfigurationActivity : AppCompatActivity() {
     fun DemoConfigurationScreen() {
         val state = remember {
             InputState(
-                color = COLOR_DEFAULT,
-                installment = "No Installment"
+                color = COLOR_DEFAULT
             )
         }
         Column(Modifier.padding(16.dp)) {
-            DropdownMenu(
-                title = "Installment",
-                optionList = listOf(
-                    "No Installment",
-                    "Mandiri",
-                    "BCA",
-                    "BNI",
-                    "BRI",
-                    "CIMB",
-                    "MayBank",
-                    "Offline"
-                ),
-                state = state
-            )
             DropdownMenu(
                 title = COLOR_THEME,
                 optionList = listOf(COLOR_DEFAULT, COLOR_RED, COLOR_BLUE, COLOR_GREEN),
@@ -71,8 +56,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 onClick = {
                     val intent = ProductListActivity.getProductListActivity(
                         this@DemoConfigurationActivity,
-                        state.color,
-                        state.installment
+                        state.color
                     )
                     startActivity(intent)
                 }
@@ -124,7 +108,6 @@ class DemoConfigurationActivity : AppCompatActivity() {
                                 selectedOptionText = selectionOption
                                 expanded = false
                                 when (title) {
-                                    INSTALLMENT -> state.installment = selectedOptionText
                                     COLOR_THEME -> state.color = selectedOptionText
                                 }
                             },
@@ -152,14 +135,11 @@ class DemoConfigurationActivity : AppCompatActivity() {
 
     companion object {
         private const val COLOR_THEME = "Color Theme"
-        private const val INSTALLMENT = "Installment"
     }
 }
 
 class InputState(
-    color: String,
-    installment: String
+    color: String
 ) {
-    var installment by mutableStateOf(installment)
     var color by mutableStateOf(color)
 }

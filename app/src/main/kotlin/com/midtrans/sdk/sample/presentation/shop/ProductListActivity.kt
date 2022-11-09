@@ -20,11 +20,6 @@ class ProductListActivity : ComponentActivity() {
             ?: throw RuntimeException("Input Color must not be empty")
     }
 
-    private val installment: String by lazy {
-        intent.getStringExtra(EXTRA_INPUT_INSTALLMENT)
-            ?: throw RuntimeException("Installment must not be empty")
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,16 +35,13 @@ class ProductListActivity : ComponentActivity() {
 
     companion object {
         private const val EXTRA_INPUT_COLOR = "productList.extra.inputColor"
-        private const val EXTRA_INPUT_INSTALLMENT = "productList.extra.installment"
 
         fun getProductListActivity(
             activityContext: Context,
-            color: String,
-            installment: String
+            color: String
         ): Intent {
             return Intent(activityContext, ProductListActivity::class.java).apply {
                 putExtra(EXTRA_INPUT_COLOR, color)
-                putExtra(EXTRA_INPUT_INSTALLMENT, installment)
             }
         }
     }
