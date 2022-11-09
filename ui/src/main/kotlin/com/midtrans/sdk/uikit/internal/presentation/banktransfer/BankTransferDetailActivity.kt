@@ -33,6 +33,7 @@ import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
@@ -46,7 +47,34 @@ internal class BankTransferDetailActivity : BaseActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel: BankTransferDetailViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory).get(BankTransferDetailViewModel::class.java)
+        ViewModelProvider(this, viewModelFactory)[BankTransferDetailViewModel::class.java]
+    }
+
+    private val totalAmount: String by lazy {
+        intent.getStringExtra(EXTRA_TOTAL_AMOUNT)
+            ?: throw RuntimeException("Total amount must not be empty")
+    }
+
+    private val orderId: String by lazy {
+        intent.getStringExtra(EXTRA_ORDER_ID)
+            ?: throw RuntimeException("Order ID must not be empty")
+    }
+
+    private val customerInfo: CustomerInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
+    }
+
+    private val itemInfo: ItemInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
+    }
+
+    private val paymentType: String by lazy {
+        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
+            ?: throw RuntimeException("Bank name must not be empty")
+    }
+
+    private val snapToken: String by lazy {
+        intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +85,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 totalAmount = totalAmount,
                 orderId = orderId,
                 customerInfo = customerInfo,
+                itemInfo = itemInfo,
                 vaNumberState = viewModel.vaNumberLiveData.observeAsState(initial = ""),
                 billingNumberState = viewModel.billingNumberLiveData.observeAsState(initial = ""),
                 bankName = paymentType,
@@ -111,6 +140,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
         orderId: String,
         bankName: String,
         customerInfo: CustomerInfo?,
+        itemInfo: ItemInfo?,
         vaNumberState: State<String>,
         billingNumberState: State<String>,
         companyCodeState: State<String>,
@@ -150,13 +180,10 @@ internal class BankTransferDetailActivity : BaseActivity() {
                         }
                     },
                     expandingContent = {
-                        customerInfo?.run {
-                            SnapCustomerDetail(
-                                name = name,
-                                phone = phone,
-                                addressLines = addressLines
-                            )
-                        }
+                        SnapPaymentOrderDetails(
+                            customerInfo = customerInfo,
+                            itemInfo = itemInfo
+                        )
                     }
                 ) {
                     Column(
@@ -359,6 +386,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 phone = "4123123123123",
                 addressLines = listOf("jalan", "jalan", "jalan")
             ),
+            itemInfo = null,
             vaNumberState = remember { mutableStateOf("32323") },
             companyCodeState = remember { mutableStateOf("32323") },
             bankName = "bni",
@@ -366,31 +394,6 @@ internal class BankTransferDetailActivity : BaseActivity() {
             destinationBankCode = remember { mutableStateOf("123") },
             remainingTimeState = remember { mutableStateOf("00:00") }
         )
-
-    }
-
-
-    private val totalAmount: String by lazy {
-        intent.getStringExtra(EXTRA_TOTAL_AMOUNT)
-            ?: throw RuntimeException("Total amount must not be empty")
-    }
-
-    private val orderId: String by lazy {
-        intent.getStringExtra(EXTRA_ORDER_ID)
-            ?: throw RuntimeException("Order ID must not be empty")
-    }
-
-    private val customerInfo: CustomerInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
-    }
-
-    private val paymentType: String by lazy {
-        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
-            ?: throw RuntimeException("Bank name must not be empty")
-    }
-
-    private val snapToken: String by lazy {
-        intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
     }
 
     private val paymentInstruction by lazy {
@@ -532,6 +535,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
         private const val EXTRA_TOTAL_AMOUNT = "bankTransfer.extra.total_amount"
         private const val EXTRA_ORDER_ID = "bankTransfer.extra.order_id"
         private const val EXTRA_CUSTOMER_DETAIL = "bankTransfer.extra.customer_detail"
+        private const val EXTRA_ITEM_INFO = "bankTransfer.extra.item_info"
         private const val EXTRA_PAYMENT_TYPE = "bankTransfer.extra.payment_type"
         private const val EXTRA_SNAP_TOKEN = "bankTransfer.extra.snap_token"
         private const val BANK_CODE_MARK = "--BANK_CODE--"
@@ -542,17 +546,15 @@ internal class BankTransferDetailActivity : BaseActivity() {
             paymentType: String,
             totalAmount: String,
             orderId: String,
-            customerInfo: CustomerInfo? = null
-
+            customerInfo: CustomerInfo? = null,
+            itemInfo: ItemInfo? = null
         ): Intent {
             return Intent(activityContext, BankTransferDetailActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
-                putExtra(
-                    EXTRA_CUSTOMER_DETAIL,
-                    customerInfo
-                )
+                putExtra(EXTRA_CUSTOMER_DETAIL, customerInfo)
+                putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
             }
         }

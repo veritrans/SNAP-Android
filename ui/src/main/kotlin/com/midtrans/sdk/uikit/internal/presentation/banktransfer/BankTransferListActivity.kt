@@ -111,6 +111,7 @@ class BankTransferListActivity : BaseActivity() {
                 activityContext = this,
                 paymentType = method,
                 customerInfo = customerInfo,
+                itemInfo = itemInfo,
                 orderId = orderId,
                 totalAmount = totalAmount,
                 snapToken = snapToken
