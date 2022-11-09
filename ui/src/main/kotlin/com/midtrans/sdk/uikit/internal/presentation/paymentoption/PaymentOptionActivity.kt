@@ -176,6 +176,7 @@ class PaymentOptionActivity : BaseActivity() {
                 getOnPaymentItemClick(
                     paymentType = paymentType.type,
                     customerInfo = customerInfo,
+                    itemInfo = itemInfo,
                     totalAmount = totalAmount,
                     paymentMethodItem = it,
                     orderId = orderId
@@ -347,6 +348,7 @@ class PaymentOptionActivity : BaseActivity() {
                                 getOnPaymentItemClick(
                                     paymentType = payment.type,
                                     customerInfo = customerInfo,
+                                    itemInfo = itemInfo,
                                     totalAmount = totalAmount,
                                     paymentMethodItem = payment,
                                     orderId = orderId
@@ -380,6 +382,7 @@ class PaymentOptionActivity : BaseActivity() {
         orderId: String,
         paymentMethodItem: PaymentMethodItem,
         customerInfo: CustomerInfo?,
+        itemInfo: ItemInfo?
     ): Map<String, () -> Unit> {
 
         val eWalletPaymentLauncher = {
@@ -431,6 +434,7 @@ class PaymentOptionActivity : BaseActivity() {
                             transactionDetails = transactionDetails,
                             totalAmount = totalAmount,
                             customerInfo = customerInfo,
+                            itemInfo = itemInfo,
                             creditCard = creditCard,
                             expiryTime = expiryTime,
                             withMerchantData = merchant,
