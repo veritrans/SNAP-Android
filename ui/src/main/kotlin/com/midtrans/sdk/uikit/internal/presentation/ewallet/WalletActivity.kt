@@ -28,6 +28,7 @@ import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
@@ -55,6 +56,7 @@ internal class WalletActivity : BaseActivity() {
                 totalAmount = totalAmount,
                 orderId = orderId,
                 customerInfo = customerInfo,
+                itemInfo = itemInfo,
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
                 qrCodeUrl = viewModel.qrCodeUrlLiveData.observeAsState(initial = ""),
                 paymentType = paymentType,
@@ -119,6 +121,7 @@ internal class WalletActivity : BaseActivity() {
         qrCodeUrl: State<String>,
         paymentType: String,
         customerInfo: CustomerInfo?,
+        itemInfo: ItemInfo?,
         remainingTimeState: State<String>,
         isTablet: Boolean = false
     ) {
@@ -149,20 +152,17 @@ internal class WalletActivity : BaseActivity() {
                     SnapTotal(
                         amount = totalAmount,
                         orderId = orderId,
-                        canExpand = customerInfo != null,
+                        canExpand = customerInfo != null || itemInfo != null,
                         remainingTime = remainingTime
                     ) {
                         expanding = it
                     }
                 },
                 expandingContent = {
-                    customerInfo?.run {
-                        SnapCustomerDetail(
-                            name = name,
-                            phone = phone,
-                            addressLines = addressLines
-                        )
-                    }
+                    SnapPaymentOrderDetails(
+                        customerInfo = customerInfo,
+                        itemInfo = itemInfo
+                    )
                 }
             ) {
                 Column(
@@ -291,6 +291,7 @@ internal class WalletActivity : BaseActivity() {
                 phone = "4123123123123",
                 addressLines = listOf("jalan", "jalan", "jalan")
             ),
+            itemInfo = null,
             paymentType = PaymentType.GOPAY,
             remainingTimeState = remember { mutableStateOf("00:00") },
             qrCodeUrl = remember { mutableStateOf("http://kkkk") },
@@ -312,6 +313,10 @@ internal class WalletActivity : BaseActivity() {
 
     private val customerInfo: CustomerInfo? by lazy {
         intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
+    }
+
+    private val itemInfo: ItemInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
     }
 
     private val paymentType: String by lazy {
@@ -350,6 +355,7 @@ internal class WalletActivity : BaseActivity() {
         private const val EXTRA_TOTAL_AMOUNT = "wallet.extra.total_amount"
         private const val EXTRA_ORDER_ID = "wallet.extra.order_id"
         private const val EXTRA_CUSTOMER_DETAIL = "wallet.extra.customer_detail"
+        private const val EXTRA_ITEM_INFO = "wallet.extra.item_info"
         private const val EXTRA_PAYMENT_TYPE = "wallet.extra.payment_type"
         private const val EXTRA_SNAP_TOKEN = "wallet.extra.snap_token"
 
@@ -359,17 +365,15 @@ internal class WalletActivity : BaseActivity() {
             paymentType: String,
             totalAmount: String,
             orderId: String,
-            customerInfo: CustomerInfo? = null
-
+            customerInfo: CustomerInfo? = null,
+            itemInfo: ItemInfo? = null
         ): Intent {
             return Intent(activityContext, WalletActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
-                putExtra(
-                    EXTRA_CUSTOMER_DETAIL,
-                    customerInfo
-                )
+                putExtra(EXTRA_CUSTOMER_DETAIL, customerInfo)
+                putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
             }
         }

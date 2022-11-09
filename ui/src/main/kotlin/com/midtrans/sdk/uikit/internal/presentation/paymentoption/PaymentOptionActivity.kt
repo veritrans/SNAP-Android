@@ -394,6 +394,7 @@ class PaymentOptionActivity : BaseActivity() {
                     totalAmount = totalAmount,
                     paymentType = paymentMethodItem.type,
                     customerInfo = customerInfo,
+                    itemInfo = itemInfo
                 )
             )
         }
