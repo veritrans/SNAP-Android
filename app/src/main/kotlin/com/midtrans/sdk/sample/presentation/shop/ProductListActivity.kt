@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
 import com.midtrans.sdk.sample.presentation.shop.component.ProductListPage
 import com.midtrans.sdk.sample.util.Constant.COLOR_BLUE
 import com.midtrans.sdk.sample.util.Constant.COLOR_GREEN
@@ -32,14 +31,9 @@ class ProductListActivity : ComponentActivity() {
         buildUiKit()
 
         setContent {
-            Column {
-                ProductListPage {
-                    val intent = OrderReviewActivity.getOrderReviewActivityIntent(
-                        this@ProductListActivity,
-                        it
-                    )
-                    startActivity(intent)
-                }
+            ProductListPage {
+                val intent = OrderReviewActivity.getOrderReviewActivityIntent(this, it)
+                startActivity(intent)
             }
         }
     }
@@ -61,23 +55,19 @@ class ProductListActivity : ComponentActivity() {
     }
 
     private fun buildUiKit() {
-        UiKitApi.Builder()
+        val builder = UiKitApi.Builder()
             .withContext(this.applicationContext)
             .withMerchantUrl("https://fiesta-point-sample.herokuapp.com/")
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
             .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
-            .withCustomColors(
-                getCustomColor(inputColor)
-            )
-            .build()
+
+        getCustomColor(inputColor)?.let { builder.withCustomColors(it) }
+
+        builder.build()
     }
 
-    private fun getCustomColor(inputColor: String): CustomColors {
-        var color = CustomColors(
-            interactiveFillInverse = 0X383942,
-            textInverse = 0xFFFFFF,
-            supportNeutralFill = 0XEFF2F6
-        )
+    private fun getCustomColor(inputColor: String): CustomColors? {
+        var color: CustomColors? = null
         when (inputColor) {
             COLOR_BLUE -> {
                 color = CustomColors(
