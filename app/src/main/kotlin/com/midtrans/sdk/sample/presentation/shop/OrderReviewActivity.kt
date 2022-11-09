@@ -1,4 +1,4 @@
-package com.midtrans.sdk.sample.view.shop
+package com.midtrans.sdk.sample.presentation.shop
 
 import android.content.Context
 import android.content.Intent

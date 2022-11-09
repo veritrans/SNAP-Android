@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round">
 
         <activity
-            android:name=".view.shop.ProductListActivity"
+            android:name=".presentation.shop.ProductListActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.Light">
@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.shop.OrderReviewActivity"
+            android:name=".presentation.shop.OrderReviewActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.Light" />
 

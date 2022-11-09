@@ -1,4 +1,4 @@
-package com.midtrans.sdk.sample.view.shop.component
+package com.midtrans.sdk.sample.presentation.shop.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
