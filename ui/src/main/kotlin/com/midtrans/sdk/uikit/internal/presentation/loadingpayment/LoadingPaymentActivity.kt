@@ -228,9 +228,9 @@ class LoadingPaymentActivity : BaseActivity() {
             val intent = PaymentOptionActivity.openPaymentOptionPage(
                 activityContext = this,
                 snapToken = it.token,
-                totalAmount = viewModel.getAmountInString(transactionDetails),
+                totalAmount = viewModel.getAmountInString(it.transactionDetails),
                 transactionDetail = it.transactionDetails,
-                orderId = viewModel.getOrderId(transactionDetails),
+                orderId = viewModel.getOrderId(it.transactionDetails),
                 paymentList = it.options,
                 customerDetails = customerDetails,
                 creditCard = it.creditCard,
