@@ -272,9 +272,7 @@ class OrderReviewActivity : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
-                onClick = {
-//                    payWithAndroidxActivityResultLauncherToken(snapToken.text)
-                }
+                onClick = {}
             )
             SnapButton(
                 text = "Pay Rp.${(product.price).toString().dropLast(2)}",
@@ -373,14 +371,6 @@ class OrderReviewActivity : ComponentActivity() {
             ),
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
             customerDetails = customerDetails
-        )
-    }
-
-    private fun payWithAndroidxActivityResultLauncherToken(token: String?) {
-        uiKitApi.startPaymentWithAndroidXToken(
-            activity = this@OrderReviewActivity,
-            launcher = launcher,
-            snapToken = token
         )
     }
 
