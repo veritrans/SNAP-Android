@@ -420,6 +420,7 @@ class PaymentOptionActivity : BaseActivity() {
                         totalAmount = totalAmount,
                         paymentMethodItem = paymentMethodItem,
                         customerInfo = customerInfo,
+                        itemInfo = itemInfo,
                         paymentTypeItem = this.paymentTypeItem
                     )
                 )
