@@ -17,6 +17,7 @@ import com.midtrans.sdk.sample.presentation.shop.ProductListActivity
 import com.midtrans.sdk.uikit.api.model.CustomColors
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
+import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import kotlinx.parcelize.Parcelize
@@ -28,15 +29,15 @@ class DemoConfigurationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         buildUiKit()
         setContent {
-            MainContent()
+            DemoConfigurationScreen()
         }
     }
 
     @Composable
-    fun MainContent() {
+    fun DemoConfigurationScreen() {
         val state = remember {
             InputState(
-                color = "Blue",
+                color = "Default",
                 installment = "No Installment"
             )
         }
@@ -57,23 +58,26 @@ class DemoConfigurationActivity : AppCompatActivity() {
             )
             DropdownMenu(
                 title = "Color Theme",
-                optionList = listOf("Blue", "Red", "Green"),
+                optionList = listOf("Default", "Blue", "Red", "Green"),
                 state = state
             )
             Text(text = state.installment)
             Text(text = state.color)
 
-            Button(onClick = {
-                startActivity(
-                    ProductListActivity.getProductListActivity(
+            SnapButton(
+                text = "Launch Demo App", style = SnapButton.Style.PRIMARY,
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
+                onClick = {
+                    val intent = ProductListActivity.getProductListActivity(
                         this@DemoConfigurationActivity,
                         state.color,
                         state.installment
                     )
-                )
-            }) {
-                Text(text = "Simple Button")
-            }
+                    startActivity(intent)
+                }
+            )
         }
     }
 
@@ -144,13 +148,6 @@ class DemoConfigurationActivity : AppCompatActivity() {
             .withMerchantUrl("https://fiesta-point-sample.herokuapp.com/")
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
             .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
-            .withCustomColors(
-                CustomColors(
-                    interactiveFillInverse = 0x0e4e95,
-                    textInverse = 0xFFFFFF,
-                    supportNeutralFill = 0x3e71aa
-                )
-            )
             .build()
     }
 }
