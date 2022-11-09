@@ -7,6 +7,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import com.midtrans.sdk.sample.presentation.shop.component.ProductListPage
+import com.midtrans.sdk.sample.util.Constant.COLOR_BLUE
+import com.midtrans.sdk.sample.util.Constant.COLOR_GREEN
+import com.midtrans.sdk.sample.util.Constant.COLOR_RED
 import com.midtrans.sdk.uikit.api.model.CustomColors
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
@@ -15,12 +18,12 @@ class ProductListActivity : ComponentActivity() {
 
     private val inputColor: String by lazy {
         intent.getStringExtra(EXTRA_INPUT_COLOR)
-            ?: throw RuntimeException("Order ID must not be empty")
+            ?: throw RuntimeException("Input Color must not be empty")
     }
 
     private val installment: String by lazy {
         intent.getStringExtra(EXTRA_INPUT_INSTALLMENT)
-            ?: throw RuntimeException("Order ID must not be empty")
+            ?: throw RuntimeException("Installment must not be empty")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,21 +79,21 @@ class ProductListActivity : ComponentActivity() {
             supportNeutralFill = 0XEFF2F6
         )
         when (inputColor) {
-            "Blue" -> {
+            COLOR_BLUE -> {
                 color = CustomColors(
                     interactiveFillInverse = 0x0e4e95,
                     textInverse = 0xFFFFFF,
                     supportNeutralFill = 0x3e71aa
                 )
             }
-            "Red" -> {
+            COLOR_RED -> {
                 color = CustomColors(
                     interactiveFillInverse = 0xb11235,
                     textInverse = 0xFFFFFF,
                     supportNeutralFill = 0xf36b89
                 )
             }
-            "Green" -> {
+            COLOR_GREEN -> {
                 color = CustomColors(
                     interactiveFillInverse = 0x32ad4a,
                     textInverse = 0xFFFFFF,

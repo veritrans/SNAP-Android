@@ -1,7 +1,6 @@
 package com.midtrans.sdk.sample.presentation.config
 
 import android.os.Bundle
-import android.os.Parcelable
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
@@ -14,13 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.sample.presentation.shop.ProductListActivity
-import com.midtrans.sdk.uikit.api.model.CustomColors
+import com.midtrans.sdk.sample.util.Constant.COLOR_BLUE
+import com.midtrans.sdk.sample.util.Constant.COLOR_DEFAULT
+import com.midtrans.sdk.sample.util.Constant.COLOR_GREEN
+import com.midtrans.sdk.sample.util.Constant.COLOR_RED
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
-import kotlinx.parcelize.Parcelize
 
 
 class DemoConfigurationActivity : AppCompatActivity() {
@@ -37,7 +38,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
     fun DemoConfigurationScreen() {
         val state = remember {
             InputState(
-                color = "Default",
+                color = COLOR_DEFAULT,
                 installment = "No Installment"
             )
         }
@@ -57,12 +58,10 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 state = state
             )
             DropdownMenu(
-                title = "Color Theme",
-                optionList = listOf("Default", "Blue", "Red", "Green"),
+                title = COLOR_THEME,
+                optionList = listOf(COLOR_DEFAULT, COLOR_RED, COLOR_BLUE, COLOR_GREEN),
                 state = state
             )
-            Text(text = state.installment)
-            Text(text = state.color)
 
             SnapButton(
                 text = "Launch Demo App", style = SnapButton.Style.PRIMARY,
@@ -125,8 +124,8 @@ class DemoConfigurationActivity : AppCompatActivity() {
                                 selectedOptionText = selectionOption
                                 expanded = false
                                 when (title) {
-                                    "Installment" -> state.installment = selectedOptionText
-                                    "Color Theme" -> state.color = selectedOptionText
+                                    INSTALLMENT -> state.installment = selectedOptionText
+                                    COLOR_THEME -> state.color = selectedOptionText
                                 }
                             },
                             enabled = true
@@ -149,6 +148,11 @@ class DemoConfigurationActivity : AppCompatActivity() {
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
             .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
             .build()
+    }
+
+    companion object {
+        private const val COLOR_THEME = "Color Theme"
+        private const val INSTALLMENT = "Installment"
     }
 }
 
