@@ -91,6 +91,7 @@ class UobSelectionActivity : BaseActivity() {
                         amount = amount,
                         orderId = orderId,
                         customerInfo = customerInfo,
+                        itemInfo = itemInfo,
                         remainingTime = viewModel.getExpiredTime()
                     )
                 )
@@ -164,6 +165,7 @@ class UobSelectionActivity : BaseActivity() {
                                             amount = amount,
                                             orderId = orderId,
                                             customerInfo = customerInfo,
+                                            itemInfo = itemInfo,
                                             remainingTime = viewModel.getExpiredTime()
                                         )
                                     )
