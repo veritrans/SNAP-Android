@@ -1,8 +1,11 @@
 package com.midtrans.sdk.uikit.internal.base
 
 import androidx.lifecycle.ViewModel
+import com.midtrans.sdk.corekit.api.model.BinData
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
+import com.midtrans.sdk.corekit.internal.analytics.PageName
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -57,7 +60,8 @@ internal open class BaseViewModel : ViewModel() {
 
     protected fun trackSnapChargeResult(
         response: TransactionResponse,
-        pageName: String
+        pageName: String,
+        paymentMethodName: String
     ) {
         eventAnalytics?.trackSnapChargeResult(
             pageName = pageName,
@@ -66,7 +70,7 @@ internal open class BaseViewModel : ViewModel() {
             currency = response.currency.orEmpty(),
             statusCode = response.statusCode.orEmpty(),
             transactionId = response.transactionId.orEmpty(),
-            paymentMethodName = response.paymentType.orEmpty(),
+            paymentMethodName = paymentMethodName,
             responseTime = getResponseTime(),
             bank = response.bank,
             channelResponseCode = response.channelResponseCode,
@@ -96,5 +100,24 @@ internal open class BaseViewModel : ViewModel() {
             pageName = pageName,
             paymentMethodName = paymentMethodName
         )
+    }
+
+    protected fun trackCreditDebitCardExbinResponse(binData: BinData?) {
+        eventAnalytics?.trackSnapExbinResponse(
+            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+            paymentMethodName = PaymentType.CREDIT_CARD,
+            registrationRequired = binData?.registrationRequired,
+            countryCode = binData?.countryCode,
+            channel = binData?.channel,
+            brand = binData?.brand,
+            binType = binData?.binType,
+            binClass = binData?.binClass,
+            bin = binData?.bin,
+            bankCode = binData?.bankCode,
+        )
+    }
+
+    protected fun trackPageClosed(pageName: String) {
+        eventAnalytics?.trackSnapPageClosed(pageName)
     }
 }

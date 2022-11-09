@@ -22,7 +22,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
-import com.midtrans.sdk.corekit.api.model.*
+import com.midtrans.sdk.corekit.api.model.CreditCard
+import com.midtrans.sdk.corekit.api.model.CustomerDetails
+import com.midtrans.sdk.corekit.api.model.PaymentMethod
+import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.Promo
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
@@ -41,7 +46,9 @@ import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobSelectionActi
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.presentation.paylater.PayLaterActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CANCELED
 import com.midtrans.sdk.uikit.internal.view.*
+import javax.inject.Inject
 
 class PaymentOptionActivity : BaseActivity() {
 
@@ -90,8 +97,11 @@ class PaymentOptionActivity : BaseActivity() {
         }
     }
 
+    @Inject
+    internal lateinit var vmFactory: ViewModelProvider.Factory
+
     private val viewModel: PaymentOptionViewModel by lazy {
-        ViewModelProvider(this).get(PaymentOptionViewModel::class.java)
+        ViewModelProvider(this, vmFactory).get(PaymentOptionViewModel::class.java)
     }
 
     private val snapToken: String by lazy {
@@ -149,6 +159,8 @@ class PaymentOptionActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        UiKitApi.getDefaultInstance().daggerComponent.inject(this)
+
         paymentMethods = viewModel.initiateList(paymentList, isTabletDevice())
         customerInfo = viewModel.getCustomerInfo(customerDetail)
 
@@ -174,6 +186,20 @@ class PaymentOptionActivity : BaseActivity() {
                 )
             }
         }
+    }
+
+    override fun onBackPressed() {
+        viewModel.trackPaymentListPageClosed()
+        val resultIntent = Intent().putExtra(
+            UiKitConstants.KEY_TRANSACTION_RESULT,
+            TransactionResult(
+                status = STATUS_CANCELED,
+                transactionId = "",
+                paymentType = ""
+            )
+        )
+        setResult(Activity.RESULT_OK, resultIntent)
+        super.onBackPressed()
     }
 
     @Preview
@@ -324,13 +350,7 @@ class PaymentOptionActivity : BaseActivity() {
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                result?.data?.let {
-                    val transactionResult = it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT) as TransactionResult
-                    Intent().apply {
-                        putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, transactionResult)
-                        setResult(RESULT_OK, this)
-                    }
-                }
+                setResult(Activity.RESULT_OK, result.data)
                 finish()
             } else {
                 setResult(Activity.RESULT_CANCELED)

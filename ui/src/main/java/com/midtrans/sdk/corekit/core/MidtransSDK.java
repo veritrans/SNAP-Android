@@ -1,5 +1,7 @@
 package com.midtrans.sdk.corekit.core;
 
+import static com.midtrans.sdk.corekit.core.Logger.TAG;
+
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -13,6 +15,7 @@ import com.midtrans.sdk.uikit.SdkUIFlowBuilder;
  * Created by shivam on 10/19/15.
  */
 public class MidtransSDK {
+    private static final String ADD_TRANSACTION_DETAILS = "Add transaction request details.";
 
     private static SdkUIFlowBuilder sdkBuilder;
     private static volatile MidtransSDK midtransSDK;
@@ -40,7 +43,7 @@ public class MidtransSDK {
         if (transactionRequest != null) {
             this.transactionRequest = transactionRequest;
         } else {
-//            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
         }
     }
 
@@ -69,7 +72,7 @@ public class MidtransSDK {
         if (isTransactionRequestAvailable() && uiflow != null) {
             uiflow.runUIFlow(context, snapToken);
         } else {
-//            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
         }
     }
 
@@ -89,7 +92,7 @@ public class MidtransSDK {
             sdkBuilder = newSdkBuilder;
             midtransSDK.uiflow = new ISdkFlow();
         } else {
-//            Logger.e("sdk is not initialized.");
+            Logger.e("sdk is not initialized.");
         }
 
         return midtransSDK;

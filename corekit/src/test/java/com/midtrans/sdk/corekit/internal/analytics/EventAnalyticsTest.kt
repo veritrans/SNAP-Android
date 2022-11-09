@@ -4,15 +4,25 @@ import com.midtrans.sdk.corekit.BuildConfig
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_RESULTS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CTA_CLICKED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_EXBIN_RESPONSE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_HOW_TO_PAY_VIEWED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_CLOSED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CTA_NAME
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BANK_CODE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BIN
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BIN_CLASSS
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BIN_TYPE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BRAND
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_CHANNEL
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_COUNTRY_CODE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CURRENCY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_FRAUD_STATUS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAGE_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAYMENT_METHOD_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PLATFORM
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_REGISTRATION_REQUIRED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_RESPONSE_TIME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TOKEN
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STATUS_CODE
@@ -173,6 +183,48 @@ internal class EventAnalyticsTest {
                 PROPERTY_PAGE_NAME to "page-name",
                 PROPERTY_PAYMENT_METHOD_NAME to "payment-type"
             )
+        )
+    }
+
+    @Test
+    fun verifyTrackSnapExbinResponse() {
+        eventAnalytics.trackSnapExbinResponse(
+            pageName = "page-name",
+            paymentMethodName = "payment-type",
+            registrationRequired = "false",
+            countryCode = "country-code",
+            channel = "channel",
+            brand = "brand",
+            binType = "bin-type",
+            binClass = "bin-class",
+            bin = "bin",
+            bankCode = "bank-code"
+        )
+        verify(mixpanelTracker).trackEvent(
+            eventName = EVENT_SNAP_EXBIN_RESPONSE,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to "page-name",
+                PROPERTY_PAYMENT_METHOD_NAME to "payment-type",
+                PROPERTY_REGISTRATION_REQUIRED to "false",
+                PROPERTY_CARD_COUNTRY_CODE to "country-code",
+                PROPERTY_CARD_CHANNEL to "channel",
+                PROPERTY_CARD_BRAND to "brand",
+                PROPERTY_CARD_BIN_TYPE to "bin-type",
+                PROPERTY_CARD_BIN_CLASSS to "bin-class",
+                PROPERTY_CARD_BIN to "bin",
+                PROPERTY_CARD_BANK_CODE to "bank-code"
+            )
+        )
+    }
+
+    @Test
+    fun verifyTrackSnapPageClosed() {
+        eventAnalytics.trackSnapPageClosed(
+            pageName = "page-name"
+        )
+        verify(mixpanelTracker).trackEvent(
+            eventName = EVENT_SNAP_PAGE_CLOSED,
+            properties = mapOf(PROPERTY_PAGE_NAME to "page-name")
         )
     }
 }

@@ -114,10 +114,9 @@ class SavedCardActivity: BaseActivity() {
             }
         })
         viewModel.getTransactionStatusLiveData().observe(this, Observer {
-            var intent = Intent()
-            when (it.statusCode) {
+            val intent = when (it.statusCode) {
                 UiKitConstants.STATUS_CODE_200 -> {
-                    intent = SuccessScreenActivity.getIntent(
+                    SuccessScreenActivity.getIntent(
                         activityContext = this@SavedCardActivity,
                         total = totalAmount,
                         orderId = it?.orderId.toString(),
@@ -125,7 +124,7 @@ class SavedCardActivity: BaseActivity() {
                     )
                 }
                 else -> {
-                    intent = ErrorScreenActivity.getIntent(
+                    ErrorScreenActivity.getIntent(
                         activityContext = this@SavedCardActivity,
                         title = it.statusCode.toString(),
                         content = it.transactionStatus.toString()
@@ -154,7 +153,7 @@ class SavedCardActivity: BaseActivity() {
         totalAmount: String,
         orderId: String,
         customerDetail: CustomerInfo?
-    ){
+    ) {
         var previousEightDigitNumber = ""
         val bankCodeId by viewModel.bankIconId.observeAsState(null)
         val isCvvSavedCardInvalid by remember { mutableStateOf(false)}

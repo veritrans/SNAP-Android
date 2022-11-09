@@ -53,7 +53,8 @@ internal class DirectDebitViewModel @Inject constructor(
                     transactionResponse.value = result
                     trackSnapChargeResult(
                         response = result,
-                        pageName = pageName
+                        pageName = pageName,
+                        paymentMethodName = paymentType
                     )
                 }
 
