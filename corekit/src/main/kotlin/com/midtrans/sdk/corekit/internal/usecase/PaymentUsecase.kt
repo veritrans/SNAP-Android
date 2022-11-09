@@ -89,6 +89,8 @@ internal class PaymentUsecase(
             snapRepository.getTransactionDetail(snapToken)
                 .map (setAnalyticsUserIdentityWithSnapToken(isUserSet))
                 .map (trackCommonTransactionProperties())
+                .subscribeOn(scheduler.io())
+                .observeOn(scheduler.ui())
                 .subscribe(
                     { responseData ->
                         val methods = mutableListOf<PaymentMethod>()
