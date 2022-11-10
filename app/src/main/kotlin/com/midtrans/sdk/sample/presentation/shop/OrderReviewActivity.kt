@@ -420,6 +420,17 @@ class OrderReviewActivity : ComponentActivity() {
             "hour",
             1
         )
+
+
+        // set free text on BCA VA Payment
+        // un-comment for testing custom va
+        /**
+        val freeText = createSampleBcaFreeText()
+        val vaNumber = "12345678"
+        val subCompanyCode = "123"
+        val bcaVaRequestModel = BcaBankTransferRequestModel(vaNumber, freeText, subCompanyCode)
+        transactionRequest.bcaVa = bcaVaRequestModel
+         */
         MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().transactionRequest = transactionRequest
         MidtransSDK.getInstance().startPaymentUiFlow(this.applicationContext)
