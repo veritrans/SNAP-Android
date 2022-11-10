@@ -5,10 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Text
 import com.midtrans.sdk.sample.presentation.shop.component.ProductListPage
-import com.midtrans.sdk.sample.util.Constant.COLOR_BLUE
-import com.midtrans.sdk.sample.util.Constant.COLOR_GREEN
-import com.midtrans.sdk.sample.util.Constant.COLOR_RED
+import com.midtrans.sdk.sample.util.DemoConstant.COLOR_BLUE
+import com.midtrans.sdk.sample.util.DemoConstant.COLOR_GREEN
+import com.midtrans.sdk.sample.util.DemoConstant.COLOR_RED
 import com.midtrans.sdk.uikit.api.model.CustomColors
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
@@ -20,28 +22,39 @@ class ProductListActivity : ComponentActivity() {
             ?: throw RuntimeException("Input Color must not be empty")
     }
 
+    private val installment: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_INSTALLMENT)
+            ?: throw RuntimeException("Installment must not be empty")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         buildUiKit()
 
         setContent {
-            ProductListPage {
-                val intent = OrderReviewActivity.getOrderReviewActivityIntent(this, it)
-                startActivity(intent)
+            Column() {
+                Text(text = installment)
+                ProductListPage {
+                    val intent = OrderReviewActivity.getOrderReviewActivityIntent(this@ProductListActivity, product = it)
+                    startActivity(intent)
+                }
             }
         }
     }
 
     companion object {
         private const val EXTRA_INPUT_COLOR = "productList.extra.inputColor"
+        private const val EXTRA_INPUT_INSTALLMENT = "productList.extra.installment"
 
         fun getProductListActivity(
             activityContext: Context,
-            color: String
+            color: String,
+            installment: String
         ): Intent {
             return Intent(activityContext, ProductListActivity::class.java).apply {
                 putExtra(EXTRA_INPUT_COLOR, color)
+                putExtra(EXTRA_INPUT_INSTALLMENT, installment)
             }
         }
     }

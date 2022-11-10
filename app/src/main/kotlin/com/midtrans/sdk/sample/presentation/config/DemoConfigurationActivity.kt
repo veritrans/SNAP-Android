@@ -13,10 +13,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.sample.presentation.shop.ProductListActivity
-import com.midtrans.sdk.sample.util.Constant.COLOR_BLUE
-import com.midtrans.sdk.sample.util.Constant.COLOR_DEFAULT
-import com.midtrans.sdk.sample.util.Constant.COLOR_GREEN
-import com.midtrans.sdk.sample.util.Constant.COLOR_RED
+import com.midtrans.sdk.sample.util.DemoConstant.BCA
+import com.midtrans.sdk.sample.util.DemoConstant.BNI
+import com.midtrans.sdk.sample.util.DemoConstant.BRI
+import com.midtrans.sdk.sample.util.DemoConstant.CIMB
+import com.midtrans.sdk.sample.util.DemoConstant.COLOR_BLUE
+import com.midtrans.sdk.sample.util.DemoConstant.COLOR_DEFAULT
+import com.midtrans.sdk.sample.util.DemoConstant.COLOR_GREEN
+import com.midtrans.sdk.sample.util.DemoConstant.COLOR_RED
+import com.midtrans.sdk.sample.util.DemoConstant.MANDIRI
+import com.midtrans.sdk.sample.util.DemoConstant.MAYBANK
+import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
+import com.midtrans.sdk.sample.util.DemoConstant.OFFLINE
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.view.SnapButton
@@ -38,10 +46,25 @@ class DemoConfigurationActivity : AppCompatActivity() {
     fun DemoConfigurationScreen() {
         val state = remember {
             InputState(
-                color = COLOR_DEFAULT
+                color = COLOR_DEFAULT,
+                installment = NO_INSTALLMENT
             )
         }
         Column(Modifier.padding(16.dp)) {
+            DropdownMenu(
+                title = INSTALLMENT,
+                optionList = listOf(
+                    NO_INSTALLMENT,
+                    MANDIRI,
+                    BCA,
+                    BNI,
+                    BRI,
+                    CIMB,
+                    MAYBANK,
+                    OFFLINE
+                ),
+                state = state
+            )
             DropdownMenu(
                 title = COLOR_THEME,
                 optionList = listOf(COLOR_DEFAULT, COLOR_RED, COLOR_BLUE, COLOR_GREEN),
@@ -56,7 +79,8 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 onClick = {
                     val intent = ProductListActivity.getProductListActivity(
                         this@DemoConfigurationActivity,
-                        state.color
+                        state.color,
+                        state.installment
                     )
                     startActivity(intent)
                 }
@@ -108,6 +132,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                                 selectedOptionText = selectionOption
                                 expanded = false
                                 when (title) {
+                                    INSTALLMENT -> state.installment = selectedOptionText
                                     COLOR_THEME -> state.color = selectedOptionText
                                 }
                             },
@@ -135,11 +160,14 @@ class DemoConfigurationActivity : AppCompatActivity() {
 
     companion object {
         private const val COLOR_THEME = "Color Theme"
+        private const val INSTALLMENT = "Installment"
     }
 }
 
 class InputState(
-    color: String
+    color: String,
+    installment: String
 ) {
+    var installment by mutableStateOf(installment)
     var color by mutableStateOf(color)
 }
