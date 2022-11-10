@@ -1,12 +1,9 @@
 package com.midtrans.sdk.uikit.internal.model
 
-/**
- * promoAmount and pointAmount should be in negative
-*/
 data class CreditCardPromoInfo(
     val promoName: String?,
-    val promoAmount: Double?,
+    val promoAmount: String?,
     val pointName: String?,
-    val pointAmount: Double?,
-    val discountedAmount: Double?
+    val pointAmount: String?,
+    val discountedAmount: String?
 )

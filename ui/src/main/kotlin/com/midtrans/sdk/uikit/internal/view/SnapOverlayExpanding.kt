@@ -167,10 +167,10 @@ fun PreviewOrderDetail() {
         ),
         creditCardPromoInfo = CreditCardPromoInfo(
             promoName = "promo-name",
-            promoAmount = -1000.00,
+            promoAmount = "-Rp1000",
             pointName = "point-name",
-            pointAmount = -2000.00,
-            discountedAmount = 7000.00
+            pointAmount = "-Rp2000",
+            discountedAmount = "Rp7000"
         )
     )
 }
@@ -312,15 +312,17 @@ private fun SnapItemDetail(
 @Composable
 private fun SnapPromoDetail(
     promoName: String?,
-    promoAmount: Double?,
+    promoAmount: String?,
     pointName: String?,
-    pointAmount: Double?,
-    discountedAmount: Double?
+    pointAmount: String?,
+    discountedAmount: String?
 ) {
     Column(
         modifier = Modifier.background(color = SnapColors.getARGBColor(SnapColors.backgroundFillPrimary))
     ) {
-        if (promoName != null && promoAmount != null) {
+        val isPromoAvailable = promoName != null && promoAmount != null
+        val isPointAvailable = pointName != null && pointAmount != null
+        if (isPromoAvailable) {
             Row(
                 modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -341,19 +343,19 @@ private fun SnapPromoDetail(
             }
             Row(modifier = Modifier.padding(top = 4.dp)) {
                 Text(
-                    text = promoName,
+                    text = promoName.orEmpty(),
                     style = SnapTypography.STYLES.snapTextSmallRegular,
                     color = SnapColors.getARGBColor(SnapColors.textSecondary),
                     modifier = Modifier.weight(1f)
                 )
                 Text(
-                    text = promoAmount.currencyFormatRp(),
+                    text = promoAmount.orEmpty(),
                     style = SnapTypography.STYLES.snapTextSmallRegular,
                     color = SnapColors.getARGBColor(SnapColors.textSecondary)
                 )
             }
         }
-        if (pointName != null && pointAmount != null) {
+        if (isPointAvailable) {
             Text(
                 modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
                 text = stringResource(id = R.string.payment_details_point_redemption_title),
@@ -362,24 +364,26 @@ private fun SnapPromoDetail(
             )
             Row(modifier = Modifier.padding(top = 4.dp)) {
                 Text(
-                    text = pointName,
+                    text = pointName.orEmpty(),
                     style = SnapTypography.STYLES.snapTextSmallRegular,
                     color = SnapColors.getARGBColor(SnapColors.textSecondary),
                     modifier = Modifier.weight(1f)
                 )
                 Text(
-                    text = pointAmount.currencyFormatRp(),
+                    text = pointAmount.orEmpty(),
                     style = SnapTypography.STYLES.snapTextSmallRegular,
                     color = SnapColors.getARGBColor(SnapColors.textSecondary)
                 )
             }
         }
 
-        DashedDivider(
-            modifier = Modifier.padding(top = 12.dp),
-            thickness = 1.dp,
-            color = SnapColors.getARGBColor(SnapColors.lineLightMuted)
-        )
+        if (isPromoAvailable || isPointAvailable) {
+            DashedDivider(
+                modifier = Modifier.padding(top = 12.dp),
+                thickness = 1.dp,
+                color = SnapColors.getARGBColor(SnapColors.lineLightMuted)
+            )
+        }
 
         Row(modifier = Modifier.padding(top = 12.dp)) {
             Text(
@@ -389,7 +393,7 @@ private fun SnapPromoDetail(
                 modifier = Modifier.weight(1f)
             )
             Text(
-                text = discountedAmount?.currencyFormatRp().orEmpty(),
+                text = discountedAmount.orEmpty(),
                 style = SnapTypography.STYLES.snapTextMediumRegular,
                 color = SnapColors.getARGBColor(SnapColors.textPrimary)
             )
