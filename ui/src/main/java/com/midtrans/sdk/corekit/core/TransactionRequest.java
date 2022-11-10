@@ -80,7 +80,7 @@ public class TransactionRequest {
             this.amount = amount;
             this.currency = currency;
         } else {
-//            Logger.e("Invalid transaction data.");
+            Logger.e("Invalid transaction data.");
         }
     }
 
@@ -97,7 +97,7 @@ public class TransactionRequest {
             this.currency = "IDR";
             this.paymentMethod = -1; //Constants.PAYMENT_METHOD_NOT_SELECTED;
         } else {
-//            Logger.e("Invalid transaction data.");
+            Logger.e("Invalid transaction data.");
         }
     }
 
@@ -162,7 +162,7 @@ public class TransactionRequest {
      */
     @Deprecated
     public void setCardPaymentInfo(String clickType, boolean isSecureCard) {
-//        Logger.i("clicktype:" + clickType + ",isSecured:" + isSecureCard);
+        Logger.i("clicktype:" + clickType + ",isSecured:" + isSecureCard);
         this.cardClickType = clickType;
         this.isSecureCard = isSecureCard;
     }

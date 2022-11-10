@@ -1,10 +1,8 @@
 package com.midtrans.sdk.corekit.core;
 
 import android.content.Context;
-import android.content.Intent;
-
 import androidx.annotation.NonNull;
-
+import com.midtrans.sdk.corekit.api.model.PaymentType;
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
 import com.midtrans.sdk.corekit.models.TransactionResponse;
 import com.midtrans.sdk.uikit.api.callback.Callback;
@@ -14,7 +12,6 @@ import com.midtrans.sdk.uikit.api.model.SnapTransactionDetail;
 import com.midtrans.sdk.uikit.api.model.TransactionResult;
 import com.midtrans.sdk.uikit.external.UiKitApi;
 import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem;
-import com.midtrans.sdk.corekit.api.model.PaymentType;
 import java.lang.ref.WeakReference;
 
 /**
@@ -36,7 +33,7 @@ public class ISdkFlow {
     };
 
     public void runUIFlow(Context context, String snapToken) {
-        if(snapToken != null) {
+        if (snapToken != null) {
             UiKitApi.Companion.getDefaultInstance().startPayment(
                     context,
                     snapToken,
@@ -268,7 +265,14 @@ public class ISdkFlow {
     }
 
     private static void deliverCallback(TransactionResult transactionResult) {
-        com.midtrans.sdk.corekit.models.snap.TransactionResult result = new com.midtrans.sdk.corekit.models.snap.TransactionResult(new TransactionResponse(transactionResult));
+        com.midtrans.sdk.corekit.models.snap.TransactionResult result;
+
+        if (transactionResult.getStatus().contains("canceled")) {
+            result = new com.midtrans.sdk.corekit.models.snap.TransactionResult(true);
+        } else {
+            result = new com.midtrans.sdk.corekit.models.snap.TransactionResult(new TransactionResponse(transactionResult));
+        }
+
         if (transactionFinishedCallback != null && transactionFinishedCallback.get() != null) {
             transactionFinishedCallback.get().onTransactionFinished(result);
         }

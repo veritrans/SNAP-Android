@@ -275,7 +275,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 }
             }
             SnapButton(
-                text = stringResource(getCtaName(paymentType)),
+                text = stringResource(getDownloadInfoCtaName(paymentType)),
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(top = 16.dp, start = 16.dp, end = 16.dp),
@@ -283,7 +283,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 style = SnapButton.Style.TERTIARY
             ) {
                 viewModel?.trackSnapButtonClicked(
-                    ctaName = getStringResourceInEnglish(getCtaName(paymentType)),
+                    ctaName = getStringResourceInEnglish(getDownloadInfoCtaName(paymentType)),
                     paymentType = paymentType
                 )
                 startActivity(
@@ -295,21 +295,31 @@ internal class ConvenienceStoreActivity : BaseActivity() {
 
             }
             SnapButton(
-                text = stringResource(id = R.string.indomaret_cta_2),
+                text = stringResource(id = getClosePageCtaName(paymentType)),
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(16.dp),
                 enabled = errorState.value==null && !loading,
                 style = if (errorState.value==null && !loading) SnapButton.Style.PRIMARY else SnapButton.Style.PRIMARY
             ) {
-
+                viewModel?.trackSnapButtonClicked(
+                    ctaName = getStringResourceInEnglish(getClosePageCtaName(paymentType)),
+                    paymentType = paymentType
+                )
                 onBackPressed()
-
             }
         }
     }
 
-    private fun getCtaName(paymentType: String): Int {
+    private fun getDownloadInfoCtaName(paymentType: String): Int {
+        return when(paymentType) {
+            PaymentType.INDOMARET -> R.string.indomaret_cta_1
+            PaymentType.ALFAMART -> R.string.alfa_group_cta_1
+            else -> 0
+        }
+    }
+
+    private fun getClosePageCtaName(paymentType: String): Int {
         return when(paymentType) {
             PaymentType.INDOMARET -> R.string.indomaret_cta_2
             PaymentType.ALFAMART -> R.string.alfa_group_cta_2

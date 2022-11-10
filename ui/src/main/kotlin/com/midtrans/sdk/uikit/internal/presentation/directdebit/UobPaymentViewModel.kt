@@ -46,7 +46,8 @@ internal class UobPaymentViewModel @Inject constructor(
                     transactionResponse.value = result
                     trackSnapChargeResult(
                         response = result,
-                        pageName = PageName.UOB_PAGE
+                        pageName = PageName.UOB_PAGE,
+                        paymentMethodName = PaymentType.UOB_EZPAY
                     )
                 }
 
@@ -96,6 +97,13 @@ internal class UobPaymentViewModel @Inject constructor(
         trackHowToPayViewed(
             paymentMethodName = PaymentType.UOB_EZPAY,
             pageName = PageName.UOB_PAGE
+        )
+    }
+
+    fun trackOpenDeeplink() {
+        trackOpenDeeplink(
+            pageName = PageName.UOB_PAGE,
+            paymentMethodName = PaymentType.UOB_EZPAY
         )
     }
 

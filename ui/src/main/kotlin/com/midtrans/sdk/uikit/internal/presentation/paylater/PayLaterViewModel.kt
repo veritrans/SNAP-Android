@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.PayLaterPaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.analytics.PageName
@@ -42,7 +43,11 @@ internal class PayLaterViewModel @Inject constructor(
             paymentRequestBuilder = builder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
-                    trackSnapChargeResult(result, PageName.AKULAKU_PAGE)
+                    trackSnapChargeResult(
+                        response = result,
+                        pageName = PageName.AKULAKU_PAGE,
+                        paymentMethodName = PaymentType.AKULAKU
+                    )
                     _transactionResponseLiveData.value = result
                 }
 
@@ -68,6 +73,13 @@ internal class PayLaterViewModel @Inject constructor(
         trackHowToPayViewed(
             paymentMethodName = paymentType,
             pageName = PageName.AKULAKU_PAGE
+        )
+    }
+
+    fun trackOpenWebView(paymentType: String) {
+        trackOpenDeeplink(
+            pageName = PageName.AKULAKU_PAGE,
+            paymentMethodName = paymentType
         )
     }
 

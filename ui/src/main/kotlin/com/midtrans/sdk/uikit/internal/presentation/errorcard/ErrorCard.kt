@@ -116,7 +116,7 @@ object ErrorCard {
         transactionResponse: TransactionResponse,
         allowRetry: Boolean = false
     ): Int? {
-        var errorType =when (transactionResponse.statusCode) {
+        var errorType = when (transactionResponse.statusCode) {
             "503" -> TIMEOUT_ERROR_DIALOG_FROM_BANK
             "402" -> TID_MID_ERROR_OTHER_PAY_METHOD_AVAILABLE
             "500" -> if (allowRetry) SYSTEM_ERROR_DIALOG_ALLOW_RETRY else SYSTEM_ERROR_DIALOG_DISALLOW_RETRY
@@ -124,7 +124,7 @@ object ErrorCard {
         }
 
         if (errorType == null) {
-            errorType =  when (transactionResponse.transactionStatus) {
+            errorType = when (transactionResponse.transactionStatus) {
                 "deny" -> CARD_ERROR_DECLINED_DISALLOW_RETRY
                 else -> null
             }

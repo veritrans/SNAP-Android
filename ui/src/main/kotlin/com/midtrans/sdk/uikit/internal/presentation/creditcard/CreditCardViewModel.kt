@@ -39,8 +39,7 @@ internal class CreditCardViewModel @Inject constructor(
     private val _binType = MutableLiveData<String>()
     private val _cardIssuerBank = MutableLiveData<String>()
     private val _transactionResponse = MutableLiveData<TransactionResponse>()
-    private val _transactionStatus = MutableLiveData<TransactionResponse>()
-    private val _errorTypeLiveData = MutableLiveData<Int>()
+    private val _errorTypeLiveData = MutableLiveData<Pair<Int?, String>>()
     private val _promoDataLiveData = MutableLiveData<List<PromoData>>()
     private val _netAmountLiveData = MutableLiveData<String>()
     private val _binBlockedLiveData = MutableLiveData<Boolean>()
@@ -58,8 +57,7 @@ internal class CreditCardViewModel @Inject constructor(
     val binType: LiveData<String> = _binType
     val cardIssuerBank: LiveData<String> = _cardIssuerBank
     val transactionResponseLiveData: LiveData<TransactionResponse> = _transactionResponse
-    val transactionStatusLiveData: LiveData<TransactionResponse> = _transactionStatus
-    val errorTypeLiveData: LiveData<Int> = _errorTypeLiveData
+    val errorTypeLiveData: LiveData<Pair<Int?, String>> = _errorTypeLiveData
     val binBlockedLiveData: LiveData<Boolean> = _binBlockedLiveData
     val errorLiveData: LiveData<SnapError> = _errorLiveData
 
@@ -86,16 +84,16 @@ internal class CreditCardViewModel @Inject constructor(
         return date.time
     }
 
-    fun setPromos(promos: List<Promo>?){
+    fun setPromos(promos: List<Promo>?) {
         this.promos = promos
         getPromosData("", "")
     }
 
-    fun setTransactionDetails(transactionDetails: TransactionDetails?){
+    fun setTransactionDetails(transactionDetails: TransactionDetails?) {
         this.transactionDetails = transactionDetails
     }
 
-    fun setPromoId(promoId: Long){
+    fun setPromoId(promoId: Long) {
         _netAmountLiveData.value = transactionDetails?.grossAmount?.currencyFormatRp()
         promos?.find { it.id == promoId }?.discountedGrossAmount?.let {
             _netAmountLiveData.value = it.currencyFormatRp()
@@ -103,7 +101,8 @@ internal class CreditCardViewModel @Inject constructor(
     }
 
     fun getPromosData(binNumber: String, installmentTerm: String) {
-        _promoDataLiveData.value = snapCreditCardUtil.getCreditCardApplicablePromosData(binNumber, promos, installmentTerm)
+        _promoDataLiveData.value =
+            snapCreditCardUtil.getCreditCardApplicablePromosData(binNumber, promos, installmentTerm)
     }
 
     fun getBinData(binNumber: String) {
@@ -112,6 +111,7 @@ internal class CreditCardViewModel @Inject constructor(
             callback = object : Callback<BinResponse> {
                 override fun onSuccess(result: BinResponse) {
                     result.run {
+                        trackCreditDebitCardExbinResponse(data)
                         data?.bankCode?.let {
                             _bankIconId.value = snapCreditCardUtil.getBankIcon(it.lowercase())
                             _cardIssuerBank.value = it
@@ -211,12 +211,12 @@ internal class CreditCardViewModel @Inject constructor(
                         paymentRequestBuilder = ccRequestBuilder,
                         callback = object : Callback<TransactionResponse> {
                             override fun onSuccess(result: TransactionResponse) {
-                                trackSnapChargeResult(
-                                    response = result,
-                                    pageName = PageName.CREDIT_DEBIT_CARD_PAGE
-                                )
+                                trackSnapChargeResult(result)
                                 errorCard.getErrorCardType(result, allowRetry)
-                                    ?.let { _errorTypeLiveData.value = it }
+                                    ?.let {
+                                        val transactionId = result.transactionId.orEmpty()
+                                        _errorTypeLiveData.value = Pair(it, transactionId)
+                                    }
                                     ?: run {
                                         _transactionResponse.value = result
                                         null
@@ -224,14 +224,16 @@ internal class CreditCardViewModel @Inject constructor(
                             }
 
                             override fun onError(error: SnapError) {
-                                _errorTypeLiveData.value = errorCard.getErrorCardType(error, allowRetry)
+                                val errorType = errorCard.getErrorCardType(error, allowRetry)
+                                _errorTypeLiveData.value = Pair(errorType, "")
                             }
                         }
                     )
                 }
 
                 override fun onError(error: SnapError) {
-                    _errorTypeLiveData.value = errorCard.getErrorCardType(error, allowRetry)
+                    val errorType = errorCard.getErrorCardType(error, allowRetry)
+                    _errorTypeLiveData.value = Pair(errorType, "")
                     _errorLiveData.value = error
                 }
             }
@@ -280,13 +282,12 @@ internal class CreditCardViewModel @Inject constructor(
                 callback = object : Callback<TransactionResponse> {
                     override fun onSuccess(result: TransactionResponse) {
                         _transactionResponse.value = result
-                        trackSnapChargeResult(
-                            response = result,
-                            pageName = PageName.CREDIT_DEBIT_CARD_PAGE
-                        )
+                        trackSnapChargeResult(result)
                     }
+
                     override fun onError(error: SnapError) {
-                        _errorTypeLiveData.value = errorCard.getErrorCardType(error, allowRetry)
+                        val errorType = errorCard.getErrorCardType(error, allowRetry)
+                        _errorTypeLiveData.value = Pair(errorType, "")
                         _errorLiveData.value = error
                     }
                 }
@@ -305,7 +306,7 @@ internal class CreditCardViewModel @Inject constructor(
             transactionDetails?.orderId?.let {
                 tokenRequest.withOrderId(it)
             }
-            snapCore.getCardToken(cardTokenRequestBuilder = tokenRequest ,
+            snapCore.getCardToken(cardTokenRequestBuilder = tokenRequest,
                 callback = object : Callback<CardTokenResponse> {
                     override fun onSuccess(result: CardTokenResponse) {
                         var promoName: String? = null
@@ -347,18 +348,18 @@ internal class CreditCardViewModel @Inject constructor(
                             callback = object : Callback<TransactionResponse> {
                                 override fun onSuccess(result: TransactionResponse) {
                                     _transactionResponse.value = result
-                                    trackSnapChargeResult(
-                                        response = result,
-                                        pageName = PageName.CREDIT_DEBIT_CARD_PAGE
-                                    )
+                                    trackSnapChargeResult(result)
                                 }
+
                                 override fun onError(error: SnapError) {
-                                    _errorTypeLiveData.value = errorCard.getErrorCardType(error, allowRetry)
+                                    val errorType = errorCard.getErrorCardType(error, allowRetry)
+                                    _errorTypeLiveData.value = Pair(errorType, "")
                                     _errorLiveData.value = error
                                 }
                             }
                         )
                     }
+
                     override fun onError(error: SnapError) {
                         //TODO: Need to confirm how to handle get token error on UI
                         Log.e("error get 2click token", "error, error, error")
@@ -369,7 +370,7 @@ internal class CreditCardViewModel @Inject constructor(
         }
     }
 
-    fun resetError(){
+    fun resetError() {
         _errorTypeLiveData.value = null
     }
 
@@ -379,7 +380,8 @@ internal class CreditCardViewModel @Inject constructor(
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
                     errorCard.getErrorCardType(result, allowRetry)?.let {
-                        _errorTypeLiveData.value = it
+                        val transactionId = result.transactionId.orEmpty()
+                        _errorTypeLiveData.value = Pair(it, transactionId)
                     } ?: run {
                         _transactionResponse.value = result
                         null
@@ -387,14 +389,15 @@ internal class CreditCardViewModel @Inject constructor(
                 }
 
                 override fun onError(error: SnapError) {
-                    _errorTypeLiveData.value = errorCard.getErrorCardType(error, allowRetry)
+                    val errorType = errorCard.getErrorCardType(error, allowRetry)
+                    _errorTypeLiveData.value = Pair(errorType, "")
                     _errorLiveData.value = error
                 }
             }
         )
     }
 
-    fun deleteSavedCard(snapToken: String, maskedCard: String){
+    fun deleteSavedCard(snapToken: String, maskedCard: String) {
         snapCore.deleteSavedCard(
             snapToken = snapToken,
             maskedCard = maskedCard,
@@ -402,6 +405,7 @@ internal class CreditCardViewModel @Inject constructor(
                 override fun onSuccess(result: DeleteSavedCardResponse) {
                     Log.e("Delete Card Success", "Delete Card Success")
                 }
+
                 override fun onError(error: SnapError) {
                     Log.e("Delete Card Error", "Delete Card Error")
                     _errorLiveData.value = error
@@ -413,6 +417,14 @@ internal class CreditCardViewModel @Inject constructor(
     fun trackSnapButtonClicked(ctaName: String) {
         trackCtaClicked(
             ctaName = ctaName,
+            paymentMethodName = PaymentType.CREDIT_CARD,
+            pageName = PageName.CREDIT_DEBIT_CARD_PAGE
+        )
+    }
+
+    private fun trackSnapChargeResult(response: TransactionResponse) {
+        trackSnapChargeResult(
+            response = response,
             paymentMethodName = PaymentType.CREDIT_CARD,
             pageName = PageName.CREDIT_DEBIT_CARD_PAGE
         )

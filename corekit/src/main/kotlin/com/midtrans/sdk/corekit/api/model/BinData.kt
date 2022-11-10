@@ -9,5 +9,6 @@ data class BinData(
     val binType: String?,
     val bin: String?,
     val bankCode: String?,
+    val binClass: String?,
     val bank: String?
 )

@@ -53,7 +53,8 @@ internal class DirectDebitViewModel @Inject constructor(
                     transactionResponse.value = result
                     trackSnapChargeResult(
                         response = result,
-                        pageName = pageName
+                        pageName = pageName,
+                        paymentMethodName = paymentType
                     )
                 }
 
@@ -80,6 +81,13 @@ internal class DirectDebitViewModel @Inject constructor(
         trackHowToPayViewed(
             paymentMethodName = paymentType,
             pageName = getPageName(paymentType)
+        )
+    }
+
+    fun trackOpenRedirectionUrl(paymentType: String) {
+        trackOpenDeeplink(
+            pageName = getPageName(paymentType),
+            paymentMethodName = paymentType
         )
     }
 

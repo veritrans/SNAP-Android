@@ -207,15 +207,22 @@ class LoadingPaymentActivity : BaseActivity() {
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                result?.data?.let {
-                    val transactionResult = it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT)
-                    val resultIntent = Intent()
-                    transactionResult?.let {
-                        val resultForHost = PublicTransactionResult(transactionResult)
-                        resultIntent.putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, resultForHost)
-                        setResult(RESULT_OK, resultIntent)
-                        UiKitApi.getDefaultInstance().getPaymentCallback()?.onSuccess(resultForHost)
-                    }
+                result?.run {
+                    data?.also {
+                        val transactionResult =
+                            it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT)
+                        val resultIntent = Intent()
+                        transactionResult?.let {
+                            val resultForHost = PublicTransactionResult(transactionResult)
+                            resultIntent.putExtra(
+                                UiKitConstants.KEY_TRANSACTION_RESULT,
+                                resultForHost
+                            )
+                            setResult(RESULT_OK, resultIntent)
+                            UiKitApi.getDefaultInstance().getPaymentCallback()
+                                ?.onSuccess(resultForHost)
+                        }
+                    } ?: setResult(Activity.RESULT_OK)
                 }
                 finish()
             } else {
@@ -228,9 +235,9 @@ class LoadingPaymentActivity : BaseActivity() {
             val intent = PaymentOptionActivity.openPaymentOptionPage(
                 activityContext = this,
                 snapToken = it.token,
-                totalAmount = viewModel.getAmountInString(transactionDetails),
+                totalAmount = viewModel.getAmountInString(it.transactionDetails),
                 transactionDetail = it.transactionDetails,
-                orderId = viewModel.getOrderId(transactionDetails),
+                orderId = viewModel.getOrderId(it.transactionDetails),
                 paymentList = it.options,
                 customerDetails = customerDetails,
                 creditCard = it.creditCard,

@@ -72,7 +72,8 @@ internal class ConvenienceStoreViewModel @Inject constructor(
                     }
                     trackSnapChargeResult(
                         response = result,
-                        pageName = getPageName(paymentType)
+                        pageName = getPageName(paymentType),
+                        paymentMethodName = paymentType
                     )
                 }
 

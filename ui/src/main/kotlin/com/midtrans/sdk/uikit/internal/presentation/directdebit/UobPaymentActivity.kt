@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -282,6 +281,7 @@ class UobPaymentActivity : BaseActivity() {
         url: String,
         transactionResult: TransactionResult
     ) {
+        viewModel.trackOpenDeeplink()
         if (uobMode == PaymentType.UOB_EZPAY_WEB) {
             try {
                 intent = Intent(Intent.ACTION_VIEW)

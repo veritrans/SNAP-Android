@@ -25,6 +25,8 @@ class PageName {
         BCA_VA_PAGE,
         BNI_VA_PAGE,
         BRI_VA_PAGE,
+        PERMATA_VA_PAGE,
+        MANDIRI_E_CHANNEL_PAGE,
         OTHER_VA_PAGE,
         THREE_DS_PAGE,
         NOT_LISTED_PAGE
@@ -55,6 +57,8 @@ class PageName {
         const val BCA_VA_PAGE = "BCA VA Page"
         const val BNI_VA_PAGE = "BNI VA Page"
         const val BRI_VA_PAGE = "BRI VA Page"
+        const val PERMATA_VA_PAGE = "Permata VA Page"
+        const val MANDIRI_E_CHANNEL_PAGE = "Mandiri BP Page"
         const val OTHER_VA_PAGE = "Other VA Page"
         const val NOT_LISTED_PAGE = "Page Not Listed"
     }

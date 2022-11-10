@@ -74,6 +74,19 @@ class UiKitApi private constructor(val builder: Builder) {
         launcher.launch(intent)
     }
 
+    fun startPaymentWithAndroidXToken(
+        activity: Activity,
+        launcher: ActivityResultLauncher<Intent>,
+        snapToken: String?
+    ) {
+        val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
+            activityContext = activity,
+            snapToken = snapToken,
+            transactionDetails = SnapTransactionDetail("", 0.0)
+        )
+        launcher.launch(intent)
+    }
+
     fun startPaymentWithLegacyAndroid(
         activity: Activity,
         requestCode: Int,
