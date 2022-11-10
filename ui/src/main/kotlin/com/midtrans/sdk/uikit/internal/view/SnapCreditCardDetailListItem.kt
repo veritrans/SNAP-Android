@@ -409,6 +409,8 @@ class CardItemState(
     customerEmail: TextFieldValue,
     customerPhone: TextFieldValue,
     promoId: Long,
+    promoName: String?,
+    promoAmount: String?,
     isInstallmentAllowed: Boolean,
     cardItemType: CardItemType = CardItemType.NORMAL_CARD
 ) {
@@ -427,6 +429,8 @@ class CardItemState(
     var customerEmail by mutableStateOf(customerEmail)
     var customerPhone by mutableStateOf(customerPhone)
     var promoId by mutableStateOf(promoId)
+    var promoName by mutableStateOf(promoName)
+    var promoAmount by mutableStateOf(promoAmount)
     var cardItemType by mutableStateOf(cardItemType)
     var isInstallmentAllowed by mutableStateOf(isInstallmentAllowed)
     var isBinBlocked by mutableStateOf(isBinBlocked)
@@ -790,7 +794,7 @@ fun PromoLayout(
     cardItemState: CardItemState
 ): () -> Unit {
     Divider(
-        color = SnapColors.getARGBColor(SnapColors.backgroundBorderSolidSecondary),
+        color = SnapColors.getARGBColor(backgroundBorderSolidSecondary),
         modifier = Modifier
             .fillMaxWidth(1f)
             .padding(top = 16.dp)
@@ -801,7 +805,7 @@ fun PromoLayout(
         style = SnapTypography.STYLES.snapTextMediumRegular
     )
 
-    val promoReset= SnapPromoListRadioButton(
+    val promoReset = SnapPromoListRadioButton(
         states = promoData.toMutableList().apply {
             add(
                 PromoData(
@@ -813,6 +817,8 @@ fun PromoLayout(
         },
         onItemSelectedListener = {
             cardItemState.promoId = it.identifier.orEmpty().toLong()
+            cardItemState.promoName = it.promoName
+            cardItemState.promoAmount = it.discountAmount
         }
     )
     return {
