@@ -27,6 +27,7 @@ import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
 import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
+import com.midtrans.sdk.sample.util.Utils
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.model.*
@@ -378,6 +379,11 @@ class OrderReviewActivity : ComponentActivity() {
                 saveCard = true,
                 secure = true,
                 installment = installment
+            ),
+            expiry = Expiry(
+                startTime = Utils.getFormattedTime(System.currentTimeMillis()),
+                unit = Expiry.UNIT_MINUTE,
+                duration = 1
             ),
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
             customerDetails = customerDetails
