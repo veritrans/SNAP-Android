@@ -47,7 +47,7 @@ private val googleFontProvider: GoogleFont.Provider by lazy {
 
 @OptIn(ExperimentalTextApi::class)
 fun getPoppinsFontFamily(): FontFamily {
-    return UiKitApi.getDefaultInstance().customFontFamily ?: getGoogleFontFamily(
+    return UiKitApi.getDefaultInstanceNullAble()?.customFontFamily ?: getGoogleFontFamily(
         name = "Poppins",
         weights = listOf(
             FontWeight.Normal,

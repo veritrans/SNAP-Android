@@ -128,7 +128,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
         val state = rememberScrollState()
 
         Column {
-            title[paymentType]?.let {
+            title[bankName]?.let {
                 SnapAppBar(title = stringResource(id = it), iconResId = R.drawable.ic_cross) {
                     onBackPressed()
                 }
