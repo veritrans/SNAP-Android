@@ -86,6 +86,7 @@
     <string name="cc_dc_main_screen_placeholder_cvv">***</string>
 
     <string name="cc_dc_main_screen_save_this_card">Save this card</string>
+    <string name="cc_dc_main_screen_use_point_bank">Use point</string>
 
     <string name="cc_dc_main_screen_security_disclaimer">Secure payments by Midtrans</string>
 
