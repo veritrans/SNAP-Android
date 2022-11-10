@@ -1,6 +1,10 @@
 package com.midtrans.sdk.sample.util
 
 object DemoConstant {
+    //Dropdown Titlw
+    const val COLOR_THEME = "Color Theme"
+    const val INSTALLMENT = "Installment"
+
     //Color Theme
     const val COLOR_DEFAULT = "Default"
     const val COLOR_RED = "Red"

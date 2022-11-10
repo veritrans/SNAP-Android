@@ -8,10 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.midtrans.sdk.sample.presentation.config.component.BasicDropdownMenu
 import com.midtrans.sdk.sample.presentation.shop.ProductListActivity
 import com.midtrans.sdk.sample.util.DemoConstant.BCA
 import com.midtrans.sdk.sample.util.DemoConstant.BNI
@@ -21,6 +20,8 @@ import com.midtrans.sdk.sample.util.DemoConstant.COLOR_BLUE
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_DEFAULT
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_GREEN
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_RED
+import com.midtrans.sdk.sample.util.DemoConstant.COLOR_THEME
+import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.MANDIRI
 import com.midtrans.sdk.sample.util.DemoConstant.MAYBANK
 import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
@@ -28,8 +29,6 @@ import com.midtrans.sdk.sample.util.DemoConstant.OFFLINE
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.view.SnapButton
-import com.midtrans.sdk.uikit.internal.view.SnapTextField
-import com.midtrans.sdk.uikit.internal.view.SnapTypography
 
 
 class DemoConfigurationActivity : AppCompatActivity() {
@@ -51,7 +50,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
             )
         }
         Column(Modifier.padding(16.dp)) {
-            DropdownMenu(
+            BasicDropdownMenu(
                 title = INSTALLMENT,
                 optionList = listOf(
                     NO_INSTALLMENT,
@@ -65,7 +64,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 ),
                 state = state
             )
-            DropdownMenu(
+            BasicDropdownMenu(
                 title = COLOR_THEME,
                 optionList = listOf(COLOR_DEFAULT, COLOR_RED, COLOR_BLUE, COLOR_GREEN),
                 state = state
@@ -88,67 +87,6 @@ class DemoConfigurationActivity : AppCompatActivity() {
         }
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
-    @Composable
-    fun DropdownMenu(title: String, optionList: List<String>, state: InputState) {
-        val options by remember { mutableStateOf(optionList) }
-        var expanded by remember { mutableStateOf(false) }
-        var selectedOptionText by remember { mutableStateOf(options[0]) }
-
-        Column(modifier = Modifier.fillMaxWidth(1f), horizontalAlignment = Alignment.Start) {
-            Text(
-                modifier = Modifier.padding(top = 16.dp, bottom = 20.dp),
-                text = title,
-                style = SnapTypography.STYLES.snapTextMediumMedium
-            )
-            ExposedDropdownMenuBox(
-                modifier = Modifier.padding(bottom = 10.dp),
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded }
-            ) {
-                SnapTextField(
-                    modifier = Modifier.fillMaxWidth(1f),
-                    readOnly = true,
-                    value = TextFieldValue(selectedOptionText),
-                    onValueChange = {},
-                    isFocused = false,
-                    enabled = true,
-                    onFocusChange = {},
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(
-                            expanded = expanded
-                        )
-                    },
-                    textStyle = SnapTypography.STYLES.snapTextMediumRegular
-                )
-                ExposedDropdownMenu(
-                    modifier = Modifier.fillMaxWidth(1f),
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    options.forEach { selectionOption ->
-                        DropdownMenuItem(
-                            onClick = {
-                                selectedOptionText = selectionOption
-                                expanded = false
-                                when (title) {
-                                    INSTALLMENT -> state.installment = selectedOptionText
-                                    COLOR_THEME -> state.color = selectedOptionText
-                                }
-                            },
-                            enabled = true
-                        ) {
-                            Text(
-                                text = selectionOption,
-                                style = SnapTypography.STYLES.snapTextMediumRegular
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private fun buildUiKit() {
         UiKitApi.Builder()
             .withContext(this.applicationContext)
@@ -156,11 +94,6 @@ class DemoConfigurationActivity : AppCompatActivity() {
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
             .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
             .build()
-    }
-
-    companion object {
-        private const val COLOR_THEME = "Color Theme"
-        private const val INSTALLMENT = "Installment"
     }
 }
 
