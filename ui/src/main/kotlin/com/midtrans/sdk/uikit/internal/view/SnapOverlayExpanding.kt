@@ -28,6 +28,7 @@ import com.midtrans.sdk.corekit.api.model.ItemDetails
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
+import com.midtrans.sdk.uikit.internal.model.CreditCardPromoInfo
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 
 @Composable
@@ -163,6 +164,13 @@ fun PreviewOrderDetail() {
                 ItemDetails(id= "001", price = 3800.00, quantity = 1, "product2")
             ),
             totalAmount = 10000.00
+        ),
+        creditCardPromoInfo = CreditCardPromoInfo(
+            promoName = "promo-name",
+            promoAmount = -1000.00,
+            pointName = "point-name",
+            pointAmount = -2000.00,
+            discountedAmount = 7000.00
         )
     )
 }
@@ -170,39 +178,40 @@ fun PreviewOrderDetail() {
 @Composable
 fun SnapPaymentOrderDetails(
     customerInfo: CustomerInfo?,
-    itemInfo: ItemInfo?
+    itemInfo: ItemInfo?,
+    creditCardPromoInfo: CreditCardPromoInfo? = null
 ) {
     Column(
         modifier = Modifier.background(color = SnapColors.getARGBColor(SnapColors.backgroundFillPrimary))
     ) {
         itemInfo?.apply {
-            SnapItemDetail(itemDetails)
-            DashedDivider(
-                modifier = Modifier.padding(top = 12.dp),
-                thickness = 1.dp,
-                color = SnapColors.getARGBColor(SnapColors.lineLightMuted)
-            )
-            Row(modifier = Modifier.padding(top = 12.dp)) {
-                Text(
-                    text = stringResource(id = R.string.payment_summary_total),
-                    style = SnapTypography.STYLES.snapTextSmallRegular,
-                    color = SnapColors.getARGBColor(SnapColors.textPrimary),
-                    modifier = Modifier.weight(1f)
-                )
-                Text(
-                    text = totalAmount.currencyFormatRp(),
-                    style = SnapTypography.STYLES.snapTextSmallRegular,
-                    color = SnapColors.getARGBColor(SnapColors.textPrimary)
-                )
+            val totalId = if (creditCardPromoInfo != null) {
+                R.string.payment_details_subtotal
+            } else {
+                R.string.payment_details_total
             }
-            Divider(
-                thickness = 1.dp,
-                color = SnapColors.getARGBColor(SnapColors.lineLightMuted),
-                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
+            SnapItemDetail(
+                totalTitle = stringResource(id = totalId),
+                totalAmount = totalAmount,
+                itemDetails = itemDetails
             )
         }
 
-        //TODO promo & point info goes here
+        creditCardPromoInfo?.apply {
+            SnapPromoDetail(
+                promoName = promoName,
+                promoAmount = promoAmount,
+                pointName = pointName,
+                pointAmount = pointAmount,
+                discountedAmount = discountedAmount
+            )
+        }
+
+        Divider(
+            thickness = 1.dp,
+            color = SnapColors.getARGBColor(SnapColors.lineLightMuted),
+            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
+        )
 
         customerInfo?.apply {
             SnapCustomerDetail(
@@ -225,18 +234,18 @@ fun SnapCustomerDetail(
     ) {
         Text(
             text = stringResource(id = R.string.payment_details_customer_detail_title),
-            style = SnapTypography.STYLES.snapTextSmallRegular,
+            style = SnapTypography.STYLES.snapTextMediumRegular,
             color = SnapColors.getARGBColor(SnapColors.textPrimary)
         )
         Row(modifier = Modifier.padding(top = 12.dp)) {
             Text(
                 text = name,
-                style = SnapTypography.STYLES.snapTextSmallRegular,
+                style = SnapTypography.STYLES.snapTextMediumRegular,
                 color = SnapColors.getARGBColor(SnapColors.textSecondary),
                 modifier = Modifier.weight(1f)
             )
             Text(
-                text = phone, style = SnapTypography.STYLES.snapTextSmallRegular,
+                text = phone, style = SnapTypography.STYLES.snapTextMediumRegular,
                 color = SnapColors.getARGBColor(SnapColors.textSecondary)
             )
         }
@@ -251,6 +260,8 @@ fun SnapCustomerDetail(
 
 @Composable
 private fun SnapItemDetail(
+    totalTitle: String,
+    totalAmount: Double,
     itemDetails: List<ItemDetails>
 ) {
     Column(
@@ -259,7 +270,7 @@ private fun SnapItemDetail(
         Text(
             modifier = Modifier.padding(bottom = 8.dp),
             text = stringResource(id = R.string.payment_details_title),
-            style = SnapTypography.STYLES.snapTextSmallRegular,
+            style = SnapTypography.STYLES.snapTextMediumRegular,
             color = SnapColors.getARGBColor(SnapColors.textPrimary)
         )
         itemDetails.forEach {
@@ -277,17 +288,34 @@ private fun SnapItemDetail(
                 )
             }
         }
+        DashedDivider(
+            modifier = Modifier.padding(top = 12.dp),
+            thickness = 1.dp,
+            color = SnapColors.getARGBColor(SnapColors.lineLightMuted)
+        )
+        Row(modifier = Modifier.padding(top = 12.dp)) {
+            Text(
+                text = totalTitle,
+                style = SnapTypography.STYLES.snapTextMediumRegular,
+                color = SnapColors.getARGBColor(SnapColors.textPrimary),
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = totalAmount.currencyFormatRp(),
+                style = SnapTypography.STYLES.snapTextMediumRegular,
+                color = SnapColors.getARGBColor(SnapColors.textPrimary)
+            )
+        }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun SnapPromoAndPointDetail(
-    promoName: String? = "promoName",
-    promoAmount: Double? = 1000.00,
-    pointName: String? = "BNIpoint",
-    pointAmount: Double? = 400.00,
-    discountedAmount: Double? = 600.00
+private fun SnapPromoDetail(
+    promoName: String?,
+    promoAmount: Double?,
+    pointName: String?,
+    pointAmount: Double?,
+    discountedAmount: Double?
 ) {
     Column(
         modifier = Modifier.background(color = SnapColors.getARGBColor(SnapColors.backgroundFillPrimary))
@@ -299,7 +327,7 @@ private fun SnapPromoAndPointDetail(
             ) {
                 Text(
                     text = stringResource(id = R.string.payment_details_promo_title),
-                    style = SnapTypography.STYLES.snapTextSmallRegular,
+                    style = SnapTypography.STYLES.snapTextMediumRegular,
                     color = SnapColors.getARGBColor(SnapColors.textPrimary)
                 )
                 Icon(
@@ -329,7 +357,7 @@ private fun SnapPromoAndPointDetail(
             Text(
                 modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
                 text = stringResource(id = R.string.payment_details_point_redemption_title),
-                style = SnapTypography.STYLES.snapTextSmallRegular,
+                style = SnapTypography.STYLES.snapTextMediumRegular,
                 color = SnapColors.getARGBColor(SnapColors.textPrimary)
             )
             Row(modifier = Modifier.padding(top = 4.dp)) {
@@ -348,7 +376,7 @@ private fun SnapPromoAndPointDetail(
         }
 
         DashedDivider(
-            modifier = Modifier.padding(top = 8.dp),
+            modifier = Modifier.padding(top = 12.dp),
             thickness = 1.dp,
             color = SnapColors.getARGBColor(SnapColors.lineLightMuted)
         )
@@ -356,13 +384,13 @@ private fun SnapPromoAndPointDetail(
         Row(modifier = Modifier.padding(top = 12.dp)) {
             Text(
                 text = stringResource(id = R.string.payment_summary_total),
-                style = SnapTypography.STYLES.snapTextSmallRegular,
+                style = SnapTypography.STYLES.snapTextMediumRegular,
                 color = SnapColors.getARGBColor(SnapColors.textPrimary),
                 modifier = Modifier.weight(1f)
             )
             Text(
                 text = discountedAmount?.currencyFormatRp().orEmpty(),
-                style = SnapTypography.STYLES.snapTextSmallRegular,
+                style = SnapTypography.STYLES.snapTextMediumRegular,
                 color = SnapColors.getARGBColor(SnapColors.textPrimary)
             )
         }
