@@ -76,5 +76,12 @@ internal class PayLaterViewModel @Inject constructor(
         )
     }
 
+    fun trackOpenWebView(paymentType: String) {
+        trackOpenDeeplink(
+            pageName = PageName.AKULAKU_PAGE,
+            paymentMethodName = paymentType
+        )
+    }
+
     fun getExpiredHour() = dateTimeUtil.getExpiredHour(expiredTime)
 }

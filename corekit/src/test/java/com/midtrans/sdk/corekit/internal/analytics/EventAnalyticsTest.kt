@@ -8,6 +8,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_EXBIN_RE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_HOW_TO_PAY_VIEWED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_OPEN_DEEPLINK
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_CLOSED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CTA_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BANK_CODE
@@ -225,6 +226,21 @@ internal class EventAnalyticsTest {
         verify(mixpanelTracker).trackEvent(
             eventName = EVENT_SNAP_PAGE_CLOSED,
             properties = mapOf(PROPERTY_PAGE_NAME to "page-name")
+        )
+    }
+
+    @Test
+    fun verifyTrackSnapOpenDeeplink() {
+        eventAnalytics.trackSnapOpenDeeplink(
+            pageName = "page-name",
+            paymentMethodName = "payment-type"
+        )
+        verify(mixpanelTracker).trackEvent(
+            eventName = EVENT_SNAP_OPEN_DEEPLINK,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to "page-name",
+                PROPERTY_PAYMENT_METHOD_NAME to "payment-type"
+            )
         )
     }
 }

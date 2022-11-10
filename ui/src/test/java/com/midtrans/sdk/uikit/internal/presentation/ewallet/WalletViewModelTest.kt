@@ -218,6 +218,22 @@ class WalletViewModelTest {
         )
     }
 
+    @Test
+    fun verifyTrackOpenDeeplink() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil)
+
+        walletViewModel.trackOpenDeeplink(paymentType = PaymentType.GOPAY)
+        verify(eventAnalytics).trackSnapOpenDeeplink(
+            pageName = PageName.GOPAY_DEEPLINK_PAGE,
+            paymentMethodName = PaymentType.GOPAY
+        )
+    }
+
     fun <T> LiveData<T>.getOrAwaitValue(
         time: Long = 2,
         timeUnit: TimeUnit = TimeUnit.SECONDS

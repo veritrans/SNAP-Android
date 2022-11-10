@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round">
 
         <activity
-            android:name=".SampleActivity"
+            android:name=".presentation.shop.ProductListActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.Light">
@@ -33,6 +33,15 @@
                     android:host="snap"
                     android:scheme="demo" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".presentation.shop.OrderReviewActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat.Light" />
+
+        <activity android:name=".SampleActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat.Light">
         </activity>
 
         <service

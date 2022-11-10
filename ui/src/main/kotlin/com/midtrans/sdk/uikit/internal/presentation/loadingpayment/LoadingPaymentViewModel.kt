@@ -17,6 +17,7 @@ import com.midtrans.sdk.corekit.api.model.PromoRequest
 import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
 import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferRequest
+import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 import javax.inject.Inject
 
@@ -84,12 +85,12 @@ class LoadingPaymentViewModel @Inject constructor(
             })
     }
 
-    fun getAmountInString(transactionDetails: SnapTransactionDetail): String {
-        return transactionDetails.grossAmount.currencyFormatRp() //TODO: currency configuration
+    fun getAmountInString(transactionDetails: TransactionDetails?): String {
+        return transactionDetails?.grossAmount?.currencyFormatRp().orEmpty() //TODO: currency configuration
     }
 
-    fun getOrderId(transactionDetails: SnapTransactionDetail): String {
-        return transactionDetails.orderId
+    fun getOrderId(transactionDetails: TransactionDetails?): String {
+        return transactionDetails?.orderId.orEmpty()
     }
 
     fun registerCommonProperties(isTablet: Boolean) {
