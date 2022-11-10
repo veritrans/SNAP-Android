@@ -164,6 +164,7 @@ internal class CreditCardActivity : BaseActivity() {
         viewModel.setAllowRetry(allowRetry)
         viewModel.setPromos(promos = promos)
         viewModel.setTransactionDetails(transactionDetails)
+        viewModel.setPointBanks(merchant?.pointBanks)
         viewModel.creditCard = creditCard
         initTransactionResultScreenObserver()
         setContent {
@@ -255,6 +256,7 @@ internal class CreditCardActivity : BaseActivity() {
                 isExpiryTextFieldFocused = false,
                 isCvvTextFieldFocused = false,
                 isSaveCardChecked = true,
+                isPointBankChecked = false,
                 principalIconId = null,
                 customerEmail = TextFieldValue(),
                 customerPhone = TextFieldValue(),
@@ -262,6 +264,7 @@ internal class CreditCardActivity : BaseActivity() {
                 isInstallmentAllowed = true
             )
         }
+        val isPointBankShownState = viewModel?.isPointBankShown?.observeAsState( false)
         val transactionResponse = viewModel?.transactionResponseLiveData?.observeAsState()
         val bankCodeId by bankCodeIdState
         var isExpanding by remember { mutableStateOf(false) }
@@ -284,6 +287,7 @@ internal class CreditCardActivity : BaseActivity() {
             CreditCardPageStateLess(
                 state = state,
                 isExpandingState = isExpanding,
+                isPointBankShownState = isPointBankShownState,
                 totalAmount = totalAmount.value,
                 creditCard = creditCard,
                 orderId = transactionDetails?.orderId.toString(),
@@ -447,6 +451,7 @@ internal class CreditCardActivity : BaseActivity() {
     private fun CreditCardPageStateLess(
         state: CardItemState,
         isExpandingState: Boolean,
+        isPointBankShownState: State<Boolean>?,
         withCustomerPhoneEmail: Boolean = false,
         totalAmount: String,
         creditCard: CreditCard?,
@@ -513,6 +518,7 @@ internal class CreditCardActivity : BaseActivity() {
                             SavedCardLayout(
                                 viewModel = viewModel,
                                 state = state,
+                                isPointBankShownState = isPointBankShownState,
                                 savedTokenListState = it,
                                 bankCodeId = bankCodeState,
                                 onCardNumberValueChange = onCardNumberValueChange,
@@ -524,6 +530,7 @@ internal class CreditCardActivity : BaseActivity() {
                             NormalCardFormLayout(
                                 state = state,
                                 creditCard = creditCard,
+                                isPointBankShownState = isPointBankShownState,
                                 bankCodeState = bankCodeState,
                                 onCardNumberValueChange = onCardNumberValueChange
                             )
@@ -594,12 +601,14 @@ internal class CreditCardActivity : BaseActivity() {
     private fun NormalCardFormLayout(
         state: CardItemState,
         bankCodeState: Int?,
+        isPointBankShownState: State<Boolean>?,
         creditCard: CreditCard?,
         onCardNumberValueChange: (TextFieldValue) -> Unit
     ) {
         NormalCardItem(
             state = state,
             bankIcon = bankCodeState,
+            isPointBankShownState = isPointBankShownState,
             creditCard = creditCard,
             onCardNumberValueChange = {
                 onCardNumberValueChange(it)
@@ -611,7 +620,8 @@ internal class CreditCardActivity : BaseActivity() {
                 state.isExpiryTextFieldFocused = it
             },
             onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
-            onSavedCardCheckedChange = { state.isSavedCardChecked = it }
+            onSavedCardCheckedChange = { state.isSavedCardChecked = it },
+            onPointBankCheckedChange = { state.isPointBankChecked = it }
         )
     }
 
@@ -674,6 +684,7 @@ internal class CreditCardActivity : BaseActivity() {
     private fun SavedCardLayout(
         viewModel: CreditCardViewModel?,
         state: CardItemState,
+        isPointBankShownState : State<Boolean>?,
         savedTokenListState: SnapshotStateList<FormData>,
         bankCodeId: Int?,
         onCardNumberValueChange: (TextFieldValue) -> Unit,
@@ -685,6 +696,7 @@ internal class CreditCardActivity : BaseActivity() {
             listStates = savedTokenListState,
             cardItemState = state,
             bankIconState = bankCodeId,
+            isPointBankShownState = isPointBankShownState,
             creditCard = creditCard,
             onItemRemoveClicked = {
                 viewModel?.deleteSavedCard(
