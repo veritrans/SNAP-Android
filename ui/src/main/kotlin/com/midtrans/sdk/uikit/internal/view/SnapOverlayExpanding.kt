@@ -320,8 +320,9 @@ private fun SnapPromoDetail(
     Column(
         modifier = Modifier.background(color = SnapColors.getARGBColor(SnapColors.backgroundFillPrimary))
     ) {
-        val isPromoAvailable = promoName != null && promoAmount != null
-        val isPointAvailable = pointName != null && pointAmount != null
+        val isPromoAvailable = !promoName.isNullOrEmpty() && !promoAmount.isNullOrEmpty()
+        val isPointAvailable = !pointName.isNullOrEmpty() && !pointAmount.isNullOrEmpty()
+
         if (isPromoAvailable) {
             Row(
                 modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
