@@ -26,6 +26,7 @@ import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
 import com.midtrans.sdk.sample.model.Product
+import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.model.*
@@ -75,12 +76,22 @@ class OrderReviewActivity : ComponentActivity() {
             ?: throw RuntimeException("Order ID must not be empty")
     }
 
+    private val installmentBank: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_INSTALLMENT)
+            ?: throw RuntimeException("Installment must not be empty")
+    }
+
+    private val isRequiredInstallment: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_INPUT_ISREQUIRED, false)
+    }
+
     private val uiKitApi: UiKitApi by lazy {
         UiKitApi.getDefaultInstance()
     }
 
     private lateinit var customerDetails: CustomerDetails
     private lateinit var transactionDetails: SnapTransactionDetail
+    private var installment: Installment? = null
 
     private fun setLocaleNew(languageCode: String?) {
         val locales = LocaleListCompat.forLanguageTags(languageCode)
@@ -92,7 +103,13 @@ class OrderReviewActivity : ComponentActivity() {
 
         setLocaleNew("id") // commented for now. conflict with buildLegacyUiKit
 
-        setContent { OrderListPage() }
+        setContent {
+            Column {
+                Text(text = installmentBank)
+                Text(text = isRequiredInstallment.toString())
+                OrderListPage()
+            }
+        }
     }
 
     @Preview
@@ -297,10 +314,22 @@ class OrderReviewActivity : ComponentActivity() {
                         phone = phoneNumber.text,
                         shippingAddress = Address(address = address.text)
                     )
+                    installment = populateInstallment()
                     payWithAndroidxActivityResultLauncher()
                 }
             )
         }
+    }
+
+    private fun populateInstallment(): Installment? {
+        var installment: Installment? = null
+        if(installmentBank != NO_INSTALLMENT){
+            installment = Installment(
+                isRequired = isRequiredInstallment,
+                terms = mapOf(installmentBank to listOf(3, 6, 12))
+            )
+        }
+        return installment
     }
 
     private fun buildLegacyUiKit() {
@@ -331,7 +360,7 @@ class OrderReviewActivity : ComponentActivity() {
                 secure = true,
                 installment = Installment(
                     isRequired = false,
-                    terms = mapOf("bni" to listOf(3, 6, 9, 12))
+                    terms = mapOf("BNI" to listOf(3, 6, 12))
                 )
             ),
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
@@ -352,10 +381,7 @@ class OrderReviewActivity : ComponentActivity() {
             creditCard = CreditCard(
                 saveCard = true,
                 secure = true,
-                installment = Installment(
-                    isRequired = false,
-                    terms = mapOf("bni" to listOf(3, 6, 12))
-                )
+                installment = installment
             ),
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
             customerDetails = customerDetails
@@ -400,13 +426,19 @@ class OrderReviewActivity : ComponentActivity() {
 
     companion object {
         private const val EXTRA_PRODUCT = "orderReview.extra.product"
+        private const val EXTRA_INPUT_INSTALLMENT = "orderReview.extra.installment"
+        private const val EXTRA_INPUT_ISREQUIRED = "orderReview.extra.isRequired"
 
         fun getOrderReviewActivityIntent(
             activityContext: Context,
-            product: Product
+            product: Product,
+            installmentBank: String,
+            isRequiredInstallment: Boolean
         ): Intent {
             return Intent(activityContext, OrderReviewActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT, product)
+                putExtra(EXTRA_INPUT_INSTALLMENT, installmentBank)
+                putExtra(EXTRA_INPUT_ISREQUIRED, isRequiredInstallment)
             }
         }
     }
