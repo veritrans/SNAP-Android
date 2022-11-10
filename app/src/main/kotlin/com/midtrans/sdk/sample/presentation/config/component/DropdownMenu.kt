@@ -11,6 +11,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.sample.presentation.config.InputState
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_THEME
+import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_EXPIRY
 import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
 import com.midtrans.sdk.sample.util.DemoConstant.OPTIONAL
@@ -64,6 +65,7 @@ fun BasicDropdownMenu(title: String, optionList: List<String>, state: InputState
                                 IS_INSTALLMENT_REQUIRED -> state.isRequired = selectedOptionText != OPTIONAL
                                 INSTALLMENT-> state.installment = selectedOptionText
                                 COLOR_THEME -> state.color = selectedOptionText
+                                CUSTOM_EXPIRY -> state.expiry = selectedOptionText
                             }
                         },
                         enabled = true

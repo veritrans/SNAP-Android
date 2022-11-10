@@ -20,12 +20,17 @@ import com.midtrans.sdk.sample.util.DemoConstant.COLOR_DEFAULT
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_GREEN
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_RED
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_THEME
+import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_EXPIRY
+import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
 import com.midtrans.sdk.sample.util.DemoConstant.MANDIRI
 import com.midtrans.sdk.sample.util.DemoConstant.MAYBANK
+import com.midtrans.sdk.sample.util.DemoConstant.NONE
 import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.OFFLINE
+import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
+import com.midtrans.sdk.sample.util.DemoConstant.ONE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.OPTIONAL
 import com.midtrans.sdk.sample.util.DemoConstant.REQUIRED
 import com.midtrans.sdk.uikit.external.UiKitApi
@@ -48,12 +53,14 @@ class DemoConfigurationActivity : AppCompatActivity() {
         val installmentTerm = listOf(NO_INSTALLMENT, MANDIRI, BCA, BNI, BRI, CIMB, MAYBANK, OFFLINE)
         val isRequiredList = listOf(OPTIONAL, REQUIRED)
         val themeColorList = listOf(COLOR_DEFAULT, COLOR_RED, COLOR_BLUE, COLOR_GREEN)
+        val customExpiryList = listOf(NONE, ONE_MINUTE, FIVE_MINUTE, ONE_HOUR)
 
         val state = remember {
             InputState(
                 isRequired = false,
                 installment = NO_INSTALLMENT,
                 color = COLOR_DEFAULT,
+                customExpiry = NONE
             )
         }
 
@@ -73,6 +80,11 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 optionList = themeColorList,
                 state = state
             )
+            BasicDropdownMenu(
+                title = CUSTOM_EXPIRY,
+                optionList = customExpiryList,
+                state = state
+            )
 
             SnapButton(
                 text = "Launch Demo App", style = SnapButton.Style.PRIMARY,
@@ -84,7 +96,8 @@ class DemoConfigurationActivity : AppCompatActivity() {
                         this@DemoConfigurationActivity,
                         state.color,
                         state.installment,
-                        state.isRequired
+                        state.isRequired,
+                        state.expiry
                     )
                     startActivity(intent)
                 }
@@ -105,9 +118,11 @@ class DemoConfigurationActivity : AppCompatActivity() {
 class InputState(
     color: String,
     installment: String,
-    isRequired: Boolean
+    isRequired: Boolean,
+    customExpiry: String
 ) {
     var installment by mutableStateOf(installment)
     var color by mutableStateOf(color)
     var isRequired by mutableStateOf(isRequired)
+    var expiry by mutableStateOf(customExpiry)
 }

@@ -29,6 +29,11 @@ class ProductListActivity : ComponentActivity() {
         intent.getBooleanExtra(EXTRA_INPUT_ISREQUIRED, false)
     }
 
+    private val customExpiry: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_EXPIRY)
+            ?: throw throw RuntimeException("Expiry must not be empty")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,7 +45,8 @@ class ProductListActivity : ComponentActivity() {
                     activityContext = this,
                     product = it,
                     installmentBank = installmentBank,
-                    isRequiredInstallment = isRequiredInstallment
+                    isRequiredInstallment = isRequiredInstallment,
+                    customExpiry = customExpiry
                 )
                 startActivity(intent)
             }
@@ -51,17 +57,20 @@ class ProductListActivity : ComponentActivity() {
         private const val EXTRA_INPUT_COLOR = "productList.extra.inputColor"
         private const val EXTRA_INPUT_INSTALLMENT = "productList.extra.installment"
         private const val EXTRA_INPUT_ISREQUIRED = "productList.extra.isRequired"
+        private const val EXTRA_INPUT_EXPIRY = "productList.extra.inputExpiry"
 
         fun getProductListActivity(
             activityContext: Context,
             color: String,
             installmentBank: String,
-            isRequiredInstallment: Boolean
+            isRequiredInstallment: Boolean,
+            customExpiry: String
         ): Intent {
             return Intent(activityContext, ProductListActivity::class.java).apply {
                 putExtra(EXTRA_INPUT_COLOR, color)
                 putExtra(EXTRA_INPUT_INSTALLMENT, installmentBank)
                 putExtra(EXTRA_INPUT_ISREQUIRED, isRequiredInstallment)
+                putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
             }
         }
     }

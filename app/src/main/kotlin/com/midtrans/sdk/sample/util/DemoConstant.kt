@@ -5,6 +5,7 @@ object DemoConstant {
     const val COLOR_THEME = "Color Theme"
     const val INSTALLMENT = "Installment"
     const val IS_INSTALLMENT_REQUIRED = "Is Installment Required"
+    const val CUSTOM_EXPIRY = "Custom Expiry"
 
     //Color Theme
     const val COLOR_DEFAULT = "Default"
@@ -25,4 +26,10 @@ object DemoConstant {
     //Is Required
     const val OPTIONAL = "Optional"
     const val REQUIRED = "Required"
+
+    //Custom Expiry
+    const val NONE = "None"
+    const val ONE_MINUTE = "1 Minute"
+    const val FIVE_MINUTE = "5 Minute"
+    const val ONE_HOUR = "1 Hour"
 }
