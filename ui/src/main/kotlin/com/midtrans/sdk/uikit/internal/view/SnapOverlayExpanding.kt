@@ -11,6 +11,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -249,7 +250,7 @@ fun SnapCustomerDetail(
 }
 
 @Composable
-fun SnapItemDetail(
+private fun SnapItemDetail(
     itemDetails: List<ItemDetails>
 ) {
     Column(
@@ -275,6 +276,48 @@ fun SnapItemDetail(
                     color = SnapColors.getARGBColor(SnapColors.textSecondary)
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun SnapPromoDetail(
+    promoName: String,
+    promoAmount: Double
+) {
+    Column(
+        modifier = Modifier.background(color = SnapColors.getARGBColor(SnapColors.backgroundFillPrimary))
+    ) {
+        Row(
+            modifier = Modifier.padding(bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(id = R.string.payment_details_promo_title),
+                style = SnapTypography.STYLES.snapTextSmallRegular,
+                color = SnapColors.getARGBColor(SnapColors.textPrimary)
+            )
+            Icon(
+                modifier = Modifier
+                    .padding(start = 4.dp)
+                    .size(12.dp),
+                painter = painterResource(id = R.drawable.ic_coupon),
+                contentDescription = null,
+                tint = Color.Unspecified
+            )
+        }
+        Row(modifier = Modifier.padding(top = 4.dp)) {
+            Text(
+                text = promoName,
+                style = SnapTypography.STYLES.snapTextSmallRegular,
+                color = SnapColors.getARGBColor(SnapColors.textSecondary),
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = promoAmount.currencyFormatRp(),
+                style = SnapTypography.STYLES.snapTextSmallRegular,
+                color = SnapColors.getARGBColor(SnapColors.textSecondary)
+            )
         }
     }
 }
