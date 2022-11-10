@@ -43,6 +43,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.api.model.PaymentType
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
+import com.midtrans.sdk.uikit.internal.model.CreditCardPromoInfo
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.model.PromoData
@@ -125,25 +126,25 @@ internal class CreditCardActivity : BaseActivity() {
 
     private val savedTokenList: SnapshotStateList<FormData>? by lazy {
         creditCard?.savedTokens?.mapIndexed { index, savedToken ->
-                    SavedCreditCardFormData(
-                        savedCardIdentifier = SnapCreditCardUtil.SAVED_CARD_IDENTIFIER + index.toString(),
-                        inputTitle = getString(R.string.cc_dc_saved_card_enter_cvv),
-                        endIcon = R.drawable.ic_trash,
-                        startIcon = SnapCreditCardUtil.getBankIcon(savedToken.binDetail?.bankCode.toString()),
-                        errorText = mutableStateOf(""),
-                        maskedCardNumber = savedToken.maskedCard.orEmpty(),
-                        displayedMaskedCard = savedToken.maskedCard.orEmpty(),
-                        tokenType = savedToken.tokenType.toString(),
-                        tokenId = savedToken.token.toString(),
-                        cvvSavedCardTextField = TextFieldValue(),
-                        isCvvSavedCardInvalid = false
+            SavedCreditCardFormData(
+                savedCardIdentifier = SnapCreditCardUtil.SAVED_CARD_IDENTIFIER + index.toString(),
+                inputTitle = getString(R.string.cc_dc_saved_card_enter_cvv),
+                endIcon = R.drawable.ic_trash,
+                startIcon = SnapCreditCardUtil.getBankIcon(savedToken.binDetail?.bankCode.toString()),
+                errorText = mutableStateOf(""),
+                maskedCardNumber = savedToken.maskedCard.orEmpty(),
+                displayedMaskedCard = savedToken.maskedCard.orEmpty(),
+                tokenType = savedToken.tokenType.toString(),
+                tokenId = savedToken.token.toString(),
+                cvvSavedCardTextField = TextFieldValue(),
+                isCvvSavedCardInvalid = false
             ) as FormData
-            }
+        }
             ?.ifEmpty { null }
             ?.toMutableList()
             ?.apply {
                 add(NewCardFormData(newCardIdentifier = SnapCreditCardUtil.NEW_CARD_FORM_IDENTIFIER))
-        }
+            }
             ?.toMutableStateList()
         //For testing purpose: uncomment below to force non save card
 //        null
@@ -255,6 +256,8 @@ internal class CreditCardActivity : BaseActivity() {
                 customerEmail = TextFieldValue(),
                 customerPhone = TextFieldValue(),
                 promoId = 0L,
+                promoName = null,
+                promoAmount = null,
                 isInstallmentAllowed = true
             )
         }
@@ -493,7 +496,14 @@ internal class CreditCardActivity : BaseActivity() {
                 expandingContent = {
                     SnapPaymentOrderDetails(
                         customerInfo = customerDetail,
-                        itemInfo = itemInfo
+                        itemInfo = itemInfo,
+                        creditCardPromoInfo = CreditCardPromoInfo(
+                            promoName = state.promoName,
+                            promoAmount = state.promoAmount,
+                            pointName = null, //TODO point selection goes here
+                            pointAmount = null, //TODO point selection goes here
+                            discountedAmount = totalAmount
+                        )
                     )
                 },
                 followingContent = {
@@ -538,9 +548,12 @@ internal class CreditCardActivity : BaseActivity() {
                             onInstallmentAllowed = { state.isInstallmentAllowed = it }
                         )
 
-                        promoState.value?.let { it ->
-                            PromoLayout(promoData = it, cardItemState = state).let { reset ->
-                               onPromoReset = reset
+                        promoState.value?.also {
+                            PromoLayout(
+                                promoData = it,
+                                cardItemState = state
+                            ).also { reset ->
+                                onPromoReset = reset
                             }
                         }
                     }
