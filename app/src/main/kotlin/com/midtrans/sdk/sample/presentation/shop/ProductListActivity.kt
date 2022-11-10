@@ -5,8 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Text
 import com.midtrans.sdk.sample.presentation.shop.component.ProductListPage
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_BLUE
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_GREEN
@@ -22,7 +20,7 @@ class ProductListActivity : ComponentActivity() {
             ?: throw RuntimeException("Input Color must not be empty")
     }
 
-    private val installment: String by lazy {
+    private val installmentBank: String by lazy {
         intent.getStringExtra(EXTRA_INPUT_INSTALLMENT)
             ?: throw RuntimeException("Installment must not be empty")
     }
@@ -37,13 +35,14 @@ class ProductListActivity : ComponentActivity() {
         buildUiKit()
 
         setContent {
-            Column() {
-                Text(text = installment)
-                Text(text = isRequiredInstallment.toString())
-                ProductListPage {
-                    val intent = OrderReviewActivity.getOrderReviewActivityIntent(this@ProductListActivity, product = it)
-                    startActivity(intent)
-                }
+            ProductListPage {
+                val intent = OrderReviewActivity.getOrderReviewActivityIntent(
+                    activityContext = this,
+                    product = it,
+                    installmentBank = installmentBank,
+                    isRequiredInstallment = isRequiredInstallment
+                )
+                startActivity(intent)
             }
         }
     }
@@ -56,12 +55,12 @@ class ProductListActivity : ComponentActivity() {
         fun getProductListActivity(
             activityContext: Context,
             color: String,
-            installment: String,
+            installmentBank: String,
             isRequiredInstallment: Boolean
         ): Intent {
             return Intent(activityContext, ProductListActivity::class.java).apply {
                 putExtra(EXTRA_INPUT_COLOR, color)
-                putExtra(EXTRA_INPUT_INSTALLMENT, installment)
+                putExtra(EXTRA_INPUT_INSTALLMENT, installmentBank)
                 putExtra(EXTRA_INPUT_ISREQUIRED, isRequiredInstallment)
             }
         }
