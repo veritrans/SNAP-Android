@@ -12,6 +12,8 @@ import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.sample.presentation.config.InputState
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_THEME
 import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
+import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
+import com.midtrans.sdk.sample.util.DemoConstant.OPTIONAL
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 
@@ -59,7 +61,7 @@ fun BasicDropdownMenu(title: String, optionList: List<String>, state: InputState
                             selectedOptionText = selectionOption
                             expanded = false
                             when (title) {
-                                "Is Installment Required" -> state.isRequired = selectedOptionText != "Optional"
+                                IS_INSTALLMENT_REQUIRED -> state.isRequired = selectedOptionText != OPTIONAL
                                 INSTALLMENT-> state.installment = selectedOptionText
                                 COLOR_THEME -> state.color = selectedOptionText
                             }

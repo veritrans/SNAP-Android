@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -22,10 +21,13 @@ import com.midtrans.sdk.sample.util.DemoConstant.COLOR_GREEN
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_RED
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_THEME
 import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
+import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
 import com.midtrans.sdk.sample.util.DemoConstant.MANDIRI
 import com.midtrans.sdk.sample.util.DemoConstant.MAYBANK
 import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.OFFLINE
+import com.midtrans.sdk.sample.util.DemoConstant.OPTIONAL
+import com.midtrans.sdk.sample.util.DemoConstant.REQUIRED
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.view.SnapButton
@@ -44,7 +46,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
     @Composable
     fun DemoConfigurationScreen() {
         val installmentTerm = listOf(NO_INSTALLMENT, MANDIRI, BCA, BNI, BRI, CIMB, MAYBANK, OFFLINE)
-        val isRequiredList = listOf("Optional", "Required")
+        val isRequiredList = listOf(OPTIONAL, REQUIRED)
         val themeColorList = listOf(COLOR_DEFAULT, COLOR_RED, COLOR_BLUE, COLOR_GREEN)
 
         val state = remember {
@@ -62,7 +64,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 state = state
             )
             BasicDropdownMenu(
-                title = "Is Installment Required",
+                title = IS_INSTALLMENT_REQUIRED,
                 optionList = isRequiredList,
                 state = state
             )

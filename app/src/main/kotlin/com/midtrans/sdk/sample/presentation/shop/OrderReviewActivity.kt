@@ -104,11 +104,7 @@ class OrderReviewActivity : ComponentActivity() {
         setLocaleNew("id") // commented for now. conflict with buildLegacyUiKit
 
         setContent {
-            Column {
-                Text(text = installmentBank)
-                Text(text = isRequiredInstallment.toString())
-                OrderListPage()
-            }
+            OrderListPage()
         }
     }
 
@@ -323,7 +319,7 @@ class OrderReviewActivity : ComponentActivity() {
 
     private fun populateInstallment(): Installment? {
         var installment: Installment? = null
-        if(installmentBank != NO_INSTALLMENT){
+        if (installmentBank != NO_INSTALLMENT) {
             installment = Installment(
                 isRequired = isRequiredInstallment,
                 terms = mapOf(installmentBank to listOf(3, 6, 12))

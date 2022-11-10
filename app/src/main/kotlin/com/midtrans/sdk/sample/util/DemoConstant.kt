@@ -4,6 +4,7 @@ object DemoConstant {
     //Dropdown Titlw
     const val COLOR_THEME = "Color Theme"
     const val INSTALLMENT = "Installment"
+    const val IS_INSTALLMENT_REQUIRED = "Is Installment Required"
 
     //Color Theme
     const val COLOR_DEFAULT = "Default"
@@ -20,4 +21,8 @@ object DemoConstant {
     const val MAYBANK = "MayBank"
     const val BRI = "BRI"
     const val OFFLINE = "Offline"
+
+    //Is Required
+    const val OPTIONAL = "Optional"
+    const val REQUIRED = "Required"
 }
