@@ -59,6 +59,7 @@ fun BasicDropdownMenu(title: String, optionList: List<String>, state: InputState
                             selectedOptionText = selectionOption
                             expanded = false
                             when (title) {
+                                "Is Installment Required" -> state.isRequired = selectedOptionText != "Optional"
                                 INSTALLMENT-> state.installment = selectedOptionText
                                 COLOR_THEME -> state.color = selectedOptionText
                             }

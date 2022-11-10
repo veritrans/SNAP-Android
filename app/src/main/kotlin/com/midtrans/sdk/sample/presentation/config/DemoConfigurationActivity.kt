@@ -43,30 +43,32 @@ class DemoConfigurationActivity : AppCompatActivity() {
 
     @Composable
     fun DemoConfigurationScreen() {
+        val installmentTerm = listOf(NO_INSTALLMENT, MANDIRI, BCA, BNI, BRI, CIMB, MAYBANK, OFFLINE)
+        val isRequiredList = listOf("Optional", "Required")
+        val themeColorList = listOf(COLOR_DEFAULT, COLOR_RED, COLOR_BLUE, COLOR_GREEN)
+
         val state = remember {
             InputState(
+                isRequired = false,
+                installment = NO_INSTALLMENT,
                 color = COLOR_DEFAULT,
-                installment = NO_INSTALLMENT
             )
         }
+
         Column(Modifier.padding(16.dp)) {
             BasicDropdownMenu(
                 title = INSTALLMENT,
-                optionList = listOf(
-                    NO_INSTALLMENT,
-                    MANDIRI,
-                    BCA,
-                    BNI,
-                    BRI,
-                    CIMB,
-                    MAYBANK,
-                    OFFLINE
-                ),
+                optionList = installmentTerm,
+                state = state
+            )
+            BasicDropdownMenu(
+                title = "Is Installment Required",
+                optionList = isRequiredList,
                 state = state
             )
             BasicDropdownMenu(
                 title = COLOR_THEME,
-                optionList = listOf(COLOR_DEFAULT, COLOR_RED, COLOR_BLUE, COLOR_GREEN),
+                optionList = themeColorList,
                 state = state
             )
 
@@ -79,7 +81,8 @@ class DemoConfigurationActivity : AppCompatActivity() {
                     val intent = ProductListActivity.getProductListActivity(
                         this@DemoConfigurationActivity,
                         state.color,
-                        state.installment
+                        state.installment,
+                        state.isRequired
                     )
                     startActivity(intent)
                 }
@@ -99,8 +102,10 @@ class DemoConfigurationActivity : AppCompatActivity() {
 
 class InputState(
     color: String,
-    installment: String
+    installment: String,
+    isRequired: Boolean
 ) {
     var installment by mutableStateOf(installment)
     var color by mutableStateOf(color)
+    var isRequired by mutableStateOf(isRequired)
 }

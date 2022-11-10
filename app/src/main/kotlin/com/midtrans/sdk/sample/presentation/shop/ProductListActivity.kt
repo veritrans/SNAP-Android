@@ -27,6 +27,10 @@ class ProductListActivity : ComponentActivity() {
             ?: throw RuntimeException("Installment must not be empty")
     }
 
+    private val isRequiredInstallment: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_INPUT_ISREQUIRED, false)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -35,6 +39,7 @@ class ProductListActivity : ComponentActivity() {
         setContent {
             Column() {
                 Text(text = installment)
+                Text(text = isRequiredInstallment.toString())
                 ProductListPage {
                     val intent = OrderReviewActivity.getOrderReviewActivityIntent(this@ProductListActivity, product = it)
                     startActivity(intent)
@@ -46,15 +51,18 @@ class ProductListActivity : ComponentActivity() {
     companion object {
         private const val EXTRA_INPUT_COLOR = "productList.extra.inputColor"
         private const val EXTRA_INPUT_INSTALLMENT = "productList.extra.installment"
+        private const val EXTRA_INPUT_ISREQUIRED = "productList.extra.isRequired"
 
         fun getProductListActivity(
             activityContext: Context,
             color: String,
-            installment: String
+            installment: String,
+            isRequiredInstallment: Boolean
         ): Intent {
             return Intent(activityContext, ProductListActivity::class.java).apply {
                 putExtra(EXTRA_INPUT_COLOR, color)
                 putExtra(EXTRA_INPUT_INSTALLMENT, installment)
+                putExtra(EXTRA_INPUT_ISREQUIRED, isRequiredInstallment)
             }
         }
     }
