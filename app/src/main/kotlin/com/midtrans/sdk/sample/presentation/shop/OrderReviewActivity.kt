@@ -411,7 +411,7 @@ class OrderReviewActivity : ComponentActivity() {
                 false,
                 null
             ),
-            null,
+            "authorize",// set pre-authorization
             null
         )
         //Setting Snap token custon expiry
