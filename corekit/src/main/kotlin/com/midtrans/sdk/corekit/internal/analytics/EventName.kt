@@ -85,6 +85,7 @@ internal object EventName {
     const val PROPERTY_CARD_BIN_CLASSS = "binClass"
     const val PROPERTY_CARD_BIN_TYPE = "binType"
     const val PROPERTY_CARD_BIN = "bin"
+    const val PROPERTY_CARD_BANK = "bank"
     const val PROPERTY_ERROR_MESSAGE = "errorMessage"
     const val PROPERTY_ECI = "ECI"
     const val PROPERTY_NOTICE_MESSAGE = "noticeMessage"
