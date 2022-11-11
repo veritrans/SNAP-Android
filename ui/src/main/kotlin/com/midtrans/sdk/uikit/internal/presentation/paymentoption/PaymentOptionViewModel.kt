@@ -190,7 +190,7 @@ internal class PaymentOptionViewModel @Inject constructor(
 
     fun getItemInfo(itemDetails: List<ItemDetails>?): ItemInfo? {
         return itemDetails?.let { itemList ->
-            val totalAmount = itemList.sumOf { it.price }
+            val totalAmount = itemList.sumOf { it.price ?: 0.00 }
             ItemInfo(
                 itemDetails = itemList,
                 totalAmount = totalAmount

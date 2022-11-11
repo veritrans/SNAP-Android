@@ -270,7 +270,7 @@ fun SnapItemDetail(
                     modifier = Modifier.weight(1f)
                 )
                 Text(
-                    text = it.price.currencyFormatRp(),
+                    text = it.price?.currencyFormatRp().orEmpty(),
                     style = SnapTypography.STYLES.snapTextSmallRegular,
                     color = SnapColors.getARGBColor(SnapColors.textSecondary)
                 )
