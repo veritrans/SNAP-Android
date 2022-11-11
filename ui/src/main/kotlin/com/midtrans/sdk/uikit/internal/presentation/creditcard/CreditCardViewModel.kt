@@ -379,6 +379,7 @@ internal class CreditCardViewModel @Inject constructor(
             snapToken = snapToken,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
+                    trackCreditCard3DsResult(result)
                     errorCard.getErrorCardType(result, allowRetry)?.let {
                         val transactionId = result.transactionId.orEmpty()
                         _errorTypeLiveData.value = Pair(it, transactionId)
@@ -427,6 +428,17 @@ internal class CreditCardViewModel @Inject constructor(
             response = response,
             paymentMethodName = PaymentType.CREDIT_CARD,
             pageName = PageName.CREDIT_DEBIT_CARD_PAGE
+        )
+    }
+
+    private fun trackCreditCard3DsResult(result: TransactionResponse) {
+        trackCreditCard3DsResult(
+            transactionStatus = result.transactionStatus,
+            cardType = result.cardType,
+            bank = result.bank,
+            threeDsVersion = result.threeDsVersion,
+            channelResponseCode = result.channelResponseCode,
+            eci = result.eci
         )
     }
 
