@@ -26,13 +26,12 @@ import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
 import com.midtrans.sdk.corekit.models.ExpiryModel
-import com.midtrans.sdk.sample.Utils
 import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.NONE
 import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
-import com.midtrans.sdk.sample.util.Utils
+import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.model.*
@@ -334,7 +333,7 @@ class OrderReviewActivity : ComponentActivity() {
         var expiry: Expiry? = null
         if (customExpiry != NONE) {
             expiry = Expiry(
-                startTime = Utils.getFormattedTime(System.currentTimeMillis()),
+                startTime = DemoUtils.getFormattedTime(System.currentTimeMillis()),
                 unit = when (customExpiry) {
                     ONE_HOUR -> Expiry.UNIT_HOUR
                     else -> Expiry.UNIT_MINUTE
@@ -411,7 +410,7 @@ class OrderReviewActivity : ComponentActivity() {
                 installment = installment
             ),
             expiry = Expiry(
-                startTime = Utils.getFormattedTime(System.currentTimeMillis()),
+                startTime = DemoUtils.getFormattedTime(System.currentTimeMillis()),
                 unit = Expiry.UNIT_MINUTE,
                 duration = 5
             ),
@@ -458,7 +457,7 @@ class OrderReviewActivity : ComponentActivity() {
         )
         //Setting Snap token custon expiry
         transactionRequest.expiry = ExpiryModel(
-            Utils.getFormattedTime(System.currentTimeMillis()),
+            DemoUtils.getFormattedTime(System.currentTimeMillis()),
             "hour",
             1
         )
