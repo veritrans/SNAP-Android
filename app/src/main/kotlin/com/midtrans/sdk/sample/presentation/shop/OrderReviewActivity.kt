@@ -101,6 +101,10 @@ class OrderReviewActivity : ComponentActivity() {
             ?: throw RuntimeException("Expiry must not be empty")
     }
 
+    private val isSavedCard: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_INPUT_SAVEDCARD, false)
+    }
+
     private val uiKitApi: UiKitApi by lazy {
         UiKitApi.getDefaultInstance()
     }
@@ -421,7 +425,7 @@ class OrderReviewActivity : ComponentActivity() {
             launcher = launcher,
             transactionDetails = transactionDetails,
             creditCard = CreditCard(
-                saveCard = true,
+                saveCard = isSavedCard,
                 secure = true,
                 installment = installment,
                 bank = bank
@@ -485,6 +489,7 @@ class OrderReviewActivity : ComponentActivity() {
         private const val EXTRA_INPUT_ISREQUIRED = "orderReview.extra.isRequired"
         private const val EXTRA_INPUT_ACQUIRINGBANK = "orderReview.extra.acquiringBank"
         private const val EXTRA_INPUT_EXPIRY = "orderReview.extra.expiry"
+        private const val EXTRA_INPUT_SAVEDCARD = "orderReview.extra.savedCard"
 
         fun getOrderReviewActivityIntent(
             activityContext: Context,
@@ -492,7 +497,8 @@ class OrderReviewActivity : ComponentActivity() {
             installmentBank: String,
             isRequiredInstallment: Boolean,
             acquiringBank: String,
-            customExpiry: String
+            customExpiry: String,
+            isSavedCard: Boolean
         ): Intent {
             return Intent(activityContext, OrderReviewActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT, product)
@@ -500,6 +506,7 @@ class OrderReviewActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_ISREQUIRED, isRequiredInstallment)
                 putExtra(EXTRA_INPUT_ACQUIRINGBANK, acquiringBank)
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
+                putExtra(EXTRA_INPUT_SAVEDCARD, isSavedCard)
             }
         }
     }

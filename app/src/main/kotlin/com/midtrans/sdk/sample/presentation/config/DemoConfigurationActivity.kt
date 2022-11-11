@@ -3,9 +3,12 @@ package com.midtrans.sdk.sample.presentation.config
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -22,6 +25,8 @@ import com.midtrans.sdk.sample.util.DemoConstant.COLOR_GREEN
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_RED
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_THEME
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_EXPIRY
+import com.midtrans.sdk.sample.util.DemoConstant.DISABLED
+import com.midtrans.sdk.sample.util.DemoConstant.ENABLED
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
@@ -36,6 +41,7 @@ import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.OPTIONAL
 import com.midtrans.sdk.sample.util.DemoConstant.REQUIRED
+import com.midtrans.sdk.sample.util.DemoConstant.SAVED_CARD
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.view.SnapButton
@@ -47,17 +53,20 @@ class DemoConfigurationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         buildUiKit()
         setContent {
-            DemoConfigurationScreen()
+            val scrollState = rememberScrollState()
+            DemoConfigurationScreen(scrollState)
         }
     }
 
     @Composable
-    fun DemoConfigurationScreen() {
+    fun DemoConfigurationScreen(scrollState: ScrollState) {
         val installmentTerm = listOf(NO_INSTALLMENT, MANDIRI, BCA, BNI, BRI, CIMB, MAYBANK, OFFLINE)
         val isRequiredList = listOf(OPTIONAL, REQUIRED)
-        val acquringBankList = listOf(NO_ACQUIRING_BANK, MANDIRI, BCA, BNI, BRI, CIMB, MAYBANK, MEGA)
+        val acquringBankList =
+            listOf(NO_ACQUIRING_BANK, MANDIRI, BCA, BNI, BRI, CIMB, MAYBANK, MEGA)
         val themeColorList = listOf(COLOR_DEFAULT, COLOR_RED, COLOR_BLUE, COLOR_GREEN)
         val customExpiryList = listOf(NONE, ONE_MINUTE, FIVE_MINUTE, ONE_HOUR)
+        val booleanList = listOf(DISABLED, ENABLED)
 
         val state = remember {
             InputState(
@@ -65,11 +74,16 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 installment = NO_INSTALLMENT,
                 acquiringBank = NO_ACQUIRING_BANK,
                 color = COLOR_DEFAULT,
-                customExpiry = NONE
+                customExpiry = NONE,
+                savedCard = false
             )
         }
 
-        Column(Modifier.padding(16.dp)) {
+        Column(
+            Modifier
+                .padding(16.dp)
+                .verticalScroll(scrollState)
+        ) {
             BasicDropdownMenu(
                 title = INSTALLMENT,
                 optionList = installmentTerm,
@@ -95,6 +109,11 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 optionList = customExpiryList,
                 state = state
             )
+            BasicDropdownMenu(
+                title = SAVED_CARD,
+                optionList = booleanList,
+                state = state
+            )
 
             SnapButton(
                 text = "Launch Demo App", style = SnapButton.Style.PRIMARY,
@@ -108,7 +127,8 @@ class DemoConfigurationActivity : AppCompatActivity() {
                         state.installment,
                         state.isRequired,
                         state.acquiringBank,
-                        state.expiry
+                        state.expiry,
+                        state.savedCard
                     )
                     startActivity(intent)
                 }
@@ -131,11 +151,13 @@ class InputState(
     installment: String,
     isRequired: Boolean,
     acquiringBank: String,
-    customExpiry: String
+    customExpiry: String,
+    savedCard: Boolean
 ) {
     var installment by mutableStateOf(installment)
     var color by mutableStateOf(color)
     var isRequired by mutableStateOf(isRequired)
     var acquiringBank by mutableStateOf(acquiringBank)
     var expiry by mutableStateOf(customExpiry)
+    var savedCard by mutableStateOf(savedCard)
 }

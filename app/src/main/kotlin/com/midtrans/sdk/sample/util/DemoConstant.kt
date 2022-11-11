@@ -7,6 +7,7 @@ object DemoConstant {
     const val INSTALLMENT = "Installment"
     const val IS_INSTALLMENT_REQUIRED = "Is Installment Required"
     const val CUSTOM_EXPIRY = "Custom Expiry"
+    const val SAVED_CARD = "Saved Card"
 
     //Color Theme
     const val COLOR_DEFAULT = "Default"
@@ -37,4 +38,8 @@ object DemoConstant {
     //Acquiring Bank
     const val NO_ACQUIRING_BANK = "No Acquiring Bank"
     const val MEGA = "Mega"
+
+    //Enabled or Disabled
+    const val ENABLED = "Enabled"
+    const val DISABLED = "Disabled"
 }

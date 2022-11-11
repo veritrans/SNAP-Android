@@ -39,6 +39,10 @@ class ProductListActivity : ComponentActivity() {
             ?: throw throw RuntimeException("Expiry must not be empty")
     }
 
+    private val isSavedCard: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_INPUT_SAVEDCARD, false)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -52,7 +56,8 @@ class ProductListActivity : ComponentActivity() {
                     installmentBank = installmentBank,
                     isRequiredInstallment = isRequiredInstallment,
                     acquiringBank = acquiringBank,
-                    customExpiry = customExpiry
+                    customExpiry = customExpiry,
+                    isSavedCard = isSavedCard
                 )
                 startActivity(intent)
             }
@@ -65,6 +70,7 @@ class ProductListActivity : ComponentActivity() {
         private const val EXTRA_INPUT_ISREQUIRED = "productList.extra.isRequired"
         private const val EXTRA_INPUT_ACQUIRINGBANK = "productList.extra.acquiringBank"
         private const val EXTRA_INPUT_EXPIRY = "productList.extra.inputExpiry"
+        private const val EXTRA_INPUT_SAVEDCARD = "productList.extra.savedCard"
 
         fun getProductListActivity(
             activityContext: Context,
@@ -72,7 +78,8 @@ class ProductListActivity : ComponentActivity() {
             installmentBank: String,
             isRequiredInstallment: Boolean,
             acquiringBank: String,
-            customExpiry: String
+            customExpiry: String,
+            isSavedCard: Boolean
         ): Intent {
             return Intent(activityContext, ProductListActivity::class.java).apply {
                 putExtra(EXTRA_INPUT_COLOR, color)
@@ -80,6 +87,7 @@ class ProductListActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_ISREQUIRED, isRequiredInstallment)
                 putExtra(EXTRA_INPUT_ACQUIRINGBANK, acquiringBank)
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
+                putExtra(EXTRA_INPUT_SAVEDCARD, isSavedCard)
             }
         }
     }
