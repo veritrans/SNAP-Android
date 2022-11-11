@@ -30,6 +30,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import com.midtrans.sdk.uikit.internal.view.SnapColors.supportDangerDefault
@@ -67,8 +68,12 @@ class DirectDebitActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
     }
 
+    private val itemInfo: ItemInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
+    }
+
     private val viewModel: DirectDebitViewModel by lazy {
-        ViewModelProvider(this, vmFactory).get(DirectDebitViewModel::class.java)
+        ViewModelProvider(this, vmFactory)[DirectDebitViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +87,7 @@ class DirectDebitActivity : BaseActivity() {
                 amount = amount,
                 orderId = orderId,
                 customerInfo = customerInfo,
+                itemInfo = itemInfo,
                 response = viewModel.getTransactionResponse().observeAsState().value,
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
             )
@@ -100,6 +106,7 @@ class DirectDebitActivity : BaseActivity() {
                 phone = "081234567890",
                 addressLines = listOf("address one", "address two")
             ),
+            itemInfo = null,
             response = TransactionResponse(
                 transactionStatus = "pending"
             ),
@@ -113,6 +120,7 @@ class DirectDebitActivity : BaseActivity() {
         amount: String,
         orderId: String,
         customerInfo: CustomerInfo?,
+        itemInfo: ItemInfo?,
         response: TransactionResponse?,
         remainingTimeState: State<String>
     ) {
@@ -144,20 +152,17 @@ class DirectDebitActivity : BaseActivity() {
                         SnapTotal(
                             amount = amount,
                             orderId = orderId,
-                            canExpand = customerInfo != null,
+                            canExpand = customerInfo != null || itemInfo != null,
                             remainingTime = remainingTime
                         ) {
                             isCustomerDetailExpanded = it
                         }
                     },
-                    expandingContent = customerInfo?.let {
-                        {
-                            SnapCustomerDetail(
-                                name = customerInfo.name,
-                                phone = customerInfo.phone,
-                                addressLines = customerInfo.addressLines
-                            )
-                        }
+                    expandingContent = {
+                        SnapPaymentOrderDetails(
+                            customerInfo = customerInfo,
+                            itemInfo = itemInfo
+                        )
                     },
                     followingContent = {
                         Column(
@@ -389,6 +394,7 @@ class DirectDebitActivity : BaseActivity() {
         private const val EXTRA_AMOUNT = "directDebit.extra.amount"
         private const val EXTRA_ORDER_ID = "directDebit.extra.order_id"
         private const val EXTRA_CUSTOMER_INFO = "directDebit.extra.customer_info"
+        private const val EXTRA_ITEM_INFO = "directDebit.extra.item_info"
 
         fun getIntent(
             activityContext: Context,
@@ -396,7 +402,8 @@ class DirectDebitActivity : BaseActivity() {
             @PaymentType.Def paymentType: String,
             amount: String,
             orderId: String,
-            customerInfo: CustomerInfo?
+            customerInfo: CustomerInfo?,
+            itemInfo: ItemInfo?
         ): Intent {
             return Intent(activityContext, DirectDebitActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -404,6 +411,7 @@ class DirectDebitActivity : BaseActivity() {
                 putExtra(EXTRA_AMOUNT, amount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
+                putExtra(EXTRA_ITEM_INFO, itemInfo)
             }
         }
     }

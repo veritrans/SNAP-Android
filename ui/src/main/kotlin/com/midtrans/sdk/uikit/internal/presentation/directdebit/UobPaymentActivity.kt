@@ -29,6 +29,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
@@ -70,6 +71,10 @@ class UobPaymentActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
     }
 
+    private val itemInfo: ItemInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
+    }
+
     private val viewModel: UobPaymentViewModel by lazy {
         ViewModelProvider(this, vmFactory).get(UobPaymentViewModel::class.java)
     }
@@ -85,6 +90,7 @@ class UobPaymentActivity : BaseActivity() {
                 amount = amount,
                 orderId = orderId,
                 customerInfo = customerInfo,
+                itemInfo = itemInfo,
                 response = viewModel.getTransactionResponse().observeAsState().value,
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
             )
@@ -159,6 +165,7 @@ class UobPaymentActivity : BaseActivity() {
         amount: String,
         orderId: String,
         customerInfo: CustomerInfo?,
+        itemInfo: ItemInfo?,
         response: TransactionResponse?,
         remainingTimeState: State<String>
     ) {
@@ -189,20 +196,17 @@ class UobPaymentActivity : BaseActivity() {
                         SnapTotal(
                             amount = amount,
                             orderId = orderId,
-                            canExpand = customerInfo != null,
+                            canExpand = customerInfo != null || itemInfo != null,
                             remainingTime = remainingTime
                         ) {
                             isCustomerDetailExpanded = it
                         }
                     },
-                    expandingContent = customerInfo?.let {
-                        {
-                            SnapCustomerDetail(
-                                name = customerInfo.name,
-                                phone = customerInfo.phone,
-                                addressLines = customerInfo.addressLines
-                            )
-                        }
+                    expandingContent = {
+                        SnapPaymentOrderDetails(
+                            customerInfo = customerInfo,
+                            itemInfo = itemInfo
+                        )
                     },
                     followingContent = {
                         Column(
@@ -352,6 +356,7 @@ class UobPaymentActivity : BaseActivity() {
         private const val EXTRA_AMOUNT = "directDebit.uobPayment.extra.amount"
         private const val EXTRA_ORDER_ID = "directDebit.uobPayment.extra.order_id"
         private const val EXTRA_CUSTOMER_INFO = "directDebit.uobPayment.extra.customer_info"
+        private const val EXTRA_ITEM_INFO = "directDebit.uobPayment.extra.item_info"
         private const val EXTRA_REMAINING_TIME = "directDebit.uobPayment.extra.remaining_time"
 
         fun getIntent(
@@ -361,6 +366,7 @@ class UobPaymentActivity : BaseActivity() {
             amount: String,
             orderId: String,
             customerInfo: CustomerInfo?,
+            itemInfo: ItemInfo?,
             remainingTime: Long
         ): Intent {
             return Intent(activityContext, UobPaymentActivity::class.java).apply {
@@ -369,6 +375,7 @@ class UobPaymentActivity : BaseActivity() {
                 putExtra(EXTRA_AMOUNT, amount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
+                putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_REMAINING_TIME, remainingTime)
             }
         }

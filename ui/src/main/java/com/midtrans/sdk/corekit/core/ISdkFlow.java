@@ -43,22 +43,21 @@ public class ISdkFlow {
         } else {
             TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
             UiKitApi.Companion.getDefaultInstance().startPayment(
-                    context,
-                    new SnapTransactionDetail(
-                            transactionRequest.getOrderId(),
-                            transactionRequest.getAmount(),
-                            transactionRequest.getCurrency()
-                    ),
-                    transactionRequest.getCustomerDetails(),
-                    transactionRequest.getCreditCard(),
-                    transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                    new PaymentCallback(""),
-                    wrapperCallback,
-                    transactionRequest.getExpiry(),
-                    null
+                context,
+                new SnapTransactionDetail(
+                    transactionRequest.getOrderId(),
+                    transactionRequest.getAmount(),
+                    transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,transactionRequest.getExpiry(),
+                null
 
             );
-
         }
     }
 
