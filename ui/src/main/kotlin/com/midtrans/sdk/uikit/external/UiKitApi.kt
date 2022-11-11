@@ -46,14 +46,16 @@ class UiKitApi private constructor(val builder: Builder) {
         transactionDetails: SnapTransactionDetail,
         customerDetails: CustomerDetails,
         creditCard: CreditCard,
-        userId: String
+        userId: String,
+        expiry: Expiry? = null
     ) {
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
             activityContext = activity,
             transactionDetails = transactionDetails,
             customerDetails = customerDetails,
             creditCard = creditCard,
-            userId = userId
+            userId = userId,
+            expiry = expiry
         )
         launcher.launch(intent)
     }
@@ -179,7 +181,7 @@ class UiKitApi private constructor(val builder: Builder) {
             }
             UiKitApi(this)
 
-            return instance
+            return instance!!
         }
     }
 
@@ -192,10 +194,15 @@ class UiKitApi private constructor(val builder: Builder) {
             }
             get() = paymentCallbackWeakReference.get()
 
-        private lateinit var instance: UiKitApi
+        private var instance: UiKitApi? = null
 
 
         fun getDefaultInstance(): UiKitApi {
+            return instance!!
+        }
+
+        //TODO: should getDefault Instance always not - null?
+        internal fun getDefaultInstanceNullAble(): UiKitApi? {
             return instance
         }
 
