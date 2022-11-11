@@ -100,6 +100,7 @@ class OrderReviewActivity : ComponentActivity() {
     }
 
     private lateinit var customerDetails: CustomerDetails
+    private lateinit var itemDetails: List<ItemDetails>
     private lateinit var transactionDetails: SnapTransactionDetail
     private var installment: Installment? = null
     private var expiry: Expiry? = null
@@ -323,6 +324,13 @@ class OrderReviewActivity : ComponentActivity() {
                     )
                     installment = populateInstallment()
                     expiry = populateExpiry()
+                    itemDetails = listOf(
+                        ItemDetails(
+                            name = product.name,
+                            price = product.price,
+                            quantity = 1
+                        )
+                    )
                     payWithAndroidxActivityResultLauncher()
                 }
             )
@@ -395,7 +403,8 @@ class OrderReviewActivity : ComponentActivity() {
                 lastName = "Bhaktis",
                 email = "arisbhaktis@email.com",
                 phone = "087788778212"
-            )
+            ),
+            itemDetails = itemDetails
         )
     }
 
@@ -414,6 +423,7 @@ class OrderReviewActivity : ComponentActivity() {
                 unit = Expiry.UNIT_MINUTE,
                 duration = 5
             ),
+            itemDetails = itemDetails,
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
             customerDetails = customerDetails
         )
@@ -430,7 +440,7 @@ class OrderReviewActivity : ComponentActivity() {
     private fun payWithOldSnapLegacyApi() {
         val transactionRequest = TransactionRequest(
             UUID.randomUUID().toString(),
-            3000.0
+            15000.0
         )
         transactionRequest.customerDetails = com.midtrans.sdk.corekit.models.CustomerDetails(
             "3A8788CE-B96F-449C-8180-B5901A08B50A",
@@ -438,6 +448,10 @@ class OrderReviewActivity : ComponentActivity() {
             "Bhakti",
             "aribhakti@email.com",
             "087788778212"
+        )
+        transactionRequest.itemDetails = arrayListOf<com.midtrans.sdk.corekit.models.ItemDetails>(
+            com.midtrans.sdk.corekit.models.ItemDetails("id01", 8000.00, 1, "Cappuccino"),
+            com.midtrans.sdk.corekit.models.ItemDetails("id02", 7000.00, 1, "Americano")
         )
         transactionRequest.creditCard = com.midtrans.sdk.corekit.models.snap.CreditCard(
             true,

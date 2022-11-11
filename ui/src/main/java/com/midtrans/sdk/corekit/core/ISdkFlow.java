@@ -50,6 +50,7 @@ public class ISdkFlow {
                             transactionRequest.getCurrency()
                     ),
                     transactionRequest.getCustomerDetails(),
+                    transactionRequest.getItemDetails(),
                     transactionRequest.getCreditCard(),
                     transactionRequest.getCustomerDetails().getCustomerIdentifier(),
                     new PaymentCallback(""),
@@ -62,7 +63,6 @@ public class ISdkFlow {
                     transactionRequest.getBniVa(),
                     transactionRequest.getBriVa()
             );
-
         }
     }
 
