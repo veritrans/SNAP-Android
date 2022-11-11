@@ -44,29 +44,15 @@ import com.midtrans.sdk.uikit.api.model.PaymentType
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.model.PromoData
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
-import com.midtrans.sdk.uikit.internal.view.CardItemState
-import com.midtrans.sdk.uikit.internal.view.FormData
-import com.midtrans.sdk.uikit.internal.view.NewCardFormData
-import com.midtrans.sdk.uikit.internal.view.NormalCardItem
-import com.midtrans.sdk.uikit.internal.view.PromoLayout
-import com.midtrans.sdk.uikit.internal.view.SavedCreditCardFormData
-import com.midtrans.sdk.uikit.internal.view.SnapAppBar
-import com.midtrans.sdk.uikit.internal.view.SnapButton
+import com.midtrans.sdk.uikit.internal.view.*
 import com.midtrans.sdk.uikit.internal.view.SnapColors
-import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
-import com.midtrans.sdk.uikit.internal.view.SnapInstallmentTermSelectionMenu
-import com.midtrans.sdk.uikit.internal.view.SnapOverlayExpandingBox
-import com.midtrans.sdk.uikit.internal.view.SnapSavedCardRadioGroup
-import com.midtrans.sdk.uikit.internal.view.SnapTextField
-import com.midtrans.sdk.uikit.internal.view.SnapThreeDsWebView
-import com.midtrans.sdk.uikit.internal.view.SnapTotal
-import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
@@ -81,7 +67,7 @@ internal class CreditCardActivity : BaseActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel: CreditCardViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory).get(CreditCardViewModel::class.java)
+        ViewModelProvider(this, viewModelFactory)[CreditCardViewModel::class.java]
     }
 
     private var previousEightDigitNumber = ""
@@ -97,6 +83,10 @@ internal class CreditCardActivity : BaseActivity() {
 
     private val customerDetail: CustomerInfo? by lazy {
         intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
+    }
+
+    private val itemInfo: ItemInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
     }
 
     private val creditCard: CreditCard? by lazy {
@@ -173,6 +163,7 @@ internal class CreditCardActivity : BaseActivity() {
             CreditCardPageStateFull(
                 transactionDetails = transactionDetails,
                 customerDetail = customerDetail,
+                itemInfo = itemInfo,
                 savedTokenListState = savedTokenList,
                 creditCard = creditCard,
                 viewModel = viewModel,
@@ -234,6 +225,7 @@ internal class CreditCardActivity : BaseActivity() {
     private fun CreditCardPageStateFull(
         transactionDetails: TransactionDetails? = null,
         customerDetail: CustomerInfo? = null,
+        itemInfo: ItemInfo? = null,
         withCustomerPhoneEmail: Boolean = false,
         savedTokenListState: SnapshotStateList<FormData>?,
         creditCard: CreditCard?,
@@ -294,6 +286,7 @@ internal class CreditCardActivity : BaseActivity() {
                 creditCard = creditCard,
                 orderId = transactionDetails?.orderId.toString(),
                 customerDetail = customerDetail,
+                itemInfo = itemInfo,
                 savedTokenListState = savedTokenListState,
                 bankCodeState = bankCodeId,
                 binType = binType.value,
@@ -459,6 +452,7 @@ internal class CreditCardActivity : BaseActivity() {
         creditCard: CreditCard?,
         orderId: String,
         customerDetail: CustomerInfo? = null,
+        itemInfo: ItemInfo? = null,
         savedTokenListState: SnapshotStateList<FormData>?,
         promoState: State<List<PromoData>?>,
         bankCodeState: Int?,
@@ -490,20 +484,17 @@ internal class CreditCardActivity : BaseActivity() {
                         amount = totalAmount,
                         orderId = orderId,
                         remainingTime = remainingTime,
-                        canExpand = customerDetail != null,
+                        canExpand = customerDetail != null || itemInfo != null,
                         isPromo = state.promoId != 0L
                     ) {
                         onExpand(it)
                     }
                 },
                 expandingContent = {
-                    customerDetail?.let {
-                        SnapCustomerDetail(
-                            name = customerDetail.name,
-                            phone = customerDetail.phone,
-                            addressLines = customerDetail.addressLines
-                        )
-                    }
+                    SnapPaymentOrderDetails(
+                        customerInfo = customerDetail,
+                        itemInfo = itemInfo
+                    )
                 },
                 followingContent = {
                     Column(
@@ -762,6 +753,7 @@ internal class CreditCardActivity : BaseActivity() {
         private const val EXTRA_EXPIRY_TIME = "card.extra.expiry_time"
         private const val EXTRA_MERCHANT_DATA = "card.extra.merchant_data"
         private const val EXTRA_PROMOS = "card.extra.extra.promos"
+        private const val EXTRA_ITEM_INFO = "card.extra.extra.item_info"
 
         fun getIntent(
             activityContext: Context,
@@ -769,6 +761,7 @@ internal class CreditCardActivity : BaseActivity() {
             totalAmount: String,
             transactionDetails: TransactionDetails?,
             customerInfo: CustomerInfo? = null,
+            itemInfo: ItemInfo? = null,
             creditCard: CreditCard?,
             promos: List<Promo>? = null,
             expiryTime: String?,
@@ -778,14 +771,12 @@ internal class CreditCardActivity : BaseActivity() {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
                 putExtra(EXTRA_TRANSACTION_DETAILS, transactionDetails)
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
-                putExtra(
-                    EXTRA_CUSTOMER_DETAIL,
-                    customerInfo
-                )
+                putExtra(EXTRA_CUSTOMER_DETAIL, customerInfo)
+                putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_CREDIT_CARD, creditCard)
                 putExtra(EXTRA_EXPIRY_TIME, expiryTime)
                 withMerchantData?.let { putExtra(EXTRA_MERCHANT_DATA, withMerchantData) }
-                promos?.let {
+                promos?.also {
                     putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it))
                 }
             }

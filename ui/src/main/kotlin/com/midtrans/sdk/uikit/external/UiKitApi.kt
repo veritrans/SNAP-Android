@@ -45,6 +45,7 @@ class UiKitApi private constructor(val builder: Builder) {
         launcher: ActivityResultLauncher<Intent>,
         transactionDetails: SnapTransactionDetail,
         customerDetails: CustomerDetails,
+        itemDetails: List<ItemDetails>,
         creditCard: CreditCard,
         userId: String,
         expiry: Expiry? = null
@@ -53,6 +54,7 @@ class UiKitApi private constructor(val builder: Builder) {
             activityContext = activity,
             transactionDetails = transactionDetails,
             customerDetails = customerDetails,
+            itemDetails = itemDetails,
             creditCard = creditCard,
             userId = userId,
             expiry = expiry
@@ -78,6 +80,7 @@ class UiKitApi private constructor(val builder: Builder) {
         requestCode: Int,
         transactionDetails: SnapTransactionDetail,
         customerDetails: CustomerDetails,
+        itemDetails: List<ItemDetails>,
         creditCard: CreditCard,
         userId: String
     ) {
@@ -86,6 +89,7 @@ class UiKitApi private constructor(val builder: Builder) {
             activityContext = activity,
             transactionDetails = transactionDetails,
             customerDetails = customerDetails,
+            itemDetails = itemDetails,
             creditCard = creditCard,
             userId = userId
         )
@@ -96,6 +100,7 @@ class UiKitApi private constructor(val builder: Builder) {
         activityContext: Context,
         transactionDetails: SnapTransactionDetail,
         customerDetails: CustomerDetails,
+        itemDetails: List<ItemDetails>,
         creditCard: CreditCard,
         userId: String,
         uobEzpayCallback: PaymentCallback,
@@ -109,6 +114,7 @@ class UiKitApi private constructor(val builder: Builder) {
             activityContext = activityContext,
             transactionDetails = transactionDetails,
             customerDetails = customerDetails,
+            itemDetails = itemDetails,
             creditCard = creditCard,
             userId = userId,
             uobEzpayCallback = uobEzpayCallback,
@@ -202,7 +208,7 @@ class UiKitApi private constructor(val builder: Builder) {
         }
 
         //TODO: should getDefault Instance always not - null?
-        internal fun getDefaultInstanceNullAble(): UiKitApi? {
+        internal fun getDefaultInstanceNullable(): UiKitApi? {
             return instance
         }
 

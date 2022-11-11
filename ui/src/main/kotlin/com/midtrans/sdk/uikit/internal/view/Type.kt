@@ -2,13 +2,10 @@ package com.midtrans.sdk.uikit.internal.view
 
 import android.graphics.Typeface
 import android.text.Spanned
-import android.text.style.BulletSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
-import androidx.compose.material.Text
 import androidx.compose.material.Typography
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontFamily
@@ -17,9 +14,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextIndent
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.sp
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 
@@ -47,7 +41,7 @@ private val googleFontProvider: GoogleFont.Provider by lazy {
 
 @OptIn(ExperimentalTextApi::class)
 fun getPoppinsFontFamily(): FontFamily {
-    return UiKitApi.getDefaultInstanceNullAble()?.customFontFamily ?: getGoogleFontFamily(
+    return UiKitApi.getDefaultInstanceNullable()?.customFontFamily ?: getGoogleFontFamily(
         name = "Poppins",
         weights = listOf(
             FontWeight.Normal,

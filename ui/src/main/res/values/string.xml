@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="payment_details_title">Your order</string>
     <string name="payment_details_subtotal">Subtotal</string>
-
     <string name="payment_details_promo_title">Promo</string>
-
     <string name="payment_details_point_redemption_title">Points</string>
-
-
     <string name="payment_details_total">Total</string>
-
     <string name="payment_details_customer_detail_title">Customer details</string>
 
 
