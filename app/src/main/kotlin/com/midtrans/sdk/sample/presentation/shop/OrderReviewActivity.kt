@@ -26,13 +26,16 @@ import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
 import com.midtrans.sdk.corekit.models.ExpiryModel
-import com.midtrans.sdk.sample.Utils
 import com.midtrans.sdk.sample.model.Product
+import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
+import com.midtrans.sdk.sample.util.DemoConstant.NONE
+import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
+import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
+import com.midtrans.sdk.sample.Utils
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
-import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapButton
@@ -78,12 +81,28 @@ class OrderReviewActivity : ComponentActivity() {
             ?: throw RuntimeException("Order ID must not be empty")
     }
 
+    private val installmentBank: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_INSTALLMENT)
+            ?: throw RuntimeException("Installment must not be empty")
+    }
+
+    private val isRequiredInstallment: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_INPUT_ISREQUIRED, false)
+    }
+
+    private val customExpiry: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_EXPIRY)
+            ?: throw RuntimeException("Expiry must not be empty")
+    }
+
     private val uiKitApi: UiKitApi by lazy {
         UiKitApi.getDefaultInstance()
     }
 
     private lateinit var customerDetails: CustomerDetails
     private lateinit var transactionDetails: SnapTransactionDetail
+    private var installment: Installment? = null
+    private var expiry: Expiry? = null
 
     private fun setLocaleNew(languageCode: String?) {
         val locales = LocaleListCompat.forLanguageTags(languageCode)
@@ -94,9 +113,10 @@ class OrderReviewActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setLocaleNew("id") // commented for now. conflict with buildLegacyUiKit
-        buildUiKit()
 
-        setContent { OrderListPage() }
+        setContent {
+            OrderListPage()
+        }
     }
 
     @Preview
@@ -301,26 +321,41 @@ class OrderReviewActivity : ComponentActivity() {
                         phone = phoneNumber.text,
                         shippingAddress = Address(address = address.text)
                     )
+                    installment = populateInstallment()
+                    expiry = populateExpiry()
                     payWithAndroidxActivityResultLauncher()
                 }
             )
         }
     }
 
-    private fun buildUiKit() {
-        UiKitApi.Builder()
-            .withContext(this.applicationContext)
-            .withMerchantUrl("https://fiesta-point-sample.herokuapp.com/")
-            .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
-            .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
-            .withCustomColors(
-                CustomColors(
-                    interactiveFillInverse = 0xff0000,
-                    textInverse = 0x00ff00,
-                    supportNeutralFill = 0xffdddd
-                )
+    private fun populateExpiry(): Expiry? {
+        var expiry: Expiry? = null
+        if (customExpiry != NONE) {
+            expiry = Expiry(
+                startTime = Utils.getFormattedTime(System.currentTimeMillis()),
+                unit = when (customExpiry) {
+                    ONE_HOUR -> Expiry.UNIT_HOUR
+                    else -> Expiry.UNIT_MINUTE
+                },
+                duration = when (customExpiry) {
+                    FIVE_MINUTE -> 5
+                    else -> 1
+                }
             )
-            .build()
+        }
+        return expiry
+    }
+
+    private fun populateInstallment(): Installment? {
+        var installment: Installment? = null
+        if (installmentBank != NO_INSTALLMENT) {
+            installment = Installment(
+                isRequired = isRequiredInstallment,
+                terms = mapOf(installmentBank to listOf(3, 6, 12))
+            )
+        }
+        return installment
     }
 
     private fun buildLegacyUiKit() {
@@ -351,7 +386,7 @@ class OrderReviewActivity : ComponentActivity() {
                 secure = true,
                 installment = Installment(
                     isRequired = false,
-                    terms = mapOf("bni" to listOf(3, 6, 9, 12))
+                    terms = mapOf("BNI" to listOf(3, 6, 12))
                 )
             ),
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
@@ -371,7 +406,13 @@ class OrderReviewActivity : ComponentActivity() {
             transactionDetails = transactionDetails,
             creditCard = CreditCard(
                 saveCard = true,
-                secure = true
+                secure = true,
+                installment = installment
+            ),
+            snapTokenExpiry = Expiry(
+                startTime = Utils.getFormattedTime(System.currentTimeMillis()),
+                unit = Expiry.UNIT_MINUTE,
+                duration = 5
             ),
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
             customerDetails = customerDetails
@@ -438,13 +479,22 @@ class OrderReviewActivity : ComponentActivity() {
 
     companion object {
         private const val EXTRA_PRODUCT = "orderReview.extra.product"
+        private const val EXTRA_INPUT_INSTALLMENT = "orderReview.extra.installment"
+        private const val EXTRA_INPUT_ISREQUIRED = "orderReview.extra.isRequired"
+        private const val EXTRA_INPUT_EXPIRY = "orderReview.extra.expiry"
 
         fun getOrderReviewActivityIntent(
             activityContext: Context,
-            product: Product
+            product: Product,
+            installmentBank: String,
+            isRequiredInstallment: Boolean,
+            customExpiry: String
         ): Intent {
             return Intent(activityContext, OrderReviewActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT, product)
+                putExtra(EXTRA_INPUT_INSTALLMENT, installmentBank)
+                putExtra(EXTRA_INPUT_ISREQUIRED, isRequiredInstallment)
+                putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
             }
         }
     }

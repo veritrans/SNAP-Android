@@ -221,7 +221,7 @@ class UiKitApi private constructor(val builder: Builder) {
             }
             UiKitApi(this)
 
-            return instance
+            return instance!!
         }
     }
 
@@ -234,10 +234,15 @@ class UiKitApi private constructor(val builder: Builder) {
             }
             get() = paymentCallbackWeakReference.get()
 
-        private lateinit var instance: UiKitApi
+        private var instance: UiKitApi? = null
 
 
         fun getDefaultInstance(): UiKitApi {
+            return instance!!
+        }
+
+        //TODO: should getDefault Instance always not - null?
+        internal fun getDefaultInstanceNullAble(): UiKitApi? {
             return instance
         }
 

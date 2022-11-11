@@ -182,7 +182,9 @@ class PaymentOptionActivity : BaseActivity() {
                     totalAmount = totalAmount,
                     orderId = orderId,
                     customerInfo = customerInfo,
-                    paymentMethods = paymentMethods
+                    paymentMethods = paymentMethods,
+                    promos = promos,
+                    creditCard = creditCard
                 )
             }
         }
@@ -206,14 +208,16 @@ class PaymentOptionActivity : BaseActivity() {
     @Composable
     private fun Preview() {
         PaymentOptionPage(
-            "Rp33.990",
+            totalAmount = "Rp33.990",
             "#00-11-22-33",
-            CustomerInfo(
+            customerInfo = CustomerInfo(
                 "Ari Bhakti",
                 "087788778212",
                 listOf("Jl. ABC", "Rumah DEF")
             ),
-            PaymentMethodList(
+            creditCard = CreditCard()
+            ,
+            paymentMethods = PaymentMethodList(
                 listOf(
                     PaymentMethodItem(
                         type = "bt",
@@ -284,8 +288,10 @@ class PaymentOptionActivity : BaseActivity() {
     private fun PaymentOptionPage(
         totalAmount: String,
         orderId: String,
+        creditCard: CreditCard?,
         customerInfo: CustomerInfo?,
-        paymentMethods: PaymentMethodList
+        paymentMethods: PaymentMethodList,
+        promos: List<Promo>? = null
     ) {
         var isExpand by remember { mutableStateOf(false) }
         Column {

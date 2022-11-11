@@ -10,4 +10,10 @@ open class Expiry(
     startTime = startTime,
     unit = unit,
     duration = duration
-)
+) {
+    companion object {
+        val UNIT_HOUR = "hours"
+        val UNIT_MINUTE = "minutes"
+        val UNIT_DAY = "days"
+    }
+}
