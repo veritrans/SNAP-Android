@@ -22,6 +22,7 @@ public class MidtransSDK {
     private static boolean sdkNotAvailable = false;
     private TransactionRequest transactionRequest = null;
     private ISdkFlow uiflow;
+    private UIKitCustomSetting uiKitCustomSetting;
 
     private MidtransSDK() {
 
@@ -29,6 +30,7 @@ public class MidtransSDK {
 
     private MidtransSDK(@NonNull SdkUIFlowBuilder sdkBuilder) {
         MidtransSDK.sdkBuilder = sdkBuilder;
+        uiKitCustomSetting = sdkBuilder.uiKitCustomSetting;
     }
 
     /**
@@ -94,6 +96,13 @@ public class MidtransSDK {
         }
 
         return midtransSDK;
+    }
+
+    public UIKitCustomSetting getUIKitCustomSetting() {
+        if (this.uiKitCustomSetting == null) {
+            this.uiKitCustomSetting = new UIKitCustomSetting();
+        }
+        return uiKitCustomSetting;
     }
 
 

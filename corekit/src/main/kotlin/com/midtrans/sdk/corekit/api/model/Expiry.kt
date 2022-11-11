@@ -4,10 +4,10 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Expiry(
-    val startTime: String,
-    val unit: String,
-    val duration: Int
+open class Expiry(
+    val startTime: String? = null,
+    val unit: String? = null,
+    val duration: Int? = null
 ) : Parcelable {
 
     companion object {

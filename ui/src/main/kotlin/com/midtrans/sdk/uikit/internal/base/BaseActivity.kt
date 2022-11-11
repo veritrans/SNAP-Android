@@ -21,6 +21,8 @@ open class BaseActivity : AppCompatActivity(){
         return diagonalInches >= 6.5 && hasTabletAttribute
     }
 
+    protected fun getUikitSetting() = UiKitApi.getDefaultInstance().uiKitSetting
+
     fun getStringResourceInEnglish(id: Int): String {
         val config = Configuration(resources.configuration)
         config.setLocale(Locale("en"))
