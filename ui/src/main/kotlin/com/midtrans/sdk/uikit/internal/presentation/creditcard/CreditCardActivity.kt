@@ -70,7 +70,9 @@ import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
+import java.util.function.BooleanSupplier
 import javax.inject.Inject
+import kotlin.properties.Delegates
 
 //TODO: refactor, state on value change listener is not required, compose will do the magic
 internal class CreditCardActivity : BaseActivity() {
@@ -254,7 +256,7 @@ internal class CreditCardActivity : BaseActivity() {
                 isCardTexFieldFocused = false,
                 isExpiryTextFieldFocused = false,
                 isCvvTextFieldFocused = false,
-                isSaveCardChecked = true,
+                isSaveCardChecked = getUikitSetting().saveCardChecked,
                 principalIconId = null,
                 customerEmail = TextFieldValue(),
                 customerPhone = TextFieldValue(),

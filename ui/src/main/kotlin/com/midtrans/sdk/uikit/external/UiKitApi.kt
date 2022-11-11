@@ -38,6 +38,7 @@ class UiKitApi private constructor(val builder: Builder) {
     internal fun getPaymentCallback() = paymentCallback
     internal val customColors = builder.customColors
     internal val customFontFamily = builder.fontFamily
+    val uiKitSetting = builder.uiKitSetting
 
     fun startPaymentWithAndroidX(
         activity: Activity,
@@ -99,6 +100,7 @@ class UiKitApi private constructor(val builder: Builder) {
         userId: String,
         uobEzpayCallback: PaymentCallback,
         paymentCallback: Callback<TransactionResult>,
+        snapTokenExpiry: Expiry? = null,
         paymentType: PaymentTypeItem? = null
     ) {
         UiKitApi.paymentCallback = paymentCallback
@@ -110,7 +112,8 @@ class UiKitApi private constructor(val builder: Builder) {
             creditCard = creditCard,
             userId = userId,
             uobEzpayCallback = uobEzpayCallback,
-            paymentType = paymentType
+            paymentType = paymentType,
+            expiry = snapTokenExpiry
         )
         activityContext.startActivity(intent)
     }
@@ -139,6 +142,7 @@ class UiKitApi private constructor(val builder: Builder) {
         internal lateinit var merchantClientKey: String
         internal var customColors: CustomColors? = null
         internal var fontFamily: FontFamily? = null
+        internal var uiKitSetting: UiKitSetting = UiKitSetting()
 
         fun withContext(context: Context) = apply {
             this.context = context.applicationContext
@@ -158,6 +162,10 @@ class UiKitApi private constructor(val builder: Builder) {
 
         fun withFontFamily(fontFamily: FontFamily) = apply {
             this.fontFamily = fontFamily
+        }
+
+        fun withUiKitSetting(uiKitSetting: UiKitSetting) = apply {
+            this.uiKitSetting = uiKitSetting
         }
 
         @Throws(RuntimeException::class)
