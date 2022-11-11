@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.sample.presentation.config.component.BasicDropdownMenu
 import com.midtrans.sdk.sample.presentation.shop.ProductListActivity
+import com.midtrans.sdk.sample.util.DemoConstant.ACQUIRING_BANK
 import com.midtrans.sdk.sample.util.DemoConstant.BCA
 import com.midtrans.sdk.sample.util.DemoConstant.BNI
 import com.midtrans.sdk.sample.util.DemoConstant.BRI
@@ -26,7 +27,9 @@ import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
 import com.midtrans.sdk.sample.util.DemoConstant.MANDIRI
 import com.midtrans.sdk.sample.util.DemoConstant.MAYBANK
+import com.midtrans.sdk.sample.util.DemoConstant.MEGA
 import com.midtrans.sdk.sample.util.DemoConstant.NONE
+import com.midtrans.sdk.sample.util.DemoConstant.NO_ACQUIRING_BANK
 import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.OFFLINE
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
@@ -52,6 +55,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
     fun DemoConfigurationScreen() {
         val installmentTerm = listOf(NO_INSTALLMENT, MANDIRI, BCA, BNI, BRI, CIMB, MAYBANK, OFFLINE)
         val isRequiredList = listOf(OPTIONAL, REQUIRED)
+        val acquringBankList = listOf(NO_ACQUIRING_BANK, MANDIRI, BCA, BNI, BRI, CIMB, MAYBANK, MEGA)
         val themeColorList = listOf(COLOR_DEFAULT, COLOR_RED, COLOR_BLUE, COLOR_GREEN)
         val customExpiryList = listOf(NONE, ONE_MINUTE, FIVE_MINUTE, ONE_HOUR)
 
@@ -59,6 +63,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
             InputState(
                 isRequired = false,
                 installment = NO_INSTALLMENT,
+                acquiringBank = NO_ACQUIRING_BANK,
                 color = COLOR_DEFAULT,
                 customExpiry = NONE
             )
@@ -73,6 +78,11 @@ class DemoConfigurationActivity : AppCompatActivity() {
             BasicDropdownMenu(
                 title = IS_INSTALLMENT_REQUIRED,
                 optionList = isRequiredList,
+                state = state
+            )
+            BasicDropdownMenu(
+                title = ACQUIRING_BANK,
+                optionList = acquringBankList,
                 state = state
             )
             BasicDropdownMenu(
@@ -97,6 +107,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                         state.color,
                         state.installment,
                         state.isRequired,
+                        state.acquiringBank,
                         state.expiry
                     )
                     startActivity(intent)
@@ -119,10 +130,12 @@ class InputState(
     color: String,
     installment: String,
     isRequired: Boolean,
+    acquiringBank: String,
     customExpiry: String
 ) {
     var installment by mutableStateOf(installment)
     var color by mutableStateOf(color)
     var isRequired by mutableStateOf(isRequired)
+    var acquiringBank by mutableStateOf(acquiringBank)
     var expiry by mutableStateOf(customExpiry)
 }

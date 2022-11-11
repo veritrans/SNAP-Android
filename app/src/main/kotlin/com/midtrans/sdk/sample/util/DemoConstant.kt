@@ -1,7 +1,8 @@
 package com.midtrans.sdk.sample.util
 
 object DemoConstant {
-    //Dropdown Titlw
+    //Dropdown Title
+    const val ACQUIRING_BANK = "Acquiring Bank"
     const val COLOR_THEME = "Color Theme"
     const val INSTALLMENT = "Installment"
     const val IS_INSTALLMENT_REQUIRED = "Is Installment Required"
@@ -32,4 +33,8 @@ object DemoConstant {
     const val ONE_MINUTE = "1 Minute"
     const val FIVE_MINUTE = "5 Minute"
     const val ONE_HOUR = "1 Hour"
+
+    //Acquiring Bank
+    const val NO_ACQUIRING_BANK = "No Acquiring Bank"
+    const val MEGA = "Mega"
 }

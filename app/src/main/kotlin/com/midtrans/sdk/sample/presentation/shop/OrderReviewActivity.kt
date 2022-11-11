@@ -29,6 +29,7 @@ import com.midtrans.sdk.corekit.models.ExpiryModel
 import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.NONE
+import com.midtrans.sdk.sample.util.DemoConstant.NO_ACQUIRING_BANK
 import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
@@ -90,6 +91,11 @@ class OrderReviewActivity : ComponentActivity() {
         intent.getBooleanExtra(EXTRA_INPUT_ISREQUIRED, false)
     }
 
+    private val acquiringBank: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_ACQUIRINGBANK)
+            ?: throw RuntimeException("Acquiring Bank must not be empty")
+    }
+
     private val customExpiry: String by lazy {
         intent.getStringExtra(EXTRA_INPUT_EXPIRY)
             ?: throw RuntimeException("Expiry must not be empty")
@@ -103,6 +109,7 @@ class OrderReviewActivity : ComponentActivity() {
     private lateinit var transactionDetails: SnapTransactionDetail
     private var installment: Installment? = null
     private var expiry: Expiry? = null
+    private var bank: String? = null
 
     private fun setLocaleNew(languageCode: String?) {
         val locales = LocaleListCompat.forLanguageTags(languageCode)
@@ -322,11 +329,20 @@ class OrderReviewActivity : ComponentActivity() {
                         shippingAddress = Address(address = address.text)
                     )
                     installment = populateInstallment()
+                    bank = populateAcquiringBank()
                     expiry = populateExpiry()
                     payWithAndroidxActivityResultLauncher()
                 }
             )
         }
+    }
+
+    private fun populateAcquiringBank(): String? {
+        var bank: String? = null
+        if(acquiringBank != NO_ACQUIRING_BANK) {
+            bank = acquiringBank
+        }
+        return bank
     }
 
     private fun populateExpiry(): Expiry? {
@@ -407,13 +423,10 @@ class OrderReviewActivity : ComponentActivity() {
             creditCard = CreditCard(
                 saveCard = true,
                 secure = true,
-                installment = installment
+                installment = installment,
+                bank = bank
             ),
-            expiry = Expiry(
-                startTime = DemoUtils.getFormattedTime(System.currentTimeMillis()),
-                unit = Expiry.UNIT_MINUTE,
-                duration = 5
-            ),
+            expiry = expiry,
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
             customerDetails = customerDetails
         )
@@ -470,6 +483,7 @@ class OrderReviewActivity : ComponentActivity() {
         private const val EXTRA_PRODUCT = "orderReview.extra.product"
         private const val EXTRA_INPUT_INSTALLMENT = "orderReview.extra.installment"
         private const val EXTRA_INPUT_ISREQUIRED = "orderReview.extra.isRequired"
+        private const val EXTRA_INPUT_ACQUIRINGBANK = "orderReview.extra.acquiringBank"
         private const val EXTRA_INPUT_EXPIRY = "orderReview.extra.expiry"
 
         fun getOrderReviewActivityIntent(
@@ -477,12 +491,14 @@ class OrderReviewActivity : ComponentActivity() {
             product: Product,
             installmentBank: String,
             isRequiredInstallment: Boolean,
+            acquiringBank: String,
             customExpiry: String
         ): Intent {
             return Intent(activityContext, OrderReviewActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT, product)
                 putExtra(EXTRA_INPUT_INSTALLMENT, installmentBank)
                 putExtra(EXTRA_INPUT_ISREQUIRED, isRequiredInstallment)
+                putExtra(EXTRA_INPUT_ACQUIRINGBANK, acquiringBank)
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
             }
         }
