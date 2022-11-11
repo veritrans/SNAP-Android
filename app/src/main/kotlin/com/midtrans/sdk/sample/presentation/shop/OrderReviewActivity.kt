@@ -26,7 +26,6 @@ import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
 import com.midtrans.sdk.corekit.models.ExpiryModel
-import com.midtrans.sdk.sample.Utils
 import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.NONE
