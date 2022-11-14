@@ -44,6 +44,11 @@ class ProductListActivity : ComponentActivity() {
             ?: throw throw RuntimeException("CCPaymentType must not be empty")
     }
 
+    private val bcaVa: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_BCAVA)
+            ?: throw throw RuntimeException("BCAva must not be empty")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -52,13 +57,14 @@ class ProductListActivity : ComponentActivity() {
         setContent {
             ProductListPage {
                 val intent = OrderReviewActivity.getOrderReviewActivityIntent(
-                    activityContext = this,
+                    activityContext = this@ProductListActivity,
                     product = it,
                     installmentBank = installmentBank,
                     isRequiredInstallment = isRequiredInstallment,
                     acquiringBank = acquiringBank,
                     customExpiry = customExpiry,
-                    ccPaymentType = ccPaymentType
+                    ccPaymentType = ccPaymentType,
+                    bcaVa = bcaVa
                 )
                 startActivity(intent)
             }
@@ -72,6 +78,7 @@ class ProductListActivity : ComponentActivity() {
         private const val EXTRA_INPUT_ACQUIRINGBANK = "productList.extra.acquiringBank"
         private const val EXTRA_INPUT_EXPIRY = "productList.extra.inputExpiry"
         private const val EXTRA_INPUT_CCPAYMENTTYPE = "productList.extra.ccPaymentType"
+        private const val EXTRA_INPUT_BCAVA = "productList.extra.bcaVa"
 
         fun getProductListActivity(
             activityContext: Context,
@@ -80,7 +87,8 @@ class ProductListActivity : ComponentActivity() {
             isRequiredInstallment: Boolean,
             acquiringBank: String,
             customExpiry: String,
-            ccPaymentType: String
+            ccPaymentType: String,
+            bcaVa: String
         ): Intent {
             return Intent(activityContext, ProductListActivity::class.java).apply {
                 putExtra(EXTRA_INPUT_COLOR, color)
@@ -89,6 +97,7 @@ class ProductListActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_ACQUIRINGBANK, acquiringBank)
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
                 putExtra(EXTRA_INPUT_CCPAYMENTTYPE, ccPaymentType)
+                putExtra(EXTRA_INPUT_BCAVA, bcaVa)
             }
         }
     }

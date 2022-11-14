@@ -108,17 +108,24 @@ class OrderReviewActivity : ComponentActivity() {
             ?: throw RuntimeException("CCPaymentType must not be empty")
     }
 
+    private val bcaVa: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_BCAVA)
+            ?: throw throw RuntimeException("BCAva must not be empty")
+    }
+
     private val uiKitApi: UiKitApi by lazy {
         UiKitApi.getDefaultInstance()
     }
 
     private lateinit var customerDetails: CustomerDetails
+    private lateinit var itemDetails: List<ItemDetails>
     private lateinit var transactionDetails: SnapTransactionDetail
     private var installment: Installment? = null
     private var expiry: Expiry? = null
     private var bank: String? = null
     private var isSavedCard: Boolean = false
     private var isSecure: Boolean = false
+    private var bcaVaRequest: BankTransferRequest? = null
 
     private fun setLocaleNew(languageCode: String?) {
         val locales = LocaleListCompat.forLanguageTags(languageCode)
@@ -337,20 +344,40 @@ class OrderReviewActivity : ComponentActivity() {
                         phone = phoneNumber.text,
                         shippingAddress = Address(address = address.text)
                     )
+                    itemDetails = listOf(ItemDetails("test-01", product.price, 1, product.name))
                     installment = populateInstallment()
                     bank = populateAcquiringBank()
                     expiry = populateExpiry()
                     isSecure = populateIsSecure()
                     isSavedCard = populateIsSavedCard()
+                    bcaVaRequest = populateBcaVa()
                     payWithAndroidxActivityResultLauncher()
                 }
             )
         }
     }
 
+    private fun populateBcaVa(): BankTransferRequest? {
+        var bcaTransferRequest: BankTransferRequest? = null
+        if (bcaVa != "") {
+            bcaTransferRequest = BankTransferRequest(
+                vaNumber = bcaVa,
+                freeText = FreeText(
+                    inquiry = listOf(
+                        FreeTextLanguage(
+                            "Text ID inquiry 0",
+                            "Text EN inquiry 0"
+                        )
+                    ), payment = listOf(FreeTextLanguage("Text ID inquiry 0", "Text EN inquiry 0"))
+                )
+            )
+        }
+        return bcaTransferRequest
+    }
+
     private fun populateIsSavedCard(): Boolean {
         var isSaved = false
-        if(ccPaymentType != NORMAL_CC_PAYMENT) {
+        if (ccPaymentType != NORMAL_CC_PAYMENT) {
             isSaved = true
         }
         return isSaved
@@ -358,7 +385,7 @@ class OrderReviewActivity : ComponentActivity() {
 
     private fun populateIsSecure(): Boolean {
         var isSecure = false
-        if(ccPaymentType == ONE_CLICK_TYPE) {
+        if (ccPaymentType == ONE_CLICK_TYPE) {
             isSecure = true
         }
         return isSecure
@@ -366,7 +393,7 @@ class OrderReviewActivity : ComponentActivity() {
 
     private fun populateAcquiringBank(): String? {
         var bank: String? = null
-        if(acquiringBank != NO_ACQUIRING_BANK) {
+        if (acquiringBank != NO_ACQUIRING_BANK) {
             bank = acquiringBank
         }
         return bank
@@ -439,7 +466,8 @@ class OrderReviewActivity : ComponentActivity() {
                 email = "arisbhaktis@email.com",
                 phone = "087788778212"
             ),
-            itemDetails = listOf(ItemDetails("test-01", product.price, 1, product.name))
+            itemDetails = itemDetails,
+            bcaVa = bcaVaRequest
         )
     }
 
@@ -457,7 +485,8 @@ class OrderReviewActivity : ComponentActivity() {
             snapTokenExpiry = expiry,
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
             customerDetails = customerDetails,
-            itemDetails = listOf(ItemDetails("test-01", product.price, 1, product.name))
+            itemDetails = itemDetails,
+            bcaVa = bcaVaRequest
         )
     }
 
@@ -515,6 +544,7 @@ class OrderReviewActivity : ComponentActivity() {
         private const val EXTRA_INPUT_ACQUIRINGBANK = "orderReview.extra.acquiringBank"
         private const val EXTRA_INPUT_EXPIRY = "orderReview.extra.expiry"
         private const val EXTRA_INPUT_CCPAYMENTTYPE = "orderReview.extra.ccPaymentType"
+        private const val EXTRA_INPUT_BCAVA = "orderReview.extra.bcaVa"
 
         fun getOrderReviewActivityIntent(
             activityContext: Context,
@@ -523,7 +553,8 @@ class OrderReviewActivity : ComponentActivity() {
             isRequiredInstallment: Boolean,
             acquiringBank: String,
             customExpiry: String,
-            ccPaymentType: String
+            ccPaymentType: String,
+            bcaVa: String
         ): Intent {
             return Intent(activityContext, OrderReviewActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT, product)
@@ -532,6 +563,7 @@ class OrderReviewActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_ACQUIRINGBANK, acquiringBank)
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
                 putExtra(EXTRA_INPUT_CCPAYMENTTYPE, ccPaymentType)
+                putExtra(EXTRA_INPUT_BCAVA, bcaVa)
             }
         }
     }
