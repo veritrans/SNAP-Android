@@ -14,6 +14,7 @@ import com.midtrans.sdk.sample.util.DemoConstant.ACQUIRING_BANK
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_THEME
 import com.midtrans.sdk.sample.util.DemoConstant.CREDIT_CARD_PAYMENT_TYPE
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BCA_VA
+import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BNI_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_EXPIRY
 import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
@@ -103,6 +104,7 @@ fun CustomTextField(title: String, state: InputState, modifier: Modifier = Modif
                 textField = it
                 when (title) {
                     CUSTOM_BCA_VA -> state.bcaVa = textField.text
+                    CUSTOM_BNI_VA -> state.bniVa = textField.text
                 }
             },
             isFocused = textFieldFocused,

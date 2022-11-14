@@ -113,6 +113,11 @@ class OrderReviewActivity : ComponentActivity() {
             ?: throw throw RuntimeException("BCAva must not be empty")
     }
 
+    private val bniVa: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_BNIVA)
+            ?: throw throw RuntimeException("BNIva must not be empty")
+    }
+
     private val uiKitApi: UiKitApi by lazy {
         UiKitApi.getDefaultInstance()
     }
@@ -126,6 +131,7 @@ class OrderReviewActivity : ComponentActivity() {
     private var isSavedCard: Boolean = false
     private var isSecure: Boolean = false
     private var bcaVaRequest: BankTransferRequest? = null
+    private var bniVaRequest: BankTransferRequest? = null
 
     private fun setLocaleNew(languageCode: String?) {
         val locales = LocaleListCompat.forLanguageTags(languageCode)
@@ -351,10 +357,21 @@ class OrderReviewActivity : ComponentActivity() {
                     isSecure = populateIsSecure()
                     isSavedCard = populateIsSavedCard()
                     bcaVaRequest = populateBcaVa()
+                    bniVaRequest = populateBniVa()
                     payWithAndroidxActivityResultLauncher()
                 }
             )
         }
+    }
+
+    private fun populateBniVa(): BankTransferRequest? {
+        var bniTransferRequest: BankTransferRequest? = null
+        if (bniVa != "") {
+            bniTransferRequest = BankTransferRequest(
+                vaNumber = bniVa
+            )
+        }
+        return bniTransferRequest
     }
 
     private fun populateBcaVa(): BankTransferRequest? {
@@ -467,7 +484,8 @@ class OrderReviewActivity : ComponentActivity() {
                 phone = "087788778212"
             ),
             itemDetails = itemDetails,
-            bcaVa = bcaVaRequest
+            bcaVa = bcaVaRequest,
+            bniVa = bniVaRequest
         )
     }
 
@@ -486,7 +504,8 @@ class OrderReviewActivity : ComponentActivity() {
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
             customerDetails = customerDetails,
             itemDetails = itemDetails,
-            bcaVa = bcaVaRequest
+            bcaVa = bcaVaRequest,
+            bniVa = bniVaRequest
         )
     }
 
@@ -545,6 +564,7 @@ class OrderReviewActivity : ComponentActivity() {
         private const val EXTRA_INPUT_EXPIRY = "orderReview.extra.expiry"
         private const val EXTRA_INPUT_CCPAYMENTTYPE = "orderReview.extra.ccPaymentType"
         private const val EXTRA_INPUT_BCAVA = "orderReview.extra.bcaVa"
+        private const val EXTRA_INPUT_BNIVA = "orderReview.extra.bniVa"
 
         fun getOrderReviewActivityIntent(
             activityContext: Context,
@@ -554,7 +574,8 @@ class OrderReviewActivity : ComponentActivity() {
             acquiringBank: String,
             customExpiry: String,
             ccPaymentType: String,
-            bcaVa: String
+            bcaVa: String,
+            bniVa: String
         ): Intent {
             return Intent(activityContext, OrderReviewActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT, product)
@@ -564,6 +585,7 @@ class OrderReviewActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
                 putExtra(EXTRA_INPUT_CCPAYMENTTYPE, ccPaymentType)
                 putExtra(EXTRA_INPUT_BCAVA, bcaVa)
+                putExtra(EXTRA_INPUT_BNIVA, bniVa)
             }
         }
     }

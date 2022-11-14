@@ -11,7 +11,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.sample.presentation.config.component.BasicDropdownMenu
 import com.midtrans.sdk.sample.presentation.config.component.CustomTextField
@@ -28,6 +27,7 @@ import com.midtrans.sdk.sample.util.DemoConstant.COLOR_RED
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_THEME
 import com.midtrans.sdk.sample.util.DemoConstant.CREDIT_CARD_PAYMENT_TYPE
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BCA_VA
+import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BNI_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_EXPIRY
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
@@ -49,7 +49,6 @@ import com.midtrans.sdk.sample.util.DemoConstant.TWO_CLICK_TYPE
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.view.SnapButton
-import com.midtrans.sdk.uikit.internal.view.SnapTextField
 
 
 class DemoConfigurationActivity : AppCompatActivity() {
@@ -73,9 +72,6 @@ class DemoConfigurationActivity : AppCompatActivity() {
         val customExpiryList = listOf(NONE, ONE_MINUTE, FIVE_MINUTE, ONE_HOUR)
         val ccPaymentTypeList = listOf(NORMAL_CC_PAYMENT, TWO_CLICK_TYPE, ONE_CLICK_TYPE)
 
-        var bcaVaNumber by remember { mutableStateOf(TextFieldValue("")) }
-        var bcaVaNumberFieldFocused by remember { mutableStateOf(false) }
-
         val state = remember {
             InputState(
                 isRequired = false,
@@ -84,7 +80,8 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 color = COLOR_DEFAULT,
                 customExpiry = NONE,
                 ccPaymentType = NORMAL_CC_PAYMENT,
-                bcaVa = ""
+                bcaVa = "",
+                bniVa = ""
             )
         }
 
@@ -127,6 +124,10 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 title = CUSTOM_BCA_VA,
                 state = state
             )
+            CustomTextField(
+                title = CUSTOM_BNI_VA,
+                state = state
+            )
 
             SnapButton(
                 text = "Launch Demo App", style = SnapButton.Style.PRIMARY,
@@ -142,7 +143,8 @@ class DemoConfigurationActivity : AppCompatActivity() {
                         state.acquiringBank,
                         state.expiry,
                         state.ccPaymentType,
-                        state.bcaVa
+                        state.bcaVa,
+                        state.bniVa
                     )
                     startActivity(intent)
                 }
@@ -167,7 +169,8 @@ class InputState(
     acquiringBank: String,
     customExpiry: String,
     ccPaymentType: String,
-    bcaVa: String
+    bcaVa: String,
+    bniVa: String,
 ) {
     var installment by mutableStateOf(installment)
     var color by mutableStateOf(color)
@@ -176,4 +179,5 @@ class InputState(
     var expiry by mutableStateOf(customExpiry)
     var ccPaymentType by mutableStateOf(ccPaymentType)
     var bcaVa by mutableStateOf(bcaVa)
+    var bniVa by mutableStateOf(bniVa)
 }
