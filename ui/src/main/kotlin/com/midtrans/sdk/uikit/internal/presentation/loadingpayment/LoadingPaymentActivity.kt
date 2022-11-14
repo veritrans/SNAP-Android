@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.*
-import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferRequest
+import com.midtrans.sdk.corekit.api.model.BankTransferRequest
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.api.model.PublicTransactionResult
 import com.midtrans.sdk.uikit.external.UiKitApi

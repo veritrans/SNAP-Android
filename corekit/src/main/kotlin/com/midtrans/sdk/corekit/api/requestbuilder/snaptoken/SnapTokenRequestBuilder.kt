@@ -9,7 +9,7 @@ import com.midtrans.sdk.corekit.api.model.ItemDetails
 import com.midtrans.sdk.corekit.api.model.PaymentCallback
 import com.midtrans.sdk.corekit.api.model.PromoRequest
 import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
-import com.midtrans.sdk.corekit.internal.network.model.request.BankTransferRequest
+import com.midtrans.sdk.corekit.api.model.BankTransferRequest
 import com.midtrans.sdk.corekit.internal.network.model.request.SnapTokenRequest
 
 class SnapTokenRequestBuilder {
