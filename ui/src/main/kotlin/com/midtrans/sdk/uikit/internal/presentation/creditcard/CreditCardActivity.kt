@@ -500,8 +500,6 @@ internal class CreditCardActivity : BaseActivity() {
                         creditCardPromoInfo = CreditCardPromoInfo(
                             promoName = state.promoName,
                             promoAmount = state.promoAmount,
-                            pointName = null, //TODO point selection goes here
-                            pointAmount = null, //TODO point selection goes here
                             discountedAmount = totalAmount
                         )
                     )

@@ -168,8 +168,6 @@ fun PreviewOrderDetail() {
         creditCardPromoInfo = CreditCardPromoInfo(
             promoName = "promo-name",
             promoAmount = "-Rp1000",
-            pointName = "point-name",
-            pointAmount = "-Rp2000",
             discountedAmount = "Rp7000"
         )
     )
