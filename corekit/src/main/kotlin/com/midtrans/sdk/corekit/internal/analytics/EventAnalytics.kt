@@ -112,6 +112,8 @@ class EventAnalytics(
         customerPhoneNumber: String?,
         customerCity: String?,
         customerPostCode: String?,
+        totalItems: String?,
+        totalQuantity: String?,
     ) {
         val customerProperties = mutableMapOf<String, String>()
         customerName?.also { customerProperties[PROPERTY_CUSTOMER_NAME] = it }
@@ -119,6 +121,8 @@ class EventAnalytics(
         customerPhoneNumber?.also { customerProperties[PROPERTY_CUSTOMER_PHONE_NUMBER] = it }
         customerCity?.also { customerProperties[PROPERTY_CUSTOMER_CITY] = it }
         customerPostCode?.also { customerProperties[PROPERTY_CUSTOMER_POST_CODE] = it }
+        totalItems?.also { customerProperties[PROPERTY_TOTAL_ITEMS] = it }
+        totalQuantity?.also { customerProperties[PROPERTY_TOTAL_QUANTITY] = it }
 
         mixpanelTracker.registerCommonProperties(customerProperties)
     }
@@ -136,16 +140,11 @@ class EventAnalytics(
         pageName: String,
         paymentMethodName: String?,
         transactionId: String?,
-        totalItems: String?,
-        totalQuantity: String?,
         netAmount: String?
     ) {
         val optionalProperties = mutableMapOf<String, String>()
         paymentMethodName?.also { optionalProperties[PROPERTY_PAYMENT_METHOD_NAME] = it }
         transactionId?.also { optionalProperties[PROPERTY_TRANSACTION_ID] = it }
-
-        totalItems?.also { optionalProperties[PROPERTY_TOTAL_ITEMS] = it }
-        totalQuantity?.also { optionalProperties[PROPERTY_TOTAL_QUANTITY] = it }
         netAmount?.also { optionalProperties[PROPERTY_NET_AMOUNT] = it }
 
         mixpanelTracker.trackEvent(

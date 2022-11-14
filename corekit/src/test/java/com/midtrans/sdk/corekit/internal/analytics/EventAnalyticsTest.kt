@@ -118,6 +118,8 @@ internal class EventAnalyticsTest {
             customerPhoneNumber = "phone",
             customerCity = "city",
             customerPostCode = "post-code",
+            totalItems = "total-items",
+            totalQuantity = "total-quantity"
         )
         verify(mixpanelTracker).registerCommonProperties(
             mapOf(
@@ -125,7 +127,9 @@ internal class EventAnalyticsTest {
                 PROPERTY_CUSTOMER_EMAIL to "email",
                 PROPERTY_CUSTOMER_PHONE_NUMBER to "phone",
                 PROPERTY_CUSTOMER_CITY to "city",
-                PROPERTY_CUSTOMER_POST_CODE to "post-code"
+                PROPERTY_CUSTOMER_POST_CODE to "post-code",
+                PROPERTY_TOTAL_ITEMS to "total-items",
+                PROPERTY_TOTAL_QUANTITY to "total-quantity"
             )
         )
     }
@@ -310,8 +314,6 @@ internal class EventAnalyticsTest {
             pageName = "page-name",
             paymentMethodName = "payment-type",
             transactionId = "transaction-id",
-            totalItems = "total-items",
-            totalQuantity = "total-quantity",
             netAmount = "net-amount"
         )
         verify(mixpanelTracker).trackEvent(
@@ -320,8 +322,6 @@ internal class EventAnalyticsTest {
                 PROPERTY_PAGE_NAME to "page-name",
                 PROPERTY_PAYMENT_METHOD_NAME to "payment-type",
                 PROPERTY_TRANSACTION_ID to "transaction-id",
-                PROPERTY_TOTAL_ITEMS to "total-items",
-                PROPERTY_TOTAL_QUANTITY to "total-quantity",
                 PROPERTY_NET_AMOUNT to "net-amount"
             )
         )
