@@ -13,6 +13,7 @@ import com.midtrans.sdk.sample.presentation.config.InputState
 import com.midtrans.sdk.sample.util.DemoConstant.ACQUIRING_BANK
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_THEME
 import com.midtrans.sdk.sample.util.DemoConstant.CREDIT_CARD_PAYMENT_TYPE
+import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BCA_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_EXPIRY
 import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
@@ -64,9 +65,10 @@ fun BasicDropdownMenu(title: String, optionList: List<String>, state: InputState
                             selectedOptionText = selectionOption
                             expanded = false
                             when (title) {
-                                IS_INSTALLMENT_REQUIRED -> state.isRequired = selectedOptionText != OPTIONAL
-                                INSTALLMENT-> state.installment = selectedOptionText
-                                ACQUIRING_BANK-> state.acquiringBank = selectedOptionText
+                                IS_INSTALLMENT_REQUIRED -> state.isRequired =
+                                    selectedOptionText != OPTIONAL
+                                INSTALLMENT -> state.installment = selectedOptionText
+                                ACQUIRING_BANK -> state.acquiringBank = selectedOptionText
                                 COLOR_THEME -> state.color = selectedOptionText
                                 CUSTOM_EXPIRY -> state.expiry = selectedOptionText
                                 CREDIT_CARD_PAYMENT_TYPE -> state.ccPaymentType = selectedOptionText
@@ -82,5 +84,35 @@ fun BasicDropdownMenu(title: String, optionList: List<String>, state: InputState
                 }
             }
         }
+    }
+}
+
+@Composable
+fun CustomTextField(title: String, state: InputState, modifier: Modifier = Modifier) {
+    var textField by remember { mutableStateOf(TextFieldValue()) }
+    var textFieldFocused by remember { mutableStateOf(false) }
+
+    Column {
+        Text(
+            modifier = Modifier.padding(top = 16.dp, bottom = 20.dp),
+            text = title,
+            style = SnapTypography.STYLES.snapTextMediumMedium
+        )
+        SnapTextField(
+            value = textField,
+            onValueChange = {
+                textField = it
+                when (title) {
+                    CUSTOM_BCA_VA -> state.bcaVa = textField.text
+                }
+            },
+            isFocused = textFieldFocused,
+            onFocusChange = {
+                textFieldFocused = it
+            },
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp)
+        )
     }
 }
