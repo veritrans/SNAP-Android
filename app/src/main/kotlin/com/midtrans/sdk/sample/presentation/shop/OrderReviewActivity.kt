@@ -29,9 +29,12 @@ import com.midtrans.sdk.corekit.models.ExpiryModel
 import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.NONE
+import com.midtrans.sdk.sample.util.DemoConstant.NORMAL_CC_PAYMENT
 import com.midtrans.sdk.sample.util.DemoConstant.NO_ACQUIRING_BANK
 import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
+import com.midtrans.sdk.sample.util.DemoConstant.ONE_CLICK_TYPE
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
+import com.midtrans.sdk.sample.util.DemoConstant.TWO_CLICK_TYPE
 import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
@@ -101,8 +104,9 @@ class OrderReviewActivity : ComponentActivity() {
             ?: throw RuntimeException("Expiry must not be empty")
     }
 
-    private val isSavedCard: Boolean by lazy {
-        intent.getBooleanExtra(EXTRA_INPUT_SAVEDCARD, false)
+    private val ccPaymentType: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_CCPAYMENTTYPE)
+            ?: throw throw RuntimeException("CCPaymentType must not be empty")
     }
 
     private val uiKitApi: UiKitApi by lazy {
@@ -114,6 +118,8 @@ class OrderReviewActivity : ComponentActivity() {
     private var installment: Installment? = null
     private var expiry: Expiry? = null
     private var bank: String? = null
+    private var isSavedCard: Boolean = false
+    private var isSecure: Boolean = false
 
     private fun setLocaleNew(languageCode: String?) {
         val locales = LocaleListCompat.forLanguageTags(languageCode)
@@ -335,10 +341,28 @@ class OrderReviewActivity : ComponentActivity() {
                     installment = populateInstallment()
                     bank = populateAcquiringBank()
                     expiry = populateExpiry()
+                    isSecure = populateIsSecure()
+                    isSavedCard = populateIsSavedCard()
                     payWithAndroidxActivityResultLauncher()
                 }
             )
         }
+    }
+
+    private fun populateIsSavedCard(): Boolean {
+        var isSaved = false
+        if(ccPaymentType != NORMAL_CC_PAYMENT) {
+            isSaved = true
+        }
+        return isSaved
+    }
+
+    private fun populateIsSecure(): Boolean {
+        var isSecure = false
+        if(ccPaymentType == ONE_CLICK_TYPE) {
+            isSecure = true
+        }
+        return isSecure
     }
 
     private fun populateAcquiringBank(): String? {
@@ -426,7 +450,7 @@ class OrderReviewActivity : ComponentActivity() {
             transactionDetails = transactionDetails,
             creditCard = CreditCard(
                 saveCard = isSavedCard,
-                secure = true,
+                secure = isSecure,
                 installment = installment,
                 bank = bank
             ),
@@ -492,7 +516,7 @@ class OrderReviewActivity : ComponentActivity() {
         private const val EXTRA_INPUT_ISREQUIRED = "orderReview.extra.isRequired"
         private const val EXTRA_INPUT_ACQUIRINGBANK = "orderReview.extra.acquiringBank"
         private const val EXTRA_INPUT_EXPIRY = "orderReview.extra.expiry"
-        private const val EXTRA_INPUT_SAVEDCARD = "orderReview.extra.savedCard"
+        private const val EXTRA_INPUT_CCPAYMENTTYPE = "orderReview.extra.ccPaymentType"
 
         fun getOrderReviewActivityIntent(
             activityContext: Context,
@@ -501,7 +525,7 @@ class OrderReviewActivity : ComponentActivity() {
             isRequiredInstallment: Boolean,
             acquiringBank: String,
             customExpiry: String,
-            isSavedCard: Boolean
+            ccPaymentType: String
         ): Intent {
             return Intent(activityContext, OrderReviewActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT, product)
@@ -509,7 +533,7 @@ class OrderReviewActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_ISREQUIRED, isRequiredInstallment)
                 putExtra(EXTRA_INPUT_ACQUIRINGBANK, acquiringBank)
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
-                putExtra(EXTRA_INPUT_SAVEDCARD, isSavedCard)
+                putExtra(EXTRA_INPUT_CCPAYMENTTYPE, ccPaymentType)
             }
         }
     }

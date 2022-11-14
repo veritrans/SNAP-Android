@@ -7,7 +7,7 @@ object DemoConstant {
     const val INSTALLMENT = "Installment"
     const val IS_INSTALLMENT_REQUIRED = "Is Installment Required"
     const val CUSTOM_EXPIRY = "Custom Expiry"
-    const val SAVED_CARD = "Saved Card"
+    const val CREDIT_CARD_PAYMENT_TYPE = "Credit Card Payment"
 
     //Color Theme
     const val COLOR_DEFAULT = "Default"
@@ -39,7 +39,8 @@ object DemoConstant {
     const val NO_ACQUIRING_BANK = "No Acquiring Bank"
     const val MEGA = "Mega"
 
-    //Enabled or Disabled
-    const val ENABLED = "Enabled"
-    const val DISABLED = "Disabled"
+    //CC payment
+    const val NORMAL_CC_PAYMENT = "Normal"
+    const val ONE_CLICK_TYPE = "One Click"
+    const val TWO_CLICK_TYPE = "Two Click"
 }

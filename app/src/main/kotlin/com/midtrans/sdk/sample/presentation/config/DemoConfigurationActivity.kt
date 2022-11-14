@@ -24,9 +24,8 @@ import com.midtrans.sdk.sample.util.DemoConstant.COLOR_DEFAULT
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_GREEN
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_RED
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_THEME
+import com.midtrans.sdk.sample.util.DemoConstant.CREDIT_CARD_PAYMENT_TYPE
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_EXPIRY
-import com.midtrans.sdk.sample.util.DemoConstant.DISABLED
-import com.midtrans.sdk.sample.util.DemoConstant.ENABLED
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
@@ -34,14 +33,16 @@ import com.midtrans.sdk.sample.util.DemoConstant.MANDIRI
 import com.midtrans.sdk.sample.util.DemoConstant.MAYBANK
 import com.midtrans.sdk.sample.util.DemoConstant.MEGA
 import com.midtrans.sdk.sample.util.DemoConstant.NONE
+import com.midtrans.sdk.sample.util.DemoConstant.NORMAL_CC_PAYMENT
 import com.midtrans.sdk.sample.util.DemoConstant.NO_ACQUIRING_BANK
 import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.OFFLINE
+import com.midtrans.sdk.sample.util.DemoConstant.ONE_CLICK_TYPE
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.OPTIONAL
 import com.midtrans.sdk.sample.util.DemoConstant.REQUIRED
-import com.midtrans.sdk.sample.util.DemoConstant.SAVED_CARD
+import com.midtrans.sdk.sample.util.DemoConstant.TWO_CLICK_TYPE
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.view.SnapButton
@@ -66,7 +67,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
             listOf(NO_ACQUIRING_BANK, MANDIRI, BCA, BNI, BRI, CIMB, MAYBANK, MEGA)
         val themeColorList = listOf(COLOR_DEFAULT, COLOR_RED, COLOR_BLUE, COLOR_GREEN)
         val customExpiryList = listOf(NONE, ONE_MINUTE, FIVE_MINUTE, ONE_HOUR)
-        val booleanList = listOf(DISABLED, ENABLED)
+        val ccPaymentTypeList = listOf(NORMAL_CC_PAYMENT, TWO_CLICK_TYPE, ONE_CLICK_TYPE)
 
         val state = remember {
             InputState(
@@ -75,7 +76,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 acquiringBank = NO_ACQUIRING_BANK,
                 color = COLOR_DEFAULT,
                 customExpiry = NONE,
-                savedCard = false
+                ccPaymentType = NORMAL_CC_PAYMENT
             )
         }
 
@@ -110,8 +111,8 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 state = state
             )
             BasicDropdownMenu(
-                title = SAVED_CARD,
-                optionList = booleanList,
+                title = CREDIT_CARD_PAYMENT_TYPE,
+                optionList = ccPaymentTypeList,
                 state = state
             )
 
@@ -128,7 +129,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                         state.isRequired,
                         state.acquiringBank,
                         state.expiry,
-                        state.savedCard
+                        state.ccPaymentType
                     )
                     startActivity(intent)
                 }
@@ -152,12 +153,12 @@ class InputState(
     isRequired: Boolean,
     acquiringBank: String,
     customExpiry: String,
-    savedCard: Boolean
+    ccPaymentType: String
 ) {
     var installment by mutableStateOf(installment)
     var color by mutableStateOf(color)
     var isRequired by mutableStateOf(isRequired)
     var acquiringBank by mutableStateOf(acquiringBank)
     var expiry by mutableStateOf(customExpiry)
-    var savedCard by mutableStateOf(savedCard)
+    var ccPaymentType by mutableStateOf(ccPaymentType)
 }
