@@ -1,6 +1,7 @@
 package com.midtrans.sdk.uikit.internal.presentation.banktransfer
 
 import com.midtrans.sdk.corekit.SnapCore
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import javax.inject.Inject
 
@@ -13,6 +14,8 @@ internal class BankTransferListViewModel @Inject constructor(
     }
 
     fun trackOrderDetailsViewed() {
-        trackOrderDetailsViewed()
+        trackOrderDetailsViewed(
+            paymentMethodName = PaymentType.BANK_TRANSFER
+        )
     }
 }
