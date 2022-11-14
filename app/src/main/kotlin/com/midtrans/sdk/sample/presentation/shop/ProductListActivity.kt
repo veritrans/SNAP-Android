@@ -54,6 +54,11 @@ class ProductListActivity : ComponentActivity() {
             ?: throw throw RuntimeException("BCAva must not be empty")
     }
 
+    private val permataVa: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_PERMATAVA)
+            ?: throw throw RuntimeException("BCAva must not be empty")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -70,7 +75,8 @@ class ProductListActivity : ComponentActivity() {
                     customExpiry = customExpiry,
                     ccPaymentType = ccPaymentType,
                     bcaVa = bcaVa,
-                    bniVa = bniVa
+                    bniVa = bniVa,
+                    permataVa = permataVa
                 )
                 startActivity(intent)
             }
@@ -86,6 +92,7 @@ class ProductListActivity : ComponentActivity() {
         private const val EXTRA_INPUT_CCPAYMENTTYPE = "productList.extra.ccPaymentType"
         private const val EXTRA_INPUT_BCAVA = "productList.extra.bcaVa"
         private const val EXTRA_INPUT_BNIVA = "productList.extra.bniVa"
+        private const val EXTRA_INPUT_PERMATAVA = "productList.extra.permataVa"
 
         fun getProductListActivity(
             activityContext: Context,
@@ -96,7 +103,8 @@ class ProductListActivity : ComponentActivity() {
             customExpiry: String,
             ccPaymentType: String,
             bcaVa: String,
-            bniVa: String
+            bniVa: String,
+            permataVa: String
         ): Intent {
             return Intent(activityContext, ProductListActivity::class.java).apply {
                 putExtra(EXTRA_INPUT_COLOR, color)
@@ -107,6 +115,7 @@ class ProductListActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_CCPAYMENTTYPE, ccPaymentType)
                 putExtra(EXTRA_INPUT_BCAVA, bcaVa)
                 putExtra(EXTRA_INPUT_BNIVA, bniVa)
+                putExtra(EXTRA_INPUT_PERMATAVA, permataVa)
             }
         }
     }

@@ -12,6 +12,7 @@ object DemoConstant {
     //Input Field Title
     const val CUSTOM_BCA_VA = "Custom BCA VA"
     const val CUSTOM_BNI_VA = "Custom BNI VA"
+    const val CUSTOM_PERMATA_VA = "Custom Permata VA"
 
     //Color Theme
     const val COLOR_DEFAULT = "Default"

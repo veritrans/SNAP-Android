@@ -17,10 +17,10 @@ import com.midtrans.sdk.sample.util.DemoConstant.CREDIT_CARD_PAYMENT_TYPE
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BCA_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BNI_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_EXPIRY
+import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_PERMATA_VA
 import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
 import com.midtrans.sdk.sample.util.DemoConstant.OPTIONAL
-import com.midtrans.sdk.uikit.internal.view.SnapText
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 
@@ -107,6 +107,7 @@ fun CustomTextField(title: String, state: InputState, modifier: Modifier = Modif
                 when (title) {
                     CUSTOM_BCA_VA -> state.bcaVa = textField.text
                     CUSTOM_BNI_VA -> state.bniVa = textField.text
+                    CUSTOM_PERMATA_VA -> state.permataVa = textField.text
                 }
             },
             isFocused = textFieldFocused,
@@ -123,6 +124,9 @@ fun CustomTextField(title: String, state: InputState, modifier: Modifier = Modif
         }
         if(state.bniVa.length > 8 && title == CUSTOM_BNI_VA){
             Text(text = "Numbers only. Length should be within 1 to 8.", color = Color.Red)
+        }
+        if(state.permataVa.isNotEmpty() && state.permataVa.length != 10 && title == CUSTOM_PERMATA_VA){
+            Text(text = "Numbers only. Length should be 10.", color = Color.Red)
         }
     }
 }

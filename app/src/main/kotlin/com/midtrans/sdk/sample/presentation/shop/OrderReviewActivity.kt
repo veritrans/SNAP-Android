@@ -118,6 +118,11 @@ class OrderReviewActivity : ComponentActivity() {
             ?: throw throw RuntimeException("BNIva must not be empty")
     }
 
+    private val permataVa: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_PERMATAVA)
+            ?: throw throw RuntimeException("PermataVA must not be empty")
+    }
+
     private val uiKitApi: UiKitApi by lazy {
         UiKitApi.getDefaultInstance()
     }
@@ -132,6 +137,7 @@ class OrderReviewActivity : ComponentActivity() {
     private var isSecure: Boolean = false
     private var bcaVaRequest: BankTransferRequest? = null
     private var bniVaRequest: BankTransferRequest? = null
+    private var permataVaRequest: BankTransferRequest? = null
 
     private fun setLocaleNew(languageCode: String?) {
         val locales = LocaleListCompat.forLanguageTags(languageCode)
@@ -356,40 +362,23 @@ class OrderReviewActivity : ComponentActivity() {
                     expiry = populateExpiry()
                     isSecure = populateIsSecure()
                     isSavedCard = populateIsSavedCard()
-                    bcaVaRequest = populateBcaVa()
-                    bniVaRequest = populateBniVa()
+                    bcaVaRequest = populateVa(bcaVa)
+                    bniVaRequest = populateVa(bniVa)
+                    permataVaRequest = populateVa(permataVa)
                     payWithAndroidxActivityResultLauncher()
                 }
             )
         }
     }
 
-    private fun populateBniVa(): BankTransferRequest? {
-        var bniTransferRequest: BankTransferRequest? = null
-        if (bniVa != "") {
-            bniTransferRequest = BankTransferRequest(
-                vaNumber = bniVa
+    private fun populateVa(va: String): BankTransferRequest? {
+        var vaTransferRequest: BankTransferRequest? = null
+        if (va != "") {
+            vaTransferRequest = BankTransferRequest(
+                vaNumber = va
             )
         }
-        return bniTransferRequest
-    }
-
-    private fun populateBcaVa(): BankTransferRequest? {
-        var bcaTransferRequest: BankTransferRequest? = null
-        if (bcaVa != "") {
-            bcaTransferRequest = BankTransferRequest(
-                vaNumber = bcaVa,
-                freeText = FreeText(
-                    inquiry = listOf(
-                        FreeTextLanguage(
-                            "Text ID inquiry 0",
-                            "Text EN inquiry 0"
-                        )
-                    ), payment = listOf(FreeTextLanguage("Text ID inquiry 0", "Text EN inquiry 0"))
-                )
-            )
-        }
-        return bcaTransferRequest
+        return vaTransferRequest
     }
 
     private fun populateIsSavedCard(): Boolean {
@@ -505,7 +494,8 @@ class OrderReviewActivity : ComponentActivity() {
             customerDetails = customerDetails,
             itemDetails = itemDetails,
             bcaVa = bcaVaRequest,
-            bniVa = bniVaRequest
+            bniVa = bniVaRequest,
+            permataVa = permataVaRequest
         )
     }
 
@@ -565,6 +555,7 @@ class OrderReviewActivity : ComponentActivity() {
         private const val EXTRA_INPUT_CCPAYMENTTYPE = "orderReview.extra.ccPaymentType"
         private const val EXTRA_INPUT_BCAVA = "orderReview.extra.bcaVa"
         private const val EXTRA_INPUT_BNIVA = "orderReview.extra.bniVa"
+        private const val EXTRA_INPUT_PERMATAVA = "orderReview.extra.permataVa"
 
         fun getOrderReviewActivityIntent(
             activityContext: Context,
@@ -575,7 +566,8 @@ class OrderReviewActivity : ComponentActivity() {
             customExpiry: String,
             ccPaymentType: String,
             bcaVa: String,
-            bniVa: String
+            bniVa: String,
+            permataVa: String
         ): Intent {
             return Intent(activityContext, OrderReviewActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT, product)
@@ -586,6 +578,7 @@ class OrderReviewActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_CCPAYMENTTYPE, ccPaymentType)
                 putExtra(EXTRA_INPUT_BCAVA, bcaVa)
                 putExtra(EXTRA_INPUT_BNIVA, bniVa)
+                putExtra(EXTRA_INPUT_PERMATAVA, permataVa)
             }
         }
     }

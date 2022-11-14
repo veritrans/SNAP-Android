@@ -29,6 +29,7 @@ import com.midtrans.sdk.sample.util.DemoConstant.CREDIT_CARD_PAYMENT_TYPE
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BCA_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BNI_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_EXPIRY
+import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_PERMATA_VA
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
@@ -81,7 +82,8 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 customExpiry = NONE,
                 ccPaymentType = NORMAL_CC_PAYMENT,
                 bcaVa = "",
-                bniVa = ""
+                bniVa = "",
+                permataVa = ""
             )
         }
 
@@ -128,6 +130,10 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 title = CUSTOM_BNI_VA,
                 state = state
             )
+            CustomTextField(
+                title = CUSTOM_PERMATA_VA,
+                state = state
+            )
 
             SnapButton(
                 text = "Launch Demo App", style = SnapButton.Style.PRIMARY,
@@ -144,7 +150,8 @@ class DemoConfigurationActivity : AppCompatActivity() {
                         state.expiry,
                         state.ccPaymentType,
                         state.bcaVa,
-                        state.bniVa
+                        state.bniVa,
+                        state.permataVa
                     )
                     startActivity(intent)
                 }
@@ -171,6 +178,7 @@ class InputState(
     ccPaymentType: String,
     bcaVa: String,
     bniVa: String,
+    permataVa: String
 ) {
     var installment by mutableStateOf(installment)
     var color by mutableStateOf(color)
@@ -180,4 +188,5 @@ class InputState(
     var ccPaymentType by mutableStateOf(ccPaymentType)
     var bcaVa by mutableStateOf(bcaVa)
     var bniVa by mutableStateOf(bniVa)
+    var permataVa by mutableStateOf(permataVa)
 }
