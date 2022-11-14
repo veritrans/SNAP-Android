@@ -15,20 +15,62 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
-import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.external.UiKitApi
+import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.view.*
+import javax.inject.Inject
 
 class BankTransferListActivity : BaseActivity() {
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel: BankTransferListViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[BankTransferListViewModel::class.java]
+    }
+
+    private val snapToken: String by lazy {
+        intent.getStringExtra(EXTRA_SNAP_TOKEN)
+            ?: throw RuntimeException("Snap token must not be empty")
+    }
+
+    private val totalAmount: String by lazy {
+        intent.getStringExtra(EXTRA_TOTAL_AMOUNT)
+            ?: throw RuntimeException("Total amount must not be empty")
+    }
+
+    private val orderId: String by lazy {
+        intent.getStringExtra(EXTRA_ORDER_ID)
+            ?: throw RuntimeException("Order ID must not be empty")
+    }
+
+    private val customerInfo: CustomerInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
+    }
+
+    private val itemInfo: ItemInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
+    }
+
+    private val paymentMethodItem: PaymentMethodItem by lazy {
+        intent.getParcelableExtra(EXTRA_PAYMENT_METHOD_ITEM) as? PaymentMethodItem
+            ?: throw RuntimeException("Order ID must not be empty")
+    }
+
+    private val paymentTypeItem: PaymentTypeItem? by lazy {
+        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE_ITEM)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         paymentTypeItem?.let { paymentType ->
             paymentType.method?.let { paymentMethod ->
                 toBankTransferDetail(paymentMethod)
@@ -73,6 +115,7 @@ class BankTransferListActivity : BaseActivity() {
                         }
                     },
                     expandingContent = {
+                        viewModel.trackOrderDetailsViewed()
                         SnapPaymentOrderDetails(
                             customerInfo = customerInfo,
                             itemInfo = itemInfo
@@ -117,38 +160,6 @@ class BankTransferListActivity : BaseActivity() {
                 snapToken = snapToken
             )
         resultLauncher.launch(intent)
-    }
-
-    private val snapToken: String by lazy {
-        intent.getStringExtra(EXTRA_SNAP_TOKEN)
-            ?: throw RuntimeException("Snap token must not be empty")
-    }
-
-    private val totalAmount: String by lazy {
-        intent.getStringExtra(EXTRA_TOTAL_AMOUNT)
-            ?: throw RuntimeException("Total amount must not be empty")
-    }
-
-    private val orderId: String by lazy {
-        intent.getStringExtra(EXTRA_ORDER_ID)
-            ?: throw RuntimeException("Order ID must not be empty")
-    }
-
-    private val customerInfo: CustomerInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
-    }
-
-    private val itemInfo: ItemInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
-    }
-
-    private val paymentMethodItem: PaymentMethodItem by lazy {
-        intent.getParcelableExtra(EXTRA_PAYMENT_METHOD_ITEM) as? PaymentMethodItem
-            ?: throw RuntimeException("Order ID must not be empty")
-    }
-
-    private val paymentTypeItem: PaymentTypeItem? by lazy {
-        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE_ITEM)
     }
 
     private val bankNameMap by lazy {
