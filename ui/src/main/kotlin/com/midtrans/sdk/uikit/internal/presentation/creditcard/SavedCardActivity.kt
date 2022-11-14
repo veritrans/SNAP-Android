@@ -172,6 +172,7 @@ class SavedCardActivity: BaseActivity() {
                 isCvvTextFieldFocused = false,
                 principalIconId = null,
                 isSaveCardChecked = true,
+                isPointBankChecked = false,
                 promoId = 0,
                 isInstallmentAllowed = false,
                 customerPhone = TextFieldValue(),
@@ -259,6 +260,7 @@ class SavedCardActivity: BaseActivity() {
                                 listStates = savedTokenListState,
                                 cardItemState = state,
                                 bankIconState = bankCodeId,
+                                isPointBankShownState = null,
                                 creditCard = creditCard,
                                 onItemRemoveClicked = {
                                     viewModel.deleteSavedCard(snapToken = snapToken, maskedCard = it.displayedMaskedCard)

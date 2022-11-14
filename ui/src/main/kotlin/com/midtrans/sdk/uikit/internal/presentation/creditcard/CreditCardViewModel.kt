@@ -44,10 +44,13 @@ internal class CreditCardViewModel @Inject constructor(
     private val _netAmountLiveData = MutableLiveData<String>()
     private val _binBlockedLiveData = MutableLiveData<Boolean>()
     private val _errorLiveData = MutableLiveData<SnapError>()
+    private val _isPointBankShown = MutableLiveData<Boolean>()
+    private val _isPointBankEnabled = MutableLiveData<Boolean>()
     private var expireTimeInMillis = 0L
     private var allowRetry = false
     private var promos: List<Promo>? = null
     private var transactionDetails: TransactionDetails? = null
+    private var pointBanks: List<String?>? = null
 
     val promoDataLiveData: LiveData<List<PromoData>> = _promoDataLiveData
     val netAmountLiveData: LiveData<String> = _netAmountLiveData
@@ -60,6 +63,8 @@ internal class CreditCardViewModel @Inject constructor(
     val errorTypeLiveData: LiveData<Pair<Int?, String>> = _errorTypeLiveData
     val binBlockedLiveData: LiveData<Boolean> = _binBlockedLiveData
     val errorLiveData: LiveData<SnapError> = _errorLiveData
+    val isPointBankShown: LiveData<Boolean> = _isPointBankShown
+    private val isPointBankEnabled: LiveData<Boolean> = _isPointBankEnabled
 
 
     private var promoName: String? = null
@@ -100,6 +105,23 @@ internal class CreditCardViewModel @Inject constructor(
         }
     }
 
+    fun setPointBanks(pointBanks: List<String>?) {
+        this.pointBanks = pointBanks
+    }
+
+    private fun checkForPointBank(cardIssuerBank: String) {
+        pointBanks?.contains(cardIssuerBank).apply {
+            _isPointBankEnabled.value = true
+        }
+        handleShowingPointBank(cardIssuerBank)
+    }
+    private fun handleShowingPointBank(cardIssuerBank: String){
+        _isPointBankShown.value = isPointBankEnabled.value == true && checkForBniPoint(cardIssuerBank) == true
+    }
+    private fun checkForBniPoint(cardIssuerBank: String): Boolean {
+        return cardIssuerBank.lowercase() == BANK_BNI
+    }
+
     fun getPromosData(binNumber: String, installmentTerm: String) {
         _promoDataLiveData.value =
             snapCreditCardUtil.getCreditCardApplicablePromosData(binNumber, promos, installmentTerm)
@@ -115,6 +137,7 @@ internal class CreditCardViewModel @Inject constructor(
                         data?.bankCode?.let {
                             _bankIconId.value = snapCreditCardUtil.getBankIcon(it.lowercase())
                             _cardIssuerBank.value = it
+                            checkForPointBank(it)
                         }
                         data?.binType?.let {
                             _binType.value = it
@@ -139,6 +162,7 @@ internal class CreditCardViewModel @Inject constructor(
     fun resetCardNumberAttribute() {
         _bankIconId.value = null
         _binBlockedLiveData.value = false
+        _isPointBankShown.value = false
     }
 
     fun chargeUsingCreditCard(
@@ -449,5 +473,6 @@ internal class CreditCardViewModel @Inject constructor(
         private const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
         private const val TIME_FORMAT = "%02d:%02d:%02d"
         private val timeZoneUtc = TimeZone.getTimeZone("UTC")
+        private const val BANK_BNI = "bni"
     }
 }

@@ -27,16 +27,14 @@ import com.midtrans.sdk.corekit.api.model.CustomerDetails
 import com.midtrans.sdk.corekit.api.model.PaymentMethod
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.Promo
+import com.midtrans.sdk.corekit.api.model.ItemDetails
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
-import com.midtrans.sdk.uikit.internal.model.CustomerInfo
-import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
-import com.midtrans.sdk.uikit.internal.model.PaymentMethodList
-import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
+import com.midtrans.sdk.uikit.internal.model.*
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.conveniencestore.ConvenienceStoreActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
@@ -58,6 +56,7 @@ class PaymentOptionActivity : BaseActivity() {
         private const val EXTRA_ORDER_ID = "paymentOptionActivity.extra.order_id"
         private const val EXTRA_PAYMENT_LIST = "paymentOptionActivity.extra.payment_list"
         private const val EXTRA_CUSTOMER_DETAILS = "paymentOptionActivity.extra.customer_details"
+        private const val EXTRA_ITEM_DETAILS = "paymentOptionActivity.extra.item_details"
         private const val EXTRA_CREDIT_CARD = "paymentOptionActivity.extra.credit_card"
         private const val EXTRA_PROMOS = "paymentOptionActivity.extra.promos"
         private const val EXTRA_MERCHANT_DATA = "paymentOptionActivity.extra.merchant_data"
@@ -73,6 +72,7 @@ class PaymentOptionActivity : BaseActivity() {
             orderId: String,
             paymentList: List<PaymentMethod>,
             customerDetails: CustomerDetails?,
+            itemDetails: List<ItemDetails>?,
             creditCard: CreditCard?,
             promos: List<Promo>?,
             merchant: Merchant?,
@@ -90,9 +90,8 @@ class PaymentOptionActivity : BaseActivity() {
                 putExtra(EXTRA_TRANSACTION_DETAILS, transactionDetail)
                 putExtra(EXTRA_EXPIRY_TIME, expiryTime)
                 putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
-                promos?.let {
-                    putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it))
-                }
+                promos?.also { putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it)) }
+                itemDetails?.also { putParcelableArrayListExtra(EXTRA_ITEM_DETAILS, ArrayList(it)) }
             }
         }
     }
@@ -101,7 +100,7 @@ class PaymentOptionActivity : BaseActivity() {
     internal lateinit var vmFactory: ViewModelProvider.Factory
 
     private val viewModel: PaymentOptionViewModel by lazy {
-        ViewModelProvider(this, vmFactory).get(PaymentOptionViewModel::class.java)
+        ViewModelProvider(this, vmFactory)[PaymentOptionViewModel::class.java]
     }
 
     private val snapToken: String by lazy {
@@ -125,7 +124,11 @@ class PaymentOptionActivity : BaseActivity() {
     }
 
     private val promos: List<Promo>? by lazy {
-        intent.getParcelableArrayListExtra<Promo>(EXTRA_PROMOS)
+        intent.getParcelableArrayListExtra(EXTRA_PROMOS)
+    }
+
+    private val itemDetails: List<ItemDetails>? by lazy {
+        intent.getParcelableArrayListExtra(EXTRA_ITEM_DETAILS)
     }
 
     private val customerDetail: CustomerDetails? by lazy {
@@ -153,6 +156,7 @@ class PaymentOptionActivity : BaseActivity() {
     }
 
     private var customerInfo: CustomerInfo? = null
+    private var itemInfo: ItemInfo? = null
 
     private lateinit var paymentMethods: PaymentMethodList
 
@@ -163,6 +167,7 @@ class PaymentOptionActivity : BaseActivity() {
 
         paymentMethods = viewModel.initiateList(paymentList, isTabletDevice())
         customerInfo = viewModel.getCustomerInfo(customerDetail)
+        itemInfo = viewModel.getItemInfo(itemDetails)
 
         //TODO: Find More Optimal way for PaymentType that have method (Bank transfer & UOB)
         paymentTypeItem?.let { paymentType ->
@@ -171,6 +176,7 @@ class PaymentOptionActivity : BaseActivity() {
                 getOnPaymentItemClick(
                     paymentType = paymentType.type,
                     customerInfo = customerInfo,
+                    itemInfo = itemInfo,
                     totalAmount = totalAmount,
                     paymentMethodItem = it,
                     orderId = orderId
@@ -182,6 +188,7 @@ class PaymentOptionActivity : BaseActivity() {
                     totalAmount = totalAmount,
                     orderId = orderId,
                     customerInfo = customerInfo,
+                    itemInfo = itemInfo,
                     paymentMethods = paymentMethods,
                     promos = promos,
                     creditCard = creditCard
@@ -215,8 +222,11 @@ class PaymentOptionActivity : BaseActivity() {
                 "087788778212",
                 listOf("Jl. ABC", "Rumah DEF")
             ),
-            creditCard = CreditCard()
-            ,
+            itemInfo = ItemInfo(
+                itemDetails = listOf(ItemDetails("001", 890.00, 1, "item")),
+                totalAmount = 890.00
+            ),
+            creditCard = CreditCard(),
             paymentMethods = PaymentMethodList(
                 listOf(
                     PaymentMethodItem(
@@ -290,12 +300,16 @@ class PaymentOptionActivity : BaseActivity() {
         orderId: String,
         creditCard: CreditCard?,
         customerInfo: CustomerInfo?,
+        itemInfo: ItemInfo?,
         paymentMethods: PaymentMethodList,
         promos: List<Promo>? = null
     ) {
         var isExpand by remember { mutableStateOf(false) }
         Column {
-            SnapAppBar(title = stringResource(id = R.string.payment_summary_select_method), iconResId = R.drawable.ic_arrow_left) {
+            SnapAppBar(
+                title = stringResource(id = R.string.payment_summary_select_method),
+                iconResId = R.drawable.ic_arrow_left
+            ) {
                 onBackPressed()
             }
             SnapOverlayExpandingBox(
@@ -311,14 +325,11 @@ class PaymentOptionActivity : BaseActivity() {
                         isExpand = it
                     }
                 },
-                expandingContent = customerInfo?.let {
-                    {
-                        SnapCustomerDetail(
-                            name = it.name,
-                            phone = it.phone,
-                            addressLines = it.addressLines
-                        )
-                    }
+                expandingContent = {
+                    SnapPaymentOrderDetails(
+                        itemInfo = itemInfo,
+                        customerInfo = customerInfo
+                    )
                 },
                 followingContent = {
                     LazyColumn {
@@ -337,6 +348,7 @@ class PaymentOptionActivity : BaseActivity() {
                                 getOnPaymentItemClick(
                                     paymentType = payment.type,
                                     customerInfo = customerInfo,
+                                    itemInfo = itemInfo,
                                     totalAmount = totalAmount,
                                     paymentMethodItem = payment,
                                     orderId = orderId
@@ -370,6 +382,7 @@ class PaymentOptionActivity : BaseActivity() {
         orderId: String,
         paymentMethodItem: PaymentMethodItem,
         customerInfo: CustomerInfo?,
+        itemInfo: ItemInfo?
     ): Map<String, () -> Unit> {
 
         val eWalletPaymentLauncher = {
@@ -381,6 +394,7 @@ class PaymentOptionActivity : BaseActivity() {
                     totalAmount = totalAmount,
                     paymentType = paymentMethodItem.type,
                     customerInfo = customerInfo,
+                    itemInfo = itemInfo
                 )
             )
         }
@@ -394,6 +408,7 @@ class PaymentOptionActivity : BaseActivity() {
                     totalAmount = totalAmount,
                     paymentType = paymentMethodItem.type,
                     customerInfo = customerInfo,
+                    itemInfo = itemInfo
                 )
             )
         }
@@ -407,11 +422,12 @@ class PaymentOptionActivity : BaseActivity() {
                         totalAmount = totalAmount,
                         paymentMethodItem = paymentMethodItem,
                         customerInfo = customerInfo,
+                        itemInfo = itemInfo,
                         paymentTypeItem = this.paymentTypeItem
                     )
                 )
             },
-            Pair("credit_card") {
+            Pair(PaymentType.CREDIT_CARD) {
                 resultLauncher.launch(
                     //TODO: Need to revisit, if we need to enable adding a flag on sdk to force Normal Transaction like old ios sdk
                     if (creditCard?.savedTokens.isNullOrEmpty().or(true)) {
@@ -421,6 +437,7 @@ class PaymentOptionActivity : BaseActivity() {
                             transactionDetails = transactionDetails,
                             totalAmount = totalAmount,
                             customerInfo = customerInfo,
+                            itemInfo = itemInfo,
                             creditCard = creditCard,
                             expiryTime = expiryTime,
                             withMerchantData = merchant,
@@ -449,7 +466,8 @@ class PaymentOptionActivity : BaseActivity() {
                             paymentType = it,
                             amount = totalAmount,
                             orderId = orderId,
-                            customerInfo = customerInfo
+                            customerInfo = customerInfo,
+                            itemInfo = itemInfo
                         )
                     )
                 }
@@ -463,6 +481,7 @@ class PaymentOptionActivity : BaseActivity() {
                         amount = totalAmount,
                         orderId = orderId,
                         customerInfo = customerInfo,
+                        itemInfo = itemInfo,
                         paymentTypeItem = this.paymentTypeItem
                     )
                 )
@@ -479,7 +498,8 @@ class PaymentOptionActivity : BaseActivity() {
                         paymentType = paymentType,
                         amount = totalAmount,
                         orderId = orderId,
-                        customerInfo = customerInfo
+                        customerInfo = customerInfo,
+                        itemInfo = itemInfo
                     )
                 )
             },
