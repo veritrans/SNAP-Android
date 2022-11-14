@@ -38,6 +38,7 @@ internal class ConvenienceStoreViewModel @Inject constructor(
     private val _transactionResultLiveData = MutableLiveData<TransactionResult>()
     private var expiredTime = datetimeUtil.getCurrentMillis() + TimeUnit.MINUTES.toMillis(15)
     private val _errorLiveData = MutableLiveData<Int?>()
+    private var _transactionId: String? = null
     val barCodeBitmapLiveData: LiveData<Bitmap> = _barCodeBitmapLiveData
     val pdfUrlLiveData: MutableLiveData<String> = _pdfUrlLiveData
     val paymentCodeLiveData: MutableLiveData<String> = _paymentCodeLiveData
@@ -59,6 +60,7 @@ internal class ConvenienceStoreViewModel @Inject constructor(
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
                     result.run {
+                        _transactionId = transactionId
                         paymentCode?.let { generateBarcode(it) }
                         paymentCode?.let { _paymentCodeLiveData.value = it }
                         indomaretExpirationRaw?.let { expiredTime = parseTime(it) }
@@ -67,7 +69,7 @@ internal class ConvenienceStoreViewModel @Inject constructor(
                         _transactionResultLiveData.value = TransactionResult(
                             status = statusCode.orEmpty(),
                             transactionId = transactionId.orEmpty(),
-                            paymentType = paymentType.orEmpty()
+                            paymentType = paymentType
                         )
                     }
                     trackSnapChargeResult(
@@ -131,7 +133,8 @@ internal class ConvenienceStoreViewModel @Inject constructor(
     fun trackOrderDetailsViewed(paymentType: String) {
         trackOrderDetailsViewed(
             pageName = getPageName(paymentType),
-            paymentMethodName = paymentType
+            paymentMethodName = paymentType,
+            transactionId = _transactionId
         )
     }
 
