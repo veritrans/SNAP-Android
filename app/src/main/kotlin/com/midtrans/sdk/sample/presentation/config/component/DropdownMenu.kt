@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.sample.presentation.config.InputState
@@ -19,6 +20,7 @@ import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_EXPIRY
 import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
 import com.midtrans.sdk.sample.util.DemoConstant.OPTIONAL
+import com.midtrans.sdk.uikit.internal.view.SnapText
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 
@@ -115,5 +117,12 @@ fun CustomTextField(title: String, state: InputState, modifier: Modifier = Modif
                 .fillMaxWidth()
                 .padding(bottom = 10.dp)
         )
+
+        if(state.bcaVa.length > 11 && title == CUSTOM_BCA_VA){
+            Text(text = "Numbers only. Length should be within 1 to 11.", color = Color.Red)
+        }
+        if(state.bniVa.length > 8 && title == CUSTOM_BNI_VA){
+            Text(text = "Numbers only. Length should be within 1 to 8.", color = Color.Red)
+        }
     }
 }
