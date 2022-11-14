@@ -316,6 +316,12 @@ internal class PaymentOptionViewModelTest {
         verify(eventAnalytics).trackSnapPageClosed(PageName.PAYMENT_LIST_PAGE)
     }
 
+    @Test
+    fun trackOrderDetailsViewed() {
+        viewModel.trackOrderDetailsViewed()
+        verify(eventAnalytics).trackSnapOrderDetailsViewed(PageName.PAYMENT_LIST_PAGE, null, null, null)
+    }
+
     private fun providePaymentMethodList(): List<PaymentMethod> {
         return listOf(
             PaymentMethod(
