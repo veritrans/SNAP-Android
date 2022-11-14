@@ -4,7 +4,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-object Utils {
+object DemoUtils {
 
     fun getFormattedTime(time: Long): String {
         // Quoted "Z" to indicate UTC, no timezone offset
