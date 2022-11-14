@@ -455,9 +455,6 @@ class OrderReviewActivity : ComponentActivity() {
                 bank = bank
             ),
             expiry = expiry,
-            bcaVa = BankTransferRequest(
-                vaNumber = "1234567"
-            ),
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
             customerDetails = customerDetails
         )
