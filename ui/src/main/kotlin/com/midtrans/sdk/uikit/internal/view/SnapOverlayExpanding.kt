@@ -201,8 +201,6 @@ fun SnapPaymentOrderDetails(
             SnapPromoDetail(
                 promoName = promoName,
                 promoAmount = promoAmount,
-                pointName = pointName,
-                pointAmount = pointAmount,
                 discountedAmount = discountedAmount
             )
         }
@@ -313,15 +311,12 @@ private fun SnapItemDetail(
 private fun SnapPromoDetail(
     promoName: String?,
     promoAmount: String?,
-    pointName: String?,
-    pointAmount: String?,
     discountedAmount: String?
 ) {
     Column(
         modifier = Modifier.background(color = SnapColors.getARGBColor(SnapColors.backgroundFillPrimary))
     ) {
         val isPromoAvailable = !promoName.isNullOrEmpty() && !promoAmount.isNullOrEmpty()
-        val isPointAvailable = !pointName.isNullOrEmpty() && !pointAmount.isNullOrEmpty()
 
         if (isPromoAvailable) {
             Row(
@@ -355,30 +350,6 @@ private fun SnapPromoDetail(
                     color = SnapColors.getARGBColor(SnapColors.textSecondary)
                 )
             }
-        }
-        if (isPointAvailable) {
-            Text(
-                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
-                text = stringResource(id = R.string.payment_details_point_redemption_title),
-                style = SnapTypography.STYLES.snapTextMediumRegular,
-                color = SnapColors.getARGBColor(SnapColors.textPrimary)
-            )
-            Row(modifier = Modifier.padding(top = 4.dp)) {
-                Text(
-                    text = pointName.orEmpty(),
-                    style = SnapTypography.STYLES.snapTextSmallRegular,
-                    color = SnapColors.getARGBColor(SnapColors.textSecondary),
-                    modifier = Modifier.weight(1f)
-                )
-                Text(
-                    text = pointAmount.orEmpty(),
-                    style = SnapTypography.STYLES.snapTextSmallRegular,
-                    color = SnapColors.getARGBColor(SnapColors.textSecondary)
-                )
-            }
-        }
-
-        if (isPromoAvailable || isPointAvailable) {
             DashedDivider(
                 modifier = Modifier.padding(top = 12.dp),
                 thickness = 1.dp,
