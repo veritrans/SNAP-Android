@@ -18,9 +18,11 @@ import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BCA_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BNI_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_EXPIRY
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_PERMATA_VA
+import com.midtrans.sdk.sample.util.DemoConstant.ENABLED
 import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
 import com.midtrans.sdk.sample.util.DemoConstant.OPTIONAL
+import com.midtrans.sdk.sample.util.DemoConstant.PRE_AUTH
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 
@@ -74,6 +76,7 @@ fun BasicDropdownMenu(title: String, optionList: List<String>, state: InputState
                                 COLOR_THEME -> state.color = selectedOptionText
                                 CUSTOM_EXPIRY -> state.expiry = selectedOptionText
                                 CREDIT_CARD_PAYMENT_TYPE -> state.ccPaymentType = selectedOptionText
+                                PRE_AUTH -> state.isPreAuth = selectedOptionText == ENABLED
                             }
                         },
                         enabled = true

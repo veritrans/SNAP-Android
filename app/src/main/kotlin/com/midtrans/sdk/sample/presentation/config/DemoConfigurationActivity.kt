@@ -30,6 +30,8 @@ import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BCA_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BNI_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_EXPIRY
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_PERMATA_VA
+import com.midtrans.sdk.sample.util.DemoConstant.DISABLED
+import com.midtrans.sdk.sample.util.DemoConstant.ENABLED
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
@@ -45,6 +47,7 @@ import com.midtrans.sdk.sample.util.DemoConstant.ONE_CLICK_TYPE
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.OPTIONAL
+import com.midtrans.sdk.sample.util.DemoConstant.PRE_AUTH
 import com.midtrans.sdk.sample.util.DemoConstant.REQUIRED
 import com.midtrans.sdk.sample.util.DemoConstant.TWO_CLICK_TYPE
 import com.midtrans.sdk.uikit.external.UiKitApi
@@ -72,6 +75,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
         val themeColorList = listOf(COLOR_DEFAULT, COLOR_RED, COLOR_BLUE, COLOR_GREEN)
         val customExpiryList = listOf(NONE, ONE_MINUTE, FIVE_MINUTE, ONE_HOUR)
         val ccPaymentTypeList = listOf(NORMAL_CC_PAYMENT, TWO_CLICK_TYPE, ONE_CLICK_TYPE)
+        val booleanList = listOf(DISABLED, ENABLED)
 
         val state = remember {
             InputState(
@@ -81,6 +85,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 color = COLOR_DEFAULT,
                 customExpiry = NONE,
                 ccPaymentType = NORMAL_CC_PAYMENT,
+                isPreAuth = false,
                 bcaVa = "",
                 bniVa = "",
                 permataVa = ""
@@ -122,6 +127,11 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 optionList = ccPaymentTypeList,
                 state = state
             )
+            BasicDropdownMenu(
+                title = PRE_AUTH,
+                optionList = booleanList,
+                state = state
+            )
             CustomTextField(
                 title = CUSTOM_BCA_VA,
                 state = state
@@ -149,6 +159,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                         state.acquiringBank,
                         state.expiry,
                         state.ccPaymentType,
+                        state.isPreAuth,
                         state.bcaVa,
                         state.bniVa,
                         state.permataVa
@@ -176,6 +187,7 @@ class InputState(
     acquiringBank: String,
     customExpiry: String,
     ccPaymentType: String,
+    isPreAuth: Boolean,
     bcaVa: String,
     bniVa: String,
     permataVa: String
@@ -186,6 +198,7 @@ class InputState(
     var acquiringBank by mutableStateOf(acquiringBank)
     var expiry by mutableStateOf(customExpiry)
     var ccPaymentType by mutableStateOf(ccPaymentType)
+    var isPreAuth by mutableStateOf(isPreAuth)
     var bcaVa by mutableStateOf(bcaVa)
     var bniVa by mutableStateOf(bniVa)
     var permataVa by mutableStateOf(permataVa)

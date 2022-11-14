@@ -108,6 +108,10 @@ class OrderReviewActivity : ComponentActivity() {
             ?: throw RuntimeException("CCPaymentType must not be empty")
     }
 
+    private val isPreAuth: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_INPUT_ISPREAUTH, false)
+    }
+
     private val bcaVa: String by lazy {
         intent.getStringExtra(EXTRA_INPUT_BCAVA)
             ?: throw throw RuntimeException("BCAva must not be empty")
@@ -138,6 +142,7 @@ class OrderReviewActivity : ComponentActivity() {
     private var bcaVaRequest: BankTransferRequest? = null
     private var bniVaRequest: BankTransferRequest? = null
     private var permataVaRequest: BankTransferRequest? = null
+    private var ccAuthType: String? = null
 
     private fun setLocaleNew(languageCode: String?) {
         val locales = LocaleListCompat.forLanguageTags(languageCode)
@@ -362,6 +367,7 @@ class OrderReviewActivity : ComponentActivity() {
                     expiry = populateExpiry()
                     isSecure = populateIsSecure()
                     isSavedCard = populateIsSavedCard()
+                    ccAuthType = populateCCAuthType()
                     bcaVaRequest = populateVa(bcaVa)
                     bniVaRequest = populateVa(bniVa)
                     permataVaRequest = populateVa(permataVa)
@@ -369,6 +375,16 @@ class OrderReviewActivity : ComponentActivity() {
                 }
             )
         }
+    }
+
+    private fun populateCCAuthType(): String? {
+        var ccAuthType: String? = null
+        ccAuthType = if (isPreAuth) {
+            "authorize"
+        } else {
+            "authorize_capture"
+        }
+        return ccAuthType
     }
 
     private fun populateVa(va: String): BankTransferRequest? {
@@ -487,7 +503,8 @@ class OrderReviewActivity : ComponentActivity() {
                 saveCard = isSavedCard,
                 secure = isSecure,
                 installment = installment,
-                bank = bank
+                bank = bank,
+                type = ccAuthType
             ),
             snapTokenExpiry = expiry,
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
@@ -556,6 +573,7 @@ class OrderReviewActivity : ComponentActivity() {
         private const val EXTRA_INPUT_BCAVA = "orderReview.extra.bcaVa"
         private const val EXTRA_INPUT_BNIVA = "orderReview.extra.bniVa"
         private const val EXTRA_INPUT_PERMATAVA = "orderReview.extra.permataVa"
+        private const val EXTRA_INPUT_ISPREAUTH = "orderReview.extra.isPreAuth"
 
         fun getOrderReviewActivityIntent(
             activityContext: Context,
@@ -565,6 +583,7 @@ class OrderReviewActivity : ComponentActivity() {
             acquiringBank: String,
             customExpiry: String,
             ccPaymentType: String,
+            isPreAuth: Boolean,
             bcaVa: String,
             bniVa: String,
             permataVa: String
@@ -576,6 +595,7 @@ class OrderReviewActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_ACQUIRINGBANK, acquiringBank)
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
                 putExtra(EXTRA_INPUT_CCPAYMENTTYPE, ccPaymentType)
+                putExtra(EXTRA_INPUT_ISPREAUTH, isPreAuth)
                 putExtra(EXTRA_INPUT_BCAVA, bcaVa)
                 putExtra(EXTRA_INPUT_BNIVA, bniVa)
                 putExtra(EXTRA_INPUT_PERMATAVA, permataVa)

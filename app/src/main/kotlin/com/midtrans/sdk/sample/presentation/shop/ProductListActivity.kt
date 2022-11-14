@@ -44,6 +44,10 @@ class ProductListActivity : ComponentActivity() {
             ?: throw throw RuntimeException("CCPaymentType must not be empty")
     }
 
+    private val isPreAuth: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_INPUT_ISPREAUTH, false)
+    }
+
     private val bcaVa: String by lazy {
         intent.getStringExtra(EXTRA_INPUT_BCAVA)
             ?: throw throw RuntimeException("BCAva must not be empty")
@@ -74,6 +78,7 @@ class ProductListActivity : ComponentActivity() {
                     acquiringBank = acquiringBank,
                     customExpiry = customExpiry,
                     ccPaymentType = ccPaymentType,
+                    isPreAuth = isPreAuth,
                     bcaVa = bcaVa,
                     bniVa = bniVa,
                     permataVa = permataVa
@@ -93,6 +98,7 @@ class ProductListActivity : ComponentActivity() {
         private const val EXTRA_INPUT_BCAVA = "productList.extra.bcaVa"
         private const val EXTRA_INPUT_BNIVA = "productList.extra.bniVa"
         private const val EXTRA_INPUT_PERMATAVA = "productList.extra.permataVa"
+        private const val EXTRA_INPUT_ISPREAUTH = "productList.extra.isPreAuth"
 
         fun getProductListActivity(
             activityContext: Context,
@@ -102,6 +108,7 @@ class ProductListActivity : ComponentActivity() {
             acquiringBank: String,
             customExpiry: String,
             ccPaymentType: String,
+            isPreAuth: Boolean,
             bcaVa: String,
             bniVa: String,
             permataVa: String
@@ -113,6 +120,7 @@ class ProductListActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_ACQUIRINGBANK, acquiringBank)
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
                 putExtra(EXTRA_INPUT_CCPAYMENTTYPE, ccPaymentType)
+                putExtra(EXTRA_INPUT_ISPREAUTH, isPreAuth)
                 putExtra(EXTRA_INPUT_BCAVA, bcaVa)
                 putExtra(EXTRA_INPUT_BNIVA, bniVa)
                 putExtra(EXTRA_INPUT_PERMATAVA, permataVa)

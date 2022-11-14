@@ -8,6 +8,7 @@ object DemoConstant {
     const val IS_INSTALLMENT_REQUIRED = "Is Installment Required"
     const val CUSTOM_EXPIRY = "Custom Expiry"
     const val CREDIT_CARD_PAYMENT_TYPE = "Credit Card Payment"
+    const val PRE_AUTH = "Pre-Auth"
 
     //Input Field Title
     const val CUSTOM_BCA_VA = "Custom BCA VA"
@@ -48,4 +49,8 @@ object DemoConstant {
     const val NORMAL_CC_PAYMENT = "Normal"
     const val ONE_CLICK_TYPE = "One Click"
     const val TWO_CLICK_TYPE = "Two Click"
+
+    //Boolean List
+    const val DISABLED = "Disabled"
+    const val ENABLED = "Enabled"
 }
