@@ -152,9 +152,9 @@ internal open class BaseViewModel : ViewModel() {
 
     protected fun trackOrderDetailsViewed(
         pageName: String,
-        paymentMethodName: String?,
-        transactionId: String?,
-        netAmount: String?
+        paymentMethodName: String? = null,
+        transactionId: String? = null,
+        netAmount: String? = null
     ) {
         eventAnalytics?.trackSnapOrderDetailsViewed(
             pageName = pageName,
