@@ -145,6 +145,7 @@ class UobSelectionActivity : BaseActivity() {
                     }
                 },
                 expandingContent = {
+                    viewModel.trackOrderDetailsViewed()
                     SnapPaymentOrderDetails(
                         customerInfo = customerInfo,
                         itemInfo = itemInfo

@@ -1,12 +1,20 @@
 package com.midtrans.sdk.uikit.internal.presentation.directdebit
 
-import androidx.lifecycle.ViewModel
+import com.midtrans.sdk.corekit.SnapCore
+import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.internal.analytics.PageName
+import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import javax.inject.Inject
 
 internal class UobSelectionViewModel @Inject constructor(
+    snapCore: SnapCore,
     private val dateTimeUtil: DateTimeUtil
-): ViewModel() {
+): BaseViewModel() {
+
+    init {
+        eventAnalytics = snapCore.getEventAnalytics()
+    }
 
     private var expiredTime = dateTimeUtil.plusDateBy(dateTimeUtil.getCurrentMillis(), 1) //TODO temporary is 24H, later get value from request snap if set
 
@@ -14,4 +22,10 @@ internal class UobSelectionViewModel @Inject constructor(
 
     fun getExpiredHour() = dateTimeUtil.getExpiredHour(expiredTime)
 
+    fun trackOrderDetailsViewed() {
+        trackOrderDetailsViewed(
+            pageName = PageName.UOB_PAGE,
+            paymentMethodName = PaymentType.UOB_EZPAY
+        )
+    }
 }
