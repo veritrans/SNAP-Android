@@ -137,6 +137,13 @@ internal class BankTransferDetailViewModel @Inject constructor(
         )
     }
 
+    fun trackOrderDetailsViewed(paymentType: String) {
+        trackOrderDetailsViewed(
+            pageName = getPageName(paymentType),
+            paymentMethodName = paymentType
+        )
+    }
+
     fun getExpiredHour() = datetimeUtil.getExpiredHour(expiredTime)
 
     companion object{
