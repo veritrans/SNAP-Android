@@ -39,6 +39,11 @@ class ProductListActivity : ComponentActivity() {
             ?: throw throw RuntimeException("Expiry must not be empty")
     }
 
+    private val ccPaymentType: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_CCPAYMENTTYPE)
+            ?: throw throw RuntimeException("CCPaymentType must not be empty")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -52,7 +57,8 @@ class ProductListActivity : ComponentActivity() {
                     installmentBank = installmentBank,
                     isRequiredInstallment = isRequiredInstallment,
                     acquiringBank = acquiringBank,
-                    customExpiry = customExpiry
+                    customExpiry = customExpiry,
+                    ccPaymentType = ccPaymentType
                 )
                 startActivity(intent)
             }
@@ -65,6 +71,7 @@ class ProductListActivity : ComponentActivity() {
         private const val EXTRA_INPUT_ISREQUIRED = "productList.extra.isRequired"
         private const val EXTRA_INPUT_ACQUIRINGBANK = "productList.extra.acquiringBank"
         private const val EXTRA_INPUT_EXPIRY = "productList.extra.inputExpiry"
+        private const val EXTRA_INPUT_CCPAYMENTTYPE = "productList.extra.ccPaymentType"
 
         fun getProductListActivity(
             activityContext: Context,
@@ -72,7 +79,8 @@ class ProductListActivity : ComponentActivity() {
             installmentBank: String,
             isRequiredInstallment: Boolean,
             acquiringBank: String,
-            customExpiry: String
+            customExpiry: String,
+            ccPaymentType: String
         ): Intent {
             return Intent(activityContext, ProductListActivity::class.java).apply {
                 putExtra(EXTRA_INPUT_COLOR, color)
@@ -80,6 +88,7 @@ class ProductListActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_ISREQUIRED, isRequiredInstallment)
                 putExtra(EXTRA_INPUT_ACQUIRINGBANK, acquiringBank)
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
+                putExtra(EXTRA_INPUT_CCPAYMENTTYPE, ccPaymentType)
             }
         }
     }
