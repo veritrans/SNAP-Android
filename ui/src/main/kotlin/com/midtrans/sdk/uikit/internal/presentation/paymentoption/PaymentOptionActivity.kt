@@ -326,6 +326,7 @@ class PaymentOptionActivity : BaseActivity() {
                     }
                 },
                 expandingContent = {
+                    viewModel.trackOrderDetailsViewed()
                     SnapPaymentOrderDetails(
                         itemInfo = itemInfo,
                         customerInfo = customerInfo

@@ -213,4 +213,8 @@ internal class PaymentOptionViewModel @Inject constructor(
     fun trackPaymentListPageClosed() {
         trackPageClosed(PageName.PAYMENT_LIST_PAGE)
     }
+
+    fun trackOrderDetailsViewed() {
+        trackOrderDetailsViewed(pageName = PageName.PAYMENT_LIST_PAGE)
+    }
 }
