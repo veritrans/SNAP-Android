@@ -12,6 +12,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.sample.presentation.config.InputState
 import com.midtrans.sdk.sample.util.DemoConstant.ACQUIRING_BANK
+import com.midtrans.sdk.sample.util.DemoConstant.BNI_POINT_ONLY
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_THEME
 import com.midtrans.sdk.sample.util.DemoConstant.CREDIT_CARD_PAYMENT_TYPE
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BCA_VA
@@ -77,6 +78,7 @@ fun BasicDropdownMenu(title: String, optionList: List<String>, state: InputState
                                 CUSTOM_EXPIRY -> state.expiry = selectedOptionText
                                 CREDIT_CARD_PAYMENT_TYPE -> state.ccPaymentType = selectedOptionText
                                 PRE_AUTH -> state.isPreAuth = selectedOptionText == ENABLED
+                                BNI_POINT_ONLY -> state.isBniPointOnly = selectedOptionText == ENABLED
                             }
                         },
                         enabled = true

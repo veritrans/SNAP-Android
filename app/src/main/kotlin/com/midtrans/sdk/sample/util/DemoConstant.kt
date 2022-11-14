@@ -9,6 +9,7 @@ object DemoConstant {
     const val CUSTOM_EXPIRY = "Custom Expiry"
     const val CREDIT_CARD_PAYMENT_TYPE = "Credit Card Payment"
     const val PRE_AUTH = "Pre-Auth"
+    const val BNI_POINT_ONLY = "Bni Point Only"
 
     //Input Field Title
     const val CUSTOM_BCA_VA = "Custom BCA VA"

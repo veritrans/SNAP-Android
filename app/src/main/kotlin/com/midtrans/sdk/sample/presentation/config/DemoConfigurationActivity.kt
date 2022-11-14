@@ -18,6 +18,7 @@ import com.midtrans.sdk.sample.presentation.shop.ProductListActivity
 import com.midtrans.sdk.sample.util.DemoConstant.ACQUIRING_BANK
 import com.midtrans.sdk.sample.util.DemoConstant.BCA
 import com.midtrans.sdk.sample.util.DemoConstant.BNI
+import com.midtrans.sdk.sample.util.DemoConstant.BNI_POINT_ONLY
 import com.midtrans.sdk.sample.util.DemoConstant.BRI
 import com.midtrans.sdk.sample.util.DemoConstant.CIMB
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_BLUE
@@ -86,6 +87,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 customExpiry = NONE,
                 ccPaymentType = NORMAL_CC_PAYMENT,
                 isPreAuth = false,
+                isBniPointOnly = false,
                 bcaVa = "",
                 bniVa = "",
                 permataVa = ""
@@ -132,6 +134,11 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 optionList = booleanList,
                 state = state
             )
+            BasicDropdownMenu(
+                title = BNI_POINT_ONLY,
+                optionList = booleanList,
+                state = state
+            )
             CustomTextField(
                 title = CUSTOM_BCA_VA,
                 state = state
@@ -160,6 +167,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                         state.expiry,
                         state.ccPaymentType,
                         state.isPreAuth,
+                        state.isBniPointOnly,
                         state.bcaVa,
                         state.bniVa,
                         state.permataVa
@@ -188,6 +196,7 @@ class InputState(
     customExpiry: String,
     ccPaymentType: String,
     isPreAuth: Boolean,
+    isBniPointOnly: Boolean,
     bcaVa: String,
     bniVa: String,
     permataVa: String
@@ -199,6 +208,7 @@ class InputState(
     var expiry by mutableStateOf(customExpiry)
     var ccPaymentType by mutableStateOf(ccPaymentType)
     var isPreAuth by mutableStateOf(isPreAuth)
+    var isBniPointOnly by mutableStateOf(isBniPointOnly)
     var bcaVa by mutableStateOf(bcaVa)
     var bniVa by mutableStateOf(bniVa)
     var permataVa by mutableStateOf(permataVa)

@@ -48,6 +48,10 @@ class ProductListActivity : ComponentActivity() {
         intent.getBooleanExtra(EXTRA_INPUT_ISPREAUTH, false)
     }
 
+    private val isBniPointsOnly: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_INPUT_ISBNIPOINTS, false)
+    }
+
     private val bcaVa: String by lazy {
         intent.getStringExtra(EXTRA_INPUT_BCAVA)
             ?: throw throw RuntimeException("BCAva must not be empty")
@@ -79,6 +83,7 @@ class ProductListActivity : ComponentActivity() {
                     customExpiry = customExpiry,
                     ccPaymentType = ccPaymentType,
                     isPreAuth = isPreAuth,
+                    isBniPointsOnly = isBniPointsOnly,
                     bcaVa = bcaVa,
                     bniVa = bniVa,
                     permataVa = permataVa
@@ -99,6 +104,7 @@ class ProductListActivity : ComponentActivity() {
         private const val EXTRA_INPUT_BNIVA = "productList.extra.bniVa"
         private const val EXTRA_INPUT_PERMATAVA = "productList.extra.permataVa"
         private const val EXTRA_INPUT_ISPREAUTH = "productList.extra.isPreAuth"
+        private const val EXTRA_INPUT_ISBNIPOINTS = "productList.extra.isBniPoints"
 
         fun getProductListActivity(
             activityContext: Context,
@@ -109,6 +115,7 @@ class ProductListActivity : ComponentActivity() {
             customExpiry: String,
             ccPaymentType: String,
             isPreAuth: Boolean,
+            isBniPointsOnly: Boolean,
             bcaVa: String,
             bniVa: String,
             permataVa: String
@@ -121,6 +128,7 @@ class ProductListActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
                 putExtra(EXTRA_INPUT_CCPAYMENTTYPE, ccPaymentType)
                 putExtra(EXTRA_INPUT_ISPREAUTH, isPreAuth)
+                putExtra(EXTRA_INPUT_ISBNIPOINTS, isBniPointsOnly)
                 putExtra(EXTRA_INPUT_BCAVA, bcaVa)
                 putExtra(EXTRA_INPUT_BNIVA, bniVa)
                 putExtra(EXTRA_INPUT_PERMATAVA, permataVa)
