@@ -47,7 +47,8 @@ class UiKitApi private constructor(val builder: Builder) {
         customerDetails: CustomerDetails,
         creditCard: CreditCard,
         userId: String,
-        expiry: Expiry? = null
+        expiry: Expiry? = null,
+        bcaVa: BankTransferRequest? = null
     ) {
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
             activityContext = activity,
@@ -55,7 +56,8 @@ class UiKitApi private constructor(val builder: Builder) {
             customerDetails = customerDetails,
             creditCard = creditCard,
             userId = userId,
-            expiry = expiry
+            expiry = expiry,
+            bcaVa = bcaVa
         )
         launcher.launch(intent)
     }
