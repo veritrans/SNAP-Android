@@ -63,6 +63,11 @@ public class TransactionRequest {
 
     private List<String> enabledPayments;
 
+    private BankTransferRequestModel permataVa;
+    private BcaBankTransferRequestModel bcaVa;
+    private BankTransferRequestModel bniVa;
+    private BankTransferRequestModel briVa;
+
     /**
      * @param orderId  order id of transaction.
      * @param amount   amount to charge.
@@ -184,6 +189,45 @@ public class TransactionRequest {
 
     public String getCurrency() {
         return currency;
+    }
+
+    public List<String> getEnabledPayments() {
+        return enabledPayments;
+    }
+
+    public void setEnabledPayments(List<String> enabledPayments) {
+        this.enabledPayments = enabledPayments;
+    }
+    public BankTransferRequestModel getPermataVa() {
+        return permataVa;
+    }
+
+    public void setPermataVa(BankTransferRequestModel permataVa) {
+        this.permataVa = permataVa;
+    }
+
+    public BcaBankTransferRequestModel getBcaVa() {
+        return bcaVa;
+    }
+
+    public void setBcaVa(BcaBankTransferRequestModel bcaVa) {
+        this.bcaVa = bcaVa;
+    }
+
+    public BankTransferRequestModel getBniVa() {
+        return bniVa;
+    }
+
+    public void setBniVa(BankTransferRequestModel bniVa) {
+        this.bniVa = bniVa;
+    }
+
+    public BankTransferRequestModel getBriVa() {
+        return briVa;
+    }
+
+    public void setBriVa(BankTransferRequestModel briVa) {
+        this.briVa = briVa;
     }
 
 }
