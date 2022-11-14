@@ -106,6 +106,23 @@ class EventAnalytics(
         )
     }
 
+    fun registerCommonCustomerProperties(
+        customerName: String?,
+        customerEmail: String?,
+        customerPhoneNumber: String?,
+        customerCity: String?,
+        customerPostCode: String?,
+    ) {
+        val customerProperties = mutableMapOf<String, String>()
+        customerName?.also { customerProperties[PROPERTY_CUSTOMER_NAME] = it }
+        customerEmail?.also { customerProperties[PROPERTY_CUSTOMER_EMAIL] = it }
+        customerPhoneNumber?.also { customerProperties[PROPERTY_CUSTOMER_PHONE_NUMBER] = it }
+        customerCity?.also { customerProperties[PROPERTY_CUSTOMER_CITY] = it }
+        customerPostCode?.also { customerProperties[PROPERTY_CUSTOMER_POST_CODE] = it }
+
+        mixpanelTracker.registerCommonProperties(customerProperties)
+    }
+
     //TODO will be implemented separately
     fun trackSnapPageViewed() {}
     fun trackSnapCustomerDataInput() {}
@@ -119,11 +136,6 @@ class EventAnalytics(
         pageName: String,
         paymentMethodName: String?,
         transactionId: String?,
-        customerName: String?,
-        customerEmail: String?,
-        customerPhoneNumber: String?,
-        customerCity: String?,
-        customerPostCode: String?,
         totalItems: String?,
         totalQuantity: String?,
         netAmount: String?
@@ -131,11 +143,7 @@ class EventAnalytics(
         val optionalProperties = mutableMapOf<String, String>()
         paymentMethodName?.also { optionalProperties[PROPERTY_PAYMENT_METHOD_NAME] = it }
         transactionId?.also { optionalProperties[PROPERTY_TRANSACTION_ID] = it }
-        customerName?.also { optionalProperties[PROPERTY_CUSTOMER_NAME] = it }
-        customerEmail?.also { optionalProperties[PROPERTY_CUSTOMER_EMAIL] = it }
-        customerPhoneNumber?.also { optionalProperties[PROPERTY_CUSTOMER_PHONE_NUMBER] = it }
-        customerCity?.also { optionalProperties[PROPERTY_CUSTOMER_CITY] = it }
-        customerPostCode?.also { optionalProperties[PROPERTY_CUSTOMER_POST_CODE] = it }
+
         totalItems?.also { optionalProperties[PROPERTY_TOTAL_ITEMS] = it }
         totalQuantity?.also { optionalProperties[PROPERTY_TOTAL_QUANTITY] = it }
         netAmount?.also { optionalProperties[PROPERTY_NET_AMOUNT] = it }

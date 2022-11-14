@@ -111,6 +111,26 @@ internal class EventAnalyticsTest {
     }
 
     @Test
+    fun verifyRegisterCommonCustomerProperties() {
+        eventAnalytics.registerCommonCustomerProperties(
+            customerName = "name",
+            customerEmail = "email",
+            customerPhoneNumber = "phone",
+            customerCity = "city",
+            customerPostCode = "post-code",
+        )
+        verify(mixpanelTracker).registerCommonProperties(
+            mapOf(
+                PROPERTY_CUSTOMER_NAME to "name",
+                PROPERTY_CUSTOMER_EMAIL to "email",
+                PROPERTY_CUSTOMER_PHONE_NUMBER to "phone",
+                PROPERTY_CUSTOMER_CITY to "city",
+                PROPERTY_CUSTOMER_POST_CODE to "post-code"
+            )
+        )
+    }
+
+    @Test
     fun verifyTrackSnapGetTokenRequest() {
         eventAnalytics.trackSnapGetTokenRequest("token")
         verify(mixpanelTracker).trackEvent(
@@ -290,11 +310,6 @@ internal class EventAnalyticsTest {
             pageName = "page-name",
             paymentMethodName = "payment-type",
             transactionId = "transaction-id",
-            customerName = "name",
-            customerEmail = "email",
-            customerPhoneNumber = "phone",
-            customerCity = "city",
-            customerPostCode = "post-code",
             totalItems = "total-items",
             totalQuantity = "total-quantity",
             netAmount = "net-amount"
@@ -305,11 +320,6 @@ internal class EventAnalyticsTest {
                 PROPERTY_PAGE_NAME to "page-name",
                 PROPERTY_PAYMENT_METHOD_NAME to "payment-type",
                 PROPERTY_TRANSACTION_ID to "transaction-id",
-                PROPERTY_CUSTOMER_NAME to "name",
-                PROPERTY_CUSTOMER_EMAIL to "email",
-                PROPERTY_CUSTOMER_PHONE_NUMBER to "phone",
-                PROPERTY_CUSTOMER_CITY to "city",
-                PROPERTY_CUSTOMER_POST_CODE to "post-code",
                 PROPERTY_TOTAL_ITEMS to "total-items",
                 PROPERTY_TOTAL_QUANTITY to "total-quantity",
                 PROPERTY_NET_AMOUNT to "net-amount"
