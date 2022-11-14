@@ -66,7 +66,7 @@ class CreditCardViewModelTest {
             statusMessage = "Credit card token is created as Token ID.",
             tokenId = "41002312-1236-2b142f51-1093-4c9e-88eb-5ae529fde1b9",
             hash = "41002312-1236-mami",
-            bank = "bank amat",
+            bank = "bank bni",
             redirectUrl = null
         )
 
@@ -280,6 +280,26 @@ class CreditCardViewModelTest {
             ctaName = "cta-name",
             pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
             paymentMethodName = PaymentType.CREDIT_CARD
+        )
+    }
+
+    @Test
+    fun verifyTrackOrderDetailsViewed() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val errorCard: ErrorCard = mock()
+        val snapCreditCardUtil: SnapCreditCardUtil = mock()
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+        val creditCardViewModel =
+            CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil, errorCard)
+        creditCardViewModel.trackOrderDetailsViewed("5000")
+        verify(eventAnalytics).trackSnapOrderDetailsViewed(
+            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+            paymentMethodName = PaymentType.CREDIT_CARD,
+            transactionId = null,
+            netAmount = "5000"
         )
     }
 }

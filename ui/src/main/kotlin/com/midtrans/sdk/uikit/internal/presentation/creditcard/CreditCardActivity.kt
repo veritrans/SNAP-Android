@@ -484,6 +484,7 @@ internal class CreditCardActivity : BaseActivity() {
                     }
                 },
                 expandingContent = {
+                    viewModel.trackOrderDetailsViewed(totalAmount)
                     SnapPaymentOrderDetails(
                         customerInfo = customerDetail,
                         itemInfo = itemInfo,

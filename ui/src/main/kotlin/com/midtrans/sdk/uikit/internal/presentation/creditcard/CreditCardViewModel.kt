@@ -466,6 +466,14 @@ internal class CreditCardViewModel @Inject constructor(
         )
     }
 
+    fun trackOrderDetailsViewed(netAmount: String) {
+        trackOrderDetailsViewed(
+            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+            paymentMethodName = PaymentType.CREDIT_CARD,
+            netAmount = netAmount
+        )
+    }
+
     fun getExpiredHour(): String {
         val duration = datetimeUtil.getDuration(
             datetimeUtil.getTimeDiffInMillis(
