@@ -137,21 +137,20 @@ class EventAnalytics(
     fun trackSnapCtaError() {}
 
     fun trackSnapOrderDetailsViewed(
-        pageName: String,
+        pageName: String?,
         paymentMethodName: String?,
         transactionId: String?,
         netAmount: String?
     ) {
         val optionalProperties = mutableMapOf<String, String>()
+        pageName?.also { optionalProperties[PROPERTY_PAGE_NAME] = it }
         paymentMethodName?.also { optionalProperties[PROPERTY_PAYMENT_METHOD_NAME] = it }
         transactionId?.also { optionalProperties[PROPERTY_TRANSACTION_ID] = it }
         netAmount?.also { optionalProperties[PROPERTY_NET_AMOUNT] = it }
 
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_ORDER_DETAILS_VIEWED,
-            properties = mapOf(
-                PROPERTY_PAGE_NAME to pageName
-            ) + optionalProperties
+            properties = optionalProperties
         )
     }
 

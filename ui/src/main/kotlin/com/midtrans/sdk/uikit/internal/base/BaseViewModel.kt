@@ -151,7 +151,7 @@ internal open class BaseViewModel : ViewModel() {
     }
 
     protected fun trackOrderDetailsViewed(
-        pageName: String,
+        pageName: String? = null,
         paymentMethodName: String? = null,
         transactionId: String? = null,
         netAmount: String? = null
