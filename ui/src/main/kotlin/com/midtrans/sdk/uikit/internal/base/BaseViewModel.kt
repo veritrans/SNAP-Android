@@ -153,13 +153,14 @@ internal open class BaseViewModel : ViewModel() {
     protected fun trackOrderDetailsViewed(
         pageName: String,
         paymentMethodName: String?,
-        transactionId: String?
+        transactionId: String?,
+        netAmount: String?
     ) {
         eventAnalytics?.trackSnapOrderDetailsViewed(
             pageName = pageName,
             paymentMethodName = paymentMethodName,
             transactionId = transactionId,
-            netAmount = null //TODO get net amount from promo
+            netAmount = netAmount
         )
     }
 }
