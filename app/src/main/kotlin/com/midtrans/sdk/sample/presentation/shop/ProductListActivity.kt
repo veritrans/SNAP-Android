@@ -29,6 +29,11 @@ class ProductListActivity : ComponentActivity() {
         intent.getBooleanExtra(EXTRA_INPUT_ISREQUIRED, false)
     }
 
+    private val acquiringBank: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_ACQUIRINGBANK)
+            ?: throw RuntimeException("Acquiring Bank must not be empty")
+    }
+
     private val customExpiry: String by lazy {
         intent.getStringExtra(EXTRA_INPUT_EXPIRY)
             ?: throw throw RuntimeException("Expiry must not be empty")
@@ -46,6 +51,7 @@ class ProductListActivity : ComponentActivity() {
                     product = it,
                     installmentBank = installmentBank,
                     isRequiredInstallment = isRequiredInstallment,
+                    acquiringBank = acquiringBank,
                     customExpiry = customExpiry
                 )
                 startActivity(intent)
@@ -57,6 +63,7 @@ class ProductListActivity : ComponentActivity() {
         private const val EXTRA_INPUT_COLOR = "productList.extra.inputColor"
         private const val EXTRA_INPUT_INSTALLMENT = "productList.extra.installment"
         private const val EXTRA_INPUT_ISREQUIRED = "productList.extra.isRequired"
+        private const val EXTRA_INPUT_ACQUIRINGBANK = "productList.extra.acquiringBank"
         private const val EXTRA_INPUT_EXPIRY = "productList.extra.inputExpiry"
 
         fun getProductListActivity(
@@ -64,12 +71,14 @@ class ProductListActivity : ComponentActivity() {
             color: String,
             installmentBank: String,
             isRequiredInstallment: Boolean,
+            acquiringBank: String,
             customExpiry: String
         ): Intent {
             return Intent(activityContext, ProductListActivity::class.java).apply {
                 putExtra(EXTRA_INPUT_COLOR, color)
                 putExtra(EXTRA_INPUT_INSTALLMENT, installmentBank)
                 putExtra(EXTRA_INPUT_ISREQUIRED, isRequiredInstallment)
+                putExtra(EXTRA_INPUT_ACQUIRINGBANK, acquiringBank)
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
             }
         }

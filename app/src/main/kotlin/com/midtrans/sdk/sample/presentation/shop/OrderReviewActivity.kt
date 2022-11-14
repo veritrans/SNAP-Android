@@ -29,6 +29,7 @@ import com.midtrans.sdk.corekit.models.ExpiryModel
 import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.NONE
+import com.midtrans.sdk.sample.util.DemoConstant.NO_ACQUIRING_BANK
 import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
@@ -90,6 +91,11 @@ class OrderReviewActivity : ComponentActivity() {
         intent.getBooleanExtra(EXTRA_INPUT_ISREQUIRED, false)
     }
 
+    private val acquiringBank: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_ACQUIRINGBANK)
+            ?: throw RuntimeException("Acquiring Bank must not be empty")
+    }
+
     private val customExpiry: String by lazy {
         intent.getStringExtra(EXTRA_INPUT_EXPIRY)
             ?: throw RuntimeException("Expiry must not be empty")
@@ -100,10 +106,10 @@ class OrderReviewActivity : ComponentActivity() {
     }
 
     private lateinit var customerDetails: CustomerDetails
-    private lateinit var itemDetails: List<ItemDetails>
     private lateinit var transactionDetails: SnapTransactionDetail
     private var installment: Installment? = null
     private var expiry: Expiry? = null
+    private var bank: String? = null
 
     private fun setLocaleNew(languageCode: String?) {
         val locales = LocaleListCompat.forLanguageTags(languageCode)
@@ -323,18 +329,20 @@ class OrderReviewActivity : ComponentActivity() {
                         shippingAddress = Address(address = address.text)
                     )
                     installment = populateInstallment()
+                    bank = populateAcquiringBank()
                     expiry = populateExpiry()
-                    itemDetails = listOf(
-                        ItemDetails(
-                            name = product.name,
-                            price = product.price,
-                            quantity = 1
-                        )
-                    )
                     payWithAndroidxActivityResultLauncher()
                 }
             )
         }
+    }
+
+    private fun populateAcquiringBank(): String? {
+        var bank: String? = null
+        if(acquiringBank != NO_ACQUIRING_BANK) {
+            bank = acquiringBank
+        }
+        return bank
     }
 
     private fun populateExpiry(): Expiry? {
@@ -404,7 +412,7 @@ class OrderReviewActivity : ComponentActivity() {
                 email = "arisbhaktis@email.com",
                 phone = "087788778212"
             ),
-            itemDetails = itemDetails
+            itemDetails = listOf(ItemDetails("test-01", product.price, 1, product.name))
         )
     }
 
@@ -416,16 +424,13 @@ class OrderReviewActivity : ComponentActivity() {
             creditCard = CreditCard(
                 saveCard = true,
                 secure = true,
-                installment = installment
+                installment = installment,
+                bank = bank
             ),
-            snapTokenExpiry = Expiry(
-                startTime = DemoUtils.getFormattedTime(System.currentTimeMillis()),
-                unit = Expiry.UNIT_MINUTE,
-                duration = 5
-            ),
-            itemDetails = itemDetails,
+            snapTokenExpiry = expiry,
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
-            customerDetails = customerDetails
+            customerDetails = customerDetails,
+            itemDetails = listOf(ItemDetails("test-01", product.price, 1, product.name))
         )
     }
 
@@ -440,7 +445,7 @@ class OrderReviewActivity : ComponentActivity() {
     private fun payWithOldSnapLegacyApi() {
         val transactionRequest = TransactionRequest(
             UUID.randomUUID().toString(),
-            15000.0
+            3000.0
         )
         transactionRequest.customerDetails = com.midtrans.sdk.corekit.models.CustomerDetails(
             "3A8788CE-B96F-449C-8180-B5901A08B50A",
@@ -448,10 +453,6 @@ class OrderReviewActivity : ComponentActivity() {
             "Bhakti",
             "aribhakti@email.com",
             "087788778212"
-        )
-        transactionRequest.itemDetails = arrayListOf<com.midtrans.sdk.corekit.models.ItemDetails>(
-            com.midtrans.sdk.corekit.models.ItemDetails("id01", 8000.00, 1, "Cappuccino"),
-            com.midtrans.sdk.corekit.models.ItemDetails("id02", 7000.00, 1, "Americano")
         )
         transactionRequest.creditCard = com.midtrans.sdk.corekit.models.snap.CreditCard(
             true,
@@ -475,17 +476,6 @@ class OrderReviewActivity : ComponentActivity() {
             "hour",
             1
         )
-
-
-        // set free text on BCA VA Payment
-        // un-comment for testing custom va
-        /**
-        val freeText = createSampleBcaFreeText()
-        val vaNumber = "12345678"
-        val subCompanyCode = "123"
-        val bcaVaRequestModel = BcaBankTransferRequestModel(vaNumber, freeText, subCompanyCode)
-        transactionRequest.bcaVa = bcaVaRequestModel
-         */
         MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().transactionRequest = transactionRequest
         MidtransSDK.getInstance().startPaymentUiFlow(this.applicationContext)
@@ -495,6 +485,7 @@ class OrderReviewActivity : ComponentActivity() {
         private const val EXTRA_PRODUCT = "orderReview.extra.product"
         private const val EXTRA_INPUT_INSTALLMENT = "orderReview.extra.installment"
         private const val EXTRA_INPUT_ISREQUIRED = "orderReview.extra.isRequired"
+        private const val EXTRA_INPUT_ACQUIRINGBANK = "orderReview.extra.acquiringBank"
         private const val EXTRA_INPUT_EXPIRY = "orderReview.extra.expiry"
 
         fun getOrderReviewActivityIntent(
@@ -502,12 +493,14 @@ class OrderReviewActivity : ComponentActivity() {
             product: Product,
             installmentBank: String,
             isRequiredInstallment: Boolean,
+            acquiringBank: String,
             customExpiry: String
         ): Intent {
             return Intent(activityContext, OrderReviewActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT, product)
                 putExtra(EXTRA_INPUT_INSTALLMENT, installmentBank)
                 putExtra(EXTRA_INPUT_ISREQUIRED, isRequiredInstallment)
+                putExtra(EXTRA_INPUT_ACQUIRINGBANK, acquiringBank)
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
             }
         }
