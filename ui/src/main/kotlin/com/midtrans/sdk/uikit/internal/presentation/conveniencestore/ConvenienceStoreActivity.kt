@@ -141,6 +141,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                     }
                 },
                 expandingContent = {
+                    viewModel?.trackOrderDetailsViewed(paymentType)
                     SnapPaymentOrderDetails(
                         customerInfo = customerInfo,
                         itemInfo = itemInfo
