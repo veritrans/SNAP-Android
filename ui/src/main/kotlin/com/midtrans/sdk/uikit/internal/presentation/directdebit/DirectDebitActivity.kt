@@ -159,6 +159,7 @@ class DirectDebitActivity : BaseActivity() {
                         }
                     },
                     expandingContent = {
+                        viewModel.trackOrderDetailsViewed(paymentType)
                         SnapPaymentOrderDetails(
                             customerInfo = customerInfo,
                             itemInfo = itemInfo
