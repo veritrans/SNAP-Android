@@ -53,6 +53,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
+        viewModel.trackPageViewed(paymentType)
         setContent {
             Content(
                 totalAmount = totalAmount,
