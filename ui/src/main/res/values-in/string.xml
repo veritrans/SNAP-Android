@@ -84,6 +84,7 @@
 
     <string name="cc_dc_main_screen_save_this_card">Simpan kartu ini</string>
     <string name="cc_dc_main_screen_use_point_bank">Gunakan point</string>
+    <string name="cc_dc_main_screen_use_point_bank_saved_card">Gunakan BNI Rewards Point</string>
 
     <string name="cc_dc_main_screen_security_disclaimer">Pembayaran aman dengan Midtrans</string>
 
