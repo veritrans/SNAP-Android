@@ -83,7 +83,7 @@ class UobPaymentActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
-
+        viewModel.trackPageViewed()
         setContent {
             UobPaymentContent(
                 uobMode = uobMode,
