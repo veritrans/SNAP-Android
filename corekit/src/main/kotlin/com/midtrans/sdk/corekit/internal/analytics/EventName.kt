@@ -53,7 +53,7 @@ internal object EventName {
     const val PROPERTY_SECURE_ENABLED = "secure"
     const val PROPERTY_SAVE_CARD_ENABLED = "saveCard"
     const val PROPERTY_BLACKLISTED_BINS = "blacklistedBins"
-    const val PROPERTY_WHITELISTED_BINS = "allowlistedBins"
+    const val PROPERTY_ALLOWLISTED_BINS = "allowlistedBins"
     const val PROPERTY_INSTALLMENT_TERMS = "InstallmentTerms"
     const val PROPERTY_INSTALLMENT_BANK = "InstallmentBank"
     const val PROPERTY_INSTALLMENT_REQUIRED = "installmentRequired"
