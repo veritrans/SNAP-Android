@@ -28,4 +28,11 @@ internal class UobSelectionViewModel @Inject constructor(
             paymentMethodName = PaymentType.UOB_EZPAY
         )
     }
+
+    fun trackPageViewed() {
+        trackPageViewed(
+            pageName = PageName.UOB_SELECTION_PAGE,
+            paymentMethodName = PaymentType.UOB_EZPAY
+        )
+    }
 }
