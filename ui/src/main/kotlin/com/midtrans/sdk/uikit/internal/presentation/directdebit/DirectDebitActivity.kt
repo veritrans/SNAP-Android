@@ -80,7 +80,7 @@ class DirectDebitActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
-
+        viewModel.trackPageViewed(paymentType)
         setContent {
             DirectDebitContent(
                 paymentType = paymentType,
