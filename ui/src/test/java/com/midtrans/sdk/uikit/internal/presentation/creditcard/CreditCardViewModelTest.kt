@@ -302,4 +302,24 @@ class CreditCardViewModelTest {
             netAmount = "5000"
         )
     }
+
+    @Test
+    fun verifyTrackPageViewed() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val errorCard: ErrorCard = mock()
+        val snapCreditCardUtil: SnapCreditCardUtil = mock()
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+        val creditCardViewModel =
+            CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil, errorCard)
+        creditCardViewModel.trackPageViewed()
+        verify(eventAnalytics).trackSnapPageViewed(
+            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+            paymentMethodName = PaymentType.CREDIT_CARD,
+            transactionId = null,
+            stepNumber = null
+        )
+    }
 }

@@ -149,6 +149,7 @@ internal class CreditCardActivity : BaseActivity() {
         viewModel.setTransactionDetails(transactionDetails)
         viewModel.setPointBanks(merchant?.pointBanks)
         viewModel.creditCard = creditCard
+        viewModel.trackPageViewed()
         initTransactionResultScreenObserver()
         setContent {
             CreditCardPageStateFull(
