@@ -29,9 +29,51 @@ class ProductListActivity : ComponentActivity() {
         intent.getBooleanExtra(EXTRA_INPUT_ISREQUIRED, false)
     }
 
+    private val acquiringBank: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_ACQUIRINGBANK)
+            ?: throw RuntimeException("Acquiring Bank must not be empty")
+    }
+
     private val customExpiry: String by lazy {
         intent.getStringExtra(EXTRA_INPUT_EXPIRY)
             ?: throw throw RuntimeException("Expiry must not be empty")
+    }
+
+    private val ccPaymentType: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_CCPAYMENTTYPE)
+            ?: throw throw RuntimeException("CCPaymentType must not be empty")
+    }
+
+    private val isPreAuth: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_INPUT_ISPREAUTH, false)
+    }
+
+    private val isBniPointsOnly: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_INPUT_ISBNIPOINTS, false)
+    }
+
+    private val isShowAllPaymentChannels: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_INPUT_ISSHOWALLPAYMENT, true)
+    }
+
+    private val paymentChannels: ArrayList<String> by lazy {
+        intent.getStringArrayListExtra(EXTRA_INPUT_PAYMENTCHANNELS)
+            ?: throw RuntimeException("Installment must not be empty")
+    }
+
+    private val bcaVa: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_BCAVA)
+            ?: throw throw RuntimeException("BCAva must not be empty")
+    }
+
+    private val bniVa: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_BNIVA)
+            ?: throw throw RuntimeException("BCAva must not be empty")
+    }
+
+    private val permataVa: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_PERMATAVA)
+            ?: throw throw RuntimeException("BCAva must not be empty")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,11 +84,20 @@ class ProductListActivity : ComponentActivity() {
         setContent {
             ProductListPage {
                 val intent = OrderReviewActivity.getOrderReviewActivityIntent(
-                    activityContext = this,
+                    activityContext = this@ProductListActivity,
                     product = it,
                     installmentBank = installmentBank,
                     isRequiredInstallment = isRequiredInstallment,
-                    customExpiry = customExpiry
+                    acquiringBank = acquiringBank,
+                    customExpiry = customExpiry,
+                    ccPaymentType = ccPaymentType,
+                    isPreAuth = isPreAuth,
+                    isBniPointsOnly = isBniPointsOnly,
+                    isShowAllPaymentChannels = isShowAllPaymentChannels,
+                    paymentChannels = paymentChannels,
+                    bcaVa = bcaVa,
+                    bniVa = bniVa,
+                    permataVa = permataVa
                 )
                 startActivity(intent)
             }
@@ -57,20 +108,47 @@ class ProductListActivity : ComponentActivity() {
         private const val EXTRA_INPUT_COLOR = "productList.extra.inputColor"
         private const val EXTRA_INPUT_INSTALLMENT = "productList.extra.installment"
         private const val EXTRA_INPUT_ISREQUIRED = "productList.extra.isRequired"
+        private const val EXTRA_INPUT_ACQUIRINGBANK = "productList.extra.acquiringBank"
         private const val EXTRA_INPUT_EXPIRY = "productList.extra.inputExpiry"
+        private const val EXTRA_INPUT_CCPAYMENTTYPE = "productList.extra.ccPaymentType"
+        private const val EXTRA_INPUT_BCAVA = "productList.extra.bcaVa"
+        private const val EXTRA_INPUT_BNIVA = "productList.extra.bniVa"
+        private const val EXTRA_INPUT_PERMATAVA = "productList.extra.permataVa"
+        private const val EXTRA_INPUT_ISPREAUTH = "productList.extra.isPreAuth"
+        private const val EXTRA_INPUT_ISBNIPOINTS = "productList.extra.isBniPoints"
+        private const val EXTRA_INPUT_ISSHOWALLPAYMENT = "productList.extra.isShowAllPayment"
+        private const val EXTRA_INPUT_PAYMENTCHANNELS = "productList.extra.paymentChannels"
 
         fun getProductListActivity(
             activityContext: Context,
             color: String,
             installmentBank: String,
             isRequiredInstallment: Boolean,
-            customExpiry: String
+            acquiringBank: String,
+            customExpiry: String,
+            ccPaymentType: String,
+            isPreAuth: Boolean,
+            isBniPointsOnly: Boolean,
+            isShowAllPaymentChannels: Boolean,
+            paymentChannels: ArrayList<String>,
+            bcaVa: String,
+            bniVa: String,
+            permataVa: String
         ): Intent {
             return Intent(activityContext, ProductListActivity::class.java).apply {
                 putExtra(EXTRA_INPUT_COLOR, color)
                 putExtra(EXTRA_INPUT_INSTALLMENT, installmentBank)
                 putExtra(EXTRA_INPUT_ISREQUIRED, isRequiredInstallment)
+                putExtra(EXTRA_INPUT_ACQUIRINGBANK, acquiringBank)
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
+                putExtra(EXTRA_INPUT_CCPAYMENTTYPE, ccPaymentType)
+                putExtra(EXTRA_INPUT_ISPREAUTH, isPreAuth)
+                putExtra(EXTRA_INPUT_ISBNIPOINTS, isBniPointsOnly)
+                putExtra(EXTRA_INPUT_ISSHOWALLPAYMENT, isShowAllPaymentChannels)
+                putExtra(EXTRA_INPUT_PAYMENTCHANNELS, paymentChannels)
+                putExtra(EXTRA_INPUT_BCAVA, bcaVa)
+                putExtra(EXTRA_INPUT_BNIVA, bniVa)
+                putExtra(EXTRA_INPUT_PERMATAVA, permataVa)
             }
         }
     }
