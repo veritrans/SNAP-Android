@@ -663,7 +663,7 @@ class OrderReviewActivity : ComponentActivity() {
         transactionRequest.permataVa = permataVaLegacy
         MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().transactionRequest = transactionRequest
-        MidtransSDK.getInstance().startPaymentUiFlow(this.applicationContext)
+        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity)
     }
 
     companion object {
