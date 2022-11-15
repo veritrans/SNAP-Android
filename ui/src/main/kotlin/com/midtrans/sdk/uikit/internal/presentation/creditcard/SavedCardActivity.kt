@@ -174,6 +174,8 @@ class SavedCardActivity: BaseActivity() {
                 isSaveCardChecked = true,
                 isPointBankChecked = false,
                 promoId = 0,
+                promoName = null,
+                promoAmount = null,
                 isInstallmentAllowed = false,
                 customerPhone = TextFieldValue(),
                 customerEmail = TextFieldValue()

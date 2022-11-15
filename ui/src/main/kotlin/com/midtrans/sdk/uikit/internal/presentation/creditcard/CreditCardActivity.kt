@@ -15,17 +15,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rxjava2.subscribeAsState
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -43,6 +36,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.api.model.PaymentType
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
+import com.midtrans.sdk.uikit.internal.model.CreditCardPromoInfo
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.model.PromoData
@@ -52,13 +46,10 @@ import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
-import com.midtrans.sdk.uikit.internal.view.SnapColors
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
-import java.util.function.BooleanSupplier
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
 //TODO: refactor, state on value change listener is not required, compose will do the magic
 internal class CreditCardActivity : BaseActivity() {
@@ -125,25 +116,25 @@ internal class CreditCardActivity : BaseActivity() {
 
     private val savedTokenList: SnapshotStateList<FormData>? by lazy {
         creditCard?.savedTokens?.mapIndexed { index, savedToken ->
-                    SavedCreditCardFormData(
-                        savedCardIdentifier = SnapCreditCardUtil.SAVED_CARD_IDENTIFIER + index.toString(),
-                        inputTitle = getString(R.string.cc_dc_saved_card_enter_cvv),
-                        endIcon = R.drawable.ic_trash,
-                        startIcon = SnapCreditCardUtil.getBankIcon(savedToken.binDetail?.bankCode.toString()),
-                        errorText = mutableStateOf(""),
-                        maskedCardNumber = savedToken.maskedCard.orEmpty(),
-                        displayedMaskedCard = savedToken.maskedCard.orEmpty(),
-                        tokenType = savedToken.tokenType.toString(),
-                        tokenId = savedToken.token.toString(),
-                        cvvSavedCardTextField = TextFieldValue(),
-                        isCvvSavedCardInvalid = false
+            SavedCreditCardFormData(
+                savedCardIdentifier = SnapCreditCardUtil.SAVED_CARD_IDENTIFIER + index.toString(),
+                inputTitle = getString(R.string.cc_dc_saved_card_enter_cvv),
+                endIcon = R.drawable.ic_trash,
+                startIcon = SnapCreditCardUtil.getBankIcon(savedToken.binDetail?.bankCode.toString()),
+                errorText = mutableStateOf(""),
+                maskedCardNumber = savedToken.maskedCard.orEmpty(),
+                displayedMaskedCard = savedToken.maskedCard.orEmpty(),
+                tokenType = savedToken.tokenType.toString(),
+                tokenId = savedToken.token.toString(),
+                cvvSavedCardTextField = TextFieldValue(),
+                isCvvSavedCardInvalid = false
             ) as FormData
-            }
+        }
             ?.ifEmpty { null }
             ?.toMutableList()
             ?.apply {
                 add(NewCardFormData(newCardIdentifier = SnapCreditCardUtil.NEW_CARD_FORM_IDENTIFIER))
-        }
+            }
             ?.toMutableStateList()
         //For testing purpose: uncomment below to force non save card
 //        null
@@ -255,6 +246,8 @@ internal class CreditCardActivity : BaseActivity() {
                 customerEmail = TextFieldValue(),
                 customerPhone = TextFieldValue(),
                 promoId = 0L,
+                promoName = null,
+                promoAmount = null,
                 isInstallmentAllowed = true
             )
         }
@@ -493,7 +486,12 @@ internal class CreditCardActivity : BaseActivity() {
                 expandingContent = {
                     SnapPaymentOrderDetails(
                         customerInfo = customerDetail,
-                        itemInfo = itemInfo
+                        itemInfo = itemInfo,
+                        creditCardPromoInfo = CreditCardPromoInfo(
+                            promoName = state.promoName,
+                            promoAmount = state.promoAmount,
+                            discountedAmount = totalAmount
+                        )
                     )
                 },
                 followingContent = {
@@ -538,9 +536,12 @@ internal class CreditCardActivity : BaseActivity() {
                             onInstallmentAllowed = { state.isInstallmentAllowed = it }
                         )
 
-                        promoState.value?.let { it ->
-                            PromoLayout(promoData = it, cardItemState = state).let { reset ->
-                               onPromoReset = reset
+                        promoState.value?.also {
+                            PromoLayout(
+                                promoData = it,
+                                cardItemState = state
+                            ).also { onResetAction ->
+                                onPromoReset = onResetAction
                             }
                         }
                     }

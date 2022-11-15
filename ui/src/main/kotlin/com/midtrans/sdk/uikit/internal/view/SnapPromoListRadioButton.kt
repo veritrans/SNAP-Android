@@ -1,4 +1,4 @@
-package com.midtrans.sdk.uikit.internal.view;
+package com.midtrans.sdk.uikit.internal.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,13 +19,10 @@ import com.midtrans.sdk.uikit.internal.model.PromoData
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.CARD_NOT_ELIGIBLE
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.INSTALLMENT_NOT_SUPPORTED
 
-object SnapPromoListRadioButton {
-}
-
 @Composable
 fun SnapPromoListRadioButton(
     states: List<PromoData>,
-    onItemSelectedListener: (promodata: PromoData) -> Unit
+    onItemSelectedListener: (promoData: PromoData) -> Unit
 ): () -> Unit {
     val (selectedOption, onOptionSelected) = remember {
         mutableStateOf(states.filter { it.enabled.value }[0].promoName)
