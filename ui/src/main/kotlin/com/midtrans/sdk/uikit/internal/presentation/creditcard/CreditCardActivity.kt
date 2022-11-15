@@ -540,8 +540,8 @@ internal class CreditCardActivity : BaseActivity() {
                             PromoLayout(
                                 promoData = it,
                                 cardItemState = state
-                            ).also { reset ->
-                                onPromoReset = reset
+                            ).also { onResetAction ->
+                                onPromoReset = onResetAction
                             }
                         }
                     }
