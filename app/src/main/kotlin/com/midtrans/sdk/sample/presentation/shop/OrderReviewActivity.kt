@@ -141,12 +141,13 @@ class OrderReviewActivity : ComponentActivity() {
     private lateinit var transactionDetails: SnapTransactionDetail
     private var installment: Installment? = null
     private var expiry: Expiry? = null
-    private var bank: String? = null
-    private var isSavedCard: Boolean = false
-    private var isSecure: Boolean = false
     private var bcaVaRequest: BankTransferRequest? = null
     private var bniVaRequest: BankTransferRequest? = null
     private var permataVaRequest: BankTransferRequest? = null
+
+    private var bank: String? = null
+    private var isSavedCard: Boolean = false
+    private var isSecure: Boolean = false
     private var ccAuthType: String? = null
     private var whitelistBins: List<String> = listOf()
 
@@ -349,6 +350,13 @@ class OrderReviewActivity : ComponentActivity() {
                     payWithAndroidxActivityResultLauncherToken(snapToken.text)
                 }
             )
+
+            bank = populateAcquiringBank()
+            isSecure = populateIsSecure()
+            isSavedCard = populateIsSavedCard()
+            ccAuthType = populateCCAuthType()
+            whitelistBins = populateWhitelistBins()
+
             SnapButton(
                 text = "Pay Rp.${(product.price).toString().dropLast(2)}",
                 style = SnapButton.Style.PRIMARY,
@@ -374,12 +382,7 @@ class OrderReviewActivity : ComponentActivity() {
                     )
                     itemDetails = listOf(ItemDetails("test-01", product.price, 1, product.name))
                     installment = populateInstallment()
-                    bank = populateAcquiringBank()
                     expiry = populateExpiry()
-                    isSecure = populateIsSecure()
-                    isSavedCard = populateIsSavedCard()
-                    ccAuthType = populateCCAuthType()
-                    whitelistBins = populateWhitelistBins()
                     bcaVaRequest = populateVa(bcaVa)
                     bniVaRequest = populateVa(bniVa)
                     permataVaRequest = populateVa(permataVa)
