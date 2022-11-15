@@ -252,6 +252,24 @@ class WalletViewModelTest {
         )
     }
 
+    @Test
+    fun verifyTrackPageViewed() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil)
+
+        walletViewModel.trackPageViewed(paymentType = PaymentType.GOPAY)
+        verify(eventAnalytics).trackSnapPageViewed(
+            pageName = PageName.GOPAY_DEEPLINK_PAGE,
+            paymentMethodName = PaymentType.GOPAY,
+            transactionId = null,
+            stepNumber = null
+        )
+    }
+
     fun <T> LiveData<T>.getOrAwaitValue(
         time: Long = 2,
         timeUnit: TimeUnit = TimeUnit.SECONDS
