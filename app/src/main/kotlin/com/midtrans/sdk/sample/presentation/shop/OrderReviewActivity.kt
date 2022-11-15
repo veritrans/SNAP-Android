@@ -25,6 +25,7 @@ import androidx.core.os.LocaleListCompat
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
+import com.midtrans.sdk.corekit.models.BcaBankTransferRequestModel
 import com.midtrans.sdk.corekit.models.ExpiryModel
 import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
@@ -149,6 +150,11 @@ class OrderReviewActivity : ComponentActivity() {
     private var ccAuthType: String? = null
     private var whitelistBins: List<String> = listOf()
 
+    private lateinit var customerDetailsLegacy: com.midtrans.sdk.corekit.models.CustomerDetails
+    private var installmentLegacy: com.midtrans.sdk.corekit.models.snap.Installment? = null
+    private var expiryLegacy: ExpiryModel? = null
+    private var bcaVaLegacy: BcaBankTransferRequestModel? = null
+
     private fun setLocaleNew(languageCode: String?) {
         val locales = LocaleListCompat.forLanguageTags(languageCode)
         AppCompatDelegate.setApplicationLocales(locales)
@@ -156,8 +162,8 @@ class OrderReviewActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setLocaleNew("id") // commented for now. conflict with buildLegacyUiKit
+        buildLegacyUiKit()
+//        setLocaleNew("id") // commented for now. conflict with buildLegacyUiKit
 
         setContent {
             OrderListPage()
@@ -380,7 +386,65 @@ class OrderReviewActivity : ComponentActivity() {
                     payWithAndroidxActivityResultLauncher()
                 }
             )
+            SnapButton(
+                text = "Pay Rp.${(product.price).toString().dropLast(2)}",
+                style = SnapButton.Style.PRIMARY,
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
+                onClick = {
+                    val name = fullName.text
+                    val index = name.lastIndexOf(' ')
+                    val firstName = index.let { name.substring(0, it) }
+                    val lastName = index.plus(1).let { name.substring(it) }
+
+                    customerDetailsLegacy = com.midtrans.sdk.corekit.models.CustomerDetails(
+                        "3A8788CE-B96F-449C-8180-B5901A08B50A",
+                        firstName,
+                        lastName,
+                        email.text,
+                        phoneNumber.text
+                    )
+                    installmentLegacy = populateInstallmentLegacy()
+                    expiryLegacy = populateExpiryLegacy()
+                    bcaVaLegacy = populateBcaVaLegacy(bcaVa)
+                    payWithOldSnapLegacyApi()
+                }
+            )
         }
+    }
+
+    private fun populateExpiryLegacy(): ExpiryModel? {
+        var expiry: ExpiryModel? = null
+        if (customExpiry != NONE) {
+            expiry = ExpiryModel(
+                DemoUtils.getFormattedTime(System.currentTimeMillis()),
+                when (customExpiry) {
+                    ONE_HOUR -> Expiry.UNIT_HOUR
+                    else -> Expiry.UNIT_MINUTE
+                },
+                when (customExpiry) {
+                    FIVE_MINUTE -> 5
+                    else -> 1
+                }
+            )
+        }
+        return expiry
+    }
+
+    private fun populateBcaVaLegacy(va: String): BcaBankTransferRequestModel? {
+        var vaTransferRequest: BcaBankTransferRequestModel? = null
+        if (va != "") {
+            vaTransferRequest = BcaBankTransferRequestModel(
+                va,
+                com.midtrans.sdk.corekit.models.FreeText(
+                    listOf(com.midtrans.sdk.corekit.models.FreeTextLanguage("Text ID inquiry 0", "Text EN inquiry 0")),
+                    listOf(com.midtrans.sdk.corekit.models.FreeTextLanguage("Text ID inquiry 0", "Text EN inquiry 0"))
+                ),
+                null
+            )
+        }
+        return vaTransferRequest
     }
 
     private fun populateWhitelistBins(): List<String> {
@@ -448,6 +512,17 @@ class OrderReviewActivity : ComponentActivity() {
             )
         }
         return expiry
+    }
+
+    private fun populateInstallmentLegacy(): com.midtrans.sdk.corekit.models.snap.Installment? {
+        var installment: com.midtrans.sdk.corekit.models.snap.Installment? = null
+        if (installmentBank != NO_INSTALLMENT) {
+            installment = com.midtrans.sdk.corekit.models.snap.Installment(
+                isRequiredInstallment,
+                mapOf(installmentBank to listOf(3, 6, 12))
+            )
+        }
+        return installment
     }
 
     private fun populateInstallment(): Installment? {
@@ -539,37 +614,33 @@ class OrderReviewActivity : ComponentActivity() {
     private fun payWithOldSnapLegacyApi() {
         val transactionRequest = TransactionRequest(
             UUID.randomUUID().toString(),
-            3000.0
-        )
-        transactionRequest.customerDetails = com.midtrans.sdk.corekit.models.CustomerDetails(
-            "3A8788CE-B96F-449C-8180-B5901A08B50A",
-            "Ari",
-            "Bhakti",
-            "aribhakti@email.com",
-            "087788778212"
+            product.price
         )
         transactionRequest.creditCard = com.midtrans.sdk.corekit.models.snap.CreditCard(
-            true,
+            isSavedCard,
             null,
-            true,
+            isSecure,
             null,
-            "MANDIRI", //Acquiring Bank by Mandiri
+            bank,
             null,
+            whitelistBins,
             null,
-            null,
-            com.midtrans.sdk.corekit.models.snap.Installment(
-                false,
-                null
-            ),
-            null,
+            installmentLegacy,
+            ccAuthType,
             null
         )
         //Setting Snap token custon expiry
-        transactionRequest.expiry = ExpiryModel(
-            DemoUtils.getFormattedTime(System.currentTimeMillis()),
-            "hour",
-            1
-        )
+        transactionRequest.expiry = expiryLegacy
+        transactionRequest.customerDetails = customerDetailsLegacy
+
+        val itemDetails = arrayListOf(com.midtrans.sdk.corekit.models.ItemDetails(
+            "Test01",
+            product.price,
+            1,
+            product.name
+        ))
+        transactionRequest.itemDetails = itemDetails
+        transactionRequest.bcaVa = bcaVaLegacy
         MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().transactionRequest = transactionRequest
         MidtransSDK.getInstance().startPaymentUiFlow(this.applicationContext)
