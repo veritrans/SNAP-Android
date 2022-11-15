@@ -130,4 +130,23 @@ internal open class BaseViewModel : ViewModel() {
             paymentMethodName = paymentMethodName
         )
     }
+
+    protected fun trackCreditCard3DsResult(
+        transactionStatus: String?,
+        cardType: String?,
+        bank: String?,
+        threeDsVersion: String?,
+        channelResponseCode: String?,
+        eci: String?
+    ) {
+        eventAnalytics?.trackSnap3DsResult(
+            transactionStatus = transactionStatus,
+            cardType = cardType,
+            bank = bank,
+            threeDsVersion = threeDsVersion,
+            channelResponseCode = channelResponseCode,
+            eci = eci,
+            paymentMethodName = PaymentType.CREDIT_CARD
+        )
+    }
 }
