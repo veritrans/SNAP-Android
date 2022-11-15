@@ -166,7 +166,6 @@ class OrderReviewActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        buildLegacyUiKit()
 //        setLocaleNew("id") // commented for now. conflict with buildLegacyUiKit
 
         setContent {
@@ -416,6 +415,7 @@ class OrderReviewActivity : ComponentActivity() {
                     bcaVaLegacy = populateBcaVaLegacy(bcaVa)
                     permataVaLegacy = populateVaLegacy(permataVa)
                     bniVaLegacy = populateVaLegacy(bniVa)
+                    buildLegacyUiKit()
                     payWithOldSnapLegacyApi()
                 }
             )
