@@ -24,6 +24,8 @@ import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
 import com.midtrans.sdk.sample.util.DemoConstant.OPTIONAL
 import com.midtrans.sdk.sample.util.DemoConstant.PRE_AUTH
+import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL
+import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL_PAYMENT_CHANNELS
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 
@@ -79,6 +81,7 @@ fun BasicDropdownMenu(title: String, optionList: List<String>, state: InputState
                                 CREDIT_CARD_PAYMENT_TYPE -> state.ccPaymentType = selectedOptionText
                                 PRE_AUTH -> state.isPreAuth = selectedOptionText == ENABLED
                                 BNI_POINT_ONLY -> state.isBniPointOnly = selectedOptionText == ENABLED
+                                SHOW_ALL_PAYMENT_CHANNELS -> state.isShowAllPaymentChannels = selectedOptionText == SHOW_ALL
                             }
                         },
                         enabled = true

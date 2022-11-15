@@ -52,6 +52,15 @@ class ProductListActivity : ComponentActivity() {
         intent.getBooleanExtra(EXTRA_INPUT_ISBNIPOINTS, false)
     }
 
+    private val isShowAllPaymentChannels: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_INPUT_ISSHOWALLPAYMENT, true)
+    }
+
+    private val paymentChannels: ArrayList<String> by lazy {
+        intent.getStringArrayListExtra(EXTRA_INPUT_PAYMENTCHANNELS)
+            ?: throw RuntimeException("Installment must not be empty")
+    }
+
     private val bcaVa: String by lazy {
         intent.getStringExtra(EXTRA_INPUT_BCAVA)
             ?: throw throw RuntimeException("BCAva must not be empty")
@@ -84,6 +93,8 @@ class ProductListActivity : ComponentActivity() {
                     ccPaymentType = ccPaymentType,
                     isPreAuth = isPreAuth,
                     isBniPointsOnly = isBniPointsOnly,
+                    isShowAllPaymentChannels = isShowAllPaymentChannels,
+                    paymentChannels = paymentChannels,
                     bcaVa = bcaVa,
                     bniVa = bniVa,
                     permataVa = permataVa
@@ -105,6 +116,8 @@ class ProductListActivity : ComponentActivity() {
         private const val EXTRA_INPUT_PERMATAVA = "productList.extra.permataVa"
         private const val EXTRA_INPUT_ISPREAUTH = "productList.extra.isPreAuth"
         private const val EXTRA_INPUT_ISBNIPOINTS = "productList.extra.isBniPoints"
+        private const val EXTRA_INPUT_ISSHOWALLPAYMENT = "productList.extra.isShowAllPayment"
+        private const val EXTRA_INPUT_PAYMENTCHANNELS = "productList.extra.paymentChannels"
 
         fun getProductListActivity(
             activityContext: Context,
@@ -116,6 +129,8 @@ class ProductListActivity : ComponentActivity() {
             ccPaymentType: String,
             isPreAuth: Boolean,
             isBniPointsOnly: Boolean,
+            isShowAllPaymentChannels: Boolean,
+            paymentChannels: ArrayList<String>,
             bcaVa: String,
             bniVa: String,
             permataVa: String
@@ -129,6 +144,8 @@ class ProductListActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_CCPAYMENTTYPE, ccPaymentType)
                 putExtra(EXTRA_INPUT_ISPREAUTH, isPreAuth)
                 putExtra(EXTRA_INPUT_ISBNIPOINTS, isBniPointsOnly)
+                putExtra(EXTRA_INPUT_ISSHOWALLPAYMENT, isShowAllPaymentChannels)
+                putExtra(EXTRA_INPUT_PAYMENTCHANNELS, paymentChannels)
                 putExtra(EXTRA_INPUT_BCAVA, bcaVa)
                 putExtra(EXTRA_INPUT_BNIVA, bniVa)
                 putExtra(EXTRA_INPUT_PERMATAVA, permataVa)

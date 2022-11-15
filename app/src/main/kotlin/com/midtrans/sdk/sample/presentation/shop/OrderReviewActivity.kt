@@ -47,6 +47,7 @@ import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class OrderReviewActivity : ComponentActivity() {
@@ -118,6 +119,15 @@ class OrderReviewActivity : ComponentActivity() {
         intent.getBooleanExtra(EXTRA_INPUT_ISBNIPOINTS, false)
     }
 
+    private val isShowAllPaymentChannels: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_INPUT_ISSHOWALLPAYMENT, false)
+    }
+
+    private val paymentChannels: ArrayList<String> by lazy {
+        intent.getStringArrayListExtra(EXTRA_INPUT_PAYMENTCHANNELS)
+            ?: throw RuntimeException("Installment must not be empty")
+    }
+
     private val bcaVa: String by lazy {
         intent.getStringExtra(EXTRA_INPUT_BCAVA)
             ?: throw throw RuntimeException("BCAva must not be empty")
@@ -145,6 +155,7 @@ class OrderReviewActivity : ComponentActivity() {
     private var bcaVaRequest: BankTransferRequest? = null
     private var bniVaRequest: BankTransferRequest? = null
     private var permataVaRequest: BankTransferRequest? = null
+    private var enabledPayment: List<String>? = null
 
     private var bank: String? = null
     private var isSavedCard: Boolean = false
@@ -358,6 +369,7 @@ class OrderReviewActivity : ComponentActivity() {
             isSavedCard = populateIsSavedCard()
             ccAuthType = populateCCAuthType()
             whitelistBins = populateWhitelistBins()
+            enabledPayment = populateEnabledPayment()
 
             SnapButton(
                 text = "Pay Rp.${(product.price).toString().dropLast(2)}",
@@ -420,6 +432,14 @@ class OrderReviewActivity : ComponentActivity() {
                 }
             )
         }
+    }
+
+    private fun populateEnabledPayment(): List<String>? {
+        var payment : List<String>? = null
+        if(!isShowAllPaymentChannels){
+            payment = paymentChannels
+        }
+        return payment
     }
 
     private fun populateVaLegacy(va: String): BankTransferRequestModel? {
@@ -617,7 +637,8 @@ class OrderReviewActivity : ComponentActivity() {
             itemDetails = itemDetails,
             bcaVa = bcaVaRequest,
             bniVa = bniVaRequest,
-            permataVa = permataVaRequest
+            permataVa = permataVaRequest,
+            enabledPayment = enabledPayment
         )
     }
 
@@ -661,6 +682,7 @@ class OrderReviewActivity : ComponentActivity() {
         transactionRequest.bcaVa = bcaVaLegacy
         transactionRequest.bniVa = bniVaLegacy
         transactionRequest.permataVa = permataVaLegacy
+        transactionRequest.enabledPayments = enabledPayment
         MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().transactionRequest = transactionRequest
         MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity)
@@ -678,6 +700,8 @@ class OrderReviewActivity : ComponentActivity() {
         private const val EXTRA_INPUT_PERMATAVA = "orderReview.extra.permataVa"
         private const val EXTRA_INPUT_ISPREAUTH = "orderReview.extra.isPreAuth"
         private const val EXTRA_INPUT_ISBNIPOINTS = "orderReview.extra.isBniPoints"
+        private const val EXTRA_INPUT_ISSHOWALLPAYMENT = "productList.extra.isShowAllPayment"
+        private const val EXTRA_INPUT_PAYMENTCHANNELS = "productList.extra.paymentChannels"
 
         fun getOrderReviewActivityIntent(
             activityContext: Context,
@@ -689,6 +713,8 @@ class OrderReviewActivity : ComponentActivity() {
             ccPaymentType: String,
             isPreAuth: Boolean,
             isBniPointsOnly: Boolean,
+            isShowAllPaymentChannels: Boolean,
+            paymentChannels: ArrayList<String>,
             bcaVa: String,
             bniVa: String,
             permataVa: String
@@ -702,6 +728,8 @@ class OrderReviewActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_CCPAYMENTTYPE, ccPaymentType)
                 putExtra(EXTRA_INPUT_ISPREAUTH, isPreAuth)
                 putExtra(EXTRA_INPUT_ISBNIPOINTS, isBniPointsOnly)
+                putExtra(EXTRA_INPUT_ISSHOWALLPAYMENT, isShowAllPaymentChannels)
+                putExtra(EXTRA_INPUT_PAYMENTCHANNELS, paymentChannels)
                 putExtra(EXTRA_INPUT_BCAVA, bcaVa)
                 putExtra(EXTRA_INPUT_BNIVA, bniVa)
                 putExtra(EXTRA_INPUT_PERMATAVA, permataVa)

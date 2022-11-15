@@ -10,6 +10,7 @@ object DemoConstant {
     const val CREDIT_CARD_PAYMENT_TYPE = "Credit Card Payment"
     const val PRE_AUTH = "Pre-Auth"
     const val BNI_POINT_ONLY = "Bni Point Only"
+    const val SHOW_ALL_PAYMENT_CHANNELS = "Show All Payment Channels"
 
     //Input Field Title
     const val CUSTOM_BCA_VA = "Custom BCA VA"
@@ -54,4 +55,8 @@ object DemoConstant {
     //Boolean List
     const val DISABLED = "Disabled"
     const val ENABLED = "Enabled"
+
+    // Payment Channels
+    const val SHOW_ALL = "Show All"
+    const val SHOW_SELECTED_ONLY = "Show Selected Only"
 }
