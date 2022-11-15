@@ -71,6 +71,7 @@ class BankTransferListActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
+        viewModel.trackPageViewed()
         paymentTypeItem?.let { paymentType ->
             paymentType.method?.let { paymentMethod ->
                 toBankTransferDetail(paymentMethod)
