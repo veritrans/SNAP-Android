@@ -90,5 +90,12 @@ internal class PayLaterViewModel @Inject constructor(
         )
     }
 
+    fun trackPageViewed(paymentType: String) {
+        trackPageViewed(
+            pageName = PageName.AKULAKU_PAGE,
+            paymentMethodName = paymentType
+        )
+    }
+
     fun getExpiredHour() = dateTimeUtil.getExpiredHour(expiredTime)
 }

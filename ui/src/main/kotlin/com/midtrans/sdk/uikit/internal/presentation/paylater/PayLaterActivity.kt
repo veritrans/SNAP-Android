@@ -76,7 +76,7 @@ class PayLaterActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
-
+        viewModel.trackPageViewed(paymentType)
         setContent {
             PayLaterContent(
                 paymentType = paymentType,
