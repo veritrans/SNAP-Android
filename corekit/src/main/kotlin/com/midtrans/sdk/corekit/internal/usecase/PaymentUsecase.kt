@@ -167,7 +167,7 @@ internal class PaymentUsecase(
                     merchantId = merchant?.merchantId.orEmpty(),
                     merchantName = merchant?.preference?.displayName.orEmpty(),
                     colourSchema = merchant?.preference?.colorScheme.orEmpty(),
-                    enabledPayments = enabledPayments?.toString().orEmpty(),
+                    enabledPayments = enabledPayments?.map { it.type }?.toString().orEmpty(),
                     enabledPaymentsLength = enabledPayments?.size?.toString().orEmpty(),
                     snapRedirectUrl = snapRedirectUrl,
                     merchantUrl = null, //TODO where to get merchant url
