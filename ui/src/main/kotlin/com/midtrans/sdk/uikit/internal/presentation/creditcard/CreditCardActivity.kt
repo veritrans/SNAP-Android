@@ -125,6 +125,7 @@ internal class CreditCardActivity : BaseActivity() {
                 maskedCardNumber = savedToken.maskedCard.orEmpty(),
                 displayedMaskedCard = savedToken.maskedCard.orEmpty(),
                 tokenType = savedToken.tokenType.toString(),
+                bankCode = savedToken.binDetail?.bankCode.toString(),
                 tokenId = savedToken.token.toString(),
                 cvvSavedCardTextField = TextFieldValue(),
                 isCvvSavedCardInvalid = false
@@ -251,13 +252,14 @@ internal class CreditCardActivity : BaseActivity() {
                 isInstallmentAllowed = true
             )
         }
-        val isPointBankShownState = viewModel?.isPointBankShown?.observeAsState( false)
+        val isPointBankShownState = viewModel?.isPointBankShown?.observeAsState(false)
+        val isPointBankEnabled = viewModel?.isPointBankEnabled?.observeAsState(false)
         val transactionResponse = viewModel?.transactionResponseLiveData?.observeAsState()
         val bankCodeId by bankCodeIdState
         var isExpanding by remember { mutableStateOf(false) }
         var selectedFormData: FormData? by remember { mutableStateOf(null) }
         var installmentTerm by remember { mutableStateOf("") }
-        state.isBinBlocked = viewModel?.binBlockedLiveData?.observeAsState(false)?.value?: false
+        state.isBinBlocked = viewModel?.binBlockedLiveData?.observeAsState(false)?.value ?: false
 
         if (transactionResponse?.value?.statusCode == UiKitConstants.STATUS_CODE_201 && !transactionResponse.value?.redirectUrl.isNullOrEmpty()) {
             transactionResponse.value?.redirectUrl?.let {
@@ -290,7 +292,10 @@ internal class CreditCardActivity : BaseActivity() {
 
                     state.cardNumber = it
                     val cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
-                    viewModel?.getPromosData(binNumber = cardNumberWithoutSpace, installmentTerm = installmentTerm)
+                    viewModel?.getPromosData(
+                        binNumber = cardNumberWithoutSpace,
+                        installmentTerm = installmentTerm
+                    )
                     if (cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER) {
                         val eightDigitNumber = cardNumberWithoutSpace.substring(
                             0,
@@ -337,7 +342,11 @@ internal class CreditCardActivity : BaseActivity() {
                 },
                 onInstallmentTermSelected = {
                     installmentTerm = it
-                    viewModel?.getPromosData(binNumber = SnapCreditCardUtil.getCardNumberFromTextField(state.cardNumber), installmentTerm = installmentTerm)
+                    viewModel?.getPromosData(
+                        binNumber = SnapCreditCardUtil.getCardNumberFromTextField(
+                            state.cardNumber
+                        ), installmentTerm = installmentTerm
+                    )
                 },
                 withCustomerPhoneEmail = withCustomerPhoneEmail,
                 promoState = promoState,
@@ -572,12 +581,12 @@ internal class CreditCardActivity : BaseActivity() {
 
     private fun isValidCardData(state: CardItemState): Boolean {
         return !(state.isCardNumberInvalid ||
-            state.isExpiryInvalid ||
-            state.isCvvInvalid ||
-            state.cardNumber.text.isEmpty() ||
-            state.expiry.text.isEmpty() ||
-            state.cvv.text.isEmpty()
-            )
+                state.isExpiryInvalid ||
+                state.isCvvInvalid ||
+                state.cardNumber.text.isEmpty() ||
+                state.expiry.text.isEmpty() ||
+                state.cvv.text.isEmpty()
+                )
     }
 
     private fun isValidEmail(customerEmail: TextFieldValue): Boolean {
@@ -678,7 +687,7 @@ internal class CreditCardActivity : BaseActivity() {
     private fun SavedCardLayout(
         viewModel: CreditCardViewModel?,
         state: CardItemState,
-        isPointBankShownState : State<Boolean>?,
+        isPointBankShownState: State<Boolean>?,
         savedTokenListState: SnapshotStateList<FormData>,
         bankCodeId: Int?,
         onCardNumberValueChange: (TextFieldValue) -> Unit,
@@ -706,7 +715,8 @@ internal class CreditCardActivity : BaseActivity() {
             onCvvValueChange = {
                 state.cvv = it
             },
-            onSavedCardCheckedChange = { state.isSavedCardChecked = it }
+            onSavedCardCheckedChange = { state.isSavedCardChecked = it },
+            onPointBankCheckedChange = { state.isPointBankChecked = it }
         )
     }
 
