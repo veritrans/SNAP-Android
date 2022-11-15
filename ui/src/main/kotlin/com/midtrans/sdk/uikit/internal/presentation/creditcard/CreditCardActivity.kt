@@ -253,7 +253,6 @@ internal class CreditCardActivity : BaseActivity() {
             )
         }
         val isPointBankShownState = viewModel?.isPointBankShown?.observeAsState(false)
-        val isPointBankEnabled = viewModel?.isPointBankEnabled?.observeAsState(false)
         val transactionResponse = viewModel?.transactionResponseLiveData?.observeAsState()
         val bankCodeId by bankCodeIdState
         var isExpanding by remember { mutableStateOf(false) }
