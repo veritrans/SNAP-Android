@@ -155,14 +155,22 @@ internal class PaymentUsecase(
 
     private fun trackCommonTransactionProperties(): (Transaction) -> Transaction {
         return { transaction ->
-            eventAnalytics.registerCommonTransactionProperties(
-                snapToken = transaction.token.orEmpty(),
-                orderId = transaction.transactionDetails?.orderId.orEmpty(),
-                grossAmount = transaction.transactionDetails?.grossAmount.toString(),
-                merchantId = transaction.merchant?.merchantId.orEmpty(),
-                merchantName = transaction.merchant?.preference?.displayName.orEmpty()
-            )
-            transaction
+            transaction.apply {
+                eventAnalytics.registerCommonTransactionProperties(
+                    snapToken = token.orEmpty(),
+                    orderId = transactionDetails?.orderId.orEmpty(),
+                    grossAmount = transactionDetails?.grossAmount.toString(),
+                    merchantId = merchant?.merchantId.orEmpty(),
+                    merchantName = merchant?.preference?.displayName.orEmpty(),
+                    colourSchema = merchant?.preference?.colorScheme.orEmpty(),
+                    enabledPayments = enabledPayments?.toString().orEmpty(),
+                    enabledPaymentsLength = enabledPayments?.size?.toString().orEmpty(),
+                    snapRedirectUrl = null, //TODO get redirect url
+                    merchantUrl = null, //TODO where to get merchant url
+                    allowRetry = merchant?.allowRetry?.toString(),
+                    otherVaProcessor = merchant?.preference?.otherVaProcessor
+                )
+            }
         }
     }
 
