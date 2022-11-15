@@ -53,7 +53,7 @@ internal class PaymentUsecase(
                     snapRepository
                         .getTransactionDetail(response.token.orEmpty())
                         .map (setAnalyticsUserIdentityWithSnapToken(isUserSet))
-                        .map (trackCommonTransactionProperties())
+                        .map (trackCommonTransactionProperties(response.redirectUrl))
                         .map (trackCommonCustomerProperties())
                         .map { Pair(response.token, it) }
                 }
@@ -89,7 +89,7 @@ internal class PaymentUsecase(
         } else {
             snapRepository.getTransactionDetail(snapToken)
                 .map (setAnalyticsUserIdentityWithSnapToken(isUserSet))
-                .map (trackCommonTransactionProperties())
+                .map (trackCommonTransactionProperties(null))
                 .map (trackCommonCustomerProperties())
                 .subscribeOn(scheduler.io())
                 .observeOn(scheduler.ui())
@@ -153,7 +153,7 @@ internal class PaymentUsecase(
         }
     }
 
-    private fun trackCommonTransactionProperties(): (Transaction) -> Transaction {
+    private fun trackCommonTransactionProperties(snapRedirectUrl: String?): (Transaction) -> Transaction {
         return { transaction ->
             transaction.apply {
                 eventAnalytics.registerCommonTransactionProperties(
@@ -165,7 +165,7 @@ internal class PaymentUsecase(
                     colourSchema = merchant?.preference?.colorScheme.orEmpty(),
                     enabledPayments = enabledPayments?.toString().orEmpty(),
                     enabledPaymentsLength = enabledPayments?.size?.toString().orEmpty(),
-                    snapRedirectUrl = null, //TODO get redirect url
+                    snapRedirectUrl = snapRedirectUrl,
                     merchantUrl = null, //TODO where to get merchant url
                     allowRetry = merchant?.allowRetry?.toString(),
                     otherVaProcessor = merchant?.preference?.otherVaProcessor
