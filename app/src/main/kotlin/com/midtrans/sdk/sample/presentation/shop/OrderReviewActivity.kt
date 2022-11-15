@@ -424,7 +424,7 @@ class OrderReviewActivity : ComponentActivity() {
 
     private fun populateVaLegacy(va: String): BankTransferRequestModel? {
         var vaTransferRequest: BankTransferRequestModel? = null
-        if (va != "") {
+        if (va.isNotEmpty()) {
             vaTransferRequest = BankTransferRequestModel(
                 va
             )
@@ -452,7 +452,7 @@ class OrderReviewActivity : ComponentActivity() {
 
     private fun populateBcaVaLegacy(va: String): BcaBankTransferRequestModel? {
         var vaTransferRequest: BcaBankTransferRequestModel? = null
-        if (va != "") {
+        if (va.isNotEmpty()) {
             vaTransferRequest = BcaBankTransferRequestModel(
                 va,
                 com.midtrans.sdk.corekit.models.FreeText(
@@ -482,7 +482,7 @@ class OrderReviewActivity : ComponentActivity() {
 
     private fun populateVa(va: String): BankTransferRequest? {
         var vaTransferRequest: BankTransferRequest? = null
-        if (va != "") {
+        if (va.isNotEmpty()) {
             vaTransferRequest = BankTransferRequest(
                 vaNumber = va
             )
