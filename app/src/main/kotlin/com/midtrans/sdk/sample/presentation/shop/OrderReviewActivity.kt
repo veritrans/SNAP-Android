@@ -387,7 +387,7 @@ class OrderReviewActivity : ComponentActivity() {
                 }
             )
             SnapButton(
-                text = "Pay Rp.${(product.price).toString().dropLast(2)}",
+                text = "Pay Rp.${(product.price).toString().dropLast(2)} with legacy",
                 style = SnapButton.Style.PRIMARY,
                 modifier = Modifier
                     .fillMaxWidth(1f)
