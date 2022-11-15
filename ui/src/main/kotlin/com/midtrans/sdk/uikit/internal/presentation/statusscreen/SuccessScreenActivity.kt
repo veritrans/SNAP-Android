@@ -55,6 +55,7 @@ class SuccessScreenActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
+        viewModel.trackPageViewed(transactionResult?.paymentType.orEmpty())
         setContent {
             SuccessContent(
                 total = data.total,

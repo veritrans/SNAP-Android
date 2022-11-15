@@ -23,4 +23,11 @@ internal class SuccessScreenViewModel @Inject constructor(
             pageName = PageName.SUCCESS_PAGE
         )
     }
+
+    fun trackPageViewed(paymentType: String) {
+        trackPageViewed(
+            pageName = PageName.SUCCESS_PAGE,
+            paymentMethodName = paymentType
+        )
+    }
 }
