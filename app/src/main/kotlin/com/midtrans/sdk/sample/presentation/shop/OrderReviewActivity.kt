@@ -27,6 +27,7 @@ import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
 import com.midtrans.sdk.corekit.models.BcaBankTransferRequestModel
 import com.midtrans.sdk.corekit.models.ExpiryModel
+import com.midtrans.sdk.corekit.models.snap.BankTransferRequestModel
 import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.NONE
@@ -155,6 +156,8 @@ class OrderReviewActivity : ComponentActivity() {
     private var installmentLegacy: com.midtrans.sdk.corekit.models.snap.Installment? = null
     private var expiryLegacy: ExpiryModel? = null
     private var bcaVaLegacy: BcaBankTransferRequestModel? = null
+    private var permataVaLegacy: BankTransferRequestModel? = null
+    private var bniVaLegacy: BankTransferRequestModel? = null
 
     private fun setLocaleNew(languageCode: String?) {
         val locales = LocaleListCompat.forLanguageTags(languageCode)
@@ -411,10 +414,22 @@ class OrderReviewActivity : ComponentActivity() {
                     installmentLegacy = populateInstallmentLegacy()
                     expiryLegacy = populateExpiryLegacy()
                     bcaVaLegacy = populateBcaVaLegacy(bcaVa)
+                    permataVaLegacy = populateVaLegacy(permataVa)
+                    bniVaLegacy = populateVaLegacy(bniVa)
                     payWithOldSnapLegacyApi()
                 }
             )
         }
+    }
+
+    private fun populateVaLegacy(va: String): BankTransferRequestModel? {
+        var vaTransferRequest: BankTransferRequestModel? = null
+        if (va != "") {
+            vaTransferRequest = BankTransferRequestModel(
+                va
+            )
+        }
+        return vaTransferRequest
     }
 
     private fun populateExpiryLegacy(): ExpiryModel? {
@@ -644,6 +659,8 @@ class OrderReviewActivity : ComponentActivity() {
         ))
         transactionRequest.itemDetails = itemDetails
         transactionRequest.bcaVa = bcaVaLegacy
+        transactionRequest.bniVa = bniVaLegacy
+        transactionRequest.permataVa = permataVaLegacy
         MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().transactionRequest = transactionRequest
         MidtransSDK.getInstance().startPaymentUiFlow(this.applicationContext)
