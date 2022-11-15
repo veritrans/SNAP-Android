@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.*
+import com.midtrans.sdk.corekit.api.model.SavedToken.Companion.ONE_CLICK
+import com.midtrans.sdk.corekit.api.model.SavedToken.Companion.TWO_CLICKS
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.CreditCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.PaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
@@ -55,6 +57,7 @@ internal class PaymentUsecase(
                         .map (setAnalyticsUserIdentityWithSnapToken(isUserSet))
                         .map (trackCommonTransactionProperties(response.redirectUrl))
                         .map (trackCommonCustomerProperties())
+                        .map (trackCommonCreditCardProperties())
                         .map { Pair(response.token, it) }
                 }
                 .subscribeOn(scheduler.io())
@@ -91,6 +94,7 @@ internal class PaymentUsecase(
                 .map (setAnalyticsUserIdentityWithSnapToken(isUserSet))
                 .map (trackCommonTransactionProperties(null))
                 .map (trackCommonCustomerProperties())
+                .map (trackCommonCreditCardProperties())
                 .subscribeOn(scheduler.io())
                 .observeOn(scheduler.ui())
                 .subscribe(
@@ -193,6 +197,32 @@ internal class PaymentUsecase(
                     customerPostCode = cityAndPostCode.second,
                     totalItems = totalItems?.toString(),
                     totalQuantity = totalQuantity?.toString()
+                )
+            }
+        }
+    }
+
+    private fun trackCommonCreditCardProperties(): (Transaction) -> Transaction {
+        return { transaction ->
+            transaction.apply {
+                val isOneClickTokenAvailable =
+                    creditCard?.savedTokens?.any { it.containsType(ONE_CLICK) }
+                val isTwoClickTokenAvailable =
+                    creditCard?.savedTokens?.any { it.containsType(TWO_CLICKS) }
+
+                eventAnalytics.registerCommonCreditCardProperties(
+                    cardOneClickTokenAvailable = isOneClickTokenAvailable?.toString(),
+                    cardTwoClickTokenAvailable = isTwoClickTokenAvailable?.toString(),
+                    priorityCardFeature = merchant?.priorityCardFeature,
+                    savedTokens = creditCard?.savedTokens?.size?.toString(),
+                    promoEnabled = promoDetails?.promos?.isNotEmpty()?.toString(),
+                    secure = creditCard?.secure?.toString(),
+                    saveCard = creditCard?.saveCard?.toString(),
+                    blacklistedBins = creditCard?.blacklistBins?.toString(),
+                    allowlistedBins = creditCard?.whitelistBins?.toString(),
+                    installmentTerms = creditCard?.installment?.terms?.values?.toString(),
+                    installmentBank = creditCard?.installment?.terms?.keys?.toString(),
+                    installmentRequired = creditCard?.installment?.isRequired?.toString()
                 )
             }
         }
