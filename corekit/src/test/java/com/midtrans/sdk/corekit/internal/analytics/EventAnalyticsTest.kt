@@ -10,6 +10,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_HOW_TO_PAY_VIEWED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_OPEN_DEEPLINK
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ORDER_DETAILS_VIEWED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_CLOSED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_3DS_VERSION
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BANK
@@ -24,8 +25,14 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_COUNT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CHANNEL_RESPONSE_CODE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CURRENCY
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_CITY
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_EMAIL
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_NAME
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_PHONE_NUMBER
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_POST_CODE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ECI
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_FRAUD_STATUS
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_NET_AMOUNT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAGE_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAYMENT_METHOD_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PLATFORM
@@ -33,6 +40,8 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_REGISTRATI
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_RESPONSE_TIME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TOKEN
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STATUS_CODE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOTAL_ITEMS
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOTAL_QUANTITY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TRANSACTION_ID
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TRANSACTION_STATUS
 import org.junit.After
@@ -97,6 +106,30 @@ internal class EventAnalyticsTest {
                 EventName.PROPERTY_GROSS_AMOUNT to "gross-amount",
                 EventName.PROPERTY_MERCHANT_ID to "merchant-id",
                 EventName.PROPERTY_MERCHANT_NAME to "merchant-name"
+            )
+        )
+    }
+
+    @Test
+    fun verifyRegisterCommonCustomerProperties() {
+        eventAnalytics.registerCommonCustomerProperties(
+            customerName = "name",
+            customerEmail = "email",
+            customerPhoneNumber = "phone",
+            customerCity = "city",
+            customerPostCode = "post-code",
+            totalItems = "total-items",
+            totalQuantity = "total-quantity"
+        )
+        verify(mixpanelTracker).registerCommonProperties(
+            mapOf(
+                PROPERTY_CUSTOMER_NAME to "name",
+                PROPERTY_CUSTOMER_EMAIL to "email",
+                PROPERTY_CUSTOMER_PHONE_NUMBER to "phone",
+                PROPERTY_CUSTOMER_CITY to "city",
+                PROPERTY_CUSTOMER_POST_CODE to "post-code",
+                PROPERTY_TOTAL_ITEMS to "total-items",
+                PROPERTY_TOTAL_QUANTITY to "total-quantity"
             )
         )
     }
@@ -271,6 +304,25 @@ internal class EventAnalyticsTest {
                 PROPERTY_CHANNEL_RESPONSE_CODE to "response-code",
                 PROPERTY_ECI to "eci",
                 PROPERTY_PAYMENT_METHOD_NAME to "payment-type"
+            )
+        )
+    }
+
+    @Test
+    fun verifyTrackSnapOrderDetailsViewed() {
+        eventAnalytics.trackSnapOrderDetailsViewed(
+            pageName = "page-name",
+            paymentMethodName = "payment-type",
+            transactionId = "transaction-id",
+            netAmount = "net-amount"
+        )
+        verify(mixpanelTracker).trackEvent(
+            eventName = EVENT_SNAP_ORDER_DETAILS_VIEWED,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to "page-name",
+                PROPERTY_PAYMENT_METHOD_NAME to "payment-type",
+                PROPERTY_TRANSACTION_ID to "transaction-id",
+                PROPERTY_NET_AMOUNT to "net-amount"
             )
         )
     }

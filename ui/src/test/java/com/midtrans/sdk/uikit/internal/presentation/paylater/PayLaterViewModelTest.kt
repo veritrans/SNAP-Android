@@ -114,4 +114,15 @@ internal class PayLaterViewModelTest {
             paymentMethodName = PaymentType.AKULAKU
         )
     }
+
+    @Test
+    fun verifyTrackOrderDetailsViewed() {
+        viewModel.trackOrderDetailsViewed(PaymentType.AKULAKU)
+        verify(eventAnalytics).trackSnapOrderDetailsViewed(
+            pageName = PageName.AKULAKU_PAGE,
+            paymentMethodName = PaymentType.AKULAKU,
+            transactionId = null,
+            netAmount = null
+        )
+    }
 }

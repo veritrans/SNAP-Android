@@ -149,4 +149,18 @@ internal open class BaseViewModel : ViewModel() {
             paymentMethodName = PaymentType.CREDIT_CARD
         )
     }
+
+    protected fun trackOrderDetailsViewed(
+        pageName: String? = null,
+        paymentMethodName: String? = null,
+        transactionId: String? = null,
+        netAmount: String? = null
+    ) {
+        eventAnalytics?.trackSnapOrderDetailsViewed(
+            pageName = pageName,
+            paymentMethodName = paymentMethodName,
+            transactionId = transactionId,
+            netAmount = netAmount
+        )
+    }
 }

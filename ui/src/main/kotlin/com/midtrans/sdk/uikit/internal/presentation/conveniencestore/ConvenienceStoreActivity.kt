@@ -73,8 +73,8 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         observeTransactionResultLiveData()
     }
 
-    private fun observeTransactionResultLiveData(){
-        viewModel.transactionResultLiveData.observe(this){
+    private fun observeTransactionResultLiveData() {
+        viewModel.transactionResultLiveData.observe(this) {
             val resultIntent = Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, it)
             setResult(Activity.RESULT_OK, resultIntent)
         }
@@ -141,6 +141,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                     }
                 },
                 expandingContent = {
+                    viewModel?.trackOrderDetailsViewed(paymentType)
                     SnapPaymentOrderDetails(
                         customerInfo = customerInfo,
                         itemInfo = itemInfo

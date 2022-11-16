@@ -150,4 +150,15 @@ internal class UobPaymentViewModelTest {
             paymentMethodName = PaymentType.UOB_EZPAY
         )
     }
+
+    @Test
+    fun verifyTrackOrderDetailsViewed() {
+        viewModel.trackOrderDetailsViewed()
+        verify(eventAnalytics).trackSnapOrderDetailsViewed(
+            pageName = PageName.UOB_PAGE,
+            paymentMethodName = PaymentType.UOB_EZPAY,
+            transactionId = null,
+            netAmount = null
+        )
+    }
 }

@@ -159,6 +159,7 @@ internal class WalletActivity : BaseActivity() {
                     }
                 },
                 expandingContent = {
+                    viewModel.trackOrderDetailsViewed(paymentType)
                     SnapPaymentOrderDetails(
                         customerInfo = customerInfo,
                         itemInfo = itemInfo

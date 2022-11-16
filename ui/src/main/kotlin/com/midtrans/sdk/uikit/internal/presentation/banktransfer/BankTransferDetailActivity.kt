@@ -180,6 +180,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                         }
                     },
                     expandingContent = {
+                        viewModel.trackOrderDetailsViewed(paymentType)
                         SnapPaymentOrderDetails(
                             customerInfo = customerInfo,
                             itemInfo = itemInfo
