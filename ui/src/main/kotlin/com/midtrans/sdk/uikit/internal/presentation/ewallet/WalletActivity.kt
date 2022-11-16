@@ -40,7 +40,37 @@ internal class WalletActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModel: WalletViewModel
-    var deepLinkUrl: String? = null
+
+    private val totalAmount: String by lazy {
+        intent.getStringExtra(EXTRA_TOTAL_AMOUNT)
+            ?: throw RuntimeException("Total amount must not be empty")
+    }
+
+    private val orderId: String by lazy {
+        intent.getStringExtra(EXTRA_ORDER_ID)
+            ?: throw RuntimeException("Order ID must not be empty")
+    }
+
+    private val customerInfo: CustomerInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
+    }
+
+    private val itemInfo: ItemInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
+    }
+
+    private val paymentType: String by lazy {
+        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
+            ?: throw RuntimeException("Payment Type must not be empty")
+    }
+
+    private val snapToken: String by lazy {
+        intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
+    }
+
+    private val currentStepNumber: Int by lazy {
+        intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
+    }
 
     private val deepLinkLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -48,10 +78,12 @@ internal class WalletActivity : BaseActivity() {
             finish()
         }
 
+    private var deepLinkUrl: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
-        viewModel.trackPageViewed(paymentType)
+        viewModel.trackPageViewed(paymentType, currentStepNumber)
         setContent {
             Content(
                 totalAmount = totalAmount,
@@ -91,7 +123,8 @@ internal class WalletActivity : BaseActivity() {
                 activityContext = this,
                 paymentType = paymentType,
                 url = it,
-                snapToken = snapToken
+                snapToken = snapToken,
+                stepNumber = currentStepNumber + 1
             )
             deepLinkLauncher.launch(intent)
         }
@@ -300,34 +333,6 @@ internal class WalletActivity : BaseActivity() {
             isTablet = true
         )
 
-    }
-
-
-    private val totalAmount: String by lazy {
-        intent.getStringExtra(EXTRA_TOTAL_AMOUNT)
-            ?: throw RuntimeException("Total amount must not be empty")
-    }
-
-    private val orderId: String by lazy {
-        intent.getStringExtra(EXTRA_ORDER_ID)
-            ?: throw RuntimeException("Order ID must not be empty")
-    }
-
-    private val customerInfo: CustomerInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
-    }
-
-    private val itemInfo: ItemInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
-    }
-
-    private val paymentType: String by lazy {
-        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
-            ?: throw RuntimeException("Payment Type must not be empty")
-    }
-
-    private val snapToken: String by lazy {
-        intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
     }
 
     private val paymentInstructionQr by lazy {

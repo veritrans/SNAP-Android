@@ -206,6 +206,7 @@ internal class DeepLinkActivity : BaseActivity() {
         private const val EXTRA_URL = "deeplinkactivity.extra.url"
         private const val EXTRA_PAYMENT_TYPE = "deeplinkactivity.extra.payment_type"
         private const val EXTRA_SNAP_TOKEN = "deeplinkactivity.extra.snap_token"
+        private const val EXTRA_STEP_NUMBER = "deeplinkactivity.extra.step_number"
         private const val GOJEK_PACKAGE_NAME = "com.gojek.app"
         private const val SHOPEE_PACKAGE_NAME = "com.shopee.id"
 
@@ -213,12 +214,14 @@ internal class DeepLinkActivity : BaseActivity() {
             activityContext: Context,
             paymentType: String,
             url: String,
-            snapToken: String
+            snapToken: String,
+            stepNumber: Int
         ): Intent {
             return Intent(activityContext, DeepLinkActivity::class.java).apply {
                 putExtra(EXTRA_URL, url)
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
+                putExtra(EXTRA_STEP_NUMBER, stepNumber)
             }
         }
     }

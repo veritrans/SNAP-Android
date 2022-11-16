@@ -128,11 +128,15 @@ internal class WalletViewModel @Inject constructor(
         )
     }
 
-    fun trackPageViewed(paymentType: String) {
+    fun trackPageViewed(
+        paymentType: String,
+        stepNumber: Int
+    ) {
         trackPageViewed(
             pageName = getPageName(paymentType),
             paymentMethodName = paymentType,
-            transactionId = _transactionId
+            transactionId = _transactionId,
+            stepNumber = stepNumber.toString()
         )
     }
 
