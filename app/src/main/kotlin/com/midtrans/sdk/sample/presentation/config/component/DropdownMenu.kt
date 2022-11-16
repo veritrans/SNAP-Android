@@ -1,15 +1,18 @@
 package com.midtrans.sdk.sample.presentation.config.component
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.presentation.config.InputState
 import com.midtrans.sdk.sample.util.DemoConstant.ACQUIRING_BANK
 import com.midtrans.sdk.sample.util.DemoConstant.BNI_POINT_ONLY
@@ -108,6 +111,36 @@ fun AlertDialogDropdownMenu(
     val options by remember { mutableStateOf(optionList) }
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(options[0]) }
+    var items by remember {
+        mutableStateOf(
+            listOf(
+                ListItem("Credit Card", "credit_card", isSelected = false),
+                ListItem("BCA VA", "bca_va", isSelected = false),
+                ListItem("Mandiri VA", "echannel", isSelected = false),
+                ListItem("BNI VA", "bni_va", isSelected = false),
+                ListItem("Permata VA", "permata_va", isSelected = false),
+                ListItem("BRI VA", "bri_va", isSelected = false),
+                ListItem("Other VA", "other_va", isSelected = false),
+                ListItem("Gopay", "gopay", isSelected = false),
+                ListItem("ShopeePay", "shopeepay", isSelected = false),
+                ListItem("KlikBCA", "bca_klikbca", isSelected = false),
+                ListItem("BCA KlikPay", "bca_klikpay", isSelected = false),
+                ListItem("Mandiri Clickpay", "mandiri_ecash", isSelected = false),
+                ListItem("BriMo", "bri_epay", isSelected = false),
+                ListItem("CimbClicks", "cimb_clicks", isSelected = false),
+                ListItem("Danamon Online Banking", "danamon_online", isSelected = false),
+                ListItem("Indomaret", "indomaret", isSelected = false),
+                ListItem("Alfamart", "alfamart", isSelected = false),
+                ListItem("Akulaku", "akulaku", isSelected = false),
+            )
+        )
+    }
+    var list by remember {
+        mutableStateOf(arrayListOf<String>())
+    }
+    var itemList by remember {
+        mutableStateOf(listOf<ListItem>())
+    }
 
     Column(modifier = Modifier.fillMaxWidth(1f), horizontalAlignment = Alignment.Start) {
         Text(
@@ -164,6 +197,74 @@ fun AlertDialogDropdownMenu(
                 }
             }
         }
+    }
+
+
+    if (!state.isShowAllPaymentChannels) {
+        if (openDialog.value) {
+            AlertDialog(
+                onDismissRequest = {
+                    openDialog.value = false
+                },
+                title = {
+                    Text(text = "Title")
+                },
+                text = {
+                    Column {
+                        LazyColumn(Modifier.weight(1f)) {
+                            items(items.size) { i ->
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            items = items.mapIndexed { j, item ->
+                                                if (i == j) {
+                                                    item.copy(isSelected = !item.isSelected)
+                                                } else item
+                                            }
+                                        }
+                                        .padding(16.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(text = items[i].title)
+                                    if (items[i].isSelected) {
+                                        Icon(
+                                            imageVector = Icons.Default.Check,
+                                            contentDescription = "Selected",
+                                            tint = Color.Green,
+                                            modifier = Modifier.size(20.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                buttons = {
+                    Row(
+                        modifier = Modifier.padding(all = 8.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Button(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = {
+                                openDialog.value = false
+                            }
+                        ) {
+                            Text("Confirm")
+                        }
+                    }
+                }
+            )
+        }
+        itemList = items.filter { it.isSelected }
+        for(i in itemList){
+            Text(text = i.title)
+        }
+        state.allPaymentChannels = ArrayList(itemList.distinct())
+    } else {
+        list = arrayListOf()
     }
 }
 
