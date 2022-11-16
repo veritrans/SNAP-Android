@@ -108,7 +108,8 @@ class SavedCardActivity: BaseActivity() {
                     activityContext = this@SavedCardActivity,
                     total = totalAmount,
                     orderId = it?.orderId.toString(),
-                    transactionResult = TransactionResult("","","")
+                    transactionResult = TransactionResult("","",""),
+                    stepNumber = 0
                 )
                 startActivity(intent)
             }
@@ -120,7 +121,8 @@ class SavedCardActivity: BaseActivity() {
                         activityContext = this@SavedCardActivity,
                         total = totalAmount,
                         orderId = it?.orderId.toString(),
-                        transactionResult = TransactionResult("","","")
+                        transactionResult = TransactionResult("","",""),
+                        stepNumber = 0
                     )
                 }
                 else -> {
