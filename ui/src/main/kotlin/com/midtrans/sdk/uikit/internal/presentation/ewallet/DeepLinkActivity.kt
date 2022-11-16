@@ -40,6 +40,11 @@ internal class DeepLinkActivity : BaseActivity() {
         ViewModelProvider(this, viewModelFactory).get(DeepLinkViewModel::class.java)
     }
 
+    private val currentStepNumber: Int by lazy {
+        intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
+    }
+
+
     private val deepLinkLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             viewModel.checkStatus(snapToken)
@@ -48,7 +53,7 @@ internal class DeepLinkActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
-        viewModel.trackPageViewed(paymentType)
+        viewModel.trackPageViewed(paymentType, currentStepNumber)
         setContent { Content(paymentType = paymentType, url = url) }
         observeData()
     }
