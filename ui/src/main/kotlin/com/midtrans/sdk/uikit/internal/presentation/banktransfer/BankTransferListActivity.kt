@@ -162,7 +162,8 @@ class BankTransferListActivity : BaseActivity() {
                 itemInfo = itemInfo,
                 orderId = orderId,
                 totalAmount = totalAmount,
-                snapToken = snapToken
+                snapToken = snapToken,
+                stepNumber = currentStepNumber + 1
             )
         resultLauncher.launch(intent)
     }
