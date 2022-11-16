@@ -73,6 +73,10 @@ class UobSelectionActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_PAYMENT_TYPE_ITEM)
     }
 
+    private val currentStepNumber: Int by lazy {
+        intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
+    }
+
     private val viewModel: UobSelectionViewModel by lazy {
         ViewModelProvider(this, vmFactory)[UobSelectionViewModel::class.java]
     }
@@ -80,7 +84,7 @@ class UobSelectionActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
-        viewModel.trackPageViewed()
+        viewModel.trackPageViewed(currentStepNumber)
         paymentTypeItem?.let { paymentType ->
             paymentType.method?.let { uobMode ->
                 resultLauncher.launch(
