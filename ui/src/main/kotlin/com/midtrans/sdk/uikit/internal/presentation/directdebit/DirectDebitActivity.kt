@@ -72,6 +72,10 @@ class DirectDebitActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
     }
 
+    private val currentStepNumber: Int by lazy {
+        intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
+    }
+
     private val viewModel: DirectDebitViewModel by lazy {
         ViewModelProvider(this, vmFactory)[DirectDebitViewModel::class.java]
     }
@@ -80,7 +84,7 @@ class DirectDebitActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
-        viewModel.trackPageViewed(paymentType)
+        viewModel.trackPageViewed(paymentType, currentStepNumber)
         setContent {
             DirectDebitContent(
                 paymentType = paymentType,

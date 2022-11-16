@@ -98,10 +98,14 @@ internal class DirectDebitViewModel @Inject constructor(
         )
     }
 
-    fun trackPageViewed(paymentType: String) {
+    fun trackPageViewed(
+        paymentType: String,
+        stepNumber: Int
+    ) {
         trackPageViewed(
             pageName = getPageName(paymentType),
-            paymentMethodName = paymentType
+            paymentMethodName = paymentType,
+            stepNumber = stepNumber.toString()
         )
     }
 
