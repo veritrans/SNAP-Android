@@ -184,7 +184,8 @@ internal class CreditCardActivity : BaseActivity() {
                 status = it.transactionStatus.orEmpty(),
                 transactionId = it.transactionId.orEmpty(),
                 paymentType = it.paymentType.orEmpty()
-            )
+            ),
+            stepNumber = currentStepNumber + 1
         )
         resultLauncher.launch(intent)
     }
@@ -759,9 +760,9 @@ internal class CreditCardActivity : BaseActivity() {
         private const val EXTRA_CREDIT_CARD = "card.extra.credit_card"
         private const val EXTRA_EXPIRY_TIME = "card.extra.expiry_time"
         private const val EXTRA_MERCHANT_DATA = "card.extra.merchant_data"
-        private const val EXTRA_PROMOS = "card.extra.extra.promos"
-        private const val EXTRA_ITEM_INFO = "card.extra.extra.item_info"
-        private const val EXTRA_STEP_NUMBER = "card.extra.extra.step_number"
+        private const val EXTRA_PROMOS = "card.extra.promos"
+        private const val EXTRA_ITEM_INFO = "card.extra.item_info"
+        private const val EXTRA_STEP_NUMBER = "card.extra.step_number"
 
         fun getIntent(
             activityContext: Context,
