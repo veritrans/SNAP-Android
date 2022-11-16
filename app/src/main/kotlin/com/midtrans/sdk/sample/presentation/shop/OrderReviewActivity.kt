@@ -28,6 +28,7 @@ import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
 import com.midtrans.sdk.corekit.models.BcaBankTransferRequestModel
 import com.midtrans.sdk.corekit.models.ExpiryModel
 import com.midtrans.sdk.corekit.models.snap.BankTransferRequestModel
+import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.NONE
@@ -123,9 +124,9 @@ class OrderReviewActivity : ComponentActivity() {
         intent.getBooleanExtra(EXTRA_INPUT_ISSHOWALLPAYMENT, false)
     }
 
-    private val paymentChannels: ArrayList<String> by lazy {
-        intent.getStringArrayListExtra(EXTRA_INPUT_PAYMENTCHANNELS)
-            ?: throw RuntimeException("Installment must not be empty")
+    private val paymentChannels: ArrayList<ListItem> by lazy {
+        intent.getParcelableArrayListExtra(EXTRA_INPUT_PAYMENTCHANNELS)
+            ?: throw RuntimeException("paymentChannels must not be empty")
     }
 
     private val bcaVa: String by lazy {
@@ -436,8 +437,12 @@ class OrderReviewActivity : ComponentActivity() {
 
     private fun populateEnabledPayment(): List<String>? {
         var payment : List<String>? = null
+        val channels = mutableListOf<String>()
         if(!isShowAllPaymentChannels){
-            payment = paymentChannels
+            for (i in paymentChannels){
+                channels.add(i.type)
+            }
+            payment = channels
         }
         return payment
     }
@@ -714,7 +719,7 @@ class OrderReviewActivity : ComponentActivity() {
             isPreAuth: Boolean,
             isBniPointsOnly: Boolean,
             isShowAllPaymentChannels: Boolean,
-            paymentChannels: ArrayList<String>,
+            paymentChannels: ArrayList<ListItem>,
             bcaVa: String,
             bniVa: String,
             permataVa: String

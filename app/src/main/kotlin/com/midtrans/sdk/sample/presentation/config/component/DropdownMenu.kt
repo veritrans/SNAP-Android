@@ -99,7 +99,7 @@ fun BasicDropdownMenu(title: String, optionList: List<String>, state: InputState
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AlertBasicDropdownMenu(
+fun AlertDialogDropdownMenu(
     title: String,
     optionList: List<String>,
     state: InputState,

@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.sample.model.ListItem
-import com.midtrans.sdk.sample.presentation.config.component.AlertBasicDropdownMenu
+import com.midtrans.sdk.sample.presentation.config.component.AlertDialogDropdownMenu
 import com.midtrans.sdk.sample.presentation.config.component.BasicDropdownMenu
 import com.midtrans.sdk.sample.presentation.config.component.CustomTextField
 import com.midtrans.sdk.sample.presentation.shop.ProductListActivity
@@ -111,31 +111,32 @@ class DemoConfigurationActivity : AppCompatActivity() {
         var items by remember {
             mutableStateOf(
                 listOf(
-                    ListItem("Credit Card","credit_card", isSelected = false),
-                    ListItem("BCA VA","bca_va", isSelected = false),
-                    ListItem("Mandiri VA","echannel", isSelected = false),
-                    ListItem("BNI VA","bni_va", isSelected = false),
-                    ListItem("Permata VA","permata_va", isSelected = false),
-                    ListItem("BRI VA","bri_va", isSelected = false),
-                    ListItem("Other VA","other_va", isSelected = false),
-                    ListItem("Gopay","gopay", isSelected = false),
-                    ListItem("ShopeePay","shopeepay", isSelected = false),
-                    ListItem("KlikBCA","bca_klikbca", isSelected = false),
-                    ListItem("BCA KlikPay","bca_klikpay", isSelected = false),
-                    ListItem("Mandiri Clickpay","mandiri_ecash", isSelected = false),
-                    ListItem("BriMo","bri_epay", isSelected = false),
-                    ListItem("CimbClicks","cimb_clicks", isSelected = false),
-                    ListItem("Danamon Online Banking","danamon_online", isSelected = false),
-                    ListItem("Indomaret","indomaret", isSelected = false),
-                    ListItem("Alfamart","alfamart", isSelected = false),
-                    ListItem("Akulaku","akulaku", isSelected = false),
+                    ListItem("Credit Card", "credit_card", isSelected = false),
+                    ListItem("BCA VA", "bca_va", isSelected = false),
+                    ListItem("Mandiri VA", "echannel", isSelected = false),
+                    ListItem("BNI VA", "bni_va", isSelected = false),
+                    ListItem("Permata VA", "permata_va", isSelected = false),
+                    ListItem("BRI VA", "bri_va", isSelected = false),
+                    ListItem("Other VA", "other_va", isSelected = false),
+                    ListItem("Gopay", "gopay", isSelected = false),
+                    ListItem("ShopeePay", "shopeepay", isSelected = false),
+                    ListItem("KlikBCA", "bca_klikbca", isSelected = false),
+                    ListItem("BCA KlikPay", "bca_klikpay", isSelected = false),
+                    ListItem("Mandiri Clickpay", "mandiri_ecash", isSelected = false),
+                    ListItem("BriMo", "bri_epay", isSelected = false),
+                    ListItem("CimbClicks", "cimb_clicks", isSelected = false),
+                    ListItem("Danamon Online Banking", "danamon_online", isSelected = false),
+                    ListItem("Indomaret", "indomaret", isSelected = false),
+                    ListItem("Alfamart", "alfamart", isSelected = false),
+                    ListItem("Akulaku", "akulaku", isSelected = false),
                 )
             )
         }
         var list by remember {
-            mutableStateOf(
-                arrayListOf<String>()
-            )
+            mutableStateOf(arrayListOf<String>())
+        }
+        var itemList by remember {
+            mutableStateOf(listOf<ListItem>())
         }
 
         Column(
@@ -183,7 +184,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 optionList = booleanList,
                 state = state
             )
-            AlertBasicDropdownMenu(
+            AlertDialogDropdownMenu(
                 title = SHOW_ALL_PAYMENT_CHANNELS,
                 optionList = showPaymentList,
                 state = state,
@@ -228,10 +229,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                                     }
                                 }
                             }
-                            val itemList = items.filter { it.isSelected }
-                            for (i in itemList) {
-                                list.add(i.type)
-                            }
+
                         },
                         buttons = {
                             Row(
@@ -250,8 +248,11 @@ class DemoConfigurationActivity : AppCompatActivity() {
                         }
                     )
                 }
-                Text(text = ArrayList(list.distinct()).toString())
-                state.allPaymentChannels = ArrayList(list.distinct())
+                itemList = items.filter { it.isSelected }
+                for(i in itemList){
+                    Text(text = i.title)
+                }
+                state.allPaymentChannels = ArrayList(itemList.distinct())
             } else {
                 list = arrayListOf()
             }
@@ -317,7 +318,7 @@ class InputState(
     isPreAuth: Boolean,
     isBniPointOnly: Boolean,
     isShowAllPaymentChannels: Boolean,
-    allPaymentChannels: ArrayList<String>,
+    allPaymentChannels: ArrayList<ListItem>,
     bcaVa: String,
     bniVa: String,
     permataVa: String
