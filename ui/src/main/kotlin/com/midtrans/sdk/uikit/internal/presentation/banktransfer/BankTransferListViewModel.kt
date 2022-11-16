@@ -19,9 +19,10 @@ internal class BankTransferListViewModel @Inject constructor(
         )
     }
 
-    fun trackPageViewed() {
+    fun trackPageViewed(stepNumber: Int) {
         trackPageViewed(
-            paymentMethodName = PaymentType.BANK_TRANSFER
+            paymentMethodName = PaymentType.BANK_TRANSFER,
+            stepNumber = stepNumber.toString()
         )
     }
 }
