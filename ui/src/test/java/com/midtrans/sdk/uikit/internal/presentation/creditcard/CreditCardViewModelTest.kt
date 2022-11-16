@@ -314,12 +314,12 @@ class CreditCardViewModelTest {
         whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
         val creditCardViewModel =
             CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil, errorCard)
-        creditCardViewModel.trackPageViewed()
+        creditCardViewModel.trackPageViewed(2)
         verify(eventAnalytics).trackSnapPageViewed(
             pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
             paymentMethodName = PaymentType.CREDIT_CARD,
             transactionId = null,
-            stepNumber = null
+            stepNumber = "2"
         )
     }
 }

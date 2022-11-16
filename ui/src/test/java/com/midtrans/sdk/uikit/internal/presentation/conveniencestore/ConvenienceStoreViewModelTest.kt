@@ -257,12 +257,12 @@ class ConvenienceStoreViewModelTest {
 
         val convenienceStoreViewModel =
             ConvenienceStoreViewModel(snapCore = snapCore, dateTimeUtil, errorCard, barcodeEncoder)
-        convenienceStoreViewModel.trackPageViewed(PaymentType.INDOMARET)
+        convenienceStoreViewModel.trackPageViewed(PaymentType.INDOMARET, 2)
         verify(eventAnalytics).trackSnapPageViewed(
             pageName = PageName.INDOMARET_PAGE,
             paymentMethodName = PaymentType.INDOMARET,
             transactionId = null,
-            stepNumber = null
+            stepNumber = "2"
         )
     }
 }

@@ -96,12 +96,12 @@ class DeepLinkViewModelTest {
         whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
 
         val deepLinkViewModel = DeepLinkViewModel(snapCore)
-        deepLinkViewModel.trackPageViewed(PaymentType.GOPAY)
+        deepLinkViewModel.trackPageViewed(PaymentType.GOPAY, 3)
         verify(eventAnalytics).trackSnapPageViewed(
             pageName = PageName.GOPAY_DEEPLINK_PAGE,
             paymentMethodName = PaymentType.GOPAY,
             transactionId = null,
-            stepNumber = null
+            stepNumber = "3"
         )
     }
 

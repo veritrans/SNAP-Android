@@ -128,12 +128,12 @@ internal class PayLaterViewModelTest {
 
     @Test
     fun verifyTrackPageViewed() {
-        viewModel.trackPageViewed(PaymentType.AKULAKU)
+        viewModel.trackPageViewed(PaymentType.AKULAKU, 2)
         verify(eventAnalytics).trackSnapPageViewed(
             pageName = PageName.AKULAKU_PAGE,
             paymentMethodName = PaymentType.AKULAKU,
             transactionId = null,
-            stepNumber = null
+            stepNumber = "2"
         )
     }
 }

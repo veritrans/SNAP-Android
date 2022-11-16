@@ -126,12 +126,12 @@ internal class DirectDebitViewModelTest {
 
     @Test
     fun verifyTrackPageViewed() {
-        viewModel.trackPageViewed(PaymentType.BCA_KLIKPAY)
+        viewModel.trackPageViewed(PaymentType.BCA_KLIKPAY, 2)
         verify(eventAnalytics).trackSnapPageViewed(
             pageName = PageName.BCA_KLIK_PAY_PAGE,
             paymentMethodName = PaymentType.BCA_KLIKPAY,
             transactionId = null,
-            stepNumber = null
+            stepNumber = "2"
         )
     }
 }

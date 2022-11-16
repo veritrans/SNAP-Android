@@ -261,12 +261,12 @@ class WalletViewModelTest {
         whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
         val walletViewModel = WalletViewModel(snapCore, dateTimeUtil)
 
-        walletViewModel.trackPageViewed(paymentType = PaymentType.GOPAY)
+        walletViewModel.trackPageViewed(paymentType = PaymentType.GOPAY, stepNumber = 2)
         verify(eventAnalytics).trackSnapPageViewed(
             pageName = PageName.GOPAY_DEEPLINK_PAGE,
             paymentMethodName = PaymentType.GOPAY,
             transactionId = null,
-            stepNumber = null
+            stepNumber = "2"
         )
     }
 
