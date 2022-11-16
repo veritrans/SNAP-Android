@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.presentation.shop.component.ProductListPage
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_BLUE
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_GREEN
@@ -56,9 +57,9 @@ class ProductListActivity : ComponentActivity() {
         intent.getBooleanExtra(EXTRA_INPUT_ISSHOWALLPAYMENT, true)
     }
 
-    private val paymentChannels: ArrayList<String> by lazy {
-        intent.getStringArrayListExtra(EXTRA_INPUT_PAYMENTCHANNELS)
-            ?: throw RuntimeException("Installment must not be empty")
+    private val paymentChannels: ArrayList<ListItem> by lazy {
+        intent.getParcelableArrayListExtra(EXTRA_INPUT_PAYMENTCHANNELS)
+            ?: throw RuntimeException("paymentChannels must not be empty")
     }
 
     private val bcaVa: String by lazy {
@@ -130,7 +131,7 @@ class ProductListActivity : ComponentActivity() {
             isPreAuth: Boolean,
             isBniPointsOnly: Boolean,
             isShowAllPaymentChannels: Boolean,
-            paymentChannels: ArrayList<String>,
+            paymentChannels: ArrayList<ListItem>,
             bcaVa: String,
             bniVa: String,
             permataVa: String
