@@ -29,6 +29,7 @@ import com.midtrans.sdk.sample.util.DemoConstant.OPTIONAL
 import com.midtrans.sdk.sample.util.DemoConstant.PRE_AUTH
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL_PAYMENT_CHANNELS
+import com.midtrans.sdk.uikit.api.model.PaymentType
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 
@@ -114,24 +115,28 @@ fun AlertDialogDropdownMenu(
     var items by remember {
         mutableStateOf(
             listOf(
-                ListItem("Credit Card", "credit_card", isSelected = false),
-                ListItem("BCA VA", "bca_va", isSelected = false),
-                ListItem("Mandiri VA", "echannel", isSelected = false),
-                ListItem("BNI VA", "bni_va", isSelected = false),
-                ListItem("Permata VA", "permata_va", isSelected = false),
-                ListItem("BRI VA", "bri_va", isSelected = false),
-                ListItem("Other VA", "other_va", isSelected = false),
-                ListItem("Gopay", "gopay", isSelected = false),
-                ListItem("ShopeePay", "shopeepay", isSelected = false),
-                ListItem("KlikBCA", "bca_klikbca", isSelected = false),
-                ListItem("BCA KlikPay", "bca_klikpay", isSelected = false),
-                ListItem("Mandiri Clickpay", "mandiri_ecash", isSelected = false),
-                ListItem("BriMo", "bri_epay", isSelected = false),
-                ListItem("CimbClicks", "cimb_clicks", isSelected = false),
-                ListItem("Danamon Online Banking", "danamon_online", isSelected = false),
-                ListItem("Indomaret", "indomaret", isSelected = false),
-                ListItem("Alfamart", "alfamart", isSelected = false),
-                ListItem("Akulaku", "akulaku", isSelected = false),
+                ListItem("Credit Card", PaymentType.CREDIT_CARD, isSelected = false),
+
+                ListItem("BCA VA", PaymentType.BCA_VA, isSelected = false),
+                ListItem("Mandiri VA", PaymentType.E_CHANNEL, isSelected = false),
+                ListItem("BNI VA", PaymentType.BNI_VA, isSelected = false),
+                ListItem("Permata VA", PaymentType.PERMATA_VA, isSelected = false),
+                ListItem("BRI VA", PaymentType.BRI_VA, isSelected = false),
+                ListItem("Other VA", PaymentType.OTHER_VA, isSelected = false),
+
+                ListItem("Gopay", PaymentType.GOPAY, isSelected = false),
+                ListItem("ShopeePay", PaymentType.SHOPEEPAY, isSelected = false),
+
+                ListItem("KlikBCA", PaymentType.KLIK_BCA, isSelected = false),
+                ListItem("BCA KlikPay", PaymentType.BCA_KLIKPAY, isSelected = false),
+                ListItem("BriMo", PaymentType.BRI_EPAY, isSelected = false),
+                ListItem("CimbClicks", PaymentType.CIMB_CLICKS, isSelected = false),
+                ListItem("Danamon Online Banking", PaymentType.DANAMON_ONLINE, isSelected = false),
+
+                ListItem("Indomaret", PaymentType.INDOMARET, isSelected = false),
+                ListItem("Alfamart", PaymentType.ALFAMART, isSelected = false),
+
+                ListItem("Akulaku", PaymentType.AKULAKU, isSelected = false),
             )
         )
     }
@@ -207,7 +212,7 @@ fun AlertDialogDropdownMenu(
                     openDialog.value = false
                 },
                 title = {
-                    Text(text = "Title")
+                    Text(text = "Payment Channels")
                 },
                 text = {
                     Column {
