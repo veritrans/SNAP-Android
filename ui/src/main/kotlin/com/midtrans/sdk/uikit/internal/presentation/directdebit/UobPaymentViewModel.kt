@@ -114,10 +114,11 @@ internal class UobPaymentViewModel @Inject constructor(
         )
     }
 
-    fun trackPageViewed() {
+    fun trackPageViewed(stepNumber: Int) {
         trackPageViewed(
             pageName = PageName.UOB_PAGE,
-            paymentMethodName = PaymentType.UOB_EZPAY
+            paymentMethodName = PaymentType.UOB_EZPAY,
+            stepNumber = stepNumber.toString()
         )
     }
 

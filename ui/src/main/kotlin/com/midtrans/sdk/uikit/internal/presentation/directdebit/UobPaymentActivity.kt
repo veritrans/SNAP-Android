@@ -75,15 +75,19 @@ class UobPaymentActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
     }
 
+    private val currentStepNumber: Int by lazy {
+        intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
+    }
+
     private val viewModel: UobPaymentViewModel by lazy {
-        ViewModelProvider(this, vmFactory).get(UobPaymentViewModel::class.java)
+        ViewModelProvider(this, vmFactory)[UobPaymentViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
-        viewModel.trackPageViewed()
+        viewModel.trackPageViewed(currentStepNumber)
         setContent {
             UobPaymentContent(
                 uobMode = uobMode,
@@ -154,7 +158,8 @@ class UobPaymentActivity : BaseActivity() {
                 activityContext = this,
                 total = amount,
                 orderId = orderId,
-                transactionResult = transactionResult
+                transactionResult = transactionResult,
+                stepNumber = currentStepNumber + 1
             )
         )
     }
@@ -359,6 +364,7 @@ class UobPaymentActivity : BaseActivity() {
         private const val EXTRA_CUSTOMER_INFO = "directDebit.uobPayment.extra.customer_info"
         private const val EXTRA_ITEM_INFO = "directDebit.uobPayment.extra.item_info"
         private const val EXTRA_REMAINING_TIME = "directDebit.uobPayment.extra.remaining_time"
+        private const val EXTRA_STEP_NUMBER = "directDebit.uobPayment.extra.step_number"
 
         fun getIntent(
             activityContext: Context,
@@ -368,7 +374,8 @@ class UobPaymentActivity : BaseActivity() {
             orderId: String,
             customerInfo: CustomerInfo?,
             itemInfo: ItemInfo?,
-            remainingTime: Long
+            remainingTime: Long,
+            stepNumber: Int
         ): Intent {
             return Intent(activityContext, UobPaymentActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -378,6 +385,7 @@ class UobPaymentActivity : BaseActivity() {
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_REMAINING_TIME, remainingTime)
+                putExtra(EXTRA_STEP_NUMBER, stepNumber)
             }
         }
     }

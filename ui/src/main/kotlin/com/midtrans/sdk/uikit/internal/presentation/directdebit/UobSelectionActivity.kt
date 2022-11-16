@@ -96,7 +96,8 @@ class UobSelectionActivity : BaseActivity() {
                         orderId = orderId,
                         customerInfo = customerInfo,
                         itemInfo = itemInfo,
-                        remainingTime = viewModel.getExpiredTime()
+                        remainingTime = viewModel.getExpiredTime(),
+                        stepNumber = currentStepNumber + 1
                     )
                 )
             }
@@ -171,7 +172,8 @@ class UobSelectionActivity : BaseActivity() {
                                             orderId = orderId,
                                             customerInfo = customerInfo,
                                             itemInfo = itemInfo,
-                                            remainingTime = viewModel.getExpiredTime()
+                                            remainingTime = viewModel.getExpiredTime(),
+                                            stepNumber = currentStepNumber + 1
                                         )
                                     )
                                 }
