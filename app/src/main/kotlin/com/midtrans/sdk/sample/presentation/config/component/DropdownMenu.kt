@@ -97,6 +97,76 @@ fun BasicDropdownMenu(title: String, optionList: List<String>, state: InputState
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun AlertBasicDropdownMenu(
+    title: String,
+    optionList: List<String>,
+    state: InputState,
+    openDialog: MutableState<Boolean>
+) {
+    val options by remember { mutableStateOf(optionList) }
+    var expanded by remember { mutableStateOf(false) }
+    var selectedOptionText by remember { mutableStateOf(options[0]) }
+
+    Column(modifier = Modifier.fillMaxWidth(1f), horizontalAlignment = Alignment.Start) {
+        Text(
+            modifier = Modifier.padding(top = 16.dp, bottom = 20.dp),
+            text = title,
+            style = SnapTypography.STYLES.snapTextMediumMedium
+        )
+        ExposedDropdownMenuBox(
+            modifier = Modifier.padding(bottom = 10.dp),
+            expanded = expanded,
+            onExpandedChange = { expanded = !expanded }
+        ) {
+            SnapTextField(
+                modifier = Modifier.fillMaxWidth(1f),
+                readOnly = true,
+                value = TextFieldValue(selectedOptionText),
+                onValueChange = {},
+                isFocused = false,
+                enabled = true,
+                onFocusChange = {},
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(
+                        expanded = expanded
+                    )
+                },
+                textStyle = SnapTypography.STYLES.snapTextMediumRegular
+            )
+            ExposedDropdownMenu(
+                modifier = Modifier.fillMaxWidth(1f),
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                options.forEach { selectionOption ->
+                    DropdownMenuItem(
+                        onClick = {
+                            selectedOptionText = selectionOption
+                            expanded = false
+                            when (title) {
+                                SHOW_ALL_PAYMENT_CHANNELS -> {
+                                    state.isShowAllPaymentChannels = selectedOptionText == SHOW_ALL
+                                    if(!state.isShowAllPaymentChannels) {
+                                        openDialog.value = true
+                                    }
+                                }
+                            }
+                        },
+                        enabled = true
+                    ) {
+                        Text(
+                            text = selectionOption,
+                            style = SnapTypography.STYLES.snapTextMediumRegular
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun CustomTextField(title: String, state: InputState, modifier: Modifier = Modifier) {
     var textField by remember { mutableStateOf(TextFieldValue()) }
