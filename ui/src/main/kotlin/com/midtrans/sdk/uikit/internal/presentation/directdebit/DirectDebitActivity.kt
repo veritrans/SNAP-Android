@@ -396,6 +396,7 @@ class DirectDebitActivity : BaseActivity() {
         private const val EXTRA_ORDER_ID = "directDebit.extra.order_id"
         private const val EXTRA_CUSTOMER_INFO = "directDebit.extra.customer_info"
         private const val EXTRA_ITEM_INFO = "directDebit.extra.item_info"
+        private const val EXTRA_STEP_NUMBER = "directDebit.extra.step_number"
 
         fun getIntent(
             activityContext: Context,
@@ -404,7 +405,8 @@ class DirectDebitActivity : BaseActivity() {
             amount: String,
             orderId: String,
             customerInfo: CustomerInfo?,
-            itemInfo: ItemInfo?
+            itemInfo: ItemInfo?,
+            stepNumber: Int
         ): Intent {
             return Intent(activityContext, DirectDebitActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -413,6 +415,7 @@ class DirectDebitActivity : BaseActivity() {
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
+                putExtra(EXTRA_STEP_NUMBER, stepNumber)
             }
         }
     }

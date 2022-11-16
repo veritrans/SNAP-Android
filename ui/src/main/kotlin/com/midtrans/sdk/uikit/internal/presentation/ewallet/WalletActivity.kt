@@ -360,6 +360,7 @@ internal class WalletActivity : BaseActivity() {
         private const val EXTRA_ITEM_INFO = "wallet.extra.item_info"
         private const val EXTRA_PAYMENT_TYPE = "wallet.extra.payment_type"
         private const val EXTRA_SNAP_TOKEN = "wallet.extra.snap_token"
+        private const val EXTRA_STEP_NUMBER = "wallet.extra.step_number"
 
         fun getIntent(
             activityContext: Context,
@@ -368,7 +369,8 @@ internal class WalletActivity : BaseActivity() {
             totalAmount: String,
             orderId: String,
             customerInfo: CustomerInfo? = null,
-            itemInfo: ItemInfo? = null
+            itemInfo: ItemInfo? = null,
+            stepNumber: Int
         ): Intent {
             return Intent(activityContext, WalletActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
@@ -377,6 +379,7 @@ internal class WalletActivity : BaseActivity() {
                 putExtra(EXTRA_CUSTOMER_DETAIL, customerInfo)
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
+                putExtra(EXTRA_STEP_NUMBER, stepNumber)
             }
         }
     }

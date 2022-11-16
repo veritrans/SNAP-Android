@@ -407,6 +407,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         private const val EXTRA_ITEM_INFO = "convenience_store.extra.item_info"
         private const val EXTRA_PAYMENT_TYPE = "convenience_store.extra.payment_type"
         private const val EXTRA_SNAP_TOKEN = "convenience_store.extra.snap_token"
+        private const val EXTRA_STEP_NUMBER = "convenience_store.extra.step_number"
 
         fun getIntent(
             activityContext: Context,
@@ -415,7 +416,8 @@ internal class ConvenienceStoreActivity : BaseActivity() {
             totalAmount: String,
             orderId: String,
             customerInfo: CustomerInfo? = null,
-            itemInfo: ItemInfo? = null
+            itemInfo: ItemInfo? = null,
+            stepNumber: Int
         ): Intent {
             return Intent(activityContext, ConvenienceStoreActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
@@ -424,6 +426,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 putExtra(EXTRA_CUSTOMER_DETAIL, customerInfo)
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
+                putExtra(EXTRA_STEP_NUMBER, stepNumber)
             }
         }
     }

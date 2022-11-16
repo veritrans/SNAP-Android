@@ -757,6 +757,7 @@ internal class CreditCardActivity : BaseActivity() {
         private const val EXTRA_MERCHANT_DATA = "card.extra.merchant_data"
         private const val EXTRA_PROMOS = "card.extra.extra.promos"
         private const val EXTRA_ITEM_INFO = "card.extra.extra.item_info"
+        private const val EXTRA_STEP_NUMBER = "card.extra.extra.step_number"
 
         fun getIntent(
             activityContext: Context,
@@ -768,7 +769,8 @@ internal class CreditCardActivity : BaseActivity() {
             creditCard: CreditCard?,
             promos: List<Promo>? = null,
             expiryTime: String?,
-            withMerchantData: Merchant? = null
+            withMerchantData: Merchant? = null,
+            stepNumber: Int
         ): Intent {
             return Intent(activityContext, CreditCardActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -778,6 +780,7 @@ internal class CreditCardActivity : BaseActivity() {
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_CREDIT_CARD, creditCard)
                 putExtra(EXTRA_EXPIRY_TIME, expiryTime)
+                putExtra(EXTRA_STEP_NUMBER, stepNumber)
                 withMerchantData?.let { putExtra(EXTRA_MERCHANT_DATA, withMerchantData) }
                 promos?.also {
                     putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it))

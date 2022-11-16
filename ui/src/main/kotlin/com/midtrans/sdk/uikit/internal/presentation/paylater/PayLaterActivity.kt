@@ -271,6 +271,7 @@ class PayLaterActivity : BaseActivity() {
         private const val EXTRA_ORDER_ID = "payLater.extra.order_id"
         private const val EXTRA_CUSTOMER_INFO = "payLater.extra.customer_info"
         private const val EXTRA_ITEM_INFO = "payLater.extra.item_info"
+        private const val EXTRA_STEP_NUMBER = "payLater.extra.step_number"
 
         fun getIntent(
             activityContext: Context,
@@ -279,7 +280,8 @@ class PayLaterActivity : BaseActivity() {
             amount: String,
             orderId: String,
             customerInfo: CustomerInfo?,
-            itemInfo: ItemInfo?
+            itemInfo: ItemInfo?,
+            stepNumber: Int
         ): Intent {
             return Intent(activityContext, PayLaterActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -288,6 +290,7 @@ class PayLaterActivity : BaseActivity() {
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
+                putExtra(EXTRA_STEP_NUMBER, stepNumber)
             }
         }
     }

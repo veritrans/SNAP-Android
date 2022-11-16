@@ -247,6 +247,7 @@ class UobSelectionActivity : BaseActivity() {
         private const val EXTRA_ITEM_INFO = "uobSelection.extra.item_info"
         private const val EXTRA_UOB_MODES = "uobSelection.extra.uob_modes"
         private const val EXTRA_PAYMENT_TYPE_ITEM = "uobSelection.extra.payment_type_item"
+        private const val EXTRA_STEP_NUMBER = "uobSelection.extra.step_number"
 
         fun getIntent(
             activityContext: Context,
@@ -256,7 +257,8 @@ class UobSelectionActivity : BaseActivity() {
             orderId: String,
             customerInfo: CustomerInfo?,
             itemInfo: ItemInfo?,
-            paymentTypeItem: PaymentTypeItem?
+            paymentTypeItem: PaymentTypeItem?,
+            stepNumber: Int
         ): Intent {
             return Intent(activityContext, UobSelectionActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -265,6 +267,7 @@ class UobSelectionActivity : BaseActivity() {
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
+                putExtra(EXTRA_STEP_NUMBER, stepNumber)
                 putStringArrayListExtra(EXTRA_UOB_MODES, uobModes)
             }
         }
