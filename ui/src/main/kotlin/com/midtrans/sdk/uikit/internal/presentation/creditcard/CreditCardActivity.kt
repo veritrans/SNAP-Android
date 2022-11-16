@@ -93,16 +93,12 @@ internal class CreditCardActivity : BaseActivity() {
         intent.getStringExtra(EXTRA_EXPIRY_TIME)
     }
 
-    private val withCustomerPhoneEmail: Boolean by lazy {
-        merchant?.showCreditCardCustomerInfo ?: false
-    }
-
-    private val allowRetry: Boolean by lazy {
-        merchant?.allowRetry ?: false
-    }
-
     private val merchant: Merchant? by lazy {
         intent.getParcelableExtra(EXTRA_MERCHANT_DATA) as? Merchant
+    }
+
+    private val currentStepNumber: Int by lazy {
+        intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
     }
 
     private val promos: List<Promo>? by lazy {
@@ -110,6 +106,14 @@ internal class CreditCardActivity : BaseActivity() {
             ?.apply {
                 sortByDescending { it.calculatedDiscountAmount }
             }
+    }
+
+    private val withCustomerPhoneEmail: Boolean by lazy {
+        merchant?.showCreditCardCustomerInfo ?: false
+    }
+
+    private val allowRetry: Boolean by lazy {
+        merchant?.allowRetry ?: false
     }
 
     private var onPromoReset: () -> Unit = {}
@@ -149,7 +153,7 @@ internal class CreditCardActivity : BaseActivity() {
         viewModel.setTransactionDetails(transactionDetails)
         viewModel.setPointBanks(merchant?.pointBanks)
         viewModel.creditCard = creditCard
-        viewModel.trackPageViewed()
+        viewModel.trackPageViewed(currentStepNumber)
         initTransactionResultScreenObserver()
         setContent {
             CreditCardPageStateFull(

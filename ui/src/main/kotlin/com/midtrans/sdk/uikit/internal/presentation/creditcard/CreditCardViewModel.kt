@@ -474,10 +474,11 @@ internal class CreditCardViewModel @Inject constructor(
         )
     }
 
-    fun trackPageViewed() {
+    fun trackPageViewed(stepNumber: Int) {
         trackPageViewed(
             pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
-            paymentMethodName = PaymentType.CREDIT_CARD
+            paymentMethodName = PaymentType.CREDIT_CARD,
+            stepNumber = stepNumber.toString()
         )
     }
 
