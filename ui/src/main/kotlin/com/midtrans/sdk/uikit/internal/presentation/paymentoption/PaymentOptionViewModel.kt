@@ -218,7 +218,10 @@ internal class PaymentOptionViewModel @Inject constructor(
         trackOrderDetailsViewed(pageName = PageName.PAYMENT_LIST_PAGE)
     }
 
-    fun trackPageViewed() {
-        trackPageViewed(pageName = PageName.PAYMENT_LIST_PAGE)
+    fun trackPageViewed(stepNumber: Int) {
+        trackPageViewed(
+            pageName = PageName.PAYMENT_LIST_PAGE,
+            stepNumber = stepNumber.toString()
+        )
     }
 }

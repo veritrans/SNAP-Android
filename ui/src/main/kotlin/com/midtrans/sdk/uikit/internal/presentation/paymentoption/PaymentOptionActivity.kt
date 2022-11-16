@@ -166,7 +166,7 @@ class PaymentOptionActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
-        viewModel.trackPageViewed()
+        viewModel.trackPageViewed(CURRENT_STEP_NUMBER)
         paymentMethods = viewModel.initiateList(paymentList, isTabletDevice())
         customerInfo = viewModel.getCustomerInfo(customerDetail)
         itemInfo = viewModel.getItemInfo(itemDetails)
