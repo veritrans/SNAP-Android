@@ -53,7 +53,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
-        viewModel.trackPageViewed(paymentType)
+        viewModel.trackPageViewed(paymentType, currentStepNumber)
         setContent {
             Content(
                 totalAmount = totalAmount,
@@ -377,6 +377,10 @@ internal class ConvenienceStoreActivity : BaseActivity() {
 
     private val snapToken: String by lazy {
         intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
+    }
+
+    private val currentStepNumber: Int by lazy {
+        intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
     }
 
     private val paymentHowToPay by lazy {
