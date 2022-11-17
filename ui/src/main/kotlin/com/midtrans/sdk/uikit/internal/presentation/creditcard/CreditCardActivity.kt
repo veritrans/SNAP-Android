@@ -155,7 +155,7 @@ internal class CreditCardActivity : BaseActivity() {
         viewModel.setPromos(promos = promos)
         viewModel.setTransactionDetails(transactionDetails)
         viewModel.setPointBanks(merchant?.pointBanks)
-        viewModel.creditCard = creditCard
+        viewModel.setCreditCardDetails(creditCard)
         viewModel.trackPageViewed(currentStepNumber)
         initTransactionResultScreenObserver()
         setContent {
