@@ -757,6 +757,7 @@ internal class CreditCardActivity : BaseActivity() {
             bankCodeIdState = remember { mutableStateOf(null) },
             cardIssuerBank = remember { mutableStateOf(null) },
             totalAmount = remember { mutableStateOf("5000") },
+            totalAmountWithoutRp = remember { mutableStateOf(5000.0) },
             remainingTimeState = remember { mutableStateOf("00:00") },
             withCustomerPhoneEmail = true,
             errorTypeState = remember { mutableStateOf(null) },
