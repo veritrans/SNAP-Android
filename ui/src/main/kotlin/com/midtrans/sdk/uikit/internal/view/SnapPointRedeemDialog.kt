@@ -2,11 +2,17 @@ package com.midtrans.sdk.uikit.internal.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.view.SnapColors.backgroundBorderSolidSecondary
 import kotlinx.coroutines.launch
 
@@ -14,22 +20,43 @@ import kotlinx.coroutines.launch
 object SnapPointRedeemDialog {
 }
 
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun PointBankCard(
+    data: SnapPointRedeemDialogData,
+    onSheetStateChange: (ModalBottomSheetState) -> Unit,
+    onValueChange: (value: Double) -> Unit,
+    onClick: () -> Unit
+): DialogToggle {
+    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    return SnapBottomSheet(
+        sheetState = sheetState,
+        onSheetStateChange = onSheetStateChange,
+        content = {
+            SnapPointRedeemDialogContent(
+                data = data,
+                onClick = onClick,
+                onValueChange = onValueChange
+            )
+        })
+}
+
 @Composable
 fun SnapPointRedeemDialogContent(
     data: SnapPointRedeemDialogData,
-    onValueChange: (value: String) -> Unit,
+    onValueChange: (value: Double) -> Unit,
     onClick: () -> Unit
 ) {
-    val info by remember {
-        data.infoMessage
+    var pointAmountInputted by remember {
+        mutableStateOf(TextFieldValue())
     }
-    val total by remember {
-        data.total
+    var displayedTotalFinal by remember {
+        mutableStateOf(data.displayedTotal)
     }
-    var textFieldText by remember {
-        mutableStateOf("")
+    var infoMessage by remember {
+        mutableStateOf(data.infoMessage)
     }
-    val isError by remember { data.isError }
+
     Column(
         modifier = Modifier.padding(24.dp)
     ) {
@@ -43,30 +70,46 @@ fun SnapPointRedeemDialogContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Point discount",
+                text = stringResource(id = R.string.point_discount),
                 style = SnapTypography.STYLES.snapTextMediumRegular,
                 modifier = Modifier.weight(1f)
             )
-            Text(text = "Rp ")
+            Text(
+                text = stringResource(id = R.string.point_rp_currency),
+                modifier = Modifier.padding(end = 8.dp)
+            )
 
-            //TODO: Need to fix using the updated SnapTextField param when implementing card point
-//            SnapTextField(
-//                value = textFieldText,
-//                onValueChange = { value ->
-//                    textFieldText = value.filter { it.isDigit() }
-//                    onValueChange(textFieldText.ifEmpty { "0" })
-//                },
-//                modifier = Modifier.width(117.dp),
-//                isError = isError,
-//                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-//            )
+            SnapTextField(
+                value = pointAmountInputted,
+                onValueChange = {
+                    pointAmountInputted = SnapCreditCardUtil.formatMaxPointDiscount(
+                        it,
+                        totalAmount = data.total.toInt(),
+                        pointBalanceAmount = data.pointBalanceAmount
+                    )
+                    displayedTotalFinal = SnapCreditCardUtil.formatDisplayedAmountOnPointInput(
+                        displayedTotal = data.displayedTotal,
+                        total = data.total,
+                        pointAmount = pointAmountInputted
+                    )
+                    onValueChange(pointAmountInputted.text.ifEmpty { "0" }.toDouble())
+                },
+                modifier = Modifier.width(117.dp),
+                isError = data.isError,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                isFocused = false,
+                onFocusChange = {}
+            )
         }
-        Text(
-            text = info,
-            style = SnapTypography.STYLES.snapTextSmallRegular,
-            color = SnapColors.getARGBColor(if (!isError) SnapColors.supportInfoDefault else SnapColors.supportDangerDefault),
-            modifier = Modifier.padding(top = 16.dp)
-        )
+
+        if (pointAmountInputted.text.isEmpty()) {
+            Text(
+                text = infoMessage,
+                style = SnapTypography.STYLES.snapTextSmallRegular,
+                color = SnapColors.getARGBColor(if (!data.isError) SnapColors.supportInfoDefault else SnapColors.supportDangerDefault),
+                modifier = Modifier.padding(top = 16.dp)
+            )
+        }
 
         Divider(
             thickness = 1.dp,
@@ -75,14 +118,17 @@ fun SnapPointRedeemDialogContent(
         )
 
         Row(modifier = Modifier.padding(bottom = 24.dp)) {
-            Text(text = "Total dibayar", modifier = Modifier.weight(1f))
-            Text(text = total)
+            Text(
+                text = stringResource(id = R.string.point_total_payment),
+                modifier = Modifier.weight(1f)
+            )
+            Text(text = displayedTotalFinal)
         }
         SnapButton(
-            text = "Bayar",
+            text = stringResource(id = R.string.point_pay_cta),
             style = SnapButton.Style.PRIMARY,
             modifier = Modifier.fillMaxWidth(1f),
-            enabled = !isError && textFieldText.isNotBlank(),
+            enabled = pointAmountInputted.text.isNotEmpty(),
             onClick = onClick
         )
     }
@@ -91,9 +137,10 @@ fun SnapPointRedeemDialogContent(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SnapBottomSheet(
+    sheetState: ModalBottomSheetState,
+    onSheetStateChange: (ModalBottomSheetState) -> Unit,
     content: @Composable (() -> Unit)
 ): DialogToggle {
-    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, confirmStateChange = {false})
     val coroutine = rememberCoroutineScope()
 
     ModalBottomSheetLayout(
@@ -104,6 +151,7 @@ fun SnapBottomSheet(
             content()
         }
     ) {}
+    onSheetStateChange(sheetState)
 
     return object : DialogToggle {
         override fun show() {
@@ -123,8 +171,10 @@ interface DialogToggle {
 
 data class SnapPointRedeemDialogData(
     val title: String,
-    var total: MutableState<String>,
-    var isError: MutableState<Boolean>,
-    var infoMessage: MutableState<String>
+    var displayedTotal: String,
+    var total: Double,
+    var isError: Boolean,
+    var infoMessage: String,
+    var pointBalanceAmount: String
 )
 
