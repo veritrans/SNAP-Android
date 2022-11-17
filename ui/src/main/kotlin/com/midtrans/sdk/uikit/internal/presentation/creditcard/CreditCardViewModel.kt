@@ -41,11 +41,14 @@ internal class CreditCardViewModel @Inject constructor(
     private val _transactionResponse = MutableLiveData<TransactionResponse>()
     private val _errorTypeLiveData = MutableLiveData<Pair<Int?, String>>()
     private val _promoDataLiveData = MutableLiveData<List<PromoData>>()
+    private var _netAmountWithoutCurrencyLiveData = MutableLiveData<Double>()
     private val _netAmountLiveData = MutableLiveData<String>()
     private val _binBlockedLiveData = MutableLiveData<Boolean>()
     private val _errorLiveData = MutableLiveData<SnapError>()
     private val _isPointBankShown = MutableLiveData<Boolean>()
     private val _isPointBankEnabled = MutableLiveData<Boolean>()
+    private val _pointBalanceAmount = MutableLiveData<String>()
+    private val _cardToken = MutableLiveData<String>()
     private var expireTimeInMillis = 0L
     private var allowRetry = false
     private var promos: List<Promo>? = null
@@ -54,7 +57,9 @@ internal class CreditCardViewModel @Inject constructor(
 
     val promoDataLiveData: LiveData<List<PromoData>> = _promoDataLiveData
     val netAmountLiveData: LiveData<String> = _netAmountLiveData
-    var creditCard: CreditCard? = null
+    val netAmountWithoutCurrencyLiveData: LiveData<Double> = _netAmountWithoutCurrencyLiveData
+    private var creditCard: CreditCard? = null
+    private var _isInstallmentRequired = MutableLiveData<Boolean>()
 
     val bankIconId: LiveData<Int> = _bankIconId
     val binType: LiveData<String> = _binType
@@ -65,10 +70,14 @@ internal class CreditCardViewModel @Inject constructor(
     val errorLiveData: LiveData<SnapError> = _errorLiveData
     val isPointBankShown: LiveData<Boolean> = _isPointBankShown
     private val isPointBankEnabled: LiveData<Boolean> = _isPointBankEnabled
+    val pointBalanceAmount: LiveData<String> = _pointBalanceAmount
+    val cardToken: LiveData<String> = _cardToken
+    val isInstallmentRequired: LiveData<Boolean> = _isInstallmentRequired
 
 
     private var promoName: String? = null
     private var promoAmount: Double? = null
+    private var finalAmount = 0.0
 
     fun setExpiryTime(expireTime: String?) {
         expireTime?.let {
