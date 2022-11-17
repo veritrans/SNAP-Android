@@ -169,6 +169,7 @@ internal class CreditCardActivity : BaseActivity() {
                 binType = viewModel.binType.observeAsState(null),
                 cardIssuerBank = viewModel.cardIssuerBank.observeAsState(null),
                 totalAmount = viewModel.netAmountLiveData.observeAsState(initial = totalAmount),
+                totalAmountWithoutRp = viewModel.netAmountWithoutCurrencyLiveData.observeAsState(0.0),
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
                 withCustomerPhoneEmail = withCustomerPhoneEmail,
                 errorTypeState = viewModel.errorTypeLiveData.observeAsState(initial = null),
