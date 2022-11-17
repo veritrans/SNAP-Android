@@ -121,7 +121,8 @@ fun SnapCCDetailListItem(
                         value = cvvTextField,
                         onValueChange = {
                             onCvvValueChange(formatCVV(it))
-                            isCvvInvalid = formatCVV(it).text.length < SnapCreditCardUtil.FORMATTED_MIN_CVV_LENGTH
+                            isCvvInvalid =
+                                formatCVV(it).text.length < SnapCreditCardUtil.FORMATTED_MIN_CVV_LENGTH
                             onIsCvvInvalidValueChange(isCvvInvalid)
                         },
                         modifier = Modifier.width(69.dp),
@@ -299,7 +300,8 @@ fun SnapSavedCardRadioGroup(
                                     cardItemState.cvv = cvvSavedCardTextFieldValue
                                     onCardNumberOtherCardValueChange(TextFieldValue(item.maskedCardNumber))
                                     onSavedCardRadioSelected(item)
-                                    cardItemState.cardItemType = CardItemState.CardItemType.SAVED_CARD
+                                    cardItemState.cardItemType =
+                                        CardItemState.CardItemType.SAVED_CARD
                                 }
                                 is NewCardFormData -> {
                                     cvvSavedCardTextFieldValue = TextFieldValue("")
@@ -307,7 +309,8 @@ fun SnapSavedCardRadioGroup(
                                     cardItemState.cardNumber = newCardNumberTextFieldValue
                                     onCardNumberOtherCardValueChange(newCardNumberTextFieldValue)
                                     onSavedCardRadioSelected(null)
-                                    cardItemState.cardItemType = CardItemState.CardItemType.NORMAL_CARD
+                                    cardItemState.cardItemType =
+                                        CardItemState.CardItemType.NORMAL_CARD
                                 }
                             }
                             onCvvValueChange(cardItemState.cvv)
@@ -467,7 +470,8 @@ class CardItemState(
             R.drawable.ic_outline_amex_24,
         )
     )
-    enum class CardItemType{
+
+    enum class CardItemType {
         NORMAL_CARD,
         SAVED_CARD
     }
@@ -571,7 +575,11 @@ fun NormalCardItem(
                         val cardLength = formatCreditCard(it).text.length
                         state.isCardNumberInvalid =
                             cardLength != SnapCreditCardUtil.FORMATTED_MAX_CARD_NUMBER_LENGTH
-                                    || !SnapCreditCardUtil.isValidCardNumber(SnapCreditCardUtil.getCardNumberFromTextField(it))
+                                    || !SnapCreditCardUtil.isValidCardNumber(
+                                SnapCreditCardUtil.getCardNumberFromTextField(
+                                    it
+                                )
+                            )
                                     || state.isBinBlocked
                         onCardNumberValueChange(formatCreditCard(it))
                     },
@@ -678,7 +686,8 @@ fun NormalCardItem(
                         hint = stringResource(id = R.string.cc_dc_main_screen_placeholder_cvv),
                         onValueChange = {
                             onCvvValueChange(formatCVV(it))
-                            state.isCvvInvalid = formatCVV(it).text.length < SnapCreditCardUtil.FORMATTED_MIN_CVV_LENGTH
+                            state.isCvvInvalid =
+                                formatCVV(it).text.length < SnapCreditCardUtil.FORMATTED_MIN_CVV_LENGTH
                         },
                         isError = state.isCvvInvalid,
                         isFocused = state.isCvvTextFieldFocused,
@@ -710,7 +719,7 @@ fun NormalCardItem(
     Column(
     ) {
         isPointBankShownState?.value?.let { isPointBankShown ->
-            if (isPointBankShown){
+            if (isPointBankShown) {
                 PointBankCheckBox(
                     checked = state.isPointBankChecked,
                     isPointBankShown = isPointBankShown,
@@ -740,7 +749,7 @@ fun PointBankCheckBox(
     label: String,
     modifier: Modifier = Modifier
 ) {
-    if(isPointBankShown){
+    if (isPointBankShown) {
         LabelledCheckBox(
             checked = checked,
             onCheckedChange = { onCheckedChange(it) },
