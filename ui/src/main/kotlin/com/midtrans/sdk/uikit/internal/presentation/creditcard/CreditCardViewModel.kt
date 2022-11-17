@@ -100,8 +100,26 @@ internal class CreditCardViewModel @Inject constructor(
 
     fun setPromoId(promoId: Long) {
         _netAmountLiveData.value = transactionDetails?.grossAmount?.currencyFormatRp()
+        _netAmountWithoutCurrencyLiveData.value = transactionDetails?.grossAmount
         promos?.find { it.id == promoId }?.discountedGrossAmount?.let {
             _netAmountLiveData.value = it.currencyFormatRp()
+            _netAmountWithoutCurrencyLiveData.value = it
+        }
+    }
+
+    fun setCreditCardDetails(creditCard: CreditCard?) {
+        this.creditCard = creditCard
+        creditCard?.installment?.isRequired?.let {
+            _isInstallmentRequired.value = it
+        }
+    }
+
+    fun hidePointBank(installmentTerm: String) = when {
+        installmentTerm.isNullOrBlank() -> {
+            _isPointBankShown.value = true
+        }
+        else -> {
+            _isPointBankShown.value = false
         }
     }
 
