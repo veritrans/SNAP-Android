@@ -110,14 +110,19 @@ internal class CreditCardViewModel @Inject constructor(
     }
 
     private fun checkForPointBank(cardIssuerBank: String) {
-        pointBanks?.contains(cardIssuerBank).apply {
-            _isPointBankEnabled.value = true
+        if (isInstallmentRequired.value != true) {
+            pointBanks?.contains(cardIssuerBank)?.apply {
+                _isPointBankEnabled.value = true
+            }
+            handleShowingPointBank(cardIssuerBank)
         }
-        handleShowingPointBank(cardIssuerBank)
     }
-    private fun handleShowingPointBank(cardIssuerBank: String){
-        _isPointBankShown.value = isPointBankEnabled.value == true && checkForBniPoint(cardIssuerBank) == true
+
+    private fun handleShowingPointBank(cardIssuerBank: String) {
+        _isPointBankShown.value =
+            isPointBankEnabled.value == true && checkForBniPoint(cardIssuerBank) == true
     }
+
     private fun checkForBniPoint(cardIssuerBank: String): Boolean {
         return cardIssuerBank.lowercase() == BANK_BNI
     }
