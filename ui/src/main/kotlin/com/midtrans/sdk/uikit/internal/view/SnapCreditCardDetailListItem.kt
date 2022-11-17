@@ -156,7 +156,7 @@ fun SnapCCDetailListItem(
                         checked = isPointBankChecked,
                         isPointBankShown = true,
                         onCheckedChange = { onPointBankCheckedChange(it) },
-                        label = stringResource(id = R.string.cc_dc_main_screen_use_point_bank_saved_card)
+                        label = stringResource(id = R.string.cc_dc_main_screen_use_point_bank_bni_saved_card)
                     )
                 }
             }
