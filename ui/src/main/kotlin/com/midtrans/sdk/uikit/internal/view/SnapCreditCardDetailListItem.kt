@@ -52,7 +52,6 @@ fun SnapCCDetailListItem(
     shouldReveal: Boolean,
     inputTitle: String,
     isInputError: Boolean,
-    isPointBankChecked: Boolean,
     errorTitle: String,
     onValueChange: (String) -> Unit,
     onEndIconClicked: () -> Unit,
@@ -152,11 +151,15 @@ fun SnapCCDetailListItem(
                     }
                 }
 
-                if (tokenType == SavedToken.TWO_CLICKS && bankCode.lowercase() == SnapCreditCardUtil.BANK_BNI){
+                var isPointOnSavedCardChecked by remember { mutableStateOf(false) }
+                if (tokenType == SavedToken.TWO_CLICKS && bankCode.lowercase() == SnapCreditCardUtil.BANK_BNI) {
                     PointBankCheckBox(
-                        checked = isPointBankChecked,
+                        checked = isPointOnSavedCardChecked,
                         isPointBankShown = true,
-                        onCheckedChange = { onPointBankCheckedChange(it) },
+                        onCheckedChange = {
+                            isPointOnSavedCardChecked = it
+                            onPointBankCheckedChange(isPointOnSavedCardChecked)
+                        },
                         label = stringResource(id = R.string.cc_dc_main_screen_use_point_bank_bni_saved_card)
                     )
                 }
@@ -354,8 +357,7 @@ fun SnapSavedCardRadioGroup(
                                 onIsCvvInvalidValueChange = {
                                     onIsCvvSavedCardInvalidValueChange(it)
                                 },
-                                isPointBankChecked = cardItemState.isPointBankChecked,
-                                onPointBankCheckedChange = { onPointBankCheckedChange(it) }
+                                onPointBankCheckedChange = onPointBankCheckedChange
                             )
                         }
 
@@ -407,7 +409,8 @@ data class SavedCreditCardFormData(
     var savedCardIdentifier: String,
     var tokenId: String,
     var cvvSavedCardTextField: TextFieldValue,
-    var isCvvSavedCardInvalid: Boolean
+    var isCvvSavedCardInvalid: Boolean,
+    var isPointBankSavedCardChecked: Boolean
 ) : FormData(savedCardIdentifier)
 
 class NewCardFormData(
