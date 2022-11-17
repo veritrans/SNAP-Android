@@ -43,6 +43,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_RESPONSE_T
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TOKEN
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STATUS_CODE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STEP_NUMBER
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOKEN_ID
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOTAL_ITEMS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOTAL_QUANTITY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TRANSACTION_ID
@@ -403,14 +404,16 @@ internal class EventAnalyticsTest {
         eventAnalytics.trackSnapTokenizationResult(
             pageName = "page-name",
             paymentMethodName = "payment-type",
-            statusCode = "status-code"
+            statusCode = "status-code",
+            tokenId = "token-id"
         )
         verify(mixpanelTracker).trackEvent(
             eventName = EVENT_SNAP_TOKENIZATION_RESULT,
             properties = mapOf(
                 PROPERTY_PAGE_NAME to "page-name",
                 PROPERTY_PAYMENT_METHOD_NAME to "payment-type",
-                PROPERTY_STATUS_CODE to "status-code"
+                PROPERTY_STATUS_CODE to "status-code",
+                PROPERTY_TOKEN_ID to "token-id"
             )
         )
     }

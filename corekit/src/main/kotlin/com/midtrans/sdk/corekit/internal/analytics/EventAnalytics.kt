@@ -81,6 +81,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMEN
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMENT_REQUIRED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMENT_TERMS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STEP_NUMBER
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOKEN_ID
 
 class EventAnalytics(
     private val mixpanelTracker: MixpanelTracker
@@ -210,14 +211,16 @@ class EventAnalytics(
     fun trackSnapTokenizationResult(
         pageName: String,
         paymentMethodName: String,
-        statusCode: String
+        statusCode: String,
+        tokenId: String
     ) {
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_TOKENIZATION_RESULT,
             properties = mapOf(
                 PROPERTY_PAGE_NAME to pageName,
                 PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName,
-                PROPERTY_STATUS_CODE to statusCode
+                PROPERTY_STATUS_CODE to statusCode,
+                PROPERTY_TOKEN_ID to tokenId
             )
         )
     }
