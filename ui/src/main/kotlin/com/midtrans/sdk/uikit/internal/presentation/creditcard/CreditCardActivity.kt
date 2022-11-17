@@ -263,6 +263,9 @@ internal class CreditCardActivity : BaseActivity() {
                 isInstallmentAllowed = true
             )
         }
+
+        var isPaymentUsingPointState by remember { mutableStateOf(false) }
+        val pointBalanceAmount = viewModel?.pointBalanceAmount?.observeAsState(null)
         val isPointBankShownState = viewModel?.isPointBankShown?.observeAsState(false)
         val transactionResponse = viewModel?.transactionResponseLiveData?.observeAsState()
         val bankCodeId by bankCodeIdState
