@@ -188,6 +188,7 @@ private fun InstallmentDropdownMenu(
                         DropdownMenuItem(
                             onClick = {
                                 selectedOptionText = selectionOption
+                                onOptionsSelected(selectionOption)
                                 expanded = false
                             },
                             enabled = enabled
@@ -199,10 +200,7 @@ private fun InstallmentDropdownMenu(
                         }
                     }
                 }
-            } else {
-                selectedOptionText = options[0]
             }
-            onOptionsSelected(selectedOptionText)
         }
 
         if (isErrorVisible) {
