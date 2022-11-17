@@ -473,6 +473,7 @@ internal class CreditCardActivity : BaseActivity() {
         onExpand: (Boolean) -> Unit,
         onCardNumberValueChange: (TextFieldValue) -> Unit,
         onSavedCardRadioSelected: (item: FormData?) -> Unit,
+        onSavedCardPointBankCheckedChange: (Boolean) -> Unit,
         onInstallmentTermSelected: (String) -> Unit,
         onClick: () -> Unit
     ) {
@@ -532,7 +533,8 @@ internal class CreditCardActivity : BaseActivity() {
                                 savedTokenListState = it,
                                 bankCodeId = bankCodeState,
                                 onCardNumberValueChange = onCardNumberValueChange,
-                                onSavedCardRadioSelected = onSavedCardRadioSelected
+                                onSavedCardRadioSelected = onSavedCardRadioSelected,
+                                onSavedCardPointBankCheckedChange = onSavedCardPointBankCheckedChange
                             )
                         }
 
@@ -551,6 +553,7 @@ internal class CreditCardActivity : BaseActivity() {
                             cardIssuerBank = cardIssuerBank,
                             binType = binType,
                             cardNumber = state.cardNumber,
+                            isPointBankChecked = state.isPointBankChecked,
                             onInstallmentTermSelected = { onInstallmentTermSelected(it) },
                             onInstallmentAllowed = { state.isInstallmentAllowed = it }
                         )
@@ -701,7 +704,8 @@ internal class CreditCardActivity : BaseActivity() {
         savedTokenListState: SnapshotStateList<FormData>,
         bankCodeId: Int?,
         onCardNumberValueChange: (TextFieldValue) -> Unit,
-        onSavedCardRadioSelected: (item: FormData?) -> Unit
+        onSavedCardRadioSelected: (item: FormData?) -> Unit,
+        onSavedCardPointBankCheckedChange: (Boolean) -> Unit
     ) {
         SnapSavedCardRadioGroup(
             modifier = Modifier
@@ -726,7 +730,7 @@ internal class CreditCardActivity : BaseActivity() {
                 state.cvv = it
             },
             onSavedCardCheckedChange = { state.isSavedCardChecked = it },
-            onPointBankCheckedChange = { state.isPointBankChecked = it }
+            onPointBankCheckedChange = onSavedCardPointBankCheckedChange
         )
     }
 
