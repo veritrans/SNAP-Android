@@ -26,6 +26,7 @@ internal object SnapCreditCardUtil {
     const val SAVED_CARD_IDENTIFIER = "savedCardIdentifier"
     const val INSTALLMENT_NOT_SUPPORTED = "installmentNotSupported"
     const val CARD_NOT_ELIGIBLE = "cardNotEligible"
+    const val BANK_BNI = "bni"
 
     /**
      * Return validation of a given card number.

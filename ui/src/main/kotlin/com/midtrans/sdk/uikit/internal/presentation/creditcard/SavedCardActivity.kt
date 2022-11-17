@@ -193,6 +193,7 @@ class SavedCardActivity: BaseActivity() {
                     maskedCardNumber = formatMaskedCard(savedToken.maskedCard.toString()),
                     displayedMaskedCard = savedToken.maskedCard.toString(),
                     tokenType = savedToken.tokenType.toString(),
+                    bankCode = savedToken.binDetail?.bankCode.toString(),
                     tokenId = savedToken.token.toString(),
                     cvvSavedCardTextField = TextFieldValue(),
                     isCvvSavedCardInvalid = isCvvSavedCardInvalid
@@ -294,7 +295,8 @@ class SavedCardActivity: BaseActivity() {
                                 onCvvValueChange = {
                                     state.cvv = it
                                 },
-                                onSavedCardCheckedChange = { state.isSavedCardChecked = it }
+                                onSavedCardCheckedChange = { state.isSavedCardChecked = it },
+                                onPointBankCheckedChange = {}
                             )
                             SnapButton(
                                 text = stringResource(id = R.string.cc_dc_main_screen_cta),
