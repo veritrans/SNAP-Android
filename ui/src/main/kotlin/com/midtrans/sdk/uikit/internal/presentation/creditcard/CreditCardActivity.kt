@@ -231,6 +231,7 @@ internal class CreditCardActivity : BaseActivity() {
         savedTokenListState: SnapshotStateList<FormData>?,
         creditCard: CreditCard?,
         totalAmount: State<String>,
+        totalAmountWithoutRp: State<Double>,
         bankCodeIdState: State<Int?>,
         binType: State<String?>,
         cardIssuerBank: State<String?>,
