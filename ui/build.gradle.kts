@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("kotlin-parcelize")
+    id("maven-publish")
 }
 
 android {
@@ -30,7 +31,7 @@ android {
     }
 
     compileOptions {
-        isCoreLibraryDesugaringEnabled = true
+//        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -54,7 +55,7 @@ dependencies {
     implementation(com.gtf.snap.CommonLibraries.appCompat)
     testImplementation(com.gtf.snap.TestLibraries.junit)
     testImplementation(com.gtf.snap.TestLibraries.hamcrest)
-    implementation(com.gtf.snap.CommonLibraries.coreLibraryDesugaring)
+//    implementation(com.gtf.snap.CommonLibraries.coreLibraryDesugaring)
     testImplementation(com.gtf.snap.TestLibraries.mockitoKotlin)
     testImplementation(com.gtf.snap.TestLibraries.androidxArchTesting)
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
@@ -110,4 +111,20 @@ dependencies {
     implementation(com.gtf.snap.CommonLibraries.zxing)
 
     debugImplementation(com.gtf.snap.CommonLibraries.leakCanary)
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            register<MavenPublication>("release") {
+                groupId = "com.snap"
+                artifactId = "uikit-test"
+                version = "1.0"
+
+                afterEvaluate {
+                    from(components["release"])
+                }
+            }
+        }
+    }
 }
