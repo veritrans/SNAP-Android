@@ -133,7 +133,8 @@ internal class CreditCardActivity : BaseActivity() {
                 bankCode = savedToken.binDetail?.bankCode.toString(),
                 tokenId = savedToken.token.toString(),
                 cvvSavedCardTextField = TextFieldValue(),
-                isCvvSavedCardInvalid = false
+                isCvvSavedCardInvalid = false,
+                isPointBankSavedCardChecked = false
             ) as FormData
         }
             ?.ifEmpty { null }
