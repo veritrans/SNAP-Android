@@ -328,33 +328,51 @@ internal class CreditCardActivity : BaseActivity() {
                     viewModel?.trackSnapButtonClicked(
                         ctaName = getStringResourceInEnglish(R.string.cc_dc_main_screen_cta)
                     )
-                    if (selectedFormData == null) {
-                        viewModel?.chargeUsingCreditCard(
+
+                    var grossAmount = 0.0
+                    transactionDetails?.grossAmount?.let {
+                        grossAmount = it
+                    }
+                    if (state.isPointBankChecked) {
+                        viewModel?.getBankPoint(
+                            snapToken = snapToken,
                             transactionDetails = transactionDetails,
                             cardNumber = state.cardNumber,
                             cardExpiry = state.expiry,
                             cardCvv = state.cvv,
-                            isSavedCard = state.isSavedCardChecked,
-                            customerEmail = state.customerEmail.text,
-                            customerPhone = state.customerPhone.text,
-                            installmentTerm = installmentTerm,
-                            snapToken = snapToken,
                             promoId = state.promoId
                         )
+                        isPaymentUsingPointState = true
                     } else {
-                        viewModel?.chargeUsingCreditCard(
-                            formData = selectedFormData as SavedCreditCardFormData,
-                            snapToken = snapToken,
-                            cardCvv = state.cvv,
-                            customerEmail = state.customerEmail.text,
-                            transactionDetails = transactionDetails,
-                            installmentTerm = installmentTerm,
-                            promoId = state.promoId
-                        )
+                        if (selectedFormData == null) {
+                            viewModel?.chargeUsingCreditCard(
+                                transactionDetails = transactionDetails,
+                                cardNumber = state.cardNumber,
+                                cardExpiry = state.expiry,
+                                cardCvv = state.cvv,
+                                isSavedCard = state.isSavedCardChecked,
+                                customerEmail = state.customerEmail.text,
+                                customerPhone = state.customerPhone.text,
+                                installmentTerm = installmentTerm,
+                                snapToken = snapToken,
+                                promoId = state.promoId
+                            )
+                        } else {
+                            viewModel?.chargeUsingCreditCard(
+                                formData = selectedFormData as SavedCreditCardFormData,
+                                snapToken = snapToken,
+                                cardCvv = state.cvv,
+                                customerEmail = state.customerEmail.text,
+                                transactionDetails = transactionDetails,
+                                installmentTerm = installmentTerm,
+                                promoId = state.promoId
+                            )
+                        }
                     }
                 },
                 onInstallmentTermSelected = {
                     installmentTerm = it
+                    viewModel?.hidePointBank(installmentTerm)
                     viewModel?.getPromosData(
                         binNumber = SnapCreditCardUtil.getCardNumberFromTextField(
                             state.cardNumber
