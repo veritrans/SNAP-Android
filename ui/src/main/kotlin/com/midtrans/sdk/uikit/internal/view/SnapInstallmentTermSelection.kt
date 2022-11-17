@@ -20,6 +20,7 @@ fun SnapInstallmentTermSelectionMenu(
     cardIssuerBank: String?,
     binType: String?,
     cardNumber: TextFieldValue,
+    isPointBankChecked: Boolean,
     onInstallmentTermSelected: (String) -> Unit,
     onInstallmentAllowed: (Boolean) -> Unit
 ) {
@@ -39,11 +40,11 @@ fun SnapInstallmentTermSelectionMenu(
                 issuerBank = cardIssuerBank.orEmpty(),
                 enabledBanks = terms.keys.toList()
             )
-            val isBinComplete = cardNumber.text.length >= 8
+            val isBinComplete = cardNumber.text.length >= 9
             val isCreditCard = binType?.contains("credit", true) ?: false
             val isOfflineInstallment = selectedBank.contains("offline")
             val isError = !isOfflineInstallment && (!isOnUs || !isCreditCard)
-            val isEnabled = !isError && isBinComplete
+            val isEnabled = !isError && isBinComplete && !isPointBankChecked
             val errorMessageIdList = getErrorMessageIdList(
                 isOfflineInstallment = isOfflineInstallment,
                 isCreditCard = isCreditCard,
