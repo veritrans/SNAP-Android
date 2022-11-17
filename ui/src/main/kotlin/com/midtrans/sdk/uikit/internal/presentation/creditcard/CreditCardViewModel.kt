@@ -394,6 +394,120 @@ internal class CreditCardViewModel @Inject constructor(
         }
     }
 
+    fun getBankPoint(
+        snapToken: String,
+        transactionDetails: TransactionDetails?,
+        cardNumber: TextFieldValue,
+        cardExpiry: TextFieldValue,
+        cardCvv: TextFieldValue,
+        promoId: Long?
+    ) {
+        val tokenRequest = NormalCardTokenRequestBuilder()
+            .withCardNumber(snapCreditCardUtil.getCardNumberFromTextField(cardNumber))
+            .withCardExpMonth(snapCreditCardUtil.getExpMonthFromTextField(cardExpiry))
+            .withCardExpYear(snapCreditCardUtil.getExpYearFromTextField(cardExpiry))
+            .withCardCvv(cardCvv.text)
+
+        transactionDetails?.currency?.let {
+            tokenRequest.withCurrency(it)
+        }
+        transactionDetails?.grossAmount?.let {
+            finalAmount = it
+        }
+        transactionDetails?.orderId?.let {
+            tokenRequest.withOrderId(it)
+        }
+
+        promos
+            ?.find { it.id == promoId }
+            ?.also { promoName = it.name }
+            ?.discountedGrossAmount
+            ?.let {
+                finalAmount = it
+            }
+
+        tokenRequest.withGrossAmount(finalAmount)
+
+        snapCore.getCardToken(
+            cardTokenRequestBuilder = tokenRequest,
+            callback = object : Callback<CardTokenResponse> {
+                override fun onSuccess(result: CardTokenResponse) {
+
+                    result.tokenId?.let { tokenId ->
+                        _cardToken.value = tokenId
+                        snapCore.getBankPoint(
+                            snapToken = snapToken,
+                            cardToken = tokenId,
+                            grossAmount = finalAmount,
+                            callback = object : Callback<BankPointResponse> {
+                                override fun onSuccess(result: BankPointResponse) {
+                                    _pointBalanceAmount.value = result.pointBalanceAmount
+                                }
+
+                                override fun onError(error: SnapError) {
+                                    val errorType = errorCard.getErrorCardType(error, allowRetry)
+                                    _errorTypeLiveData.value = Pair(errorType, "")
+                                    _errorLiveData.value = error
+                                }
+                            }
+                        )
+                    }
+                }
+
+                override fun onError(error: SnapError) {
+                    val errorType = errorCard.getErrorCardType(error, allowRetry)
+                    _errorTypeLiveData.value = Pair(errorType, "")
+                    _errorLiveData.value = error
+                }
+            }
+        )
+    }
+
+    fun chargeWithPoint(
+        transactionDetails: TransactionDetails?,
+        cardNumber: TextFieldValue,
+        cardExpiry: TextFieldValue,
+        cardCvv: TextFieldValue,
+        isSavedCard: Boolean,
+        customerEmail: String,
+        customerPhone: String,
+        promoId: Long?,
+        pointAmount: Double,
+        snapToken: String
+    ) {
+
+        val ccRequestBuilder = CreditCardPaymentRequestBuilder()
+            .withSaveCard(isSavedCard)
+            .withPaymentType(PaymentType.CREDIT_CARD)
+            .withCustomerEmail(customerEmail)
+            .withCustomerPhone(customerPhone)
+            .withPoint(pointAmount)
+
+        cardToken.value?.let {
+            ccRequestBuilder.withCardToken(it)
+        }
+        cardIssuerBank.value?.let {
+            ccRequestBuilder.withBank(it)
+        }
+
+        snapCore.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = ccRequestBuilder,
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    _transactionResponse.value = result
+                    trackSnapChargeResult(result)
+                }
+
+                override fun onError(error: SnapError) {
+                    val errorType = errorCard.getErrorCardType(error, allowRetry)
+                    _errorTypeLiveData.value = Pair(errorType, "")
+                    _errorLiveData.value = error
+                }
+            }
+        )
+    }
+
     fun resetError() {
         _errorTypeLiveData.value = null
     }
