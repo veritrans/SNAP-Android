@@ -221,6 +221,11 @@ internal class CreditCardViewModel @Inject constructor(
                         ccRequestBuilder.withCardToken(it)
                     }
 
+                    trackCreditCardTokenizationResult(
+                        statusCode = result.statusCode.orEmpty(),
+                        tokenId = result.tokenId.orEmpty()
+                    )
+
                     trackSnapChargeRequest(
                         pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
                         paymentMethodName = PaymentType.CREDIT_CARD,
@@ -356,6 +361,11 @@ internal class CreditCardViewModel @Inject constructor(
                         result.tokenId?.let {
                             ccRequestBuilder.withCardToken(it)
                         }
+
+                        trackCreditCardTokenizationResult(
+                            statusCode = result.statusCode.orEmpty(),
+                            tokenId = result.tokenId.orEmpty()
+                        )
 
                         trackSnapChargeRequest(
                             pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
