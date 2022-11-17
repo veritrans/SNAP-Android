@@ -381,9 +381,73 @@ internal class CreditCardActivity : BaseActivity() {
                 },
                 withCustomerPhoneEmail = withCustomerPhoneEmail,
                 promoState = promoState,
-                onSavedCardRadioSelected = { selectedFormData = it }
+                onSavedCardRadioSelected = { selectedFormData = it },
+                onSavedCardPointBankCheckedChange = { }
             )
         }
+
+
+        var pointPayButtonClickedState by remember {
+            mutableStateOf(false)
+        }
+        var justOpenedSheetState by remember {
+            mutableStateOf(false)
+        }
+        var isPointInsufficient by remember {
+            mutableStateOf(false)
+        }
+        var pointAmountUsed by remember {
+            mutableStateOf(0.0)
+        }
+
+        pointBalanceAmount?.value?.let { pointBalance ->
+
+            val data = SnapPointRedeemDialogData(
+                title = stringResource(id = R.string.point_title_bni),
+                displayedTotal = totalAmount.value,
+                total = totalAmountWithoutRp.value,
+                isError = isPointInsufficient,
+                infoMessage = stringResource(id = R.string.point_amount_of_points, pointBalance),
+                pointBalanceAmount = pointBalance
+            )
+            PointBankCard(
+                data = data,
+                onSheetStateChange = {
+                    if (justOpenedSheetState && !it.isVisible) {
+                        isPaymentUsingPointState = false
+                        justOpenedSheetState = false
+                    }
+                },
+                onValueChange = {
+                    pointAmountUsed = it
+                },
+                onClick = {
+                    viewModel?.chargeWithPoint(
+                        transactionDetails = transactionDetails,
+                        cardNumber = state.cardNumber,
+                        cardExpiry = state.expiry,
+                        cardCvv = state.cvv,
+                        isSavedCard = state.isSavedCardChecked,
+                        customerEmail = state.customerEmail.text,
+                        customerPhone = state.customerPhone.text,
+                        promoId = state.promoId,
+                        pointAmount = pointAmountUsed,
+                        snapToken = snapToken,
+                    )
+                    pointPayButtonClickedState = true
+                }
+            ).apply {
+                if (isPaymentUsingPointState) {
+                    justOpenedSheetState = true
+                    show()
+                } else if (pointPayButtonClickedState) {
+                    pointPayButtonClickedState = false
+                    hide()
+                }
+            }
+        }
+
+
         val errorState by errorTypeState
         errorState?.let { pair ->
             pair.first?.let { type ->
