@@ -13,6 +13,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_OPEN_DEE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ORDER_DETAILS_VIEWED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_CLOSED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_VIEWED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_TOKENIZATION_RESULT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_3DS_VERSION
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BANK
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CTA_NAME
@@ -393,6 +394,23 @@ internal class EventAnalyticsTest {
                 PROPERTY_PAYMENT_METHOD_NAME to "payment-type",
                 PROPERTY_TRANSACTION_ID to "transaction-id",
                 PROPERTY_STEP_NUMBER to "1"
+            )
+        )
+    }
+
+    @Test
+    fun verifyTrackSnapTokenizationResult() {
+        eventAnalytics.trackSnapTokenizationResult(
+            pageName = "page-name",
+            paymentMethodName = "payment-type",
+            statusCode = "status-code"
+        )
+        verify(mixpanelTracker).trackEvent(
+            eventName = EVENT_SNAP_TOKENIZATION_RESULT,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to "page-name",
+                PROPERTY_PAYMENT_METHOD_NAME to "payment-type",
+                PROPERTY_STATUS_CODE to "status-code"
             )
         )
     }
