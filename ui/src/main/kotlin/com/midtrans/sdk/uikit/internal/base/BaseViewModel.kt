@@ -177,4 +177,16 @@ internal open class BaseViewModel : ViewModel() {
             stepNumber = stepNumber
         )
     }
+
+    protected fun trackCreditCardTokenizationResult(
+        statusCode: String,
+        tokenId: String
+    ) {
+        eventAnalytics?.trackSnapTokenizationResult(
+            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+            paymentMethodName = PaymentType.CREDIT_CARD,
+            statusCode = statusCode,
+            tokenId = tokenId
+        )
+    }
 }
