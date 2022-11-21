@@ -24,7 +24,7 @@ import com.midtrans.sdk.uikit.internal.view.SnapColors.lineLightMuted
 @Composable
 fun SnapMultiIconListItem(
     title: String,
-    iconList: List<Int>,
+    iconList: List<Int>?,
     creditCard: CreditCard?,
     paymentType: String,
     onClick: () -> Unit
@@ -61,7 +61,7 @@ fun SnapMultiIconListItem(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(space = 8.dp, alignment = Alignment.Start)
             ) {
-                iconList.forEach {
+                iconList?.forEach {
                     Icon(
                         painter = painterResource(id = it),
                         tint = Color.Unspecified,

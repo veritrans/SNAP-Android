@@ -78,7 +78,8 @@ internal class PaymentUsecase(
                                 merchantData = responseData.merchant,
                                 customerDetails = responseData.customerDetails,
                                 transactionDetails = responseData.transactionDetails,
-                                expiryTme = responseData.expiryTime
+                                expiryTme = responseData.expiryTime,
+                                enabledPayment = responseData.enabledPayments
                             )
                         )
                     },
@@ -108,7 +109,8 @@ internal class PaymentUsecase(
                                 merchantData = responseData.merchant,
                                 customerDetails = responseData.customerDetails,
                                 transactionDetails = responseData.transactionDetails,
-                                expiryTme = responseData.expiryTime
+                                expiryTme = responseData.expiryTime,
+                                enabledPayment = responseData.enabledPayments
                             )
                         )
                     },
@@ -225,8 +227,8 @@ internal class PaymentUsecase(
                     type = PaymentType.BANK_TRANSFER,
                     channels = methods[index]
                         .channels
-                        .toMutableList()
-                        .apply { add(payment.type) }
+                        ?.toMutableList()
+                        ?.apply { add(payment.type) }
                 )
             }
         } else if (payment.category == PaymentType.CSTORE) {

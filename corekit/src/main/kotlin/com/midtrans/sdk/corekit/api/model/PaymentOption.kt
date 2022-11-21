@@ -1,6 +1,7 @@
 package com.midtrans.sdk.corekit.api.model
 
 import android.os.Parcelable
+import com.midtrans.sdk.corekit.internal.network.model.response.EnabledPayment
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import kotlinx.parcelize.Parcelize
@@ -14,5 +15,6 @@ data class PaymentOption(
     val merchantData: Merchant?,
     val customerDetails: CustomerDetails?,
     val transactionDetails: TransactionDetails?,
-    val expiryTme: String?
+    val expiryTme: String?,
+    val enabledPayment: List<EnabledPayment>?
 ) : Parcelable

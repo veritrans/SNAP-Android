@@ -123,7 +123,7 @@ class BankTransferListActivity : BaseActivity() {
                     }
                 ) {
                     LazyColumn {
-                        paymentMethodItem.methods.forEachIndexed { _, method ->
+                        paymentMethodItem.methods?.forEachIndexed { _, method ->
                             item {
                                 bankNameMap[method]?.let {
                                     SnapSingleIconListItem(title = stringResource(it.first),

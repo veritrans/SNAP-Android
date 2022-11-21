@@ -56,7 +56,7 @@ internal class PaymentOptionViewModel @Inject constructor(
                         type = it.type,
                         titleId = getTitle(it.type, isTabletDevice),
                         methods = it.channels,
-                        icons = getIcons(it.type, it.channels, isTabletDevice)
+                        icons = it.channels?.let { it1 -> getIcons(it.type, it1, isTabletDevice) }
                     )
                 )
             }
