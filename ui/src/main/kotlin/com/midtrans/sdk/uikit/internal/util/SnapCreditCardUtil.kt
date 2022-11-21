@@ -113,7 +113,7 @@ internal object SnapCreditCardUtil {
             output = when {
                 pointBalanceAvailable > totalAmount -> {
                     when {
-                        digit.toInt() > totalAmount -> {
+                        digit.toLong() > totalAmount -> {
                             input.copy(totalAmount.toString(), TextRange(length))
                         }
                         else -> {
@@ -123,8 +123,8 @@ internal object SnapCreditCardUtil {
                 }
                 else -> {
                     when {
-                        digit.toInt() > totalAmount -> {
-                            input.copy(pointBalanceAvailable.toString(), TextRange(pointBalanceAvailable))
+                        digit.toLong() > totalAmount -> {
+                            input.copy(pointBalanceAvailable.toString(), TextRange(pointBalanceAvailable.toString().length))
                         }
                         else -> {
                             input.copy(digit, TextRange(digit.length))
