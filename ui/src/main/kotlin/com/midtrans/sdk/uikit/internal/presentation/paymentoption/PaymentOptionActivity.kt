@@ -216,10 +216,10 @@ class PaymentOptionActivity : BaseActivity() {
     private fun handleEnabledPayments(payment: List<EnabledPayment>) {
         val bankTransfer: (EnabledPayment) -> Boolean = { it.category == PaymentType.BANK_TRANSFER }
         val isAllBankTransfer = payment.all(bankTransfer)
-        val paymentType = if (payment.size == 1) {
-            payment[0].type
-        } else if (isAllBankTransfer) {
+        val paymentType = if (isAllBankTransfer) {
             PaymentType.BANK_TRANSFER
+        } else if (payment.size == 1) {
+            payment[0].type
         } else ""
         val paymentMethod =  paymentMethods.paymentMethods.find { it.type == paymentType }
 
@@ -463,7 +463,8 @@ class PaymentOptionActivity : BaseActivity() {
                         paymentMethodItem = paymentMethodItem,
                         customerInfo = customerInfo,
                         itemInfo = itemInfo,
-                        paymentTypeItem = this.paymentTypeItem
+                        paymentTypeItem = this.paymentTypeItem,
+                        enabledPayment = enabledPayments
                     )
                 )
             },
