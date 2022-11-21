@@ -1,6 +1,5 @@
 package com.midtrans.sdk.uikit.internal.presentation.directdebit
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -29,6 +28,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
@@ -60,6 +60,10 @@ class UobSelectionActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
     }
 
+    private val itemInfo: ItemInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
+    }
+
     private val uobModes: List<String> by lazy {
         intent.getStringArrayListExtra(EXTRA_UOB_MODES)
             ?: throw RuntimeException("Missing Uob modes")
@@ -70,7 +74,7 @@ class UobSelectionActivity : BaseActivity() {
     }
 
     private val viewModel: UobSelectionViewModel by lazy {
-        ViewModelProvider(this, vmFactory).get(UobSelectionViewModel::class.java)
+        ViewModelProvider(this, vmFactory)[UobSelectionViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,6 +91,7 @@ class UobSelectionActivity : BaseActivity() {
                         amount = amount,
                         orderId = orderId,
                         customerInfo = customerInfo,
+                        itemInfo = itemInfo,
                         remainingTime = viewModel.getExpiredTime()
                     )
                 )
@@ -97,6 +102,7 @@ class UobSelectionActivity : BaseActivity() {
                     amount = amount,
                     orderId = orderId,
                     customerInfo = customerInfo,
+                    itemInfo = itemInfo,
                     remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
                 )
             }
@@ -109,6 +115,7 @@ class UobSelectionActivity : BaseActivity() {
         amount: String = "Rp500",
         orderId: String = "order-123456",
         customerInfo: CustomerInfo? = CustomerInfo(name = "Harry", "Phone", listOf("address")),
+        itemInfo: ItemInfo? = null,
         remainingTimeState: State<String> = remember { mutableStateOf("00:00") }
     ) {
         var isExpanded by remember { mutableStateOf(false) }
@@ -131,20 +138,18 @@ class UobSelectionActivity : BaseActivity() {
                     SnapTotal(
                         amount = amount,
                         orderId = orderId,
-                        canExpand = customerInfo != null,
+                        canExpand = customerInfo != null || itemInfo != null,
                         remainingTime = remainingTime
                     ) {
                         isExpanded = it
                     }
                 },
-                expandingContent = customerInfo?.let {
-                    {
-                        SnapCustomerDetail(
-                            name = customerInfo.name,
-                            phone = customerInfo.phone,
-                            addressLines = customerInfo.addressLines
-                        )
-                    }
+                expandingContent = {
+                    viewModel.trackOrderDetailsViewed()
+                    SnapPaymentOrderDetails(
+                        customerInfo = customerInfo,
+                        itemInfo = itemInfo
+                    )
                 },
                 followingContent = {
                     LazyColumn(modifier = Modifier.padding(top = 16.dp)) {
@@ -161,6 +166,7 @@ class UobSelectionActivity : BaseActivity() {
                                             amount = amount,
                                             orderId = orderId,
                                             customerInfo = customerInfo,
+                                            itemInfo = itemInfo,
                                             remainingTime = viewModel.getExpiredTime()
                                         )
                                     )
@@ -238,6 +244,7 @@ class UobSelectionActivity : BaseActivity() {
         private const val EXTRA_AMOUNT = "uobSelection.extra.amount"
         private const val EXTRA_ORDER_ID = "uobSelection.extra.order_id"
         private const val EXTRA_CUSTOMER_INFO = "uobSelection.extra.customer_info"
+        private const val EXTRA_ITEM_INFO = "uobSelection.extra.item_info"
         private const val EXTRA_UOB_MODES = "uobSelection.extra.uob_modes"
         private const val EXTRA_PAYMENT_TYPE_ITEM = "uobSelection.extra.payment_type_item"
 
@@ -248,6 +255,7 @@ class UobSelectionActivity : BaseActivity() {
             amount: String,
             orderId: String,
             customerInfo: CustomerInfo?,
+            itemInfo: ItemInfo?,
             paymentTypeItem: PaymentTypeItem?
         ): Intent {
             return Intent(activityContext, UobSelectionActivity::class.java).apply {
@@ -255,6 +263,7 @@ class UobSelectionActivity : BaseActivity() {
                 putExtra(EXTRA_AMOUNT, amount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
+                putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
                 putStringArrayListExtra(EXTRA_UOB_MODES, uobModes)
             }

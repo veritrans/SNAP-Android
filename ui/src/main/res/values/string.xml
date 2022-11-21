@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="payment_details_title">Your order</string>
     <string name="payment_details_subtotal">Subtotal</string>
-
     <string name="payment_details_promo_title">Promo</string>
-
     <string name="payment_details_point_redemption_title">Points</string>
-
-
     <string name="payment_details_total">Total</string>
-
     <string name="payment_details_customer_detail_title">Customer details</string>
 
 
@@ -86,6 +82,8 @@
     <string name="cc_dc_main_screen_placeholder_cvv">***</string>
 
     <string name="cc_dc_main_screen_save_this_card">Save this card</string>
+    <string name="cc_dc_main_screen_use_point_bank">Use point</string>
+    <string name="cc_dc_main_screen_use_point_bank_bni_saved_card">Redeem BNI Rewards Point</string>
 
     <string name="cc_dc_main_screen_security_disclaimer">Secure payments by Midtrans</string>
 

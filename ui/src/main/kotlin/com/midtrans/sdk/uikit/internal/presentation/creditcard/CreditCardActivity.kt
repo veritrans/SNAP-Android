@@ -15,17 +15,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rxjava2.subscribeAsState
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -43,36 +36,20 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.api.model.PaymentType
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
+import com.midtrans.sdk.uikit.internal.model.CreditCardPromoInfo
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.model.PromoData
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
-import com.midtrans.sdk.uikit.internal.view.CardItemState
-import com.midtrans.sdk.uikit.internal.view.FormData
-import com.midtrans.sdk.uikit.internal.view.NewCardFormData
-import com.midtrans.sdk.uikit.internal.view.NormalCardItem
-import com.midtrans.sdk.uikit.internal.view.PromoLayout
-import com.midtrans.sdk.uikit.internal.view.SavedCreditCardFormData
-import com.midtrans.sdk.uikit.internal.view.SnapAppBar
-import com.midtrans.sdk.uikit.internal.view.SnapButton
-import com.midtrans.sdk.uikit.internal.view.SnapColors
-import com.midtrans.sdk.uikit.internal.view.SnapCustomerDetail
-import com.midtrans.sdk.uikit.internal.view.SnapInstallmentTermSelectionMenu
-import com.midtrans.sdk.uikit.internal.view.SnapOverlayExpandingBox
-import com.midtrans.sdk.uikit.internal.view.SnapSavedCardRadioGroup
-import com.midtrans.sdk.uikit.internal.view.SnapTextField
-import com.midtrans.sdk.uikit.internal.view.SnapThreeDsWebView
-import com.midtrans.sdk.uikit.internal.view.SnapTotal
-import com.midtrans.sdk.uikit.internal.view.SnapTypography
+import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
-import java.util.function.BooleanSupplier
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
 //TODO: refactor, state on value change listener is not required, compose will do the magic
 internal class CreditCardActivity : BaseActivity() {
@@ -81,7 +58,7 @@ internal class CreditCardActivity : BaseActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel: CreditCardViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory).get(CreditCardViewModel::class.java)
+        ViewModelProvider(this, viewModelFactory)[CreditCardViewModel::class.java]
     }
 
     private var previousEightDigitNumber = ""
@@ -97,6 +74,10 @@ internal class CreditCardActivity : BaseActivity() {
 
     private val customerDetail: CustomerInfo? by lazy {
         intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
+    }
+
+    private val itemInfo: ItemInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
     }
 
     private val creditCard: CreditCard? by lazy {
@@ -135,25 +116,26 @@ internal class CreditCardActivity : BaseActivity() {
 
     private val savedTokenList: SnapshotStateList<FormData>? by lazy {
         creditCard?.savedTokens?.mapIndexed { index, savedToken ->
-                    SavedCreditCardFormData(
-                        savedCardIdentifier = SnapCreditCardUtil.SAVED_CARD_IDENTIFIER + index.toString(),
-                        inputTitle = getString(R.string.cc_dc_saved_card_enter_cvv),
-                        endIcon = R.drawable.ic_trash,
-                        startIcon = SnapCreditCardUtil.getBankIcon(savedToken.binDetail?.bankCode.toString()),
-                        errorText = mutableStateOf(""),
-                        maskedCardNumber = savedToken.maskedCard.orEmpty(),
-                        displayedMaskedCard = savedToken.maskedCard.orEmpty(),
-                        tokenType = savedToken.tokenType.toString(),
-                        tokenId = savedToken.token.toString(),
-                        cvvSavedCardTextField = TextFieldValue(),
-                        isCvvSavedCardInvalid = false
+            SavedCreditCardFormData(
+                savedCardIdentifier = SnapCreditCardUtil.SAVED_CARD_IDENTIFIER + index.toString(),
+                inputTitle = getString(R.string.cc_dc_saved_card_enter_cvv),
+                endIcon = R.drawable.ic_trash,
+                startIcon = SnapCreditCardUtil.getBankIcon(savedToken.binDetail?.bankCode.toString()),
+                errorText = mutableStateOf(""),
+                maskedCardNumber = savedToken.maskedCard.orEmpty(),
+                displayedMaskedCard = savedToken.maskedCard.orEmpty(),
+                tokenType = savedToken.tokenType.toString(),
+                bankCode = savedToken.binDetail?.bankCode.toString(),
+                tokenId = savedToken.token.toString(),
+                cvvSavedCardTextField = TextFieldValue(),
+                isCvvSavedCardInvalid = false
             ) as FormData
-            }
+        }
             ?.ifEmpty { null }
             ?.toMutableList()
             ?.apply {
                 add(NewCardFormData(newCardIdentifier = SnapCreditCardUtil.NEW_CARD_FORM_IDENTIFIER))
-        }
+            }
             ?.toMutableStateList()
         //For testing purpose: uncomment below to force non save card
 //        null
@@ -166,12 +148,14 @@ internal class CreditCardActivity : BaseActivity() {
         viewModel.setAllowRetry(allowRetry)
         viewModel.setPromos(promos = promos)
         viewModel.setTransactionDetails(transactionDetails)
+        viewModel.setPointBanks(merchant?.pointBanks)
         viewModel.creditCard = creditCard
         initTransactionResultScreenObserver()
         setContent {
             CreditCardPageStateFull(
                 transactionDetails = transactionDetails,
                 customerDetail = customerDetail,
+                itemInfo = itemInfo,
                 savedTokenListState = savedTokenList,
                 creditCard = creditCard,
                 viewModel = viewModel,
@@ -233,6 +217,7 @@ internal class CreditCardActivity : BaseActivity() {
     private fun CreditCardPageStateFull(
         transactionDetails: TransactionDetails? = null,
         customerDetail: CustomerInfo? = null,
+        itemInfo: ItemInfo? = null,
         withCustomerPhoneEmail: Boolean = false,
         savedTokenListState: SnapshotStateList<FormData>?,
         creditCard: CreditCard?,
@@ -256,20 +241,24 @@ internal class CreditCardActivity : BaseActivity() {
                 isCardTexFieldFocused = false,
                 isExpiryTextFieldFocused = false,
                 isCvvTextFieldFocused = false,
+                isPointBankChecked = false,
                 isSaveCardChecked = getUikitSetting().saveCardChecked,
                 principalIconId = null,
                 customerEmail = TextFieldValue(),
                 customerPhone = TextFieldValue(),
                 promoId = 0L,
+                promoName = null,
+                promoAmount = null,
                 isInstallmentAllowed = true
             )
         }
+        val isPointBankShownState = viewModel?.isPointBankShown?.observeAsState(false)
         val transactionResponse = viewModel?.transactionResponseLiveData?.observeAsState()
         val bankCodeId by bankCodeIdState
         var isExpanding by remember { mutableStateOf(false) }
         var selectedFormData: FormData? by remember { mutableStateOf(null) }
         var installmentTerm by remember { mutableStateOf("") }
-        state.isBinBlocked = viewModel?.binBlockedLiveData?.observeAsState(false)?.value?: false
+        state.isBinBlocked = viewModel?.binBlockedLiveData?.observeAsState(false)?.value ?: false
 
         if (transactionResponse?.value?.statusCode == UiKitConstants.STATUS_CODE_201 && !transactionResponse.value?.redirectUrl.isNullOrEmpty()) {
             transactionResponse.value?.redirectUrl?.let {
@@ -286,10 +275,12 @@ internal class CreditCardActivity : BaseActivity() {
             CreditCardPageStateLess(
                 state = state,
                 isExpandingState = isExpanding,
+                isPointBankShownState = isPointBankShownState,
                 totalAmount = totalAmount.value,
                 creditCard = creditCard,
                 orderId = transactionDetails?.orderId.toString(),
                 customerDetail = customerDetail,
+                itemInfo = itemInfo,
                 savedTokenListState = savedTokenListState,
                 bankCodeState = bankCodeId,
                 binType = binType.value,
@@ -300,7 +291,10 @@ internal class CreditCardActivity : BaseActivity() {
 
                     state.cardNumber = it
                     val cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
-                    viewModel?.getPromosData(binNumber = cardNumberWithoutSpace, installmentTerm = installmentTerm)
+                    viewModel?.getPromosData(
+                        binNumber = cardNumberWithoutSpace,
+                        installmentTerm = installmentTerm
+                    )
                     if (cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER) {
                         val eightDigitNumber = cardNumberWithoutSpace.substring(
                             0,
@@ -347,7 +341,11 @@ internal class CreditCardActivity : BaseActivity() {
                 },
                 onInstallmentTermSelected = {
                     installmentTerm = it
-                    viewModel?.getPromosData(binNumber = SnapCreditCardUtil.getCardNumberFromTextField(state.cardNumber), installmentTerm = installmentTerm)
+                    viewModel?.getPromosData(
+                        binNumber = SnapCreditCardUtil.getCardNumberFromTextField(
+                            state.cardNumber
+                        ), installmentTerm = installmentTerm
+                    )
                 },
                 withCustomerPhoneEmail = withCustomerPhoneEmail,
                 promoState = promoState,
@@ -449,11 +447,13 @@ internal class CreditCardActivity : BaseActivity() {
     private fun CreditCardPageStateLess(
         state: CardItemState,
         isExpandingState: Boolean,
+        isPointBankShownState: State<Boolean>?,
         withCustomerPhoneEmail: Boolean = false,
         totalAmount: String,
         creditCard: CreditCard?,
         orderId: String,
         customerDetail: CustomerInfo? = null,
+        itemInfo: ItemInfo? = null,
         savedTokenListState: SnapshotStateList<FormData>?,
         promoState: State<List<PromoData>?>,
         bankCodeState: Int?,
@@ -485,20 +485,23 @@ internal class CreditCardActivity : BaseActivity() {
                         amount = totalAmount,
                         orderId = orderId,
                         remainingTime = remainingTime,
-                        canExpand = customerDetail != null,
+                        canExpand = customerDetail != null || itemInfo != null,
                         isPromo = state.promoId != 0L
                     ) {
                         onExpand(it)
                     }
                 },
                 expandingContent = {
-                    customerDetail?.let {
-                        SnapCustomerDetail(
-                            name = customerDetail.name,
-                            phone = customerDetail.phone,
-                            addressLines = customerDetail.addressLines
+                    viewModel.trackOrderDetailsViewed(totalAmount)
+                    SnapPaymentOrderDetails(
+                        customerInfo = customerDetail,
+                        itemInfo = itemInfo,
+                        creditCardPromoInfo = CreditCardPromoInfo(
+                            promoName = state.promoName,
+                            promoAmount = state.promoAmount,
+                            discountedAmount = totalAmount
                         )
-                    }
+                    )
                 },
                 followingContent = {
                     Column(
@@ -515,6 +518,7 @@ internal class CreditCardActivity : BaseActivity() {
                             SavedCardLayout(
                                 viewModel = viewModel,
                                 state = state,
+                                isPointBankShownState = isPointBankShownState,
                                 savedTokenListState = it,
                                 bankCodeId = bankCodeState,
                                 onCardNumberValueChange = onCardNumberValueChange,
@@ -526,6 +530,7 @@ internal class CreditCardActivity : BaseActivity() {
                             NormalCardFormLayout(
                                 state = state,
                                 creditCard = creditCard,
+                                isPointBankShownState = isPointBankShownState,
                                 bankCodeState = bankCodeState,
                                 onCardNumberValueChange = onCardNumberValueChange
                             )
@@ -540,9 +545,12 @@ internal class CreditCardActivity : BaseActivity() {
                             onInstallmentAllowed = { state.isInstallmentAllowed = it }
                         )
 
-                        promoState.value?.let { it ->
-                            PromoLayout(promoData = it, cardItemState = state).let { reset ->
-                               onPromoReset = reset
+                        promoState.value?.also {
+                            PromoLayout(
+                                promoData = it,
+                                cardItemState = state
+                            ).also { onResetAction ->
+                                onPromoReset = onResetAction
                             }
                         }
                     }
@@ -573,12 +581,12 @@ internal class CreditCardActivity : BaseActivity() {
 
     private fun isValidCardData(state: CardItemState): Boolean {
         return !(state.isCardNumberInvalid ||
-            state.isExpiryInvalid ||
-            state.isCvvInvalid ||
-            state.cardNumber.text.isEmpty() ||
-            state.expiry.text.isEmpty() ||
-            state.cvv.text.isEmpty()
-            )
+                state.isExpiryInvalid ||
+                state.isCvvInvalid ||
+                state.cardNumber.text.isEmpty() ||
+                state.expiry.text.isEmpty() ||
+                state.cvv.text.isEmpty()
+                )
     }
 
     private fun isValidEmail(customerEmail: TextFieldValue): Boolean {
@@ -596,12 +604,14 @@ internal class CreditCardActivity : BaseActivity() {
     private fun NormalCardFormLayout(
         state: CardItemState,
         bankCodeState: Int?,
+        isPointBankShownState: State<Boolean>?,
         creditCard: CreditCard?,
         onCardNumberValueChange: (TextFieldValue) -> Unit
     ) {
         NormalCardItem(
             state = state,
             bankIcon = bankCodeState,
+            isPointBankShownState = isPointBankShownState,
             creditCard = creditCard,
             onCardNumberValueChange = {
                 onCardNumberValueChange(it)
@@ -613,7 +623,8 @@ internal class CreditCardActivity : BaseActivity() {
                 state.isExpiryTextFieldFocused = it
             },
             onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
-            onSavedCardCheckedChange = { state.isSavedCardChecked = it }
+            onSavedCardCheckedChange = { state.isSavedCardChecked = it },
+            onPointBankCheckedChange = { state.isPointBankChecked = it }
         )
     }
 
@@ -676,6 +687,7 @@ internal class CreditCardActivity : BaseActivity() {
     private fun SavedCardLayout(
         viewModel: CreditCardViewModel?,
         state: CardItemState,
+        isPointBankShownState: State<Boolean>?,
         savedTokenListState: SnapshotStateList<FormData>,
         bankCodeId: Int?,
         onCardNumberValueChange: (TextFieldValue) -> Unit,
@@ -687,6 +699,7 @@ internal class CreditCardActivity : BaseActivity() {
             listStates = savedTokenListState,
             cardItemState = state,
             bankIconState = bankCodeId,
+            isPointBankShownState = isPointBankShownState,
             creditCard = creditCard,
             onItemRemoveClicked = {
                 viewModel?.deleteSavedCard(
@@ -702,7 +715,8 @@ internal class CreditCardActivity : BaseActivity() {
             onCvvValueChange = {
                 state.cvv = it
             },
-            onSavedCardCheckedChange = { state.isSavedCardChecked = it }
+            onSavedCardCheckedChange = { state.isSavedCardChecked = it },
+            onPointBankCheckedChange = { state.isPointBankChecked = it }
         )
     }
 
@@ -750,6 +764,7 @@ internal class CreditCardActivity : BaseActivity() {
         private const val EXTRA_EXPIRY_TIME = "card.extra.expiry_time"
         private const val EXTRA_MERCHANT_DATA = "card.extra.merchant_data"
         private const val EXTRA_PROMOS = "card.extra.extra.promos"
+        private const val EXTRA_ITEM_INFO = "card.extra.extra.item_info"
 
         fun getIntent(
             activityContext: Context,
@@ -757,6 +772,7 @@ internal class CreditCardActivity : BaseActivity() {
             totalAmount: String,
             transactionDetails: TransactionDetails?,
             customerInfo: CustomerInfo? = null,
+            itemInfo: ItemInfo? = null,
             creditCard: CreditCard?,
             promos: List<Promo>? = null,
             expiryTime: String?,
@@ -766,14 +782,12 @@ internal class CreditCardActivity : BaseActivity() {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
                 putExtra(EXTRA_TRANSACTION_DETAILS, transactionDetails)
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
-                putExtra(
-                    EXTRA_CUSTOMER_DETAIL,
-                    customerInfo
-                )
+                putExtra(EXTRA_CUSTOMER_DETAIL, customerInfo)
+                putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_CREDIT_CARD, creditCard)
                 putExtra(EXTRA_EXPIRY_TIME, expiryTime)
                 withMerchantData?.let { putExtra(EXTRA_MERCHANT_DATA, withMerchantData) }
-                promos?.let {
+                promos?.also {
                     putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it))
                 }
             }

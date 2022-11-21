@@ -4,8 +4,8 @@ import com.midtrans.sdk.corekit.api.model.BankTransferRequest
 
 open class BankTransferRequest(
     vaNumber: String,
-    freeText: FreeText,
-    subCompanyCode: String?
+    freeText: FreeText? = null,
+    subCompanyCode: String? = null
 ) : BankTransferRequest(
     vaNumber = vaNumber,
     freeText = freeText,

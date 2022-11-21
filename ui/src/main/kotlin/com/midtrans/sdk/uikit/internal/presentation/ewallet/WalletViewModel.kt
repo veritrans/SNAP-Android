@@ -28,6 +28,7 @@ internal class WalletViewModel @Inject constructor(
     private val _qrCodeUrlLiveData = MutableLiveData<String>()
     private val _deepLinkUrlLiveData = MutableLiveData<String>()
     private val _chargeResultLiveData = MutableLiveData<TransactionResult>()
+    private var _transactionId: String? = null
     val qrCodeUrlLiveData: LiveData<String> = _qrCodeUrlLiveData
     val deepLinkUrlLiveData: LiveData<String> = _deepLinkUrlLiveData
     val chargeResultLiveData: LiveData<TransactionResult> = _chargeResultLiveData
@@ -50,6 +51,7 @@ internal class WalletViewModel @Inject constructor(
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
                     result.run {
+                        _transactionId = transactionId
                         qrCodeUrl?.let { _qrCodeUrlLiveData.value = it }
                         qrisUrl?.let { _qrCodeUrlLiveData.value = it }
                         deeplinkUrl?.let { _deepLinkUrlLiveData.value = it }
@@ -57,7 +59,7 @@ internal class WalletViewModel @Inject constructor(
                         _chargeResultLiveData.value = TransactionResult(
                             status = transactionStatus.orEmpty(),
                             transactionId = transactionId.orEmpty(),
-                            paymentType = paymentType.orEmpty()
+                            paymentType = paymentType
                         )
                     }
                     trackSnapChargeResult(
@@ -115,6 +117,14 @@ internal class WalletViewModel @Inject constructor(
         trackOpenDeeplink(
             pageName = getPageName(paymentType),
             paymentMethodName = paymentType
+        )
+    }
+
+    fun trackOrderDetailsViewed(paymentType: String) {
+        trackOrderDetailsViewed(
+            pageName = getPageName(paymentType),
+            paymentMethodName = paymentType,
+            transactionId = _transactionId
         )
     }
 

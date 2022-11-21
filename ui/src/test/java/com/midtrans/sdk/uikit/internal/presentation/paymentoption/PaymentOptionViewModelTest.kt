@@ -14,6 +14,8 @@ import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY_QRIS
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
+import com.midtrans.sdk.uikit.api.model.ItemDetails
+import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.hamcrest.beans.HasPropertyWithValue
@@ -22,10 +24,7 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
+import org.mockito.kotlin.*
 
 internal class PaymentOptionViewModelTest {
 
@@ -317,6 +316,12 @@ internal class PaymentOptionViewModelTest {
         verify(eventAnalytics).trackSnapPageClosed(PageName.PAYMENT_LIST_PAGE)
     }
 
+    @Test
+    fun trackOrderDetailsViewed() {
+        viewModel.trackOrderDetailsViewed()
+        verify(eventAnalytics).trackSnapOrderDetailsViewed(PageName.PAYMENT_LIST_PAGE, null, null, null)
+    }
+
     private fun providePaymentMethodList(): List<PaymentMethod> {
         return listOf(
             PaymentMethod(
@@ -348,5 +353,18 @@ internal class PaymentOptionViewModelTest {
                 channels = emptyList()
             )
         )
+    }
+
+    @Test
+    fun getItemInfo() {
+        val itemList = listOf(
+            ItemDetails("id-01", 7800.00, 2, "item1"),
+            ItemDetails("id-01", 2200.00, 1, "item2"),
+        )
+        val itemInfo = viewModel.getItemInfo(itemList)
+        assertEquals(itemInfo, ItemInfo(itemList, 10000.00))
+
+        val itemInfo2 = viewModel.getItemInfo(null)
+        assertEquals(itemInfo2, null)
     }
 }

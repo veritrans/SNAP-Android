@@ -33,6 +33,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
@@ -46,7 +47,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel: ConvenienceStoreViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory).get(ConvenienceStoreViewModel::class.java)
+        ViewModelProvider(this, viewModelFactory)[ConvenienceStoreViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +58,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 totalAmount = totalAmount,
                 orderId = orderId,
                 customerInfo = customerInfo,
+                itemInfo = itemInfo,
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
                 barCode = viewModel.barCodeBitmapLiveData.observeAsState(initial = null),
                 paymentType = paymentType,
@@ -71,8 +73,8 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         observeTransactionResultLiveData()
     }
 
-    private fun observeTransactionResultLiveData(){
-        viewModel.transactionResultLiveData.observe(this){
+    private fun observeTransactionResultLiveData() {
+        viewModel.transactionResultLiveData.observe(this) {
             val resultIntent = Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, it)
             setResult(Activity.RESULT_OK, resultIntent)
         }
@@ -98,6 +100,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         barCode: State<Bitmap?>,
         paymentType: String,
         customerInfo: CustomerInfo?,
+        itemInfo: ItemInfo?,
         paymentCodeState:State<String?>,
         remainingTimeState: State<String>,
         pdfUrl: State<String?>,
@@ -131,20 +134,18 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                     SnapTotal(
                         amount = totalAmount,
                         orderId = orderId,
-                        canExpand = customerInfo != null,
+                        canExpand = customerInfo != null || itemInfo != null,
                         remainingTime = remainingTime
                     ) {
                         expanding = it
                     }
                 },
                 expandingContent = {
-                    customerInfo?.run {
-                        SnapCustomerDetail(
-                            name = name,
-                            phone = phone,
-                            addressLines = addressLines
-                        )
-                    }
+                    viewModel?.trackOrderDetailsViewed(paymentType)
+                    SnapPaymentOrderDetails(
+                        customerInfo = customerInfo,
+                        itemInfo = itemInfo
+                    )
                 }
             ) {
                 Column(
@@ -338,6 +339,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 phone = "4123123123123",
                 addressLines = listOf("jalan", "jalan", "jalan")
             ),
+            itemInfo = null,
             paymentType = PaymentType.GOPAY,
             remainingTimeState = remember { mutableStateOf("00:00") },
             barCode = remember { mutableStateOf(null) },
@@ -363,13 +365,17 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
     }
 
+    private val itemInfo: ItemInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
+    }
+
     private val paymentType: String by lazy {
-        intent.getStringExtra(EXTRA_PAYMENTTYPE)
+        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
             ?: throw RuntimeException("Payment Type must not be empty")
     }
 
     private val snapToken: String by lazy {
-        intent.getStringExtra(EXTRA_SNAPTOKEN).orEmpty()
+        intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
     }
 
     private val paymentHowToPay by lazy {
@@ -397,8 +403,9 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         private const val EXTRA_TOTAL_AMOUNT = "convenience_store.extra.total_amount"
         private const val EXTRA_ORDER_ID = "convenience_store.extra.order_id"
         private const val EXTRA_CUSTOMER_DETAIL = "convenience_store.extra.customer_detail"
-        private const val EXTRA_PAYMENTTYPE = "convenience_store.extra.payment_type"
-        private const val EXTRA_SNAPTOKEN = "convenience_store.extra.snap_token"
+        private const val EXTRA_ITEM_INFO = "convenience_store.extra.item_info"
+        private const val EXTRA_PAYMENT_TYPE = "convenience_store.extra.payment_type"
+        private const val EXTRA_SNAP_TOKEN = "convenience_store.extra.snap_token"
 
         fun getIntent(
             activityContext: Context,
@@ -406,18 +413,16 @@ internal class ConvenienceStoreActivity : BaseActivity() {
             paymentType: String,
             totalAmount: String,
             orderId: String,
-            customerInfo: CustomerInfo? = null
-
+            customerInfo: CustomerInfo? = null,
+            itemInfo: ItemInfo? = null
         ): Intent {
             return Intent(activityContext, ConvenienceStoreActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
-                putExtra(EXTRA_SNAPTOKEN, snapToken)
-                putExtra(
-                    EXTRA_CUSTOMER_DETAIL,
-                    customerInfo
-                )
-                putExtra(EXTRA_PAYMENTTYPE, paymentType)
+                putExtra(EXTRA_SNAP_TOKEN, snapToken)
+                putExtra(EXTRA_CUSTOMER_DETAIL, customerInfo)
+                putExtra(EXTRA_ITEM_INFO, itemInfo)
+                putExtra(EXTRA_PAYMENT_TYPE, paymentType)
             }
         }
     }

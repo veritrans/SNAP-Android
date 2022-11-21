@@ -27,6 +27,7 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
@@ -63,6 +64,10 @@ class PayLaterActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
     }
 
+    private val itemInfo: ItemInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
+    }
+
     private val viewModel: PayLaterViewModel by lazy {
         ViewModelProvider(this, vmFactory).get(PayLaterViewModel::class.java)
     }
@@ -78,6 +83,7 @@ class PayLaterActivity : BaseActivity() {
                 amount = amount,
                 orderId = orderId,
                 customerInfo = customerInfo,
+                itemInfo = itemInfo,
                 response =  viewModel.transactionResponseLiveData.observeAsState().value,
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
             )
@@ -90,6 +96,7 @@ class PayLaterActivity : BaseActivity() {
         amount: String,
         orderId: String,
         customerInfo: CustomerInfo?,
+        itemInfo: ItemInfo?,
         response: TransactionResponse?,
         remainingTimeState: State<String>
     ) {
@@ -120,20 +127,18 @@ class PayLaterActivity : BaseActivity() {
                         SnapTotal(
                             amount = amount,
                             orderId = orderId,
-                            canExpand = customerInfo != null,
+                            canExpand = customerInfo != null || itemInfo != null,
                             remainingTime = remainingTime
                         ) {
                             isCustomerDetailExpanded = it
                         }
                     },
-                    expandingContent = customerInfo?.let {
-                        {
-                            SnapCustomerDetail(
-                                name = customerInfo.name,
-                                phone = customerInfo.phone,
-                                addressLines = customerInfo.addressLines
-                            )
-                        }
+                    expandingContent = {
+                        viewModel.trackOrderDetailsViewed(paymentType)
+                        SnapPaymentOrderDetails(
+                            customerInfo = customerInfo,
+                            itemInfo = itemInfo
+                        )
                     },
                     followingContent = {
                         Column(
@@ -265,6 +270,7 @@ class PayLaterActivity : BaseActivity() {
         private const val EXTRA_AMOUNT = "payLater.extra.amount"
         private const val EXTRA_ORDER_ID = "payLater.extra.order_id"
         private const val EXTRA_CUSTOMER_INFO = "payLater.extra.customer_info"
+        private const val EXTRA_ITEM_INFO = "payLater.extra.item_info"
 
         fun getIntent(
             activityContext: Context,
@@ -272,7 +278,8 @@ class PayLaterActivity : BaseActivity() {
             @PaymentType.Def paymentType: String,
             amount: String,
             orderId: String,
-            customerInfo: CustomerInfo?
+            customerInfo: CustomerInfo?,
+            itemInfo: ItemInfo?
         ): Intent {
             return Intent(activityContext, PayLaterActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -280,6 +287,7 @@ class PayLaterActivity : BaseActivity() {
                 putExtra(EXTRA_AMOUNT, amount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
+                putExtra(EXTRA_ITEM_INFO, itemInfo)
             }
         }
     }

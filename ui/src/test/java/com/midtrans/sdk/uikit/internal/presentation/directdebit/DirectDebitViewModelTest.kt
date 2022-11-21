@@ -112,4 +112,15 @@ internal class DirectDebitViewModelTest {
             paymentMethodName = PaymentType.BCA_KLIKPAY
         )
     }
+
+    @Test
+    fun verifyTrackOrderDetailsViewed() {
+        viewModel.trackOrderDetailsViewed(PaymentType.BCA_KLIKPAY)
+        verify(eventAnalytics).trackSnapOrderDetailsViewed(
+            pageName = PageName.BCA_KLIK_PAY_PAGE,
+            paymentMethodName = PaymentType.BCA_KLIKPAY,
+            transactionId = null,
+            netAmount = null
+        )
+    }
 }

@@ -240,6 +240,7 @@ class LoadingPaymentActivity : BaseActivity() {
                 orderId = viewModel.getOrderId(it.transactionDetails),
                 paymentList = it.options,
                 customerDetails = customerDetails,
+                itemDetails = itemDetails,
                 creditCard = it.creditCard,
                 promos = it.promos,
                 merchant = it.merchantData,

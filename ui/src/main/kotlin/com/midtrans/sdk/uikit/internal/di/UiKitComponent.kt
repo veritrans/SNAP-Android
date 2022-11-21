@@ -5,6 +5,7 @@ import com.midtrans.sdk.uikit.internal.di.viewmodel.UtilModule
 import com.midtrans.sdk.uikit.internal.di.viewmodel.ViewModelFactoryModule
 import com.midtrans.sdk.uikit.internal.di.viewmodel.ViewModelModule
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDetailActivity
+import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.conveniencestore.ConvenienceStoreActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardActivity
@@ -53,4 +54,5 @@ internal interface UiKitComponent {
     fun inject(activity: SuccessScreenActivity)
     fun inject(activity: LoadingPaymentActivity)
     fun inject(activity: PaymentOptionActivity)
+    fun inject(activity: BankTransferListActivity)
 }

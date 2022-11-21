@@ -54,6 +54,7 @@ internal class PaymentUsecase(
                         .getTransactionDetail(response.token.orEmpty())
                         .map (setAnalyticsUserIdentityWithSnapToken(isUserSet))
                         .map (trackCommonTransactionProperties())
+                        .map (trackCommonCustomerProperties())
                         .map { Pair(response.token, it) }
                 }
                 .subscribeOn(scheduler.io())
@@ -89,6 +90,7 @@ internal class PaymentUsecase(
             snapRepository.getTransactionDetail(snapToken)
                 .map (setAnalyticsUserIdentityWithSnapToken(isUserSet))
                 .map (trackCommonTransactionProperties())
+                .map (trackCommonCustomerProperties())
                 .subscribeOn(scheduler.io())
                 .observeOn(scheduler.ui())
                 .subscribe(
@@ -161,6 +163,44 @@ internal class PaymentUsecase(
                 merchantName = transaction.merchant?.preference?.displayName.orEmpty()
             )
             transaction
+        }
+    }
+
+    private fun trackCommonCustomerProperties(): (Transaction) -> Transaction {
+        return { transaction ->
+            transaction.apply {
+                val totalItems = itemDetails?.size
+                val totalQuantity = itemDetails?.sumOf { it.quantity }
+                val name = customerDetails?.let { "${it.firstName} ${it.lastName}" }
+                val cityAndPostCode = getCustomerCityAndPostCode(
+                    billingAddress = customerDetails?.billingAddress,
+                    shippingAddress = customerDetails?.shippingAddress
+                )
+
+                eventAnalytics.registerCommonCustomerProperties(
+                    customerName = name,
+                    customerEmail = customerDetails?.email,
+                    customerPhoneNumber = customerDetails?.phone,
+                    customerCity = cityAndPostCode.first,
+                    customerPostCode = cityAndPostCode.second,
+                    totalItems = totalItems?.toString(),
+                    totalQuantity = totalQuantity?.toString()
+                )
+            }
+        }
+    }
+
+    private fun getCustomerCityAndPostCode(
+        billingAddress: Address?,
+        shippingAddress: Address?
+    ): Pair<String?, String?> {
+        val billingCity = billingAddress?.city
+        val billingPostCode = billingAddress?.postalCode
+
+        return if (billingCity.isNullOrEmpty() && billingPostCode.isNullOrEmpty()) {
+            Pair(shippingAddress?.city, shippingAddress?.postalCode)
+        } else {
+            Pair(billingCity, billingPostCode)
         }
     }
 

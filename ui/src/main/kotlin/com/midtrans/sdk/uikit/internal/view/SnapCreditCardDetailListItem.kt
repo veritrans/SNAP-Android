@@ -35,6 +35,8 @@ import com.midtrans.sdk.uikit.internal.view.SnapColors.backgroundBorderSolidSeco
 import com.midtrans.sdk.uikit.internal.view.SnapColors.lineLightMuted
 import com.midtrans.sdk.uikit.internal.view.SnapColors.supportDangerDefault
 import com.midtrans.sdk.uikit.internal.view.SnapColors.supportNeutralFill
+import com.midtrans.sdk.uikit.internal.view.SnapColors.textDisabled
+import com.midtrans.sdk.uikit.internal.view.SnapColors.textPrimary
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
@@ -45,9 +47,12 @@ fun SnapCCDetailListItem(
     @DrawableRes endIconId: Int,
     cvvTextField: TextFieldValue,
     itemTitle: String,
+    bankCode: String,
+    tokenType: String,
     shouldReveal: Boolean,
     inputTitle: String,
     isInputError: Boolean,
+    isPointBankChecked: Boolean,
     errorTitle: String,
     onValueChange: (String) -> Unit,
     onEndIconClicked: () -> Unit,
@@ -57,7 +62,8 @@ fun SnapCCDetailListItem(
     onCardTextFieldFocusedChange: (Boolean) -> Unit,
     onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
     onCvvTextFieldFocusedChange: (Boolean) -> Unit,
-    onIsCvvInvalidValueChange: (Boolean) -> Unit
+    onIsCvvInvalidValueChange: (Boolean) -> Unit,
+    onPointBankCheckedChange: (Boolean) -> Unit,
 ) {
     Column {
         Row(
@@ -93,52 +99,65 @@ fun SnapCCDetailListItem(
             enter = expandVertically()
         ) {
             Column(
-                modifier = Modifier
-                    .background(
-                        SnapColors.getARGBColor(supportNeutralFill),
-                        RoundedCornerShape(4.dp)
-                    )
-                    .fillMaxWidth(1f)
-                    .padding(start = 16.dp, bottom = 8.dp, top = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(space = 8.dp)
             ) {
-                Text(
-                    text = inputTitle,
-                    style = SnapTypography.STYLES.snapTextSmallRegular
-                )
-                var isCvvInvalid by remember { mutableStateOf(false) }
-                var isCvvTextFieldFocused by remember { mutableStateOf(false) }
-                SnapTextField(
-                    value = cvvTextField,
-                    onValueChange = {
-                        onCvvValueChange(formatCVV(it))
-                        isCvvInvalid = formatCVV(it).text.length < SnapCreditCardUtil.FORMATTED_MIN_CVV_LENGTH
-                        onIsCvvInvalidValueChange(isCvvInvalid)
-                    },
-                    modifier = Modifier.width(69.dp),
+                Column(
+                    modifier = Modifier
+                        .background(
+                            SnapColors.getARGBColor(supportNeutralFill),
+                            RoundedCornerShape(4.dp)
+                        )
+                        .fillMaxWidth(1f)
+                        .padding(start = 16.dp, bottom = 8.dp, top = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = inputTitle,
+                        style = SnapTypography.STYLES.snapTextSmallRegular
+                    )
+                    var isCvvInvalid by remember { mutableStateOf(false) }
+                    var isCvvTextFieldFocused by remember { mutableStateOf(false) }
+                    SnapTextField(
+                        value = cvvTextField,
+                        onValueChange = {
+                            onCvvValueChange(formatCVV(it))
+                            isCvvInvalid = formatCVV(it).text.length < SnapCreditCardUtil.FORMATTED_MIN_CVV_LENGTH
+                            onIsCvvInvalidValueChange(isCvvInvalid)
+                        },
+                        modifier = Modifier.width(69.dp),
 
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    isError = isCvvInvalid,
-                    isFocused = isCvvTextFieldFocused,
-                    onFocusChange = {
-                        isCvvTextFieldFocused = it
-                    },
-                )
-                if (isCvvInvalid && !isCvvTextFieldFocused) {
-                    if (cvvTextField.text.isEmpty()) {
-                        Text(
-                            text = stringResource(id = R.string.card_error_empty_cvv),
-                            style = SnapTypography.STYLES.snapTextSmallRegular,
-                            color = SnapColors.getARGBColor(supportDangerDefault)
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(id = R.string.card_error_invalid_cvv),
-                            style = SnapTypography.STYLES.snapTextSmallRegular,
-                            color = SnapColors.getARGBColor(supportDangerDefault)
-                        )
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        isError = isCvvInvalid,
+                        isFocused = isCvvTextFieldFocused,
+                        onFocusChange = {
+                            isCvvTextFieldFocused = it
+                        },
+                    )
+                    if (isCvvInvalid && !isCvvTextFieldFocused) {
+                        if (cvvTextField.text.isEmpty()) {
+                            Text(
+                                text = stringResource(id = R.string.card_error_empty_cvv),
+                                style = SnapTypography.STYLES.snapTextSmallRegular,
+                                color = SnapColors.getARGBColor(supportDangerDefault)
+                            )
+                        } else {
+                            Text(
+                                text = stringResource(id = R.string.card_error_invalid_cvv),
+                                style = SnapTypography.STYLES.snapTextSmallRegular,
+                                color = SnapColors.getARGBColor(supportDangerDefault)
+                            )
+                        }
                     }
+                }
+
+                if (tokenType == SavedToken.TWO_CLICKS && bankCode.lowercase() == SnapCreditCardUtil.BANK_BNI){
+                    PointBankCheckBox(
+                        checked = isPointBankChecked,
+                        isPointBankShown = true,
+                        onCheckedChange = { onPointBankCheckedChange(it) },
+                        label = stringResource(id = R.string.cc_dc_main_screen_use_point_bank_bni_saved_card)
+                    )
                 }
             }
         }
@@ -150,6 +169,7 @@ fun InputNewCardItem(
     shouldReveal: Boolean,
     state: CardItemState,
     bankIconState: Int?,
+    isPointBankShownState: State<Boolean>?,
     creditCard: CreditCard?,
     onCardNumberValueChange: (TextFieldValue) -> Unit,
     onExpiryDateValueChange: (TextFieldValue) -> Unit,
@@ -178,6 +198,7 @@ fun InputNewCardItem(
                     state = state,
                     bankIcon = bankIconState,
                     creditCard = creditCard,
+                    isPointBankShownState = isPointBankShownState,
                     onCardNumberValueChange = {
                         onCardNumberValueChange(it)
                     },
@@ -194,7 +215,8 @@ fun InputNewCardItem(
                     onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
                     onSavedCardCheckedChange = {
                         onSavedCardCheckedChange(it)
-                    }
+                    },
+                    onPointBankCheckedChange = { state.isPointBankChecked = it }
                 )
             }
         }
@@ -239,6 +261,7 @@ fun SnapSavedCardRadioGroup(
     modifier: Modifier,
     listStates: List<FormData>,
     bankIconState: Int?,
+    isPointBankShownState: State<Boolean>?,
     cardItemState: CardItemState,
     onItemRemoveClicked: (item: SavedCreditCardFormData) -> Unit,
     creditCard: CreditCard?,
@@ -248,6 +271,7 @@ fun SnapSavedCardRadioGroup(
     onSavedCardRadioSelected: (item: FormData?) -> Unit,
     onIsCvvSavedCardInvalidValueChange: (Boolean) -> Unit,
     onSavedCardCheckedChange: (Boolean) -> Unit,
+    onPointBankCheckedChange: (Boolean) -> Unit,
     onCvvSavedCardValueChange: ((TextFieldValue) -> Unit)? = null //Todo: delete later
 ) {
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(listStates[0].identifier) }
@@ -306,6 +330,8 @@ fun SnapSavedCardRadioGroup(
                                 startIconId = item.startIcon,
                                 endIconId = item.endIcon,
                                 itemTitle = formatMaskedCard(item.maskedCardNumber),
+                                bankCode = item.bankCode,
+                                tokenType = item.tokenType,
                                 shouldReveal = item.savedCardIdentifier == selectedOption,
                                 inputTitle = item.inputTitle,
                                 cvvTextField = cvvSavedCardTextFieldValue,
@@ -324,7 +350,9 @@ fun SnapSavedCardRadioGroup(
                                 onCvvTextFieldFocusedChange = {},
                                 onIsCvvInvalidValueChange = {
                                     onIsCvvSavedCardInvalidValueChange(it)
-                                }
+                                },
+                                isPointBankChecked = cardItemState.isPointBankChecked,
+                                onPointBankCheckedChange = { onPointBankCheckedChange(it) }
                             )
                         }
 
@@ -334,6 +362,7 @@ fun SnapSavedCardRadioGroup(
                                 state = cardItemState,
                                 creditCard = creditCard,
                                 bankIconState = bankIconState,
+                                isPointBankShownState = isPointBankShownState,
                                 onCardNumberValueChange = {
                                     newCardNumberTextFieldValue = it
                                     onCardNumberOtherCardValueChange(it)
@@ -369,6 +398,7 @@ data class SavedCreditCardFormData(
     val maskedCardNumber: String,
     val displayedMaskedCard: String,
     val tokenType: String,
+    val bankCode: String,
     var errorText: MutableState<String>,
     val inputTitle: String,
     var savedCardIdentifier: String,
@@ -397,11 +427,14 @@ class CardItemState(
     isExpiryTextFieldFocused: Boolean,
     isCvvTextFieldFocused: Boolean,
     isSaveCardChecked: Boolean,
+    isPointBankChecked: Boolean,
     isBinBlocked: Boolean = false,
     principalIconId: Int?,
     customerEmail: TextFieldValue,
     customerPhone: TextFieldValue,
     promoId: Long,
+    promoName: String?,
+    promoAmount: String?,
     isInstallmentAllowed: Boolean,
     cardItemType: CardItemType = CardItemType.NORMAL_CARD
 ) {
@@ -416,9 +449,12 @@ class CardItemState(
     var isCvvTextFieldFocused by mutableStateOf(isCvvTextFieldFocused)
     var principalIconId by mutableStateOf(principalIconId)
     var isSavedCardChecked by mutableStateOf(isSaveCardChecked)
+    var isPointBankChecked by mutableStateOf(isPointBankChecked)
     var customerEmail by mutableStateOf(customerEmail)
     var customerPhone by mutableStateOf(customerPhone)
     var promoId by mutableStateOf(promoId)
+    var promoName by mutableStateOf(promoName)
+    var promoAmount by mutableStateOf(promoAmount)
     var cardItemType by mutableStateOf(cardItemType)
     var isInstallmentAllowed by mutableStateOf(isInstallmentAllowed)
     var isBinBlocked by mutableStateOf(isBinBlocked)
@@ -480,13 +516,15 @@ fun NormalCardItem(
     state: CardItemState,
     bankIcon: Int?,
     creditCard: CreditCard?,
+    isPointBankShownState: State<Boolean>?,
     onCardNumberValueChange: (TextFieldValue) -> Unit,
     onExpiryDateValueChange: (TextFieldValue) -> Unit,
     onCvvValueChange: (TextFieldValue) -> Unit,
     onCardTextFieldFocusedChange: (Boolean) -> Unit,
     onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
     onCvvTextFieldFocusedChange: (Boolean) -> Unit,
-    onSavedCardCheckedChange: (Boolean) -> Unit
+    onSavedCardCheckedChange: (Boolean) -> Unit,
+    onPointBankCheckedChange: (Boolean) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 16.dp)
@@ -667,19 +705,73 @@ fun NormalCardItem(
                     }
                 }
             }
-            creditCard?.saveCard?.let { isCardSaved ->
-                if (isCardSaved) {
-                    Row {
-                        LabelledCheckBox(
-                            checked = state.isSavedCardChecked,
-                            onCheckedChange = { onSavedCardCheckedChange(it) },
-                            label = stringResource(id = R.string.cc_dc_main_screen_save_this_card)
-                        )
-                    }
-                }
+        }
+    }
+    Column(
+    ) {
+        isPointBankShownState?.value?.let { isPointBankShown ->
+            if (isPointBankShown){
+                PointBankCheckBox(
+                    checked = state.isPointBankChecked,
+                    isPointBankShown = isPointBankShown,
+                    onCheckedChange = { onPointBankCheckedChange(it) },
+                    label = stringResource(id = R.string.cc_dc_main_screen_use_point_bank)
+                )
+            }
+        }
+
+        creditCard?.saveCard?.let { isCardSaved ->
+            if (isCardSaved) {
+                LabelledCheckBox(
+                    checked = state.isSavedCardChecked,
+                    onCheckedChange = { onSavedCardCheckedChange(it) },
+                    label = stringResource(id = R.string.cc_dc_main_screen_save_this_card)
+                )
             }
         }
     }
+}
+
+@Composable
+fun PointBankCheckBox(
+    checked: Boolean,
+    isPointBankShown: Boolean,
+    onCheckedChange: ((Boolean) -> Unit),
+    label: String,
+    modifier: Modifier = Modifier
+) {
+    if(isPointBankShown){
+        LabelledCheckBox(
+            checked = checked,
+            onCheckedChange = { onCheckedChange(it) },
+            label = label
+        )
+    } else {
+        Row(
+            verticalAlignment = CenterVertically,
+            modifier = modifier
+                .clip(MaterialTheme.shapes.small)
+                .requiredHeight(ButtonDefaults.MinHeight)
+        ) {
+            Checkbox(
+                checked = false,
+                colors = CheckboxDefaults.colors(
+                    uncheckedColor = SnapColors.getARGBColor(textDisabled),
+                    disabledColor = SnapColors.getARGBColor(textDisabled)
+                ),
+                onCheckedChange = null
+            )
+
+            Spacer(Modifier.size(6.dp))
+
+            Text(
+                text = label,
+                color = SnapColors.getARGBColor(textDisabled),
+                style = SnapTypography.STYLES.snapTextMediumRegular
+            )
+        }
+    }
+
 }
 
 @Composable
@@ -705,7 +797,7 @@ fun LabelledCheckBox(
             colors = CheckboxDefaults.colors(
                 checkmarkColor = Color.White,
                 uncheckedColor = Color.Black,
-                checkedColor = Color.Black
+                checkedColor = SnapColors.getARGBColor(textPrimary)
             ),
             onCheckedChange = null
         )
@@ -714,6 +806,8 @@ fun LabelledCheckBox(
 
         Text(
             text = label,
+            color = SnapColors.getARGBColor(textPrimary),
+            style = SnapTypography.STYLES.snapTextMediumRegular
         )
     }
 }
@@ -724,7 +818,7 @@ fun PromoLayout(
     cardItemState: CardItemState
 ): () -> Unit {
     Divider(
-        color = SnapColors.getARGBColor(SnapColors.backgroundBorderSolidSecondary),
+        color = SnapColors.getARGBColor(backgroundBorderSolidSecondary),
         modifier = Modifier
             .fillMaxWidth(1f)
             .padding(top = 16.dp)
@@ -735,7 +829,7 @@ fun PromoLayout(
         style = SnapTypography.STYLES.snapTextMediumRegular
     )
 
-    val promoReset= SnapPromoListRadioButton(
+    val promoReset = SnapPromoListRadioButton(
         states = promoData.toMutableList().apply {
             add(
                 PromoData(
@@ -747,6 +841,8 @@ fun PromoLayout(
         },
         onItemSelectedListener = {
             cardItemState.promoId = it.identifier.orEmpty().toLong()
+            cardItemState.promoName = it.promoName
+            cardItemState.promoAmount = it.discountAmount
         }
     )
     return {

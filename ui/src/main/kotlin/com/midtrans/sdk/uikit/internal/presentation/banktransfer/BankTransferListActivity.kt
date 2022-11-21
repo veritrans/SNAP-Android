@@ -15,26 +15,69 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
-import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.external.UiKitApi
+import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
+import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.view.*
+import javax.inject.Inject
 
 class BankTransferListActivity : BaseActivity() {
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel: BankTransferListViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[BankTransferListViewModel::class.java]
+    }
+
+    private val snapToken: String by lazy {
+        intent.getStringExtra(EXTRA_SNAP_TOKEN)
+            ?: throw RuntimeException("Snap token must not be empty")
+    }
+
+    private val totalAmount: String by lazy {
+        intent.getStringExtra(EXTRA_TOTAL_AMOUNT)
+            ?: throw RuntimeException("Total amount must not be empty")
+    }
+
+    private val orderId: String by lazy {
+        intent.getStringExtra(EXTRA_ORDER_ID)
+            ?: throw RuntimeException("Order ID must not be empty")
+    }
+
+    private val customerInfo: CustomerInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
+    }
+
+    private val itemInfo: ItemInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
+    }
+
+    private val paymentMethodItem: PaymentMethodItem by lazy {
+        intent.getParcelableExtra(EXTRA_PAYMENT_METHOD_ITEM) as? PaymentMethodItem
+            ?: throw RuntimeException("Order ID must not be empty")
+    }
+
+    private val paymentTypeItem: PaymentTypeItem? by lazy {
+        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE_ITEM)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         paymentTypeItem?.let { paymentType ->
             paymentType.method?.let { paymentMethod ->
                 toBankTransferDetail(paymentMethod)
             }
         } ?: run {
             setContent {
-                setupView(paymentMethodItem = paymentMethodItem)
+                SetupView(paymentMethodItem = paymentMethodItem)
             }
         }
     }
@@ -65,24 +108,22 @@ class BankTransferListActivity : BaseActivity() {
                         SnapTotal(
                             amount = totalAmount,
                             orderId = orderId,
-                            canExpand = customerInfo != null,
+                            canExpand = customerInfo != null || itemInfo != null,
                             remainingTime = null
                         ) {
                             expanding = it
                         }
                     },
                     expandingContent = {
-                        customerInfo?.run {
-                            SnapCustomerDetail(
-                                name = name,
-                                phone = phone,
-                                addressLines = addressLines
-                            )
-                        }
+                        viewModel.trackOrderDetailsViewed()
+                        SnapPaymentOrderDetails(
+                            customerInfo = customerInfo,
+                            itemInfo = itemInfo
+                        )
                     }
                 ) {
                     LazyColumn {
-                        paymentMethodItem.methods.forEachIndexed { index, method ->
+                        paymentMethodItem.methods.forEachIndexed { _, method ->
                             item {
                                 bankNameMap[method]?.let {
                                     SnapSingleIconListItem(title = stringResource(it.first),
@@ -101,7 +142,7 @@ class BankTransferListActivity : BaseActivity() {
     }
 
     @Composable
-    fun setupView(paymentMethodItem: PaymentMethodItem) {
+    fun SetupView(paymentMethodItem: PaymentMethodItem) {
         Content(
             paymentMethodItem = paymentMethodItem
         )
@@ -113,39 +154,12 @@ class BankTransferListActivity : BaseActivity() {
                 activityContext = this,
                 paymentType = method,
                 customerInfo = customerInfo,
+                itemInfo = itemInfo,
                 orderId = orderId,
                 totalAmount = totalAmount,
                 snapToken = snapToken
             )
         resultLauncher.launch(intent)
-    }
-
-    private val snapToken: String by lazy {
-        intent.getStringExtra(EXTRA_SNAP_TOKEN)
-            ?: throw RuntimeException("Snap token must not be empty")
-    }
-
-    private val totalAmount: String by lazy {
-        intent.getStringExtra(EXTRA_TOTAL_AMOUNT)
-            ?: throw RuntimeException("Total amount must not be empty")
-    }
-
-    private val orderId: String by lazy {
-        intent.getStringExtra(EXTRA_ORDER_ID)
-            ?: throw RuntimeException("Order ID must not be empty")
-    }
-
-    private val customerInfo: CustomerInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
-    }
-
-    private val paymentMethodItem: PaymentMethodItem by lazy {
-        intent.getParcelableExtra(EXTRA_PAYMENT_METHOD_ITEM) as? PaymentMethodItem
-            ?: throw RuntimeException("Order ID must not be empty")
-    }
-
-    private val paymentTypeItem: PaymentTypeItem? by lazy {
-        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE_ITEM)
     }
 
     private val bankNameMap by lazy {
@@ -173,6 +187,7 @@ class BankTransferListActivity : BaseActivity() {
         private const val EXTRA_TOTAL_AMOUNT = "bankTransfer.extra.total_amount"
         private const val EXTRA_ORDER_ID = "bankTransfer.extra.order_id"
         private const val EXTRA_CUSTOMER_INFO = "bankTransfer.extra.customer_info"
+        private const val EXTRA_ITEM_INFO = "bankTransfer.extra.item_info"
         private const val EXTRA_PAYMENT_METHOD_ITEM = "bankTransfer.extra.payment_method_item"
         private const val EXTRA_PAYMENT_TYPE_ITEM = "bankTransfer.extra.payment_type_it"
 
@@ -183,6 +198,7 @@ class BankTransferListActivity : BaseActivity() {
             orderId: String,
             paymentMethodItem: PaymentMethodItem,
             customerInfo: CustomerInfo? = null,
+            itemInfo: ItemInfo? = null,
             paymentTypeItem: PaymentTypeItem? = null
         ): Intent {
             return Intent(activityContext, BankTransferListActivity::class.java).apply {
@@ -190,11 +206,9 @@ class BankTransferListActivity : BaseActivity() {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
                 putExtra(EXTRA_ORDER_ID, orderId)
                 putExtra(EXTRA_PAYMENT_METHOD_ITEM, paymentMethodItem)
-                putExtra(
-                    EXTRA_CUSTOMER_INFO,
-                    customerInfo
-                )
+                putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
                 putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
+                putExtra(EXTRA_ITEM_INFO, itemInfo)
             }
         }
     }

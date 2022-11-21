@@ -172,7 +172,10 @@ class SavedCardActivity: BaseActivity() {
                 isCvvTextFieldFocused = false,
                 principalIconId = null,
                 isSaveCardChecked = true,
+                isPointBankChecked = false,
                 promoId = 0,
+                promoName = null,
+                promoAmount = null,
                 isInstallmentAllowed = false,
                 customerPhone = TextFieldValue(),
                 customerEmail = TextFieldValue()
@@ -190,6 +193,7 @@ class SavedCardActivity: BaseActivity() {
                     maskedCardNumber = formatMaskedCard(savedToken.maskedCard.toString()),
                     displayedMaskedCard = savedToken.maskedCard.toString(),
                     tokenType = savedToken.tokenType.toString(),
+                    bankCode = savedToken.binDetail?.bankCode.toString(),
                     tokenId = savedToken.token.toString(),
                     cvvSavedCardTextField = TextFieldValue(),
                     isCvvSavedCardInvalid = isCvvSavedCardInvalid
@@ -259,6 +263,7 @@ class SavedCardActivity: BaseActivity() {
                                 listStates = savedTokenListState,
                                 cardItemState = state,
                                 bankIconState = bankCodeId,
+                                isPointBankShownState = null,
                                 creditCard = creditCard,
                                 onItemRemoveClicked = {
                                     viewModel.deleteSavedCard(snapToken = snapToken, maskedCard = it.displayedMaskedCard)
@@ -290,7 +295,8 @@ class SavedCardActivity: BaseActivity() {
                                 onCvvValueChange = {
                                     state.cvv = it
                                 },
-                                onSavedCardCheckedChange = { state.isSavedCardChecked = it }
+                                onSavedCardCheckedChange = { state.isSavedCardChecked = it },
+                                onPointBankCheckedChange = {}
                             )
                             SnapButton(
                                 text = stringResource(id = R.string.cc_dc_main_screen_cta),
