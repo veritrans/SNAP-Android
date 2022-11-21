@@ -2,6 +2,7 @@ package com.midtrans.sdk.corekit.internal.analytics
 
 import com.midtrans.sdk.corekit.BuildConfig
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_3DS_RESULT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ACCOUNT_NUMBER_COPIED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_RESULTS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CTA_CLICKED
@@ -12,6 +13,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_HOW_TO_P
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_OPEN_DEEPLINK
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ORDER_DETAILS_VIEWED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_CLOSED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAYMENT_NUMBER_BUTTON_RETRIED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_3DS_VERSION
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BANK
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BANK_CODE
@@ -130,8 +132,35 @@ class EventAnalytics(
     //TODO will be implemented separately
     fun trackSnapPageViewed() {}
     fun trackSnapCustomerDataInput() {}
-    fun trackSnapAccountNumberCopied() {}
-    fun trackSnapPaymentNumberButtonRetried() {}
+
+    fun trackSnapAccountNumberCopied(
+        pageName: String?,
+        paymentMethodName: String?
+    ) {
+        val optionalProperties = mutableMapOf<String, String>()
+        paymentMethodName?.also { optionalProperties[PROPERTY_PAYMENT_METHOD_NAME] = it }
+        pageName?.also { optionalProperties[PROPERTY_PAGE_NAME] = it }
+
+        mixpanelTracker.trackEvent(
+            eventName = EVENT_SNAP_ACCOUNT_NUMBER_COPIED,
+            properties = optionalProperties
+        )
+    }
+
+    fun trackSnapPaymentNumberButtonRetried(
+        pageName: String?,
+        paymentMethodName: String?
+    ) {
+        val optionalProperties = mutableMapOf<String, String>()
+        paymentMethodName?.also { optionalProperties[PROPERTY_PAYMENT_METHOD_NAME] = it }
+        pageName?.also { optionalProperties[PROPERTY_PAGE_NAME] = it }
+
+        mixpanelTracker.trackEvent(
+            eventName = EVENT_SNAP_PAYMENT_NUMBER_BUTTON_RETRIED,
+            properties = optionalProperties
+        )
+    }
+
     fun trackSnapError() {}
     fun trackSnapTokenizationResult() {}
     fun trackSnapCtaError() {}

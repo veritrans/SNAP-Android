@@ -235,6 +235,22 @@ class WalletViewModelTest {
     }
 
     @Test
+    fun verifyTrackReloadClicked() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil)
+
+        walletViewModel.trackReloadClicked(paymentType = PaymentType.GOPAY)
+        verify(eventAnalytics).trackSnapPaymentNumberButtonRetried(
+            pageName = PageName.GOPAY_DEEPLINK_PAGE,
+            paymentMethodName = PaymentType.GOPAY
+        )
+    }
+
+    @Test
     fun verifyTrackOrderDetailsViewed() {
         val snapCore: SnapCore = mock()
         val dateTimeUtil: DateTimeUtil = mock()

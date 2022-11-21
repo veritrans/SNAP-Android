@@ -194,6 +194,7 @@ internal class WalletActivity : BaseActivity() {
                                             ctaName = getStringResourceInEnglish(R.string.qr_reload),
                                             paymentType = paymentType
                                         )
+                                        viewModel.trackReloadClicked(paymentType = paymentType)
                                         error = false
                                     }
                                 )
