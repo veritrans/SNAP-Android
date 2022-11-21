@@ -386,7 +386,6 @@ internal class CreditCardActivity : BaseActivity() {
             )
         }
 
-
         var pointPayButtonClickedState by remember {
             mutableStateOf(false)
         }
