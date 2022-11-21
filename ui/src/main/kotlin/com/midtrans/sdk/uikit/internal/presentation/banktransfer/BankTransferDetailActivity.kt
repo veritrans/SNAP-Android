@@ -423,7 +423,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
         listOf(
             Pair(
                 R.string.bca_instruction_atm_title,
-                R.array.mandiri_instruction_atm
+                R.array.bca_instruction_atm
             ),
             Pair(
                 R.string.bca_instruction_klikbca_title,

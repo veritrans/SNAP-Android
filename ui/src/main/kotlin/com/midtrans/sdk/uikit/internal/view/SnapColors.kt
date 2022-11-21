@@ -133,7 +133,7 @@ internal object SnapColors {
         get() = UiKitApi.getDefaultInstanceNullable()?.customColors?.supportSuccessDefault ?: SUPPORT_SUCCESS_DEFAULT
     val supportSuccessHover get() = UiKitApi.getDefaultInstanceNullable()?.customColors?.supportSuccessHover ?: SUPPORT_SUCCESS_HOVER
     val supportSuccessActive get() = UiKitApi.getDefaultInstanceNullable()?.customColors?.supportSuccessActive ?: SUPPORT_SUCCESS_ACTIVE
-    val supportSuccessFill get() = UiKitApi.getDefaultInstanceNullable()?.customColors?.supportSuccessFill ?: SUPPORT_DANGER_FILL
+    val supportSuccessFill get() = UiKitApi.getDefaultInstanceNullable()?.customColors?.supportSuccessFill ?: SUPPORT_SUCCESS_FILL
     val supportInfoDefault get() = UiKitApi.getDefaultInstanceNullable()?.customColors?.supportInfoDefault ?: SUPPORT_INFO_DEFAULT
     val supportInfoHover get() = UiKitApi.getDefaultInstanceNullable()?.customColors?.supportInfoHover ?: SUPPORT_INFO_HOVER
     val supportInfoActive get() = UiKitApi.getDefaultInstanceNullable()?.customColors?.supportInfoActive ?: SUPPORT_INFO_ACTIVE
