@@ -41,11 +41,14 @@ internal class CreditCardViewModel @Inject constructor(
     private val _transactionResponse = MutableLiveData<TransactionResponse>()
     private val _errorTypeLiveData = MutableLiveData<Pair<Int?, String>>()
     private val _promoDataLiveData = MutableLiveData<List<PromoData>>()
+    private var _netAmountWithoutCurrencyLiveData = MutableLiveData<Double>()
     private val _netAmountLiveData = MutableLiveData<String>()
     private val _binBlockedLiveData = MutableLiveData<Boolean>()
     private val _errorLiveData = MutableLiveData<SnapError>()
     private val _isPointBankShown = MutableLiveData<Boolean>()
     private val _isPointBankEnabled = MutableLiveData<Boolean>()
+    private val _pointBalanceAmount = MutableLiveData<String>()
+    private val _cardToken = MutableLiveData<String>()
     private var expireTimeInMillis = 0L
     private var allowRetry = false
     private var promos: List<Promo>? = null
@@ -54,7 +57,9 @@ internal class CreditCardViewModel @Inject constructor(
 
     val promoDataLiveData: LiveData<List<PromoData>> = _promoDataLiveData
     val netAmountLiveData: LiveData<String> = _netAmountLiveData
-    var creditCard: CreditCard? = null
+    val netAmountWithoutCurrencyLiveData: LiveData<Double> = _netAmountWithoutCurrencyLiveData
+    private var creditCard: CreditCard? = null
+    private var _isInstallmentRequired = MutableLiveData<Boolean>()
 
     val bankIconId: LiveData<Int> = _bankIconId
     val binType: LiveData<String> = _binType
@@ -65,10 +70,14 @@ internal class CreditCardViewModel @Inject constructor(
     val errorLiveData: LiveData<SnapError> = _errorLiveData
     val isPointBankShown: LiveData<Boolean> = _isPointBankShown
     private val isPointBankEnabled: LiveData<Boolean> = _isPointBankEnabled
+    val pointBalanceAmount: LiveData<String> = _pointBalanceAmount
+    val cardToken: LiveData<String> = _cardToken
+    val isInstallmentRequired: LiveData<Boolean> = _isInstallmentRequired
 
 
     private var promoName: String? = null
     private var promoAmount: Double? = null
+    private var finalAmount = 0.0
 
     fun setExpiryTime(expireTime: String?) {
         expireTime?.let {
@@ -100,8 +109,26 @@ internal class CreditCardViewModel @Inject constructor(
 
     fun setPromoId(promoId: Long) {
         _netAmountLiveData.value = transactionDetails?.grossAmount?.currencyFormatRp()
+        _netAmountWithoutCurrencyLiveData.value = transactionDetails?.grossAmount
         promos?.find { it.id == promoId }?.discountedGrossAmount?.let {
             _netAmountLiveData.value = it.currencyFormatRp()
+            _netAmountWithoutCurrencyLiveData.value = it
+        }
+    }
+
+    fun setCreditCardDetails(creditCard: CreditCard?) {
+        this.creditCard = creditCard
+        creditCard?.installment?.isRequired?.let {
+            _isInstallmentRequired.value = it
+        }
+    }
+
+    fun hidePointBank(installmentTerm: String) = when {
+        installmentTerm.isNullOrBlank() -> {
+            _isPointBankShown.value = true
+        }
+        else -> {
+            _isPointBankShown.value = false
         }
     }
 
@@ -110,14 +137,19 @@ internal class CreditCardViewModel @Inject constructor(
     }
 
     private fun checkForPointBank(cardIssuerBank: String) {
-        pointBanks?.contains(cardIssuerBank).apply {
-            _isPointBankEnabled.value = true
+        if (isInstallmentRequired.value != true) {
+            pointBanks?.contains(cardIssuerBank)?.apply {
+                _isPointBankEnabled.value = true
+            }
+            handleShowingPointBank(cardIssuerBank)
         }
-        handleShowingPointBank(cardIssuerBank)
     }
-    private fun handleShowingPointBank(cardIssuerBank: String){
-        _isPointBankShown.value = isPointBankEnabled.value == true && checkForBniPoint(cardIssuerBank) == true
+
+    private fun handleShowingPointBank(cardIssuerBank: String) {
+        _isPointBankShown.value =
+            isPointBankEnabled.value == true && checkForBniPoint(cardIssuerBank) == true
     }
+
     private fun checkForBniPoint(cardIssuerBank: String): Boolean {
         return cardIssuerBank.lowercase() == BANK_BNI
     }
@@ -392,6 +424,120 @@ internal class CreditCardViewModel @Inject constructor(
                 }
             )
         }
+    }
+
+    fun getBankPoint(
+        snapToken: String,
+        transactionDetails: TransactionDetails?,
+        cardNumber: TextFieldValue,
+        cardExpiry: TextFieldValue,
+        cardCvv: TextFieldValue,
+        promoId: Long?
+    ) {
+        val tokenRequest = NormalCardTokenRequestBuilder()
+            .withCardNumber(snapCreditCardUtil.getCardNumberFromTextField(cardNumber))
+            .withCardExpMonth(snapCreditCardUtil.getExpMonthFromTextField(cardExpiry))
+            .withCardExpYear(snapCreditCardUtil.getExpYearFromTextField(cardExpiry))
+            .withCardCvv(cardCvv.text)
+
+        transactionDetails?.currency?.let {
+            tokenRequest.withCurrency(it)
+        }
+        transactionDetails?.grossAmount?.let {
+            finalAmount = it
+        }
+        transactionDetails?.orderId?.let {
+            tokenRequest.withOrderId(it)
+        }
+
+        promos
+            ?.find { it.id == promoId }
+            ?.also { promoName = it.name }
+            ?.discountedGrossAmount
+            ?.let {
+                finalAmount = it
+            }
+
+        tokenRequest.withGrossAmount(finalAmount)
+
+        snapCore.getCardToken(
+            cardTokenRequestBuilder = tokenRequest,
+            callback = object : Callback<CardTokenResponse> {
+                override fun onSuccess(result: CardTokenResponse) {
+
+                    result.tokenId?.let { tokenId ->
+                        _cardToken.value = tokenId
+                        snapCore.getBankPoint(
+                            snapToken = snapToken,
+                            cardToken = tokenId,
+                            grossAmount = finalAmount,
+                            callback = object : Callback<BankPointResponse> {
+                                override fun onSuccess(result: BankPointResponse) {
+                                    _pointBalanceAmount.value = result.pointBalanceAmount
+                                }
+
+                                override fun onError(error: SnapError) {
+                                    val errorType = errorCard.getErrorCardType(error, allowRetry)
+                                    _errorTypeLiveData.value = Pair(errorType, "")
+                                    _errorLiveData.value = error
+                                }
+                            }
+                        )
+                    }
+                }
+
+                override fun onError(error: SnapError) {
+                    val errorType = errorCard.getErrorCardType(error, allowRetry)
+                    _errorTypeLiveData.value = Pair(errorType, "")
+                    _errorLiveData.value = error
+                }
+            }
+        )
+    }
+
+    fun chargeWithPoint(
+        transactionDetails: TransactionDetails?,
+        cardNumber: TextFieldValue,
+        cardExpiry: TextFieldValue,
+        cardCvv: TextFieldValue,
+        isSavedCard: Boolean,
+        customerEmail: String,
+        customerPhone: String,
+        promoId: Long?,
+        pointAmount: Double,
+        snapToken: String
+    ) {
+
+        val ccRequestBuilder = CreditCardPaymentRequestBuilder()
+            .withSaveCard(isSavedCard)
+            .withPaymentType(PaymentType.CREDIT_CARD)
+            .withCustomerEmail(customerEmail)
+            .withCustomerPhone(customerPhone)
+            .withPoint(pointAmount)
+
+        cardToken.value?.let {
+            ccRequestBuilder.withCardToken(it)
+        }
+        cardIssuerBank.value?.let {
+            ccRequestBuilder.withBank(it)
+        }
+
+        snapCore.pay(
+            snapToken = snapToken,
+            paymentRequestBuilder = ccRequestBuilder,
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    _transactionResponse.value = result
+                    trackSnapChargeResult(result)
+                }
+
+                override fun onError(error: SnapError) {
+                    val errorType = errorCard.getErrorCardType(error, allowRetry)
+                    _errorTypeLiveData.value = Pair(errorType, "")
+                    _errorLiveData.value = error
+                }
+            }
+        )
     }
 
     fun resetError() {
