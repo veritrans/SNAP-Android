@@ -125,4 +125,15 @@ internal class PayLaterViewModelTest {
             netAmount = null
         )
     }
+
+    @Test
+    fun verifyTrackPageViewed() {
+        viewModel.trackPageViewed(PaymentType.AKULAKU, 2)
+        verify(eventAnalytics).trackSnapPageViewed(
+            pageName = PageName.AKULAKU_PAGE,
+            paymentMethodName = PaymentType.AKULAKU,
+            transactionId = null,
+            stepNumber = "2"
+        )
+    }
 }

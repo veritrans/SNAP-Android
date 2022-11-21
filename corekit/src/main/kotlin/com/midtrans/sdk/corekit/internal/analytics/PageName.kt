@@ -50,6 +50,7 @@ class PageName {
         const val DANAMON_ONLINE_PAGE = "Danamon Online Banking Instruction"
         const val BRIMO_PAGE = "BRImo  Instruction"
         const val UOB_PAGE = "UOB EZpay  Instruction"
+        const val UOB_SELECTION_PAGE = "UOB EZpay Selection"
         const val REDIRECTION_PAGE = "Redirection Page"
         const val SUCCESS_PAGE = "Success Page"
         const val PROCESSING_PAGE = "Processing Page"

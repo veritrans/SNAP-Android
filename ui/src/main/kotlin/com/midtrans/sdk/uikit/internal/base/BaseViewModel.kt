@@ -163,4 +163,18 @@ internal open class BaseViewModel : ViewModel() {
             netAmount = netAmount
         )
     }
+
+    protected fun trackPageViewed(
+        pageName: String? = null,
+        paymentMethodName: String? = null,
+        transactionId: String? = null,
+        stepNumber: String? = null
+    ) {
+        eventAnalytics?.trackSnapPageViewed(
+            pageName = pageName,
+            paymentMethodName = paymentMethodName,
+            transactionId = transactionId,
+            stepNumber = stepNumber
+        )
+    }
 }

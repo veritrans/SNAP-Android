@@ -12,6 +12,11 @@ open class SavedToken(
     val fromHostApp: Boolean = false,
     val binDetail: BinDetail? = null
 ) : Parcelable {
+
+    fun containsType(type: String): Boolean {
+        return tokenType?.contains(type, true) ?: false
+    }
+
     companion object {
         const val ONE_CLICK = "one_click"
         const val TWO_CLICKS = "two_clicks"

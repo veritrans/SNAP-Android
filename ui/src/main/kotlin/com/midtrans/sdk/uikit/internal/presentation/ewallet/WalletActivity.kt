@@ -40,7 +40,37 @@ internal class WalletActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModel: WalletViewModel
-    var deepLinkUrl: String? = null
+
+    private val totalAmount: String by lazy {
+        intent.getStringExtra(EXTRA_TOTAL_AMOUNT)
+            ?: throw RuntimeException("Total amount must not be empty")
+    }
+
+    private val orderId: String by lazy {
+        intent.getStringExtra(EXTRA_ORDER_ID)
+            ?: throw RuntimeException("Order ID must not be empty")
+    }
+
+    private val customerInfo: CustomerInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
+    }
+
+    private val itemInfo: ItemInfo? by lazy {
+        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
+    }
+
+    private val paymentType: String by lazy {
+        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
+            ?: throw RuntimeException("Payment Type must not be empty")
+    }
+
+    private val snapToken: String by lazy {
+        intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
+    }
+
+    private val currentStepNumber: Int by lazy {
+        intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
+    }
 
     private val deepLinkLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -48,9 +78,12 @@ internal class WalletActivity : BaseActivity() {
             finish()
         }
 
+    private var deepLinkUrl: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
+        viewModel.trackPageViewed(paymentType, currentStepNumber)
         setContent {
             Content(
                 totalAmount = totalAmount,
@@ -90,7 +123,8 @@ internal class WalletActivity : BaseActivity() {
                 activityContext = this,
                 paymentType = paymentType,
                 url = it,
-                snapToken = snapToken
+                snapToken = snapToken,
+                stepNumber = currentStepNumber + 1
             )
             deepLinkLauncher.launch(intent)
         }
@@ -301,34 +335,6 @@ internal class WalletActivity : BaseActivity() {
 
     }
 
-
-    private val totalAmount: String by lazy {
-        intent.getStringExtra(EXTRA_TOTAL_AMOUNT)
-            ?: throw RuntimeException("Total amount must not be empty")
-    }
-
-    private val orderId: String by lazy {
-        intent.getStringExtra(EXTRA_ORDER_ID)
-            ?: throw RuntimeException("Order ID must not be empty")
-    }
-
-    private val customerInfo: CustomerInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
-    }
-
-    private val itemInfo: ItemInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
-    }
-
-    private val paymentType: String by lazy {
-        intent.getStringExtra(EXTRA_PAYMENT_TYPE)
-            ?: throw RuntimeException("Payment Type must not be empty")
-    }
-
-    private val snapToken: String by lazy {
-        intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
-    }
-
     private val paymentInstructionQr by lazy {
         mapOf(
             Pair(PaymentType.GOPAY_QRIS, R.array.scan_qr_instruction_gopay),
@@ -359,6 +365,7 @@ internal class WalletActivity : BaseActivity() {
         private const val EXTRA_ITEM_INFO = "wallet.extra.item_info"
         private const val EXTRA_PAYMENT_TYPE = "wallet.extra.payment_type"
         private const val EXTRA_SNAP_TOKEN = "wallet.extra.snap_token"
+        private const val EXTRA_STEP_NUMBER = "wallet.extra.step_number"
 
         fun getIntent(
             activityContext: Context,
@@ -367,7 +374,8 @@ internal class WalletActivity : BaseActivity() {
             totalAmount: String,
             orderId: String,
             customerInfo: CustomerInfo? = null,
-            itemInfo: ItemInfo? = null
+            itemInfo: ItemInfo? = null,
+            stepNumber: Int
         ): Intent {
             return Intent(activityContext, WalletActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
@@ -376,6 +384,7 @@ internal class WalletActivity : BaseActivity() {
                 putExtra(EXTRA_CUSTOMER_DETAIL, customerInfo)
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
+                putExtra(EXTRA_STEP_NUMBER, stepNumber)
             }
         }
     }

@@ -244,4 +244,25 @@ class ConvenienceStoreViewModelTest {
             netAmount = null
         )
     }
+
+    @Test
+    fun verifyTrackPageViewed() {
+        val snapCore: SnapCore = mock()
+        val errorCard: ErrorCard = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val barcodeEncoder: BarcodeEncoder = mock()
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+
+        val convenienceStoreViewModel =
+            ConvenienceStoreViewModel(snapCore = snapCore, dateTimeUtil, errorCard, barcodeEncoder)
+        convenienceStoreViewModel.trackPageViewed(PaymentType.INDOMARET, 2)
+        verify(eventAnalytics).trackSnapPageViewed(
+            pageName = PageName.INDOMARET_PAGE,
+            paymentMethodName = PaymentType.INDOMARET,
+            transactionId = null,
+            stepNumber = "2"
+        )
+    }
 }

@@ -93,16 +93,12 @@ internal class CreditCardActivity : BaseActivity() {
         intent.getStringExtra(EXTRA_EXPIRY_TIME)
     }
 
-    private val withCustomerPhoneEmail: Boolean by lazy {
-        merchant?.showCreditCardCustomerInfo ?: false
-    }
-
-    private val allowRetry: Boolean by lazy {
-        merchant?.allowRetry ?: false
-    }
-
     private val merchant: Merchant? by lazy {
         intent.getParcelableExtra(EXTRA_MERCHANT_DATA) as? Merchant
+    }
+
+    private val currentStepNumber: Int by lazy {
+        intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
     }
 
     private val promos: List<Promo>? by lazy {
@@ -110,6 +106,14 @@ internal class CreditCardActivity : BaseActivity() {
             ?.apply {
                 sortByDescending { it.calculatedDiscountAmount }
             }
+    }
+
+    private val withCustomerPhoneEmail: Boolean by lazy {
+        merchant?.showCreditCardCustomerInfo ?: false
+    }
+
+    private val allowRetry: Boolean by lazy {
+        merchant?.allowRetry ?: false
     }
 
     private var onPromoReset: () -> Unit = {}
@@ -150,6 +154,7 @@ internal class CreditCardActivity : BaseActivity() {
         viewModel.setTransactionDetails(transactionDetails)
         viewModel.setPointBanks(merchant?.pointBanks)
         viewModel.creditCard = creditCard
+        viewModel.trackPageViewed(currentStepNumber)
         initTransactionResultScreenObserver()
         setContent {
             CreditCardPageStateFull(
@@ -180,7 +185,8 @@ internal class CreditCardActivity : BaseActivity() {
                 status = it.transactionStatus.orEmpty(),
                 transactionId = it.transactionId.orEmpty(),
                 paymentType = it.paymentType.orEmpty()
-            )
+            ),
+            stepNumber = currentStepNumber + 1
         )
         resultLauncher.launch(intent)
     }
@@ -763,8 +769,9 @@ internal class CreditCardActivity : BaseActivity() {
         private const val EXTRA_CREDIT_CARD = "card.extra.credit_card"
         private const val EXTRA_EXPIRY_TIME = "card.extra.expiry_time"
         private const val EXTRA_MERCHANT_DATA = "card.extra.merchant_data"
-        private const val EXTRA_PROMOS = "card.extra.extra.promos"
-        private const val EXTRA_ITEM_INFO = "card.extra.extra.item_info"
+        private const val EXTRA_PROMOS = "card.extra.promos"
+        private const val EXTRA_ITEM_INFO = "card.extra.item_info"
+        private const val EXTRA_STEP_NUMBER = "card.extra.step_number"
 
         fun getIntent(
             activityContext: Context,
@@ -776,7 +783,8 @@ internal class CreditCardActivity : BaseActivity() {
             creditCard: CreditCard?,
             promos: List<Promo>? = null,
             expiryTime: String?,
-            withMerchantData: Merchant? = null
+            withMerchantData: Merchant? = null,
+            stepNumber: Int
         ): Intent {
             return Intent(activityContext, CreditCardActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -786,6 +794,7 @@ internal class CreditCardActivity : BaseActivity() {
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_CREDIT_CARD, creditCard)
                 putExtra(EXTRA_EXPIRY_TIME, expiryTime)
+                putExtra(EXTRA_STEP_NUMBER, stepNumber)
                 withMerchantData?.let { putExtra(EXTRA_MERCHANT_DATA, withMerchantData) }
                 promos?.also {
                     putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it))
