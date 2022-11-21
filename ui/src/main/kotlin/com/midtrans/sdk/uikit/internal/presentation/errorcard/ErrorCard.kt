@@ -24,6 +24,7 @@ import java.net.UnknownHostException
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ErrorCard(type: Int, onClick: (Int) -> Unit = {}): DialogToggle {
+    
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         confirmStateChange = { false })
