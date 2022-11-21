@@ -61,7 +61,8 @@ class PaymentOptionActivity : BaseActivity() {
         private const val EXTRA_CREDIT_CARD = "paymentOptionActivity.extra.credit_card"
         private const val EXTRA_PROMOS = "paymentOptionActivity.extra.promos"
         private const val EXTRA_MERCHANT_DATA = "paymentOptionActivity.extra.merchant_data"
-        private const val EXTRA_TRANSACTION_DETAILS = "paymentOptionActivity.extra.transaction_details"
+        private const val EXTRA_TRANSACTION_DETAILS =
+            "paymentOptionActivity.extra.transaction_details"
         private const val EXTRA_EXPIRY_TIME = "paymentOptionActivity.extra.expiry_time"
         private const val EXTRA_PAYMENT_TYPE_ITEM = "paymentOptionActivity.extra.payment_type_item"
         private const val EXTRA_ENABLED_PAYMENT = "paymentOptionActivity.extra.enabled_payment"
@@ -95,7 +96,12 @@ class PaymentOptionActivity : BaseActivity() {
                 putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
                 promos?.also { putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it)) }
                 itemDetails?.also { putParcelableArrayListExtra(EXTRA_ITEM_DETAILS, ArrayList(it)) }
-                enabledPayments?.also { putParcelableArrayListExtra(EXTRA_ENABLED_PAYMENT, ArrayList(it)) }
+                enabledPayments?.also {
+                    putParcelableArrayListExtra(
+                        EXTRA_ENABLED_PAYMENT,
+                        ArrayList(it)
+                    )
+                }
             }
         }
     }
@@ -208,18 +214,24 @@ class PaymentOptionActivity : BaseActivity() {
     }
 
     private fun handleEnabledPayments(payment: List<EnabledPayment>) {
-        if (payment.size == 1) {
-            val paymentMethod = paymentMethods.paymentMethods.find { it.type == payment[0].type }
-            paymentMethod?.let {
-                getOnPaymentItemClick(
-                    paymentType = payment[0].type,
-                    customerInfo = customerInfo,
-                    itemInfo = itemInfo,
-                    totalAmount = totalAmount,
-                    paymentMethodItem = paymentMethod,
-                    orderId = orderId
-                )[payment[0].type]?.invoke()
-            }
+        val bankTransfer: (EnabledPayment) -> Boolean = { it.category == PaymentType.BANK_TRANSFER }
+        val isAllBankTransfer = payment.all(bankTransfer)
+        val paymentType = if (payment.size == 1) {
+            payment[0].type
+        } else if (isAllBankTransfer) {
+            PaymentType.BANK_TRANSFER
+        } else ""
+        val paymentMethod =  paymentMethods.paymentMethods.find { it.type == paymentType }
+
+        paymentMethod?.let {
+            getOnPaymentItemClick(
+                paymentType = paymentType,
+                customerInfo = customerInfo,
+                itemInfo = itemInfo,
+                totalAmount = totalAmount,
+                paymentMethodItem = paymentMethod,
+                orderId = orderId
+            )[paymentType]?.invoke()
         }
     }
 
