@@ -412,7 +412,7 @@
     </string-array>
 
 
-    <string name="bni_instruction_atm_title">ATM BNI46</string>
+    <string name="bni_instruction_atm_title">ATM BNI</string>
 
     <string-array name="bni_instruction_atm">
         <item><data><![CDATA[ Select <b>others</b> on the main menu.]]></data></item>
@@ -576,7 +576,7 @@
     <string name="bank_permata">Permata</string>
     <string name="bank_bri">BRI</string>
     <string name="bank_mandiri">Mandiri</string>
-    <string name="bank_bni">BNI46</string>
+    <string name="bank_bni">BNI</string>
     <string name="bank_other">Other banks</string>
 
     <string name="timeout_error_dialog_from_bank_title">Payment method error</string>

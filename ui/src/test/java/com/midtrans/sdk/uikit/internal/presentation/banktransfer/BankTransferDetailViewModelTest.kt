@@ -152,7 +152,7 @@ internal class BankTransferDetailViewModelTest {
         val dateTimeUtil: DateTimeUtil = mock()
         val snapToken = "SnapToken"
         val paymentType = PaymentType.BNI_VA
-        val BANK_CODE_BNI = "009 - BNI46"
+        val BANK_CODE_BNI = "009 - BNI"
 
         `when`(
             dateTimeUtil.getDate(
