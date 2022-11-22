@@ -121,7 +121,7 @@
     <string name="point_total_payment">Total payment</string>
     <string name="point_title_bni">Redeem BNI Rewards Point</string>
     <string name="point_insufficient_title">Exceeding the number of points available</string>
-    <string name="point_amount_of_points">You have points worth Rp%s</string>
+    <string name="point_amount_of_points">You have points worth %s</string>
     <string name="point_failed_title">Failed to load points</string>
     <string name="point_desc">You can try to refresh or proceed without redeeming points.</string>
     <string name="qr_failed_load">Failed to load QR</string>

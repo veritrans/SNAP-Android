@@ -121,7 +121,7 @@
     <string name="point_discount">Point discount</string>
     <string name="point_total_payment">Total dibayar</string>
     <string name="point_insufficient_title">Melebihi jumlah point yang tersedia </string>
-    <string name="point_amount_of_points">Anda memiliki point senilai</string>
+    <string name="point_amount_of_points">Anda memiliki point senilai %s</string>
     <string name="point_failed_title">Gagal memuat poin</string>
     <string name="point_desc">Silakan muat ulang halaman atau lanjutkan pembayaran tanpa menukarkan poin.</string>
 
