@@ -203,4 +203,18 @@ internal open class BaseViewModel : ViewModel() {
             displayField = displayField
         )
     }
+
+    protected fun trackError(
+        pageName: String,
+        paymentMethodName: String,
+        statusCode: String,
+        errorMessage: String
+    ) {
+        eventAnalytics?.trackSnapError(
+            pageName = pageName,
+            paymentMethodName = paymentMethodName,
+            statusCode = statusCode,
+            errorMessage = errorMessage
+        )
+    }
 }
