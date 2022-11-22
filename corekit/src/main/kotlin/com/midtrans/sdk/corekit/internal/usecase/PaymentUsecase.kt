@@ -265,8 +265,8 @@ internal class PaymentUsecase(
                     type = PaymentType.BANK_TRANSFER,
                     channels = methods[index]
                         .channels
-                        ?.toMutableList()
-                        ?.apply { add(payment.type) }
+                        .toMutableList()
+                        .apply { add(payment.type) }
                 )
             }
         } else if (payment.category == PaymentType.CSTORE) {
@@ -296,11 +296,11 @@ internal class PaymentUsecase(
             methods.add(
                 PaymentMethod(
                     type = payment.type,
-                    channels = if (payment.type == PaymentType.UOB_EZPAY) {
+                    channels = (if (payment.type == PaymentType.UOB_EZPAY) {
                         payment.mode
                     } else {
                         emptyList()
-                    }
+                    }) as List<String>
                 )
             )
         }

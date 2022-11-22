@@ -98,12 +98,7 @@ class PaymentOptionActivity : BaseActivity() {
                 putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
                 promos?.also { putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it)) }
                 itemDetails?.also { putParcelableArrayListExtra(EXTRA_ITEM_DETAILS, ArrayList(it)) }
-                enabledPayments?.also {
-                    putParcelableArrayListExtra(
-                        EXTRA_ENABLED_PAYMENT,
-                        ArrayList(it)
-                    )
-                }
+                enabledPayments?.also { putParcelableArrayListExtra(EXTRA_ENABLED_PAYMENT, ArrayList(it)) }
             }
         }
     }

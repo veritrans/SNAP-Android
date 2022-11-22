@@ -12,8 +12,8 @@ data class PaymentMethodList(
 data class PaymentMethodItem(
     val type: String,
     @StringRes val titleId: Int,
-    val methods: List<String>? = listOf(),
-    val icons: List<Int>? = listOf()
+    val methods: List<String> = listOf(),
+    val icons: List<Int>
 ): Parcelable
 
 
