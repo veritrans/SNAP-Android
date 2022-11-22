@@ -620,6 +620,11 @@ internal class CreditCardActivity : BaseActivity() {
                     ) {
                         if (withCustomerPhoneEmail) {
                             CustomerPhoneLayout(state = state)
+                            viewModel.trackCustomerDataInput(
+                                email = state.customerEmail.text,
+                                phoneNumber = state.customerPhone.text,
+                                displayField = withCustomerPhoneEmail
+                            )
                         }
 
                         savedTokenListState?.let {

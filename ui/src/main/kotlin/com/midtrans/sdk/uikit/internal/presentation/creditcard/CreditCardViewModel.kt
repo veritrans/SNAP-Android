@@ -640,6 +640,18 @@ internal class CreditCardViewModel @Inject constructor(
         )
     }
 
+    fun trackCustomerDataInput(
+        email: String?,
+        phoneNumber: String?,
+        displayField: Boolean
+    ) {
+        trackCreditCardCustomerDataInput(
+            email = email,
+            phoneNumber = phoneNumber,
+            displayField = displayField.toString()
+        )
+    }
+
     fun getExpiredHour(): String {
         val duration = datetimeUtil.getDuration(
             datetimeUtil.getTimeDiffInMillis(
