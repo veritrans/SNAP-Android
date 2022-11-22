@@ -52,9 +52,17 @@ class SuccessScreenActivity : BaseActivity() {
         intent.getParcelableExtra(UiKitConstants.KEY_TRANSACTION_RESULT) as? TransactionResult
     }
 
+    private val currentStepNumber: Int by lazy {
+        intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
+        viewModel.trackPageViewed(
+            paymentType = transactionResult?.paymentType.orEmpty(),
+            stepNumber = currentStepNumber
+        )
         setContent {
             SuccessContent(
                 total = data.total,
@@ -157,12 +165,15 @@ class SuccessScreenActivity : BaseActivity() {
     }
 
     companion object {
-        private const val EXTRA_TOTAL = "EXTRA_TOTAL"
+        private const val EXTRA_TOTAL = "statusScreen.extra.total"
+        private const val EXTRA_STEP_NUMBER = "statusScreen.extra.step_number"
+
         fun getIntent(
             activityContext: Context,
             total: String,
             orderId: String,
-            transactionResult: TransactionResult
+            transactionResult: TransactionResult,
+            stepNumber: Int
         ): Intent {
             return Intent(activityContext, SuccessScreenActivity::class.java).apply {
                 putExtra(
@@ -171,6 +182,7 @@ class SuccessScreenActivity : BaseActivity() {
                         orderId = orderId
                     )
                 )
+                putExtra(EXTRA_STEP_NUMBER, stepNumber)
                 putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, transactionResult)
             }
         }

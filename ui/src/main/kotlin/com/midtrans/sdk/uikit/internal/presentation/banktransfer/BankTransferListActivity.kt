@@ -72,17 +72,23 @@ class BankTransferListActivity : BaseActivity() {
     private val enabledPayments: List<EnabledPayment>? by lazy {
         intent.getParcelableArrayListExtra(EXTRA_ENABLED_PAYMENT)
     }
+    
+    private val currentStepNumber: Int by lazy {
+        intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
 
+        viewModel.trackPageViewed(currentStepNumber)
+        
         enabledPayments?.let {
             if (it.size == 1) {
                 toBankTransferDetail(it[0].type)
             }
         }
-
+        
         paymentTypeItem?.let { paymentType ->
             paymentType.method?.let { paymentMethod ->
                 toBankTransferDetail(paymentMethod)
@@ -169,7 +175,8 @@ class BankTransferListActivity : BaseActivity() {
                 itemInfo = itemInfo,
                 orderId = orderId,
                 totalAmount = totalAmount,
-                snapToken = snapToken
+                snapToken = snapToken,
+                stepNumber = currentStepNumber + 1
             )
         resultLauncher.launch(intent)
     }
@@ -203,6 +210,7 @@ class BankTransferListActivity : BaseActivity() {
         private const val EXTRA_PAYMENT_METHOD_ITEM = "bankTransfer.extra.payment_method_item"
         private const val EXTRA_PAYMENT_TYPE_ITEM = "bankTransfer.extra.payment_type_it"
         private const val EXTRA_ENABLED_PAYMENT = "bankTransfer.extra.enabled_payment"
+        private const val EXTRA_STEP_NUMBER = "bankTransfer.extra.step_number"
 
         fun getIntent(
             activityContext: Context,
@@ -213,7 +221,8 @@ class BankTransferListActivity : BaseActivity() {
             customerInfo: CustomerInfo? = null,
             itemInfo: ItemInfo? = null,
             paymentTypeItem: PaymentTypeItem? = null,
-            enabledPayment: List<EnabledPayment>? = null
+            enabledPayment: List<EnabledPayment>? = null,
+            stepNumber: Int
         ): Intent {
             return Intent(activityContext, BankTransferListActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -226,6 +235,7 @@ class BankTransferListActivity : BaseActivity() {
                 enabledPayment?.also {
                     putParcelableArrayListExtra( EXTRA_ENABLED_PAYMENT, ArrayList(it) )
                 }
+                putExtra(EXTRA_STEP_NUMBER, stepNumber)
             }
         }
     }

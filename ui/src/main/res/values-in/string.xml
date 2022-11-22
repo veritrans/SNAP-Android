@@ -115,8 +115,13 @@
 
 
     <string name="point_loading">Memuat poin…</string>
-    <string name="point_title">Tukar poin</string>
-    <string name="point_amount_of_points">%s poin</string>
+    <string name="point_pay_cta">Bayar</string>
+    <string name="point_rp_currency">Rp</string>
+    <string name="point_title_bni">Pakai BNI Rewards Poin</string>
+    <string name="point_discount">Point discount</string>
+    <string name="point_total_payment">Total dibayar</string>
+    <string name="point_insufficient_title">Melebihi jumlah point yang tersedia </string>
+    <string name="point_amount_of_points">Anda memiliki point senilai</string>
     <string name="point_failed_title">Gagal memuat poin</string>
     <string name="point_desc">Silakan muat ulang halaman atau lanjutkan pembayaran tanpa menukarkan poin.</string>
 

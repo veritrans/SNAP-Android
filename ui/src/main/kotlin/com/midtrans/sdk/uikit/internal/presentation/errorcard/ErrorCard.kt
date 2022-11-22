@@ -4,7 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,9 +21,14 @@ import com.midtrans.sdk.uikit.internal.view.*
 import retrofit2.HttpException
 import java.net.UnknownHostException
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ErrorCard(type: Int, onClick: (Int) -> Unit = {}): DialogToggle {
-    return SnapBottomSheet {
+    
+    val sheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmStateChange = { false })
+    return SnapBottomSheet(sheetState = sheetState, onSheetStateChange = {}) {
         ErrorContent(type = type, onClick = onClick)
     }
 }

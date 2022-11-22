@@ -52,6 +52,8 @@ import javax.inject.Inject
 class PaymentOptionActivity : BaseActivity() {
 
     companion object {
+        private const val CURRENT_STEP_NUMBER = 1
+        private const val NEXT_STEP_NUMBER = 2
         private const val EXTRA_SNAP_TOKEN = "paymentOptionActivity.extra.snap_token"
         private const val EXTRA_TOTAL_AMOUNT = "paymentOptionActivity.extra.total_amount"
         private const val EXTRA_ORDER_ID = "paymentOptionActivity.extra.order_id"
@@ -178,7 +180,7 @@ class PaymentOptionActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
-
+        viewModel.trackPageViewed(CURRENT_STEP_NUMBER)
         paymentMethods = viewModel.initiateList(paymentList, isTabletDevice())
         customerInfo = viewModel.getCustomerInfo(customerDetail)
         itemInfo = viewModel.getItemInfo(itemDetails)
@@ -434,7 +436,8 @@ class PaymentOptionActivity : BaseActivity() {
                     totalAmount = totalAmount,
                     paymentType = paymentMethodItem.type,
                     customerInfo = customerInfo,
-                    itemInfo = itemInfo
+                    itemInfo = itemInfo,
+                    stepNumber = NEXT_STEP_NUMBER
                 )
             )
         }
@@ -448,7 +451,8 @@ class PaymentOptionActivity : BaseActivity() {
                     totalAmount = totalAmount,
                     paymentType = paymentMethodItem.type,
                     customerInfo = customerInfo,
-                    itemInfo = itemInfo
+                    itemInfo = itemInfo,
+                    stepNumber = NEXT_STEP_NUMBER
                 )
             )
         }
@@ -464,7 +468,8 @@ class PaymentOptionActivity : BaseActivity() {
                         customerInfo = customerInfo,
                         itemInfo = itemInfo,
                         paymentTypeItem = this.paymentTypeItem,
-                        enabledPayment = enabledPayments
+                        enabledPayment = enabledPayments,
+                        stepNumber = NEXT_STEP_NUMBER
                     )
                 )
             },
@@ -482,7 +487,8 @@ class PaymentOptionActivity : BaseActivity() {
                             creditCard = creditCard,
                             expiryTime = expiryTime,
                             withMerchantData = merchant,
-                            promos = promos
+                            promos = promos,
+                            stepNumber = NEXT_STEP_NUMBER
                         )
                     } else {
                         //TODO currently set to CreditCardActivity for testing purpose
@@ -508,7 +514,8 @@ class PaymentOptionActivity : BaseActivity() {
                             amount = totalAmount,
                             orderId = orderId,
                             customerInfo = customerInfo,
-                            itemInfo = itemInfo
+                            itemInfo = itemInfo,
+                            stepNumber = NEXT_STEP_NUMBER
                         )
                     )
                 }
@@ -523,7 +530,8 @@ class PaymentOptionActivity : BaseActivity() {
                         orderId = orderId,
                         customerInfo = customerInfo,
                         itemInfo = itemInfo,
-                        paymentTypeItem = this.paymentTypeItem
+                        paymentTypeItem = this.paymentTypeItem,
+                        stepNumber = NEXT_STEP_NUMBER
                     )
                 )
             },
@@ -540,7 +548,8 @@ class PaymentOptionActivity : BaseActivity() {
                         amount = totalAmount,
                         orderId = orderId,
                         customerInfo = customerInfo,
-                        itemInfo = itemInfo
+                        itemInfo = itemInfo,
+                        stepNumber = NEXT_STEP_NUMBER
                     )
                 )
             },

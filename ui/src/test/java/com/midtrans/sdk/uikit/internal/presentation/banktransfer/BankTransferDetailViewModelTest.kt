@@ -252,6 +252,25 @@ internal class BankTransferDetailViewModelTest {
         )
     }
 
+    @Test
+    fun verifyTrackPageViewed() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+        val bankTransferDetailViewModel =
+            BankTransferDetailViewModel(snapCore = snapCore, dateTimeUtil)
+
+        bankTransferDetailViewModel.trackPageViewed(PaymentType.BRI_VA, 2)
+        verify(eventAnalytics).trackSnapPageViewed(
+            pageName = PageName.BRI_VA_PAGE,
+            paymentMethodName = PaymentType.BRI_VA,
+            transactionId = null,
+            stepNumber = "2"
+        )
+    }
+
     fun <T> LiveData<T>.getOrAwaitValue(
         time: Long = 2,
         timeUnit: TimeUnit = TimeUnit.SECONDS
