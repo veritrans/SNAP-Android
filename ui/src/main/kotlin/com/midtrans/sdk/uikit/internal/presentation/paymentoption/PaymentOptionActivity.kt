@@ -210,15 +210,9 @@ class PaymentOptionActivity : BaseActivity() {
         }
     }
 
-    private fun handleEnabledPayments(payment: List<EnabledPayment>) {
-        val bankTransfer: (EnabledPayment) -> Boolean = { it.category == PaymentType.BANK_TRANSFER }
-        val isAllBankTransfer = payment.all(bankTransfer)
-        val paymentType = if (isAllBankTransfer) {
-            PaymentType.BANK_TRANSFER
-        } else if (payment.size == 1) {
-            payment[0].type
-        } else ""
-        val paymentMethod =  paymentMethods.paymentMethods.find { it.type == paymentType }
+    private fun handleEnabledPayments(enabledPayments: List<EnabledPayment>) {
+        val paymentType = getPaymentType(enabledPayments)
+        val paymentMethod = paymentMethods.paymentMethods.find { it.type == paymentType }
 
         paymentMethod?.let {
             getOnPaymentItemClick(
@@ -230,6 +224,18 @@ class PaymentOptionActivity : BaseActivity() {
                 orderId = orderId
             )[paymentType]?.invoke()
         }
+    }
+
+    private fun getPaymentType(enabledPayments: List<EnabledPayment>): String {
+        val bankTransfer: (EnabledPayment) -> Boolean = { it.category == PaymentType.BANK_TRANSFER }
+        val isAllBankTransfer = enabledPayments.all(bankTransfer)
+        val paymentType = if (isAllBankTransfer) {
+            PaymentType.BANK_TRANSFER
+        } else if (enabledPayments.size == 1) {
+            enabledPayments[0].type
+        } else ""
+
+        return paymentType
     }
 
 
