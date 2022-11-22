@@ -189,4 +189,18 @@ internal open class BaseViewModel : ViewModel() {
             tokenId = tokenId
         )
     }
+
+    protected fun trackCreditCardCustomerDataInput(
+        email: String?,
+        phoneNumber: String?,
+        displayField: String
+    ) {
+        eventAnalytics?.trackSnapCustomerDataInput(
+            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+            paymentMethodName = PaymentType.CREDIT_CARD,
+            email = email,
+            phoneNumber = phoneNumber,
+            displayField = displayField
+        )
+    }
 }
