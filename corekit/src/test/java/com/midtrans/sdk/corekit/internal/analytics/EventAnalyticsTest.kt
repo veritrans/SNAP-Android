@@ -472,13 +472,19 @@ internal class EventAnalyticsTest {
 
     @Test
     fun verifyTrackSnapError() {
+        eventAnalytics.trackSnapError(
+            pageName = "page-name",
+            paymentMethodName = "payment-type",
+            statusCode = "status-code",
+            errorMessage = "error-message"
+        )
         verify(mixpanelTracker).trackEvent(
             eventName = EVENT_SNAP_ERROR,
             properties = mapOf(
                 PROPERTY_PAGE_NAME to "page-name",
                 PROPERTY_PAYMENT_METHOD_NAME to "payment-type",
-                PROPERTY_ERROR_MESSAGE to "error-message",
-                PROPERTY_STATUS_CODE to "status-code"
+                PROPERTY_STATUS_CODE to "status-code",
+                PROPERTY_ERROR_MESSAGE to "error-message"
             )
         )
     }

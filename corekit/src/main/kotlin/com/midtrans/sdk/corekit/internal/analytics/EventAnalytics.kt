@@ -6,6 +6,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ACCOUNT_
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_RESULTS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CTA_CLICKED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ERROR
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CUSTOMER_DATA_INPUT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_EXBIN_RESPONSE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
@@ -86,6 +87,14 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOTAL_QUAN
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TRANSACTION_ID
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TRANSACTION_STATUS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TWO_CLICK_TOKEN_AVAILABLE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ALLOWLISTED_BINS
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ALLOW_RETRY
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ERROR_MESSAGE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMENT_BANK
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMENT_REQUIRED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMENT_TERMS
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STEP_NUMBER
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOKEN_ID
 
 class EventAnalytics(
     private val mixpanelTracker: MixpanelTracker
@@ -206,8 +215,24 @@ class EventAnalytics(
     }
 
     //TODO will be implemented separately
-    fun trackSnapError() {}
     fun trackSnapCtaError() {}
+
+    fun trackSnapError(
+        pageName: String,
+        paymentMethodName: String,
+        statusCode: String,
+        errorMessage: String
+    ) {
+        mixpanelTracker.trackEvent(
+            eventName = EVENT_SNAP_ERROR,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to pageName,
+                PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName,
+                PROPERTY_STATUS_CODE to statusCode,
+                PROPERTY_ERROR_MESSAGE to errorMessage
+            )
+        )
+    }
 
     fun trackSnapAccountNumberCopied(
         pageName: String,
