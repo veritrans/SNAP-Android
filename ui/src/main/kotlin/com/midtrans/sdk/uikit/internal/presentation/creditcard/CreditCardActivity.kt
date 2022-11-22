@@ -406,7 +406,7 @@ internal class CreditCardActivity : BaseActivity() {
                 displayedTotal = totalAmount.value,
                 total = totalAmountWithoutRp.value,
                 isError = isPointInsufficient,
-                infoMessage = stringResource(id = R.string.point_amount_of_points, pointBalance),
+                infoMessage = stringResource(id = R.string.point_amount_of_points, pointBalance.currencyFormatRp()),
                 pointBalanceAmount = pointBalance
             )
             PointBankCard(
