@@ -13,6 +13,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_OPEN_DEE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ORDER_DETAILS_VIEWED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_CLOSED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_VIEWED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_TOKENIZATION_RESULT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_3DS_VERSION
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_BLACKLISTED_BINS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BANK
@@ -80,6 +81,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMEN
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMENT_REQUIRED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMENT_TERMS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STEP_NUMBER
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOKEN_ID
 
 class EventAnalytics(
     private val mixpanelTracker: MixpanelTracker
@@ -204,8 +206,24 @@ class EventAnalytics(
     fun trackSnapAccountNumberCopied() {}
     fun trackSnapPaymentNumberButtonRetried() {}
     fun trackSnapError() {}
-    fun trackSnapTokenizationResult() {}
     fun trackSnapCtaError() {}
+
+    fun trackSnapTokenizationResult(
+        pageName: String,
+        paymentMethodName: String,
+        statusCode: String,
+        tokenId: String
+    ) {
+        mixpanelTracker.trackEvent(
+            eventName = EVENT_SNAP_TOKENIZATION_RESULT,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to pageName,
+                PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName,
+                PROPERTY_STATUS_CODE to statusCode,
+                PROPERTY_TOKEN_ID to tokenId
+            )
+        )
+    }
 
     fun trackSnapPageViewed(
         transactionId: String?,
