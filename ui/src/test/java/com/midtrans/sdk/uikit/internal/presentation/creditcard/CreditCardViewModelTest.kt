@@ -322,4 +322,29 @@ class CreditCardViewModelTest {
             stepNumber = "2"
         )
     }
+
+    @Test
+    fun verifyTrackCustomerDataInput() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val errorCard: ErrorCard = mock()
+        val snapCreditCardUtil: SnapCreditCardUtil = mock()
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+        val creditCardViewModel =
+            CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil, errorCard)
+        creditCardViewModel.trackCustomerDataInput(
+            email = "email",
+            phoneNumber = "phone",
+            displayField = true
+        )
+        verify(eventAnalytics).trackSnapCustomerDataInput(
+            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+            paymentMethodName = PaymentType.CREDIT_CARD,
+            email = "email",
+            phoneNumber = "phone",
+            displayField = "true"
+        )
+    }
 }
