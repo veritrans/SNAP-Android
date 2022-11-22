@@ -463,7 +463,7 @@ class PaymentOptionActivity : BaseActivity() {
                         customerInfo = customerInfo,
                         itemInfo = itemInfo,
                         paymentTypeItem = this.paymentTypeItem,
-                        enabledPayment = enabledPayments,
+                        enabledPayments = enabledPayments,
                         stepNumber = NEXT_STEP_NUMBER
                     )
                 )

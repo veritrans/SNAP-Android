@@ -221,7 +221,7 @@ class BankTransferListActivity : BaseActivity() {
             customerInfo: CustomerInfo? = null,
             itemInfo: ItemInfo? = null,
             paymentTypeItem: PaymentTypeItem? = null,
-            enabledPayment: List<EnabledPayment>? = null,
+            enabledPayments: List<EnabledPayment>? = null,
             stepNumber: Int
         ): Intent {
             return Intent(activityContext, BankTransferListActivity::class.java).apply {
@@ -232,7 +232,7 @@ class BankTransferListActivity : BaseActivity() {
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
                 putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
-                enabledPayment?.also {
+                enabledPayments?.also {
                     putParcelableArrayListExtra( EXTRA_ENABLED_PAYMENT, ArrayList(it) )
                 }
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
