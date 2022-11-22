@@ -47,7 +47,7 @@ class ErrorScreenActivity : BaseActivity() {
 
     @Preview
     @Composable
-    private fun forPreview() {
+    private fun ForPreview() {
         ErrorContent(
             title = resources.getString(R.string.expired_title),
             content = resources.getString(R.string.expired_desc)

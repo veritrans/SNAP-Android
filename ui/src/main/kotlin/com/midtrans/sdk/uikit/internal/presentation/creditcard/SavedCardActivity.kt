@@ -108,7 +108,8 @@ class SavedCardActivity: BaseActivity() {
                     activityContext = this@SavedCardActivity,
                     total = totalAmount,
                     orderId = it?.orderId.toString(),
-                    transactionResult = TransactionResult("","","")
+                    transactionResult = TransactionResult("","",""),
+                    stepNumber = 0
                 )
                 startActivity(intent)
             }
@@ -120,7 +121,8 @@ class SavedCardActivity: BaseActivity() {
                         activityContext = this@SavedCardActivity,
                         total = totalAmount,
                         orderId = it?.orderId.toString(),
-                        transactionResult = TransactionResult("","","")
+                        transactionResult = TransactionResult("","",""),
+                        stepNumber = 0
                     )
                 }
                 else -> {
@@ -157,6 +159,7 @@ class SavedCardActivity: BaseActivity() {
         var previousEightDigitNumber = ""
         val bankCodeId by viewModel.bankIconId.observeAsState(null)
         val isCvvSavedCardInvalid by remember { mutableStateOf(false)}
+        val isPointBankSavedCardChecked by remember { mutableStateOf(false)}
         val savedTokenList = mutableListOf<FormData>()
         var isExpanding by remember { mutableStateOf(false) }
         val state = remember {
@@ -196,7 +199,8 @@ class SavedCardActivity: BaseActivity() {
                     bankCode = savedToken.binDetail?.bankCode.toString(),
                     tokenId = savedToken.token.toString(),
                     cvvSavedCardTextField = TextFieldValue(),
-                    isCvvSavedCardInvalid = isCvvSavedCardInvalid
+                    isCvvSavedCardInvalid = isCvvSavedCardInvalid,
+                    isPointBankSavedCardChecked = isPointBankSavedCardChecked
                 )
             )
         }
@@ -296,7 +300,7 @@ class SavedCardActivity: BaseActivity() {
                                     state.cvv = it
                                 },
                                 onSavedCardCheckedChange = { state.isSavedCardChecked = it },
-                                onPointBankCheckedChange = {}
+                                onPointBankCheckedChange = { }
                             )
                             SnapButton(
                                 text = stringResource(id = R.string.cc_dc_main_screen_cta),

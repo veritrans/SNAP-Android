@@ -68,9 +68,14 @@ class BankTransferListActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_PAYMENT_TYPE_ITEM)
     }
 
+    private val currentStepNumber: Int by lazy {
+        intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
+        viewModel.trackPageViewed(currentStepNumber)
         paymentTypeItem?.let { paymentType ->
             paymentType.method?.let { paymentMethod ->
                 toBankTransferDetail(paymentMethod)
@@ -157,7 +162,8 @@ class BankTransferListActivity : BaseActivity() {
                 itemInfo = itemInfo,
                 orderId = orderId,
                 totalAmount = totalAmount,
-                snapToken = snapToken
+                snapToken = snapToken,
+                stepNumber = currentStepNumber + 1
             )
         resultLauncher.launch(intent)
     }
@@ -190,6 +196,7 @@ class BankTransferListActivity : BaseActivity() {
         private const val EXTRA_ITEM_INFO = "bankTransfer.extra.item_info"
         private const val EXTRA_PAYMENT_METHOD_ITEM = "bankTransfer.extra.payment_method_item"
         private const val EXTRA_PAYMENT_TYPE_ITEM = "bankTransfer.extra.payment_type_it"
+        private const val EXTRA_STEP_NUMBER = "bankTransfer.extra.step_number"
 
         fun getIntent(
             activityContext: Context,
@@ -199,7 +206,8 @@ class BankTransferListActivity : BaseActivity() {
             paymentMethodItem: PaymentMethodItem,
             customerInfo: CustomerInfo? = null,
             itemInfo: ItemInfo? = null,
-            paymentTypeItem: PaymentTypeItem? = null
+            paymentTypeItem: PaymentTypeItem? = null,
+            stepNumber: Int
         ): Intent {
             return Intent(activityContext, BankTransferListActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -209,6 +217,7 @@ class BankTransferListActivity : BaseActivity() {
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
                 putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
+                putExtra(EXTRA_STEP_NUMBER, stepNumber)
             }
         }
     }

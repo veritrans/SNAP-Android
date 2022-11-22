@@ -15,6 +15,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_OPEN_DEE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ORDER_DETAILS_VIEWED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_CLOSED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAYMENT_NUMBER_BUTTON_RETRIED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_VIEWED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_3DS_VERSION
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BANK
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CTA_NAME
@@ -43,6 +44,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_REGISTRATI
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_RESPONSE_TIME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TOKEN
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STATUS_CODE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STEP_NUMBER
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOTAL_ITEMS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOTAL_QUANTITY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TRANSACTION_ID
@@ -100,7 +102,14 @@ internal class EventAnalyticsTest {
             orderId = "order-id",
             grossAmount = "gross-amount",
             merchantId = "merchant-id",
-            merchantName = "merchant-name"
+            merchantName = "merchant-name",
+            colourSchema = "colour-schema",
+            enabledPayments = "enabled-payments",
+            enabledPaymentsLength = "5",
+            snapRedirectUrl = "redirect-url",
+            merchantUrl = "merchant-url",
+            allowRetry = "allow-retry",
+            otherVaProcessor = "other-va"
         )
         verify(mixpanelTracker).registerCommonProperties(
             mapOf(
@@ -108,7 +117,14 @@ internal class EventAnalyticsTest {
                 EventName.PROPERTY_ORDER_ID to "order-id",
                 EventName.PROPERTY_GROSS_AMOUNT to "gross-amount",
                 EventName.PROPERTY_MERCHANT_ID to "merchant-id",
-                EventName.PROPERTY_MERCHANT_NAME to "merchant-name"
+                EventName.PROPERTY_MERCHANT_NAME to "merchant-name",
+                EventName.PROPERTY_COLOUR_SCHEME to "colour-schema",
+                EventName.PROPERTY_PAYMENTS_ENABLED to "enabled-payments",
+                EventName.PROPERTY_PAYMENTS_ENABLED_LENGTH to "5",
+                EventName.PROPERTY_SNAP_REDIRECT_URL to "redirect-url",
+                EventName.PROPERTY_MERCHANT_URL to "merchant-url",
+                EventName.PROPERTY_ALLOW_RETRY to "allow-retry",
+                EventName.PROPERTY_OTHER_VA_PROCESSOR to "other-va"
             )
         )
     }
@@ -133,6 +149,41 @@ internal class EventAnalyticsTest {
                 PROPERTY_CUSTOMER_POST_CODE to "post-code",
                 PROPERTY_TOTAL_ITEMS to "total-items",
                 PROPERTY_TOTAL_QUANTITY to "total-quantity"
+            )
+        )
+    }
+
+    @Test
+    fun verifyRegisterCommonCreditCardProperties() {
+        eventAnalytics.registerCommonCreditCardProperties(
+            cardOneClickTokenAvailable = "available",
+            cardTwoClickTokenAvailable = "available",
+            priorityCardFeature = "priority",
+            savedTokens = "tokens",
+            promoEnabled = "promo-enabled",
+            secure = "secure-enabled",
+            saveCard = "save-card-enabled",
+            blacklistedBins = "blacklist",
+            allowlistedBins = "allowlist",
+            installmentTerms = "terms",
+            installmentBank = "bank",
+            installmentRequired = "required"
+        )
+
+        verify(mixpanelTracker).registerCommonProperties(
+            mapOf(
+                EventName.PROPERTY_ONE_CLICK_TOKEN_AVAILABLE to "available",
+                EventName.PROPERTY_TWO_CLICK_TOKEN_AVAILABLE to "available",
+                EventName.PROPERTY_PRIORITY_CARD_FEATURE to "priority",
+                EventName.PROPERTY_SAVED_TOKENS to "tokens",
+                EventName.PROPERTY_PROMO_ENABLED to "promo-enabled",
+                EventName.PROPERTY_SECURE_ENABLED to "secure-enabled",
+                EventName.PROPERTY_SAVE_CARD_ENABLED to "save-card-enabled",
+                EventName.PROPERTY_BLACKLISTED_BINS to "blacklist",
+                EventName.PROPERTY_ALLOWLISTED_BINS to "allowlist",
+                EventName.PROPERTY_INSTALLMENT_TERMS to "terms",
+                EventName.PROPERTY_INSTALLMENT_BANK to "bank",
+                EventName.PROPERTY_INSTALLMENT_REQUIRED to "required",
             )
         )
     }
@@ -350,6 +401,25 @@ internal class EventAnalyticsTest {
                 PROPERTY_PAYMENT_METHOD_NAME to "payment-type",
                 PROPERTY_TRANSACTION_ID to "transaction-id",
                 PROPERTY_NET_AMOUNT to "net-amount"
+            )
+        )
+    }
+
+    @Test
+    fun verifyTrackSnapPageViewed() {
+        eventAnalytics.trackSnapPageViewed(
+            pageName = "page-name",
+            paymentMethodName = "payment-type",
+            transactionId = "transaction-id",
+            stepNumber = "1"
+        )
+        verify(mixpanelTracker).trackEvent(
+            eventName = EVENT_SNAP_PAGE_VIEWED,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to "page-name",
+                PROPERTY_PAYMENT_METHOD_NAME to "payment-type",
+                PROPERTY_TRANSACTION_ID to "transaction-id",
+                PROPERTY_STEP_NUMBER to "1"
             )
         )
     }

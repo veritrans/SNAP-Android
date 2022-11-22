@@ -2,6 +2,7 @@ package com.midtrans.sdk.uikit.internal.util
 
 import android.util.Patterns
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.PaymentType
@@ -9,6 +10,7 @@ import com.midtrans.sdk.corekit.api.model.Promo
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.PromoData
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
+import kotlin.math.min
 
 internal object SnapCreditCardUtil {
 
@@ -96,6 +98,50 @@ internal object SnapCreditCardUtil {
     }
     fun getExpYearFromTextField(value: TextFieldValue) : String{
         return return value.text.substring(3, 5)
+    }
+
+    fun formatMaxPointDiscount(input:TextFieldValue, totalAmount: Int, pointBalanceAmount: String) : TextFieldValue {
+        val digit = input.text.filter {
+            it.isDigit()
+        }
+        val length = min(digit.length, totalAmount)
+        val pointBalanceAvailable = pointBalanceAmount.toDouble().toInt()
+
+        var output = TextFieldValue("")
+
+        if (input.text.isNotEmpty()){
+            output = when {
+                pointBalanceAvailable > totalAmount -> {
+                    when {
+                        digit.toLong() > totalAmount -> {
+                            input.copy(totalAmount.toString(), TextRange(length))
+                        }
+                        else -> {
+                            input.copy(digit, TextRange(digit.length))
+                        }
+                    }
+                }
+                else -> {
+                    when {
+                        digit.toLong() > totalAmount -> {
+                            input.copy(pointBalanceAvailable.toString(), TextRange(pointBalanceAvailable.toString().length))
+                        }
+                        else -> {
+                            input.copy(digit, TextRange(digit.length))
+                        }
+                    }
+                }
+            }
+        }
+        return  output
+    }
+
+    fun formatDisplayedAmountOnPointInput(displayedTotal: String, total: Double, pointAmount: TextFieldValue ): String{
+        return if (pointAmount.text.isNotEmpty()){
+            (total - pointAmount.text.toDouble()).currencyFormatRp()
+        } else {
+            displayedTotal
+        }
     }
 
     private fun isWhiteListedByCreditDebit(

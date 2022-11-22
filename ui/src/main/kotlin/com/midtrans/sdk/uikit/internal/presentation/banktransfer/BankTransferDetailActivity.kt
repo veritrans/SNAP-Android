@@ -77,9 +77,14 @@ internal class BankTransferDetailActivity : BaseActivity() {
         intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
     }
 
+    private val currentStepNumber: Int by lazy {
+        intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
+        viewModel.trackPageViewed(paymentType, currentStepNumber)
         setContent {
             Content(
                 totalAmount = totalAmount,
@@ -568,6 +573,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
         private const val EXTRA_ITEM_INFO = "bankTransfer.extra.item_info"
         private const val EXTRA_PAYMENT_TYPE = "bankTransfer.extra.payment_type"
         private const val EXTRA_SNAP_TOKEN = "bankTransfer.extra.snap_token"
+        private const val EXTRA_STEP_NUMBER = "bankTransfer.extra.step_number"
         private const val BANK_CODE_MARK = "--BANK_CODE--"
 
         fun getIntent(
@@ -577,7 +583,8 @@ internal class BankTransferDetailActivity : BaseActivity() {
             totalAmount: String,
             orderId: String,
             customerInfo: CustomerInfo? = null,
-            itemInfo: ItemInfo? = null
+            itemInfo: ItemInfo? = null,
+            stepNumber: Int
         ): Intent {
             return Intent(activityContext, BankTransferDetailActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
@@ -586,6 +593,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 putExtra(EXTRA_CUSTOMER_DETAIL, customerInfo)
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
+                putExtra(EXTRA_STEP_NUMBER, stepNumber)
             }
         }
     }

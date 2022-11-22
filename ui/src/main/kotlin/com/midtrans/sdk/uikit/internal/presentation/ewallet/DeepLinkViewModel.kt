@@ -56,6 +56,17 @@ internal class DeepLinkViewModel @Inject constructor(
         )
     }
 
+    fun trackPageViewed(
+        paymentType: String,
+        stepNumber: Int
+    ) {
+        trackPageViewed(
+            pageName = getPageName(paymentType),
+            paymentMethodName = paymentType,
+            stepNumber = stepNumber.toString()
+        )
+    }
+
     private fun getPageName(paymentType: String): String {
         return when (paymentType) {
             PaymentType.GOPAY -> PageName.GOPAY_DEEPLINK_PAGE

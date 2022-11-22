@@ -114,5 +114,13 @@ internal class UobPaymentViewModel @Inject constructor(
         )
     }
 
+    fun trackPageViewed(stepNumber: Int) {
+        trackPageViewed(
+            pageName = PageName.UOB_PAGE,
+            paymentMethodName = PaymentType.UOB_EZPAY,
+            stepNumber = stepNumber.toString()
+        )
+    }
+
     fun getExpiredHour(remainingTime: Long) = dateTimeUtil.getExpiredHour(remainingTime)
 }
