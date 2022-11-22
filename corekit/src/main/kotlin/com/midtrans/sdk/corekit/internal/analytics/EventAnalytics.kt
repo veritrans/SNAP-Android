@@ -134,30 +134,30 @@ class EventAnalytics(
     fun trackSnapCustomerDataInput() {}
 
     fun trackSnapAccountNumberCopied(
-        pageName: String?,
-        paymentMethodName: String?
+        pageName: String,
+        paymentMethodName: String
     ) {
-        val optionalProperties = mutableMapOf<String, String>()
-        paymentMethodName?.also { optionalProperties[PROPERTY_PAYMENT_METHOD_NAME] = it }
-        pageName?.also { optionalProperties[PROPERTY_PAGE_NAME] = it }
+        val manadatoryProperties = mutableMapOf<String, String>()
+        manadatoryProperties[PROPERTY_PAYMENT_METHOD_NAME] = paymentMethodName
+        manadatoryProperties[PROPERTY_PAGE_NAME] = pageName
 
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_ACCOUNT_NUMBER_COPIED,
-            properties = optionalProperties
+            properties = manadatoryProperties
         )
     }
 
     fun trackSnapPaymentNumberButtonRetried(
-        pageName: String?,
-        paymentMethodName: String?
+        pageName: String,
+        paymentMethodName: String
     ) {
-        val optionalProperties = mutableMapOf<String, String>()
-        paymentMethodName?.also { optionalProperties[PROPERTY_PAYMENT_METHOD_NAME] = it }
-        pageName?.also { optionalProperties[PROPERTY_PAGE_NAME] = it }
+        val mandatoryProperties = mutableMapOf<String, String>()
+        mandatoryProperties[PROPERTY_PAYMENT_METHOD_NAME] = paymentMethodName
+        mandatoryProperties[PROPERTY_PAGE_NAME] = pageName
 
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_PAYMENT_NUMBER_BUTTON_RETRIED,
-            properties = optionalProperties
+            properties = mandatoryProperties
         )
     }
 
