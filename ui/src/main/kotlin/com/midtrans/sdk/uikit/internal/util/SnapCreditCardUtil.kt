@@ -100,16 +100,16 @@ internal object SnapCreditCardUtil {
         return return value.text.substring(3, 5)
     }
 
-    fun formatMaxPointDiscount(input:TextFieldValue, totalAmount: Int, pointBalanceAmount: String) : TextFieldValue {
+    fun formatMaxPointDiscount(input:TextFieldValue, totalAmount: Int, pointBalanceAmount: Double) : TextFieldValue {
         val digit = input.text.filter {
             it.isDigit()
         }
-        val length = min(digit.length, totalAmount)
-        val pointBalanceAvailable = pointBalanceAmount.toDouble().toInt()
+        val length = min(digit.length, totalAmount.toString().length)
+        val pointBalanceAvailable = pointBalanceAmount.toLong()
 
         var output = TextFieldValue("")
 
-        if (input.text.isNotEmpty()){
+        if (digit.isNotEmpty()){
             output = when {
                 pointBalanceAvailable > totalAmount -> {
                     when {

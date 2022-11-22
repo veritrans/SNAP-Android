@@ -175,6 +175,6 @@ data class SnapPointRedeemDialogData(
     var total: Double,
     var isError: Boolean,
     var infoMessage: String,
-    var pointBalanceAmount: String
+    var pointBalanceAmount: Double
 )
 

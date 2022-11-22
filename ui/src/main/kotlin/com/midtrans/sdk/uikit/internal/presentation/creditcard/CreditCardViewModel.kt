@@ -47,7 +47,7 @@ internal class CreditCardViewModel @Inject constructor(
     private val _errorLiveData = MutableLiveData<SnapError>()
     private val _isPointBankShown = MutableLiveData<Boolean>()
     private val _isPointBankEnabled = MutableLiveData<Boolean>()
-    private val _pointBalanceAmount = MutableLiveData<String>()
+    private val _pointBalanceAmount = MutableLiveData<Double>()
     private val _cardToken = MutableLiveData<String>()
     private var expireTimeInMillis = 0L
     private var allowRetry = false
@@ -70,7 +70,7 @@ internal class CreditCardViewModel @Inject constructor(
     val errorLiveData: LiveData<SnapError> = _errorLiveData
     val isPointBankShown: LiveData<Boolean> = _isPointBankShown
     private val isPointBankEnabled: LiveData<Boolean> = _isPointBankEnabled
-    val pointBalanceAmount: LiveData<String> = _pointBalanceAmount
+    val pointBalanceAmount: LiveData<Double> = _pointBalanceAmount
     val cardToken: LiveData<String> = _cardToken
     val isInstallmentRequired: LiveData<Boolean> = _isInstallmentRequired
 
@@ -483,7 +483,9 @@ internal class CreditCardViewModel @Inject constructor(
                             grossAmount = finalAmount,
                             callback = object : Callback<BankPointResponse> {
                                 override fun onSuccess(result: BankPointResponse) {
-                                    _pointBalanceAmount.value = result.pointBalanceAmount
+                                    result.pointBalanceAmount?.toDouble().let {
+                                        _pointBalanceAmount.value = it
+                                    }
                                 }
 
                                 override fun onError(error: SnapError) {
