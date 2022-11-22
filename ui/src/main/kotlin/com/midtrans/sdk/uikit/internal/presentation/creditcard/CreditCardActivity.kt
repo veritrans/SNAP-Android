@@ -340,6 +340,11 @@ internal class CreditCardActivity : BaseActivity() {
                     viewModel?.trackSnapButtonClicked(
                         ctaName = getStringResourceInEnglish(R.string.cc_dc_main_screen_cta)
                     )
+                    viewModel?.trackCustomerDataInput(
+                        email = state.customerEmail.text,
+                        phoneNumber = state.customerPhone.text,
+                        displayField = withCustomerPhoneEmail
+                    )
 
                     var grossAmount = 0.0
                     transactionDetails?.grossAmount?.let {
@@ -620,11 +625,6 @@ internal class CreditCardActivity : BaseActivity() {
                     ) {
                         if (withCustomerPhoneEmail) {
                             CustomerPhoneLayout(state = state)
-                            viewModel.trackCustomerDataInput(
-                                email = state.customerEmail.text,
-                                phoneNumber = state.customerPhone.text,
-                                displayField = withCustomerPhoneEmail
-                            )
                         }
 
                         savedTokenListState?.let {
