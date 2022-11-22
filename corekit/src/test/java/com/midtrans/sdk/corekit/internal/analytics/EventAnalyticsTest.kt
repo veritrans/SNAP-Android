@@ -449,6 +449,13 @@ internal class EventAnalyticsTest {
 
     @Test
     fun verifyTrackSnapCustomerDataInput() {
+        eventAnalytics.trackSnapCustomerDataInput(
+            pageName = "page-name",
+            paymentMethodName = "payment-type",
+            email = "email",
+            phoneNumber = "phone",
+            displayField = "true"
+        )
         verify(mixpanelTracker).trackEvent(
             eventName = EVENT_SNAP_CUSTOMER_DATA_INPUT,
             properties = mapOf(
