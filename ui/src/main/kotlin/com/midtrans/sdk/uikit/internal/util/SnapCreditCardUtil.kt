@@ -104,12 +104,12 @@ internal object SnapCreditCardUtil {
         val digit = input.text.filter {
             it.isDigit()
         }
-        val length = min(digit.length, totalAmount)
+        val length = min(digit.length, totalAmount.toString().length)
         val pointBalanceAvailable = pointBalanceAmount.toLong()
 
         var output = TextFieldValue("")
 
-        if (input.text.isNotEmpty()){
+        if (digit.isNotEmpty()){
             output = when {
                 pointBalanceAvailable > totalAmount -> {
                     when {
