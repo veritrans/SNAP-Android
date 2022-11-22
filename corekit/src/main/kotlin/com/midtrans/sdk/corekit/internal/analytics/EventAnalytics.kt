@@ -204,7 +204,8 @@ class EventAnalytics(
     }
 
     //TODO will be implemented separately
-    fun trackSnapCustomerDataInput() {}
+    fun trackSnapError() {}
+    fun trackSnapCtaError() {}
 
     fun trackSnapAccountNumberCopied(
         pageName: String,
@@ -234,8 +235,15 @@ class EventAnalytics(
         )
     }
 
-    fun trackSnapError() {}
-    fun trackSnapCtaError() {}
+    fun trackSnapCustomerDataInput(
+        pageName: String,
+        paymentMethodName: String,
+        email: String?,
+        phoneNumber: String?,
+        displayField: String
+    ) {
+
+    }
 
     fun trackSnapTokenizationResult(
         pageName: String,

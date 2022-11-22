@@ -7,6 +7,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ACCOUNT_
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_RESULTS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CTA_CLICKED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CUSTOMER_DATA_INPUT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_EXBIN_RESPONSE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
@@ -35,6 +36,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_E
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_PHONE_NUMBER
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_POST_CODE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_DISPLAY_FIELD
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ECI
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_FRAUD_STATUS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_NET_AMOUNT
@@ -441,6 +443,20 @@ internal class EventAnalyticsTest {
                 PROPERTY_PAYMENT_METHOD_NAME to "payment-type",
                 PROPERTY_STATUS_CODE to "status-code",
                 PROPERTY_TOKEN_ID to "token-id"
+            )
+        )
+    }
+
+    @Test
+    fun verifyTrackSnapCustomerDataInput() {
+        verify(mixpanelTracker).trackEvent(
+            eventName = EVENT_SNAP_CUSTOMER_DATA_INPUT,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to "page-name",
+                PROPERTY_PAYMENT_METHOD_NAME to "payment-type",
+                PROPERTY_CUSTOMER_EMAIL to "email",
+                PROPERTY_CUSTOMER_PHONE_NUMBER to "phone",
+                PROPERTY_DISPLAY_FIELD to "true"
             )
         )
     }
