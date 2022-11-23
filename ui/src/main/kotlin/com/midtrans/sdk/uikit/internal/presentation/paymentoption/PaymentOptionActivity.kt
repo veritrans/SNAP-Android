@@ -22,13 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
-import com.midtrans.sdk.corekit.api.model.CreditCard
-import com.midtrans.sdk.corekit.api.model.CustomerDetails
-import com.midtrans.sdk.corekit.api.model.PaymentMethod
-import com.midtrans.sdk.corekit.api.model.PaymentType
-import com.midtrans.sdk.corekit.api.model.Promo
-import com.midtrans.sdk.corekit.api.model.ItemDetails
-import com.midtrans.sdk.corekit.api.model.TransactionResult
+import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.internal.network.model.response.EnabledPayment
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
@@ -68,6 +62,7 @@ class PaymentOptionActivity : BaseActivity() {
         private const val EXTRA_EXPIRY_TIME = "paymentOptionActivity.extra.expiry_time"
         private const val EXTRA_PAYMENT_TYPE_ITEM = "paymentOptionActivity.extra.payment_type_item"
         private const val EXTRA_ENABLED_PAYMENT = "paymentOptionActivity.extra.enabled_payment"
+        private const val EXTRA_TRANSACTION_RESULT = "paymentOptionActivity.extra.transaction_result"
 
         fun openPaymentOptionPage(
             activityContext: Context,
@@ -83,7 +78,8 @@ class PaymentOptionActivity : BaseActivity() {
             merchant: Merchant?,
             expiryTime: String?,
             paymentTypeItem: PaymentTypeItem?,
-            enabledPayments: List<EnabledPayment>?
+            enabledPayments: List<EnabledPayment>?,
+            result: TransactionResponse?
         ): Intent {
             return Intent(activityContext, PaymentOptionActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -96,6 +92,7 @@ class PaymentOptionActivity : BaseActivity() {
                 putExtra(EXTRA_TRANSACTION_DETAILS, transactionDetail)
                 putExtra(EXTRA_EXPIRY_TIME, expiryTime)
                 putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
+                putExtra(EXTRA_TRANSACTION_RESULT, result)
                 promos?.also { putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it)) }
                 itemDetails?.also { putParcelableArrayListExtra(EXTRA_ITEM_DETAILS, ArrayList(it)) }
                 enabledPayments?.also { putParcelableArrayListExtra(EXTRA_ENABLED_PAYMENT, ArrayList(it)) }
@@ -166,6 +163,10 @@ class PaymentOptionActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_MERCHANT_DATA)
     }
 
+    private val transactionResult: TransactionResponse? by lazy {
+        intent.getParcelableExtra(EXTRA_TRANSACTION_RESULT) as? TransactionResponse
+    }
+
     private var customerInfo: CustomerInfo? = null
     private var itemInfo: ItemInfo? = null
 
@@ -179,6 +180,10 @@ class PaymentOptionActivity : BaseActivity() {
         paymentMethods = viewModel.initiateList(paymentList, isTabletDevice())
         customerInfo = viewModel.getCustomerInfo(customerDetail)
         itemInfo = viewModel.getItemInfo(itemDetails)
+
+        transactionResult?.let {
+            handleUsedToken(it)
+        }
 
         enabledPayments?.let { handleEnabledPayments(it) }
 
@@ -206,6 +211,24 @@ class PaymentOptionActivity : BaseActivity() {
                     promos = promos,
                     creditCard = creditCard
                 )
+            }
+        }
+    }
+
+    private fun handleUsedToken(result: TransactionResponse) {
+        if(result.transactionStatus == UiKitConstants.STATUS_PENDING){
+            val paymentMethod = paymentMethods.paymentMethods.find { it.type == result.chargeType }
+            paymentMethod?.let { method ->
+                result.chargeType?.let { paymentType ->
+                    getOnPaymentItemClick(
+                        paymentType = paymentType,
+                        customerInfo = customerInfo,
+                        itemInfo = itemInfo,
+                        totalAmount = totalAmount,
+                        paymentMethodItem = method,
+                        orderId = orderId
+                    )[paymentType]?.invoke()
+                }
             }
         }
     }

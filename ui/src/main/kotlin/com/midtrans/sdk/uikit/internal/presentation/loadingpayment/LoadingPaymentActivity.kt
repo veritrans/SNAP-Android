@@ -246,7 +246,8 @@ class LoadingPaymentActivity : BaseActivity() {
                 merchant = it.merchantData,
                 expiryTime = it.expiryTme,
                 paymentTypeItem = paymentType,
-                enabledPayments = it.enabledPayment
+                enabledPayments = it.enabledPayment,
+                result = it.result
             )
 
             resultLauncher.launch(intent)

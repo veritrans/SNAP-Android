@@ -26,6 +26,7 @@ data class TransactionResponse(
     var orderId: String? = null,
     var grossAmount: Double? = null,
     var paymentType: String? = null,
+    var chargeType: String? = null,
     var transactionTime: String? = null,
     var transactionStatus: String? = null,
     var fraudStatus: String? = null,
