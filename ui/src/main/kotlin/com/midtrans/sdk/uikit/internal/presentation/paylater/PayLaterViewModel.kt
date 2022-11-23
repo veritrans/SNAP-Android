@@ -58,6 +58,7 @@ internal class PayLaterViewModel @Inject constructor(
                 }
 
                 override fun onError(error: SnapError) {
+                    //TODO need to handle error dialog?
                     trackSnapError(
                         pageName = PageName.AKULAKU_PAGE,
                         paymentMethodName = PaymentType.AKULAKU,
