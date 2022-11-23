@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.internal.network.model.response.EnabledPayment
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
@@ -68,6 +69,10 @@ class BankTransferListActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_PAYMENT_TYPE_ITEM)
     }
 
+    private val enabledPayments: List<EnabledPayment>? by lazy {
+        intent.getParcelableArrayListExtra(EXTRA_ENABLED_PAYMENT)
+    }
+    
     private val currentStepNumber: Int by lazy {
         intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
     }
@@ -75,7 +80,15 @@ class BankTransferListActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
+
         viewModel.trackPageViewed(currentStepNumber)
+        
+        enabledPayments?.let {
+            if (it.size == 1) {
+                toBankTransferDetail(it[0].type)
+            }
+        }
+        
         paymentTypeItem?.let { paymentType ->
             paymentType.method?.let { paymentMethod ->
                 toBankTransferDetail(paymentMethod)
@@ -128,7 +141,7 @@ class BankTransferListActivity : BaseActivity() {
                     }
                 ) {
                     LazyColumn {
-                        paymentMethodItem.methods.forEachIndexed { _, method ->
+                        paymentMethodItem.methods?.forEachIndexed { _, method ->
                             item {
                                 bankNameMap[method]?.let {
                                     SnapSingleIconListItem(title = stringResource(it.first),
@@ -196,6 +209,7 @@ class BankTransferListActivity : BaseActivity() {
         private const val EXTRA_ITEM_INFO = "bankTransfer.extra.item_info"
         private const val EXTRA_PAYMENT_METHOD_ITEM = "bankTransfer.extra.payment_method_item"
         private const val EXTRA_PAYMENT_TYPE_ITEM = "bankTransfer.extra.payment_type_it"
+        private const val EXTRA_ENABLED_PAYMENT = "bankTransfer.extra.enabled_payment"
         private const val EXTRA_STEP_NUMBER = "bankTransfer.extra.step_number"
 
         fun getIntent(
@@ -207,6 +221,7 @@ class BankTransferListActivity : BaseActivity() {
             customerInfo: CustomerInfo? = null,
             itemInfo: ItemInfo? = null,
             paymentTypeItem: PaymentTypeItem? = null,
+            enabledPayments: List<EnabledPayment>? = null,
             stepNumber: Int
         ): Intent {
             return Intent(activityContext, BankTransferListActivity::class.java).apply {
@@ -217,6 +232,9 @@ class BankTransferListActivity : BaseActivity() {
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
                 putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
+                enabledPayments?.also {
+                    putParcelableArrayListExtra( EXTRA_ENABLED_PAYMENT, ArrayList(it) )
+                }
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
             }
         }

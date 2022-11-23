@@ -42,6 +42,7 @@ import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.model.PromoData
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
@@ -194,10 +195,21 @@ internal class CreditCardActivity : BaseActivity() {
         resultLauncher.launch(intent)
     }
 
+    private fun launchErrorScreen(it: TransactionResponse) {
+        val intent = ErrorScreenActivity.getIntent(
+            activityContext = this@CreditCardActivity,
+            title = it.validationMessages?.get(0).toString(),
+            content = it.statusMessage.toString()
+        )
+        resultLauncher.launch(intent)
+    }
+
     private fun initTransactionResultScreenObserver() {
         viewModel.transactionResponseLiveData.observe(this) {
-            if (it.statusCode != UiKitConstants.STATUS_CODE_201 && it.redirectUrl.isNullOrEmpty()) {
+            if (it.statusCode == UiKitConstants.STATUS_CODE_200) {
                 launchSuccessScreen(it)
+            } else if (it.statusCode != UiKitConstants.STATUS_CODE_201 && it.redirectUrl.isNullOrEmpty()) {
+                launchErrorScreen(it)
             }
         }
 

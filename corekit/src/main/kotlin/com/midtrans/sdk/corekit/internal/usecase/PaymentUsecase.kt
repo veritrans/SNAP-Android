@@ -81,7 +81,8 @@ internal class PaymentUsecase(
                                 merchantData = responseData.merchant,
                                 customerDetails = responseData.customerDetails,
                                 transactionDetails = responseData.transactionDetails,
-                                expiryTme = responseData.expiryTime
+                                expiryTme = responseData.expiryTime,
+                                enabledPayment = responseData.enabledPayments
                             )
                         )
                     },
@@ -112,7 +113,8 @@ internal class PaymentUsecase(
                                 merchantData = responseData.merchant,
                                 customerDetails = responseData.customerDetails,
                                 transactionDetails = responseData.transactionDetails,
-                                expiryTme = responseData.expiryTime
+                                expiryTme = responseData.expiryTime,
+                                enabledPayment = responseData.enabledPayments
                             )
                         )
                     },
@@ -294,11 +296,11 @@ internal class PaymentUsecase(
             methods.add(
                 PaymentMethod(
                     type = payment.type,
-                    channels = if (payment.type == PaymentType.UOB_EZPAY) {
+                    channels = (if (payment.type == PaymentType.UOB_EZPAY) {
                         payment.mode
                     } else {
                         emptyList()
-                    }
+                    }) as List<String>
                 )
             )
         }

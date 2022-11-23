@@ -29,6 +29,7 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.Promo
 import com.midtrans.sdk.corekit.api.model.ItemDetails
 import com.midtrans.sdk.corekit.api.model.TransactionResult
+import com.midtrans.sdk.corekit.internal.network.model.response.EnabledPayment
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
@@ -62,9 +63,11 @@ class PaymentOptionActivity : BaseActivity() {
         private const val EXTRA_CREDIT_CARD = "paymentOptionActivity.extra.credit_card"
         private const val EXTRA_PROMOS = "paymentOptionActivity.extra.promos"
         private const val EXTRA_MERCHANT_DATA = "paymentOptionActivity.extra.merchant_data"
-        private const val EXTRA_TRANSACTION_DETAILS = "paymentOptionActivity.extra.transaction_details"
+        private const val EXTRA_TRANSACTION_DETAILS =
+            "paymentOptionActivity.extra.transaction_details"
         private const val EXTRA_EXPIRY_TIME = "paymentOptionActivity.extra.expiry_time"
         private const val EXTRA_PAYMENT_TYPE_ITEM = "paymentOptionActivity.extra.payment_type_item"
+        private const val EXTRA_ENABLED_PAYMENT = "paymentOptionActivity.extra.enabled_payment"
 
         fun openPaymentOptionPage(
             activityContext: Context,
@@ -79,7 +82,8 @@ class PaymentOptionActivity : BaseActivity() {
             promos: List<Promo>?,
             merchant: Merchant?,
             expiryTime: String?,
-            paymentTypeItem: PaymentTypeItem?
+            paymentTypeItem: PaymentTypeItem?,
+            enabledPayments: List<EnabledPayment>?
         ): Intent {
             return Intent(activityContext, PaymentOptionActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -94,6 +98,7 @@ class PaymentOptionActivity : BaseActivity() {
                 putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
                 promos?.also { putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it)) }
                 itemDetails?.also { putParcelableArrayListExtra(EXTRA_ITEM_DETAILS, ArrayList(it)) }
+                enabledPayments?.also { putParcelableArrayListExtra(EXTRA_ENABLED_PAYMENT, ArrayList(it)) }
             }
         }
     }
@@ -153,6 +158,10 @@ class PaymentOptionActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_PAYMENT_TYPE_ITEM)
     }
 
+    private val enabledPayments: List<EnabledPayment>? by lazy {
+        intent.getParcelableArrayListExtra(EXTRA_ENABLED_PAYMENT)
+    }
+
     private val merchant: Merchant? by lazy {
         intent.getParcelableExtra(EXTRA_MERCHANT_DATA)
     }
@@ -170,6 +179,8 @@ class PaymentOptionActivity : BaseActivity() {
         paymentMethods = viewModel.initiateList(paymentList, isTabletDevice())
         customerInfo = viewModel.getCustomerInfo(customerDetail)
         itemInfo = viewModel.getItemInfo(itemDetails)
+
+        enabledPayments?.let { handleEnabledPayments(it) }
 
         //TODO: Find More Optimal way for PaymentType that have method (Bank transfer & UOB)
         paymentTypeItem?.let { paymentType ->
@@ -198,6 +209,35 @@ class PaymentOptionActivity : BaseActivity() {
             }
         }
     }
+
+    private fun handleEnabledPayments(enabledPayments: List<EnabledPayment>) {
+        val paymentType = getPaymentType(enabledPayments)
+        val paymentMethod = paymentMethods.paymentMethods.find { it.type == paymentType }
+
+        paymentMethod?.let {
+            getOnPaymentItemClick(
+                paymentType = paymentType,
+                customerInfo = customerInfo,
+                itemInfo = itemInfo,
+                totalAmount = totalAmount,
+                paymentMethodItem = paymentMethod,
+                orderId = orderId
+            )[paymentType]?.invoke()
+        }
+    }
+
+    private fun getPaymentType(enabledPayments: List<EnabledPayment>): String {
+        val bankTransfer: (EnabledPayment) -> Boolean = { it.category == PaymentType.BANK_TRANSFER }
+        val isAllBankTransfer = enabledPayments.all(bankTransfer)
+        val paymentType = if (isAllBankTransfer) {
+            PaymentType.BANK_TRANSFER
+        } else if (enabledPayments.size == 1) {
+            enabledPayments[0].type
+        } else ""
+
+        return paymentType
+    }
+
 
     override fun onBackPressed() {
         viewModel.trackPaymentListPageClosed()
@@ -429,6 +469,7 @@ class PaymentOptionActivity : BaseActivity() {
                         customerInfo = customerInfo,
                         itemInfo = itemInfo,
                         paymentTypeItem = this.paymentTypeItem,
+                        enabledPayments = enabledPayments,
                         stepNumber = NEXT_STEP_NUMBER
                     )
                 )
