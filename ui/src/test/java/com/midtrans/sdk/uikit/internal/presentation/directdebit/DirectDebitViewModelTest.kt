@@ -3,6 +3,7 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
+import com.midtrans.sdk.corekit.api.exception.InvalidPaymentTypeException
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
@@ -82,6 +83,30 @@ internal class DirectDebitViewModelTest {
             channelResponseMessage = eq(null),
             cardType = eq(null),
             threeDsVersion = eq(null)
+        )
+    }
+
+    @Test
+    fun payDirectDebitWhenErrorShouldTrackError() {
+        val snapToken = "snapToken"
+        val paymentType = "bca_klikpay"
+        val callbackCaptor: KArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
+        val exception = InvalidPaymentTypeException()
+
+        viewModel.payDirectDebit(snapToken, paymentType, null)
+
+        verify(snapCore).pay(
+            snapToken = eq(snapToken),
+            paymentRequestBuilder = any(),
+            callback = callbackCaptor.capture()
+        )
+        val callback = callbackCaptor.firstValue
+        callback.onError(exception)
+        verify(eventAnalytics).trackSnapError(
+            pageName = PageName.BCA_KLIK_PAY_PAGE,
+            paymentMethodName = PaymentType.BCA_KLIKPAY,
+            statusCode = null,
+            errorMessage = exception.message ?: exception.javaClass.name
         )
     }
 
