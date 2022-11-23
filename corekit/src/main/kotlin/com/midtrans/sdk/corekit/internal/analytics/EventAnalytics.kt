@@ -6,8 +6,8 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ACCOUNT_
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_RESULTS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CTA_CLICKED
-import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ERROR
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CUSTOMER_DATA_INPUT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ERROR
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_EXBIN_RESPONSE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
@@ -15,8 +15,8 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_HOW_TO_P
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_OPEN_DEEPLINK
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ORDER_DETAILS_VIEWED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_CLOSED
-import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAYMENT_NUMBER_BUTTON_RETRIED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_VIEWED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAYMENT_NUMBER_BUTTON_RETRIED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_TOKENIZATION_RESULT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_3DS_VERSION
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ALLOWLISTED_BINS
@@ -45,6 +45,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_P
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_POST_CODE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_DISPLAY_FIELD
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ECI
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ERROR_MESSAGE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_FRAUD_STATUS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_GROSS_AMOUNT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMENT_BANK
@@ -87,14 +88,6 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOTAL_QUAN
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TRANSACTION_ID
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TRANSACTION_STATUS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TWO_CLICK_TOKEN_AVAILABLE
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ALLOWLISTED_BINS
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ALLOW_RETRY
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ERROR_MESSAGE
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMENT_BANK
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMENT_REQUIRED
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMENT_TERMS
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STEP_NUMBER
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOKEN_ID
 
 class EventAnalytics(
     private val mixpanelTracker: MixpanelTracker
@@ -343,7 +336,7 @@ class EventAnalytics(
         eci: String?,
         paymentMethodName: String
     ) {
-        val optionalProperties = mutableMapOf<String,String>()
+        val optionalProperties = mutableMapOf<String, String>()
         transactionStatus?.also { optionalProperties[PROPERTY_TRANSACTION_STATUS] = it }
         cardType?.also { optionalProperties[PROPERTY_CARD_TYPE] = it }
         bank?.also { optionalProperties[PROPERTY_CARD_BANK] = it }
@@ -521,5 +514,4 @@ class EventAnalytics(
             )
         )
     }
-
 }
