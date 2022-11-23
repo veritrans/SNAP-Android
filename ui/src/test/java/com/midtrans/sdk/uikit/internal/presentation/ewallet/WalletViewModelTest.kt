@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
+import com.midtrans.sdk.corekit.api.exception.MissingParameterException
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
@@ -98,9 +99,40 @@ class WalletViewModelTest {
         )
     }
 
+    @Test
+    fun chargeQrPaymentWhenErrorShouldTrackError() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val snapToken = "SnapToken"
+        val paymentType = PaymentType.GOPAY_QRIS
+        val eventAnalytics: EventAnalytics = mock()
+        val exception = MissingParameterException("missing")
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+
+        val walletViewModel = WalletViewModel(snapCore = snapCore, dateTimeUtil)
+        walletViewModel.chargeQrPayment(
+            snapToken = snapToken,
+            paymentType = paymentType
+        )
+        val callbackCaptor: KArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
+        verify(snapCore).pay(
+            snapToken = eq(snapToken),
+            paymentRequestBuilder = any(),
+            callback = callbackCaptor.capture()
+        )
+        val callback = callbackCaptor.firstValue
+        callback.onError(exception)
+        verify(eventAnalytics).trackSnapError(
+            pageName = PageName.GOPAY_QR_PAGE,
+            paymentMethodName = paymentType,
+            statusCode = null,
+            errorMessage = exception.message ?: exception.javaClass.name
+        )
+    }
 
     @Test
-    fun getExpiredHourShouldReturnhhmmss() {
+    fun getExpiredHourShouldReturnHHMMSS() {
         val snapCore: SnapCore = mock()
         val dateTimeUtil: DateTimeUtil = mock()
         val snapToken = "SnapToken"

@@ -67,10 +67,21 @@ internal class WalletViewModel @Inject constructor(
                         pageName = pageName,
                         paymentMethodName = paymentType
                     )
+                    trackErrorStatusCode(
+                        pageName = pageName,
+                        paymentMethodName = paymentType,
+                        statusCode = result.statusCode.orEmpty(),
+                        errorMessage = result.statusMessage.orEmpty()
+                    )
                 }
 
                 override fun onError(error: SnapError) {
                     // TODO: error dialog etc
+                    trackSnapError(
+                        pageName = pageName,
+                        paymentMethodName = paymentType,
+                        errorMessage = error.message ?: error.javaClass.name
+                    )
                 }
             }
         )
