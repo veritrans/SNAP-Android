@@ -213,13 +213,12 @@ class EventAnalytics(
         pageName: String,
         paymentMethodName: String
     ) {
-        val manadatoryProperties = mutableMapOf<String, String>()
-        manadatoryProperties[PROPERTY_PAYMENT_METHOD_NAME] = paymentMethodName
-        manadatoryProperties[PROPERTY_PAGE_NAME] = pageName
-
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_ACCOUNT_NUMBER_COPIED,
-            properties = manadatoryProperties
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to pageName,
+                PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
+            )
         )
     }
 
@@ -227,13 +226,12 @@ class EventAnalytics(
         pageName: String,
         paymentMethodName: String
     ) {
-        val mandatoryProperties = mutableMapOf<String, String>()
-        mandatoryProperties[PROPERTY_PAYMENT_METHOD_NAME] = paymentMethodName
-        mandatoryProperties[PROPERTY_PAGE_NAME] = pageName
-
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_PAYMENT_NUMBER_BUTTON_RETRIED,
-            properties = mandatoryProperties
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to pageName,
+                PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
+            )
         )
     }
 
