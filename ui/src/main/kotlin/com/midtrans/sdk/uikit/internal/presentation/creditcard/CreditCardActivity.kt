@@ -208,7 +208,7 @@ internal class CreditCardActivity : BaseActivity() {
         viewModel.transactionResponseLiveData.observe(this) {
             if (it.statusCode == UiKitConstants.STATUS_CODE_200) {
                 launchSuccessScreen(it)
-            } else {
+            } else if (it.statusCode != UiKitConstants.STATUS_CODE_201 && it.redirectUrl.isNullOrEmpty()) {
                 launchErrorScreen(it)
             }
         }
