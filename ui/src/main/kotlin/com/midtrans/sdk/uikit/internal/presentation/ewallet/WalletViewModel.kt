@@ -140,6 +140,13 @@ internal class WalletViewModel @Inject constructor(
         )
     }
 
+    fun trackReloadClicked(paymentType: String) {
+        eventAnalytics?.trackSnapPaymentNumberButtonRetried(
+            paymentMethodName = paymentType,
+            pageName = getPageName(paymentType)
+        )
+    }
+
     fun getExpiredHour(): String = datetimeUtil.getExpiredHour(expiredTime)
 
     companion object {

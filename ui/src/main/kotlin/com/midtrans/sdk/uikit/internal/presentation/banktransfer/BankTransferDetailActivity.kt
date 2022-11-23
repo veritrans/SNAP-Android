@@ -209,7 +209,8 @@ internal class BankTransferDetailActivity : BaseActivity() {
                             vaNumber = vaNumberState.value,
                             companyCode = companyCode,
                             billingNumber = billingNumber,
-                            destinationBankCode = destinationBankCode.value
+                            destinationBankCode = destinationBankCode.value,
+                            viewModel = viewModel
                         )[bankName]?.invoke()
 
                         var isExpanded by remember { mutableStateOf(false) }
@@ -285,7 +286,11 @@ internal class BankTransferDetailActivity : BaseActivity() {
     }
 
     @Composable
-    fun getDetailWithVaNumber(vaNumber: String?): @Composable (() -> Unit) {
+    fun getDetailWithVaNumber(
+        vaNumber: String?,
+        paymentType: String,
+        viewModel: BankTransferDetailViewModel?
+    ): @Composable (() -> Unit) {
         val clipboardManager: ClipboardManager = LocalClipboardManager.current
         return {
             var copied by remember {
@@ -299,6 +304,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                     onCopyClicked = { label ->
                         copied = true
                         clipboardManager.setText(AnnotatedString(text = label))
+                        viewModel?.trackAccountNumberCopied(paymentType)
                     }
                 )
             }
@@ -311,11 +317,19 @@ internal class BankTransferDetailActivity : BaseActivity() {
         vaNumber: String?,
         billingNumber: String?,
         destinationBankCode: String?,
-        companyCode: String?
+        companyCode: String?,
+        viewModel: BankTransferDetailViewModel?
     ): Map<String, @Composable (() -> Unit)> {
         val clipboardManager: ClipboardManager = LocalClipboardManager.current
         return mapOf(
-            Pair(PaymentType.BCA_VA, getDetailWithVaNumber(vaNumber = vaNumber)),
+            Pair(
+                PaymentType.BCA_VA,
+                getDetailWithVaNumber(
+                    vaNumber = vaNumber,
+                    paymentType = PaymentType.BCA_VA,
+                    viewModel = viewModel
+                )
+            ),
             Pair(PaymentType.E_CHANNEL) {
                 var companyCodeCopied by remember {
                     mutableStateOf(false)
@@ -343,13 +357,27 @@ internal class BankTransferDetailActivity : BaseActivity() {
                         onCopyClicked = { label ->
                             billingNumberCopied = true
                             clipboardManager.setText(AnnotatedString(text = label))
+                            viewModel?.trackAccountNumberCopied(paymentType = PaymentType.E_CHANNEL)
+
                         }
                     )
                 }
             },
-            Pair(PaymentType.BNI_VA, getDetailWithVaNumber(vaNumber = vaNumber)),
-            Pair(PaymentType.BRI_VA, getDetailWithVaNumber(vaNumber = vaNumber)),
-            Pair(PaymentType.PERMATA_VA, getDetailWithVaNumber(vaNumber = vaNumber)),
+            Pair(PaymentType.BNI_VA,  getDetailWithVaNumber(
+                vaNumber = vaNumber,
+                paymentType = PaymentType.BNI_VA,
+                viewModel = viewModel
+            )),
+            Pair(PaymentType.BRI_VA,  getDetailWithVaNumber(
+                vaNumber = vaNumber,
+                paymentType = PaymentType.BRI_VA,
+                viewModel = viewModel
+            )),
+            Pair(PaymentType.PERMATA_VA,  getDetailWithVaNumber(
+                vaNumber = vaNumber,
+                paymentType = PaymentType.PERMATA_VA,
+                viewModel = viewModel
+            )),
             Pair(PaymentType.OTHER_VA) {
                 var copiedBankCode by remember {
                     mutableStateOf(false)
@@ -365,6 +393,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                         onCopyClicked = { label ->
                             copiedBankCode = true
                             clipboardManager.setText(AnnotatedString(text = label))
+                            viewModel?.trackAccountNumberCopied(paymentType = PaymentType.OTHER_VA)
                         }
                     )
                 }

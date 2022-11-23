@@ -9,6 +9,7 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.BankTransferPaymentRequestBuilder
+import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
@@ -84,7 +85,11 @@ internal class BankTransferDetailViewModel @Inject constructor(
                         bniExpiration?.let { expiredTime = parseTime(it) }
                         briExpiration?.let { expiredTime = parseTime(it) }
                         permataExpiration?.let { expiredTime = parseTime(it) }
-                        _transactionResult.value = TransactionResult(status = transactionStatus.orEmpty(), transactionId = transactionId.orEmpty(), paymentType = paymentType)
+                        _transactionResult.value = TransactionResult(
+                            status = transactionStatus.orEmpty(),
+                            transactionId = transactionId.orEmpty(),
+                            paymentType = paymentType
+                        )
                     }
                 }
 
@@ -109,7 +114,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
     }
 
     private fun getPageName(paymentType: String): String {
-        return when(paymentType) {
+        return when (paymentType) {
             PaymentType.BCA_VA -> PageName.BCA_VA_PAGE
             PaymentType.BNI_VA -> PageName.BNI_VA_PAGE
             PaymentType.BRI_VA -> PageName.BRI_VA_PAGE
@@ -143,6 +148,14 @@ internal class BankTransferDetailViewModel @Inject constructor(
             paymentMethodName = paymentType
         )
     }
+
+    fun trackAccountNumberCopied(paymentType: String) {
+        eventAnalytics?.trackSnapAccountNumberCopied(
+            paymentMethodName = paymentType,
+            pageName = getPageName(paymentType)
+        )
+    }
+
 
     fun trackPageViewed(
         paymentType: String,

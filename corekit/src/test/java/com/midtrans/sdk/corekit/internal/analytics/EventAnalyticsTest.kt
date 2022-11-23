@@ -1,7 +1,9 @@
 package com.midtrans.sdk.corekit.internal.analytics
 
 import com.midtrans.sdk.corekit.BuildConfig
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_3DS_RESULT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ACCOUNT_NUMBER_COPIED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_RESULTS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CTA_CLICKED
@@ -12,6 +14,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_HOW_TO_P
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_OPEN_DEEPLINK
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ORDER_DETAILS_VIEWED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_CLOSED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAYMENT_NUMBER_BUTTON_RETRIED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_VIEWED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_TOKENIZATION_RESULT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_3DS_VERSION
@@ -204,6 +207,30 @@ internal class EventAnalyticsTest {
             properties = mapOf(
                 PROPERTY_SNAP_TOKEN to "token",
                 PROPERTY_RESPONSE_TIME to "1000"
+            )
+        )
+    }
+
+    @Test
+    fun verifyTrackSnapAccountNumberCopied() {
+        eventAnalytics.trackSnapAccountNumberCopied(PageName.BRI_VA_PAGE, PaymentType.BRI_VA)
+        verify(mixpanelTracker).trackEvent(
+            eventName = EVENT_SNAP_ACCOUNT_NUMBER_COPIED,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to PageName.BRI_VA_PAGE,
+                PROPERTY_PAYMENT_METHOD_NAME to PaymentType.BRI_VA
+            )
+        )
+    }
+
+    @Test
+    fun verifyTrackSnapPaymentNumberButtonRetried() {
+        eventAnalytics.trackSnapPaymentNumberButtonRetried(PageName.GOPAY_QR_PAGE, PaymentType.GOPAY)
+        verify(mixpanelTracker).trackEvent(
+            eventName = EVENT_SNAP_PAYMENT_NUMBER_BUTTON_RETRIED,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to PageName.GOPAY_QR_PAGE,
+                PROPERTY_PAYMENT_METHOD_NAME to PaymentType.GOPAY
             )
         )
     }
