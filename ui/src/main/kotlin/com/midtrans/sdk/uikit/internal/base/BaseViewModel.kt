@@ -207,8 +207,8 @@ internal open class BaseViewModel : ViewModel() {
     protected fun trackError(
         pageName: String,
         paymentMethodName: String,
-        statusCode: String,
-        errorMessage: String
+        errorMessage: String,
+        statusCode: String?
     ) {
         eventAnalytics?.trackSnapError(
             pageName = pageName,

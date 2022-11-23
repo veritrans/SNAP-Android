@@ -213,17 +213,19 @@ class EventAnalytics(
     fun trackSnapError(
         pageName: String,
         paymentMethodName: String,
-        statusCode: String,
+        statusCode: String?,
         errorMessage: String
     ) {
+        val optionalProperties = mutableMapOf<String, String>()
+        statusCode?.let { optionalProperties[PROPERTY_STATUS_CODE] = it }
+
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_ERROR,
             properties = mapOf(
                 PROPERTY_PAGE_NAME to pageName,
                 PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName,
-                PROPERTY_STATUS_CODE to statusCode,
                 PROPERTY_ERROR_MESSAGE to errorMessage
-            )
+            ) + optionalProperties
         )
     }
 
