@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.compose.ui.text.input.TextFieldValue
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
+import com.midtrans.sdk.corekit.api.exception.InvalidPaymentTypeException
 import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
@@ -141,6 +142,80 @@ class CreditCardViewModelTest {
             channelResponseMessage = eq(null),
             cardType = eq(null),
             threeDsVersion = eq(null)
+        )
+    }
+
+    @Test
+    fun payCreditCardWhenErrorShouldTrackError() {
+        val snapCore: SnapCore = mock()
+        val errorCard: ErrorCard = mock()
+        val snapCreditCardUtil: SnapCreditCardUtil = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val eventAnalytics: EventAnalytics = mock()
+        val snapToken = "SnapToken"
+        val paymentType = PaymentType.CREDIT_CARD
+        val cardNumber = TextFieldValue(text = "1111 1111 1111")
+        val expiry = TextFieldValue(text = "22/23")
+        val cvv = TextFieldValue(text = "123")
+        val customerEmail = "email@email.com"
+        val customerPhone = "123456789"
+        val exception = InvalidPaymentTypeException()
+
+        `when`(snapCreditCardUtil.getCardNumberFromTextField(any())).thenReturn("")
+        `when`(snapCreditCardUtil.getExpMonthFromTextField(any())).thenReturn("")
+        `when`(snapCreditCardUtil.getExpYearFromTextField(any())).thenReturn("")
+        `when`(snapCore.getEventAnalytics()).thenReturn(eventAnalytics)
+        `when`(errorCard.getErrorCardType(transactionResponse = any(), allowRetry = any())).thenReturn(null)
+
+        val transactionDetail = TransactionDetails(
+            orderId = "orderId",
+            grossAmount = 5000.0,
+            currency = "IDR"
+        )
+        val cardTokenResponse = CardTokenResponse(
+            statusCode = "200",
+            statusMessage = "Credit card token is created as Token ID.",
+            tokenId = "41002312-1236-2b142f51-1093-4c9e-88eb-5ae529fde1b9",
+            hash = "41002312-1236-mami",
+            bank = "bank bni",
+            redirectUrl = null
+        )
+
+        val creditCardViewModel = CreditCardViewModel(snapCore, dateTimeUtil, snapCreditCardUtil, errorCard)
+
+        creditCardViewModel.chargeUsingCreditCard(
+            transactionDetails = transactionDetail,
+            cardNumber = cardNumber,
+            cardExpiry = expiry,
+            cardCvv = cvv,
+            isSavedCard = false,
+            customerEmail = customerEmail,
+            customerPhone = customerPhone,
+            snapToken = snapToken,
+            installmentTerm = "",
+            promoId = null
+        )
+        val callbackCaptor: KArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
+        val cardTokenCallbackCaptor: KArgumentCaptor<Callback<CardTokenResponse>> = argumentCaptor()
+
+        verify(snapCore).getCardToken(
+            any(),
+            cardTokenCallbackCaptor.capture()
+        )
+        val cardTokenCallback = cardTokenCallbackCaptor.firstValue
+        cardTokenCallback.onSuccess(cardTokenResponse)
+        verify(snapCore).pay(
+            snapToken = eq(snapToken),
+            paymentRequestBuilder = any(),
+            callback = callbackCaptor.capture()
+        )
+        val callback = callbackCaptor.firstValue
+        callback.onError(exception)
+        eventAnalytics.trackSnapError(
+            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+            paymentMethodName = paymentType,
+            statusCode = null,
+            errorMessage = exception.message ?: exception.javaClass.name
         )
     }
 
