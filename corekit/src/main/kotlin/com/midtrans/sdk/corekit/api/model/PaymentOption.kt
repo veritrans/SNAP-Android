@@ -16,5 +16,6 @@ data class PaymentOption(
     val customerDetails: CustomerDetails?,
     val transactionDetails: TransactionDetails?,
     val expiryTme: String?,
-    val enabledPayment: List<EnabledPayment>?
+    val enabledPayment: List<EnabledPayment>?,
+    val result: TransactionResponse?
 ) : Parcelable

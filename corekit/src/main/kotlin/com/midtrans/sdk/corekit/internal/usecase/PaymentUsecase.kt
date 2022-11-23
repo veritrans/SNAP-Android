@@ -82,7 +82,8 @@ internal class PaymentUsecase(
                                 customerDetails = responseData.customerDetails,
                                 transactionDetails = responseData.transactionDetails,
                                 expiryTme = responseData.expiryTime,
-                                enabledPayment = responseData.enabledPayments
+                                enabledPayment = responseData.enabledPayments,
+                                result = responseData.result
                             )
                         )
                     },
@@ -114,7 +115,8 @@ internal class PaymentUsecase(
                                 customerDetails = responseData.customerDetails,
                                 transactionDetails = responseData.transactionDetails,
                                 expiryTme = responseData.expiryTime,
-                                enabledPayment = responseData.enabledPayments
+                                enabledPayment = responseData.enabledPayments,
+                                result = responseData.result
                             )
                         )
                     },

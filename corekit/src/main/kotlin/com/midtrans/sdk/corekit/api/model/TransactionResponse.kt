@@ -1,7 +1,10 @@
 package com.midtrans.sdk.corekit.api.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class TransactionResponse(
     /**
      * status_code : 200 status_message : Success, Credit Card 3D Secure transaction is successful
@@ -88,4 +91,4 @@ data class TransactionResponse(
     var qrisUrl: String? = null,
     var currency: String? = null
 
-)
+) : Parcelable
