@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.network.model.response.EnabledPayment
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
@@ -72,7 +73,11 @@ class BankTransferListActivity : BaseActivity() {
     private val enabledPayments: List<EnabledPayment>? by lazy {
         intent.getParcelableArrayListExtra(EXTRA_ENABLED_PAYMENT)
     }
-    
+
+    private val transactionResult: TransactionResponse? by lazy {
+        intent.getParcelableExtra(EXTRA_TRANSACTION_RESULT) as? TransactionResponse
+    }
+
     private val currentStepNumber: Int by lazy {
         intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
     }
@@ -82,13 +87,19 @@ class BankTransferListActivity : BaseActivity() {
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
 
         viewModel.trackPageViewed(currentStepNumber)
-        
+
+        transactionResult?.let { response ->
+            response.chargeType?.let { type ->
+                toBankTransferDetail(type)
+            }
+        }
+
         enabledPayments?.let {
             if (it.size == 1) {
                 toBankTransferDetail(it[0].type)
             }
         }
-        
+
         paymentTypeItem?.let { paymentType ->
             paymentType.method?.let { paymentMethod ->
                 toBankTransferDetail(paymentMethod)
@@ -211,6 +222,7 @@ class BankTransferListActivity : BaseActivity() {
         private const val EXTRA_PAYMENT_TYPE_ITEM = "bankTransfer.extra.payment_type_it"
         private const val EXTRA_ENABLED_PAYMENT = "bankTransfer.extra.enabled_payment"
         private const val EXTRA_STEP_NUMBER = "bankTransfer.extra.step_number"
+        private const val EXTRA_TRANSACTION_RESULT = "bankTransfer.extra.transaction_result"
 
         fun getIntent(
             activityContext: Context,
@@ -222,7 +234,8 @@ class BankTransferListActivity : BaseActivity() {
             itemInfo: ItemInfo? = null,
             paymentTypeItem: PaymentTypeItem? = null,
             enabledPayments: List<EnabledPayment>? = null,
-            stepNumber: Int
+            stepNumber: Int,
+            result: TransactionResponse?
         ): Intent {
             return Intent(activityContext, BankTransferListActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -233,9 +246,10 @@ class BankTransferListActivity : BaseActivity() {
                 putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 enabledPayments?.also {
-                    putParcelableArrayListExtra( EXTRA_ENABLED_PAYMENT, ArrayList(it) )
+                    putParcelableArrayListExtra(EXTRA_ENABLED_PAYMENT, ArrayList(it))
                 }
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
+                putExtra(EXTRA_TRANSACTION_RESULT, result)
             }
         }
     }

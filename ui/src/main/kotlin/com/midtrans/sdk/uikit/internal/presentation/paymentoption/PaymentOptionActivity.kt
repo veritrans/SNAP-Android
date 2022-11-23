@@ -217,17 +217,26 @@ class PaymentOptionActivity : BaseActivity() {
 
     private fun handleUsedToken(result: TransactionResponse) {
         if(result.transactionStatus == UiKitConstants.STATUS_PENDING){
-            val paymentMethod = paymentMethods.paymentMethods.find { it.type == result.chargeType }
+            val bankList = listOf(
+                PaymentType.PERMATA_VA,
+                PaymentType.BCA_VA,
+                PaymentType.BNI_VA,
+                PaymentType.BRI_VA,
+                PaymentType.OTHER_VA,
+                PaymentType.E_CHANNEL
+            )
+            val paymentType = if (bankList.contains(result.chargeType)) PaymentType.BANK_TRANSFER else result.chargeType
+            val paymentMethod = paymentMethods.paymentMethods.find { it.type == paymentType }
             paymentMethod?.let { method ->
-                result.chargeType?.let { paymentType ->
+                paymentType?.let { type ->
                     getOnPaymentItemClick(
-                        paymentType = paymentType,
+                        paymentType = type,
                         customerInfo = customerInfo,
                         itemInfo = itemInfo,
                         totalAmount = totalAmount,
                         paymentMethodItem = method,
                         orderId = orderId
-                    )[paymentType]?.invoke()
+                    )[type]?.invoke()
                 }
             }
         }
@@ -493,6 +502,7 @@ class PaymentOptionActivity : BaseActivity() {
                         itemInfo = itemInfo,
                         paymentTypeItem = this.paymentTypeItem,
                         enabledPayments = enabledPayments,
+                        result = transactionResult,
                         stepNumber = NEXT_STEP_NUMBER
                     )
                 )
