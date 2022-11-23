@@ -12,6 +12,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.view.SnapColors.backgroundBorderSolidSecondary
 import kotlinx.coroutines.launch
@@ -28,6 +29,7 @@ fun PointBankCard(
     onValueChange: (value: Double) -> Unit,
     onClick: () -> Unit
 ): DialogToggle {
+
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     return SnapBottomSheet(
         sheetState = sheetState,
@@ -38,7 +40,8 @@ fun PointBankCard(
                 onClick = onClick,
                 onValueChange = onValueChange
             )
-        })
+        }
+    )
 }
 
 @Composable
@@ -48,13 +51,25 @@ fun SnapPointRedeemDialogContent(
     onClick: () -> Unit
 ) {
     var pointAmountInputted by remember {
-        mutableStateOf(TextFieldValue())
+        mutableStateOf(
+            SnapCreditCardUtil.formatMaxPointDiscount(
+                input = TextFieldValue(data.pointBalanceAmount.toLong().toString()),
+                totalAmount = data.total.toLong(),
+                pointBalanceAmount = data.pointBalanceAmount
+            ).first
+        )
     }
     var displayedTotalFinal by remember {
-        mutableStateOf(data.displayedTotal)
+        mutableStateOf(
+            SnapCreditCardUtil.formatMaxPointDiscount(
+                input = pointAmountInputted,
+                totalAmount = data.total.toLong(),
+                pointBalanceAmount = data.pointBalanceAmount
+            ).second
+        )
     }
-    var infoMessage by remember {
-        mutableStateOf(data.infoMessage)
+    var isError by remember {
+        mutableStateOf(false)
     }
 
     Column(
@@ -81,21 +96,22 @@ fun SnapPointRedeemDialogContent(
 
             SnapTextField(
                 value = pointAmountInputted,
-                onValueChange = {
-                    pointAmountInputted = SnapCreditCardUtil.formatMaxPointDiscount(
-                        it,
-                        totalAmount = data.total.toInt(),
-                        pointBalanceAmount = data.pointBalanceAmount
-                    )
-                    displayedTotalFinal = SnapCreditCardUtil.formatDisplayedAmountOnPointInput(
-                        displayedTotal = data.displayedTotal,
-                        total = data.total,
-                        pointAmount = pointAmountInputted
-                    )
+                onValueChange = { input ->
+                    SnapCreditCardUtil.formatMaxPointDiscount(input, totalAmount = data.total.toLong(), pointBalanceAmount = data.pointBalanceAmount).let { triple ->
+                       triple.first.let {
+                           pointAmountInputted = it
+                       }
+                        triple.second.let {
+                            displayedTotalFinal = it
+                        }
+                        triple.third.let {
+                            isError = it
+                        }
+                    }
                     onValueChange(pointAmountInputted.text.ifEmpty { "0" }.toDouble())
                 },
                 modifier = Modifier.width(117.dp),
-                isError = data.isError,
+                isError = isError,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 isFocused = false,
                 onFocusChange = {}
@@ -104,9 +120,16 @@ fun SnapPointRedeemDialogContent(
 
         if (pointAmountInputted.text.isEmpty()) {
             Text(
-                text = infoMessage,
+                text = stringResource(id = R.string.point_amount_of_points, data.pointBalanceAmount.currencyFormatRp()),
                 style = SnapTypography.STYLES.snapTextSmallRegular,
-                color = SnapColors.getARGBColor(if (!data.isError) SnapColors.supportInfoDefault else SnapColors.supportDangerDefault),
+                color = SnapColors.getARGBColor(SnapColors.supportInfoDefault),
+                modifier = Modifier.padding(top = 16.dp)
+            )
+        } else if (isError){
+            Text(
+                text = stringResource(id = R.string.point_insufficient_title),
+                style = SnapTypography.STYLES.snapTextSmallRegular,
+                color = SnapColors.getARGBColor(SnapColors.supportDangerDefault),
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
@@ -128,7 +151,7 @@ fun SnapPointRedeemDialogContent(
             text = stringResource(id = R.string.point_pay_cta),
             style = SnapButton.Style.PRIMARY,
             modifier = Modifier.fillMaxWidth(1f),
-            enabled = pointAmountInputted.text.isNotEmpty(),
+            enabled = pointAmountInputted.text.isNotEmpty() && !isError,
             onClick = onClick
         )
     }
