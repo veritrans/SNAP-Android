@@ -11,11 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SnapNumberedListItem(number: String, paragraph: String) {
+fun SnapListItem(index: String, paragraph: String) {
     Row(modifier = Modifier.fillMaxWidth(fraction = 1.0f).padding(start = 8.dp, end = 8.dp)) {
-        //Number
+        //Number or Symbol
         Text(
-            text = number,
+            text = index,
             style = SnapTypography.STYLES.snapTextMediumRegular,
             color = SnapColors.getARGBColor(SnapColors.textSecondary),
             modifier = Modifier.width(20.dp)
