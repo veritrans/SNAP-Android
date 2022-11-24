@@ -3,6 +3,7 @@ package com.midtrans.sdk.uikit.internal.presentation.conveniencestore
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
+import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
@@ -99,7 +100,41 @@ class ConvenienceStoreViewModelTest {
     }
 
     @Test
-    fun getExpiredHourShouldReturnhhmmss() {
+    fun chargeConvenienceStoreWhenErrorShouldTrackError() {
+        val snapCore: SnapCore = mock()
+        val errorCard: ErrorCard = mock()
+        val barcodeEncoder: BarcodeEncoder = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val snapToken = "SnapToken"
+        val paymentType = PaymentType.INDOMARET
+        val eventAnalytics: EventAnalytics = mock()
+        val exception = SnapError()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+
+        val convenienceStoreViewModel = ConvenienceStoreViewModel(snapCore = snapCore, dateTimeUtil, errorCard, barcodeEncoder)
+        convenienceStoreViewModel.chargeConvenienceStorePayment(
+            snapToken = snapToken,
+            paymentType = paymentType
+        )
+        val callbackCaptor: KArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
+        verify(snapCore).pay(
+            snapToken = eq(snapToken),
+            paymentRequestBuilder = any(),
+            callback = callbackCaptor.capture()
+        )
+        val callback = callbackCaptor.firstValue
+        callback.onError(exception)
+        verify(eventAnalytics).trackSnapError(
+            pageName = PageName.INDOMARET_PAGE,
+            paymentMethodName = paymentType,
+            errorMessage = exception.message ?: exception.javaClass.name,
+            statusCode = null
+        )
+    }
+
+    @Test
+    fun getExpiredHourShouldReturnHHMMSS() {
         val snapCore: SnapCore = mock()
         val errorCard: ErrorCard = mock()
         val barcodeEncoder: BarcodeEncoder = mock()

@@ -77,9 +77,20 @@ internal class ConvenienceStoreViewModel @Inject constructor(
                         pageName = getPageName(paymentType),
                         paymentMethodName = paymentType
                     )
+                    trackErrorStatusCode(
+                        pageName = getPageName(paymentType),
+                        paymentMethodName = paymentType,
+                        errorMessage = result.statusMessage.orEmpty(),
+                        statusCode = result.statusCode.orEmpty()
+                    )
                 }
 
                 override fun onError(error: SnapError) {
+                    trackSnapError(
+                        pageName = getPageName(paymentType),
+                        paymentMethodName = paymentType,
+                        errorMessage = error.message ?: error.javaClass.name
+                    )
                     _errorLiveData.value = errorCard.getErrorCardType(error)
                 }
             }
@@ -153,6 +164,7 @@ internal class ConvenienceStoreViewModel @Inject constructor(
     fun resetError(){
         _errorLiveData.value = null
     }
+
     fun getExpiredHour(): String = datetimeUtil.getExpiredHour(expiredTime)
 
     companion object{
