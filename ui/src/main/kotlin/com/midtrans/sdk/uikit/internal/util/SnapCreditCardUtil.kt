@@ -100,48 +100,49 @@ internal object SnapCreditCardUtil {
         return return value.text.substring(3, 5)
     }
 
-    fun formatMaxPointDiscount(input:TextFieldValue, totalAmount: Int, pointBalanceAmount: Double) : TextFieldValue {
+    fun formatMaxPointDiscount(input:TextFieldValue, totalAmount: Long, pointBalanceAmount: Double) : Triple<TextFieldValue, String, Boolean> {
         val digit = input.text.filter {
             it.isDigit()
         }
         val length = min(digit.length, totalAmount.toString().length)
         val pointBalanceAvailable = pointBalanceAmount.toLong()
 
-        var output = TextFieldValue("")
+        var pointDiscount = TextFieldValue("")
+        var displayedAmount = "Rp0"
+        var isError = false
 
-        if (digit.isNotEmpty()){
-            output = when {
+        if (digit.isNotEmpty() && !digit.startsWith("0")){
+            when {
                 pointBalanceAvailable > totalAmount -> {
                     when {
                         digit.toLong() > totalAmount -> {
-                            input.copy(totalAmount.toString(), TextRange(length))
+                            pointDiscount = input.copy(totalAmount.toString(), TextRange(length))
+                            isError = false
                         }
                         else -> {
-                            input.copy(digit, TextRange(digit.length))
+                            pointDiscount = input.copy(digit, TextRange(digit.length))
+                            displayedAmount = (totalAmount - digit.toDouble()).currencyFormatRp()
+                            isError = false
+
                         }
                     }
                 }
                 else -> {
                     when {
                         digit.toLong() > totalAmount -> {
-                            input.copy(pointBalanceAvailable.toString(), TextRange(pointBalanceAvailable.toString().length))
+                            pointDiscount = input.copy(digit, TextRange(digit.length))
+                            isError = true
                         }
                         else -> {
-                            input.copy(digit, TextRange(digit.length))
+                            pointDiscount = input.copy(digit, TextRange(digit.length))
+                            displayedAmount = (totalAmount - digit.toDouble()).currencyFormatRp()
+                            isError = false
                         }
                     }
                 }
             }
         }
-        return  output
-    }
-
-    fun formatDisplayedAmountOnPointInput(displayedTotal: String, total: Double, pointAmount: TextFieldValue ): String{
-        return if (pointAmount.text.isNotEmpty()){
-            (total - pointAmount.text.toDouble()).currencyFormatRp()
-        } else {
-            displayedTotal
-        }
+        return  Triple(pointDiscount, displayedAmount, isError)
     }
 
     private fun isWhiteListedByCreditDebit(

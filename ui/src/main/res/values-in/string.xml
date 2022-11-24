@@ -116,14 +116,15 @@
 
     <string name="point_loading">Memuat poin…</string>
     <string name="point_pay_cta">Bayar</string>
+    <string name="point_pay_cta_without_point">Bayar tanpa poin</string>
     <string name="point_rp_currency">Rp</string>
-    <string name="point_title_bni">Pakai BNI Rewards Poin</string>
-    <string name="point_discount">Point discount</string>
-    <string name="point_total_payment">Total dibayar</string>
-    <string name="point_insufficient_title">Melebihi jumlah point yang tersedia </string>
-    <string name="point_amount_of_points">Anda memiliki point senilai %s</string>
+    <string name="point_title_bni">Tukar BNI Rewards Point</string>
+    <string name="point_discount">Diskon poin</string>
+    <string name="point_total_payment">Total pembayaran</string>
+    <string name="point_insufficient_title">Melebihi nilai poin yang Anda miliki</string>
+    <string name="point_amount_of_points">Anda memiliki poin senilai %s</string>
     <string name="point_failed_title">Gagal memuat poin</string>
-    <string name="point_desc">Silakan muat ulang halaman atau lanjutkan pembayaran tanpa menukarkan poin.</string>
+    <string name="point_desc">Terjadi gangguan sistem. Anda dapat melanjutkan pembayaran tanpa menggunakan poin.</string>
 
 
     <string name="failed_otp_title">OTP gagal/dibatalkan</string>
