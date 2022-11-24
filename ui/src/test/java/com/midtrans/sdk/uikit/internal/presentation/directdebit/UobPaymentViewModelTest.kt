@@ -3,6 +3,7 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
+import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
@@ -92,6 +93,29 @@ internal class UobPaymentViewModelTest {
             channelResponseMessage = eq(null),
             cardType = eq(null),
             threeDsVersion = eq(null)
+        )
+    }
+
+    @Test
+    fun payUobWhenErrorShouldTrackError() {
+        val snapToken = "snap-token"
+        val exception = SnapError()
+        val callbackCaptor: KArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
+
+        viewModel.payUob(snapToken)
+
+        verify(snapCore).pay(
+            snapToken = eq(snapToken),
+            paymentRequestBuilder = any(),
+            callback = callbackCaptor.capture()
+        )
+        val callback = callbackCaptor.firstValue
+        callback.onError(exception)
+        verify(eventAnalytics).trackSnapError(
+            pageName = PageName.UOB_PAGE,
+            paymentMethodName = PaymentType.UOB_EZPAY,
+            errorMessage = exception.message ?: exception.javaClass.name,
+            statusCode = null
         )
     }
 
