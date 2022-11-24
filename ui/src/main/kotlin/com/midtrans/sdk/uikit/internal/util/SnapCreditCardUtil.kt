@@ -108,6 +108,7 @@ internal object SnapCreditCardUtil {
         val pointBalanceAvailable = pointBalanceAmount.toLong()
 
         var pointDiscount = TextFieldValue("")
+        var amount : Long = 0
         var displayedAmount = "Rp0"
         var isError = false
 
@@ -121,26 +122,24 @@ internal object SnapCreditCardUtil {
                         }
                         else -> {
                             pointDiscount = input.copy(digit, TextRange(digit.length))
-                            displayedAmount = (totalAmount - digit.toDouble()).currencyFormatRp()
+                            amount = totalAmount - digit.toLong()
                             isError = false
 
                         }
                     }
                 }
                 else -> {
-                    when {
-                        digit.toLong() > totalAmount -> {
-                            pointDiscount = input.copy(digit, TextRange(digit.length))
-                            isError = true
-                        }
-                        else -> {
-                            pointDiscount = input.copy(digit, TextRange(digit.length))
-                            displayedAmount = (totalAmount - digit.toDouble()).currencyFormatRp()
-                            isError = false
-                        }
-                    }
+                    pointDiscount = input.copy(digit, TextRange(digit.length))
+                    amount = totalAmount - digit.toLong()
+                    isError = digit.toLong() > pointBalanceAvailable
                 }
             }
+        } else {
+            amount = totalAmount
+        }
+
+        if (amount > 0){
+            displayedAmount = amount.toDouble().currencyFormatRp()
         }
         return  Triple(pointDiscount, displayedAmount, isError)
     }
