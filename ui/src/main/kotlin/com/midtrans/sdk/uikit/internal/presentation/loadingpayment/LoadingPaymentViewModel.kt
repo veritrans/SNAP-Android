@@ -6,17 +6,9 @@ import androidx.lifecycle.ViewModel
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
-import com.midtrans.sdk.corekit.api.model.CreditCard
-import com.midtrans.sdk.corekit.api.model.CustomerDetails
-import com.midtrans.sdk.corekit.api.model.Expiry
-import com.midtrans.sdk.corekit.api.model.GopayPaymentCallback
-import com.midtrans.sdk.corekit.api.model.ItemDetails
-import com.midtrans.sdk.corekit.api.model.PaymentCallback
-import com.midtrans.sdk.corekit.api.model.PaymentOption
-import com.midtrans.sdk.corekit.api.model.PromoRequest
-import com.midtrans.sdk.corekit.api.model.SnapTransactionDetail
+import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
-import com.midtrans.sdk.corekit.api.model.BankTransferRequest
+import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 import javax.inject.Inject
@@ -27,6 +19,7 @@ class LoadingPaymentViewModel @Inject constructor(
 ): ViewModel() {
     private val _paymentOptionLiveData = MutableLiveData<PaymentOption>()
     private val _error = MutableLiveData<SnapError>()
+    private val eventAnalytics = snapCore.getEventAnalytics()
 
     fun getPaymentOptionLiveData(): LiveData<PaymentOption> = _paymentOptionLiveData
     fun getErrorLiveData(): LiveData<SnapError> = _error
@@ -81,6 +74,12 @@ class LoadingPaymentViewModel @Inject constructor(
 
                 override fun onError(error: SnapError) {
                     _error.postValue(error)
+                    eventAnalytics.trackSnapError(
+                        pageName = PageName.PAYMENT_LIST_PAGE,
+                        paymentMethodName = "not selected",
+                        errorMessage = error.message ?: error.javaClass.name,
+                        statusCode = null
+                    )
                 }
             })
     }
@@ -95,6 +94,6 @@ class LoadingPaymentViewModel @Inject constructor(
 
     fun registerCommonProperties(isTablet: Boolean) {
         val platform = if (isTablet) "Tablet" else "Mobile"
-        snapCore.getEventAnalytics().registerCommonProperties(platform)
+        eventAnalytics.registerCommonProperties(platform)
     }
 }
