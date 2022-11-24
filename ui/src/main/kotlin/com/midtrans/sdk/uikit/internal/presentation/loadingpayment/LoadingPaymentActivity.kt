@@ -22,6 +22,7 @@ import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.AnimatedIcon
@@ -258,6 +259,14 @@ class LoadingPaymentActivity : BaseActivity() {
             if (it.cause is HttpException) {
                 val exception: HttpException = it.cause as HttpException
                 when (exception.code()) {
+                    400 -> {
+                        val intent = ErrorScreenActivity.getIntent(
+                            activityContext = this@LoadingPaymentActivity,
+                            title = resources.getString(R.string.expired_title),
+                            content = resources.getString(R.string.expired_desc)
+                        )
+                        resultLauncher.launch(intent)
+                    }
                     409 -> {
                         val intent = SuccessScreenActivity.getIntent(
                             activityContext = this@LoadingPaymentActivity,
