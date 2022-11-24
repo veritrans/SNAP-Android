@@ -285,6 +285,7 @@ fun SnapSavedCardRadioGroup(
     ) {
         var newCardNumberTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
         var newCvvTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
+        var isFirstInit by remember { mutableStateOf(true) }
 
         listStates.forEach { item ->
             var cvvSavedCardTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
@@ -323,6 +324,31 @@ fun SnapSavedCardRadioGroup(
                     verticalAlignment = CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+                    if(isFirstInit) {
+                        onOptionSelected(item.identifier)
+                        when (item) {
+                            is SavedCreditCardFormData -> {
+                                cvvSavedCardTextFieldValue =
+                                    formatCvvTextFieldBasedOnTokenType(item.tokenType)
+                                cardItemState.cvv = cvvSavedCardTextFieldValue
+                                onCardNumberOtherCardValueChange(TextFieldValue(item.maskedCardNumber))
+                                onSavedCardRadioSelected(item)
+                                cardItemState.cardItemType =
+                                    CardItemState.CardItemType.SAVED_CARD
+                            }
+                            is NewCardFormData -> {
+                                cvvSavedCardTextFieldValue = TextFieldValue("")
+                                cardItemState.cvv = newCvvTextFieldValue
+                                cardItemState.cardNumber = newCardNumberTextFieldValue
+                                onCardNumberOtherCardValueChange(newCardNumberTextFieldValue)
+                                onSavedCardRadioSelected(null)
+                                cardItemState.cardItemType =
+                                    CardItemState.CardItemType.NORMAL_CARD
+                            }
+                        }
+                        onCvvValueChange(cardItemState.cvv)
+                        isFirstInit = false
+                    }
                     RadioButton(
                         selected = item.identifier == selectedOption,
                         onClick = null,
