@@ -217,7 +217,7 @@ class PaymentOptionActivity : BaseActivity() {
 
     private fun handleUsedToken(result: TransactionResponse) {
         if(result.transactionStatus == UiKitConstants.STATUS_PENDING){
-            val bankList = listOf(
+            val bankTransferList = listOf(
                 PaymentType.PERMATA_VA,
                 PaymentType.BCA_VA,
                 PaymentType.BNI_VA,
@@ -225,7 +225,7 @@ class PaymentOptionActivity : BaseActivity() {
                 PaymentType.OTHER_VA,
                 PaymentType.E_CHANNEL
             )
-            val paymentType = if (bankList.contains(result.chargeType)) PaymentType.BANK_TRANSFER else result.chargeType
+            val paymentType = if (bankTransferList.contains(result.chargeType)) PaymentType.BANK_TRANSFER else result.chargeType
             val paymentMethod = paymentMethods.paymentMethods.find { it.type == paymentType }
             paymentMethod?.let { method ->
                 paymentType?.let { type ->
