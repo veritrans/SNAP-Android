@@ -61,8 +61,8 @@
     <string name="pl_error_desc">This transaction link has been used or already expired. Please place new order and complete the transaction.</string>
     <string name="pl_error_bottom_message">You can now close this browser</string>
 
-    <string name="inprogress_title">Your transaction is being processed</string>
-    <string-array name="inprogress_desc">
+    <string name="in_progress_title">Your transaction is being processed</string>
+    <string-array name="in_progress_desc">
         <item><data><![CDATA[If you make a payment using an e-wallet or a credit/debit card, you have completed your payment.]]></data></item>
         <item><data><![CDATA[If you made a payment via bank transfer, please continue the payment process.]]></data></item>
     </string-array>

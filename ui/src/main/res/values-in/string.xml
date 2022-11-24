@@ -62,8 +62,8 @@
     <string name="pl_error_desc">Tautan transaksi ini sudah terpakai atau kedaluwarsa. Silakan buat pesanan baru dan selesaikan transaksinya.</string>
     <string name="pl_error_bottom_message">Anda dapat menutup halaman ini</string>
 
-    <string name="inprogress_title">Transaksi Anda sedang diproses</string>
-    <string-array name="inprogress_desc">
+    <string name="in_progress_title">Transaksi Anda sedang diproses</string>
+    <string-array name="in_progress_desc">
         <item><data><![CDATA[Jika Anda melakukan pembayaran menggunakan e-wallet atau kartu kredit/debit, Anda telah selesai melakukan pembayaran.]]></data></item>
         <item><data><![CDATA[Jika Anda melakukan pembayaran melalui transfer bank, silahkan lanjutkan proses pembayaran.]]></data></item>
     </string-array>

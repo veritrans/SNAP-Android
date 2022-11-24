@@ -51,7 +51,7 @@ class InProgressActivity : BaseActivity() {
                     modifier = Modifier.padding(top = 88.dp)
                 )
                 Text(
-                    text = resources.getString(R.string.inprogress_title),
+                    text = resources.getString(R.string.in_progress_title),
                     style = SnapTypography.STYLES.snapHeadingL,
                     color = SnapColors.getARGBColor(SnapColors.textSecondary),
                     modifier = Modifier.padding(top = 24.dp)
@@ -64,7 +64,7 @@ class InProgressActivity : BaseActivity() {
                         .padding(top = 24.dp),
                 )
                 SnapBulletedList(
-                    list = resources.getStringArray(R.array.inprogress_desc).toList(),
+                    list = resources.getStringArray(R.array.in_progress_desc).toList(),
                     modifier = Modifier.padding(top = 24.dp)
                 )
             }
