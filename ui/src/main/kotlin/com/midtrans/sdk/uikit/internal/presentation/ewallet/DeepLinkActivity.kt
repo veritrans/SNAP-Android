@@ -53,7 +53,8 @@ internal class DeepLinkActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
-        viewModel.trackPageViewed(paymentType, currentStepNumber)
+        viewModel.setPaymentType(paymentType)
+        viewModel.trackPageViewed(currentStepNumber)
         setContent { Content(paymentType = paymentType, url = url) }
         observeData()
     }

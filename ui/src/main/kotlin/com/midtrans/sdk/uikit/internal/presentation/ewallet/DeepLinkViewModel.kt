@@ -21,6 +21,7 @@ internal class DeepLinkViewModel @Inject constructor(
         eventAnalytics = snapCore.getEventAnalytics()
     }
 
+    private lateinit var paymentType: String
     private val _checkStatusResultLiveData = MutableLiveData<TransactionResult>()
     val checkStatusResultLiveData: LiveData<TransactionResult> = _checkStatusResultLiveData
 
@@ -30,19 +31,34 @@ internal class DeepLinkViewModel @Inject constructor(
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
                     result.run {
+                        trackErrorStatusCode(
+                            pageName = getPageName(this@DeepLinkViewModel.paymentType),
+                            paymentMethodName = this@DeepLinkViewModel.paymentType,
+                            errorMessage = statusMessage.orEmpty(),
+                            statusCode = statusCode.orEmpty()
+                        )
                         _checkStatusResultLiveData.value =  TransactionResult(
                             status = transactionStatus.orEmpty(),
                             transactionId = transactionId.orEmpty(),
-                            paymentType = paymentType.orEmpty()
+                            paymentType = this@DeepLinkViewModel.paymentType
                         )
                     }
                 }
 
                 override fun onError(error: SnapError) {
                     Log.e("Wallet payment status", error.javaClass.name)
+                    trackSnapError(
+                        pageName = getPageName(paymentType),
+                        paymentMethodName = paymentType,
+                        errorMessage = error.message ?: error.javaClass.name
+                    )
                 }
             }
         )
+    }
+
+    fun setPaymentType(paymentType: String) {
+        this.paymentType = paymentType
     }
 
     fun trackSnapButtonClicked(
@@ -56,10 +72,7 @@ internal class DeepLinkViewModel @Inject constructor(
         )
     }
 
-    fun trackPageViewed(
-        paymentType: String,
-        stepNumber: Int
-    ) {
+    fun trackPageViewed(stepNumber: Int) {
         trackPageViewed(
             pageName = getPageName(paymentType),
             paymentMethodName = paymentType,
