@@ -66,7 +66,7 @@ class SuccessScreenActivity : BaseActivity() {
         setContent {
             SuccessContent(
                 total = data.total,
-                orderId = stringResource(id = R.string.payment_summary_order_id) + data.orderId.toString(),
+                orderId = data.orderId?.let { stringResource(id = R.string.payment_summary_order_id) + data.orderId.toString()},
                 isWithBackButton = !data.total.isNullOrEmpty() && !data.orderId.isNullOrEmpty()
             )
         }
@@ -171,7 +171,7 @@ class SuccessScreenActivity : BaseActivity() {
         fun getIntent(
             activityContext: Context,
             total: String,
-            orderId: String,
+            orderId: String?,
             transactionResult: TransactionResult,
             stepNumber: Int
         ): Intent {

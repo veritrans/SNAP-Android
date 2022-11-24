@@ -16,15 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.*
-import com.midtrans.sdk.corekit.api.model.BankTransferRequest
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.api.model.PublicTransactionResult
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.AnimatedIcon
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class LoadingPaymentActivity : BaseActivity() {
@@ -254,8 +255,29 @@ class LoadingPaymentActivity : BaseActivity() {
         })
         viewModel.getErrorLiveData().observe(this, Observer {
             //TODO revisit this error handle after discussing how to handle error when we are unable to get snap token / trx detail during loading screen
-            Toast.makeText(this, "Error caught ${it.javaClass.simpleName}", Toast.LENGTH_SHORT)
-                .show()
+            if (it.cause is HttpException) {
+                val exception: HttpException = it.cause as HttpException
+                when (exception.code()) {
+                    409 -> {
+                        val intent = SuccessScreenActivity.getIntent(
+                            activityContext = this@LoadingPaymentActivity,
+                            total = "",
+                            orderId = null,
+                            transactionResult = TransactionResult("","",""),
+                            stepNumber = 0
+                        )
+                        resultLauncher.launch(intent)
+                    }
+                    406 -> {
+                        Toast.makeText(this, "Error caught 406", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    else -> {
+                        Toast.makeText(this, "Error caught else", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
         })
     }
 
