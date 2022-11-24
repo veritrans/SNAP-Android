@@ -141,6 +141,8 @@ internal object SnapCreditCardUtil {
                     }
                 }
             }
+        } else {
+            displayedAmount = totalAmount.toDouble().currencyFormatRp()
         }
         return  Triple(pointDiscount, displayedAmount, isError)
     }
