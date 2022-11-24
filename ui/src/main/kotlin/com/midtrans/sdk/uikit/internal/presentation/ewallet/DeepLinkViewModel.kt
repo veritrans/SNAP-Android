@@ -46,7 +46,6 @@ internal class DeepLinkViewModel @Inject constructor(
                 }
 
                 override fun onError(error: SnapError) {
-                    Log.e("Wallet payment status", error.javaClass.name)
                     trackSnapError(
                         pageName = getPageName(paymentType),
                         paymentMethodName = paymentType,
