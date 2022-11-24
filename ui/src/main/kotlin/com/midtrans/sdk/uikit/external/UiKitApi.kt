@@ -170,7 +170,7 @@ class UiKitApi private constructor(val builder: Builder) {
         snapToken: String? = null,
         paymentType: PaymentTypeItem? = null,
         paymentCallback: Callback<TransactionResult>
-        ) {
+    ) {
         UiKitApi.paymentCallback = paymentCallback
 
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(

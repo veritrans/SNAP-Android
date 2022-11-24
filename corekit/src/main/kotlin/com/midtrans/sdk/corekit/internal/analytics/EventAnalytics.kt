@@ -104,7 +104,13 @@ class EventAnalytics(
         )
     }
 
-    fun registerCommonProperties(platform: String) {
+    fun registerCommonProperties(
+        platform: String,
+        merchantUrl: String?
+    ) {
+        val optionalProperties = mutableMapOf<String, String>()
+        merchantUrl?.also { optionalProperties[PROPERTY_MERCHANT_URL] = it }
+
         mixpanelTracker.registerCommonProperties(
             mapOf(
                 PROPERTY_SDK_VERSION to BuildConfig.SDK_VERSION,
@@ -113,7 +119,7 @@ class EventAnalytics(
                 PROPERTY_SERVICE_TYPE to "snap",
                 PROPERTY_SNAP_TYPE to "Sdk",
                 PROPERTY_PLATFORM to platform
-            )
+            ) + optionalProperties
         )
     }
 
@@ -127,13 +133,11 @@ class EventAnalytics(
         enabledPayments: String,
         enabledPaymentsLength: String,
         snapRedirectUrl: String?,
-        merchantUrl: String?,
         allowRetry: String?,
         otherVaProcessor: String?,
     ) {
         val optionalProperties = mutableMapOf<String, String>()
         snapRedirectUrl?.also { optionalProperties[PROPERTY_SNAP_REDIRECT_URL] = it }
-        merchantUrl?.also { optionalProperties[PROPERTY_MERCHANT_URL] = it }
         allowRetry?.also { optionalProperties[PROPERTY_ALLOW_RETRY] = it }
         otherVaProcessor?.also { optionalProperties[PROPERTY_OTHER_VA_PROCESSOR] = it }
 

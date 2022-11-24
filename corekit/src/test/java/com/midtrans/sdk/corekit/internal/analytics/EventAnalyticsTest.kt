@@ -41,13 +41,19 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_DISPLAY_FI
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ECI
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ERROR_MESSAGE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_FRAUD_STATUS
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_MERCHANT_URL
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_NET_AMOUNT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAGE_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAYMENT_METHOD_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PLATFORM
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_REGISTRATION_REQUIRED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_RESPONSE_TIME
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SDK_TYPE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SDK_VERSION
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SERVICE_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TOKEN
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TYPE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SOURCE_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STATUS_CODE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STEP_NUMBER
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOKEN_ID
@@ -88,15 +94,16 @@ internal class EventAnalyticsTest {
 
     @Test
     fun verifyRegisterCommonProperties() {
-        eventAnalytics.registerCommonProperties("tablet")
+        eventAnalytics.registerCommonProperties("tablet", "merchant-url")
         verify(mixpanelTracker).registerCommonProperties(
             mapOf(
-                EventName.PROPERTY_SDK_VERSION to BuildConfig.SDK_VERSION,
-                EventName.PROPERTY_SDK_TYPE to "UI",
-                EventName.PROPERTY_SOURCE_TYPE to "midtrans-mobile",
-                EventName.PROPERTY_SERVICE_TYPE to "snap",
-                EventName.PROPERTY_SNAP_TYPE to "Sdk",
-                PROPERTY_PLATFORM to "tablet"
+                PROPERTY_SDK_VERSION to BuildConfig.SDK_VERSION,
+                PROPERTY_SDK_TYPE to "UI",
+                PROPERTY_SOURCE_TYPE to "midtrans-mobile",
+                PROPERTY_SERVICE_TYPE to "snap",
+                PROPERTY_SNAP_TYPE to "Sdk",
+                PROPERTY_PLATFORM to "tablet",
+                PROPERTY_MERCHANT_URL to "merchant-url"
             )
         )
     }
@@ -113,7 +120,6 @@ internal class EventAnalyticsTest {
             enabledPayments = "enabled-payments",
             enabledPaymentsLength = "5",
             snapRedirectUrl = "redirect-url",
-            merchantUrl = "merchant-url",
             allowRetry = "allow-retry",
             otherVaProcessor = "other-va"
         )
@@ -128,7 +134,6 @@ internal class EventAnalyticsTest {
                 EventName.PROPERTY_PAYMENTS_ENABLED to "enabled-payments",
                 EventName.PROPERTY_PAYMENTS_ENABLED_LENGTH to "5",
                 EventName.PROPERTY_SNAP_REDIRECT_URL to "redirect-url",
-                EventName.PROPERTY_MERCHANT_URL to "merchant-url",
                 EventName.PROPERTY_ALLOW_RETRY to "allow-retry",
                 EventName.PROPERTY_OTHER_VA_PROCESSOR to "other-va"
             )
