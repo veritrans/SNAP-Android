@@ -13,6 +13,10 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <activity
+            android:name=".internal.presentation.statusscreen.InProgressActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity
             android:name=".internal.presentation.banktransfer.BankTransferListActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 

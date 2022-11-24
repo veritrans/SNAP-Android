@@ -16,21 +16,25 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.*
-import com.midtrans.sdk.corekit.api.model.BankTransferRequest
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.api.model.PublicTransactionResult
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.presentation.paymentoption.PaymentOptionActivity
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActivity
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.InProgressActivity
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.AnimatedIcon
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class LoadingPaymentActivity : BaseActivity() {
 
     companion object {
-        private const val EXTRA_TRANSACTION_DETAIL = "loadingPaymentActivity.extra.transaction_detail"
+        private const val EXTRA_TRANSACTION_DETAIL =
+            "loadingPaymentActivity.extra.transaction_detail"
         private const val EXTRA_SNAP_TOKEN = "loadingPaymentActivity.extra.snap_token"
         private const val EXTRA_CUSTOMER_DETAILS = "loadingPaymentActivity.extra.customer_details"
         private const val EXTRA_ITEM_DETAILS = "loadingPaymentActivity.extra.item_details"
@@ -47,8 +51,10 @@ class LoadingPaymentActivity : BaseActivity() {
         private const val EXTRA_CUSTOM_FIELD2 = "loadingPaymentActivity.extra.custom_field2"
         private const val EXTRA_CUSTOM_FIELD3 = "loadingPaymentActivity.extra.custom_field3"
         private const val EXTRA_GOPAY_CALLBACK = "loadingPaymentActivity.extra.gopay_callback"
-        private const val EXTRA_SHOPEEPAY_CALLBACK = "loadingPaymentActivity.extra.shopeepay_callback"
-        private const val EXTRA_UOB_EZPAY_CALLBACK = "loadingPaymentActivity.extra.uob_ezpay_callback"
+        private const val EXTRA_SHOPEEPAY_CALLBACK =
+            "loadingPaymentActivity.extra.shopeepay_callback"
+        private const val EXTRA_UOB_EZPAY_CALLBACK =
+            "loadingPaymentActivity.extra.uob_ezpay_callback"
         private const val EXTRA_PAYMENT_TYPE = "loadingPaymentActivity.extra.payment_type"
 
         fun getLoadingPaymentIntent(
@@ -85,7 +91,9 @@ class LoadingPaymentActivity : BaseActivity() {
                 putExtra(EXTRA_BCA_VA, bcaVa)
                 putExtra(EXTRA_BNI_VA, bniVa)
                 putExtra(EXTRA_BRI_VA, briVa)
-                putStringArrayListExtra(EXTRA_ENABLED_PAYMENTS, enabledPayments?.let { ArrayList(it) })
+                putStringArrayListExtra(
+                    EXTRA_ENABLED_PAYMENTS,
+                    enabledPayments?.let { ArrayList(it) })
                 putExtra(EXTRA_EXPIRY, expiry)
                 putExtra(EXTRA_PROMO, promoRequest)
                 putExtra(EXTRA_CUSTOM_FIELD1, customField1)
@@ -179,7 +187,7 @@ class LoadingPaymentActivity : BaseActivity() {
         loadPaymentOptions()
     }
 
-    private fun loadPaymentOptions(){
+    private fun loadPaymentOptions() {
         viewModel.registerCommonProperties(isTabletDevice())
         viewModel.getPaymentOption(
             transactionDetails = transactionDetails,
@@ -206,27 +214,33 @@ class LoadingPaymentActivity : BaseActivity() {
 
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                result?.run {
-                    data?.also {
-                        val transactionResult =
-                            it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT)
-                        val resultIntent = Intent()
-                        transactionResult?.let {
-                            val resultForHost = PublicTransactionResult(transactionResult)
-                            resultIntent.putExtra(
-                                UiKitConstants.KEY_TRANSACTION_RESULT,
-                                resultForHost
-                            )
-                            setResult(RESULT_OK, resultIntent)
-                            UiKitApi.getDefaultInstance().getPaymentCallback()
-                                ?.onSuccess(resultForHost)
-                        }
-                    } ?: setResult(Activity.RESULT_OK)
+            when (result.resultCode) {
+                Activity.RESULT_OK -> {
+                    result?.run {
+                        data?.also {
+                            val transactionResult =
+                                it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT)
+                            val resultIntent = Intent()
+                            transactionResult?.let {
+                                val resultForHost = PublicTransactionResult(transactionResult)
+                                resultIntent.putExtra(
+                                    UiKitConstants.KEY_TRANSACTION_RESULT,
+                                    resultForHost
+                                )
+                                setResult(RESULT_OK, resultIntent)
+                                UiKitApi.getDefaultInstance().getPaymentCallback()
+                                    ?.onSuccess(resultForHost)
+                            }
+                        } ?: setResult(Activity.RESULT_OK)
+                    }
+                    finish()
                 }
-                finish()
-            } else {
-                loadPaymentOptions()
+                Activity.RESULT_CANCELED -> {
+                    finish()
+                }
+                else -> {
+                    loadPaymentOptions()
+                }
             }
         }
 
@@ -246,15 +260,53 @@ class LoadingPaymentActivity : BaseActivity() {
                 merchant = it.merchantData,
                 expiryTime = it.expiryTme,
                 paymentTypeItem = paymentType,
-                enabledPayments = it.enabledPayment
+                enabledPayments = it.enabledPayment,
+                result = it.result
             )
 
             resultLauncher.launch(intent)
         })
         viewModel.getErrorLiveData().observe(this, Observer {
             //TODO revisit this error handle after discussing how to handle error when we are unable to get snap token / trx detail during loading screen
-            Toast.makeText(this, "Error caught ${it.javaClass.simpleName}", Toast.LENGTH_SHORT)
-                .show()
+            if (it.cause is HttpException) {
+                val exception: HttpException = it.cause as HttpException
+                when (exception.code()) {
+                    400 -> {
+                        val expiredIntent = ErrorScreenActivity.getIntent(
+                            activityContext = this@LoadingPaymentActivity,
+                            title = resources.getString(R.string.expired_title),
+                            content = resources.getString(R.string.expired_desc)
+                        )
+                        resultLauncher.launch(expiredIntent)
+                    }
+                    404 -> {
+                        val transactionNotFoundIntent = ErrorScreenActivity.getIntent(
+                            activityContext = this@LoadingPaymentActivity,
+                            title = resources.getString(R.string.no_record_wrong_url_title),
+                            content = resources.getString(R.string.no_record_wrong_url_desc)
+                        )
+                        resultLauncher.launch(transactionNotFoundIntent)
+                    }
+                    409 -> {
+                        val alreadySettledIntent = SuccessScreenActivity.getIntent(
+                            activityContext = this@LoadingPaymentActivity,
+                            total = "",
+                            orderId = null,
+                            transactionResult = TransactionResult("", "", ""),
+                            stepNumber = 0
+                        )
+                        resultLauncher.launch(alreadySettledIntent)
+                    }
+                    406 -> {
+                        val inProgressIntent =
+                            InProgressActivity.getIntent(activityContext = this@LoadingPaymentActivity)
+                        resultLauncher.launch(inProgressIntent)
+                    }
+                    else -> {
+                        Toast.makeText(this,"Error caught ${it.javaClass.simpleName}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         })
     }
 

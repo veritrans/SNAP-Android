@@ -12,7 +12,7 @@ fun SnapNumberedList(
 ) {
     Column(modifier = Modifier.background(color = SnapColors.getARGBColor(supportNeutralFill))) {
         list.forEachIndexed { index: Int, it: String ->
-            SnapNumberedListItem(number = "${index + 1}.", paragraph = it)
+            SnapListItem(index = "${index + 1}.", paragraph = it)
         }
     }
 }
