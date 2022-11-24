@@ -19,5 +19,4 @@ object UiKitConstants {
 
     //Symbol
     const val BULLET_LIST = "\u2022"
-
 }
