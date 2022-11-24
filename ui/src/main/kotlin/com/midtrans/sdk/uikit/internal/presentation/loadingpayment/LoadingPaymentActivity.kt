@@ -33,8 +33,7 @@ import javax.inject.Inject
 class LoadingPaymentActivity : BaseActivity() {
 
     companion object {
-        private const val EXTRA_TRANSACTION_DETAIL =
-            "loadingPaymentActivity.extra.transaction_detail"
+        private const val EXTRA_TRANSACTION_DETAIL = "loadingPaymentActivity.extra.transaction_detail"
         private const val EXTRA_SNAP_TOKEN = "loadingPaymentActivity.extra.snap_token"
         private const val EXTRA_CUSTOMER_DETAILS = "loadingPaymentActivity.extra.customer_details"
         private const val EXTRA_ITEM_DETAILS = "loadingPaymentActivity.extra.item_details"
@@ -51,10 +50,8 @@ class LoadingPaymentActivity : BaseActivity() {
         private const val EXTRA_CUSTOM_FIELD2 = "loadingPaymentActivity.extra.custom_field2"
         private const val EXTRA_CUSTOM_FIELD3 = "loadingPaymentActivity.extra.custom_field3"
         private const val EXTRA_GOPAY_CALLBACK = "loadingPaymentActivity.extra.gopay_callback"
-        private const val EXTRA_SHOPEEPAY_CALLBACK =
-            "loadingPaymentActivity.extra.shopeepay_callback"
-        private const val EXTRA_UOB_EZPAY_CALLBACK =
-            "loadingPaymentActivity.extra.uob_ezpay_callback"
+        private const val EXTRA_SHOPEEPAY_CALLBACK = "loadingPaymentActivity.extra.shopeepay_callback"
+        private const val EXTRA_UOB_EZPAY_CALLBACK = "loadingPaymentActivity.extra.uob_ezpay_callback"
         private const val EXTRA_PAYMENT_TYPE = "loadingPaymentActivity.extra.payment_type"
 
         fun getLoadingPaymentIntent(
@@ -188,7 +185,10 @@ class LoadingPaymentActivity : BaseActivity() {
     }
 
     private fun loadPaymentOptions() {
-        viewModel.registerCommonProperties(isTabletDevice())
+        viewModel.registerCommonProperties(
+            isTablet = isTabletDevice(),
+            merchantUrl = UiKitApi.getDefaultInstance().builder.merchantUrl
+        )
         viewModel.getPaymentOption(
             transactionDetails = transactionDetails,
             snapToken = snapToken,

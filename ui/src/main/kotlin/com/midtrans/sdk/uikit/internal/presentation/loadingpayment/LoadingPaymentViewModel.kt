@@ -92,8 +92,11 @@ class LoadingPaymentViewModel @Inject constructor(
         return transactionDetails?.orderId.orEmpty()
     }
 
-    fun registerCommonProperties(isTablet: Boolean) {
+    fun registerCommonProperties(
+        isTablet: Boolean,
+        merchantUrl: String
+    ) {
         val platform = if (isTablet) "Tablet" else "Mobile"
-        eventAnalytics.registerCommonProperties(platform)
+        eventAnalytics.registerCommonProperties(platform, merchantUrl)
     }
 }
