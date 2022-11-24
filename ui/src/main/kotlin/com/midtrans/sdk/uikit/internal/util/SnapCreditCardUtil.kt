@@ -129,24 +129,15 @@ internal object SnapCreditCardUtil {
                     }
                 }
                 else -> {
-                    when {
-                        digit.toLong() > pointBalanceAvailable -> {
-                            pointDiscount = input.copy(digit, TextRange(digit.length))
-                            amount = totalAmount - digit.toLong()
-                            isError = true
-                        }
-                        else -> {
-                            pointDiscount = input.copy(digit, TextRange(digit.length))
-                            amount = totalAmount - digit.toLong()
-                            isError = false
-                        }
-                    }
+                    pointDiscount = input.copy(digit, TextRange(digit.length))
+                    amount = totalAmount - digit.toLong()
+                    isError = digit.toLong() > pointBalanceAvailable
                 }
             }
         } else {
             amount = totalAmount
         }
-        
+
         if (amount > 0){
             displayedAmount = amount.toDouble().currencyFormatRp()
         }
