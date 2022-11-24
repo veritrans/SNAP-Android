@@ -85,7 +85,7 @@ class LoadingPaymentViewModel @Inject constructor(
     }
 
     fun getAmountInString(transactionDetails: TransactionDetails?): String {
-        return transactionDetails?.grossAmount?.currencyFormatRp().orEmpty() //TODO: currency configuration
+        return transactionDetails?.grossAmount?.currencyFormatRp().orEmpty()
     }
 
     fun getOrderId(transactionDetails: TransactionDetails?): String {
