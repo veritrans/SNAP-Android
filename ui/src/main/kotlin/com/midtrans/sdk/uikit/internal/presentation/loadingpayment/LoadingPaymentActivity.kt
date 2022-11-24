@@ -267,6 +267,14 @@ class LoadingPaymentActivity : BaseActivity() {
                         )
                         resultLauncher.launch(intent)
                     }
+                    404 -> {
+                        val intent = ErrorScreenActivity.getIntent(
+                            activityContext = this@LoadingPaymentActivity,
+                            title = resources.getString(R.string.no_record_wrong_url_title),
+                            content = resources.getString(R.string.no_record_wrong_url_desc)
+                        )
+                        resultLauncher.launch(intent)
+                    }
                     409 -> {
                         val intent = SuccessScreenActivity.getIntent(
                             activityContext = this@LoadingPaymentActivity,
