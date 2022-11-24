@@ -17,4 +17,7 @@ object UiKitConstants {
     const val STATUS_CODE_200 = "200"
     const val STATUS_CODE_201 = "201"
 
+    //Symbol
+    const val BULLET_LIST = "\u2022"
+
 }

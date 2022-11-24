@@ -3,6 +3,7 @@ package com.midtrans.sdk.uikit.internal.view
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 
 @Composable
 fun SnapBulletedList(
@@ -11,7 +12,7 @@ fun SnapBulletedList(
 ) {
     Column(modifier = modifier) {
         list.forEach {
-            SnapListItem(index = "\u2022", paragraph = it)
+            SnapListItem(index = UiKitConstants.BULLET_LIST, paragraph = it)
         }
     }
 }
