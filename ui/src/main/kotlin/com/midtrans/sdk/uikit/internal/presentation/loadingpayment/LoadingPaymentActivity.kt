@@ -208,27 +208,33 @@ class LoadingPaymentActivity : BaseActivity() {
 
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                result?.run {
-                    data?.also {
-                        val transactionResult =
-                            it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT)
-                        val resultIntent = Intent()
-                        transactionResult?.let {
-                            val resultForHost = PublicTransactionResult(transactionResult)
-                            resultIntent.putExtra(
-                                UiKitConstants.KEY_TRANSACTION_RESULT,
-                                resultForHost
-                            )
-                            setResult(RESULT_OK, resultIntent)
-                            UiKitApi.getDefaultInstance().getPaymentCallback()
-                                ?.onSuccess(resultForHost)
-                        }
-                    } ?: setResult(Activity.RESULT_OK)
+            when (result.resultCode) {
+                Activity.RESULT_OK -> {
+                    result?.run {
+                        data?.also {
+                            val transactionResult =
+                                it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT)
+                            val resultIntent = Intent()
+                            transactionResult?.let {
+                                val resultForHost = PublicTransactionResult(transactionResult)
+                                resultIntent.putExtra(
+                                    UiKitConstants.KEY_TRANSACTION_RESULT,
+                                    resultForHost
+                                )
+                                setResult(RESULT_OK, resultIntent)
+                                UiKitApi.getDefaultInstance().getPaymentCallback()
+                                    ?.onSuccess(resultForHost)
+                            }
+                        } ?: setResult(Activity.RESULT_OK)
+                    }
+                    finish()
                 }
-                finish()
-            } else {
-                loadPaymentOptions()
+                Activity.RESULT_CANCELED -> {
+                    finish()
+                }
+                else -> {
+                    loadPaymentOptions()
+                }
             }
         }
 
