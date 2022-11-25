@@ -409,12 +409,6 @@ internal class CreditCardActivity : BaseActivity() {
         var justOpenedSheetState by remember {
             mutableStateOf(false)
         }
-        var isPointInsufficient by remember {
-            mutableStateOf(false)
-        }
-        var pointAmountUsed by remember {
-            mutableStateOf(0.0)
-        }
 
         pointBalanceAmount?.value?.let { pointBalance ->
 
@@ -422,8 +416,6 @@ internal class CreditCardActivity : BaseActivity() {
                 title = stringResource(id = R.string.point_title_bni),
                 displayedTotal = totalAmount.value,
                 total = totalAmountWithoutRp.value,
-                isError = isPointInsufficient,
-                infoMessage = stringResource(id = R.string.point_amount_of_points, pointBalance.currencyFormatRp()),
                 pointBalanceAmount = pointBalance
             )
             PointBankCard(
@@ -434,20 +426,13 @@ internal class CreditCardActivity : BaseActivity() {
                         justOpenedSheetState = false
                     }
                 },
-                onValueChange = {
-                    pointAmountUsed = it
-                },
-                onClick = {
+                onClick = { pointInputted ->
                     viewModel?.chargeWithPoint(
-                        transactionDetails = transactionDetails,
-                        cardNumber = state.cardNumber,
-                        cardExpiry = state.expiry,
-                        cardCvv = state.cvv,
                         isSavedCard = state.isSavedCardChecked,
                         customerEmail = state.customerEmail.text,
                         customerPhone = state.customerPhone.text,
                         promoId = state.promoId,
-                        pointAmount = pointAmountUsed,
+                        pointAmount = pointInputted,
                         snapToken = snapToken,
                     )
                     pointPayButtonClickedState = true
@@ -462,7 +447,6 @@ internal class CreditCardActivity : BaseActivity() {
                 }
             }
         }
-
 
         val errorState by errorTypeState
         errorState?.let { pair ->

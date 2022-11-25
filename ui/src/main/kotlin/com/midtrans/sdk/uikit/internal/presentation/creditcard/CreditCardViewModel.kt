@@ -508,10 +508,6 @@ internal class CreditCardViewModel @Inject constructor(
     }
 
     fun chargeWithPoint(
-        transactionDetails: TransactionDetails?,
-        cardNumber: TextFieldValue,
-        cardExpiry: TextFieldValue,
-        cardCvv: TextFieldValue,
         isSavedCard: Boolean,
         customerEmail: String,
         customerPhone: String,
@@ -533,6 +529,17 @@ internal class CreditCardViewModel @Inject constructor(
         cardIssuerBank.value?.let {
             ccRequestBuilder.withBank(it)
         }
+        promos
+            ?.find { it.id == promoId }
+            ?.also { promoName = it.name }
+            ?.discountedGrossAmount
+            ?.let {
+                promoAmount = it
+                ccRequestBuilder.withPromo(
+                    discountedGrossAmount = it,
+                    promoId = promoId.toString()
+                )
+            }
 
         snapCore.pay(
             snapToken = snapToken,
