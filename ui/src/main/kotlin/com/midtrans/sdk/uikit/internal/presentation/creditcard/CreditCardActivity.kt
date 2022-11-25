@@ -426,20 +426,13 @@ internal class CreditCardActivity : BaseActivity() {
                         justOpenedSheetState = false
                     }
                 },
-                onValueChange = {
-                    pointAmountUsed = it
-                },
-                onClick = {
+                onClick = { pointInputted ->
                     viewModel?.chargeWithPoint(
-                        transactionDetails = transactionDetails,
-                        cardNumber = state.cardNumber,
-                        cardExpiry = state.expiry,
-                        cardCvv = state.cvv,
                         isSavedCard = state.isSavedCardChecked,
                         customerEmail = state.customerEmail.text,
                         customerPhone = state.customerPhone.text,
                         promoId = state.promoId,
-                        pointAmount = pointAmountUsed,
+                        pointAmount = pointInputted,
                         snapToken = snapToken,
                     )
                     pointPayButtonClickedState = true
