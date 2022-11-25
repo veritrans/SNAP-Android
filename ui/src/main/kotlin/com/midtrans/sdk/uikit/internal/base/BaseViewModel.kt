@@ -240,7 +240,7 @@ internal open class BaseViewModel : ViewModel() {
         pageName: String,
         paymentMethodName: String,
         statusText: String,
-        noticeMessage: String?
+        noticeMessage: String? = null
     ) {
         eventAnalytics?.trackSnapNotice(
             pageName = pageName,
