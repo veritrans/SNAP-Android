@@ -508,10 +508,6 @@ internal class CreditCardViewModel @Inject constructor(
     }
 
     fun chargeWithPoint(
-        transactionDetails: TransactionDetails?,
-        cardNumber: TextFieldValue,
-        cardExpiry: TextFieldValue,
-        cardCvv: TextFieldValue,
         isSavedCard: Boolean,
         customerEmail: String,
         customerPhone: String,
