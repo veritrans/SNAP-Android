@@ -150,6 +150,13 @@ internal class ConvenienceStoreViewModel @Inject constructor(
         )
     }
 
+    fun trackAccountNumberCopied(paymentType: String) {
+        eventAnalytics?.trackSnapAccountNumberCopied(
+            paymentMethodName = paymentType,
+            pageName = getPageName(paymentType)
+        )
+    }
+
     fun resetError(){
         _errorLiveData.value = null
     }
