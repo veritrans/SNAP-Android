@@ -422,4 +422,27 @@ class CreditCardViewModelTest {
             displayField = "true"
         )
     }
+
+    @Test
+    fun verifyTrackSnapNotice() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val errorCard: ErrorCard = mock()
+        val snapCreditCardUtil: SnapCreditCardUtil = mock()
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+        val creditCardViewModel =
+            CreditCardViewModel(snapCore = snapCore, dateTimeUtil, snapCreditCardUtil, errorCard)
+        creditCardViewModel.trackSnapNotice(
+            statusText = "text",
+            noticeMessage = "message"
+        )
+        verify(eventAnalytics).trackSnapNotice(
+            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+            paymentMethodName = PaymentType.CREDIT_CARD,
+            statusText = "text",
+            noticeMessage = "message"
+        )
+    }
 }
