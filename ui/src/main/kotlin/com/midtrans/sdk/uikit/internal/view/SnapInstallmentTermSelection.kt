@@ -22,7 +22,8 @@ fun SnapInstallmentTermSelectionMenu(
     cardNumber: TextFieldValue,
     isPointBankChecked: Boolean,
     onInstallmentTermSelected: (String) -> Unit,
-    onInstallmentAllowed: (Boolean) -> Unit
+    onInstallmentAllowed: (Boolean) -> Unit,
+    onInstallmentSelectionError: (String) -> Unit
 ) {
     creditCard?.installment?.let { installment ->
         val isRequired = installment.isRequired
@@ -73,7 +74,8 @@ fun SnapInstallmentTermSelectionMenu(
                                 ?.let { onInstallmentTermSelected("${selectedBank}_$it") }
                                 ?: run { onInstallmentTermSelected("") }
                         },
-                        onInstallmentAllowed = { onInstallmentAllowed(it) }
+                        onInstallmentAllowed = { onInstallmentAllowed(it) },
+                        onInstallmentSelectionError = onInstallmentSelectionError
                     )
                 }
         }
@@ -143,7 +145,8 @@ private fun InstallmentDropdownMenu(
     errorMessageIdList: List<Int>,
     optionList: List<String>,
     onOptionsSelected: (String) -> Unit,
-    onInstallmentAllowed: (Boolean) -> Unit
+    onInstallmentAllowed: (Boolean) -> Unit,
+    onInstallmentSelectionError: (String) -> Unit
 ) {
     val options by remember { mutableStateOf(optionList) }
     var expanded by remember { mutableStateOf(false) }
@@ -207,7 +210,9 @@ private fun InstallmentDropdownMenu(
         if (isErrorVisible) {
             onInstallmentAllowed.invoke(false)
             errorMessageIdList.forEach {
-                ErrorTextInstallment(errorMessage = stringResource(id = it))
+                val errorMessage = stringResource(id = it)
+                ErrorTextInstallment(errorMessage = errorMessage)
+                onInstallmentSelectionError.invoke(errorMessage)
             }
         } else {
             onInstallmentAllowed.invoke(true)

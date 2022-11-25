@@ -690,7 +690,13 @@ internal class CreditCardActivity : BaseActivity() {
                             cardNumber = state.cardNumber,
                             isPointBankChecked = state.isPointBankChecked,
                             onInstallmentTermSelected = { onInstallmentTermSelected(it) },
-                            onInstallmentAllowed = { state.isInstallmentAllowed = it }
+                            onInstallmentAllowed = { state.isInstallmentAllowed = it },
+                            onInstallmentSelectionError = { errorMessage ->
+                                viewModel.trackSnapNotice(
+                                    statusText = getString(R.string.installment_selection_error),
+                                    noticeMessage = errorMessage
+                                )
+                            }
                         )
 
                         promoState.value?.also {
