@@ -533,6 +533,17 @@ internal class CreditCardViewModel @Inject constructor(
         cardIssuerBank.value?.let {
             ccRequestBuilder.withBank(it)
         }
+        promos
+            ?.find { it.id == promoId }
+            ?.also { promoName = it.name }
+            ?.discountedGrossAmount
+            ?.let {
+                promoAmount = it
+                ccRequestBuilder.withPromo(
+                    discountedGrossAmount = it,
+                    promoId = promoId.toString()
+                )
+            }
 
         snapCore.pay(
             snapToken = snapToken,
