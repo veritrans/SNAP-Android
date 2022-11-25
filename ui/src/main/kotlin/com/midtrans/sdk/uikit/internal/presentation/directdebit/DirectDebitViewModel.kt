@@ -119,6 +119,17 @@ internal class DirectDebitViewModel @Inject constructor(
         )
     }
 
+    fun trackSnapNotice(
+        paymentType: String,
+        statusText: String
+    ) {
+        trackSnapNotice(
+            pageName = getPageName(paymentType),
+            paymentMethodName = paymentType,
+            statusText = statusText
+        )
+    }
+
     private fun getPageName(paymentType: String): String {
         return when(paymentType) {
             PaymentType.KLIK_BCA -> PageName.KLIK_BCA_PAGE

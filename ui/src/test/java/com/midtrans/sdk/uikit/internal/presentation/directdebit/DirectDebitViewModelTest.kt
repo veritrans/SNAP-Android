@@ -159,4 +159,15 @@ internal class DirectDebitViewModelTest {
             stepNumber = "2"
         )
     }
+
+    @Test
+    fun verifyTrackSnapNotice() {
+        viewModel.trackSnapNotice(PaymentType.BCA_KLIKPAY, "text")
+        verify(eventAnalytics).trackSnapNotice(
+            pageName = PageName.BCA_KLIK_PAY_PAGE,
+            paymentMethodName = PaymentType.BCA_KLIKPAY,
+            statusText = "text",
+            noticeMessage = null
+        )
+    }
 }
