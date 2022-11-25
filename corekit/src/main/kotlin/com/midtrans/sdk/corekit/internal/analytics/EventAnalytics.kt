@@ -6,6 +6,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ACCOUNT_
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_RESULTS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CTA_CLICKED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CUSTOMER_DATA_INPUT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_EXBIN_RESPONSE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
@@ -17,6 +18,8 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAYMENT_
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_VIEWED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_TOKENIZATION_RESULT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_3DS_VERSION
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ALLOWLISTED_BINS
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ALLOW_RETRY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_BLACKLISTED_BINS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BANK
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CARD_BANK_CODE
@@ -34,14 +37,18 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_COLOUR_SCH
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CREDIT_CARD_POINT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CTA_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CURRENCY
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ECI
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_CITY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_EMAIL
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_PHONE_NUMBER
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_POST_CODE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_DISPLAY_FIELD
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ECI
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_FRAUD_STATUS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_GROSS_AMOUNT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMENT_BANK
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMENT_REQUIRED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMENT_TERMS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_MERCHANT_ID
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_MERCHANT_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_MERCHANT_URL
@@ -72,18 +79,13 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TOKEN
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SOURCE_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STATUS_CODE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STEP_NUMBER
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOKEN_ID
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOTAL_ITEMS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOTAL_QUANTITY
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TRANSACTION_ID
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TRANSACTION_STATUS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TWO_CLICK_TOKEN_AVAILABLE
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ALLOWLISTED_BINS
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ALLOW_RETRY
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMENT_BANK
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMENT_REQUIRED
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_INSTALLMENT_TERMS
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STEP_NUMBER
-import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOKEN_ID
 
 class EventAnalytics(
     private val mixpanelTracker: MixpanelTracker
@@ -204,19 +206,19 @@ class EventAnalytics(
     }
 
     //TODO will be implemented separately
-    fun trackSnapCustomerDataInput() {}
+    fun trackSnapError() {}
+    fun trackSnapCtaError() {}
 
     fun trackSnapAccountNumberCopied(
         pageName: String,
         paymentMethodName: String
     ) {
-        val manadatoryProperties = mutableMapOf<String, String>()
-        manadatoryProperties[PROPERTY_PAYMENT_METHOD_NAME] = paymentMethodName
-        manadatoryProperties[PROPERTY_PAGE_NAME] = pageName
-
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_ACCOUNT_NUMBER_COPIED,
-            properties = manadatoryProperties
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to pageName,
+                PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
+            )
         )
     }
 
@@ -224,18 +226,35 @@ class EventAnalytics(
         pageName: String,
         paymentMethodName: String
     ) {
-        val mandatoryProperties = mutableMapOf<String, String>()
-        mandatoryProperties[PROPERTY_PAYMENT_METHOD_NAME] = paymentMethodName
-        mandatoryProperties[PROPERTY_PAGE_NAME] = pageName
-
         mixpanelTracker.trackEvent(
             eventName = EVENT_SNAP_PAYMENT_NUMBER_BUTTON_RETRIED,
-            properties = mandatoryProperties
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to pageName,
+                PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName
+            )
         )
     }
 
-    fun trackSnapError() {}
-    fun trackSnapCtaError() {}
+    fun trackSnapCustomerDataInput(
+        pageName: String,
+        paymentMethodName: String,
+        email: String?,
+        phoneNumber: String?,
+        displayField: String
+    ) {
+        val optionalProperties = mutableMapOf<String, String>()
+        email?.also { optionalProperties[PROPERTY_CUSTOMER_EMAIL] = it }
+        phoneNumber?.also { optionalProperties[PROPERTY_CUSTOMER_PHONE_NUMBER] = it }
+
+        mixpanelTracker.trackEvent(
+            eventName = EVENT_SNAP_CUSTOMER_DATA_INPUT,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to pageName,
+                PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName,
+                PROPERTY_DISPLAY_FIELD to displayField
+            ) + optionalProperties
+        )
+    }
 
     fun trackSnapTokenizationResult(
         pageName: String,

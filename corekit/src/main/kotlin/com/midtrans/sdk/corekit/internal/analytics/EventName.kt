@@ -34,6 +34,7 @@ internal object EventName {
     const val PROPERTY_CUSTOMER_NAME = "customerName"
     const val PROPERTY_CUSTOMER_EMAIL = "customerEmail"
     const val PROPERTY_CUSTOMER_PHONE_NUMBER = "customerPhoneNumber"
+    const val PROPERTY_DISPLAY_FIELD = "displayField"
     const val PROPERTY_CUSTOMER_CITY = "customerCity"
     const val PROPERTY_CUSTOMER_POST_CODE = "customerPostCode"
     const val PROPERTY_TOTAL_ITEMS = "totalItems"
