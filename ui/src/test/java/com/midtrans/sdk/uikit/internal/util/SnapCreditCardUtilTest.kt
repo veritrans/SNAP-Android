@@ -7,7 +7,6 @@ import com.midtrans.sdk.corekit.api.model.Promo
 import com.midtrans.sdk.uikit.R
 import org.junit.Assert
 import org.junit.Test
-import kotlin.math.exp
 
 class SnapCreditCardUtilTest {
 
@@ -229,10 +228,10 @@ class SnapCreditCardUtilTest {
     @Test
     fun formatCreditCardShouldReturnNumberGroupedBy4Digits() {
         val expected = "4811 1111 1111 1114"
-        val result1 = SnapCreditCardUtil.formatCreditCard(TextFieldValue("4811111111111114"))
+        val result1 = SnapCreditCardUtil.formatCreditCardNumber(TextFieldValue("4811111111111114"))
         Assert.assertEquals(expected, result1.text)
 
-        val result2 = SnapCreditCardUtil.formatCreditCard(TextFieldValue("4811-1111-1111-1114"))
+        val result2 = SnapCreditCardUtil.formatCreditCardNumber(TextFieldValue("4811-1111-1111-1114"))
         Assert.assertEquals(expected, result2.text)
     }
 

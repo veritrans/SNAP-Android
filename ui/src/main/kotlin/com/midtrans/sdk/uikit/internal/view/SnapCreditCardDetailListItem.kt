@@ -33,7 +33,7 @@ import com.midtrans.sdk.uikit.internal.model.PromoData
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.DEFAULT_ONE_CLICK_CVV_VALUE
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.formatCvv
-import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.formatCreditCard
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.formatCreditCardNumber
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.formatMaskedCard
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.isCardNumberInvalid
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.isCvvInvalid
@@ -586,7 +586,7 @@ fun NormalCardItem(
                             rawCardNumber = it,
                             isBinBlocked = state.isBinBlocked
                         )
-                        onCardNumberValueChange(formatCreditCard(it))
+                        onCardNumberValueChange(formatCreditCardNumber(it))
                     },
                     isFocused = state.isCardTexFieldFocused,
                     onFocusChange = {

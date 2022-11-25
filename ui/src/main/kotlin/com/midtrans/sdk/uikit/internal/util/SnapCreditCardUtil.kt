@@ -59,7 +59,7 @@ internal object SnapCreditCardUtil {
         isBinBlocked: Boolean
     ): Boolean {
         val cardNumber = getCardNumberFromTextField(rawCardNumber)
-        val formattedCardNumberLength = formatCreditCard(rawCardNumber).text.length
+        val formattedCardNumberLength = formatCreditCardNumber(rawCardNumber).text.length
 
         return isBinBlocked
             || isValidCardNumber(cardNumber)
@@ -331,7 +331,7 @@ internal object SnapCreditCardUtil {
         return "**** **** **** $lastFourDigit"
     }
 
-    fun formatCreditCard(input: TextFieldValue): TextFieldValue {
+    fun formatCreditCardNumber(input: TextFieldValue): TextFieldValue {
         val digit = input.text.filter {
             it.isDigit()
         }
