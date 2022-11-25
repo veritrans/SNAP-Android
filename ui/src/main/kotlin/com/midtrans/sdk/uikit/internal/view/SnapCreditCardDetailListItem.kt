@@ -32,6 +32,9 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.PromoData
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.DEFAULT_ONE_CLICK_CVV_VALUE
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.formatCreditCard
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.formatMaskedCard
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.isCardNumberInvalid
 import com.midtrans.sdk.uikit.internal.view.SnapColors.backgroundBorderSolidSecondary
 import com.midtrans.sdk.uikit.internal.view.SnapColors.lineLightMuted
 import com.midtrans.sdk.uikit.internal.view.SnapColors.supportDangerDefault
@@ -521,23 +524,6 @@ private fun formatCvvTextFieldBasedOnTokenType(tokenType: String): TextFieldValu
     }
 }
 
-private fun formatMaskedCard(maskedCard: String): String {
-    val lastFourDigit =
-        maskedCard.substring(startIndex = maskedCard.length - 4, endIndex = maskedCard.length)
-    return "**** **** **** $lastFourDigit"
-}
-
-private fun formatCreditCard(input: TextFieldValue): TextFieldValue {
-    val digit = input.text.filter {
-        it.isDigit()
-    }
-    var processed: String = digit.replace("\\D", "").replace(" ", "")
-    // insert a space after all groups of 4 digits that are followed by another digit
-    processed = processed.replace("(\\d{4})(?=\\d)".toRegex(), "$1 ")
-    val length = min(processed.length, SnapCreditCardUtil.FORMATTED_MAX_CARD_NUMBER_LENGTH)
-    return input.copy(text = processed.substring(0 until length), selection = TextRange(length))
-}
-
 private fun formatCVV(input: TextFieldValue): TextFieldValue {
     val digit = input.text.filter {
         it.isDigit()
@@ -603,15 +589,10 @@ fun NormalCardItem(
                     onValueChange = {
                         state.principalIconId =
                             SnapCreditCardUtil.getPrincipalIcon(SnapCreditCardUtil.getCardType(it.text))
-                        val cardLength = formatCreditCard(it).text.length
-                        state.isCardNumberInvalid =
-                            cardLength != SnapCreditCardUtil.FORMATTED_MAX_CARD_NUMBER_LENGTH
-                                || !SnapCreditCardUtil.isValidCardNumber(
-                                SnapCreditCardUtil.getCardNumberFromTextField(
-                                    it
-                                )
-                            )
-                                || state.isBinBlocked
+                        state.isCardNumberInvalid = isCardNumberInvalid(
+                            rawCardNumber = it,
+                            isBinBlocked = state.isBinBlocked
+                        )
                         onCardNumberValueChange(formatCreditCard(it))
                     },
                     isFocused = state.isCardTexFieldFocused,

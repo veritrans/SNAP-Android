@@ -14,10 +14,10 @@ import kotlin.math.min
 
 internal object SnapCreditCardUtil {
 
-    const val CARD_TYPE_VISA = "VISA"
-    const val CARD_TYPE_MASTERCARD = "MASTERCARD"
-    const val CARD_TYPE_AMEX = "AMEX"
-    const val CARD_TYPE_JCB = "JCB"
+    private const val CARD_TYPE_VISA = "VISA"
+    private const val CARD_TYPE_MASTERCARD = "MASTERCARD"
+    private const val CARD_TYPE_AMEX = "AMEX"
+    private const val CARD_TYPE_JCB = "JCB"
     const val DEFAULT_ONE_CLICK_CVV_VALUE = "123"
     const val FORMATTED_MAX_CARD_NUMBER_LENGTH = 19
     const val FORMATTED_MAX_EXPIRY_LENGTH = 5
@@ -51,6 +51,18 @@ internal object SnapCreditCardUtil {
             alternate = !alternate
         }
         return sum % 10 == 0
+    }
+
+    fun isCardNumberInvalid(
+        rawCardNumber: TextFieldValue,
+        isBinBlocked: Boolean
+    ): Boolean {
+        val cardNumber = getCardNumberFromTextField(rawCardNumber)
+        val formattedCardNumberLength = formatCreditCard(rawCardNumber).text.length
+
+        return isBinBlocked
+            || isValidCardNumber(cardNumber)
+            || formattedCardNumberLength != FORMATTED_MAX_CARD_NUMBER_LENGTH
     }
 
     //TODO: Need to find better solution about principal icon
@@ -306,5 +318,21 @@ internal object SnapCreditCardUtil {
 
     fun isValidEmail(target: String): Boolean {
         return target.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(target).matches()
+    }
+
+    fun formatMaskedCard(maskedCard: String): String {
+        val lastFourDigit = maskedCard.substring(startIndex = maskedCard.length - 4, endIndex = maskedCard.length)
+        return "**** **** **** $lastFourDigit"
+    }
+
+    fun formatCreditCard(input: TextFieldValue): TextFieldValue {
+        val digit = input.text.filter {
+            it.isDigit()
+        }
+        var processed: String = digit.replace("\\D", "").replace(" ", "")
+        // insert a space after all groups of 4 digits that are followed by another digit
+        processed = processed.replace("(\\d{4})(?=\\d)".toRegex(), "$1 ")
+        val length = min(processed.length, FORMATTED_MAX_CARD_NUMBER_LENGTH)
+        return input.copy(text = processed.substring(0 until length), selection = TextRange(length))
     }
 }
