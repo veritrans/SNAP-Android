@@ -307,7 +307,7 @@ fun SnapSavedCardRadioGroup(
                             when (item) {
                                 is SavedCreditCardFormData -> {
                                     cvvSavedCardTextFieldValue =
-                                        formatCvvTextFieldBasedOnTokenType(item.tokenType)
+                                        getCvvTextFieldValueBasedOnTokenType(item.tokenType)
                                     cardItemState.cvv = cvvSavedCardTextFieldValue
                                     onCardNumberOtherCardValueChange(TextFieldValue(item.maskedCardNumber))
                                     onSavedCardRadioSelected(item)
@@ -336,7 +336,7 @@ fun SnapSavedCardRadioGroup(
                         when (item) {
                             is SavedCreditCardFormData -> {
                                 cvvSavedCardTextFieldValue =
-                                    formatCvvTextFieldBasedOnTokenType(item.tokenType)
+                                    getCvvTextFieldValueBasedOnTokenType(item.tokenType)
                                 cardItemState.cvv = cvvSavedCardTextFieldValue
                                 onCardNumberOtherCardValueChange(TextFieldValue(item.maskedCardNumber))
                                 onSavedCardRadioSelected(item)
@@ -514,7 +514,7 @@ class CardItemState(
     }
 }
 
-private fun formatCvvTextFieldBasedOnTokenType(tokenType: String): TextFieldValue {
+private fun getCvvTextFieldValueBasedOnTokenType(tokenType: String): TextFieldValue {
     return if (tokenType == SavedToken.ONE_CLICK) {
         TextFieldValue(
             text = DEFAULT_ONE_CLICK_CVV_VALUE,
