@@ -18,7 +18,7 @@ class TwoClickCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
         cardCvv = value
     }
 
-    fun withGrossAmount(value: Double): TwoClickCardTokenRequestBuilder = apply {
+    override fun withGrossAmount(value: Double): TwoClickCardTokenRequestBuilder = apply {
         grossAmount = value
     }
 
@@ -26,11 +26,11 @@ class TwoClickCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
         tokenId = value
     }
 
-    fun withOrderId(value: String): TwoClickCardTokenRequestBuilder = apply {
+    override fun withOrderId(value: String): TwoClickCardTokenRequestBuilder = apply {
         orderId = value
     }
 
-    fun withCurrency(value: String): TwoClickCardTokenRequestBuilder = apply {
+    override fun withCurrency(value: String): TwoClickCardTokenRequestBuilder = apply {
         currency = value
     }
 

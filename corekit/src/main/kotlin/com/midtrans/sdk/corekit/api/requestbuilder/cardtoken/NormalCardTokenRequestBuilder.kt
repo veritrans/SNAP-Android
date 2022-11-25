@@ -31,15 +31,15 @@ class NormalCardTokenRequestBuilder : CreditCardTokenRequestBuilder() {
         cardCvv = value
     }
 
-    fun withGrossAmount(value: Double): NormalCardTokenRequestBuilder = apply {
+    override fun withGrossAmount(value: Double): NormalCardTokenRequestBuilder = apply {
         grossAmount = value
     }
 
-    fun withOrderId(value: String): NormalCardTokenRequestBuilder = apply {
+    override fun withOrderId(value: String): NormalCardTokenRequestBuilder = apply {
         orderId = value
     }
 
-    fun withCurrency(value: String): NormalCardTokenRequestBuilder = apply {
+    override fun withCurrency(value: String): NormalCardTokenRequestBuilder = apply {
         currency = value
     }
 

@@ -351,14 +351,26 @@ internal class CreditCardActivity : BaseActivity() {
                         grossAmount = it
                     }
                     if (state.isPointBankChecked) {
-                        viewModel?.getBankPoint(
-                            snapToken = snapToken,
-                            transactionDetails = transactionDetails,
-                            cardNumber = state.cardNumber,
-                            cardExpiry = state.expiry,
-                            cardCvv = state.cvv,
-                            promoId = state.promoId
-                        )
+                        if (state.cardItemType == CardItemState.CardItemType.SAVED_CARD) {
+                            viewModel?.getBankPoint(
+                                formData = selectedFormData as SavedCreditCardFormData,
+                                snapToken = snapToken,
+                                transactionDetails = transactionDetails,
+                                cardNumber = state.cardNumber,
+                                cardExpiry = state.expiry,
+                                cardCvv = state.cvv,
+                                promoId = state.promoId
+                            )
+                        } else {
+                            viewModel?.getBankPoint(
+                                snapToken = snapToken,
+                                transactionDetails = transactionDetails,
+                                cardNumber = state.cardNumber,
+                                cardExpiry = state.expiry,
+                                cardCvv = state.cvv,
+                                promoId = state.promoId
+                            )
+                        }
                         isPaymentUsingPointState = true
                     } else {
                         if (selectedFormData == null) {
@@ -399,7 +411,7 @@ internal class CreditCardActivity : BaseActivity() {
                 withCustomerPhoneEmail = withCustomerPhoneEmail,
                 promoState = promoState,
                 onSavedCardRadioSelected = { selectedFormData = it },
-                onSavedCardPointBankCheckedChange = { }
+                onSavedCardPointBankCheckedChange = { state.isPointBankChecked = it }
             )
         }
 

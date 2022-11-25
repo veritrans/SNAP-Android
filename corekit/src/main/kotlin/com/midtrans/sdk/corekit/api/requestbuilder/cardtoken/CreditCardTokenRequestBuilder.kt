@@ -10,6 +10,12 @@ abstract class CreditCardTokenRequestBuilder {
         clientKey = value
     }
 
+    abstract fun withCurrency(value: String): CreditCardTokenRequestBuilder
+
+    abstract fun withOrderId(value: String): CreditCardTokenRequestBuilder
+
+    abstract fun withGrossAmount(value: Double): CreditCardTokenRequestBuilder
+
     companion object {
         const val BANK = "bank"
         const val CARD_NUMBER = "card_number"
