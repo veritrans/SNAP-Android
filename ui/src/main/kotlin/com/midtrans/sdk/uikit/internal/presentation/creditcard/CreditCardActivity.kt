@@ -869,7 +869,8 @@ internal class CreditCardActivity : BaseActivity() {
                 state.cvv = it
             },
             onSavedCardCheckedChange = { state.isSavedCardChecked = it },
-            onPointBankCheckedChange = onSavedCardPointBankCheckedChange
+            onPointBankCheckedChange = onSavedCardPointBankCheckedChange,
+            onInputError = { viewModel?.trackSnapNotice(it) }
         )
     }
 

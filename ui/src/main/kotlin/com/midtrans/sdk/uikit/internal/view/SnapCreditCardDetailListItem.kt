@@ -285,6 +285,7 @@ fun SnapSavedCardRadioGroup(
     onIsCvvSavedCardInvalidValueChange: (Boolean) -> Unit,
     onSavedCardCheckedChange: (Boolean) -> Unit,
     onPointBankCheckedChange: (Boolean) -> Unit,
+    onInputError: (String) -> Unit,
     onCvvSavedCardValueChange: ((TextFieldValue) -> Unit)? = null //Todo: delete later
 ) {
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(listStates[0].identifier) }
@@ -418,7 +419,8 @@ fun SnapSavedCardRadioGroup(
                                 onCvvTextFieldFocusedChange = {},
                                 onSavedCardCheckedChange = {
                                     onSavedCardCheckedChange(it)
-                                }
+                                },
+                                onInputError = onInputError
                             )
                         }
                     }
