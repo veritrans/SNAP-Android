@@ -70,6 +70,7 @@ fun SnapCCDetailListItem(
     onCvvTextFieldFocusedChange: (Boolean) -> Unit,
     onIsCvvInvalidValueChange: (Boolean) -> Unit,
     onPointBankCheckedChange: (Boolean) -> Unit,
+    onInputError: (String) -> Unit
 ) {
     Column {
         Row(
@@ -142,17 +143,21 @@ fun SnapCCDetailListItem(
                     )
                     if (isCvvInvalid && !isCvvTextFieldFocused) {
                         if (cvvTextField.text.isEmpty()) {
+                            val text = stringResource(id = R.string.card_error_empty_cvv)
                             Text(
-                                text = stringResource(id = R.string.card_error_empty_cvv),
+                                text = text,
                                 style = SnapTypography.STYLES.snapTextSmallRegular,
                                 color = SnapColors.getARGBColor(supportDangerDefault)
                             )
+                            onInputError.invoke(text)
                         } else {
+                            val text = stringResource(id = R.string.card_error_invalid_cvv)
                             Text(
-                                text = stringResource(id = R.string.card_error_invalid_cvv),
+                                text = text,
                                 style = SnapTypography.STYLES.snapTextSmallRegular,
                                 color = SnapColors.getARGBColor(supportDangerDefault)
                             )
+                            onInputError.invoke(text)
                         }
                     }
                 }
@@ -394,7 +399,8 @@ fun SnapSavedCardRadioGroup(
                                 onIsCvvInvalidValueChange = {
                                     onIsCvvSavedCardInvalidValueChange(it)
                                 },
-                                onPointBankCheckedChange = onPointBankCheckedChange
+                                onPointBankCheckedChange = onPointBankCheckedChange,
+                                onInputError = onInputError
                             )
                         }
 
