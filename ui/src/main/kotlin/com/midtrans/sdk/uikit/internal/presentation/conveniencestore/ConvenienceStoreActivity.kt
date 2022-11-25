@@ -192,12 +192,14 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                                 modifier = Modifier.fillMaxWidth(1f),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
+                                val text = stringResource(id = R.string.alfa_group_failed_to_load_payment_code)
                                 Text(
-                                    text = stringResource(id = R.string.alfa_group_failed_to_load_payment_code),
+                                    text = text,
                                     style = SnapTypography.STYLES.snapTextSmallRegular,
                                     color = SnapColors.getARGBColor(SnapColors.supportDangerDefault),
                                     modifier = Modifier.weight(1f)
                                 )
+                                viewModel?.trackSnapNotice(paymentType, text)
 
                                 SnapButton(
                                     style = SnapButton.Style.TERTIARY,
