@@ -346,6 +346,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                         onCopyClicked = { label ->
                             companyCodeCopied = true
                             clipboardManager.setText(AnnotatedString(text = label))
+                            viewModel?.trackAccountNumberCopied(paymentType)
                         }
                     )
                 }
@@ -403,7 +404,11 @@ internal class BankTransferDetailActivity : BaseActivity() {
                         title = stringResource(id = R.string.general_instruction_va_number_title),
                         info = it,
                         copied = copiedVa,
-                        onCopyClicked = { copiedVa = true }
+                        onCopyClicked = { label ->
+                            copiedVa = true
+                            clipboardManager.setText(AnnotatedString(text = label))
+                            viewModel?.trackAccountNumberCopied(paymentType = PaymentType.OTHER_VA)
+                        }
                     )
                 }
             }

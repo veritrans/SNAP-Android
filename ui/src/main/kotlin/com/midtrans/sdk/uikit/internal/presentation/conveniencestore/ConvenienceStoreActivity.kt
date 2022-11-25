@@ -178,6 +178,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                         onCopyClicked = { label ->
                             paymentCodeCopied = true
                             clipboardManager?.setText(AnnotatedString(text = label))
+                            viewModel?.trackAccountNumberCopied(paymentType)
                         }
                     )
                     Box(
