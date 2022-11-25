@@ -31,6 +31,7 @@ import com.midtrans.sdk.corekit.api.model.SavedToken
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.PromoData
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.DEFAULT_ONE_CLICK_CVV_VALUE
 import com.midtrans.sdk.uikit.internal.view.SnapColors.backgroundBorderSolidSecondary
 import com.midtrans.sdk.uikit.internal.view.SnapColors.lineLightMuted
 import com.midtrans.sdk.uikit.internal.view.SnapColors.supportDangerDefault
@@ -326,7 +327,7 @@ fun SnapSavedCardRadioGroup(
                     verticalAlignment = CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    if(isFirstInit) {
+                    if (isFirstInit) {
                         onOptionSelected(item.identifier)
                         when (item) {
                             is SavedCreditCardFormData -> {
@@ -510,16 +511,14 @@ class CardItemState(
 }
 
 private fun formatCvvTextFieldBasedOnTokenType(tokenType: String): TextFieldValue {
-    val output = if (tokenType == SavedToken.ONE_CLICK) {
+    return if (tokenType == SavedToken.ONE_CLICK) {
         TextFieldValue(
-            SnapCreditCardUtil.DEFAULT_ONE_CLICK_CVV_VALUE, selection = TextRange(
-                SnapCreditCardUtil.DEFAULT_ONE_CLICK_CVV_VALUE.length
-            )
+            text = DEFAULT_ONE_CLICK_CVV_VALUE,
+            selection = TextRange(DEFAULT_ONE_CLICK_CVV_VALUE.length)
         )
     } else {
         TextFieldValue("")
     }
-    return output
 }
 
 private fun formatMaskedCard(maskedCard: String): String {
@@ -528,7 +527,7 @@ private fun formatMaskedCard(maskedCard: String): String {
     return "**** **** **** $lastFourDigit"
 }
 
-fun formatCreditCard(input: TextFieldValue): TextFieldValue {
+private fun formatCreditCard(input: TextFieldValue): TextFieldValue {
     val digit = input.text.filter {
         it.isDigit()
     }
@@ -539,7 +538,7 @@ fun formatCreditCard(input: TextFieldValue): TextFieldValue {
     return input.copy(text = processed.substring(0 until length), selection = TextRange(length))
 }
 
-fun formatCVV(input: TextFieldValue): TextFieldValue {
+private fun formatCVV(input: TextFieldValue): TextFieldValue {
     val digit = input.text.filter {
         it.isDigit()
     }
@@ -607,12 +606,12 @@ fun NormalCardItem(
                         val cardLength = formatCreditCard(it).text.length
                         state.isCardNumberInvalid =
                             cardLength != SnapCreditCardUtil.FORMATTED_MAX_CARD_NUMBER_LENGTH
-                                    || !SnapCreditCardUtil.isValidCardNumber(
+                                || !SnapCreditCardUtil.isValidCardNumber(
                                 SnapCreditCardUtil.getCardNumberFromTextField(
                                     it
                                 )
                             )
-                                    || state.isBinBlocked
+                                || state.isBinBlocked
                         onCardNumberValueChange(formatCreditCard(it))
                     },
                     isFocused = state.isCardTexFieldFocused,
@@ -678,8 +677,8 @@ fun NormalCardItem(
                             }
                             state.isExpiryInvalid =
                                 formatExpiryDate(it).text.length == SnapCreditCardUtil.FORMATTED_MAX_EXPIRY_LENGTH &&
-                                        isCardExpired ||
-                                        formatExpiryDate(it).text.length != SnapCreditCardUtil.FORMATTED_MAX_EXPIRY_LENGTH
+                                    isCardExpired ||
+                                    formatExpiryDate(it).text.length != SnapCreditCardUtil.FORMATTED_MAX_EXPIRY_LENGTH
                         },
                         isError = state.isExpiryInvalid,
                         isFocused = state.isExpiryTextFieldFocused,

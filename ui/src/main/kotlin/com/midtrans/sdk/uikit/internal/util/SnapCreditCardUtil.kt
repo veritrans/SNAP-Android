@@ -97,7 +97,7 @@ internal object SnapCreditCardUtil {
         return value.text.substring(0, 2)
     }
     fun getExpYearFromTextField(value: TextFieldValue) : String{
-        return return value.text.substring(3, 5)
+        return value.text.substring(3, 5)
     }
 
     fun formatMaxPointDiscount(input:TextFieldValue, totalAmount: Long, pointBalanceAmount: Double) : Triple<TextFieldValue, String, Boolean> {
@@ -306,10 +306,5 @@ internal object SnapCreditCardUtil {
 
     fun isValidEmail(target: String): Boolean {
         return target.isNotBlank() && Patterns.EMAIL_ADDRESS.matcher(target).matches()
-    }
-
-    fun formatMaskedCard(maskedCard: String): String {
-        val lastFourDigit = maskedCard.substring(startIndex = maskedCard.length - 4, endIndex = maskedCard.length)
-        return "**** **** **** $lastFourDigit"
     }
 }
