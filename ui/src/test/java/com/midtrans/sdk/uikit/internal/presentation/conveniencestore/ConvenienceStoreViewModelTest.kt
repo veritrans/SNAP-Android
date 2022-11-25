@@ -8,6 +8,7 @@ import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.getOrAwaitValue
+import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDetailViewModel
 import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.BarcodeEncoder
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
@@ -263,6 +264,27 @@ class ConvenienceStoreViewModelTest {
             paymentMethodName = PaymentType.INDOMARET,
             transactionId = null,
             stepNumber = "2"
+        )
+    }
+
+    @Test
+    fun verifyTrackAccountNumberCopied() {
+        val snapCore: SnapCore = mock()
+        val errorCard: ErrorCard = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val barcodeEncoder: BarcodeEncoder = mock()
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+
+        val convenienceStoreViewModel =
+            ConvenienceStoreViewModel(snapCore = snapCore, dateTimeUtil, errorCard, barcodeEncoder)
+        convenienceStoreViewModel.trackPageViewed(PaymentType.INDOMARET, 2)
+
+        convenienceStoreViewModel.trackAccountNumberCopied(paymentType = PaymentType.INDOMARET)
+        verify(eventAnalytics).trackSnapAccountNumberCopied(
+            pageName = PageName.INDOMARET_PAGE,
+            paymentMethodName = PaymentType.INDOMARET
         )
     }
 }
