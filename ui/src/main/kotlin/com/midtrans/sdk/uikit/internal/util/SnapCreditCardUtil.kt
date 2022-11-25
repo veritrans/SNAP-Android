@@ -29,6 +29,7 @@ internal object SnapCreditCardUtil {
     const val INSTALLMENT_NOT_SUPPORTED = "installmentNotSupported"
     const val CARD_NOT_ELIGIBLE = "cardNotEligible"
     const val BANK_BNI = "bni"
+    private const val NUMBER_GROUPING_4_DIGITS = "(\\d{4})(?=\\d)"
 
     /**
      * Return validation of a given card number.
@@ -336,7 +337,7 @@ internal object SnapCreditCardUtil {
         }
         var processed: String = digit.replace("\\D", "").replace(" ", "")
         // insert a space after all groups of 4 digits that are followed by another digit
-        processed = processed.replace("(\\d{4})(?=\\d)".toRegex(), "$1 ")
+        processed = processed.replace(NUMBER_GROUPING_4_DIGITS.toRegex(), "$1 ")
         val length = min(processed.length, FORMATTED_MAX_CARD_NUMBER_LENGTH)
         return input.copy(text = processed.substring(0 until length), selection = TextRange(length))
     }
