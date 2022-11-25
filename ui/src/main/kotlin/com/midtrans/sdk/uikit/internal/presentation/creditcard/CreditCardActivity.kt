@@ -470,6 +470,12 @@ internal class CreditCardActivity : BaseActivity() {
                             isError = it
                         }
                     }
+                },
+                onPointError = {
+                    viewModel.trackSnapNotice(
+                        statusText = getString(R.string.point_failed_title),
+                        noticeMessage = it
+                    )
                 }
             ).apply {
                 if (isPaymentUsingPointState) {
