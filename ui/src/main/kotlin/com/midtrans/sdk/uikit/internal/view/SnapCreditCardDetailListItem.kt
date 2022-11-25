@@ -32,9 +32,11 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.PromoData
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.DEFAULT_ONE_CLICK_CVV_VALUE
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.formatCvv
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.formatCreditCard
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.formatMaskedCard
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.isCardNumberInvalid
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.isCvvInvalid
 import com.midtrans.sdk.uikit.internal.view.SnapColors.backgroundBorderSolidSecondary
 import com.midtrans.sdk.uikit.internal.view.SnapColors.lineLightMuted
 import com.midtrans.sdk.uikit.internal.view.SnapColors.supportDangerDefault
@@ -124,9 +126,8 @@ fun SnapCCDetailListItem(
                     SnapTextField(
                         value = cvvTextField,
                         onValueChange = {
-                            onCvvValueChange(formatCVV(it))
-                            isCvvInvalid =
-                                formatCVV(it).text.length < SnapCreditCardUtil.FORMATTED_MIN_CVV_LENGTH
+                            onCvvValueChange(formatCvv(it))
+                            isCvvInvalid = isCvvInvalid(it)
                             onIsCvvInvalidValueChange(isCvvInvalid)
                         },
                         modifier = Modifier.width(69.dp),
@@ -524,14 +525,6 @@ private fun formatCvvTextFieldBasedOnTokenType(tokenType: String): TextFieldValu
     }
 }
 
-private fun formatCVV(input: TextFieldValue): TextFieldValue {
-    val digit = input.text.filter {
-        it.isDigit()
-    }
-    val length = min(digit.length, SnapCreditCardUtil.FORMATTED_MAX_CVV_LENGTH)
-    return input.copy(digit.substring(0 until length), TextRange(length))
-}
-
 @Composable
 fun NormalCardItem(
     state: CardItemState,
@@ -697,9 +690,9 @@ fun NormalCardItem(
                         value = state.cvv,
                         hint = stringResource(id = R.string.cc_dc_main_screen_placeholder_cvv),
                         onValueChange = {
-                            onCvvValueChange(formatCVV(it))
+                            onCvvValueChange(formatCvv(it))
                             state.isCvvInvalid =
-                                formatCVV(it).text.length < SnapCreditCardUtil.FORMATTED_MIN_CVV_LENGTH
+                                formatCvv(it).text.length < SnapCreditCardUtil.FORMATTED_MIN_CVV_LENGTH
                         },
                         isError = state.isCvvInvalid,
                         isFocused = state.isCvvTextFieldFocused,

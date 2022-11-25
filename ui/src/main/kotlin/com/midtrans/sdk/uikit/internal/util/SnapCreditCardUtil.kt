@@ -19,7 +19,7 @@ internal object SnapCreditCardUtil {
     private const val CARD_TYPE_AMEX = "AMEX"
     private const val CARD_TYPE_JCB = "JCB"
     const val DEFAULT_ONE_CLICK_CVV_VALUE = "123"
-    const val FORMATTED_MAX_CARD_NUMBER_LENGTH = 19
+    private const val FORMATTED_MAX_CARD_NUMBER_LENGTH = 19
     const val FORMATTED_MAX_EXPIRY_LENGTH = 5
     const val FORMATTED_MAX_CVV_LENGTH = 6
     const val FORMATTED_MIN_CVV_LENGTH = 3
@@ -63,6 +63,11 @@ internal object SnapCreditCardUtil {
         return isBinBlocked
             || isValidCardNumber(cardNumber)
             || formattedCardNumberLength != FORMATTED_MAX_CARD_NUMBER_LENGTH
+    }
+
+    fun isCvvInvalid(rawCvv: TextFieldValue): Boolean {
+        val formattedCvvLength = formatCvv(rawCvv).text.length
+        return formattedCvvLength < FORMATTED_MIN_CVV_LENGTH
     }
 
     //TODO: Need to find better solution about principal icon
@@ -334,5 +339,13 @@ internal object SnapCreditCardUtil {
         processed = processed.replace("(\\d{4})(?=\\d)".toRegex(), "$1 ")
         val length = min(processed.length, FORMATTED_MAX_CARD_NUMBER_LENGTH)
         return input.copy(text = processed.substring(0 until length), selection = TextRange(length))
+    }
+
+    fun formatCvv(input: TextFieldValue): TextFieldValue {
+        val digit = input.text.filter {
+            it.isDigit()
+        }
+        val length = min(digit.length, FORMATTED_MAX_CVV_LENGTH)
+        return input.copy(digit.substring(0 until length), TextRange(length))
     }
 }
