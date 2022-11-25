@@ -409,12 +409,6 @@ internal class CreditCardActivity : BaseActivity() {
         var justOpenedSheetState by remember {
             mutableStateOf(false)
         }
-        var isPointInsufficient by remember {
-            mutableStateOf(false)
-        }
-        var pointAmountUsed by remember {
-            mutableStateOf(0.0)
-        }
 
         pointBalanceAmount?.value?.let { pointBalance ->
 
@@ -422,8 +416,6 @@ internal class CreditCardActivity : BaseActivity() {
                 title = stringResource(id = R.string.point_title_bni),
                 displayedTotal = totalAmount.value,
                 total = totalAmountWithoutRp.value,
-                isError = isPointInsufficient,
-                infoMessage = stringResource(id = R.string.point_amount_of_points, pointBalance.currencyFormatRp()),
                 pointBalanceAmount = pointBalance
             )
             PointBankCard(
@@ -462,7 +454,6 @@ internal class CreditCardActivity : BaseActivity() {
                 }
             }
         }
-
 
         val errorState by errorTypeState
         errorState?.let { pair ->

@@ -105,7 +105,6 @@ fun SnapPointRedeemDialogContent(
                             isError = it
                         }
                     }
-                    onValueChange(pointAmountInputted.text.ifEmpty { "0" }.toDouble())
                 },
                 modifier = Modifier.width(117.dp),
                 isError = isError,
@@ -195,8 +194,6 @@ data class SnapPointRedeemDialogData(
     val title: String,
     var displayedTotal: String,
     var total: Double,
-    var isError: Boolean,
-    var infoMessage: String,
     var pointBalanceAmount: Double
 )
 
