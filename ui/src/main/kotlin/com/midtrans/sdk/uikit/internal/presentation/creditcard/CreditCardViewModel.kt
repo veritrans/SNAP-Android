@@ -437,6 +437,7 @@ internal class CreditCardViewModel @Inject constructor(
     }
 
     fun getBankPoint(
+        formData: SavedCreditCardFormData? = null,
         snapToken: String,
         transactionDetails: TransactionDetails?,
         cardNumber: TextFieldValue,
@@ -444,11 +445,17 @@ internal class CreditCardViewModel @Inject constructor(
         cardCvv: TextFieldValue,
         promoId: Long?
     ) {
-        val tokenRequest = NormalCardTokenRequestBuilder()
-            .withCardNumber(snapCreditCardUtil.getCardNumberFromTextField(cardNumber))
-            .withCardExpMonth(snapCreditCardUtil.getExpMonthFromTextField(cardExpiry))
-            .withCardExpYear(snapCreditCardUtil.getExpYearFromTextField(cardExpiry))
-            .withCardCvv(cardCvv.text)
+        val tokenRequest = formData?.let{
+            TwoClickCardTokenRequestBuilder()
+                .withCardCvv(cardCvv.text)
+                .withTokenId(formData.tokenId)
+        } ?: run {
+            NormalCardTokenRequestBuilder()
+                .withCardNumber(snapCreditCardUtil.getCardNumberFromTextField(cardNumber))
+                .withCardExpMonth(snapCreditCardUtil.getExpMonthFromTextField(cardExpiry))
+                .withCardExpYear(snapCreditCardUtil.getExpYearFromTextField(cardExpiry))
+                .withCardCvv(cardCvv.text)
+        }
 
         transactionDetails?.currency?.let {
             tokenRequest.withCurrency(it)
