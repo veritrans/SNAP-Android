@@ -772,7 +772,8 @@ internal class CreditCardActivity : BaseActivity() {
             },
             onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
             onSavedCardCheckedChange = { state.isSavedCardChecked = it },
-            onPointBankCheckedChange = { state.isPointBankChecked = it }
+            onPointBankCheckedChange = { state.isPointBankChecked = it },
+            onInputError = { viewModel.trackSnapNotice(it) }
         )
     }
 

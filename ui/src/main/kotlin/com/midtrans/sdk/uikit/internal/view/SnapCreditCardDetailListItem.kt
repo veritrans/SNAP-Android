@@ -187,7 +187,8 @@ fun InputNewCardItem(
     onCardTextFieldFocusedChange: (Boolean) -> Unit,
     onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
     onCvvTextFieldFocusedChange: (Boolean) -> Unit,
-    onSavedCardCheckedChange: (Boolean) -> Unit
+    onSavedCardCheckedChange: (Boolean) -> Unit,
+    onInputError: (String) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 16.dp)
@@ -226,7 +227,8 @@ fun InputNewCardItem(
                     onSavedCardCheckedChange = {
                         onSavedCardCheckedChange(it)
                     },
-                    onPointBankCheckedChange = { state.isPointBankChecked = it }
+                    onPointBankCheckedChange = { state.isPointBankChecked = it },
+                    onInputError = onInputError
                 )
             }
         }
@@ -538,7 +540,8 @@ fun NormalCardItem(
     onExpiryTextFieldFocusedChange: (Boolean) -> Unit,
     onCvvTextFieldFocusedChange: (Boolean) -> Unit,
     onSavedCardCheckedChange: (Boolean) -> Unit,
-    onPointBankCheckedChange: (Boolean) -> Unit
+    onPointBankCheckedChange: (Boolean) -> Unit,
+    onInputError: (String) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 16.dp)
@@ -606,26 +609,37 @@ fun NormalCardItem(
                 )
                 if (state.isCardNumberInvalid && !state.isCardTexFieldFocused) {
                     if (state.cardNumber.text.isEmpty()) {
+                        val text = stringResource(id = R.string.card_error_empty_card_number)
                         Text(
-                            text = stringResource(id = R.string.card_error_empty_card_number),
+                            text = text,
                             style = SnapTypography.STYLES.snapTextSmallRegular,
                             color = SnapColors.getARGBColor(supportDangerDefault)
                         )
+                        onInputError.invoke(text)
                     } else {
+                        val text = stringResource(
+                            when {
+                                state.isBinBlocked -> R.string.card_error_bank_blacklisted_by_merchant
+                                else -> R.string.card_error_invalid_card_number
+                            }
+                        )
                         Text(
-                            text = stringResource(id = if (state.isBinBlocked) R.string.card_error_bank_blacklisted_by_merchant else R.string.card_error_invalid_card_number),
+                            text = text,
                             style = SnapTypography.STYLES.snapTextSmallRegular,
                             color = SnapColors.getARGBColor(supportDangerDefault)
                         )
+                        onInputError.invoke(text)
                     }
                 }
 
                 if (state.isBinBlocked && state.isCardTexFieldFocused) {
+                    val text = stringResource(id = R.string.card_error_bank_blacklisted_by_merchant)
                     Text(
-                        text = stringResource(id = R.string.card_error_bank_blacklisted_by_merchant),
+                        text = text,
                         style = SnapTypography.STYLES.snapTextSmallRegular,
                         color = SnapColors.getARGBColor(supportDangerDefault)
                     )
+                    onInputError.invoke(text)
                 }
             }
 
@@ -663,17 +677,21 @@ fun NormalCardItem(
                     )
                     if (state.isExpiryInvalid && !state.isExpiryTextFieldFocused) {
                         if (state.expiry.text.isEmpty()) {
+                            val text = stringResource(id = R.string.card_error_empty_expiry)
                             Text(
-                                text = stringResource(id = R.string.card_error_empty_expiry),
+                                text = text,
                                 style = SnapTypography.STYLES.snapTextSmallRegular,
                                 color = SnapColors.getARGBColor(supportDangerDefault)
                             )
+                            onInputError.invoke(text)
                         } else {
+                            val text = stringResource(id = R.string.card_error_invalid_expiry)
                             Text(
-                                text = stringResource(id = R.string.card_error_invalid_expiry),
+                                text = text,
                                 style = SnapTypography.STYLES.snapTextSmallRegular,
                                 color = SnapColors.getARGBColor(supportDangerDefault)
                             )
+                            onInputError.invoke(text)
                         }
                     }
                 }
@@ -704,17 +722,21 @@ fun NormalCardItem(
                     )
                     if (state.isCvvInvalid && !state.isCvvTextFieldFocused) {
                         if (state.cvv.text.isEmpty()) {
+                            val text = stringResource(id = R.string.card_error_empty_cvv)
                             Text(
-                                text = stringResource(id = R.string.card_error_empty_cvv),
+                                text = text,
                                 style = SnapTypography.STYLES.snapTextSmallRegular,
                                 color = SnapColors.getARGBColor(supportDangerDefault)
                             )
+                            onInputError.invoke(text)
                         } else {
+                            val text = stringResource(id = R.string.card_error_invalid_cvv)
                             Text(
-                                text = stringResource(id = R.string.card_error_invalid_cvv),
+                                text = text,
                                 style = SnapTypography.STYLES.snapTextSmallRegular,
                                 color = SnapColors.getARGBColor(supportDangerDefault)
                             )
+                            onInputError.invoke(text)
                         }
                     }
                 }
