@@ -26,8 +26,7 @@ object SnapPointRedeemDialog {
 fun PointBankCard(
     data: SnapPointRedeemDialogData,
     onSheetStateChange: (ModalBottomSheetState) -> Unit,
-    onValueChange: (value: Double) -> Unit,
-    onClick: () -> Unit
+    onClick: (pointInputted: Double) -> Unit
 ): DialogToggle {
 
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -37,8 +36,7 @@ fun PointBankCard(
         content = {
             SnapPointRedeemDialogContent(
                 data = data,
-                onClick = onClick,
-                onValueChange = onValueChange
+                onClick = onClick
             )
         }
     )
@@ -47,8 +45,7 @@ fun PointBankCard(
 @Composable
 fun SnapPointRedeemDialogContent(
     data: SnapPointRedeemDialogData,
-    onValueChange: (value: Double) -> Unit,
-    onClick: () -> Unit
+    onClick: (pointInputted: Double) -> Unit
 ) {
     var pointAmountInputted by remember {
         mutableStateOf(
@@ -152,7 +149,9 @@ fun SnapPointRedeemDialogContent(
             style = SnapButton.Style.PRIMARY,
             modifier = Modifier.fillMaxWidth(1f),
             enabled = pointAmountInputted.text.isNotEmpty() && !isError,
-            onClick = onClick
+            onClick = {
+               onClick (pointAmountInputted.text.ifEmpty { "0" }.toDouble())
+            }
         )
     }
 }
