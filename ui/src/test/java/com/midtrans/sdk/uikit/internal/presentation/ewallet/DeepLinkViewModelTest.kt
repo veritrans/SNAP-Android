@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
+import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
@@ -48,6 +49,7 @@ class DeepLinkViewModelTest {
     @Test
     fun checkStatusShouldReturnResultViaLiveData() {
         val snapToken = "Snap Token"
+        testClass.setPaymentType("Payment Type")
         testClass.checkStatus(snapToken)
 
         val callbackCaptor: KArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
@@ -70,6 +72,34 @@ class DeepLinkViewModelTest {
         assertEquals(transactionId, result.transactionId)
         assertEquals(transactionStatus, result.status)
         assertEquals(paymentType, result.paymentType)
+    }
+
+    @Test
+    fun checkStatusWhenErrorShouldTrackError() {
+        val exception = SnapError()
+        val snapCore: SnapCore = mock()
+        val eventAnalytics: EventAnalytics = mock()
+        val snapToken = "Snap Token"
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+
+        val deepLinkViewModel = DeepLinkViewModel(snapCore)
+        deepLinkViewModel.setPaymentType(PaymentType.GOPAY_QRIS)
+        deepLinkViewModel.checkStatus(snapToken)
+
+        val callbackCaptor: KArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
+        verify(snapCore).getTransactionStatus(
+            snapToken = eq(snapToken),
+            callback = callbackCaptor.capture()
+        )
+        val callback = callbackCaptor.firstValue
+        callback.onError(exception)
+        verify(eventAnalytics).trackSnapError(
+            pageName = PageName.GOPAY_QR_PAGE,
+            paymentMethodName = PaymentType.GOPAY_QRIS,
+            statusCode = null,
+            errorMessage = exception.message ?: exception.javaClass.name
+        )
     }
 
     @Test
@@ -96,7 +126,8 @@ class DeepLinkViewModelTest {
         whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
 
         val deepLinkViewModel = DeepLinkViewModel(snapCore)
-        deepLinkViewModel.trackPageViewed(PaymentType.GOPAY, 3)
+        deepLinkViewModel.setPaymentType(PaymentType.GOPAY)
+        deepLinkViewModel.trackPageViewed(3)
         verify(eventAnalytics).trackSnapPageViewed(
             pageName = PageName.GOPAY_DEEPLINK_PAGE,
             paymentMethodName = PaymentType.GOPAY,

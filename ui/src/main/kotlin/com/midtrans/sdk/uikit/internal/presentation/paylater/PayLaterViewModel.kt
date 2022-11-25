@@ -48,11 +48,22 @@ internal class PayLaterViewModel @Inject constructor(
                         pageName = PageName.AKULAKU_PAGE,
                         paymentMethodName = PaymentType.AKULAKU
                     )
+                    trackErrorStatusCode(
+                        pageName = PageName.AKULAKU_PAGE,
+                        paymentMethodName = PaymentType.AKULAKU,
+                        statusCode = result.statusCode.orEmpty(),
+                        errorMessage = result.statusMessage.orEmpty()
+                    )
                     _transactionResponseLiveData.value = result
                 }
 
                 override fun onError(error: SnapError) {
-                    TODO("Not yet implemented")
+                    //TODO need to handle error dialog?
+                    trackSnapError(
+                        pageName = PageName.AKULAKU_PAGE,
+                        paymentMethodName = PaymentType.AKULAKU,
+                        errorMessage = error.message ?: error.javaClass.name
+                    )
                 }
             }
         )

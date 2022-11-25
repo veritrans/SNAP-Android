@@ -9,7 +9,6 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.BankTransferPaymentRequestBuilder
-import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
@@ -65,6 +64,12 @@ internal class BankTransferDetailViewModel @Inject constructor(
                         pageName = getPageName(paymentType),
                         paymentMethodName = paymentType
                     )
+                    trackErrorStatusCode(
+                        pageName = getPageName(paymentType),
+                        paymentMethodName = paymentType,
+                        errorMessage = result.statusMessage.orEmpty(),
+                        statusCode = result.statusCode.orEmpty()
+                    )
                     result.run {
                         bcaVaNumber?.let { _vaNumberLiveData.value = it }
                         bniVaNumber?.let {
@@ -94,6 +99,11 @@ internal class BankTransferDetailViewModel @Inject constructor(
                 }
 
                 override fun onError(error: SnapError) {
+                    trackSnapError(
+                        pageName = getPageName(paymentType),
+                        paymentMethodName = paymentType,
+                        errorMessage = error.message ?: error.javaClass.name
+                    )
                     _errorLiveData.value = error
                 }
             }
@@ -155,7 +165,6 @@ internal class BankTransferDetailViewModel @Inject constructor(
             pageName = getPageName(paymentType)
         )
     }
-
 
     fun trackPageViewed(
         paymentType: String,

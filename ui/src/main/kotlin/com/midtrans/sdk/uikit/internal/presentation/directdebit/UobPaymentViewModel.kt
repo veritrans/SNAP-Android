@@ -1,6 +1,5 @@
 package com.midtrans.sdk.uikit.internal.presentation.directdebit
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.midtrans.sdk.corekit.SnapCore
@@ -49,10 +48,14 @@ internal class UobPaymentViewModel @Inject constructor(
                         pageName = PageName.UOB_PAGE,
                         paymentMethodName = PaymentType.UOB_EZPAY
                     )
+                    trackUobError(
+                        statusCode = result.statusCode.orEmpty(),
+                        errorMessage = result.statusMessage.orEmpty()
+                    )
                 }
 
                 override fun onError(error: SnapError) {
-                    Log.e("Uob Payment", error.javaClass.name)
+                    trackUobError(error.message ?: error.javaClass.name)
                 }
             }
         )
@@ -64,10 +67,14 @@ internal class UobPaymentViewModel @Inject constructor(
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
                     transactionResult.value = Pair(getTransactionStatus(result), result.transactionId.orEmpty())
+                    trackUobError(
+                        statusCode = result.statusCode.orEmpty(),
+                        errorMessage = result.statusMessage.orEmpty()
+                    )
                 }
 
                 override fun onError(error: SnapError) {
-                    Log.e("Uob Payment Status", error.javaClass.name)
+                    trackUobError(error.message ?: error.javaClass.name)
                 }
             }
         )
@@ -120,6 +127,26 @@ internal class UobPaymentViewModel @Inject constructor(
             paymentMethodName = PaymentType.UOB_EZPAY,
             stepNumber = stepNumber.toString()
         )
+    }
+
+    private fun trackUobError(
+        errorMessage: String,
+        statusCode: String? = null
+    ) {
+        if (statusCode != null) {
+            trackErrorStatusCode(
+                pageName = PageName.UOB_PAGE,
+                paymentMethodName = PaymentType.UOB_EZPAY,
+                errorMessage = errorMessage,
+                statusCode = statusCode
+            )
+        } else {
+            trackSnapError(
+                pageName = PageName.UOB_PAGE,
+                paymentMethodName = PaymentType.UOB_EZPAY,
+                errorMessage = errorMessage
+            )
+        }
     }
 
     fun getExpiredHour(remainingTime: Long) = dateTimeUtil.getExpiredHour(remainingTime)

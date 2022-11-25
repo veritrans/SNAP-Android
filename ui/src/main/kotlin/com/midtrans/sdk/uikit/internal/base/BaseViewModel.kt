@@ -6,6 +6,7 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -202,5 +203,36 @@ internal open class BaseViewModel : ViewModel() {
             phoneNumber = phoneNumber,
             displayField = displayField
         )
+    }
+
+    protected fun trackSnapError(
+        pageName: String,
+        paymentMethodName: String,
+        errorMessage: String
+    ) {
+        eventAnalytics?.trackSnapError(
+            pageName = pageName,
+            paymentMethodName = paymentMethodName,
+            statusCode = null,
+            errorMessage = errorMessage
+        )
+    }
+
+    protected fun trackErrorStatusCode(
+        pageName: String,
+        paymentMethodName: String,
+        errorMessage: String,
+        statusCode: String
+    ) {
+        if (statusCode != UiKitConstants.STATUS_CODE_200
+            && statusCode != UiKitConstants.STATUS_CODE_201
+        ) {
+            eventAnalytics?.trackSnapError(
+                pageName = pageName,
+                paymentMethodName = paymentMethodName,
+                statusCode = statusCode,
+                errorMessage = errorMessage
+            )
+        }
     }
 }

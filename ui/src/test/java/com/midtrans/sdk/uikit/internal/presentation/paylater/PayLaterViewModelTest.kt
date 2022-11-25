@@ -3,6 +3,7 @@ package com.midtrans.sdk.uikit.internal.presentation.paylater
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
+import com.midtrans.sdk.corekit.api.exception.InvalidPaymentTypeException
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
@@ -84,6 +85,31 @@ internal class PayLaterViewModelTest {
             channelResponseMessage = eq(null),
             cardType = eq(null),
             threeDsVersion = eq(null)
+        )
+    }
+
+    @Test
+    fun payPayLaterWhenErrorShouldTrackError() {
+        val snapToken = "snapToken"
+        val paymentType = "akulaku"
+        val callbackCaptor: KArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
+        val exception = InvalidPaymentTypeException()
+
+        viewModel.payPayLater(snapToken, paymentType)
+
+        verify(snapCore).pay(
+            snapToken = eq(snapToken),
+            paymentRequestBuilder = any(),
+            callback = callbackCaptor.capture()
+        )
+
+        val callback = callbackCaptor.firstValue
+        callback.onError(exception)
+        verify(eventAnalytics).trackSnapError(
+            pageName = PageName.AKULAKU_PAGE,
+            paymentMethodName = paymentType,
+            errorMessage = exception.message ?: exception.javaClass.name,
+            statusCode = null
         )
     }
 

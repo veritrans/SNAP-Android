@@ -174,7 +174,6 @@ internal class PaymentUsecase(
                     enabledPayments = enabledPayments?.map { it.type }?.toString().orEmpty(),
                     enabledPaymentsLength = enabledPayments?.size?.toString().orEmpty(),
                     snapRedirectUrl = snapRedirectUrl,
-                    merchantUrl = null, //TODO where to get merchant url
                     allowRetry = merchant?.allowRetry?.toString(),
                     otherVaProcessor = merchant?.preference?.otherVaProcessor
                 )

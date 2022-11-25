@@ -29,7 +29,7 @@ internal class DirectDebitViewModel @Inject constructor(
     private var expiredTime = dateTimeUtil.plusDateBy(dateTimeUtil.getCurrentMillis(), 1) //TODO temporary is 24H, later get value from request snap if set
 
     fun getTransactionResponse(): LiveData<TransactionResponse> = transactionResponse
-    fun getException(): LiveData<SnapError> = exception
+    fun getException(): LiveData<SnapError> = exception //TODO what is expected in direct debit activity
 
     fun payDirectDebit(
         snapToken: String,
@@ -56,10 +56,20 @@ internal class DirectDebitViewModel @Inject constructor(
                         pageName = pageName,
                         paymentMethodName = paymentType
                     )
+                    trackErrorStatusCode(
+                        pageName = getPageName(paymentType),
+                        paymentMethodName = paymentType,
+                        errorMessage = result.statusMessage.orEmpty(),
+                        statusCode = result.statusCode.orEmpty()
+                    )
                 }
 
                 override fun onError(error: SnapError) {
-                    Log.e("DirectDebitPay", error.javaClass.name)
+                    trackSnapError(
+                        pageName = getPageName(paymentType),
+                        paymentMethodName = paymentType,
+                        errorMessage = error.message ?: error.javaClass.name
+                    )
                     exception.value = error
                 }
             }

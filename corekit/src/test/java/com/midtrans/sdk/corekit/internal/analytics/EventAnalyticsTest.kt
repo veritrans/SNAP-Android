@@ -7,6 +7,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ACCOUNT_
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_RESULTS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CTA_CLICKED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ERROR
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CUSTOMER_DATA_INPUT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_EXBIN_RESPONSE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
@@ -38,14 +39,21 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_P
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_CUSTOMER_POST_CODE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_DISPLAY_FIELD
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ECI
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ERROR_MESSAGE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_FRAUD_STATUS
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_MERCHANT_URL
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_NET_AMOUNT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAGE_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAYMENT_METHOD_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PLATFORM
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_REGISTRATION_REQUIRED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_RESPONSE_TIME
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SDK_TYPE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SDK_VERSION
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SERVICE_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TOKEN
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TYPE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SOURCE_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STATUS_CODE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STEP_NUMBER
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOKEN_ID
@@ -86,15 +94,16 @@ internal class EventAnalyticsTest {
 
     @Test
     fun verifyRegisterCommonProperties() {
-        eventAnalytics.registerCommonProperties("tablet")
+        eventAnalytics.registerCommonProperties("tablet", "merchant-url")
         verify(mixpanelTracker).registerCommonProperties(
             mapOf(
-                EventName.PROPERTY_SDK_VERSION to BuildConfig.SDK_VERSION,
-                EventName.PROPERTY_SDK_TYPE to "UI",
-                EventName.PROPERTY_SOURCE_TYPE to "midtrans-mobile",
-                EventName.PROPERTY_SERVICE_TYPE to "snap",
-                EventName.PROPERTY_SNAP_TYPE to "Sdk",
-                PROPERTY_PLATFORM to "tablet"
+                PROPERTY_SDK_VERSION to BuildConfig.SDK_VERSION,
+                PROPERTY_SDK_TYPE to "UI",
+                PROPERTY_SOURCE_TYPE to "midtrans-mobile",
+                PROPERTY_SERVICE_TYPE to "snap",
+                PROPERTY_SNAP_TYPE to "Sdk",
+                PROPERTY_PLATFORM to "tablet",
+                PROPERTY_MERCHANT_URL to "merchant-url"
             )
         )
     }
@@ -111,7 +120,6 @@ internal class EventAnalyticsTest {
             enabledPayments = "enabled-payments",
             enabledPaymentsLength = "5",
             snapRedirectUrl = "redirect-url",
-            merchantUrl = "merchant-url",
             allowRetry = "allow-retry",
             otherVaProcessor = "other-va"
         )
@@ -126,7 +134,6 @@ internal class EventAnalyticsTest {
                 EventName.PROPERTY_PAYMENTS_ENABLED to "enabled-payments",
                 EventName.PROPERTY_PAYMENTS_ENABLED_LENGTH to "5",
                 EventName.PROPERTY_SNAP_REDIRECT_URL to "redirect-url",
-                EventName.PROPERTY_MERCHANT_URL to "merchant-url",
                 EventName.PROPERTY_ALLOW_RETRY to "allow-retry",
                 EventName.PROPERTY_OTHER_VA_PROCESSOR to "other-va"
             )
@@ -464,6 +471,25 @@ internal class EventAnalyticsTest {
                 PROPERTY_CUSTOMER_EMAIL to "email",
                 PROPERTY_CUSTOMER_PHONE_NUMBER to "phone",
                 PROPERTY_DISPLAY_FIELD to "true"
+            )
+        )
+    }
+
+    @Test
+    fun verifyTrackSnapError() {
+        eventAnalytics.trackSnapError(
+            pageName = "page-name",
+            paymentMethodName = "payment-type",
+            statusCode = "status-code",
+            errorMessage = "error-message"
+        )
+        verify(mixpanelTracker).trackEvent(
+            eventName = EVENT_SNAP_ERROR,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to "page-name",
+                PROPERTY_PAYMENT_METHOD_NAME to "payment-type",
+                PROPERTY_STATUS_CODE to "status-code",
+                PROPERTY_ERROR_MESSAGE to "error-message"
             )
         )
     }
