@@ -28,9 +28,8 @@ fun SnapPromoListRadioButton(
         mutableStateOf(states.filter { it.enabled.value }[0].promoName)
     }
 
-    var needReset by remember {
-        mutableStateOf(false)
-    }
+    var needReset by remember { mutableStateOf(false) }
+    var isFirstInit by remember { mutableStateOf(true) }
 
     if(needReset){
         needReset = false
@@ -44,6 +43,11 @@ fun SnapPromoListRadioButton(
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                if (isFirstInit) {
+                    onOptionSelected(item.promoName)
+                    onItemSelectedListener(item)
+                    isFirstInit = false
+                }
                 val enabled by item.enabled
                 if((!enabled).and(item.promoName == selectedOption)){
                     onOptionSelected(states.filter { it.enabled.value }[0].also { onItemSelectedListener(it) }.promoName)
