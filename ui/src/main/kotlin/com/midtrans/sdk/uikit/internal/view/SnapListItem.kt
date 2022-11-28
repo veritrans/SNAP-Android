@@ -30,3 +30,23 @@ fun SnapListItem(index: String, paragraph: String) {
         )
     }
 }
+
+@Composable
+fun SnapBulletListItem(index: String, paragraph: String) {
+    Row(modifier = Modifier.padding(start = 8.dp, end = 8.dp)) {
+        //Number or Symbol
+        Text(
+            text = index,
+            style = SnapTypography.STYLES.snapTextMediumRegular,
+            color = SnapColors.getARGBColor(SnapColors.textSecondary),
+            modifier = Modifier.width(20.dp)
+        )
+
+        //Paragraph
+        Text(
+            text = Html.fromHtml(paragraph).toAnnotatedString(),
+            style = SnapTypography.STYLES.snapTextMediumRegular,
+            color = SnapColors.getARGBColor(SnapColors.textSecondary)
+        )
+    }
+}

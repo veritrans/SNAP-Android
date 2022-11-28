@@ -90,6 +90,7 @@ data class TransactionResponse(
 
     //currently for shopeepay, could be used for other QRIS payment except gopay (gopay still using qr_code_url)
     var qrisUrl: String? = null,
+    val qrisAcquirer: String? = null,
     var currency: String? = null
 
 ) : Parcelable

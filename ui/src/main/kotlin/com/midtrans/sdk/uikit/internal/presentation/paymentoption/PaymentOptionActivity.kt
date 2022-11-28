@@ -62,7 +62,8 @@ class PaymentOptionActivity : BaseActivity() {
         private const val EXTRA_EXPIRY_TIME = "paymentOptionActivity.extra.expiry_time"
         private const val EXTRA_PAYMENT_TYPE_ITEM = "paymentOptionActivity.extra.payment_type_item"
         private const val EXTRA_ENABLED_PAYMENT = "paymentOptionActivity.extra.enabled_payment"
-        private const val EXTRA_TRANSACTION_RESULT = "paymentOptionActivity.extra.transaction_result"
+        private const val EXTRA_TRANSACTION_RESULT =
+            "paymentOptionActivity.extra.transaction_result"
 
         fun openPaymentOptionPage(
             activityContext: Context,
@@ -95,7 +96,12 @@ class PaymentOptionActivity : BaseActivity() {
                 putExtra(EXTRA_TRANSACTION_RESULT, result)
                 promos?.also { putParcelableArrayListExtra(EXTRA_PROMOS, ArrayList(it)) }
                 itemDetails?.also { putParcelableArrayListExtra(EXTRA_ITEM_DETAILS, ArrayList(it)) }
-                enabledPayments?.also { putParcelableArrayListExtra(EXTRA_ENABLED_PAYMENT, ArrayList(it)) }
+                enabledPayments?.also {
+                    putParcelableArrayListExtra(
+                        EXTRA_ENABLED_PAYMENT,
+                        ArrayList(it)
+                    )
+                }
             }
         }
     }
@@ -216,7 +222,10 @@ class PaymentOptionActivity : BaseActivity() {
     }
 
     private fun handleUsedToken(result: TransactionResponse) {
-        if(result.transactionStatus == UiKitConstants.STATUS_PENDING){
+        val shopeeResponse = "airpay shopee"
+        val gopayResponse = "gopay"
+
+        if (result.transactionStatus == UiKitConstants.STATUS_PENDING) {
             val bankTransferList = listOf(
                 PaymentType.PERMATA_VA,
                 PaymentType.BCA_VA,
@@ -225,7 +234,16 @@ class PaymentOptionActivity : BaseActivity() {
                 PaymentType.OTHER_VA,
                 PaymentType.E_CHANNEL
             )
-            val paymentType = if (bankTransferList.contains(result.chargeType)) PaymentType.BANK_TRANSFER else result.chargeType
+            val paymentType = if (bankTransferList.contains(result.chargeType)) {
+                PaymentType.BANK_TRANSFER
+            } else if (result.chargeType == PaymentType.QRIS && result.qrisAcquirer == shopeeResponse) {
+                PaymentType.SHOPEEPAY_QRIS
+            } else if (result.chargeType == PaymentType.QRIS && result.qrisAcquirer == gopayResponse) {
+                PaymentType.GOPAY_QRIS
+            } else {
+                result.chargeType
+            }
+
             val paymentMethod = paymentMethods.paymentMethods.find { it.type == paymentType }
             paymentMethod?.let { method ->
                 paymentType?.let { type ->

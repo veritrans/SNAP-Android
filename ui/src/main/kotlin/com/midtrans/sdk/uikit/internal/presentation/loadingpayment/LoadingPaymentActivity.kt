@@ -283,7 +283,9 @@ class LoadingPaymentActivity : BaseActivity() {
                         val transactionNotFoundIntent = ErrorScreenActivity.getIntent(
                             activityContext = this@LoadingPaymentActivity,
                             title = resources.getString(R.string.no_record_wrong_url_title),
-                            content = resources.getString(R.string.no_record_wrong_url_desc)
+                            content = resources.getString(R.string.no_record_wrong_url_desc),
+                            instruction = resources.getString(R.string.no_record_wrong_url_instruction_1),
+                            tokenId = resources.getString(R.string.no_record_wrong_url_instruction_2, snapToken)
                         )
                         resultLauncher.launch(transactionNotFoundIntent)
                     }

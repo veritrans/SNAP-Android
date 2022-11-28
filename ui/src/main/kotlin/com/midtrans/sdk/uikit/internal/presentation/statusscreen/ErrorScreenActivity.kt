@@ -40,7 +40,9 @@ class ErrorScreenActivity : BaseActivity() {
         setContent {
             ErrorContent(
                 title = data.title,
-                content = data.content
+                content = data.content,
+                instruction = data.instruction,
+                tokenId = data.tokenId
             )
         }
     }
@@ -57,7 +59,9 @@ class ErrorScreenActivity : BaseActivity() {
     @Composable
     private fun ErrorContent(
         title: String,
-        content: String
+        content: String,
+        instruction: String? = null,
+        tokenId: String? = null
     ) {
         Column(
             modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.supportDangerFill))
@@ -89,11 +93,29 @@ class ErrorScreenActivity : BaseActivity() {
                 )
                 Text(
                     text = content,
-                    style = SnapTypography.STYLES.snapTextMediumRegular,
+                    style = SnapTypography.STYLES.snapTextBigRegular,
                     color = SnapColors.getARGBColor(SnapColors.textSecondary),
                     modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
                     textAlign = TextAlign.Center
                 )
+                instruction?.let {
+                    Text(
+                        text = instruction,
+                        style = SnapTypography.STYLES.snapTextMediumRegular,
+                        color = SnapColors.getARGBColor(SnapColors.textSecondary),
+                        modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
+                tokenId?.let {
+                    Text(
+                        text = tokenId,
+                        style = SnapTypography.STYLES.snapTextMediumMedium,
+                        color = SnapColors.getARGBColor(SnapColors.textSecondary),
+                        modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
             Text(
                 text = resources.getString(R.string.success_screen_v2_info),
@@ -112,13 +134,17 @@ class ErrorScreenActivity : BaseActivity() {
         fun getIntent(
             activityContext: Context,
             title: String,
-            content: String
+            content: String,
+            instruction: String? = null,
+            tokenId: String? = null
         ): Intent {
             return Intent(activityContext, ErrorScreenActivity::class.java).apply {
                 putExtra(
                     EXTRA_ERROR, ErrorData(
                         title = title,
-                        content = content
+                        content = content,
+                        instruction = instruction,
+                        tokenId = tokenId
                     )
                 )
             }
@@ -128,6 +154,8 @@ class ErrorScreenActivity : BaseActivity() {
     @Parcelize
     private data class ErrorData(
         val title: String,
-        val content: String
+        val content: String,
+        val instruction: String? = null,
+        val tokenId: String? = null
     ) : Parcelable
 }
