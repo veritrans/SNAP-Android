@@ -4,7 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -95,12 +96,15 @@ fun SnapPointRedeemDialogContent(
 
         if (pointAmountInputted.text.isEmpty()) {
             Text(
-                text = stringResource(id = R.string.point_amount_of_points, data.pointBalanceAmount.currencyFormatRp()),
+                text = stringResource(
+                    id = R.string.point_amount_of_points,
+                    data.pointBalanceAmount.currencyFormatRp()
+                ),
                 style = SnapTypography.STYLES.snapTextSmallRegular,
                 color = SnapColors.getARGBColor(SnapColors.supportInfoDefault),
                 modifier = Modifier.padding(top = 16.dp)
             )
-        } else if (isError){
+        } else if (isError) {
             Text(
                 text = stringResource(id = R.string.point_insufficient_title),
                 style = SnapTypography.STYLES.snapTextSmallRegular,
@@ -128,7 +132,7 @@ fun SnapPointRedeemDialogContent(
             modifier = Modifier.fillMaxWidth(1f),
             enabled = pointAmountInputted.text.isNotEmpty() && !isError,
             onClick = {
-               onClick (pointAmountInputted.text.ifEmpty { "0" }.toDouble())
+                onClick(pointAmountInputted.text.ifEmpty { "0" }.toDouble())
             }
         )
     }
