@@ -100,7 +100,7 @@ class ErrorScreenActivity : BaseActivity() {
                 )
                 instruction?.let {
                     Text(
-                        text = it,
+                        text = instruction,
                         style = SnapTypography.STYLES.snapTextMediumRegular,
                         color = SnapColors.getARGBColor(SnapColors.textSecondary),
                         modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp),
@@ -109,7 +109,7 @@ class ErrorScreenActivity : BaseActivity() {
                 }
                 tokenId?.let {
                     Text(
-                        text = it,
+                        text = tokenId,
                         style = SnapTypography.STYLES.snapTextMediumMedium,
                         color = SnapColors.getARGBColor(SnapColors.textSecondary),
                         modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp),
