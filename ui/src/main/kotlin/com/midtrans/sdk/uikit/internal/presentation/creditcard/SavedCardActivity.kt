@@ -268,7 +268,7 @@ class SavedCardActivity: BaseActivity() {
                                 cardItemState = state,
                                 bankIconState = bankCodeId,
                                 isPointBankShownState = null,
-                                isInstallmentOn = creditCard?.installment != null,
+                                isInstallmentActive = creditCard?.installment != null,
                                 creditCard = creditCard,
                                 onItemRemoveClicked = {
                                     viewModel.deleteSavedCard(snapToken = snapToken, maskedCard = it.displayedMaskedCard)

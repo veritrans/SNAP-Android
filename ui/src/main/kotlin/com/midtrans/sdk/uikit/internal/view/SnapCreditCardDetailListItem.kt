@@ -52,7 +52,7 @@ fun SnapCCDetailListItem(
     shouldReveal: Boolean,
     inputTitle: String,
     isInputError: Boolean,
-    isInstallmentOn: Boolean,
+    isInstallmentActive: Boolean,
     errorTitle: String,
     onValueChange: (String) -> Unit,
     onEndIconClicked: () -> Unit,
@@ -153,7 +153,7 @@ fun SnapCCDetailListItem(
                 }
 
                 var isPointOnSavedCardChecked by remember { mutableStateOf(false) }
-                if (tokenType == SavedToken.TWO_CLICKS && bankCode.lowercase() == SnapCreditCardUtil.BANK_BNI && !isInstallmentOn) {
+                if (tokenType == SavedToken.TWO_CLICKS && bankCode.lowercase() == SnapCreditCardUtil.BANK_BNI && !isInstallmentActive) {
                     PointBankCheckBox(
                         checked = isPointOnSavedCardChecked,
                         isPointBankShown = true,
@@ -267,7 +267,7 @@ fun SnapSavedCardRadioGroup(
     listStates: List<FormData>,
     bankIconState: Int?,
     isPointBankShownState: State<Boolean>?,
-    isInstallmentOn: Boolean,
+    isInstallmentActive: Boolean,
     cardItemState: CardItemState,
     onItemRemoveClicked: (item: SavedCreditCardFormData) -> Unit,
     creditCard: CreditCard?,
@@ -370,7 +370,7 @@ fun SnapSavedCardRadioGroup(
                                 inputTitle = item.inputTitle,
                                 cvvTextField = cvvSavedCardTextFieldValue,
                                 isInputError = errorText.isNotBlank(),
-                                isInstallmentOn = isInstallmentOn,
+                                isInstallmentActive = isInstallmentActive,
                                 errorTitle = errorText,
                                 onValueChange = {},
                                 onEndIconClicked = { onItemRemoveClicked(item) },
