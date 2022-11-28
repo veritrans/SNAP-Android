@@ -12,7 +12,7 @@ fun SnapBulletedList(
 ) {
     Column(modifier = modifier) {
         list.forEach {
-            SnapListItem(index = UiKitConstants.BULLET_LIST, paragraph = it)
+            SnapBulletListItem(index = UiKitConstants.BULLET_LIST, paragraph = it)
         }
     }
 }
