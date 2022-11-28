@@ -170,8 +170,6 @@ interface DialogToggle {
 }
 
 data class SnapPointRedeemDialogData(
-    val title: String,
-    var displayedTotal: String,
     var total: Double,
     var pointBalanceAmount: Double
 )
