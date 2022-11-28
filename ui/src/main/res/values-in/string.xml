@@ -51,7 +51,9 @@
     <string name="expired_double_tab_desc">Transaksimu gagal diproses. Silakan lakukan pemesanan ulang.</string>
 
     <string name="no_record_wrong_url_title">Transaksi tidak ditemukan</string>
-    <string name="no_record_wrong_url_desc">Pastikan URL transaksi sudah benar atau silakan hubungi merchant.</string>
+    <string name="no_record_wrong_url_desc">Pastikan URL transaksi sudah benar</string>
+    <string name="no_record_wrong_url_instruction_1">Jika kendala masih berlanjut, silakan hubungi merchant terkait dengan menyertakan informasi berikut:</string>
+    <string name="no_record_wrong_url_instruction_2"> SNAP token ID: %s"</string>
     <string name="no_record_wrong_url_bottom_message">Anda dapat menutup halaman ini</string>
 
     <string name="cancelled_title">Transaksi Anda telah dibatalkan</string>

@@ -50,7 +50,9 @@
     <string name="expired_double_tab_desc">Failed to process your transaction. Please place your order again.</string>
 
     <string name="no_record_wrong_url_title">Couldn\'t find your transaction record</string>
-    <string name="no_record_wrong_url_desc">Make sure the transaction URL is correct or try contacting the merchant.</string>
+    <string name="no_record_wrong_url_desc">Please check your transaction URL</string>
+    <string name="no_record_wrong_url_instruction_1">If the problem still persist, please contact the merchant and provide this information:</string>
+    <string name="no_record_wrong_url_instruction_2"> SNAP token ID: %s"</string>
     <string name="no_record_wrong_url_bottom_message">You can now close this browser</string>
 
     <string name="cancelled_title">Your transaction has been cancelled</string>
