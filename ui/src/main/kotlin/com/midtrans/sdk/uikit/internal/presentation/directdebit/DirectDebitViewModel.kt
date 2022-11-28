@@ -1,6 +1,5 @@
 package com.midtrans.sdk.uikit.internal.presentation.directdebit
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.midtrans.sdk.corekit.SnapCore
