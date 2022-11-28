@@ -52,6 +52,7 @@ fun SnapCCDetailListItem(
     shouldReveal: Boolean,
     inputTitle: String,
     isInputError: Boolean,
+    isInstallmentActive: Boolean,
     errorTitle: String,
     onValueChange: (String) -> Unit,
     onEndIconClicked: () -> Unit,
@@ -152,7 +153,7 @@ fun SnapCCDetailListItem(
                 }
 
                 var isPointOnSavedCardChecked by remember { mutableStateOf(false) }
-                if (tokenType == SavedToken.TWO_CLICKS && bankCode.lowercase() == SnapCreditCardUtil.BANK_BNI) {
+                if (tokenType == SavedToken.TWO_CLICKS && bankCode.lowercase() == SnapCreditCardUtil.BANK_BNI && !isInstallmentActive) {
                     PointBankCheckBox(
                         checked = isPointOnSavedCardChecked,
                         isPointBankShown = true,
@@ -266,6 +267,7 @@ fun SnapSavedCardRadioGroup(
     listStates: List<FormData>,
     bankIconState: Int?,
     isPointBankShownState: State<Boolean>?,
+    isInstallmentActive: Boolean,
     cardItemState: CardItemState,
     onItemRemoveClicked: (item: SavedCreditCardFormData) -> Unit,
     creditCard: CreditCard?,
@@ -368,6 +370,7 @@ fun SnapSavedCardRadioGroup(
                                 inputTitle = item.inputTitle,
                                 cvvTextField = cvvSavedCardTextFieldValue,
                                 isInputError = errorText.isNotBlank(),
+                                isInstallmentActive = isInstallmentActive,
                                 errorTitle = errorText,
                                 onValueChange = {},
                                 onEndIconClicked = { onItemRemoveClicked(item) },
@@ -747,14 +750,16 @@ fun NormalCardItem(
     }
     Column(
     ) {
-        isPointBankShownState?.value?.let { isPointBankShown ->
-            if (isPointBankShown) {
-                PointBankCheckBox(
-                    checked = state.isPointBankChecked,
-                    isPointBankShown = isPointBankShown,
-                    onCheckedChange = { onPointBankCheckedChange(it) },
-                    label = stringResource(id = R.string.cc_dc_main_screen_use_point_bank_bni_saved_card)
-                )
+        if(creditCard?.installment == null) {
+            isPointBankShownState?.value?.let { isPointBankShown ->
+                if (isPointBankShown) {
+                    PointBankCheckBox(
+                        checked = state.isPointBankChecked,
+                        isPointBankShown = isPointBankShown,
+                        onCheckedChange = { onPointBankCheckedChange(it) },
+                        label = stringResource(id = R.string.cc_dc_main_screen_use_point_bank_bni_saved_card)
+                    )
+                }
             }
         }
 

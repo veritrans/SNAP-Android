@@ -812,6 +812,7 @@ internal class CreditCardActivity : BaseActivity() {
             cardItemState = state,
             bankIconState = bankCodeId,
             isPointBankShownState = isPointBankShownState,
+            isInstallmentActive = creditCard?.installment != null,
             creditCard = creditCard,
             onItemRemoveClicked = {
                 viewModel?.deleteSavedCard(
