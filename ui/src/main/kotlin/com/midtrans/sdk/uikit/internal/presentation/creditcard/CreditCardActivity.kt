@@ -424,14 +424,19 @@ internal class CreditCardActivity : BaseActivity() {
 
         pointBalanceAmount?.value?.let { pointBalance ->
 
+            var pointAmountInputted by remember { mutableStateOf(TextFieldValue()) }
+            var displayedTotalFinal by remember { mutableStateOf("") }
+            var isError by remember { mutableStateOf(false) }
             val data = SnapPointRedeemDialogData(
-                title = stringResource(id = R.string.point_title_bni),
-                displayedTotal = totalAmount.value,
                 total = totalAmountWithoutRp.value,
                 pointBalanceAmount = pointBalance
             )
+
             PointBankCard(
                 data = data,
+                pointAmountInputted = pointAmountInputted,
+                displayedTotalFinal = displayedTotalFinal,
+                isError = isError,
                 onSheetStateChange = {
                     if (justOpenedSheetState && !it.isVisible) {
                         isPaymentUsingPointState = false
@@ -448,10 +453,44 @@ internal class CreditCardActivity : BaseActivity() {
                         snapToken = snapToken,
                     )
                     pointPayButtonClickedState = true
+                },
+                onPointValueChange = {
+                    SnapCreditCardUtil.formatMaxPointDiscount(
+                        it,
+                        totalAmount = data.total.toLong(),
+                        pointBalanceAmount = data.pointBalanceAmount
+                    ).let { triple ->
+                        triple.first.let {
+                            pointAmountInputted = it
+                        }
+                        triple.second.let {
+                            displayedTotalFinal = it
+                        }
+                        triple.third.let {
+                            isError = it
+                        }
+                    }
                 }
             ).apply {
                 if (isPaymentUsingPointState) {
                     justOpenedSheetState = true
+                    SnapCreditCardUtil.formatMaxPointDiscount(
+                        TextFieldValue(
+                            pointBalance.toLong().toString()
+                        ),
+                        totalAmount = data.total.toLong(),
+                        pointBalanceAmount = data.pointBalanceAmount
+                    ).let { triple ->
+                        triple.first.let {
+                            pointAmountInputted = it
+                        }
+                        triple.second.let {
+                            displayedTotalFinal = it
+                        }
+                        triple.third.let {
+                            isError = it
+                        }
+                    }
                     show()
                 } else if (pointPayButtonClickedState) {
                     pointPayButtonClickedState = false
