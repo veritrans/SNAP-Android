@@ -62,7 +62,7 @@ internal object SnapCreditCardUtil {
         val formattedCardNumberLength = formatCreditCardNumber(rawCardNumber).text.length
 
         return isBinBlocked
-            || isValidCardNumber(cardNumber)
+            || !isValidCardNumber(cardNumber)
             || formattedCardNumberLength != FORMATTED_MAX_CARD_NUMBER_LENGTH
     }
 
