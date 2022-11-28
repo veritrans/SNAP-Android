@@ -100,13 +100,15 @@ internal class RestClientModule {
     @Singleton
     @Named("snap_client")
     fun provideSnapOkHttpClient(
-        chuckInterceptor: ChuckerInterceptor
+        chuckInterceptor: ChuckerInterceptor,
+        snapRequestInterceptor: SnapRequestInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .readTimeout(READ_TIME_OUT.toLong(), TimeUnit.SECONDS)
             .writeTimeout(WRITE_TIME_OUT.toLong(), TimeUnit.SECONDS)
             .connectTimeout(CONNECTION_TIME_OUT.toLong(), TimeUnit.SECONDS)
             .addInterceptor(chuckInterceptor)
+            .addInterceptor(snapRequestInterceptor)
             .build()
     }
 
