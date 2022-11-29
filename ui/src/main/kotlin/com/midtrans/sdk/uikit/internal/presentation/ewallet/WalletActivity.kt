@@ -23,10 +23,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResult
-import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
+import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
@@ -72,6 +73,10 @@ internal class WalletActivity : BaseActivity() {
         intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
     }
 
+    private val transactionResult: TransactionResponse? by lazy {
+        intent.getParcelableExtra(EXTRA_TRANSACTION_RESULT) as? TransactionResponse
+    }
+
     private val deepLinkLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             setResult(result.resultCode, result.data)
@@ -84,6 +89,22 @@ internal class WalletActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.trackPageViewed(paymentType, currentStepNumber)
+        var isTablet = isTabletDevice()
+
+        transactionResult?.let { result ->
+            isTablet = when (result.chargeType) {
+                PaymentType.QRIS -> {
+                    true
+                }
+                PaymentType.GOPAY, PaymentType.SHOPEEPAY -> {
+                    false
+                }
+                else -> {
+                    isTabletDevice()
+                }
+            }
+        }
+
         setContent {
             Content(
                 totalAmount = totalAmount,
@@ -93,18 +114,18 @@ internal class WalletActivity : BaseActivity() {
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
                 qrCodeUrl = viewModel.qrCodeUrlLiveData.observeAsState(initial = ""),
                 paymentType = paymentType,
-                isTablet = isTabletDevice()
+                isTablet = isTablet
             )
         }
         viewModel.chargeQrPayment(
             snapToken = snapToken,
             paymentType = paymentType
         )
-        observeLiveData()
+        observeLiveData(isTablet)
     }
 
-    private fun observeLiveData() {
-        if (!isTabletDevice()) {
+    private fun observeLiveData(isTablet: Boolean) {
+        if (!isTablet) {
             observeDeepLinkUrl()
         }
         observeChargeResult()
@@ -294,7 +315,8 @@ internal class WalletActivity : BaseActivity() {
                 }
             }
 
-            val ctaId = if (isTablet) R.string.i_have_already_paid else R.string.redirection_instruction_gopay_cta
+            val ctaId =
+                if (isTablet) R.string.i_have_already_paid else R.string.redirection_instruction_gopay_cta
             SnapButton(
                 text = stringResource(ctaId),
                 modifier = Modifier
@@ -309,7 +331,7 @@ internal class WalletActivity : BaseActivity() {
                 )
                 if (!isTablet) {
                     openDeepLink()
-                }else{
+                } else {
                     onBackPressed()
                 }
             }
@@ -356,7 +378,7 @@ internal class WalletActivity : BaseActivity() {
             Pair(PaymentType.GOPAY_QRIS, R.string.payment_title_gopay),
             Pair(PaymentType.SHOPEEPAY, R.string.payment_title_shopeepay),
             Pair(PaymentType.SHOPEEPAY_QRIS, R.string.payment_title_shopeepay)
-            )
+        )
     }
 
     companion object {
@@ -367,6 +389,7 @@ internal class WalletActivity : BaseActivity() {
         private const val EXTRA_PAYMENT_TYPE = "wallet.extra.payment_type"
         private const val EXTRA_SNAP_TOKEN = "wallet.extra.snap_token"
         private const val EXTRA_STEP_NUMBER = "wallet.extra.step_number"
+        private const val EXTRA_TRANSACTION_RESULT = "wallet.extra.transaction_result"
 
         fun getIntent(
             activityContext: Context,
@@ -376,7 +399,8 @@ internal class WalletActivity : BaseActivity() {
             orderId: String,
             customerInfo: CustomerInfo? = null,
             itemInfo: ItemInfo? = null,
-            stepNumber: Int
+            stepNumber: Int,
+            result: TransactionResponse?
         ): Intent {
             return Intent(activityContext, WalletActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
@@ -386,6 +410,7 @@ internal class WalletActivity : BaseActivity() {
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
+                putExtra(EXTRA_TRANSACTION_RESULT, result)
             }
         }
     }
