@@ -99,7 +99,7 @@ internal class EventAnalyticsTest {
             mapOf(
                 PROPERTY_SDK_VERSION to BuildConfig.SDK_VERSION,
                 PROPERTY_SDK_TYPE to "UI",
-                PROPERTY_SOURCE_TYPE to "midtrans-mobile",
+                PROPERTY_SOURCE_TYPE to "mobile-android",
                 PROPERTY_SERVICE_TYPE to "snap",
                 PROPERTY_SNAP_TYPE to "Sdk",
                 PROPERTY_PLATFORM to "tablet",
