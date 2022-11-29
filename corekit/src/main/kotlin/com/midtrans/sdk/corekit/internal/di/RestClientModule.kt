@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.internal.bind.DateTypeAdapter
 import com.midtrans.sdk.corekit.BuildConfig
 import com.midtrans.sdk.corekit.internal.network.MerchantInterceptor
+import com.midtrans.sdk.corekit.internal.network.SnapRequestInterceptor
 import com.midtrans.sdk.corekit.internal.network.restapi.CoreApi
 import com.midtrans.sdk.corekit.internal.network.restapi.MerchantApi
 import com.midtrans.sdk.corekit.internal.network.restapi.SnapApi
@@ -99,15 +100,21 @@ internal class RestClientModule {
     @Singleton
     @Named("snap_client")
     fun provideSnapOkHttpClient(
-        chuckInterceptor: ChuckerInterceptor
+        chuckInterceptor: ChuckerInterceptor,
+        snapRequestInterceptor: SnapRequestInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .readTimeout(READ_TIME_OUT.toLong(), TimeUnit.SECONDS)
             .writeTimeout(WRITE_TIME_OUT.toLong(), TimeUnit.SECONDS)
             .connectTimeout(CONNECTION_TIME_OUT.toLong(), TimeUnit.SECONDS)
             .addInterceptor(chuckInterceptor)
+            .addInterceptor(snapRequestInterceptor)
             .build()
+    }
 
+    @Provides
+    fun provideSnapRequestInterceptor(): SnapRequestInterceptor {
+        return SnapRequestInterceptor()
     }
 
     @Provides
