@@ -500,7 +500,8 @@ class PaymentOptionActivity : BaseActivity() {
                     paymentType = paymentMethodItem.type,
                     customerInfo = customerInfo,
                     itemInfo = itemInfo,
-                    stepNumber = NEXT_STEP_NUMBER
+                    stepNumber = NEXT_STEP_NUMBER,
+                    result = transactionResult,
                 )
             )
         }
