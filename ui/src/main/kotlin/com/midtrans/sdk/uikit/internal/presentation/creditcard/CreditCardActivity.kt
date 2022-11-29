@@ -456,7 +456,7 @@ internal class CreditCardActivity : BaseActivity() {
                 },
                 onPointValueChange = {
                     SnapCreditCardUtil.formatMaxPointDiscount(
-                        it,
+                        input = it,
                         totalAmount = data.total.toLong(),
                         pointBalanceAmount = data.pointBalanceAmount
                     ).let { triple ->
@@ -475,9 +475,7 @@ internal class CreditCardActivity : BaseActivity() {
                 if (isPaymentUsingPointState) {
                     justOpenedSheetState = true
                     SnapCreditCardUtil.formatMaxPointDiscount(
-                        TextFieldValue(
-                            pointBalance.toLong().toString()
-                        ),
+                        input = TextFieldValue(pointBalance.toLong().toString()),
                         totalAmount = data.total.toLong(),
                         pointBalanceAmount = data.pointBalanceAmount
                     ).let { triple ->
