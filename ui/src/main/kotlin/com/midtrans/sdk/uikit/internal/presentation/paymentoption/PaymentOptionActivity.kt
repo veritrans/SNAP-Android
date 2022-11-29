@@ -183,12 +183,24 @@ class PaymentOptionActivity : BaseActivity() {
 
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.trackPageViewed(CURRENT_STEP_NUMBER)
-        paymentMethods = viewModel.initiateList(paymentList, isTabletDevice())
         customerInfo = viewModel.getCustomerInfo(customerDetail)
         itemInfo = viewModel.getItemInfo(itemDetails)
 
-        transactionResult?.let {
-            handleUsedToken(it)
+        transactionResult?.let { result ->
+            paymentMethods = when (result.chargeType) {
+                PaymentType.QRIS -> {
+                    viewModel.initiateList(paymentList, true)
+                }
+                PaymentType.GOPAY, PaymentType.SHOPEEPAY -> {
+                    viewModel.initiateList(paymentList, false)
+                }
+                else -> {
+                    viewModel.initiateList(paymentList, isTabletDevice())
+                }
+            }
+            handleUsedToken(result)
+        } ?: run {
+            paymentMethods = viewModel.initiateList(paymentList, isTabletDevice())
         }
 
         enabledPayments?.let { handleEnabledPayments(it) }
