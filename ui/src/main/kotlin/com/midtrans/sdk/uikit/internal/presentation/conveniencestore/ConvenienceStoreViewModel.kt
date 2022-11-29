@@ -168,6 +168,17 @@ internal class ConvenienceStoreViewModel @Inject constructor(
         )
     }
 
+    fun trackSnapNotice(
+        paymentType: String,
+        statusText: String
+    ) {
+        trackSnapNotice(
+            pageName = getPageName(paymentType),
+            paymentMethodName = paymentType,
+            statusText = statusText
+        )
+    }
+
     fun resetError(){
         _errorLiveData.value = null
     }

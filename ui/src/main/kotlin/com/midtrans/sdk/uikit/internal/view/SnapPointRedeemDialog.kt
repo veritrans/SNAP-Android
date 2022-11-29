@@ -30,7 +30,8 @@ fun PointBankCard(
     isError: Boolean,
     onSheetStateChange: (ModalBottomSheetState) -> Unit,
     onPointValueChange: (TextFieldValue) -> Unit,
-    onClick: (pointInputted: Double) -> Unit
+    onClick: (pointInputted: Double) -> Unit,
+    onPointError: (String) -> Unit
 ): DialogToggle {
 
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -44,7 +45,8 @@ fun PointBankCard(
                 displayedTotalFinal = displayedTotalFinal,
                 isError = isError,
                 onPointValueChange = onPointValueChange,
-                onClick = onClick
+                onClick = onClick,
+                onPointError = onPointError
             )
         }
     )
@@ -57,7 +59,8 @@ fun SnapPointRedeemDialogContent(
     displayedTotalFinal: String,
     isError: Boolean,
     onPointValueChange: (TextFieldValue) -> Unit,
-    onClick: (pointInputted: Double) -> Unit
+    onClick: (pointInputted: Double) -> Unit,
+    onPointError: (String) -> Unit
 ) {
     Column(
         modifier = Modifier.padding(24.dp)
@@ -105,12 +108,14 @@ fun SnapPointRedeemDialogContent(
                 modifier = Modifier.padding(top = 16.dp)
             )
         } else if (isError) {
+            val text = stringResource(id = R.string.point_insufficient_title)
             Text(
-                text = stringResource(id = R.string.point_insufficient_title),
+                text = text,
                 style = SnapTypography.STYLES.snapTextSmallRegular,
                 color = SnapColors.getARGBColor(SnapColors.supportDangerDefault),
                 modifier = Modifier.padding(top = 16.dp)
             )
+            onPointError.invoke(text)
         }
 
         Divider(

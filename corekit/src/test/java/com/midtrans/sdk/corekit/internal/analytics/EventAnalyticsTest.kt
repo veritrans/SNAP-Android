@@ -13,6 +13,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_EXBIN_RE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_HOW_TO_PAY_VIEWED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_NOTICE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_OPEN_DEEPLINK
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ORDER_DETAILS_VIEWED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_CLOSED
@@ -43,6 +44,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ERROR_MESS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_FRAUD_STATUS
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_MERCHANT_URL
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_NET_AMOUNT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_NOTICE_MESSAGE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAGE_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PAYMENT_METHOD_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_PLATFORM
@@ -55,6 +57,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TOKEN
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SOURCE_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STATUS_CODE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STATUS_TEXT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STEP_NUMBER
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOKEN_ID
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOTAL_ITEMS
@@ -490,6 +493,25 @@ internal class EventAnalyticsTest {
                 PROPERTY_PAYMENT_METHOD_NAME to "payment-type",
                 PROPERTY_STATUS_CODE to "status-code",
                 PROPERTY_ERROR_MESSAGE to "error-message"
+            )
+        )
+    }
+
+    @Test
+    fun verifyTrackSnapNotice() {
+        eventAnalytics.trackSnapNotice(
+            pageName = "page-name",
+            paymentMethodName = "payment-type",
+            statusText = "status-text",
+            noticeMessage = "notice-message"
+        )
+        verify(mixpanelTracker).trackEvent(
+            eventName = EVENT_SNAP_NOTICE,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to "page-name",
+                PROPERTY_PAYMENT_METHOD_NAME to "payment-type",
+                PROPERTY_STATUS_TEXT to "status-text",
+                PROPERTY_NOTICE_MESSAGE to "notice-message"
             )
         )
     }

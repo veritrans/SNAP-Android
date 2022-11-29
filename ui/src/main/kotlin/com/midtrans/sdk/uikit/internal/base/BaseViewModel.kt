@@ -235,4 +235,18 @@ internal open class BaseViewModel : ViewModel() {
             )
         }
     }
+
+    protected fun trackSnapNotice(
+        pageName: String,
+        paymentMethodName: String,
+        statusText: String,
+        noticeMessage: String? = null
+    ) {
+        eventAnalytics?.trackSnapNotice(
+            pageName = pageName,
+            paymentMethodName = paymentMethodName,
+            statusText = statusText,
+            noticeMessage = noticeMessage
+        )
+    }
 }

@@ -224,4 +224,24 @@ class SnapCreditCardUtilTest {
         Assert.assertEquals("promo", result3?.get(0)?.promoName )
         Assert.assertFalse(result3?.get(0)?.enabled?.value!!)
     }
+
+    @Test
+    fun formatCreditCardShouldReturnNumberGroupedBy4Digits() {
+        val expected = "4811 1111 1111 1114"
+        val result1 = SnapCreditCardUtil.formatCreditCardNumber(TextFieldValue("4811111111111114"))
+        Assert.assertEquals(expected, result1.text)
+
+        val result2 = SnapCreditCardUtil.formatCreditCardNumber(TextFieldValue("4811-1111-1111-1114"))
+        Assert.assertEquals(expected, result2.text)
+    }
+
+    @Test
+    fun formatCvvShouldReturnCvvWithMaxLength3() {
+        val expected = "123456"
+        val result1 = SnapCreditCardUtil.formatCvv(TextFieldValue("123456789"))
+        Assert.assertEquals(expected, result1.text)
+
+        val result2 = SnapCreditCardUtil.formatCvv(TextFieldValue("-123456-"))
+        Assert.assertEquals(expected, result2.text)
+    }
 }

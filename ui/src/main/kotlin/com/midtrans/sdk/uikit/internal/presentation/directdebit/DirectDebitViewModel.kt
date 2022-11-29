@@ -1,6 +1,5 @@
 package com.midtrans.sdk.uikit.internal.presentation.directdebit
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.midtrans.sdk.corekit.SnapCore
@@ -116,6 +115,17 @@ internal class DirectDebitViewModel @Inject constructor(
             pageName = getPageName(paymentType),
             paymentMethodName = paymentType,
             stepNumber = stepNumber.toString()
+        )
+    }
+
+    fun trackSnapNotice(
+        paymentType: String,
+        statusText: String
+    ) {
+        trackSnapNotice(
+            pageName = getPageName(paymentType),
+            paymentMethodName = paymentType,
+            statusText = statusText
         )
     }
 

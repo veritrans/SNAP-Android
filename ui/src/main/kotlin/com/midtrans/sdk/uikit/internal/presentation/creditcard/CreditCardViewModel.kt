@@ -722,6 +722,18 @@ internal class CreditCardViewModel @Inject constructor(
         )
     }
 
+    fun trackSnapNotice(
+        statusText: String,
+        noticeMessage: String? = null
+    ) {
+        trackSnapNotice(
+            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+            paymentMethodName = PaymentType.CREDIT_CARD,
+            statusText = statusText,
+            noticeMessage = noticeMessage
+        )
+    }
+
     private fun trackCreditCardError(
         errorMessage: String,
         statusCode: String? = null

@@ -14,12 +14,12 @@ import kotlin.math.min
 
 internal object SnapCreditCardUtil {
 
-    const val CARD_TYPE_VISA = "VISA"
-    const val CARD_TYPE_MASTERCARD = "MASTERCARD"
-    const val CARD_TYPE_AMEX = "AMEX"
-    const val CARD_TYPE_JCB = "JCB"
+    private const val CARD_TYPE_VISA = "VISA"
+    private const val CARD_TYPE_MASTERCARD = "MASTERCARD"
+    private const val CARD_TYPE_AMEX = "AMEX"
+    private const val CARD_TYPE_JCB = "JCB"
     const val DEFAULT_ONE_CLICK_CVV_VALUE = "123"
-    const val FORMATTED_MAX_CARD_NUMBER_LENGTH = 19
+    private const val FORMATTED_MAX_CARD_NUMBER_LENGTH = 19
     const val FORMATTED_MAX_EXPIRY_LENGTH = 5
     const val FORMATTED_MAX_CVV_LENGTH = 6
     const val FORMATTED_MIN_CVV_LENGTH = 3
@@ -29,6 +29,7 @@ internal object SnapCreditCardUtil {
     const val INSTALLMENT_NOT_SUPPORTED = "installmentNotSupported"
     const val CARD_NOT_ELIGIBLE = "cardNotEligible"
     const val BANK_BNI = "bni"
+    private const val NUMBER_GROUPING_4_DIGITS = "(\\d{4})(?=\\d)"
 
     /**
      * Return validation of a given card number.
@@ -51,6 +52,23 @@ internal object SnapCreditCardUtil {
             alternate = !alternate
         }
         return sum % 10 == 0
+    }
+
+    fun isCardNumberInvalid(
+        rawCardNumber: TextFieldValue,
+        isBinBlocked: Boolean
+    ): Boolean {
+        val cardNumber = getCardNumberFromTextField(rawCardNumber)
+        val formattedCardNumberLength = formatCreditCardNumber(rawCardNumber).text.length
+
+        return isBinBlocked
+            || !isValidCardNumber(cardNumber)
+            || formattedCardNumberLength != FORMATTED_MAX_CARD_NUMBER_LENGTH
+    }
+
+    fun isCvvInvalid(rawCvv: TextFieldValue): Boolean {
+        val formattedCvvLength = formatCvv(rawCvv).text.length
+        return formattedCvvLength < FORMATTED_MIN_CVV_LENGTH
     }
 
     //TODO: Need to find better solution about principal icon
@@ -97,7 +115,7 @@ internal object SnapCreditCardUtil {
         return value.text.substring(0, 2)
     }
     fun getExpYearFromTextField(value: TextFieldValue) : String{
-        return return value.text.substring(3, 5)
+        return value.text.substring(3, 5)
     }
 
     fun formatMaxPointDiscount(input:TextFieldValue, totalAmount: Long, pointBalanceAmount: Double) : Triple<TextFieldValue, String, Boolean> {
@@ -311,5 +329,24 @@ internal object SnapCreditCardUtil {
     fun formatMaskedCard(maskedCard: String): String {
         val lastFourDigit = maskedCard.substring(startIndex = maskedCard.length - 4, endIndex = maskedCard.length)
         return "**** **** **** $lastFourDigit"
+    }
+
+    fun formatCreditCardNumber(input: TextFieldValue): TextFieldValue {
+        val digit = input.text.filter {
+            it.isDigit()
+        }
+        var processed: String = digit.replace("\\D", "").replace(" ", "")
+        // insert a space after all groups of 4 digits that are followed by another digit
+        processed = processed.replace(NUMBER_GROUPING_4_DIGITS.toRegex(), "$1 ")
+        val length = min(processed.length, FORMATTED_MAX_CARD_NUMBER_LENGTH)
+        return input.copy(text = processed.substring(0 until length), selection = TextRange(length))
+    }
+
+    fun formatCvv(input: TextFieldValue): TextFieldValue {
+        val digit = input.text.filter {
+            it.isDigit()
+        }
+        val length = min(digit.length, FORMATTED_MAX_CVV_LENGTH)
+        return input.copy(digit.substring(0 until length), TextRange(length))
     }
 }

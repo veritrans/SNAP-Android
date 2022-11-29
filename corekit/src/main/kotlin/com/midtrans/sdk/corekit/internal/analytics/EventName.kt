@@ -13,6 +13,7 @@ internal object EventName {
     const val EVENT_SNAP_PAGE_CLOSED = "SNAP Page Closed"
     const val EVENT_SNAP_OPEN_DEEPLINK = "SNAP Open Deeplink"
     const val EVENT_SNAP_ERROR = "SNAP Error"
+    const val EVENT_SNAP_NOTICE = "SNAP Notice"
     const val EVENT_SNAP_3DS_RESULT = "SNAP 3DS Result"
     const val EVENT_SNAP_TOKENIZATION_RESULT = "SNAP Tokenization Result"
     const val EVENT_SNAP_CTA_ERROR = "SNAP CTA Error"

@@ -12,6 +12,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_EXBIN_RE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_REQUEST
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_GET_TOKEN_RESULT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_HOW_TO_PAY_VIEWED
+import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_NOTICE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_OPEN_DEEPLINK
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ORDER_DETAILS_VIEWED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_PAGE_CLOSED
@@ -55,6 +56,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_MERCHANT_I
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_MERCHANT_NAME
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_MERCHANT_URL
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_NET_AMOUNT
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_NOTICE_MESSAGE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ONE_CLICK_TOKEN_AVAILABLE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_ORDER_ID
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_OTHER_VA_PROCESSOR
@@ -81,6 +83,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TOKEN
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SNAP_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_SOURCE_TYPE
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STATUS_CODE
+import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STATUS_TEXT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_STEP_NUMBER
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOKEN_ID
 import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TOTAL_ITEMS
@@ -213,6 +216,25 @@ class EventAnalytics(
 
     //TODO will be implemented separately
     fun trackSnapCtaError() {}
+
+    fun trackSnapNotice(
+        pageName: String,
+        paymentMethodName: String,
+        statusText: String,
+        noticeMessage: String?
+    ) {
+        val optionalProperties = mutableMapOf<String, String>()
+        noticeMessage?.let { optionalProperties[PROPERTY_NOTICE_MESSAGE] = it }
+
+        mixpanelTracker.trackEvent(
+            eventName = EVENT_SNAP_NOTICE,
+            properties = mapOf(
+                PROPERTY_PAGE_NAME to pageName,
+                PROPERTY_PAYMENT_METHOD_NAME to paymentMethodName,
+                PROPERTY_STATUS_TEXT to statusText
+            ) + optionalProperties
+        )
+    }
 
     fun trackSnapError(
         pageName: String,

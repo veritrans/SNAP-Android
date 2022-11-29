@@ -470,6 +470,12 @@ internal class CreditCardActivity : BaseActivity() {
                             isError = it
                         }
                     }
+                },
+                onPointError = {
+                    viewModel.trackSnapNotice(
+                        statusText = getString(R.string.point_failed_title),
+                        noticeMessage = it
+                    )
                 }
             ).apply {
                 if (isPaymentUsingPointState) {
@@ -690,7 +696,13 @@ internal class CreditCardActivity : BaseActivity() {
                             cardNumber = state.cardNumber,
                             isPointBankChecked = state.isPointBankChecked,
                             onInstallmentTermSelected = { onInstallmentTermSelected(it) },
-                            onInstallmentAllowed = { state.isInstallmentAllowed = it }
+                            onInstallmentAllowed = { state.isInstallmentAllowed = it },
+                            onInstallmentSelectionError = { errorMessage ->
+                                viewModel.trackSnapNotice(
+                                    statusText = getString(R.string.installment_selection_error),
+                                    noticeMessage = errorMessage
+                                )
+                            }
                         )
 
                         promoState.value?.also {
@@ -772,7 +784,8 @@ internal class CreditCardActivity : BaseActivity() {
             },
             onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
             onSavedCardCheckedChange = { state.isSavedCardChecked = it },
-            onPointBankCheckedChange = { state.isPointBankChecked = it }
+            onPointBankCheckedChange = { state.isPointBankChecked = it },
+            onInputError = { viewModel.trackSnapNotice(it) }
         )
     }
 
@@ -818,15 +831,17 @@ internal class CreditCardActivity : BaseActivity() {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
 
-        if (!emailAddressFieldFocused && state.customerEmail.text.isNotBlank() && !SnapCreditCardUtil.isValidEmail(
-                state.customerEmail.text
-            )
+        if (!emailAddressFieldFocused
+            && state.customerEmail.text.isNotBlank()
+            && !SnapCreditCardUtil.isValidEmail(state.customerEmail.text)
         ) {
+            val errorText = stringResource(id = R.string.cc_dc_main_screen_email_invalid)
             Text(
-                text = stringResource(id = R.string.cc_dc_main_screen_email_invalid),
+                text = errorText,
                 style = SnapTypography.STYLES.snapTextSmallRegular,
                 color = SnapColors.getARGBColor(SnapColors.supportDangerDefault)
             )
+            viewModel.trackSnapNotice(errorText)
         }
         Box(modifier = Modifier.padding(8.dp))
     }
@@ -866,7 +881,8 @@ internal class CreditCardActivity : BaseActivity() {
                 state.cvv = it
             },
             onSavedCardCheckedChange = { state.isSavedCardChecked = it },
-            onPointBankCheckedChange = onSavedCardPointBankCheckedChange
+            onPointBankCheckedChange = onSavedCardPointBankCheckedChange,
+            onInputError = { viewModel?.trackSnapNotice(it) }
         )
     }
 
