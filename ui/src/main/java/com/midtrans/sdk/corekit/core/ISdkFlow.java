@@ -267,20 +267,52 @@ public class ISdkFlow {
     }
 
     public void runGoPay(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.GOPAY, null),
-                wrapperCallback
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 
     public void runShopeePay(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.SHOPEEPAY, null),
-                wrapperCallback
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 

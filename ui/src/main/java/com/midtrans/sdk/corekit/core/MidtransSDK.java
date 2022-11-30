@@ -89,6 +89,10 @@ public class MidtransSDK {
             startBriBankTransferUIFlow(context, snapToken);
         } else if (paymentMethod.equals(PaymentMethod.BANK_TRANSFER_OTHER)) {
             startOtherBankTransferUIFlow(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.GO_PAY)) {
+            startGoPayUIFlow(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.SHOPEEPAY)) {
+            startShopeePayUIFlow(context, snapToken);
         } else {
             if (TextUtils.isEmpty(snapToken)) {
                 startPaymentUiFlow(context);
@@ -173,6 +177,22 @@ public class MidtransSDK {
     private void startOtherBankTransferUIFlow(@NonNull Context context, String snapToken) {
         if (isTransactionRequestAvailable() && uiflow != null) {
             uiflow.runOtherBankTransfer(context, snapToken);
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startGoPayUIFlow(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable() && uiflow != null) {
+            uiflow.runGoPay(context, snapToken);
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startShopeePayUIFlow(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable() && uiflow != null) {
+            uiflow.runShopeePay(context, snapToken);
         } else {
             Logger.e(TAG, ADD_TRANSACTION_DETAILS);
         }
