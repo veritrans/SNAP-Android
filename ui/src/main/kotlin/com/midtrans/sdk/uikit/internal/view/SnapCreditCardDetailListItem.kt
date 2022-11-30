@@ -321,15 +321,20 @@ fun SnapSavedCardRadioGroup(
                                     onSavedCardRadioSelected(item)
                                     cardItemState.cardItemType =
                                         CardItemState.CardItemType.SAVED_CARD
+                                    cardItemState.isCvvInvalid = false
                                 }
                                 is NewCardFormData -> {
                                     cvvSavedCardTextFieldValue = TextFieldValue("")
-                                    cardItemState.cvv = newCvvTextFieldValue
-                                    cardItemState.cardNumber = newCardNumberTextFieldValue
-                                    onCardNumberOtherCardValueChange(newCardNumberTextFieldValue)
+                                    cardItemState.cvv = cvvSavedCardTextFieldValue
+                                    cardItemState.cardNumber = TextFieldValue("")
+                                    cardItemState.expiry = TextFieldValue("")
+                                    onCardNumberOtherCardValueChange(cardItemState.cardNumber)
                                     onSavedCardRadioSelected(null)
                                     cardItemState.cardItemType =
                                         CardItemState.CardItemType.NORMAL_CARD
+                                    cardItemState.isCardNumberInvalid = false
+                                    cardItemState.isCvvInvalid = false
+                                    cardItemState.isExpiryInvalid = false
                                 }
                             }
                             onCvvValueChange(cardItemState.cvv)
