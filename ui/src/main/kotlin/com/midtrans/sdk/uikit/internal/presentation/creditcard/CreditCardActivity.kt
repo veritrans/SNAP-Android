@@ -757,6 +757,7 @@ internal class CreditCardActivity : BaseActivity() {
     private fun isValidSavedCard(state: CardItemState): Boolean {
         return (state.cardItemType == CardItemState.CardItemType.SAVED_CARD)
             .and(!state.isCvvInvalid)
+            .and(state.cvv.text.isNotEmpty())
             .and(state.isInstallmentAllowed)
     }
 

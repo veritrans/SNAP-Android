@@ -32,8 +32,8 @@ import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.model.PromoData
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.DEFAULT_ONE_CLICK_CVV_VALUE
-import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.formatCvv
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.formatCreditCardNumber
+import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.formatCvv
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.formatMaskedCard
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.isCardNumberInvalid
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.isCvvInvalid
@@ -298,8 +298,6 @@ fun SnapSavedCardRadioGroup(
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        var newCardNumberTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
-        var newCvvTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
         var isFirstInit by remember { mutableStateOf(true) }
 
         listStates.forEach { item ->
@@ -321,15 +319,20 @@ fun SnapSavedCardRadioGroup(
                                     onSavedCardRadioSelected(item)
                                     cardItemState.cardItemType =
                                         CardItemState.CardItemType.SAVED_CARD
+                                    cardItemState.isCvvInvalid = false
                                 }
                                 is NewCardFormData -> {
                                     cvvSavedCardTextFieldValue = TextFieldValue("")
-                                    cardItemState.cvv = newCvvTextFieldValue
-                                    cardItemState.cardNumber = newCardNumberTextFieldValue
-                                    onCardNumberOtherCardValueChange(newCardNumberTextFieldValue)
+                                    cardItemState.cvv = cvvSavedCardTextFieldValue
+                                    cardItemState.cardNumber = TextFieldValue("")
+                                    cardItemState.expiry = TextFieldValue("")
+                                    onCardNumberOtherCardValueChange(cardItemState.cardNumber)
                                     onSavedCardRadioSelected(null)
                                     cardItemState.cardItemType =
                                         CardItemState.CardItemType.NORMAL_CARD
+                                    cardItemState.isCardNumberInvalid = false
+                                    cardItemState.isCvvInvalid = false
+                                    cardItemState.isExpiryInvalid = false
                                 }
                             }
                             onCvvValueChange(cardItemState.cvv)
@@ -350,15 +353,6 @@ fun SnapSavedCardRadioGroup(
                                 onSavedCardRadioSelected(item)
                                 cardItemState.cardItemType =
                                     CardItemState.CardItemType.SAVED_CARD
-                            }
-                            is NewCardFormData -> {
-                                cvvSavedCardTextFieldValue = TextFieldValue("")
-                                cardItemState.cvv = newCvvTextFieldValue
-                                cardItemState.cardNumber = newCardNumberTextFieldValue
-                                onCardNumberOtherCardValueChange(newCardNumberTextFieldValue)
-                                onSavedCardRadioSelected(null)
-                                cardItemState.cardItemType =
-                                    CardItemState.CardItemType.NORMAL_CARD
                             }
                         }
                         onCvvValueChange(cardItemState.cvv)
@@ -412,12 +406,12 @@ fun SnapSavedCardRadioGroup(
                                 bankIconState = bankIconState,
                                 isPointBankShownState = isPointBankShownState,
                                 onCardNumberValueChange = {
-                                    newCardNumberTextFieldValue = it
                                     onCardNumberOtherCardValueChange(it)
                                 },
-                                onExpiryDateValueChange = { onExpiryOtherCardValueChange(it) },
+                                onExpiryDateValueChange = {
+                                    onExpiryOtherCardValueChange(it)
+                                },
                                 onCvvValueChange = {
-                                    newCvvTextFieldValue = it
                                     onCvvValueChange(it)
                                 },
                                 onCardTextFieldFocusedChange = {},
@@ -673,8 +667,8 @@ fun NormalCardItem(
                             }
                             state.isExpiryInvalid =
                                 formatExpiryDate(it).text.length == SnapCreditCardUtil.FORMATTED_MAX_EXPIRY_LENGTH &&
-                                    isCardExpired ||
-                                    formatExpiryDate(it).text.length != SnapCreditCardUtil.FORMATTED_MAX_EXPIRY_LENGTH
+                                        isCardExpired ||
+                                        formatExpiryDate(it).text.length != SnapCreditCardUtil.FORMATTED_MAX_EXPIRY_LENGTH
                         },
                         isError = state.isExpiryInvalid,
                         isFocused = state.isExpiryTextFieldFocused,
@@ -753,7 +747,7 @@ fun NormalCardItem(
     }
     Column(
     ) {
-        if(creditCard?.installment == null) {
+        if (creditCard?.installment == null) {
             isPointBankShownState?.value?.let { isPointBankShown ->
                 if (isPointBankShown) {
                     PointBankCheckBox(
