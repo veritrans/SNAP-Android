@@ -103,6 +103,8 @@ public class MidtransSDK {
             startBRIEpayUIFlow(context, snapToken);
         } else if (paymentMethod.equals(PaymentMethod.DANAMON_ONLINE)) {
             startDanamonOnlineUIFlow(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.AKULAKU)) {
+            startAkulakuUIFlow(context, snapToken);
         } else {
             if (TextUtils.isEmpty(snapToken)) {
                 startPaymentUiFlow(context);
@@ -243,6 +245,14 @@ public class MidtransSDK {
     private void startDanamonOnlineUIFlow(@NonNull Context context, String snapToken) {
         if (isTransactionRequestAvailable() && uiflow != null) {
             uiflow.runDanamonOnline(context, snapToken);
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startAkulakuUIFlow(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable() && uiflow != null) {
+            uiflow.runAkulaku(context, snapToken);
         } else {
             Logger.e(TAG, ADD_TRANSACTION_DETAILS);
         }
