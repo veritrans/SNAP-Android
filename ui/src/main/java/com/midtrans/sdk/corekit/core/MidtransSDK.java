@@ -77,6 +77,18 @@ public class MidtransSDK {
             startCreditCardUIFlow(context, snapToken);
         } else if (paymentMethod.equals(PaymentMethod.BANK_TRANSFER)) {
             startBankTransferUIFlow(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.BANK_TRANSFER_BCA)) {
+            startBCABankTransferUIFlow(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.BANK_TRANSFER_PERMATA)) {
+            startPermataBankTransferUIFlow(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.BANK_TRANSFER_MANDIRI)) {
+            startMandiriBankTransferUIFlow(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.BANK_TRANSFER_BNI)) {
+            startBniBankTransferUIFlow(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.BANK_TRANSFER_BRI)) {
+            startBriBankTransferUIFlow(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.BANK_TRANSFER_OTHER)) {
+            startOtherBankTransferUIFlow(context, snapToken);
         } else {
             if (TextUtils.isEmpty(snapToken)) {
                 startPaymentUiFlow(context);
@@ -101,6 +113,66 @@ public class MidtransSDK {
             if (uiflow != null) {
                 uiflow.runBankTransfer(context, snapToken);
             }
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startBCABankTransferUIFlow(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable() && uiflow != null) {
+            uiflow.runBCABankTransfer(context, snapToken);
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startPermataBankTransferUIFlow(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable()) {
+            if (uiflow != null) {
+                uiflow.runPermataBankTransfer(context, snapToken);
+            }
+
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startMandiriBankTransferUIFlow(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable()) {
+            if (uiflow != null) {
+                uiflow.runMandiriBankTransfer(context, snapToken);
+            }
+
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startBniBankTransferUIFlow(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable()) {
+            if (uiflow != null) {
+                uiflow.runBniBankTransfer(context, snapToken);
+            }
+
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startBriBankTransferUIFlow(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable()) {
+            if (uiflow != null) {
+                uiflow.runBriBankTransfer(context, snapToken);
+            }
+
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startOtherBankTransferUIFlow(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable() && uiflow != null) {
+            uiflow.runOtherBankTransfer(context, snapToken);
         } else {
             Logger.e(TAG, ADD_TRANSACTION_DETAILS);
         }
