@@ -467,11 +467,27 @@ public class ISdkFlow {
     }
 
     public void runIndomaret(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
-                new PaymentTypeItem(PaymentType.CSTORE, PaymentType.INDOMARET),
-                wrapperCallback
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
+                new PaymentTypeItem(PaymentType.INDOMARET, null),
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 
@@ -511,11 +527,27 @@ public class ISdkFlow {
     }
 
     public void runAlfamart(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
-                new PaymentTypeItem(PaymentType.CSTORE, PaymentType.ALFAMART),
-                wrapperCallback
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
+                new PaymentTypeItem(PaymentType.ALFAMART, null),
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 

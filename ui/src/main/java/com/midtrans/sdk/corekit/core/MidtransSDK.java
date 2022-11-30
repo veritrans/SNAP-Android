@@ -105,6 +105,10 @@ public class MidtransSDK {
             startDanamonOnlineUIFlow(context, snapToken);
         } else if (paymentMethod.equals(PaymentMethod.AKULAKU)) {
             startAkulakuUIFlow(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.ALFAMART)) {
+            startAlfamartUIFlow(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.INDOMARET)) {
+            startIndomaretUIFlow(context, snapToken);
         } else {
             if (TextUtils.isEmpty(snapToken)) {
                 startPaymentUiFlow(context);
@@ -253,6 +257,22 @@ public class MidtransSDK {
     private void startAkulakuUIFlow(@NonNull Context context, String snapToken) {
         if (isTransactionRequestAvailable() && uiflow != null) {
             uiflow.runAkulaku(context, snapToken);
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startAlfamartUIFlow(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable() && uiflow != null) {
+            uiflow.runAlfamart(context, snapToken);
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startIndomaretUIFlow(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable() && uiflow != null) {
+            uiflow.runIndomaret(context, snapToken);
         } else {
             Logger.e(TAG, ADD_TRANSACTION_DETAILS);
         }
