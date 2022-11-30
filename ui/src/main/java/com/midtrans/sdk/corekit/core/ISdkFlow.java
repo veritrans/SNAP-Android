@@ -317,20 +317,52 @@ public class ISdkFlow {
     }
 
     public void runBCAKlikPay(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.BCA_KLIKPAY, null),
-                wrapperCallback
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 
     public void runKlikBCA(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.KLIK_BCA, null),
-                wrapperCallback
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 

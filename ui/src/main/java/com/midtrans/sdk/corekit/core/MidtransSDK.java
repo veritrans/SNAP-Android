@@ -93,6 +93,10 @@ public class MidtransSDK {
             startGoPayUIFlow(context, snapToken);
         } else if (paymentMethod.equals(PaymentMethod.SHOPEEPAY)) {
             startShopeePayUIFlow(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.BCA_KLIKPAY)) {
+            startBCAKlikPayUIFlow(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.KLIKBCA)) {
+            startKlikBCAUIFlow(context, snapToken);
         } else {
             if (TextUtils.isEmpty(snapToken)) {
                 startPaymentUiFlow(context);
@@ -193,6 +197,22 @@ public class MidtransSDK {
     private void startShopeePayUIFlow(@NonNull Context context, String snapToken) {
         if (isTransactionRequestAvailable() && uiflow != null) {
             uiflow.runShopeePay(context, snapToken);
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startBCAKlikPayUIFlow(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable() && uiflow != null) {
+            uiflow.runBCAKlikPay(context, snapToken);
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startKlikBCAUIFlow(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable() && uiflow != null) {
+            uiflow.runKlikBCA(context, snapToken);
         } else {
             Logger.e(TAG, ADD_TRANSACTION_DETAILS);
         }
