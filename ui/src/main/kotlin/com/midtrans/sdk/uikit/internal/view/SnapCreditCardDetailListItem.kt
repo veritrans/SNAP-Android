@@ -298,8 +298,6 @@ fun SnapSavedCardRadioGroup(
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        var newCardNumberTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
-        var newCvvTextFieldValue by remember { mutableStateOf(TextFieldValue()) }
         var isFirstInit by remember { mutableStateOf(true) }
 
         listStates.forEach { item ->
@@ -355,15 +353,6 @@ fun SnapSavedCardRadioGroup(
                                 onSavedCardRadioSelected(item)
                                 cardItemState.cardItemType =
                                     CardItemState.CardItemType.SAVED_CARD
-                            }
-                            is NewCardFormData -> {
-                                cvvSavedCardTextFieldValue = TextFieldValue("")
-                                cardItemState.cvv = newCvvTextFieldValue
-                                cardItemState.cardNumber = newCardNumberTextFieldValue
-                                onCardNumberOtherCardValueChange(newCardNumberTextFieldValue)
-                                onSavedCardRadioSelected(null)
-                                cardItemState.cardItemType =
-                                    CardItemState.CardItemType.NORMAL_CARD
                             }
                         }
                         onCvvValueChange(cardItemState.cvv)
