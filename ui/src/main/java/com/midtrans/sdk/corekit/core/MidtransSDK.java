@@ -68,6 +68,32 @@ public class MidtransSDK {
 
     }
 
+    public void startPaymentUiFlow(Context context, PaymentMethod paymentMethod) {
+            runDirectPaymentUiSdk(context, paymentMethod, null);
+    }
+
+    private void runDirectPaymentUiSdk(Context context, PaymentMethod paymentMethod, String snapToken) {
+        if (paymentMethod.equals(PaymentMethod.CREDIT_CARD)) {
+            startCreditCardUIFlow(context, snapToken);
+        } else {
+            if (TextUtils.isEmpty(snapToken)) {
+                startPaymentUiFlow(context);
+            } else {
+                startPaymentUiFlow(context, snapToken);
+            }
+        }
+    }
+
+    private void startCreditCardUIFlow(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable()) {
+            if (uiflow != null) {
+                uiflow.runCreditCard(context, snapToken);
+            }
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
     private void runUiSdk(Context context, String snapToken) {
         if (isTransactionRequestAvailable() && uiflow != null) {
             uiflow.runUIFlow(context, snapToken);
