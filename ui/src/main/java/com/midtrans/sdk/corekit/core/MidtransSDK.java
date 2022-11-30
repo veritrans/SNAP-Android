@@ -97,6 +97,12 @@ public class MidtransSDK {
             startBCAKlikPayUIFlow(context, snapToken);
         } else if (paymentMethod.equals(PaymentMethod.KLIKBCA)) {
             startKlikBCAUIFlow(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.CIMB_CLICKS)) {
+            startCIMBClicksUIFlow(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.EPAY_BRI)) {
+            startBRIEpayUIFlow(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.DANAMON_ONLINE)) {
+            startDanamonOnlineUIFlow(context, snapToken);
         } else {
             if (TextUtils.isEmpty(snapToken)) {
                 startPaymentUiFlow(context);
@@ -213,6 +219,30 @@ public class MidtransSDK {
     private void startKlikBCAUIFlow(@NonNull Context context, String snapToken) {
         if (isTransactionRequestAvailable() && uiflow != null) {
             uiflow.runKlikBCA(context, snapToken);
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startCIMBClicksUIFlow(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable() && uiflow != null) {
+            uiflow.runCIMBClicks(context, snapToken);
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startBRIEpayUIFlow(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable() && uiflow != null) {
+            uiflow.runBRIEpay(context, snapToken);
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startDanamonOnlineUIFlow(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable() && uiflow != null) {
+            uiflow.runDanamonOnline(context, snapToken);
         } else {
             Logger.e(TAG, ADD_TRANSACTION_DETAILS);
         }
