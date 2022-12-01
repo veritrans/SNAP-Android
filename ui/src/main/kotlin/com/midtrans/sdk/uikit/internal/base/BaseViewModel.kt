@@ -1,6 +1,7 @@
 package com.midtrans.sdk.uikit.internal.base
 
 import androidx.lifecycle.ViewModel
+import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.BinData
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
@@ -9,6 +10,7 @@ import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import retrofit2.HttpException
 
 internal open class BaseViewModel : ViewModel() {
 
@@ -208,13 +210,13 @@ internal open class BaseViewModel : ViewModel() {
     protected fun trackSnapError(
         pageName: String,
         paymentMethodName: String,
-        errorMessage: String
+        error: SnapError
     ) {
         eventAnalytics?.trackSnapError(
             pageName = pageName,
             paymentMethodName = paymentMethodName,
-            statusCode = null,
-            errorMessage = errorMessage
+            statusCode = error.getHttpStatusCode()?.toString(),
+            errorMessage = error.getErrorInformation()
         )
     }
 
