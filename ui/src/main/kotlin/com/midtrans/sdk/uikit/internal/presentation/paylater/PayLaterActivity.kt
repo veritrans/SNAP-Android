@@ -72,6 +72,10 @@ class PayLaterActivity : BaseActivity() {
         intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
     }
 
+    private val transactionResult: TransactionResponse? by lazy {
+        intent.getParcelableExtra(EXTRA_TRANSACTION_RESULT) as? TransactionResponse
+    }
+
     private val viewModel: PayLaterViewModel by lazy {
         ViewModelProvider(this, vmFactory).get(PayLaterViewModel::class.java)
     }
@@ -109,6 +113,8 @@ class PayLaterActivity : BaseActivity() {
         val title = stringResource(getTitleId(paymentType = paymentType))
         val url = response?.redirectUrl.orEmpty()
         val remainingTime by remember { remainingTimeState }
+
+        transactionResult?.let { payPaylater(paymentType) }
 
         if (url.isEmpty()) {
             Column(
@@ -184,14 +190,7 @@ class PayLaterActivity : BaseActivity() {
                     text = stringResource(getCta(paymentType)),
                     style = SnapButton.Style.PRIMARY
                 ) {
-                    viewModel.trackSnapButtonClicked(
-                        ctaName = getStringResourceInEnglish(getCta(paymentType)),
-                        paymentType = paymentType
-                    )
-                    viewModel.payPayLater(
-                        snapToken = snapToken,
-                        paymentType = paymentType
-                    )
+                    payPaylater(paymentType)
                 }
             }
         } else {
@@ -212,6 +211,17 @@ class PayLaterActivity : BaseActivity() {
                 onPageFinished = { }
             )
         }
+    }
+
+    private fun payPaylater(paymentType: String) {
+        viewModel.trackSnapButtonClicked(
+            ctaName = getStringResourceInEnglish(getCta(paymentType)),
+            paymentType = paymentType
+        )
+        viewModel.payPayLater(
+            snapToken = snapToken,
+            paymentType = paymentType
+        )
     }
 
     private fun finishPayLater(
@@ -276,6 +286,7 @@ class PayLaterActivity : BaseActivity() {
         private const val EXTRA_CUSTOMER_INFO = "payLater.extra.customer_info"
         private const val EXTRA_ITEM_INFO = "payLater.extra.item_info"
         private const val EXTRA_STEP_NUMBER = "payLater.extra.step_number"
+        private const val EXTRA_TRANSACTION_RESULT = "payLater.extra.transaction_result"
 
         fun getIntent(
             activityContext: Context,
@@ -285,7 +296,8 @@ class PayLaterActivity : BaseActivity() {
             orderId: String,
             customerInfo: CustomerInfo?,
             itemInfo: ItemInfo?,
-            stepNumber: Int
+            stepNumber: Int,
+            result: TransactionResponse?
         ): Intent {
             return Intent(activityContext, PayLaterActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -295,6 +307,7 @@ class PayLaterActivity : BaseActivity() {
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
+                putExtra(EXTRA_TRANSACTION_RESULT, result)
             }
         }
     }
