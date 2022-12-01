@@ -11,12 +11,11 @@ import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBui
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
-import retrofit2.HttpException
 import javax.inject.Inject
 
 //TODO will add UT and SnapCore manager after DI is setup
 class LoadingPaymentViewModel @Inject constructor(
-    private val snapCore: SnapCore
+    snapCore: SnapCore
 ): ViewModel() {
     private val _paymentOptionLiveData = MutableLiveData<PaymentOption>()
     private val _error = MutableLiveData<SnapError>()
@@ -79,18 +78,10 @@ class LoadingPaymentViewModel @Inject constructor(
                         pageName = PageName.PAYMENT_LIST_PAGE,
                         paymentMethodName = "not selected",
                         errorMessage = error.getErrorInformation(),
-                        statusCode = getHttpStatusCode(error.cause)?.toString()
+                        statusCode = error.getHttpStatusCode()?.toString()
                     )
                 }
             })
-    }
-
-    private fun getHttpStatusCode(error: Throwable?): Int? {
-        return if (error is HttpException) {
-            error.code()
-        } else {
-            null
-        }
     }
 
     fun getAmountInString(transactionDetails: TransactionDetails?): String {
