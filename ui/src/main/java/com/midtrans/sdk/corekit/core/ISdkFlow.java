@@ -516,7 +516,7 @@ public class ISdkFlow {
         );
     }
 
-    public void runUobEzpay(Context context, String snapToken) {
+    public void runUobEzPay(Context context, String snapToken) {
         TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
@@ -533,6 +533,56 @@ public class ISdkFlow {
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.UOB_EZPAY, null),
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
+        );
+    }
+
+    public void runUobEzPayApp(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
+        UiKitApi.Companion.getDefaultInstance().startPayment(
+                context,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
+                new PaymentTypeItem(PaymentType.UOB_EZPAY, PaymentType.UOB_EZPAY_APP),
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
+        );
+    }
+
+    public void runUobEzPayWeb(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
+        UiKitApi.Companion.getDefaultInstance().startPayment(
+                context,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
+                new PaymentTypeItem(PaymentType.UOB_EZPAY, PaymentType.UOB_EZPAY_WEB),
                 transactionRequest.getEnabledPayments(),
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),

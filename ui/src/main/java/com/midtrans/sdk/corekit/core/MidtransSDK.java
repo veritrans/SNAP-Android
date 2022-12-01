@@ -7,7 +7,6 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import com.midtrans.sdk.corekit.models.snap.TransactionResult;
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder;
 
 
@@ -110,7 +109,11 @@ public class MidtransSDK {
         } else if (paymentMethod.equals(PaymentMethod.INDOMARET)) {
             startIndomaretUIFlow(context, snapToken);
         } else if (paymentMethod.equals(PaymentMethod.UOB_EZPAY)) {
-            startUobEzpay(context, snapToken);
+            startUobEzPay(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.UOB_EZPAY_APP)) {
+            startUobEzPayApp(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.UOB_EZPAY_WEB)) {
+            startUobEzPayWeb(context, snapToken);
         } else {
             if (TextUtils.isEmpty(snapToken)) {
                 startPaymentUiFlow(context);
@@ -280,9 +283,25 @@ public class MidtransSDK {
         }
     }
 
-    private void startUobEzpay(@NonNull Context context, String snapToken) {
+    private void startUobEzPay(@NonNull Context context, String snapToken) {
         if (isTransactionRequestAvailable() && uiflow != null) {
-            uiflow.runUobEzpay(context, snapToken);
+            uiflow.runUobEzPay(context, snapToken);
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startUobEzPayApp(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable() && uiflow != null) {
+            uiflow.runUobEzPayApp(context, snapToken);
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startUobEzPayWeb(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable() && uiflow != null) {
+            uiflow.runUobEzPayWeb(context, snapToken);
         } else {
             Logger.e(TAG, ADD_TRANSACTION_DETAILS);
         }
