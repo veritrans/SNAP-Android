@@ -1,9 +1,23 @@
 package com.midtrans.sdk.corekit.api.exception
 
-open class SnapError(cause: Throwable? = null, message: String? = null): Throwable(cause = cause, message = message) {
+import retrofit2.HttpException
+
+open class SnapError(
+    cause: Throwable? = null,
+    message: String? = null
+): Throwable(cause = cause, message = message) {
 
     fun getErrorInformation(): String {
-        return this.message ?: this.cause?.javaClass?.name ?: this.javaClass.name
+        return message ?: cause?.javaClass?.name ?: this.javaClass.name
+    }
+
+    fun getHttpStatusCode(): Int? {
+        return if (cause is HttpException) {
+            val exception = cause as HttpException
+            exception.code()
+        } else {
+            null
+        }
     }
 
     companion object{
