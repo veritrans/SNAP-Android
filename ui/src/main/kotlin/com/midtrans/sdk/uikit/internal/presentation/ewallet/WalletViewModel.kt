@@ -80,7 +80,7 @@ internal class WalletViewModel @Inject constructor(
                     trackSnapError(
                         pageName = pageName,
                         paymentMethodName = paymentType,
-                        errorMessage = error.message ?: error.javaClass.name
+                        error = error
                     )
                 }
             }

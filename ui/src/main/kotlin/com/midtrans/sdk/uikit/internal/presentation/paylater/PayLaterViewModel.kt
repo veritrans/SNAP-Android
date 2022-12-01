@@ -62,7 +62,7 @@ internal class PayLaterViewModel @Inject constructor(
                     trackSnapError(
                         pageName = PageName.AKULAKU_PAGE,
                         paymentMethodName = PaymentType.AKULAKU,
-                        errorMessage = error.message ?: error.javaClass.name
+                        error = error
                     )
                 }
             }

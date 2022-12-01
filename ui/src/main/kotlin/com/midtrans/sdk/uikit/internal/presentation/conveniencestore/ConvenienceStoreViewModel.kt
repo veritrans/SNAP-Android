@@ -89,7 +89,7 @@ internal class ConvenienceStoreViewModel @Inject constructor(
                     trackSnapError(
                         pageName = getPageName(paymentType),
                         paymentMethodName = paymentType,
-                        errorMessage = error.message ?: error.javaClass.name
+                        error = error
                     )
                     _errorLiveData.value = errorCard.getErrorCardType(error)
                 }

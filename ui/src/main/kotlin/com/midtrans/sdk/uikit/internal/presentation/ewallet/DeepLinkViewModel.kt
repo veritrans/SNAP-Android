@@ -1,14 +1,13 @@
 package com.midtrans.sdk.uikit.internal.presentation.ewallet
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResult
-import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import javax.inject.Inject
@@ -49,7 +48,7 @@ internal class DeepLinkViewModel @Inject constructor(
                     trackSnapError(
                         pageName = getPageName(paymentType),
                         paymentMethodName = paymentType,
-                        errorMessage = error.message ?: error.javaClass.name
+                        error = error
                     )
                 }
             }
