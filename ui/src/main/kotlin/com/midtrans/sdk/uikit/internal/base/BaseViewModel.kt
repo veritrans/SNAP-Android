@@ -10,7 +10,6 @@ import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import retrofit2.HttpException
 
 internal open class BaseViewModel : ViewModel() {
 
