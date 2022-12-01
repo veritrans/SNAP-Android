@@ -109,6 +109,8 @@ public class MidtransSDK {
             startAlfamartUIFlow(context, snapToken);
         } else if (paymentMethod.equals(PaymentMethod.INDOMARET)) {
             startIndomaretUIFlow(context, snapToken);
+        } else if (paymentMethod.equals(PaymentMethod.UOB_EZPAY)) {
+            startUobEzpay(context, snapToken);
         } else {
             if (TextUtils.isEmpty(snapToken)) {
                 startPaymentUiFlow(context);
@@ -273,6 +275,14 @@ public class MidtransSDK {
     private void startIndomaretUIFlow(@NonNull Context context, String snapToken) {
         if (isTransactionRequestAvailable() && uiflow != null) {
             uiflow.runIndomaret(context, snapToken);
+        } else {
+            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+        }
+    }
+
+    private void startUobEzpay(@NonNull Context context, String snapToken) {
+        if (isTransactionRequestAvailable() && uiflow != null) {
+            uiflow.runUobEzpay(context, snapToken);
         } else {
             Logger.e(TAG, ADD_TRANSACTION_DETAILS);
         }
