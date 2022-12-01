@@ -366,16 +366,6 @@ public class ISdkFlow {
         );
     }
 
-    @Deprecated
-    public void runMandiriClickpay(Context context, String snapToken) {
-        //depreciated
-    }
-
-    @Deprecated
-    public void runMandiriECash(Context context, String snapToken) {
-        //depreciated
-    }
-
     public void runCIMBClicks(Context context, String snapToken) {
         TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
@@ -451,21 +441,6 @@ public class ISdkFlow {
         );
     }
 
-    @Deprecated
-    public void runTelkomselCash(Context context, String snapToken) {
-       //depreciated
-    }
-
-    @Deprecated
-    public void runIndosatDompetku(Context context, String snapToken) {
-
-    }
-
-    @Deprecated
-    public void runXlTunai(Context context, String snapToken) {
-
-    }
-
     public void runIndomaret(Context context, String snapToken) {
         TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
@@ -489,16 +464,6 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa()
         );
-    }
-
-    @Deprecated
-    public void runKioson(Context context, String snapToken) {
-
-    }
-
-    @Deprecated
-    public void runGci(Context context, String snapToken) {
-
     }
 
     public void runAkulaku(Context context, String snapToken) {
