@@ -31,6 +31,7 @@ import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
+import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import com.midtrans.sdk.uikit.internal.view.SnapColors.supportDangerDefault
@@ -74,6 +75,10 @@ class DirectDebitActivity : BaseActivity() {
 
     private val currentStepNumber: Int by lazy {
         intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
+    }
+
+    private val transactionResult: TransactionResponse? by lazy {
+        intent.getParcelableExtra(EXTRA_TRANSACTION_RESULT) as? TransactionResponse
     }
 
     private val viewModel: DirectDebitViewModel by lazy {
@@ -134,6 +139,10 @@ class DirectDebitActivity : BaseActivity() {
         var userId by remember { mutableStateOf("") }
         val url = response?.redirectUrl.orEmpty()
         val remainingTime by remember { remainingTimeState }
+
+        transactionResult?.let {
+            payDirectDebit(paymentType, userId)
+        }
 
         if (url.isEmpty()) {
             Column(
@@ -210,15 +219,7 @@ class DirectDebitActivity : BaseActivity() {
                     text = stringResource(getCta(paymentType)),
                     style = SnapButton.Style.PRIMARY
                 ) {
-                    viewModel.trackSnapButtonClicked(
-                        ctaName = getStringResourceInEnglish(getCta(paymentType)),
-                        paymentType = paymentType
-                    )
-                    viewModel.payDirectDebit(
-                        snapToken = snapToken,
-                        paymentType = paymentType,
-                        userId = userId
-                    )
+                    payDirectDebit(paymentType, userId)
                 }
             }
         } else {
@@ -247,6 +248,18 @@ class DirectDebitActivity : BaseActivity() {
                 )
             }
         }
+    }
+
+    private fun payDirectDebit(paymentType: String, userId: String) {
+        viewModel.trackSnapButtonClicked(
+            ctaName = getStringResourceInEnglish(getCta(paymentType)),
+            paymentType = paymentType
+        )
+        viewModel.payDirectDebit(
+            snapToken = snapToken,
+            paymentType = paymentType,
+            userId = userId
+        )
     }
 
     private fun finishDirectDebitPayment(
@@ -403,6 +416,7 @@ class DirectDebitActivity : BaseActivity() {
         private const val EXTRA_CUSTOMER_INFO = "directDebit.extra.customer_info"
         private const val EXTRA_ITEM_INFO = "directDebit.extra.item_info"
         private const val EXTRA_STEP_NUMBER = "directDebit.extra.step_number"
+        private const val EXTRA_TRANSACTION_RESULT = "directDebit.extra.transaction_result"
 
         fun getIntent(
             activityContext: Context,
@@ -412,7 +426,8 @@ class DirectDebitActivity : BaseActivity() {
             orderId: String,
             customerInfo: CustomerInfo?,
             itemInfo: ItemInfo?,
-            stepNumber: Int
+            stepNumber: Int,
+            result: TransactionResponse?
         ): Intent {
             return Intent(activityContext, DirectDebitActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -422,6 +437,7 @@ class DirectDebitActivity : BaseActivity() {
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
+                putExtra(EXTRA_TRANSACTION_RESULT, result)
             }
         }
     }
