@@ -67,195 +67,527 @@ public class ISdkFlow {
     }
 
     public void runCreditCard(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.CREDIT_CARD, null),
-                wrapperCallback
+                transactionRequest.getEnabledPayments(),
+                null,
+                null,
+                null,
+                null
         );
     }
 
     public void runBankTransfer(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.BANK_TRANSFER, null),
-                wrapperCallback
-        );
-    }
-
-    public void runPermataBankTransfer(Context context, String snapToken) {
-        UiKitApi.Companion.getDefaultInstance().startPayment(
-                context,
-                snapToken,
-                new PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.PERMATA_VA),
-                wrapperCallback
-        );
-    }
-
-    public void runMandiriBankTransfer(Context context, String snapToken) {
-        UiKitApi.Companion.getDefaultInstance().startPayment(
-                context,
-                snapToken,
-                new PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.E_CHANNEL),
-                wrapperCallback
-        );
-    }
-
-    public void runBniBankTransfer(Context context, String snapToken) {
-        UiKitApi.Companion.getDefaultInstance().startPayment(
-                context,
-                snapToken,
-                new PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BNI_VA),
-                wrapperCallback
-        );
-    }
-
-    public void runBriBankTransfer(Context context, String snapToken) {
-        UiKitApi.Companion.getDefaultInstance().startPayment(
-                context,
-                snapToken,
-                new PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BRI_VA),
-                wrapperCallback
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 
     public void runBCABankTransfer(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BCA_VA),
-                wrapperCallback
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
+        );
+    }
+
+    public void runPermataBankTransfer(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
+        UiKitApi.Companion.getDefaultInstance().startPayment(
+                context,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
+                new PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.PERMATA_VA),
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
+        );
+    }
+
+    public void runMandiriBankTransfer(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
+        UiKitApi.Companion.getDefaultInstance().startPayment(
+                context,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
+                new PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.E_CHANNEL),
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
+        );
+    }
+
+    public void runBniBankTransfer(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
+        UiKitApi.Companion.getDefaultInstance().startPayment(
+                context,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
+                new PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BNI_VA),
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
+        );
+    }
+
+    public void runBriBankTransfer(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
+        UiKitApi.Companion.getDefaultInstance().startPayment(
+                context,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
+                new PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BRI_VA),
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 
     public void runOtherBankTransfer(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.OTHER_VA),
-                wrapperCallback
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 
     public void runGoPay(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.GOPAY, null),
-                wrapperCallback
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 
     public void runShopeePay(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.SHOPEEPAY, null),
-                wrapperCallback
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 
     public void runBCAKlikPay(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.BCA_KLIKPAY, null),
-                wrapperCallback
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 
     public void runKlikBCA(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.KLIK_BCA, null),
-                wrapperCallback
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 
-    @Deprecated
-    public void runMandiriClickpay(Context context, String snapToken) {
-        //depreciated
-    }
-
-    @Deprecated
-    public void runMandiriECash(Context context, String snapToken) {
-        //depreciated
-    }
-
     public void runCIMBClicks(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.CIMB_CLICKS, null),
-                wrapperCallback
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 
     public void runBRIEpay(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.BRI_EPAY, null),
-                wrapperCallback
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 
-    @Deprecated
-    public void runTelkomselCash(Context context, String snapToken) {
-       //depreciated
-    }
-
-    @Deprecated
-    public void runIndosatDompetku(Context context, String snapToken) {
-
-    }
-
-    @Deprecated
-    public void runXlTunai(Context context, String snapToken) {
-
+    public void runDanamonOnline(Context context, String tokenToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
+        UiKitApi.Companion.getDefaultInstance().startPayment(
+                context,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
+                new PaymentTypeItem(PaymentType.DANAMON_ONLINE, null),
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
+        );
     }
 
     public void runIndomaret(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
-                new PaymentTypeItem(PaymentType.CSTORE, PaymentType.INDOMARET),
-                wrapperCallback
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
+                new PaymentTypeItem(PaymentType.INDOMARET, null),
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 
-    @Deprecated
-    public void runKioson(Context context, String snapToken) {
-
-    }
-
-    @Deprecated
-    public void runGci(Context context, String snapToken) {
-
-    }
-
-    @Deprecated
-    public void runDanamonOnline(Context context, String tokenToken) {
-
-    }
-
     public void runAkulaku(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.AKULAKU, null),
-                wrapperCallback
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 
     public void runAlfamart(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().startPayment(
                 context,
-                snapToken,
-                new PaymentTypeItem(PaymentType.CSTORE, PaymentType.ALFAMART),
-                wrapperCallback
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
+                new PaymentTypeItem(PaymentType.ALFAMART, null),
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
+        );
+    }
+
+    public void runUobEzPay(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
+        UiKitApi.Companion.getDefaultInstance().startPayment(
+                context,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
+                new PaymentTypeItem(PaymentType.UOB_EZPAY, null),
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
+        );
+    }
+
+    public void runUobEzPayApp(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
+        UiKitApi.Companion.getDefaultInstance().startPayment(
+                context,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
+                new PaymentTypeItem(PaymentType.UOB_EZPAY, PaymentType.UOB_EZPAY_APP),
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
+        );
+    }
+
+    public void runUobEzPayWeb(Context context, String snapToken) {
+        TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
+        UiKitApi.Companion.getDefaultInstance().startPayment(
+                context,
+                new SnapTransactionDetail(
+                        transactionRequest.getOrderId(),
+                        transactionRequest.getAmount(),
+                        transactionRequest.getCurrency()
+                ),
+                transactionRequest.getCustomerDetails(),
+                transactionRequest.getItemDetails(),
+                transactionRequest.getCreditCard(),
+                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                new PaymentCallback(""),
+                wrapperCallback,
+                transactionRequest.getExpiry(),
+                new PaymentTypeItem(PaymentType.UOB_EZPAY, PaymentType.UOB_EZPAY_WEB),
+                transactionRequest.getEnabledPayments(),
+                transactionRequest.getPermataVa(),
+                transactionRequest.getBcaVa(),
+                transactionRequest.getBniVa(),
+                transactionRequest.getBriVa()
         );
     }
 
