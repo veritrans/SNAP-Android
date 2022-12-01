@@ -134,6 +134,15 @@ internal class WalletActivity : BaseActivity() {
     private fun observeDeepLinkUrl() {
         viewModel.deepLinkUrlLiveData.observe(this) { url ->
             deepLinkUrl = url
+            transactionResult?.let {
+                url?.let {
+                    viewModel.trackSnapButtonClicked(
+                        ctaName = getStringResourceInEnglish(R.string.redirection_instruction_gopay_cta),
+                        paymentType = paymentType
+                    )
+                    openDeepLink()
+                }
+            }
         }
     }
 
