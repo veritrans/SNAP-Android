@@ -617,4 +617,7 @@
     <string name="card_error_declined_disallow_retry_content">Failed to process payment. Please place your order again.</string>
     <string name="card_error_declined_disallow_retry_cta">OK</string>
 
+    <string name="error_failed_load">Failed to load</string>
+    <string name="retry_to_load">Reload</string>
+
 </resources>

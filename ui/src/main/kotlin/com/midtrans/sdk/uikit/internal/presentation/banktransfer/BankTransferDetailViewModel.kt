@@ -14,6 +14,7 @@ import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.DATE_FORMAT
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.TIME_ZONE_WIB
+import java.net.SocketTimeoutException
 import java.util.*
 import javax.inject.Inject
 

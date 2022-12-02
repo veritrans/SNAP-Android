@@ -28,6 +28,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
+import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
@@ -96,15 +97,21 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 bankName = paymentType,
                 companyCodeState = viewModel.companyCodeLiveData.observeAsState(initial = ""),
                 destinationBankCode = viewModel.bankCodeLiveData.observeAsState(),
-                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
+                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
+                errorState = viewModel.errorLiveData.observeAsState(initial = null),
+                viewModel = viewModel
             )
         }
+        chargeBankTransfer()
+        observeData()
+    }
+
+    private fun chargeBankTransfer() {
         viewModel.chargeBankTransfer(
             snapToken = snapToken,
             paymentType = paymentType,
             customerEmail = null
         )
-        observeData()
     }
 
     private fun observeData() {
@@ -150,7 +157,9 @@ internal class BankTransferDetailActivity : BaseActivity() {
         billingNumberState: State<String>,
         companyCodeState: State<String>,
         destinationBankCode: State<String?>,
-        remainingTimeState: State<String>
+        remainingTimeState: State<String>,
+        errorState: State<SnapError?>,
+        viewModel: BankTransferDetailViewModel?
     ) {
         val billingNumber by remember { billingNumberState }
         val companyCode by remember { companyCodeState }
@@ -185,7 +194,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                         }
                     },
                     expandingContent = {
-                        viewModel.trackOrderDetailsViewed(paymentType)
+                        viewModel?.trackOrderDetailsViewed(paymentType)
                         SnapPaymentOrderDetails(
                             customerInfo = customerInfo,
                             itemInfo = itemInfo
@@ -210,7 +219,8 @@ internal class BankTransferDetailActivity : BaseActivity() {
                             companyCode = companyCode,
                             billingNumber = billingNumber,
                             destinationBankCode = destinationBankCode.value,
-                            viewModel = viewModel
+                            viewModel = viewModel,
+                            isChargeResponseError = errorState.value != null
                         )[bankName]?.invoke()
 
                         var isExpanded by remember { mutableStateOf(false) }
@@ -219,7 +229,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                             iconResId = R.drawable.ic_help,
                             title = stringResource(id = R.string.kredivo_how_to_pay_title),
                             onExpandClick = {
-                                viewModel.trackHowToPayClicked(paymentType)
+                                viewModel?.trackHowToPayClicked(paymentType)
                                 isExpanded = !isExpanded
                             },
                             expandingContent = {
@@ -275,7 +285,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                     text = stringResource(id = R.string.i_have_already_paid),
                     modifier = Modifier.fillMaxWidth(1f)
                 ) {
-                    viewModel.trackSnapButtonClicked(
+                    viewModel?.trackSnapButtonClicked(
                         ctaName = getStringResourceInEnglish(R.string.i_have_already_paid),
                         paymentType = paymentType
                     )
@@ -289,6 +299,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
     fun getDetailWithVaNumber(
         vaNumber: String?,
         paymentType: String,
+        isChargeResponseError: Boolean,
         viewModel: BankTransferDetailViewModel?
     ): @Composable (() -> Unit) {
         val clipboardManager: ClipboardManager = LocalClipboardManager.current
@@ -296,15 +307,19 @@ internal class BankTransferDetailActivity : BaseActivity() {
             var copied by remember {
                 mutableStateOf(false)
             }
-            vaNumber?.let {
+            vaNumber.let {
                 SnapCopyableInfoListItem(
                     title = stringResource(id = R.string.general_instruction_va_number_title),
                     info = it,
+                    isError = isChargeResponseError,
                     copied = copied,
                     onCopyClicked = { label ->
                         copied = true
                         clipboardManager.setText(AnnotatedString(text = label))
                         viewModel?.trackAccountNumberCopied(paymentType)
+                    },
+                    onReloadClicked = {
+                        chargeBankTransfer()
                     }
                 )
             }
@@ -318,6 +333,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
         billingNumber: String?,
         destinationBankCode: String?,
         companyCode: String?,
+        isChargeResponseError: Boolean,
         viewModel: BankTransferDetailViewModel?
     ): Map<String, @Composable (() -> Unit)> {
         val clipboardManager: ClipboardManager = LocalClipboardManager.current
@@ -327,7 +343,8 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 getDetailWithVaNumber(
                     vaNumber = vaNumber,
                     paymentType = PaymentType.BCA_VA,
-                    viewModel = viewModel
+                    viewModel = viewModel,
+                    isChargeResponseError = isChargeResponseError
                 )
             ),
             Pair(PaymentType.E_CHANNEL) {
@@ -367,17 +384,20 @@ internal class BankTransferDetailActivity : BaseActivity() {
             Pair(PaymentType.BNI_VA,  getDetailWithVaNumber(
                 vaNumber = vaNumber,
                 paymentType = PaymentType.BNI_VA,
-                viewModel = viewModel
+                viewModel = viewModel,
+                isChargeResponseError = isChargeResponseError
             )),
             Pair(PaymentType.BRI_VA,  getDetailWithVaNumber(
                 vaNumber = vaNumber,
                 paymentType = PaymentType.BRI_VA,
-                viewModel = viewModel
+                viewModel = viewModel,
+                isChargeResponseError = isChargeResponseError
             )),
             Pair(PaymentType.PERMATA_VA,  getDetailWithVaNumber(
                 vaNumber = vaNumber,
                 paymentType = PaymentType.PERMATA_VA,
-                viewModel = viewModel
+                viewModel = viewModel,
+                isChargeResponseError = isChargeResponseError
             )),
             Pair(PaymentType.OTHER_VA) {
                 var copiedBankCode by remember {
@@ -432,7 +452,9 @@ internal class BankTransferDetailActivity : BaseActivity() {
             bankName = "bni",
             billingNumberState = remember { mutableStateOf("2323222222") },
             destinationBankCode = remember { mutableStateOf("123") },
-            remainingTimeState = remember { mutableStateOf("00:00") }
+            remainingTimeState = remember { mutableStateOf("00:00") },
+            viewModel = null,
+            errorState = remember { mutableStateOf(null) }
         )
     }
 
