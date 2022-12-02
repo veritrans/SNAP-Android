@@ -331,13 +331,15 @@ class DirectDebitActivity : BaseActivity() {
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                     )
                     if (isError) {
-                        val text = stringResource(id = R.string.klik_bca_validation_error)
                         Text(
-                            text = text,
+                            text = stringResource(id = R.string.klik_bca_validation_error),
                             style = SnapTypography.STYLES.snapTextSmallRegular,
                             color = SnapColors.getARGBColor(supportDangerDefault)
                         )
-                        viewModel.trackSnapNotice(paymentType, text)
+                        viewModel.trackSnapNotice(
+                            paymentType = paymentType,
+                            statusText = getStringResourceInEnglish(R.string.klik_bca_validation_error)
+                        )
                     }
                 }
             }
