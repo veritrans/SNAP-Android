@@ -143,8 +143,8 @@ class DirectDebitActivity : BaseActivity() {
 
         transactionResult?.let { result ->
             result.redirectUrl?.let { url ->
-                if (result.statusCode == STATUS_CODE_201 && result.chargeType == PaymentType.KLIK_BCA) {
-                    openWebLink(url, STATUS_PENDING, result.transactionId)
+                if (result.chargeType == PaymentType.KLIK_BCA) {
+                    openWebLink(url, result.transactionStatus, result.transactionId)
                 }
             }
         }
