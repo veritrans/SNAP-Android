@@ -580,7 +580,8 @@ class PaymentOptionActivity : BaseActivity() {
                             orderId = orderId,
                             customerInfo = customerInfo,
                             itemInfo = itemInfo,
-                            stepNumber = NEXT_STEP_NUMBER
+                            stepNumber = NEXT_STEP_NUMBER,
+                            result = transactionResult,
                         )
                     )
                 }
