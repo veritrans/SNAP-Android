@@ -33,13 +33,14 @@ internal class BankTransferDetailViewModel @Inject constructor(
     private val _bankCodeLiveData = MutableLiveData<String>()
     private val _transactionResult = MutableLiveData<TransactionResult>()
     private val _errorLiveData = MutableLiveData<SnapError>()
+    private val _isBankTransferChargeErrorLiveData = MutableLiveData<Boolean>()
     val vaNumberLiveData: LiveData<String> = _vaNumberLiveData
     val companyCodeLiveData: LiveData<String> = _companyCodeLiveData
     val billingNumberLiveData: LiveData<String> = _billingNumberLiveData
     val bankCodeLiveData: LiveData<String> = _bankCodeLiveData
     val transactionResult: LiveData<TransactionResult> = _transactionResult
     val errorLiveData: LiveData<SnapError> = _errorLiveData
-
+    val isBankTransferChargeErrorLiveData: LiveData<Boolean> = _isBankTransferChargeErrorLiveData
     var expiredTime = datetimeUtil.plusDateBy(datetimeUtil.getCurrentMillis(), 1)
 
     fun chargeBankTransfer(
@@ -97,6 +98,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
                             paymentType = paymentType
                         )
                     }
+                    _isBankTransferChargeErrorLiveData.value = false
                 }
 
                 override fun onError(error: SnapError) {
@@ -106,6 +108,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
                         errorMessage = error.message ?: error.javaClass.name
                     )
                     _errorLiveData.value = error
+                    _isBankTransferChargeErrorLiveData.value = true
                 }
             }
         )
@@ -175,6 +178,13 @@ internal class BankTransferDetailViewModel @Inject constructor(
             pageName = getPageName(paymentType),
             paymentMethodName = paymentType,
             stepNumber = stepNumber.toString()
+        )
+    }
+
+    fun trackReloadClicked(paymentType: String) {
+        eventAnalytics?.trackSnapPaymentNumberButtonRetried(
+            paymentMethodName = paymentType,
+            pageName = getPageName(paymentType)
         )
     }
 

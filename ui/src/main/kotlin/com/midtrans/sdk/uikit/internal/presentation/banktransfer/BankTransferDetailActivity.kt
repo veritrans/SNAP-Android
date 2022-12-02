@@ -28,7 +28,6 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
-import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
@@ -92,13 +91,13 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 orderId = orderId,
                 customerInfo = customerInfo,
                 itemInfo = itemInfo,
-                vaNumberState = viewModel.vaNumberLiveData.observeAsState(initial = ""),
-                billingNumberState = viewModel.billingNumberLiveData.observeAsState(initial = ""),
+                vaNumberState = viewModel.vaNumberLiveData.observeAsState(initial = null),
+                billingNumberState = viewModel.billingNumberLiveData.observeAsState(initial = null),
                 bankName = paymentType,
-                companyCodeState = viewModel.companyCodeLiveData.observeAsState(initial = ""),
+                companyCodeState = viewModel.companyCodeLiveData.observeAsState(initial = null),
                 destinationBankCode = viewModel.bankCodeLiveData.observeAsState(),
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
-                errorState = viewModel.errorLiveData.observeAsState(initial = null),
+                errorState = viewModel.isBankTransferChargeErrorLiveData.observeAsState(initial = false),
                 viewModel = viewModel
             )
         }
@@ -127,15 +126,17 @@ internal class BankTransferDetailActivity : BaseActivity() {
         //TODO: handle error ui/dialog
         viewModel.errorLiveData.observe(this) {
             val data = Intent()
-            data.putExtra(
-                UiKitConstants.KEY_ERROR_NAME,
-                it::class.java.simpleName
-            )
-            data.putExtra(
-                UiKitConstants.KEY_ERROR_MESSAGE,
-                it.message
-            )
-            setResult(Activity.RESULT_CANCELED, data)
+            it?.let {
+                data.putExtra(
+                    UiKitConstants.KEY_ERROR_NAME,
+                    it::class.java.simpleName
+                )
+                data.putExtra(
+                    UiKitConstants.KEY_ERROR_MESSAGE,
+                    it.message
+                )
+                setResult(Activity.RESULT_CANCELED, data)
+            }
         }
     }
 
@@ -153,12 +154,12 @@ internal class BankTransferDetailActivity : BaseActivity() {
         bankName: String,
         customerInfo: CustomerInfo?,
         itemInfo: ItemInfo?,
-        vaNumberState: State<String>,
-        billingNumberState: State<String>,
-        companyCodeState: State<String>,
+        vaNumberState: State<String?>,
+        billingNumberState: State<String?>,
+        companyCodeState: State<String?>,
         destinationBankCode: State<String?>,
         remainingTimeState: State<String>,
-        errorState: State<SnapError?>,
+        errorState: State<Boolean>,
         viewModel: BankTransferDetailViewModel?
     ) {
         val billingNumber by remember { billingNumberState }
@@ -220,7 +221,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                             billingNumber = billingNumber,
                             destinationBankCode = destinationBankCode.value,
                             viewModel = viewModel,
-                            isChargeResponseError = errorState.value != null
+                            isChargeResponseError = errorState.value
                         )[bankName]?.invoke()
 
                         var isExpanded by remember { mutableStateOf(false) }
@@ -282,11 +283,11 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 }
 
                 SnapButton(
-                    text = stringResource(id = R.string.i_have_already_paid),
+                    text = stringResource(id = if (errorState.value) R.string.choose_another_payment_method else R.string.i_have_already_paid),
                     modifier = Modifier.fillMaxWidth(1f)
                 ) {
                     viewModel?.trackSnapButtonClicked(
-                        ctaName = getStringResourceInEnglish(R.string.i_have_already_paid),
+                        ctaName = getStringResourceInEnglish(if (errorState.value) R.string.choose_another_payment_method else R.string.i_have_already_paid),
                         paymentType = paymentType
                     )
                     onBackPressed()
@@ -319,6 +320,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                         viewModel?.trackAccountNumberCopied(paymentType)
                     },
                     onReloadClicked = {
+                        viewModel?.trackReloadClicked(paymentType)
                         chargeBankTransfer()
                     }
                 )
@@ -454,7 +456,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
             destinationBankCode = remember { mutableStateOf("123") },
             remainingTimeState = remember { mutableStateOf("00:00") },
             viewModel = null,
-            errorState = remember { mutableStateOf(null) }
+            errorState = remember { mutableStateOf(false) }
         )
     }
 
