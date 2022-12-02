@@ -87,6 +87,13 @@ internal class WalletViewModel @Inject constructor(
         )
     }
 
+    fun getUsedToken(result: TransactionResponse) {
+        result.qrCodeUrl?.let { _qrCodeUrlLiveData.value = it }
+        result.qrisUrl?.let { _qrCodeUrlLiveData.value = it }
+        result.deeplinkUrl?.let { _deepLinkUrlLiveData.value = it }
+        result.gopayExpirationRaw?.let { expiredTime = parseTime(it) }
+    }
+
     private fun parseTime(dateString: String): Long {
         val date = datetimeUtil.getDate(
             date = dateString,
