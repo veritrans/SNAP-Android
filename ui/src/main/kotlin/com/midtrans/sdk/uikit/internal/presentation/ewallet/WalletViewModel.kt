@@ -56,6 +56,8 @@ internal class WalletViewModel @Inject constructor(
                         qrisUrl?.let { _qrCodeUrlLiveData.value = it }
                         deeplinkUrl?.let { _deepLinkUrlLiveData.value = it }
                         gopayExpirationRaw?.let { expiredTime = parseTime(it) }
+                        shopeepayExpirationRaw?.let { expiredTime = parseTime(it) }
+                        qrisExpirationRaw?.let { expiredTime = parseTime(it) }
                         _chargeResultLiveData.value = TransactionResult(
                             status = transactionStatus.orEmpty(),
                             transactionId = transactionId.orEmpty(),
@@ -92,6 +94,8 @@ internal class WalletViewModel @Inject constructor(
         result.qrisUrl?.let { _qrCodeUrlLiveData.value = it }
         result.deeplinkUrl?.let { _deepLinkUrlLiveData.value = it }
         result.gopayExpirationRaw?.let { expiredTime = parseTime(it) }
+        result.shopeepayExpirationRaw?.let { expiredTime = parseTime(it) }
+        result.qrisUrl?.let { expiredTime = parseTime(it) }
     }
 
     private fun parseTime(dateString: String): Long {

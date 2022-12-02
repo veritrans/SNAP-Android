@@ -54,6 +54,8 @@ data class TransactionResponse(
     var alfamartExpireTime: String? = null,
     var alfamartExpirationRaw: String? = null,
     var gopayExpirationRaw: String? = null,
+    var shopeepayExpirationRaw: String? = null,
+    var qrisExpirationRaw: String? = null,
     var indomaretExpireTime: String? = null,
     var indomaretExpirationRaw: String? = null,
     var redirectUrl: String? = null,
