@@ -32,6 +32,7 @@ import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import java.net.URI
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -72,6 +73,10 @@ class PayLaterActivity : BaseActivity() {
         intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
     }
 
+    private val transactionResult: TransactionResponse? by lazy {
+        intent.getParcelableExtra(EXTRA_TRANSACTION_RESULT) as? TransactionResponse
+    }
+
     private val viewModel: PayLaterViewModel by lazy {
         ViewModelProvider(this, vmFactory).get(PayLaterViewModel::class.java)
     }
@@ -81,6 +86,11 @@ class PayLaterActivity : BaseActivity() {
 
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.trackPageViewed(paymentType, currentStepNumber)
+
+        transactionResult?.let { result ->
+            viewModel.getUsedToken(result)
+        }
+
         setContent {
             PayLaterContent(
                 paymentType = paymentType,
@@ -110,108 +120,130 @@ class PayLaterActivity : BaseActivity() {
         val url = response?.redirectUrl.orEmpty()
         val remainingTime by remember { remainingTimeState }
 
-        if (url.isEmpty()) {
-            Column(
-                modifier = Modifier
-                    .background(SnapColors.getARGBColor(SnapColors.overlayWhite))
-                    .fillMaxHeight(1f)
-            ) {
-                SnapAppBar(
-                    title = title,
-                    iconResId = R.drawable.ic_arrow_left
-                ) {
-                    onBackPressed()
-                }
-                SnapOverlayExpandingBox(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(all = 16.dp),
-                    isExpanded = isCustomerDetailExpanded,
-                    mainContent = {
-                        SnapTotal(
-                            amount = amount,
-                            orderId = orderId,
-                            canExpand = customerInfo != null || itemInfo != null,
-                            remainingTime = remainingTime
-                        ) {
-                            isCustomerDetailExpanded = it
-                        }
-                    },
-                    expandingContent = {
-                        viewModel.trackOrderDetailsViewed(paymentType)
-                        SnapPaymentOrderDetails(
-                            customerInfo = customerInfo,
-                            itemInfo = itemInfo
-                        )
-                    },
-                    followingContent = {
-                        Column(
-                            modifier = Modifier
-                                .verticalScroll(state = rememberScrollState())
-                                .padding(top = 16.dp)
-                                .fillMaxWidth()
-
-                        ) {
-                            SnapText(stringResource(getInstructionId(paymentType = paymentType)))
-                            SnapInstructionButton(
-                                modifier = Modifier.padding(top = 28.dp),
-                                isExpanded = isInstructionExpanded,
-                                iconResId = R.drawable.ic_help,
-                                title = stringResource(R.string.payment_instruction_how_to_pay_title),
-                                onExpandClick = {
-                                    viewModel.trackHowToPayClicked(paymentType)
-                                    isInstructionExpanded = !isInstructionExpanded
-                                },
-                                expandingContent = {
-                                    Column {
-                                        AnimatedVisibility(visible = isInstructionExpanded) {
-                                            SnapNumberedList(
-                                                list = stringArrayResource(getHowToPayId(paymentType = paymentType)).toList()
-                                            )
-                                        }
-                                    }
-                                }
-                            )
-                        }
-                    }
-                )
-
-                SnapButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 40.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
-                    enabled = true,
-                    text = stringResource(getCta(paymentType)),
-                    style = SnapButton.Style.PRIMARY
-                ) {
-                    viewModel.trackSnapButtonClicked(
-                        ctaName = getStringResourceInEnglish(getCta(paymentType)),
-                        paymentType = paymentType
-                    )
-                    viewModel.payPayLater(
-                        snapToken = snapToken,
-                        paymentType = paymentType
-                    )
-                }
-            }
-        } else {
-            val status = response?.transactionStatus
-            val transactionId = response?.transactionId
-
-            viewModel.trackOpenWebView(paymentType)
+        transactionResult?.let { result ->
             SnapWebView(
                 title = title,
                 paymentType = paymentType,
-                url = url,
+                url = result.redirectUrl.toString(),
                 onPageStarted = {
                     finishPayLater(
-                        status = status,
-                        transactionId = transactionId
+                        status = result.transactionStatus,
+                        transactionId = getTransactionId(result)
                     )
                 },
                 onPageFinished = { }
             )
+        } ?: run {
+            if (url.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .background(SnapColors.getARGBColor(SnapColors.overlayWhite))
+                        .fillMaxHeight(1f)
+                ) {
+                    SnapAppBar(
+                        title = title,
+                        iconResId = R.drawable.ic_arrow_left
+                    ) {
+                        onBackPressed()
+                    }
+                    SnapOverlayExpandingBox(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(all = 16.dp),
+                        isExpanded = isCustomerDetailExpanded,
+                        mainContent = {
+                            SnapTotal(
+                                amount = amount,
+                                orderId = orderId,
+                                canExpand = customerInfo != null || itemInfo != null,
+                                remainingTime = remainingTime
+                            ) {
+                                isCustomerDetailExpanded = it
+                            }
+                        },
+                        expandingContent = {
+                            viewModel.trackOrderDetailsViewed(paymentType)
+                            SnapPaymentOrderDetails(
+                                customerInfo = customerInfo,
+                                itemInfo = itemInfo
+                            )
+                        },
+                        followingContent = {
+                            Column(
+                                modifier = Modifier
+                                    .verticalScroll(state = rememberScrollState())
+                                    .padding(top = 16.dp)
+                                    .fillMaxWidth()
+
+                            ) {
+                                SnapText(stringResource(getInstructionId(paymentType = paymentType)))
+                                SnapInstructionButton(
+                                    modifier = Modifier.padding(top = 28.dp),
+                                    isExpanded = isInstructionExpanded,
+                                    iconResId = R.drawable.ic_help,
+                                    title = stringResource(R.string.payment_instruction_how_to_pay_title),
+                                    onExpandClick = {
+                                        viewModel.trackHowToPayClicked(paymentType)
+                                        isInstructionExpanded = !isInstructionExpanded
+                                    },
+                                    expandingContent = {
+                                        Column {
+                                            AnimatedVisibility(visible = isInstructionExpanded) {
+                                                SnapNumberedList(
+                                                    list = stringArrayResource(getHowToPayId(paymentType = paymentType)).toList()
+                                                )
+                                            }
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    )
+
+                    SnapButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 40.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
+                        enabled = true,
+                        text = stringResource(getCta(paymentType)),
+                        style = SnapButton.Style.PRIMARY
+                    ) {
+                        viewModel.trackSnapButtonClicked(
+                            ctaName = getStringResourceInEnglish(getCta(paymentType)),
+                            paymentType = paymentType
+                        )
+                        viewModel.payPayLater(
+                            snapToken = snapToken,
+                            paymentType = paymentType
+                        )
+                    }
+                }
+            } else {
+                val status = response?.transactionStatus
+                val transactionId = response?.transactionId
+
+                viewModel.trackOpenWebView(paymentType)
+                SnapWebView(
+                    title = title,
+                    paymentType = paymentType,
+                    url = url,
+                    onPageStarted = {
+                        finishPayLater(
+                            status = status,
+                            transactionId = transactionId
+                        )
+                    },
+                    onPageFinished = { }
+                )
+            }
         }
+    }
+
+    private fun getTransactionId(transactionResult: TransactionResponse): String {
+        val uri = URI(transactionResult.redirectUrl)
+        val segments = uri.path.split("/")
+
+        return segments[segments.size - 1]
     }
 
     private fun finishPayLater(
@@ -276,6 +308,7 @@ class PayLaterActivity : BaseActivity() {
         private const val EXTRA_CUSTOMER_INFO = "payLater.extra.customer_info"
         private const val EXTRA_ITEM_INFO = "payLater.extra.item_info"
         private const val EXTRA_STEP_NUMBER = "payLater.extra.step_number"
+        private const val EXTRA_TRANSACTION_RESULT = "payLater.extra.transaction_result"
 
         fun getIntent(
             activityContext: Context,
@@ -285,7 +318,8 @@ class PayLaterActivity : BaseActivity() {
             orderId: String,
             customerInfo: CustomerInfo?,
             itemInfo: ItemInfo?,
-            stepNumber: Int
+            stepNumber: Int,
+            result: TransactionResponse?
         ): Intent {
             return Intent(activityContext, PayLaterActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -295,6 +329,7 @@ class PayLaterActivity : BaseActivity() {
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
+                putExtra(EXTRA_TRANSACTION_RESULT, result)
             }
         }
     }
