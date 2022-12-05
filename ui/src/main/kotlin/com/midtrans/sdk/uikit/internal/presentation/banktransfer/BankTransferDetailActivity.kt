@@ -283,11 +283,11 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 }
 
                 SnapButton(
-                    text = stringResource(id = if (errorState.value) R.string.choose_another_payment_method else R.string.i_have_already_paid),
+                    text = stringResource(id = R.string.i_have_already_paid),
                     modifier = Modifier.fillMaxWidth(1f)
                 ) {
                     viewModel?.trackSnapButtonClicked(
-                        ctaName = getStringResourceInEnglish(if (errorState.value) R.string.choose_another_payment_method else R.string.i_have_already_paid),
+                        ctaName = getStringResourceInEnglish(R.string.i_have_already_paid),
                         paymentType = paymentType
                     )
                     onBackPressed()

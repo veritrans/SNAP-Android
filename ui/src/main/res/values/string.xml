@@ -619,5 +619,4 @@
 
     <string name="error_failed_load">Failed to load</string>
     <string name="retry_to_load">Reload</string>
-    <string name="choose_another_payment_method">Use other available payment method</string>
 </resources>

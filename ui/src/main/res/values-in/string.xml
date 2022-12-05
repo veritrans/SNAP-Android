@@ -617,5 +617,4 @@
 
     <string name="error_failed_load">Gagal memuat</string>
     <string name="retry_to_load">Coba lagi</string>
-    <string name="choose_another_payment_method">pilih metode pembayaran lain</string>
  </resources>
