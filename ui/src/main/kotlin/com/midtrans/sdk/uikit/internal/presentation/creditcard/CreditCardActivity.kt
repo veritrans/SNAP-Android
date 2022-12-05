@@ -786,7 +786,7 @@ internal class CreditCardActivity : BaseActivity() {
             onCvvTextFieldFocusedChange = { state.isCvvTextFieldFocused = it },
             onSavedCardCheckedChange = { state.isSavedCardChecked = it },
             onPointBankCheckedChange = { state.isPointBankChecked = it },
-            onInputError = { viewModel.trackSnapNotice(it) }
+            onInputError = { viewModel.trackSnapNotice(getStringResourceInEnglish(it)) }
         )
     }
 
@@ -836,13 +836,12 @@ internal class CreditCardActivity : BaseActivity() {
             && state.customerEmail.text.isNotBlank()
             && !SnapCreditCardUtil.isValidEmail(state.customerEmail.text)
         ) {
-            val errorText = stringResource(id = R.string.cc_dc_main_screen_email_invalid)
             Text(
-                text = errorText,
+                text = stringResource(id = R.string.cc_dc_main_screen_email_invalid),
                 style = SnapTypography.STYLES.snapTextSmallRegular,
                 color = SnapColors.getARGBColor(SnapColors.supportDangerDefault)
             )
-            viewModel.trackSnapNotice(errorText)
+            viewModel.trackSnapNotice(getStringResourceInEnglish(R.string.cc_dc_main_screen_email_invalid))
         }
         Box(modifier = Modifier.padding(8.dp))
     }
@@ -883,7 +882,7 @@ internal class CreditCardActivity : BaseActivity() {
             },
             onSavedCardCheckedChange = { state.isSavedCardChecked = it },
             onPointBankCheckedChange = onSavedCardPointBankCheckedChange,
-            onInputError = { viewModel?.trackSnapNotice(it) }
+            onInputError = { viewModel?.trackSnapNotice(getStringResourceInEnglish(it)) }
         )
     }
 
