@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 //TODO will add UT and SnapCore manager after DI is setup
 class LoadingPaymentViewModel @Inject constructor(
-    private val snapCore: SnapCore
+    snapCore: SnapCore
 ): ViewModel() {
     private val _paymentOptionLiveData = MutableLiveData<PaymentOption>()
     private val _error = MutableLiveData<SnapError>()
@@ -77,8 +77,8 @@ class LoadingPaymentViewModel @Inject constructor(
                     eventAnalytics.trackSnapError(
                         pageName = PageName.PAYMENT_LIST_PAGE,
                         paymentMethodName = "not selected",
-                        errorMessage = error.message ?: error.javaClass.name,
-                        statusCode = null
+                        errorMessage = error.getErrorInformation(),
+                        statusCode = error.getHttpStatusCode()?.toString()
                     )
                 }
             })

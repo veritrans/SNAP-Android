@@ -48,14 +48,20 @@ internal class UobPaymentViewModel @Inject constructor(
                         pageName = PageName.UOB_PAGE,
                         paymentMethodName = PaymentType.UOB_EZPAY
                     )
-                    trackUobError(
-                        statusCode = result.statusCode.orEmpty(),
-                        errorMessage = result.statusMessage.orEmpty()
+                    trackErrorStatusCode(
+                        pageName = PageName.UOB_PAGE,
+                        paymentMethodName = PaymentType.UOB_EZPAY,
+                        errorMessage = result.statusMessage.orEmpty(),
+                        statusCode = result.statusCode.orEmpty()
                     )
                 }
 
                 override fun onError(error: SnapError) {
-                    trackUobError(error.message ?: error.javaClass.name)
+                    trackSnapError(
+                        pageName = PageName.UOB_PAGE,
+                        paymentMethodName = PaymentType.UOB_EZPAY,
+                        error = error
+                    )
                 }
             }
         )
@@ -67,14 +73,20 @@ internal class UobPaymentViewModel @Inject constructor(
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
                     transactionResult.value = Pair(getTransactionStatus(result), result.transactionId.orEmpty())
-                    trackUobError(
-                        statusCode = result.statusCode.orEmpty(),
-                        errorMessage = result.statusMessage.orEmpty()
+                    trackErrorStatusCode(
+                        pageName = PageName.UOB_PAGE,
+                        paymentMethodName = PaymentType.UOB_EZPAY,
+                        errorMessage = result.statusMessage.orEmpty(),
+                        statusCode = result.statusCode.orEmpty()
                     )
                 }
 
                 override fun onError(error: SnapError) {
-                    trackUobError(error.message ?: error.javaClass.name)
+                    trackSnapError(
+                        pageName = PageName.UOB_PAGE,
+                        paymentMethodName = PaymentType.UOB_EZPAY,
+                        error = error
+                    )
                 }
             }
         )
@@ -127,26 +139,6 @@ internal class UobPaymentViewModel @Inject constructor(
             paymentMethodName = PaymentType.UOB_EZPAY,
             stepNumber = stepNumber.toString()
         )
-    }
-
-    private fun trackUobError(
-        errorMessage: String,
-        statusCode: String? = null
-    ) {
-        if (statusCode != null) {
-            trackErrorStatusCode(
-                pageName = PageName.UOB_PAGE,
-                paymentMethodName = PaymentType.UOB_EZPAY,
-                errorMessage = errorMessage,
-                statusCode = statusCode
-            )
-        } else {
-            trackSnapError(
-                pageName = PageName.UOB_PAGE,
-                paymentMethodName = PaymentType.UOB_EZPAY,
-                errorMessage = errorMessage
-            )
-        }
     }
 
     fun getExpiredHour(remainingTime: Long) = dateTimeUtil.getExpiredHour(remainingTime)
