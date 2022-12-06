@@ -28,7 +28,6 @@ import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import java.net.URI
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
