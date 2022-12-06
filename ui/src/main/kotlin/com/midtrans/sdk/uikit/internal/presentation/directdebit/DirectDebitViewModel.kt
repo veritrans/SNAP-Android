@@ -29,6 +29,28 @@ internal class DirectDebitViewModel @Inject constructor(
 
     fun getTransactionResponse(): LiveData<TransactionResponse> = transactionResponse
     fun getException(): LiveData<SnapError> = exception //TODO what is expected in direct debit activity
+    private val _transactionId = MutableLiveData<String>()
+    val transactionId: LiveData<String> = _transactionId
+
+    fun checkStatus(snapToken: String, paymentType: String) {
+        snapCore.getTransactionStatus(
+            snapToken = snapToken,
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    result.run {
+                        _transactionId.value = transactionId.orEmpty()
+                    }
+                }
+                override fun onError(error: SnapError) {
+                    trackSnapError(
+                        pageName = getPageName(paymentType),
+                        paymentMethodName = paymentType,
+                        error = error
+                    )
+                }
+            }
+        )
+    }
 
     fun payDirectDebit(
         snapToken: String,

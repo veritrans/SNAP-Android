@@ -32,8 +32,6 @@ import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
-import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_201
-import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
 import com.midtrans.sdk.uikit.internal.view.*
 import com.midtrans.sdk.uikit.internal.view.SnapColors.supportDangerDefault
 import io.reactivex.Observable
@@ -140,11 +138,15 @@ class DirectDebitActivity : BaseActivity() {
         var userId by remember { mutableStateOf("") }
         val url = response?.redirectUrl.orEmpty()
         val remainingTime by remember { remainingTimeState }
+        val transactionId = viewModel.transactionId.observeAsState()
 
         transactionResult?.let { result ->
             result.redirectUrl?.let { url ->
-                if (result.chargeType == PaymentType.KLIK_BCA) {
-                    openWebLink(url, result.transactionStatus, result.transactionId)
+                if(result.chargeType == PaymentType.KLIK_BCA) {
+                    viewModel.checkStatus(snapToken, PaymentType.KLIK_BCA)
+                    transactionId.value?.let {
+                        openWebLink(url, result.transactionStatus, it)
+                    }
                 }
             }
         }
