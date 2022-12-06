@@ -110,6 +110,7 @@ internal class WalletActivity : BaseActivity() {
                 totalAmount = totalAmount,
                 orderId = orderId,
                 customerInfo = customerInfo,
+                isChargeError = viewModel.isQrChargeErrorLiveData.observeAsState(initial = false),
                 itemInfo = itemInfo,
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
                 qrCodeUrl = viewModel.qrCodeUrlLiveData.observeAsState(initial = ""),
@@ -117,11 +118,15 @@ internal class WalletActivity : BaseActivity() {
                 isTablet = isTablet
             )
         }
+        chargeQrPayment()
+        observeLiveData(isTablet)
+    }
+
+    private fun chargeQrPayment() {
         viewModel.chargeQrPayment(
             snapToken = snapToken,
             paymentType = paymentType
         )
-        observeLiveData(isTablet)
     }
 
     private fun observeLiveData(isTablet: Boolean) {
@@ -175,6 +180,7 @@ internal class WalletActivity : BaseActivity() {
         orderId: String,
         qrCodeUrl: State<String>,
         paymentType: String,
+        isChargeError: State<Boolean>,
         customerInfo: CustomerInfo?,
         itemInfo: ItemInfo?,
         remainingTimeState: State<String>,
@@ -236,7 +242,7 @@ internal class WalletActivity : BaseActivity() {
                             .height(if (isTablet) 300.dp else 1.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        if (error) {
+                        if (error || isChargeError.value) {
                             Column(
                                 modifier = Modifier.fillMaxWidth(1f),
                                 horizontalAlignment = Alignment.CenterHorizontally
@@ -251,6 +257,9 @@ internal class WalletActivity : BaseActivity() {
                                         )
                                         viewModel.trackReloadClicked(paymentType = paymentType)
                                         error = false
+                                        if (isChargeError.value) {
+                                            chargeQrPayment()
+                                        }
                                     }
                                 )
                                 Text(
@@ -349,6 +358,7 @@ internal class WalletActivity : BaseActivity() {
                 phone = "4123123123123",
                 addressLines = listOf("jalan", "jalan", "jalan")
             ),
+            isChargeError = remember { mutableStateOf(false) },
             itemInfo = null,
             paymentType = PaymentType.GOPAY,
             remainingTimeState = remember { mutableStateOf("00:00") },

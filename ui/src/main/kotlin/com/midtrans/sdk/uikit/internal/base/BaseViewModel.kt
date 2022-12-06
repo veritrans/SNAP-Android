@@ -225,9 +225,7 @@ internal open class BaseViewModel : ViewModel() {
         errorMessage: String,
         statusCode: String
     ) {
-        if (statusCode != UiKitConstants.STATUS_CODE_200
-            && statusCode != UiKitConstants.STATUS_CODE_201
-        ) {
+        if (!isChargeResponseSuccess(statusCode)) {
             eventAnalytics?.trackSnapError(
                 pageName = pageName,
                 paymentMethodName = paymentMethodName,
@@ -236,6 +234,9 @@ internal open class BaseViewModel : ViewModel() {
             )
         }
     }
+
+    protected fun isChargeResponseSuccess(statusCode: String) =
+        statusCode == UiKitConstants.STATUS_CODE_200 || statusCode == UiKitConstants.STATUS_CODE_201
 
     protected fun trackSnapNotice(
         pageName: String,
