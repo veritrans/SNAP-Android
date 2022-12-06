@@ -39,7 +39,7 @@ fun SnapInstruction(
             .fillMaxWidth()
 
     ) {
-        SnapText(stringResource(getInstructionId(paymentType = paymentType)))
+        getInstructionId(paymentType = paymentType)?.let { SnapText(stringResource(it)) }
         SnapInstructionButton(
             modifier = Modifier.padding(top = 28.dp),
             isExpanded = isInstructionExpanded,
@@ -51,9 +51,9 @@ fun SnapInstruction(
             expandingContent = {
                 Column {
                     AnimatedVisibility(visible = isInstructionExpanded) {
-                        SnapNumberedList(
-                            list = stringArrayResource(getHowToPayId(paymentType = paymentType)).toList()
-                        )
+                        getHowToPayId(paymentType = paymentType)?.let {
+                            SnapNumberedList(list = stringArrayResource(it).toList())
+                        }
                     }
                 }
             }
@@ -118,17 +118,17 @@ fun SnapInstructionButton(
     }
 }
 
-private fun getHowToPayId(paymentType: String): Int {
+private fun getHowToPayId(paymentType: String): Int? {
     return when (paymentType) {
         PaymentType.AKULAKU -> R.array.akulaku_how_to_pay
-        else -> 0
+        else -> null
     }
 }
 
-private fun getInstructionId(paymentType: String): Int {
+private fun getInstructionId(paymentType: String): Int? {
     return when (paymentType) {
         PaymentType.AKULAKU -> R.string.akulaku_instruction
-        else -> 0
+        else -> null
     }
 }
 
