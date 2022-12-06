@@ -32,6 +32,8 @@ import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_201
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
 import com.midtrans.sdk.uikit.internal.view.*
 import com.midtrans.sdk.uikit.internal.view.SnapColors.supportDangerDefault
 import io.reactivex.Observable
@@ -74,6 +76,10 @@ class DirectDebitActivity : BaseActivity() {
 
     private val currentStepNumber: Int by lazy {
         intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
+    }
+
+    private val transactionResult: TransactionResponse? by lazy {
+        intent.getParcelableExtra(EXTRA_TRANSACTION_RESULT) as? TransactionResponse
     }
 
     private val viewModel: DirectDebitViewModel by lazy {
@@ -134,6 +140,14 @@ class DirectDebitActivity : BaseActivity() {
         var userId by remember { mutableStateOf("") }
         val url = response?.redirectUrl.orEmpty()
         val remainingTime by remember { remainingTimeState }
+
+        transactionResult?.let { result ->
+            result.redirectUrl?.let { url ->
+                if (result.chargeType == PaymentType.KLIK_BCA) {
+                    openWebLink(url, result.transactionStatus, result.transactionId)
+                }
+            }
+        }
 
         if (url.isEmpty()) {
             Column(
@@ -405,6 +419,7 @@ class DirectDebitActivity : BaseActivity() {
         private const val EXTRA_CUSTOMER_INFO = "directDebit.extra.customer_info"
         private const val EXTRA_ITEM_INFO = "directDebit.extra.item_info"
         private const val EXTRA_STEP_NUMBER = "directDebit.extra.step_number"
+        private const val EXTRA_TRANSACTION_RESULT = "directDebit.extra.transaction_result"
 
         fun getIntent(
             activityContext: Context,
@@ -414,7 +429,8 @@ class DirectDebitActivity : BaseActivity() {
             orderId: String,
             customerInfo: CustomerInfo?,
             itemInfo: ItemInfo?,
-            stepNumber: Int
+            stepNumber: Int,
+            result: TransactionResponse?
         ): Intent {
             return Intent(activityContext, DirectDebitActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -424,6 +440,7 @@ class DirectDebitActivity : BaseActivity() {
                 putExtra(EXTRA_CUSTOMER_INFO, customerInfo)
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
+                putExtra(EXTRA_TRANSACTION_RESULT, result)
             }
         }
     }

@@ -31,6 +31,7 @@ import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_201
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -103,6 +104,15 @@ internal class WalletActivity : BaseActivity() {
                     isTabletDevice()
                 }
             }
+            viewModel.getUsedToken(result)
+            if (result.statusCode == STATUS_CODE_201) {
+                if (!isTablet) {
+                    openDeepLink(result.deeplinkUrl)
+                }
+            }
+        } ?: run {
+            chargeQrPayment()
+            observeLiveData(isTablet)
         }
 
         setContent {
@@ -118,8 +128,6 @@ internal class WalletActivity : BaseActivity() {
                 isTablet = isTablet
             )
         }
-        chargeQrPayment()
-        observeLiveData(isTablet)
     }
 
     private fun chargeQrPayment() {
@@ -142,8 +150,8 @@ internal class WalletActivity : BaseActivity() {
         }
     }
 
-    private fun openDeepLink() {
-        deepLinkUrl?.let {
+    private fun openDeepLink(url: String?) {
+        url?.let {
             viewModel.trackOpenDeeplink(paymentType)
             val intent = DeepLinkActivity.getIntent(
                 activityContext = this,
@@ -339,7 +347,7 @@ internal class WalletActivity : BaseActivity() {
                     paymentType = paymentType
                 )
                 if (!isTablet) {
-                    openDeepLink()
+                    openDeepLink(deepLinkUrl)
                 } else {
                     onBackPressed()
                 }

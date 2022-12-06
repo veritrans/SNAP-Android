@@ -69,6 +69,10 @@ internal class PayLaterViewModel @Inject constructor(
         )
     }
 
+    fun getUsedToken(result: TransactionResponse) {
+        _transactionResponseLiveData.value = result
+    }
+
     fun trackSnapButtonClicked(
         ctaName: String,
         paymentType: String

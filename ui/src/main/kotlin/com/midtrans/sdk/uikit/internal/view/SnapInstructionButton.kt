@@ -5,6 +5,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -19,6 +21,45 @@ import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.view.SnapColors.link
 import androidx.compose.runtime.*
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
+import com.midtrans.sdk.corekit.api.model.PaymentType
+
+
+@Composable
+fun SnapInstruction(
+    paymentType: String,
+    isInstructionExpanded: Boolean,
+    onExpandClick: (() -> Unit)
+) {
+    Column(
+        modifier = Modifier
+            .verticalScroll(state = rememberScrollState())
+            .padding(top = 16.dp)
+            .fillMaxWidth()
+
+    ) {
+        getInstructionId(paymentType = paymentType)?.let { SnapText(stringResource(it)) }
+        SnapInstructionButton(
+            modifier = Modifier.padding(top = 28.dp),
+            isExpanded = isInstructionExpanded,
+            iconResId = R.drawable.ic_help,
+            title = stringResource(R.string.payment_instruction_how_to_pay_title),
+            onExpandClick = {
+                onExpandClick.invoke()
+            },
+            expandingContent = {
+                Column {
+                    AnimatedVisibility(visible = isInstructionExpanded) {
+                        getHowToPayId(paymentType = paymentType)?.let {
+                            SnapNumberedList(list = stringArrayResource(it).toList())
+                        }
+                    }
+                }
+            }
+        )
+    }
+}
 
 @Composable
 fun SnapInstructionButton(
@@ -74,6 +115,20 @@ fun SnapInstructionButton(
         ) {
             expandingContent?.invoke()
         }
+    }
+}
+
+private fun getHowToPayId(paymentType: String): Int? {
+    return when (paymentType) {
+        PaymentType.AKULAKU -> R.array.akulaku_how_to_pay
+        else -> null
+    }
+}
+
+private fun getInstructionId(paymentType: String): Int? {
+    return when (paymentType) {
+        PaymentType.AKULAKU -> R.string.akulaku_instruction
+        else -> null
     }
 }
 
