@@ -111,10 +111,7 @@ internal class WalletActivity : BaseActivity() {
                 }
             }
         } ?: run {
-            viewModel.chargeQrPayment(
-                snapToken = snapToken,
-                paymentType = paymentType
-            )
+            chargeQrPayment()
             observeLiveData(isTablet)
         }
 
@@ -131,8 +128,6 @@ internal class WalletActivity : BaseActivity() {
                 isTablet = isTablet
             )
         }
-        chargeQrPayment()
-        observeLiveData(isTablet)
     }
 
     private fun chargeQrPayment() {
