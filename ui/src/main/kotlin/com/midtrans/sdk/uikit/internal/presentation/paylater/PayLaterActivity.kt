@@ -115,8 +115,10 @@ class PayLaterActivity : BaseActivity() {
         val title = stringResource(getTitleId(paymentType = paymentType))
         val url = response?.redirectUrl.orEmpty()
         val remainingTime by remember { remainingTimeState }
+        val transactionId = viewModel.transactionId.observeAsState()
 
         transactionResult?.let { result ->
+            viewModel.checkStatus(snapToken)
             SnapWebView(
                 title = title,
                 paymentType = paymentType,
@@ -124,7 +126,7 @@ class PayLaterActivity : BaseActivity() {
                 onPageStarted = {
                     finishPayLater(
                         status = result.transactionStatus,
-                        transactionId = getTransactionId(result)
+                        transactionId = transactionId.value
                     )
                 },
                 onPageFinished = { }
@@ -213,13 +215,6 @@ class PayLaterActivity : BaseActivity() {
                 )
             }
         }
-    }
-
-    private fun getTransactionId(transactionResult: TransactionResponse): String {
-        val uri = URI(transactionResult.redirectUrl)
-        val segments = uri.path.split("/")
-
-        return segments[segments.size - 1]
     }
 
     private fun finishPayLater(

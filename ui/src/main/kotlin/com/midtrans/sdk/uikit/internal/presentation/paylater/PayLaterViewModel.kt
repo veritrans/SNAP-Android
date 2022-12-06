@@ -26,6 +26,28 @@ internal class PayLaterViewModel @Inject constructor(
     private var expiredTime = dateTimeUtil.plusDateBy(dateTimeUtil.getCurrentMillis(), 1) //TODO later get value from request snap if set
 
     val transactionResponseLiveData: LiveData<TransactionResponse> = _transactionResponseLiveData
+    private val _transactionId = MutableLiveData<String>()
+    val transactionId: LiveData<String> = _transactionId
+
+    fun checkStatus(snapToken: String) {
+        snapCore.getTransactionStatus(
+            snapToken = snapToken,
+            callback = object : Callback<TransactionResponse> {
+                override fun onSuccess(result: TransactionResponse) {
+                    result.run {
+                        _transactionId.value = transactionId.orEmpty()
+                    }
+                }
+                override fun onError(error: SnapError) {
+                    trackSnapError(
+                        pageName = PageName.AKULAKU_PAGE,
+                        paymentMethodName = PaymentType.AKULAKU,
+                        error = error
+                    )
+                }
+            }
+        )
+    }
 
     fun payPayLater(
         snapToken: String,
