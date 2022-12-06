@@ -4,19 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rxjava2.subscribeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
@@ -98,7 +94,7 @@ class PayLaterActivity : BaseActivity() {
                 orderId = orderId,
                 customerInfo = customerInfo,
                 itemInfo = itemInfo,
-                response =  viewModel.transactionResponseLiveData.observeAsState().value,
+                response = viewModel.transactionResponseLiveData.observeAsState().value,
                 remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
             )
         }
@@ -169,34 +165,14 @@ class PayLaterActivity : BaseActivity() {
                             )
                         },
                         followingContent = {
-                            Column(
-                                modifier = Modifier
-                                    .verticalScroll(state = rememberScrollState())
-                                    .padding(top = 16.dp)
-                                    .fillMaxWidth()
-
-                            ) {
-                                SnapText(stringResource(getInstructionId(paymentType = paymentType)))
-                                SnapInstructionButton(
-                                    modifier = Modifier.padding(top = 28.dp),
-                                    isExpanded = isInstructionExpanded,
-                                    iconResId = R.drawable.ic_help,
-                                    title = stringResource(R.string.payment_instruction_how_to_pay_title),
-                                    onExpandClick = {
-                                        viewModel.trackHowToPayClicked(paymentType)
-                                        isInstructionExpanded = !isInstructionExpanded
-                                    },
-                                    expandingContent = {
-                                        Column {
-                                            AnimatedVisibility(visible = isInstructionExpanded) {
-                                                SnapNumberedList(
-                                                    list = stringArrayResource(getHowToPayId(paymentType = paymentType)).toList()
-                                                )
-                                            }
-                                        }
-                                    }
-                                )
-                            }
+                            SnapInstruction(
+                                paymentType = paymentType,
+                                isInstructionExpanded = isInstructionExpanded,
+                                onExpandClick = {
+                                    viewModel.trackHowToPayClicked(paymentType)
+                                    isInstructionExpanded = !isInstructionExpanded
+                                }
+                            )
                         }
                     )
 
@@ -268,20 +244,6 @@ class PayLaterActivity : BaseActivity() {
     private fun getTitleId(paymentType: String): Int {
         return when (paymentType) {
             PaymentType.AKULAKU -> R.string.akulaku_title
-            else -> 0
-        }
-    }
-
-    private fun getInstructionId(paymentType: String): Int {
-        return when (paymentType) {
-            PaymentType.AKULAKU -> R.string.akulaku_instruction
-            else -> 0
-        }
-    }
-
-    private fun getHowToPayId(paymentType: String): Int {
-        return when (paymentType) {
-            PaymentType.AKULAKU -> R.array.akulaku_how_to_pay
             else -> 0
         }
     }
