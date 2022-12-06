@@ -67,7 +67,7 @@ internal class DirectDebitViewModel @Inject constructor(
                     trackSnapError(
                         pageName = getPageName(paymentType),
                         paymentMethodName = paymentType,
-                        errorMessage = error.message ?: error.javaClass.name
+                        error = error
                     )
                     exception.value = error
                 }

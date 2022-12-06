@@ -10,6 +10,7 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
+import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import org.junit.Assert
 import org.junit.Before
@@ -317,6 +318,23 @@ internal class BankTransferDetailViewModelTest {
             paymentMethodName = PaymentType.BRI_VA,
             transactionId = null,
             stepNumber = "2"
+        )
+    }
+
+
+    @Test
+    fun verifyTrackReloadClicked() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val eventAnalytics: EventAnalytics = mock()
+
+        whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
+        val bankTransferDetailViewModel = BankTransferDetailViewModel(snapCore, dateTimeUtil)
+
+        bankTransferDetailViewModel.trackReloadClicked(paymentType = PaymentType.BRI_VA)
+        verify(eventAnalytics).trackSnapPaymentNumberButtonRetried(
+            pageName = PageName.BRI_VA_PAGE,
+            paymentMethodName = PaymentType.BRI_VA
         )
     }
 

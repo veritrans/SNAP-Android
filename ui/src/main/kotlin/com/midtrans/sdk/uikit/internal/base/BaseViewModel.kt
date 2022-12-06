@@ -1,6 +1,7 @@
 package com.midtrans.sdk.uikit.internal.base
 
 import androidx.lifecycle.ViewModel
+import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.BinData
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
@@ -208,13 +209,13 @@ internal open class BaseViewModel : ViewModel() {
     protected fun trackSnapError(
         pageName: String,
         paymentMethodName: String,
-        errorMessage: String
+        error: SnapError
     ) {
         eventAnalytics?.trackSnapError(
             pageName = pageName,
             paymentMethodName = paymentMethodName,
-            statusCode = null,
-            errorMessage = errorMessage
+            statusCode = error.getHttpStatusCode()?.toString(),
+            errorMessage = error.getErrorInformation()
         )
     }
 
@@ -224,9 +225,7 @@ internal open class BaseViewModel : ViewModel() {
         errorMessage: String,
         statusCode: String
     ) {
-        if (statusCode != UiKitConstants.STATUS_CODE_200
-            && statusCode != UiKitConstants.STATUS_CODE_201
-        ) {
+        if (!isChargeResponseSuccess(statusCode)) {
             eventAnalytics?.trackSnapError(
                 pageName = pageName,
                 paymentMethodName = paymentMethodName,
@@ -235,6 +234,9 @@ internal open class BaseViewModel : ViewModel() {
             )
         }
     }
+
+    protected fun isChargeResponseSuccess(statusCode: String) =
+        statusCode == UiKitConstants.STATUS_CODE_200 || statusCode == UiKitConstants.STATUS_CODE_201
 
     protected fun trackSnapNotice(
         pageName: String,

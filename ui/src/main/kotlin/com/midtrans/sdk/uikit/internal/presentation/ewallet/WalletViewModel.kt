@@ -29,10 +29,13 @@ internal class WalletViewModel @Inject constructor(
     private val _deepLinkUrlLiveData = MutableLiveData<String>()
     private val _chargeResultLiveData = MutableLiveData<TransactionResult>()
     private var _transactionId: String? = null
+    private val _isQrChargeErrorLiveData = MutableLiveData<Boolean>()
+
     val qrCodeUrlLiveData: LiveData<String> = _qrCodeUrlLiveData
     val deepLinkUrlLiveData: LiveData<String> = _deepLinkUrlLiveData
     val chargeResultLiveData: LiveData<TransactionResult> = _chargeResultLiveData
     var expiredTime = datetimeUtil.getCurrentMillis() + TimeUnit.MINUTES.toMillis(15)
+    val isQrChargeErrorLiveData: LiveData<Boolean> = _isQrChargeErrorLiveData
 
     fun chargeQrPayment(
         snapToken: String,
@@ -75,6 +78,7 @@ internal class WalletViewModel @Inject constructor(
                         statusCode = result.statusCode.orEmpty(),
                         errorMessage = result.statusMessage.orEmpty()
                     )
+                    _isQrChargeErrorLiveData.value = !isChargeResponseSuccess(result.statusCode.orEmpty())
                 }
 
                 override fun onError(error: SnapError) {
@@ -82,8 +86,9 @@ internal class WalletViewModel @Inject constructor(
                     trackSnapError(
                         pageName = pageName,
                         paymentMethodName = paymentType,
-                        errorMessage = error.message ?: error.javaClass.name
+                        error = error
                     )
+                    _isQrChargeErrorLiveData.value = true
                 }
             }
         )

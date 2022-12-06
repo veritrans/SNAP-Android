@@ -3,6 +3,11 @@ package com.midtrans.sdk.corekit.internal.usecase
 import android.annotation.SuppressLint
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
+import com.midtrans.sdk.corekit.api.exception.SnapError.Companion.MESSAGE_ERROR_HTTP_404
+import com.midtrans.sdk.corekit.api.exception.SnapError.Companion.MESSAGE_ERROR_HTTP_406
+import com.midtrans.sdk.corekit.api.exception.SnapError.Companion.MESSAGE_ERROR_HTTP_407
+import com.midtrans.sdk.corekit.api.exception.SnapError.Companion.MESSAGE_ERROR_HTTP_408
+import com.midtrans.sdk.corekit.api.exception.SnapError.Companion.MESSAGE_ERROR_HTTP_409
 import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.api.model.SavedToken.Companion.ONE_CLICK
 import com.midtrans.sdk.corekit.api.model.SavedToken.Companion.TWO_CLICKS
@@ -10,6 +15,7 @@ import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.CreditCardTokenRequ
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.PaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
+import com.midtrans.sdk.corekit.internal.constant.CommonConstant
 import com.midtrans.sdk.corekit.internal.data.repository.CoreApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.MerchantApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.SnapRepository
@@ -18,6 +24,7 @@ import com.midtrans.sdk.corekit.internal.network.model.response.EnabledPayment
 import com.midtrans.sdk.corekit.internal.network.model.response.Transaction
 import com.midtrans.sdk.corekit.internal.scheduler.BaseSdkScheduler
 import io.reactivex.Single
+import retrofit2.HttpException
 
 internal class PaymentUsecase(
     private val scheduler: BaseSdkScheduler,
@@ -332,9 +339,23 @@ internal class PaymentUsecase(
     }
 
     private fun <T> deliverError(error: Throwable, callback: Callback<T>) {
-        if (error is SnapError)
-            callback.onError(error)
-        else callback.onError(SnapError(cause = error))
+        val snapError = when (error) {
+            is SnapError -> error
+            is HttpException -> {
+                val message = when (error.code()) {
+                    CommonConstant.HTTP_RESPONSE_404 -> MESSAGE_ERROR_HTTP_404
+                    CommonConstant.HTTP_RESPONSE_406 -> MESSAGE_ERROR_HTTP_406
+                    CommonConstant.HTTP_RESPONSE_407 -> MESSAGE_ERROR_HTTP_407
+                    CommonConstant.HTTP_RESPONSE_408 -> MESSAGE_ERROR_HTTP_408
+                    CommonConstant.HTTP_RESPONSE_409 -> MESSAGE_ERROR_HTTP_409
+                    else -> null
+                }
+                SnapError(cause = error, message = message)
+            }
+            else -> SnapError(cause = error)
+
+        }
+        callback.onError(snapError)
     }
 
     @SuppressLint("CheckResult")

@@ -26,8 +26,10 @@ fun SnapCopyableInfoListItem(
     title: String? = null,
     info: String? = null,
     copied: Boolean = false,
+    isError: Boolean = false,
     modifier: Modifier = Modifier.fillMaxWidth(1f),
     onCopyClicked: (info: String) -> Unit = {},
+    onReloadClicked: () -> Unit = {},
     withDivider: Boolean = true
 ) {
     Column {
@@ -49,6 +51,14 @@ fun SnapCopyableInfoListItem(
                 )
             }
 
+            if(isError){
+                Text(
+                    text = stringResource(id = R.string.error_failed_load),
+                    modifier = Modifier.weight(1f),
+                    color = SnapColors.getARGBColor(SnapColors.supportDangerDefault),
+                    style = SnapTypography.STYLES.snapTextMediumRegular
+                )
+            }
 
             androidx.compose.animation.AnimatedVisibility(
                 visible = copied,
@@ -76,6 +86,15 @@ fun SnapCopyableInfoListItem(
                 Text(
                     text = stringResource(id = R.string.general_instruction_copy_icon_text),
                     modifier = Modifier.clickable(onClick = { onCopyClicked(info.orEmpty()) }),
+                    color = SnapColors.getARGBColor(SnapColors.link),
+                    style = SnapTypography.STYLES.snapTextMediumMedium
+                )
+            }
+
+            if (isError) {
+                Text(
+                    text = stringResource(id = R.string.retry_to_load),
+                    modifier = Modifier.clickable(onClick = { onReloadClicked() }),
                     color = SnapColors.getARGBColor(SnapColors.link),
                     style = SnapTypography.STYLES.snapTextMediumMedium
                 )
