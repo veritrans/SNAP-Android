@@ -247,7 +247,7 @@ internal class WalletActivity : BaseActivity() {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(1f)
-                            .height(if (isTablet) 300.dp else 1.dp),
+                            .height(if (isTablet || isChargeError.value) 300.dp else 1.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         if (error || isChargeError.value) {
