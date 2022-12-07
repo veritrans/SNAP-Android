@@ -157,7 +157,7 @@ class ProductListActivity : ComponentActivity() {
     private fun buildUiKit() {
         val builder = UiKitApi.Builder()
             .withContext(this.applicationContext)
-            .withMerchantUrl("https://fiesta-point-sample.herokuapp.com/")
+            .withMerchantUrl("https://snap-merchant-server.herokuapp.com/api/")
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
             .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
 

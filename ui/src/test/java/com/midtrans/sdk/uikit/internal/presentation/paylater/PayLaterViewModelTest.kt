@@ -4,16 +4,19 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.InvalidPaymentTypeException
+import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.getOrAwaitValue
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito
 import org.mockito.kotlin.*
 
 internal class PayLaterViewModelTest {
@@ -33,6 +36,65 @@ internal class PayLaterViewModelTest {
     fun setup() {
         whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
         viewModel = PayLaterViewModel(snapCore, dateTimeUtil)
+    }
+
+    @Test
+    fun checkStatusWhenSucceedShouldCallbackOnSuccess() {
+        val snapToken = "snap-token"
+        val callbackCaptor: KArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
+        val transactionId = "transaction-id"
+        val transactionStatus = UiKitConstants.STATUS_CANCELED
+
+        viewModel.checkStatus(snapToken)
+
+        Mockito.verify(snapCore).getTransactionStatus(
+            snapToken = eq(snapToken),
+            callback = callbackCaptor.capture()
+        )
+
+        val callback = callbackCaptor.firstValue
+        callback.onSuccess(
+            TransactionResponse(
+                transactionStatus = transactionStatus,
+                transactionId = transactionId
+            )
+        )
+
+        assertEquals(
+            transactionId,
+            viewModel.transactionId.getOrAwaitValue()
+        )
+
+        verify(eventAnalytics).trackSnapError(
+            pageName = eq(PageName.AKULAKU_PAGE),
+            paymentMethodName = eq(PaymentType.AKULAKU),
+            errorMessage = eq(""),
+            statusCode = eq(""),
+        )
+    }
+
+    @Test
+    fun checkStatusWhenErrorShouldCallbackOnError() {
+        val snapToken = "snap-token"
+        val exception = SnapError()
+        val callbackCaptor: KArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
+
+        viewModel.checkStatus(snapToken)
+
+        Mockito.verify(snapCore).getTransactionStatus(
+            snapToken = eq(snapToken),
+            callback = callbackCaptor.capture()
+        )
+
+        val callback = callbackCaptor.firstValue
+        callback.onError(exception)
+
+        verify(eventAnalytics).trackSnapError(
+            pageName = PageName.AKULAKU_PAGE,
+            paymentMethodName = PaymentType.AKULAKU,
+            statusCode = null,
+            errorMessage = exception.message ?: exception.javaClass.name
+        )
     }
 
     @Test

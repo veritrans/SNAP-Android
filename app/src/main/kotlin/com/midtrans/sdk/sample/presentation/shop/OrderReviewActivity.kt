@@ -582,7 +582,7 @@ class OrderReviewActivity : ComponentActivity() {
     private fun buildLegacyUiKit() {
         SdkUIFlowBuilder.init()
             ?.setContext(this.applicationContext)
-            ?.setMerchantBaseUrl("https://fiesta-point-sample.herokuapp.com/")
+            ?.setMerchantBaseUrl("https://snap-merchant-server.herokuapp.com/api/")
             ?.setClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
 //            .setExternalScanner { _, _ -> TODO("Not yet implemented") }
             ?.enableLog(true)
