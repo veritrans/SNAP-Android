@@ -357,15 +357,20 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 var billingNumberCopied by remember {
                     mutableStateOf(false)
                 }
-                companyCode?.let {
+                companyCode.let {
                     SnapCopyableInfoListItem(
                         title = stringResource(id = R.string.general_instruction_company_code_mandiri_only),
                         info = it,
+                        isError = isChargeResponseError,
                         copied = companyCodeCopied,
                         onCopyClicked = { label ->
                             companyCodeCopied = true
                             clipboardManager.setText(AnnotatedString(text = label))
                             viewModel?.trackAccountNumberCopied(paymentType)
+                        },
+                        onReloadClicked = {
+                            viewModel?.trackReloadClicked(paymentType)
+                            chargeBankTransfer()
                         }
                     )
                 }
@@ -421,15 +426,20 @@ internal class BankTransferDetailActivity : BaseActivity() {
                     )
                 }
 
-                vaNumber?.let {
+                vaNumber.let {
                     SnapCopyableInfoListItem(
                         title = stringResource(id = R.string.general_instruction_va_number_title),
                         info = it,
+                        isError = isChargeResponseError,
                         copied = copiedVa,
                         onCopyClicked = { label ->
                             copiedVa = true
                             clipboardManager.setText(AnnotatedString(text = label))
                             viewModel?.trackAccountNumberCopied(paymentType = PaymentType.OTHER_VA)
+                        },
+                        onReloadClicked = {
+                            viewModel?.trackReloadClicked(paymentType)
+                            chargeBankTransfer()
                         }
                     )
                 }
