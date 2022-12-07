@@ -207,7 +207,16 @@ class PaymentOptionActivity : BaseActivity() {
 
         //TODO: Find More Optimal way for PaymentType that have method (Bank transfer & UOB)
         paymentTypeItem?.let { paymentType ->
-            val paymentMethod = paymentMethods.paymentMethods.find { it.type == paymentType.type }
+            var paymentMethod = paymentMethods.paymentMethods.find { it.type == paymentType.type }
+
+            if (paymentMethod == null) {
+                if(paymentType.type == PaymentType.SHOPEEPAY && isTabletDevice()) {
+                    paymentMethod = paymentMethods.paymentMethods.find { it.type == PaymentType.SHOPEEPAY_QRIS }
+                } else if (paymentType.type == PaymentType.GOPAY && isTabletDevice()) {
+                    paymentMethod = paymentMethods.paymentMethods.find { it.type == PaymentType.GOPAY_QRIS }
+                }
+            }
+
             paymentMethod?.let {
                 getOnPaymentItemClick(
                     paymentType = paymentType.type,
