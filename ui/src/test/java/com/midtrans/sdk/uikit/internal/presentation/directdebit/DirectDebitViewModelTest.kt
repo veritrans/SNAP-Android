@@ -63,6 +63,13 @@ internal class DirectDebitViewModelTest {
             transactionId,
             viewModel.transactionId.getOrAwaitValue()
         )
+
+        verify(eventAnalytics).trackSnapError(
+            pageName = eq(PageName.KLIK_BCA_PAGE),
+            paymentMethodName = eq(PaymentType.KLIK_BCA),
+            errorMessage = eq(""),
+            statusCode = eq(""),
+        )
     }
 
     @Test
