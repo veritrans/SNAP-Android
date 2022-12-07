@@ -64,6 +64,13 @@ internal class PayLaterViewModelTest {
             transactionId,
             viewModel.transactionId.getOrAwaitValue()
         )
+
+        verify(eventAnalytics).trackSnapError(
+            pageName = eq(PageName.AKULAKU_PAGE),
+            paymentMethodName = eq(PaymentType.AKULAKU),
+            errorMessage = eq(""),
+            statusCode = eq(""),
+        )
     }
 
     @Test
