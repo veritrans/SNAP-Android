@@ -36,6 +36,12 @@ internal class PayLaterViewModel @Inject constructor(
                 override fun onSuccess(result: TransactionResponse) {
                     result.run {
                         _transactionId.value = transactionId.orEmpty()
+                        trackErrorStatusCode(
+                            pageName = PageName.AKULAKU_PAGE,
+                            paymentMethodName = PaymentType.AKULAKU,
+                            errorMessage = result.statusMessage.orEmpty(),
+                            statusCode = result.statusCode.orEmpty()
+                        )
                     }
                 }
                 override fun onError(error: SnapError) {
