@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.network.model.response.EnabledPayment
+import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
@@ -26,6 +27,7 @@ import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
+import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
 import com.midtrans.sdk.uikit.internal.view.*
 import javax.inject.Inject
 
@@ -80,6 +82,10 @@ class BankTransferListActivity : BaseActivity() {
 
     private val currentStepNumber: Int by lazy {
         intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
+    }
+
+    private val merchant: Merchant? by lazy {
+        intent.getParcelableExtra(EXTRA_MERCHANT_DATA) as? Merchant
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -185,6 +191,7 @@ class BankTransferListActivity : BaseActivity() {
                 customerInfo = customerInfo,
                 itemInfo = itemInfo,
                 orderId = orderId,
+                withMerchantData = merchant,
                 totalAmount = totalAmount,
                 snapToken = snapToken,
                 stepNumber = currentStepNumber + 1
@@ -223,6 +230,7 @@ class BankTransferListActivity : BaseActivity() {
         private const val EXTRA_ENABLED_PAYMENT = "bankTransfer.extra.enabled_payment"
         private const val EXTRA_STEP_NUMBER = "bankTransfer.extra.step_number"
         private const val EXTRA_TRANSACTION_RESULT = "bankTransfer.extra.transaction_result"
+        private const val EXTRA_MERCHANT_DATA = "bankTransfer.extra.merchant_data"
 
         fun getIntent(
             activityContext: Context,
@@ -230,6 +238,7 @@ class BankTransferListActivity : BaseActivity() {
             totalAmount: String,
             orderId: String,
             paymentMethodItem: PaymentMethodItem,
+            withMerchantData: Merchant? = null,
             customerInfo: CustomerInfo? = null,
             itemInfo: ItemInfo? = null,
             paymentTypeItem: PaymentTypeItem? = null,
@@ -250,6 +259,7 @@ class BankTransferListActivity : BaseActivity() {
                 }
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
                 putExtra(EXTRA_TRANSACTION_RESULT, result)
+                withMerchantData?.let { putExtra(EXTRA_MERCHANT_DATA, withMerchantData) }
             }
         }
     }

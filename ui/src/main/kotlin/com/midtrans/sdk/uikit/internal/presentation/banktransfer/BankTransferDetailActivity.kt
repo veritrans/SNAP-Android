@@ -29,11 +29,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
+import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
@@ -81,10 +83,15 @@ internal class BankTransferDetailActivity : BaseActivity() {
         intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
     }
 
+    private val merchant: Merchant? by lazy {
+        intent.getParcelableExtra(EXTRA_MERCHANT_DATA) as? Merchant
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.trackPageViewed(paymentType, currentStepNumber)
+        viewModel.merchant = merchant
         setContent {
             Content(
                 totalAmount = totalAmount,
@@ -374,10 +381,11 @@ internal class BankTransferDetailActivity : BaseActivity() {
                         }
                     )
                 }
-                billingNumber?.let {
+                billingNumber.let {
                     SnapCopyableInfoListItem(
                         title = stringResource(id = R.string.general_instruction_billing_number_mandiri_only),
                         info = it,
+                        isError = isChargeResponseError,
                         copied = billingNumberCopied,
                         onCopyClicked = { label ->
                             billingNumberCopied = true
@@ -614,6 +622,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
         private const val EXTRA_SNAP_TOKEN = "bankTransfer.extra.snap_token"
         private const val EXTRA_STEP_NUMBER = "bankTransfer.extra.step_number"
         private const val BANK_CODE_MARK = "--BANK_CODE--"
+        private const val EXTRA_MERCHANT_DATA = "bankTransfer.extra.merchant_data"
 
         fun getIntent(
             activityContext: Context,
@@ -621,6 +630,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
             paymentType: String,
             totalAmount: String,
             orderId: String,
+            withMerchantData: Merchant? = null,
             customerInfo: CustomerInfo? = null,
             itemInfo: ItemInfo? = null,
             stepNumber: Int
@@ -633,6 +643,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
+                withMerchantData?.let { putExtra(EXTRA_MERCHANT_DATA, withMerchantData) }
             }
         }
     }

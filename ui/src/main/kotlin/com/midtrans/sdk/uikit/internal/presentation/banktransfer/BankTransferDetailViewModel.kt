@@ -10,6 +10,7 @@ import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.BankTransferPaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.analytics.PageName
+import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.DATE_FORMAT
@@ -42,6 +43,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
     val errorLiveData: LiveData<SnapError> = _errorLiveData
     val isBankTransferChargeErrorLiveData: LiveData<Boolean> = _isBankTransferChargeErrorLiveData
     var expiredTime = datetimeUtil.plusDateBy(datetimeUtil.getCurrentMillis(), 1)
+    var merchant: Merchant? = null
 
     fun chargeBankTransfer(
         snapToken: String,
@@ -56,6 +58,8 @@ internal class BankTransferDetailViewModel @Inject constructor(
             pageName = PageName.BANK_TRANSFER_DETAIL_PAGE,
             paymentMethodName = paymentType
         )
+
+        getBankCode()
         snapCore.pay(
             snapToken = snapToken,
             paymentRequestBuilder = requestBuilder,
@@ -186,6 +190,17 @@ internal class BankTransferDetailViewModel @Inject constructor(
             paymentMethodName = paymentType,
             pageName = getPageName(paymentType)
         )
+    }
+
+    private fun getBankCode() {
+        when (merchant?.preference?.otherVaProcessor) {
+            PaymentType.BNI_VA -> BANK_CODE_BNI
+            PaymentType.BRI_VA -> BANK_CODE_BRI
+            PaymentType.PERMATA_VA -> BANK_CODE_PERMATA
+            else -> null
+        }?.let {
+            _bankCodeLiveData.value = it
+        }
     }
 
     fun getExpiredHour() = datetimeUtil.getExpiredHour(expiredTime)
