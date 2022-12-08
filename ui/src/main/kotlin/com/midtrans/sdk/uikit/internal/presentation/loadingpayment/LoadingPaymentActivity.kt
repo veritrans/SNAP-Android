@@ -33,8 +33,7 @@ import javax.inject.Inject
 class LoadingPaymentActivity : BaseActivity() {
 
     companion object {
-        private const val EXTRA_TRANSACTION_DETAIL =
-            "loadingPaymentActivity.extra.transaction_detail"
+        private const val EXTRA_TRANSACTION_DETAIL = "loadingPaymentActivity.extra.transaction_detail"
         private const val EXTRA_SNAP_TOKEN = "loadingPaymentActivity.extra.snap_token"
         private const val EXTRA_CUSTOMER_DETAILS = "loadingPaymentActivity.extra.customer_details"
         private const val EXTRA_ITEM_DETAILS = "loadingPaymentActivity.extra.item_details"
@@ -51,10 +50,8 @@ class LoadingPaymentActivity : BaseActivity() {
         private const val EXTRA_CUSTOM_FIELD2 = "loadingPaymentActivity.extra.custom_field2"
         private const val EXTRA_CUSTOM_FIELD3 = "loadingPaymentActivity.extra.custom_field3"
         private const val EXTRA_GOPAY_CALLBACK = "loadingPaymentActivity.extra.gopay_callback"
-        private const val EXTRA_SHOPEEPAY_CALLBACK =
-            "loadingPaymentActivity.extra.shopeepay_callback"
-        private const val EXTRA_UOB_EZPAY_CALLBACK =
-            "loadingPaymentActivity.extra.uob_ezpay_callback"
+        private const val EXTRA_SHOPEEPAY_CALLBACK = "loadingPaymentActivity.extra.shopeepay_callback"
+        private const val EXTRA_UOB_EZPAY_CALLBACK = "loadingPaymentActivity.extra.uob_ezpay_callback"
         private const val EXTRA_PAYMENT_TYPE = "loadingPaymentActivity.extra.payment_type"
 
         fun getLoadingPaymentIntent(
@@ -273,70 +270,42 @@ class LoadingPaymentActivity : BaseActivity() {
             //TODO revisit this error handle after discussing how to handle error when we are unable to get snap token / trx detail during loading screen
             if (it.cause is HttpException) {
                 val exception: HttpException = it.cause as HttpException
-                if (isShowPaymentStatusPage()) {
-                    when (exception.code()) {
-                        400 -> {
-                            val expiredIntent = ErrorScreenActivity.getIntent(
-                                activityContext = this@LoadingPaymentActivity,
-                                title = resources.getString(R.string.expired_title),
-                                content = resources.getString(R.string.expired_desc)
-                            )
-                            resultLauncher.launch(expiredIntent)
-                        }
-                        404 -> {
-                            val transactionNotFoundIntent = ErrorScreenActivity.getIntent(
-                                activityContext = this@LoadingPaymentActivity,
-                                title = resources.getString(R.string.no_record_wrong_url_title),
-                                content = resources.getString(R.string.no_record_wrong_url_desc),
-                                instruction = resources.getString(R.string.no_record_wrong_url_instruction_1),
-                                tokenId = resources.getString(
-                                    R.string.no_record_wrong_url_instruction_2,
-                                    snapToken
-                                )
-                            )
-                            resultLauncher.launch(transactionNotFoundIntent)
-                        }
-                        409 -> {
-                            val alreadySettledIntent = SuccessScreenActivity.getIntent(
-                                activityContext = this@LoadingPaymentActivity,
-                                total = "",
-                                orderId = null,
-                                transactionResult = TransactionResult("", "", ""),
-                                stepNumber = 0
-                            )
-                            resultLauncher.launch(alreadySettledIntent)
-                        }
-                        406 -> {
-                            val inProgressIntent =
-                                InProgressActivity.getIntent(activityContext = this@LoadingPaymentActivity)
-                            resultLauncher.launch(inProgressIntent)
-                        }
-                        else -> {
-                            Toast.makeText(
-                                this,
-                                "Error caught ${it.javaClass.simpleName}",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                when (exception.code()) {
+                    400 -> {
+                        val expiredIntent = ErrorScreenActivity.getIntent(
+                            activityContext = this@LoadingPaymentActivity,
+                            title = resources.getString(R.string.expired_title),
+                            content = resources.getString(R.string.expired_desc)
+                        )
+                        resultLauncher.launch(expiredIntent)
                     }
-                } else {
-                    when (exception.code()) {
-                        409 -> {
-                            setResult(
-                                RESULT_OK,
-                                Intent().putExtra(
-                                    UiKitConstants.KEY_TRANSACTION_RESULT,
-                                    TransactionResult("", "", "")
-                                )
-                            )
-                            finish()
-                        }
-                        400, 404, 406 -> finish()
-                        else -> Toast.makeText(
-                            this,
-                            "Error caught ${it.javaClass.simpleName}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                    404 -> {
+                        val transactionNotFoundIntent = ErrorScreenActivity.getIntent(
+                            activityContext = this@LoadingPaymentActivity,
+                            title = resources.getString(R.string.no_record_wrong_url_title),
+                            content = resources.getString(R.string.no_record_wrong_url_desc),
+                            instruction = resources.getString(R.string.no_record_wrong_url_instruction_1),
+                            tokenId = resources.getString(R.string.no_record_wrong_url_instruction_2, snapToken)
+                        )
+                        resultLauncher.launch(transactionNotFoundIntent)
+                    }
+                    409 -> {
+                        val alreadySettledIntent = SuccessScreenActivity.getIntent(
+                            activityContext = this@LoadingPaymentActivity,
+                            total = "",
+                            orderId = null,
+                            transactionResult = TransactionResult("", "", ""),
+                            stepNumber = 0
+                        )
+                        resultLauncher.launch(alreadySettledIntent)
+                    }
+                    406 -> {
+                        val inProgressIntent =
+                            InProgressActivity.getIntent(activityContext = this@LoadingPaymentActivity)
+                        resultLauncher.launch(inProgressIntent)
+                    }
+                    else -> {
+                        Toast.makeText(this,"Error caught ${it.javaClass.simpleName}", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
