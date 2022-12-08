@@ -27,7 +27,6 @@ import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
-import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
 import com.midtrans.sdk.uikit.internal.view.*
 import javax.inject.Inject
 
@@ -191,7 +190,7 @@ class BankTransferListActivity : BaseActivity() {
                 customerInfo = customerInfo,
                 itemInfo = itemInfo,
                 orderId = orderId,
-                withMerchantData = merchant,
+                merchantData = merchant,
                 totalAmount = totalAmount,
                 snapToken = snapToken,
                 stepNumber = currentStepNumber + 1
@@ -238,7 +237,7 @@ class BankTransferListActivity : BaseActivity() {
             totalAmount: String,
             orderId: String,
             paymentMethodItem: PaymentMethodItem,
-            withMerchantData: Merchant? = null,
+            merchantData: Merchant? = null,
             customerInfo: CustomerInfo? = null,
             itemInfo: ItemInfo? = null,
             paymentTypeItem: PaymentTypeItem? = null,
@@ -259,7 +258,7 @@ class BankTransferListActivity : BaseActivity() {
                 }
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
                 putExtra(EXTRA_TRANSACTION_RESULT, result)
-                withMerchantData?.let { putExtra(EXTRA_MERCHANT_DATA, withMerchantData) }
+                merchantData?.let { putExtra(EXTRA_MERCHANT_DATA, merchantData) }
             }
         }
     }

@@ -630,7 +630,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
             paymentType: String,
             totalAmount: String,
             orderId: String,
-            withMerchantData: Merchant? = null,
+            merchantData: Merchant? = null,
             customerInfo: CustomerInfo? = null,
             itemInfo: ItemInfo? = null,
             stepNumber: Int
@@ -643,7 +643,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
-                withMerchantData?.let { putExtra(EXTRA_MERCHANT_DATA, withMerchantData) }
+                merchantData?.let { putExtra(EXTRA_MERCHANT_DATA, merchantData) }
             }
         }
     }

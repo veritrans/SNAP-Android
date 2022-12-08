@@ -527,7 +527,7 @@ class PaymentOptionActivity : BaseActivity() {
                         activityContext = this,
                         snapToken = snapToken,
                         orderId = orderId,
-                        withMerchantData = merchant,
+                        merchantData = merchant,
                         totalAmount = totalAmount,
                         paymentMethodItem = paymentMethodItem,
                         customerInfo = customerInfo,
