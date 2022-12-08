@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.ui.text.font.FontFamily
 import com.midtrans.sdk.corekit.SnapCore
+import com.midtrans.sdk.corekit.core.PaymentMethod
 import com.midtrans.sdk.uikit.api.callback.Callback
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
@@ -50,7 +51,7 @@ class UiKitApi private constructor(val builder: Builder) {
         userId: String,
         uobEzpayCallback: PaymentCallback? = null,
         snapTokenExpiry: Expiry? = null,
-        paymentType: PaymentTypeItem? = null,
+        paymentMethod: PaymentMethod? = null,
         enabledPayment: List<String>? = null,
         permataVa: BankTransferRequest? = null,
         bcaVa: BankTransferRequest? = null,
@@ -65,7 +66,7 @@ class UiKitApi private constructor(val builder: Builder) {
             creditCard = creditCard,
             userId = userId,
             uobEzpayCallback = uobEzpayCallback,
-            paymentType = paymentType,
+            paymentType = getPaymentType(paymentMethod),
             expiry = snapTokenExpiry,
             enabledPayments = enabledPayment,
             permataVa = permataVa,
@@ -74,6 +75,18 @@ class UiKitApi private constructor(val builder: Builder) {
             briVa = briVa
         )
         launcher.launch(intent)
+    }
+
+    private fun getPaymentType (paymentMethod: PaymentMethod?) : PaymentTypeItem? {
+        return when (paymentMethod) {
+            PaymentMethod.CREDIT_CARD -> PaymentTypeItem(PaymentType.CREDIT_CARD, null)
+            PaymentMethod.BANK_TRANSFER -> PaymentTypeItem(PaymentType.BANK_TRANSFER, null)
+            PaymentMethod.BANK_TRANSFER_BCA -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BCA_VA)
+            PaymentMethod.BANK_TRANSFER_PERMATA -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.PERMATA_VA)
+            PaymentMethod.BANK_TRANSFER_MANDIRI -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.E_CHANNEL)
+            PaymentMethod.SHOPEEPAY -> PaymentTypeItem(PaymentType.SHOPEEPAY, null)
+            else -> null
+        }
     }
 
     fun startPaymentWithAndroidXToken(
