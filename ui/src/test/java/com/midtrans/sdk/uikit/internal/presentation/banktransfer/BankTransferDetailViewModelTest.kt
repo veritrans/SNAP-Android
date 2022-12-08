@@ -6,10 +6,13 @@ import androidx.lifecycle.Observer
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.InvalidPaymentTypeException
+import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
+import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
+import com.midtrans.sdk.corekit.internal.network.model.response.MerchantPreferences
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import org.junit.Assert
@@ -224,6 +227,55 @@ internal class BankTransferDetailViewModelTest {
         )
 
         Assert.assertEquals(bniVa, bankTransferDetailViewModel.vaNumberLiveData.getOrAwaitValue())
+        Assert.assertEquals(BANK_CODE_BNI, bankTransferDetailViewModel.bankCodeLiveData.getOrAwaitValue())
+        Assert.assertEquals("00:00:01", bankTransferDetailViewModel.getExpiredHour())
+    }
+
+    @Test
+    fun bankCodeLiveDataShouldObtainedFromMerchantPreferences() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        val snapToken = "SnapToken"
+        val paymentType = PaymentType.BNI_VA
+        val BANK_CODE_BNI = "009 - BNI"
+        val merchant: Merchant = mock()
+        val preferences: MerchantPreferences = mock()
+
+        whenever(merchant.preference).thenReturn(preferences)
+        whenever(preferences.otherVaProcessor).thenReturn(paymentType)
+        `when`(
+            dateTimeUtil.getDate(
+                date = eq("06 January 11:32:50 +0700"),
+                dateFormat = eq("dd MMMM hh:mm Z"),
+                timeZone = any(),//argThat { timezone -> timezone.id == "Asia/Jakarta" },
+                locale = any()
+            )
+        ).thenReturn(
+            Date(1609907570066L)//"Wed Jan 6 2021 11:32:50 +0700"// (Asia/Jakarta)
+        )
+        `when`(dateTimeUtil.getCalendar(null)).thenReturn(
+            Calendar.getInstance().apply { time = Date(1609907570066L) }
+        )
+        `when`(dateTimeUtil.getExpiredHour(any())).thenReturn("00:00:01")
+
+        val bankTransferDetailViewModel =
+            BankTransferDetailViewModel(snapCore = snapCore, dateTimeUtil)
+        bankTransferDetailViewModel.merchant = merchant
+        bankTransferDetailViewModel.chargeBankTransfer(
+            snapToken = snapToken,
+            paymentType = paymentType
+        )
+        val callbackCaptor: KArgumentCaptor<Callback<TransactionResponse>> = argumentCaptor()
+        verify(snapCore).pay(
+            snapToken = eq(snapToken),
+            paymentRequestBuilder = any(),
+            callback = callbackCaptor.capture()
+        )
+        val callback = callbackCaptor.firstValue
+        callback.onError(
+            SnapError()
+        )
+
         Assert.assertEquals(BANK_CODE_BNI, bankTransferDetailViewModel.bankCodeLiveData.getOrAwaitValue())
         Assert.assertEquals("00:00:01", bankTransferDetailViewModel.getExpiredHour())
     }
