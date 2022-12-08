@@ -56,6 +56,10 @@ public class TransactionRequest {
      */
     private CustomerDetails mCustomerDetails = null;
 
+    /**
+     * contains user app deeplink for merchant app
+     */
+    private Gopay gopay;
 
     private boolean useUi = true;
     private CreditCard creditCard;
@@ -230,4 +234,11 @@ public class TransactionRequest {
         this.briVa = briVa;
     }
 
+    public Gopay getGopay() {
+        return gopay;
+    }
+
+    public void setGopay(Gopay gopay) {
+        this.gopay = gopay;
+    }
 }
