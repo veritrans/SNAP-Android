@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
+import com.midtrans.sdk.corekit.core.UIKitCustomSetting
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
 import com.midtrans.sdk.corekit.models.*
 import com.midtrans.sdk.corekit.models.snap.BankTransferRequestModel
@@ -49,7 +50,6 @@ import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class OrderReviewActivity : ComponentActivity() {
@@ -593,6 +593,17 @@ class OrderReviewActivity : ComponentActivity() {
             ?.setColorTheme(CustomColorTheme("#0e4e95", "#0b3b70", "#3e71aa"))
             ?.setLanguage("en") //setLanguage to either "en" for english or "id" for bahasa
             ?.buildSDK()
+        uiKitCustomSettingLegacy()
+    }
+
+    private fun uiKitCustomSetting() {
+        val uiKitCustomSetting = uiKitApi.uiKitSetting
+        uiKitCustomSetting.saveCardChecked = false
+    }
+
+    private fun uiKitCustomSettingLegacy() {
+        val uIKitCustomSetting = UIKitCustomSetting()
+        uIKitCustomSetting.setSaveCardChecked(true)
     }
 
     private fun payWithLegacyActivityStartActivityForResult() {
@@ -649,6 +660,7 @@ class OrderReviewActivity : ComponentActivity() {
             shopeepayCallback = PaymentCallback("demo://snap"),
             uobEzpayCallback = PaymentCallback("demo://snap")
         )
+        uiKitCustomSetting()
     }
 
     private fun payWithAndroidxActivityResultLauncherToken(token: String?) {
@@ -695,7 +707,6 @@ class OrderReviewActivity : ComponentActivity() {
         transactionRequest.gopay = Gopay("demo://snap")
         transactionRequest.shopeepay = Shopeepay("demo://snap")
         transactionRequest.uobEzpay = UobEzpay("demo://snap")
-        MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().transactionRequest = transactionRequest
         MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity)
     }
