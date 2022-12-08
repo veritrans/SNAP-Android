@@ -50,6 +50,7 @@ class UiKitApi private constructor(val builder: Builder) {
         userId: String,
         uobEzpayCallback: PaymentCallback? = null,
         gopayCallback: GopayPaymentCallback? = null,
+        shopeepayCallback: PaymentCallback? = null,
         snapTokenExpiry: Expiry? = null,
         paymentType: PaymentTypeItem? = null,
         enabledPayment: List<String>? = null,
@@ -66,6 +67,7 @@ class UiKitApi private constructor(val builder: Builder) {
             creditCard = creditCard,
             userId = userId,
             gopayCallback = gopayCallback,
+            shopeepayCallback = shopeepayCallback,
             uobEzpayCallback = uobEzpayCallback,
             paymentType = paymentType,
             expiry = snapTokenExpiry,
@@ -145,6 +147,7 @@ class UiKitApi private constructor(val builder: Builder) {
         bniVa: BankTransferRequest? = null,
         briVa: BankTransferRequest? = null,
         gopayCallback: GopayPaymentCallback? = null,
+        shopeepayCallback: PaymentCallback? = null
     ) {
         UiKitApi.paymentCallback = paymentCallback
 
@@ -163,7 +166,8 @@ class UiKitApi private constructor(val builder: Builder) {
             bcaVa = bcaVa,
             bniVa = bniVa,
             briVa = briVa,
-            gopayCallback = gopayCallback
+            gopayCallback = gopayCallback,
+            shopeepayCallback = shopeepayCallback
         )
         activityContext.startActivity(intent)
     }

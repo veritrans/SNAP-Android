@@ -28,6 +28,7 @@ import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
 import com.midtrans.sdk.corekit.models.BcaBankTransferRequestModel
 import com.midtrans.sdk.corekit.models.ExpiryModel
 import com.midtrans.sdk.corekit.models.Gopay
+import com.midtrans.sdk.corekit.models.Shopeepay
 import com.midtrans.sdk.corekit.models.snap.BankTransferRequestModel
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.model.Product
@@ -645,7 +646,8 @@ class OrderReviewActivity : ComponentActivity() {
             bniVa = bniVaRequest,
             permataVa = permataVaRequest,
             enabledPayment = enabledPayment,
-            gopayCallback = GopayPaymentCallback("demo://snap")
+            gopayCallback = GopayPaymentCallback("demo://snap"),
+            shopeepayCallback = PaymentCallback("demo://snap")
         )
     }
 
@@ -691,6 +693,7 @@ class OrderReviewActivity : ComponentActivity() {
         transactionRequest.permataVa = permataVaLegacy
         transactionRequest.enabledPayments = enabledPayment
         transactionRequest.gopay = Gopay("demo://snap")
+        transactionRequest.shopeepay = Shopeepay("demo://snap")
         MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().transactionRequest = transactionRequest
         MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity)

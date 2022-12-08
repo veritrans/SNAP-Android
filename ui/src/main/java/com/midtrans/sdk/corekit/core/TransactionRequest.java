@@ -60,6 +60,7 @@ public class TransactionRequest {
      * contains user app deeplink for merchant app
      */
     private Gopay gopay;
+    private Shopeepay shopeepay;
 
     private boolean useUi = true;
     private CreditCard creditCard;
@@ -240,5 +241,13 @@ public class TransactionRequest {
 
     public void setGopay(Gopay gopay) {
         this.gopay = gopay;
+    }
+
+    public Shopeepay getShopeepay() {
+        return shopeepay;
+    }
+
+    public void setShopeepay(Shopeepay shopeepay) {
+        this.shopeepay = shopeepay;
     }
 }
