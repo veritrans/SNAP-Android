@@ -690,8 +690,6 @@ class OrderReviewActivity : ComponentActivity() {
         transactionRequest.enabledPayments = enabledPayment
         MidtransSDK.getInstance().transactionRequest = transactionRequest
         MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
-//        val uiSetting = UIKitCustomSetting()
-//        uiSetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity, PaymentMethod.GO_PAY)
     }
 
