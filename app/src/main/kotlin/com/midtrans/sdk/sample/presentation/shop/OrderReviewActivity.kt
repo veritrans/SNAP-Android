@@ -25,10 +25,7 @@ import androidx.core.os.LocaleListCompat
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
-import com.midtrans.sdk.corekit.models.BcaBankTransferRequestModel
-import com.midtrans.sdk.corekit.models.ExpiryModel
-import com.midtrans.sdk.corekit.models.Gopay
-import com.midtrans.sdk.corekit.models.Shopeepay
+import com.midtrans.sdk.corekit.models.*
 import com.midtrans.sdk.corekit.models.snap.BankTransferRequestModel
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.model.Product
@@ -43,6 +40,8 @@ import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.model.*
+import com.midtrans.sdk.uikit.api.model.CustomerDetails
+import com.midtrans.sdk.uikit.api.model.ItemDetails
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
@@ -647,7 +646,8 @@ class OrderReviewActivity : ComponentActivity() {
             permataVa = permataVaRequest,
             enabledPayment = enabledPayment,
             gopayCallback = GopayPaymentCallback("demo://snap"),
-            shopeepayCallback = PaymentCallback("demo://snap")
+            shopeepayCallback = PaymentCallback("demo://snap"),
+            uobEzpayCallback = PaymentCallback("demo://snap")
         )
     }
 
@@ -694,6 +694,7 @@ class OrderReviewActivity : ComponentActivity() {
         transactionRequest.enabledPayments = enabledPayment
         transactionRequest.gopay = Gopay("demo://snap")
         transactionRequest.shopeepay = Shopeepay("demo://snap")
+        transactionRequest.uobEzpay = UobEzpay("demo://snap")
         MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().transactionRequest = transactionRequest
         MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity)
