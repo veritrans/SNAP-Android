@@ -85,6 +85,21 @@ class UiKitApi private constructor(val builder: Builder) {
             PaymentMethod.BANK_TRANSFER_PERMATA -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.PERMATA_VA)
             PaymentMethod.BANK_TRANSFER_MANDIRI -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.E_CHANNEL)
             PaymentMethod.SHOPEEPAY -> PaymentTypeItem(PaymentType.SHOPEEPAY, null)
+            PaymentMethod.BANK_TRANSFER_BNI -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BNI_VA)
+            PaymentMethod.BANK_TRANSFER_BRI -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BRI_VA)
+            PaymentMethod.BANK_TRANSFER_OTHER -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.OTHER_VA)
+            PaymentMethod.GO_PAY -> PaymentTypeItem(PaymentType.GOPAY, null)
+            PaymentMethod.BCA_KLIKPAY -> PaymentTypeItem(PaymentType.BCA_KLIKPAY, null)
+            PaymentMethod.KLIKBCA -> PaymentTypeItem(PaymentType.KLIK_BCA, null)
+            PaymentMethod.CIMB_CLICKS -> PaymentTypeItem(PaymentType.CIMB_CLICKS, null)
+            PaymentMethod.EPAY_BRI -> PaymentTypeItem(PaymentType.BRI_EPAY, null)
+            PaymentMethod.DANAMON_ONLINE -> PaymentTypeItem(PaymentType.DANAMON_ONLINE, null)
+            PaymentMethod.INDOMARET -> PaymentTypeItem(PaymentType.INDOMARET, null)
+            PaymentMethod.AKULAKU -> PaymentTypeItem(PaymentType.AKULAKU, null)
+            PaymentMethod.ALFAMART -> PaymentTypeItem(PaymentType.ALFAMART, null)
+            PaymentMethod.UOB_EZPAY -> PaymentTypeItem(PaymentType.UOB_EZPAY, null)
+            PaymentMethod.UOB_EZPAY_APP -> PaymentTypeItem(PaymentType.UOB_EZPAY, PaymentType.UOB_EZPAY_APP)
+            PaymentMethod.UOB_EZPAY_WEB -> PaymentTypeItem(PaymentType.UOB_EZPAY, PaymentType.UOB_EZPAY_WEB)
             else -> null
         }
     }
