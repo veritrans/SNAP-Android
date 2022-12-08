@@ -11,4 +11,8 @@ public class UIKitCustomSetting {
     public void setSaveCardChecked(boolean saveCardChecked) {
         UiKitApi.Companion.getDefaultInstance().getUiKitSetting().setSaveCardChecked(saveCardChecked);
     }
+
+    public void setShowPaymentStatus(boolean showPaymentStatus) {
+        UiKitApi.Companion.getDefaultInstance().getUiKitSetting().setShowPaymentStatus(showPaymentStatus);
+    }
 }
