@@ -210,7 +210,7 @@ class PaymentOptionActivity : BaseActivity() {
             var paymentMethod = paymentMethods.paymentMethods.find { it.type == paymentType.type }
 
             if (paymentMethod == null) {
-                if(paymentType.type == PaymentType.SHOPEEPAY && isTabletDevice()) {
+                if (paymentType.type == PaymentType.SHOPEEPAY && isTabletDevice()) {
                     paymentMethod = paymentMethods.paymentMethods.find { it.type == PaymentType.SHOPEEPAY_QRIS }
                 } else if (paymentType.type == PaymentType.GOPAY && isTabletDevice()) {
                     paymentMethod = paymentMethods.paymentMethods.find { it.type == PaymentType.GOPAY_QRIS }
