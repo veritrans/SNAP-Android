@@ -427,19 +427,33 @@ internal class CreditCardActivity : BaseActivity() {
         var pointPayButtonClickedState by remember {
             mutableStateOf(false)
         }
-        var justOpenedSheetState by remember {
-            mutableStateOf(false)
-        }
 
         pointBalanceAmount?.value?.let { pointBalance ->
 
-            var pointAmountInputted by remember { mutableStateOf(TextFieldValue()) }
-            var displayedTotalFinal by remember { mutableStateOf("") }
-            var isError by remember { mutableStateOf(false) }
             val data = SnapPointRedeemDialogData(
                 total = totalAmountWithoutRp.value,
                 pointBalanceAmount = pointBalance
             )
+            var pointAmountInputted by remember {
+                mutableStateOf(SnapCreditCardUtil.formatMaxPointDiscount(
+                    input = TextFieldValue(pointBalance.toLong().toString()),
+                    totalAmount = data.total.toLong(),
+                    pointBalanceAmount = data.pointBalanceAmount
+                ).let { triple ->
+                    triple.first
+                })
+            }
+            var displayedTotalFinal by remember {
+                mutableStateOf(SnapCreditCardUtil.formatMaxPointDiscount(
+                    input = TextFieldValue(pointBalance.toLong().toString()),
+                    totalAmount = data.total.toLong(),
+                    pointBalanceAmount = data.pointBalanceAmount
+                ).let { triple ->
+                    triple.second
+                })
+            }
+            var isError by remember { mutableStateOf(false) }
+
 
             PointBankCard(
                 data = data,
@@ -447,9 +461,8 @@ internal class CreditCardActivity : BaseActivity() {
                 displayedTotalFinal = displayedTotalFinal,
                 isError = isError,
                 onSheetStateChange = {
-                    if (justOpenedSheetState && !it.isVisible) {
-                        isPaymentUsingPointState = false
-                        justOpenedSheetState = false
+                    if (!it.isVisible) {
+                        viewModel.resetPointBalanceAmount()
                     }
                 },
                 onClick = { pointInputted ->
@@ -481,40 +494,21 @@ internal class CreditCardActivity : BaseActivity() {
                     }
                 },
                 onPointError = {
-                    viewModel.trackSnapNotice(
+                    viewModel?.trackSnapNotice(
                         statusText = getString(R.string.point_failed_title),
                         noticeMessage = it
                     )
                 }
             ).apply {
-                if (isPaymentUsingPointState) {
-                    justOpenedSheetState = true
-                    SnapCreditCardUtil.formatMaxPointDiscount(
-                        input = TextFieldValue(pointBalance.toLong().toString()),
-                        totalAmount = data.total.toLong(),
-                        pointBalanceAmount = data.pointBalanceAmount
-                    ).let { triple ->
-                        triple.first.let {
-                            pointAmountInputted = it
-                        }
-                        triple.second.let {
-                            displayedTotalFinal = it
-                        }
-                        triple.third.let {
-                            isError = it
-                        }
-                    }
-                    show()
-                } else if (pointPayButtonClickedState) {
+                if (pointPayButtonClickedState) {
                     pointPayButtonClickedState = false
                     hide()
                 }
             }
         }
 
-        val errorState by errorTypeState
-        errorState?.let { pair ->
-            pair.first?.let { type ->
+        errorTypeState?.value.let { pair ->
+            pair?.first?.let { type ->
                 val clicked = remember {
                     mutableStateOf(false)
                 }
