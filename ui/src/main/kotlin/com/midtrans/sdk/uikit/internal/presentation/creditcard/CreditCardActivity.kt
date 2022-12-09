@@ -527,12 +527,12 @@ internal class CreditCardActivity : BaseActivity() {
                 )
                 ErrorCard(
                     type = type,
+                    onSheetStateChange = {},
                     onClick = {
                         viewModel?.trackSnapButtonClicked(getStringResourceInEnglish(it))
                         errorCta.invoke()
                     }
                 ).apply {
-                    show()
                     if (clicked.value) {
                         clicked.value = false
                         hide()
