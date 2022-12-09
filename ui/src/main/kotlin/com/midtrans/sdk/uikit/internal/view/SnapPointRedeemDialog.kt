@@ -34,7 +34,7 @@ fun PointBankCard(
     onPointError: (String) -> Unit
 ): DialogToggle {
 
-    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Expanded)
     return SnapBottomSheet(
         sheetState = sheetState,
         onSheetStateChange = onSheetStateChange,
