@@ -285,7 +285,6 @@ internal class CreditCardActivity : BaseActivity() {
             )
         }
 
-        var isPaymentUsingPointState by remember { mutableStateOf(false) }
         val pointBalanceAmount = viewModel?.pointBalanceAmount?.observeAsState(null)
         val isPointBankShownState = viewModel?.isPointBankShown?.observeAsState(false)
         val transactionResponse = viewModel?.transactionResponseLiveData?.observeAsState()
@@ -380,7 +379,6 @@ internal class CreditCardActivity : BaseActivity() {
                                 promoId = state.promoId
                             )
                         }
-                        isPaymentUsingPointState = true
                     } else {
                         if (selectedFormData == null) {
                             viewModel?.chargeUsingCreditCard(
