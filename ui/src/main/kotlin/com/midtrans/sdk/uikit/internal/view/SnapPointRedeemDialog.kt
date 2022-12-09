@@ -159,8 +159,9 @@ fun SnapBottomSheet(
         sheetContent = {
             content()
         }
-    ) {}
-    onSheetStateChange(sheetState)
+    ) {}.apply {
+        onSheetStateChange(sheetState)
+    }
 
     return object : DialogToggle {
         override fun show() {
