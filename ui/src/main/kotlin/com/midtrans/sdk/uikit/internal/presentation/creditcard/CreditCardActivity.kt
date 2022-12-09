@@ -213,11 +213,15 @@ internal class CreditCardActivity : BaseActivity() {
                     launchErrorScreen(it)
                 }
             } else {
-                setResult(RESULT_OK, Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, TransactionResult(
-                    status = it.transactionStatus.orEmpty(),
-                    transactionId = it.transactionId.orEmpty(),
-                    paymentType = it.paymentType.orEmpty()
-                )))
+                setResult(
+                    RESULT_OK, Intent().putExtra(
+                        UiKitConstants.KEY_TRANSACTION_RESULT, TransactionResult(
+                            status = it.transactionStatus.orEmpty(),
+                            transactionId = it.transactionId.orEmpty(),
+                            paymentType = it.paymentType.orEmpty()
+                        )
+                    )
+                )
                 finish()
             }
         }
