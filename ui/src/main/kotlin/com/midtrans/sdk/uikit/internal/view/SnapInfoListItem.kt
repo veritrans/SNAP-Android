@@ -29,7 +29,7 @@ fun SnapCopyableInfoListItem(
     isError: Boolean = false,
     modifier: Modifier = Modifier.fillMaxWidth(1f),
     onCopyClicked: (info: String) -> Unit = {},
-    onReloadClicked: () -> Unit = {},
+    onReloadClicked: (() -> Unit)? = null,
     withDivider: Boolean = true
 ) {
     Column {
@@ -91,7 +91,7 @@ fun SnapCopyableInfoListItem(
                 )
             }
 
-            if (isError) {
+            if (isError && onReloadClicked != null) {
                 Text(
                     text = stringResource(id = R.string.retry_to_load),
                     modifier = Modifier.clickable(onClick = { onReloadClicked() }),

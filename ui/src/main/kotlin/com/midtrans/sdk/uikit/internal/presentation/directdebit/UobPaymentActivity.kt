@@ -109,15 +109,24 @@ class UobPaymentActivity : BaseActivity() {
             when (status) {
                 UiKitConstants.STATUS_SUCCESS,
                 UiKitConstants.STATUS_SETTLEMENT -> {
-                    goToSuccessScreen(
-                        amount,
-                        orderId,
-                        TransactionResult(
+                    if (isShowPaymentStatusPage()) {
+                        goToSuccessScreen(
+                            amount,
+                            orderId,
+                            TransactionResult(
+                                status = status,
+                                transactionId = transactionId,
+                                paymentType = PaymentType.UOB_EZPAY
+                            )
+                        )
+                    } else {
+                        setResult(RESULT_OK, Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, TransactionResult(
                             status = status,
                             transactionId = transactionId,
                             paymentType = PaymentType.UOB_EZPAY
-                        )
-                    )
+                        )))
+                        finish()
+                    }
                 }
                 UiKitConstants.STATUS_PENDING,
                 UiKitConstants.STATUS_FAILED -> {
@@ -139,8 +148,8 @@ class UobPaymentActivity : BaseActivity() {
 
     private val successScreenLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                setResult(result.resultCode, result?.data)
-                finish()
+            setResult(result.resultCode, result?.data)
+            finish()
         }
 
     private val webLinkLauncher =

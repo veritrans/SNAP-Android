@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import com.midtrans.sdk.corekit.core.MidtransSDK
+import com.midtrans.sdk.corekit.core.PaymentMethod
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.UIKitCustomSetting
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
@@ -708,7 +709,8 @@ class OrderReviewActivity : ComponentActivity() {
         transactionRequest.shopeepay = Shopeepay("demo://snap")
         transactionRequest.uobEzpay = UobEzpay("demo://snap")
         MidtransSDK.getInstance().transactionRequest = transactionRequest
-        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity)
+        MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
+        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity, PaymentMethod.GO_PAY)
     }
 
     companion object {

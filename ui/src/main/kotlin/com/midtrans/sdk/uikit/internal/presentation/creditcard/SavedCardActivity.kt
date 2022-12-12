@@ -103,45 +103,78 @@ class SavedCardActivity: BaseActivity() {
     private fun initTransactionResultScreenObserver(){
         //TODO: Need to be revisit on handling all the payment status
         viewModel.getTransactionResponseLiveData().observe(this, Observer {
-            if (it.statusCode != UiKitConstants.STATUS_CODE_201 && it.redirectUrl.isNullOrEmpty()) {
-                val intent = SuccessScreenActivity.getIntent(
-                    activityContext = this@SavedCardActivity,
-                    total = totalAmount,
-                    orderId = it?.orderId.toString(),
-                    transactionResult = TransactionResult("","",""),
-                    stepNumber = 0
-                )
-                startActivity(intent)
-            }
-        })
-        viewModel.getTransactionStatusLiveData().observe(this, Observer {
-            val intent = when (it.statusCode) {
-                UiKitConstants.STATUS_CODE_200 -> {
-                    SuccessScreenActivity.getIntent(
+            if(isShowPaymentStatusPage()) {
+                if (it.statusCode != UiKitConstants.STATUS_CODE_201 && it.redirectUrl.isNullOrEmpty()) {
+                    val intent = SuccessScreenActivity.getIntent(
                         activityContext = this@SavedCardActivity,
                         total = totalAmount,
                         orderId = it?.orderId.toString(),
                         transactionResult = TransactionResult("","",""),
                         stepNumber = 0
                     )
+                    startActivity(intent)
                 }
-                else -> {
-                    ErrorScreenActivity.getIntent(
-                        activityContext = this@SavedCardActivity,
-                        title = it.statusCode.toString(),
-                        content = it.transactionStatus.toString()
+            } else {
+                setResult(
+                    RESULT_OK,
+                    Intent().putExtra(
+                        UiKitConstants.KEY_TRANSACTION_RESULT,
+                        TransactionResult("", "", "")
                     )
+                )
+                finish()
+            }
+        })
+        viewModel.getTransactionStatusLiveData().observe(this, Observer {
+            if (isShowPaymentStatusPage()) {
+                val intent = when (it.statusCode) {
+                    UiKitConstants.STATUS_CODE_200 -> {
+                        SuccessScreenActivity.getIntent(
+                            activityContext = this@SavedCardActivity,
+                            total = totalAmount,
+                            orderId = it?.orderId.toString(),
+                            transactionResult = TransactionResult("","",""),
+                            stepNumber = 0
+                        )
+                    }
+                    else -> {
+                        ErrorScreenActivity.getIntent(
+                            activityContext = this@SavedCardActivity,
+                            title = it.statusCode.toString(),
+                            content = it.transactionStatus.toString()
+                        )
+                    }
+                }
+                startActivity(intent)
+            } else {
+                when (it.statusCode) {
+                    UiKitConstants.STATUS_CODE_200 -> {
+                        setResult(
+                            RESULT_OK,
+                            Intent().putExtra(
+                                UiKitConstants.KEY_TRANSACTION_RESULT,
+                                TransactionResult("", "", "")
+                            )
+                        )
+                        finish()
+                    }
+                    else -> {
+                        finish()
+                    }
                 }
             }
-            startActivity(intent)
         })
         viewModel.getErrorLiveData().observe(this, Observer {
-            val intent = ErrorScreenActivity.getIntent(
-                activityContext = this@SavedCardActivity,
-                title = it.cause.toString(),
-                content = it.message.toString()
-            )
-            startActivity(intent)
+            if (isShowPaymentStatusPage()) {
+                val intent = ErrorScreenActivity.getIntent(
+                    activityContext = this@SavedCardActivity,
+                    title = it.cause.toString(),
+                    content = it.message.toString()
+                )
+                startActivity(intent)
+            } else {
+                finish()
+            }
         })
     }
 

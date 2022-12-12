@@ -206,10 +206,19 @@ internal class CreditCardActivity : BaseActivity() {
 
     private fun initTransactionResultScreenObserver() {
         viewModel.transactionResponseLiveData.observe(this) {
-            if (it.statusCode == UiKitConstants.STATUS_CODE_200) {
-                launchSuccessScreen(it)
-            } else if (it.statusCode != UiKitConstants.STATUS_CODE_201 && it.redirectUrl.isNullOrEmpty()) {
-                launchErrorScreen(it)
+            if (isShowPaymentStatusPage()) {
+                if (it.statusCode == UiKitConstants.STATUS_CODE_200) {
+                    launchSuccessScreen(it)
+                } else if (it.statusCode != UiKitConstants.STATUS_CODE_201 && it.redirectUrl.isNullOrEmpty()) {
+                    launchErrorScreen(it)
+                }
+            } else {
+                setResult(RESULT_OK, Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, TransactionResult(
+                    status = it.transactionStatus.orEmpty(),
+                    transactionId = it.transactionId.orEmpty(),
+                    paymentType = it.paymentType.orEmpty()
+                )))
+                finish()
             }
         }
 

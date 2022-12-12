@@ -20,6 +20,9 @@ open class BaseActivity : AppCompatActivity(){
 
         return diagonalInches >= 6.5 && hasTabletAttribute
     }
+    protected fun isShowPaymentStatusPage() : Boolean {
+        return getUikitSetting().showPaymentStatus
+    }
 
     protected fun getUikitSetting() = UiKitApi.getDefaultInstance().uiKitSetting
 
