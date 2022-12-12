@@ -50,6 +50,8 @@ class UiKitApi private constructor(val builder: Builder) {
         creditCard: CreditCard,
         userId: String,
         uobEzpayCallback: PaymentCallback? = null,
+        gopayCallback: GopayPaymentCallback? = null,
+        shopeepayCallback: PaymentCallback? = null,
         snapTokenExpiry: Expiry? = null,
         paymentMethod: PaymentMethod? = null,
         enabledPayment: List<String>? = null,
@@ -65,6 +67,8 @@ class UiKitApi private constructor(val builder: Builder) {
             itemDetails = itemDetails,
             creditCard = creditCard,
             userId = userId,
+            gopayCallback = gopayCallback,
+            shopeepayCallback = shopeepayCallback,
             uobEzpayCallback = uobEzpayCallback,
             paymentType = getPaymentType(paymentMethod),
             expiry = snapTokenExpiry,
@@ -169,7 +173,9 @@ class UiKitApi private constructor(val builder: Builder) {
         permataVa: BankTransferRequest? = null,
         bcaVa: BankTransferRequest? = null,
         bniVa: BankTransferRequest? = null,
-        briVa: BankTransferRequest? = null
+        briVa: BankTransferRequest? = null,
+        gopayCallback: GopayPaymentCallback? = null,
+        shopeepayCallback: PaymentCallback? = null
     ) {
         UiKitApi.paymentCallback = paymentCallback
 
@@ -180,14 +186,16 @@ class UiKitApi private constructor(val builder: Builder) {
             itemDetails = itemDetails,
             creditCard = creditCard,
             userId = userId,
-            uobEzpayCallback = uobEzpayCallback,
             paymentType = paymentType,
             expiry = snapTokenExpiry,
             enabledPayments = enabledPayment,
             permataVa = permataVa,
             bcaVa = bcaVa,
             bniVa = bniVa,
-            briVa = briVa
+            briVa = briVa,
+            gopayCallback = gopayCallback,
+            shopeepayCallback = shopeepayCallback,
+            uobEzpayCallback = uobEzpayCallback
         )
         activityContext.startActivity(intent)
     }

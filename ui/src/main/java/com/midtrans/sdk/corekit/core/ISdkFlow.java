@@ -1,7 +1,9 @@
 package com.midtrans.sdk.corekit.core;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
+
 import com.midtrans.sdk.corekit.api.model.PaymentType;
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
 import com.midtrans.sdk.corekit.models.TransactionResponse;
@@ -12,6 +14,7 @@ import com.midtrans.sdk.uikit.api.model.SnapTransactionDetail;
 import com.midtrans.sdk.uikit.api.model.TransactionResult;
 import com.midtrans.sdk.uikit.external.UiKitApi;
 import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -53,7 +56,7 @@ public class ISdkFlow {
                     transactionRequest.getItemDetails(),
                     transactionRequest.getCreditCard(),
                     transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                    new PaymentCallback(""),
+                    transactionRequest.getUobEzpay(),
                     wrapperCallback,
                     transactionRequest.getExpiry(),
                     null,
@@ -61,7 +64,9 @@ public class ISdkFlow {
                     transactionRequest.getPermataVa(),
                     transactionRequest.getBcaVa(),
                     transactionRequest.getBniVa(),
-                    transactionRequest.getBriVa()
+                    transactionRequest.getBriVa(),
+                    transactionRequest.getGopay(),
+                    transactionRequest.getShopeepay()
             );
         }
     }
@@ -79,7 +84,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.CREDIT_CARD, null),
@@ -87,7 +92,9 @@ public class ISdkFlow {
                 null,
                 null,
                 null,
-                null
+                null,
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -104,7 +111,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.BANK_TRANSFER, null),
@@ -112,7 +119,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -129,7 +138,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BCA_VA),
@@ -137,7 +146,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -154,7 +165,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.PERMATA_VA),
@@ -162,7 +173,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -179,7 +192,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.E_CHANNEL),
@@ -187,7 +200,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -204,7 +219,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BNI_VA),
@@ -212,7 +227,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -229,7 +246,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BRI_VA),
@@ -237,7 +254,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -254,7 +273,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.OTHER_VA),
@@ -262,7 +281,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -279,7 +300,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.GOPAY, null),
@@ -287,7 +308,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -304,7 +327,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.SHOPEEPAY, null),
@@ -312,7 +335,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -329,7 +354,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.BCA_KLIKPAY, null),
@@ -337,7 +362,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -354,7 +381,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.KLIK_BCA, null),
@@ -362,7 +389,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -379,7 +408,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.CIMB_CLICKS, null),
@@ -387,7 +416,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -404,7 +435,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.BRI_EPAY, null),
@@ -412,7 +443,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -429,7 +462,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.DANAMON_ONLINE, null),
@@ -437,7 +470,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -454,7 +489,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.INDOMARET, null),
@@ -462,7 +497,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -479,7 +516,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.AKULAKU, null),
@@ -487,7 +524,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -504,7 +543,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.ALFAMART, null),
@@ -512,7 +551,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -529,7 +570,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.UOB_EZPAY, null),
@@ -537,7 +578,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -554,7 +597,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.UOB_EZPAY, PaymentType.UOB_EZPAY_APP),
@@ -562,7 +605,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 
@@ -579,7 +624,7 @@ public class ISdkFlow {
                 transactionRequest.getItemDetails(),
                 transactionRequest.getCreditCard(),
                 transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                new PaymentCallback(""),
+                transactionRequest.getUobEzpay(),
                 wrapperCallback,
                 transactionRequest.getExpiry(),
                 new PaymentTypeItem(PaymentType.UOB_EZPAY, PaymentType.UOB_EZPAY_WEB),
@@ -587,7 +632,9 @@ public class ISdkFlow {
                 transactionRequest.getPermataVa(),
                 transactionRequest.getBcaVa(),
                 transactionRequest.getBniVa(),
-                transactionRequest.getBriVa()
+                transactionRequest.getBriVa(),
+                transactionRequest.getGopay(),
+                transactionRequest.getShopeepay()
         );
     }
 

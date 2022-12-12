@@ -56,6 +56,12 @@ public class TransactionRequest {
      */
     private CustomerDetails mCustomerDetails = null;
 
+    /**
+     * contains user app deeplink for merchant app
+     */
+    private Gopay gopay;
+    private Shopeepay shopeepay;
+    private UobEzpay uobEzpay;
 
     private boolean useUi = true;
     private CreditCard creditCard;
@@ -230,4 +236,27 @@ public class TransactionRequest {
         this.briVa = briVa;
     }
 
+    public Gopay getGopay() {
+        return gopay;
+    }
+
+    public void setGopay(Gopay gopay) {
+        this.gopay = gopay;
+    }
+
+    public Shopeepay getShopeepay() {
+        return shopeepay;
+    }
+
+    public void setShopeepay(Shopeepay shopeepay) {
+        this.shopeepay = shopeepay;
+    }
+
+    public UobEzpay getUobEzpay() {
+        return uobEzpay;
+    }
+
+    public void setUobEzpay(UobEzpay uobEzpay) {
+        this.uobEzpay = uobEzpay;
+    }
 }

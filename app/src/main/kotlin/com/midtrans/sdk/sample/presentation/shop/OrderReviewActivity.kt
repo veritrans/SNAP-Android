@@ -25,9 +25,9 @@ import androidx.core.os.LocaleListCompat
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.PaymentMethod
 import com.midtrans.sdk.corekit.core.TransactionRequest
+import com.midtrans.sdk.corekit.core.UIKitCustomSetting
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
-import com.midtrans.sdk.corekit.models.BcaBankTransferRequestModel
-import com.midtrans.sdk.corekit.models.ExpiryModel
+import com.midtrans.sdk.corekit.models.*
 import com.midtrans.sdk.corekit.models.snap.BankTransferRequestModel
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.model.Product
@@ -42,6 +42,8 @@ import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.model.*
+import com.midtrans.sdk.uikit.api.model.CustomerDetails
+import com.midtrans.sdk.uikit.api.model.ItemDetails
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
@@ -592,6 +594,17 @@ class OrderReviewActivity : ComponentActivity() {
             ?.setColorTheme(CustomColorTheme("#0e4e95", "#0b3b70", "#3e71aa"))
             ?.setLanguage("en") //setLanguage to either "en" for english or "id" for bahasa
             ?.buildSDK()
+        uiKitCustomSettingLegacy()
+    }
+
+    private fun uiKitCustomSetting() {
+        val uiKitCustomSetting = uiKitApi.uiKitSetting
+        uiKitCustomSetting.saveCardChecked = false
+    }
+
+    private fun uiKitCustomSettingLegacy() {
+        val uIKitCustomSetting = UIKitCustomSetting()
+        uIKitCustomSetting.setSaveCardChecked(true)
     }
 
     private fun payWithLegacyActivityStartActivityForResult() {
@@ -643,8 +656,12 @@ class OrderReviewActivity : ComponentActivity() {
             bcaVa = bcaVaRequest,
             bniVa = bniVaRequest,
             permataVa = permataVaRequest,
-            enabledPayment = enabledPayment
+            enabledPayment = enabledPayment,
+            gopayCallback = GopayPaymentCallback("demo://snap"),
+            shopeepayCallback = PaymentCallback("demo://snap"),
+            uobEzpayCallback = PaymentCallback("demo://snap")
         )
+        uiKitCustomSetting()
     }
 
     private fun payWithAndroidxActivityResultLauncherToken(token: String?) {
@@ -688,6 +705,9 @@ class OrderReviewActivity : ComponentActivity() {
         transactionRequest.bniVa = bniVaLegacy
         transactionRequest.permataVa = permataVaLegacy
         transactionRequest.enabledPayments = enabledPayment
+        transactionRequest.gopay = Gopay("demo://snap")
+        transactionRequest.shopeepay = Shopeepay("demo://snap")
+        transactionRequest.uobEzpay = UobEzpay("demo://snap")
         MidtransSDK.getInstance().transactionRequest = transactionRequest
         MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity, PaymentMethod.GO_PAY)
