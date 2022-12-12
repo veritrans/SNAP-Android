@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import com.midtrans.sdk.corekit.core.MidtransSDK
+import com.midtrans.sdk.corekit.core.PaymentMethod
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
 import com.midtrans.sdk.corekit.models.BcaBankTransferRequestModel
@@ -48,7 +49,6 @@ import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class OrderReviewActivity : ComponentActivity() {
@@ -688,9 +688,9 @@ class OrderReviewActivity : ComponentActivity() {
         transactionRequest.bniVa = bniVaLegacy
         transactionRequest.permataVa = permataVaLegacy
         transactionRequest.enabledPayments = enabledPayment
-        MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().transactionRequest = transactionRequest
-        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity)
+        MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
+        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity, PaymentMethod.GO_PAY)
     }
 
     companion object {
