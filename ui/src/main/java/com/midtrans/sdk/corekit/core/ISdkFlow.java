@@ -9,7 +9,6 @@ import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
 import com.midtrans.sdk.corekit.models.TransactionResponse;
 import com.midtrans.sdk.uikit.api.callback.Callback;
 import com.midtrans.sdk.uikit.api.exception.SnapError;
-import com.midtrans.sdk.uikit.api.model.PaymentCallback;
 import com.midtrans.sdk.uikit.api.model.SnapTransactionDetail;
 import com.midtrans.sdk.uikit.api.model.TransactionResult;
 import com.midtrans.sdk.uikit.external.UiKitApi;
@@ -66,7 +65,10 @@ public class ISdkFlow {
                     transactionRequest.getBniVa(),
                     transactionRequest.getBriVa(),
                     transactionRequest.getGopay(),
-                    transactionRequest.getShopeepay()
+                    transactionRequest.getShopeepay(),
+                    transactionRequest.getCustomField1(),
+                    transactionRequest.getCustomField2(),
+                    transactionRequest.getCustomField3()
             );
         }
     }
@@ -94,7 +96,10 @@ public class ISdkFlow {
                 null,
                 null,
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -121,7 +126,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -148,7 +156,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -175,7 +186,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -202,7 +216,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -229,7 +246,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -256,7 +276,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -283,7 +306,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -310,7 +336,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -337,7 +366,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -364,7 +396,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -391,7 +426,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -418,7 +456,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -445,7 +486,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -472,7 +516,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -499,7 +546,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -526,7 +576,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -553,7 +606,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -580,7 +636,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -607,7 +666,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 
@@ -634,7 +696,10 @@ public class ISdkFlow {
                 transactionRequest.getBniVa(),
                 transactionRequest.getBriVa(),
                 transactionRequest.getGopay(),
-                transactionRequest.getShopeepay()
+                transactionRequest.getShopeepay(),
+                transactionRequest.getCustomField1(),
+                transactionRequest.getCustomField2(),
+                transactionRequest.getCustomField3()
         );
     }
 

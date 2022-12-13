@@ -58,7 +58,10 @@ class UiKitApi private constructor(val builder: Builder) {
         permataVa: BankTransferRequest? = null,
         bcaVa: BankTransferRequest? = null,
         bniVa: BankTransferRequest? = null,
-        briVa: BankTransferRequest? = null
+        briVa: BankTransferRequest? = null,
+        customField1: String? = null,
+        customField2: String? = null,
+        customField3: String? = null,
     ) {
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
             activityContext = activity,
@@ -76,7 +79,10 @@ class UiKitApi private constructor(val builder: Builder) {
             permataVa = permataVa,
             bcaVa = bcaVa,
             bniVa = bniVa,
-            briVa = briVa
+            briVa = briVa,
+            customField1 = customField1,
+            customField2 = customField2,
+            customField3 = customField3
         )
         launcher.launch(intent)
     }
@@ -175,7 +181,10 @@ class UiKitApi private constructor(val builder: Builder) {
         bniVa: BankTransferRequest? = null,
         briVa: BankTransferRequest? = null,
         gopayCallback: GopayPaymentCallback? = null,
-        shopeepayCallback: PaymentCallback? = null
+        shopeepayCallback: PaymentCallback? = null,
+        customField1: String? = null,
+        customField2: String? = null,
+        customField3: String? = null,
     ) {
         UiKitApi.paymentCallback = paymentCallback
 
@@ -195,7 +204,10 @@ class UiKitApi private constructor(val builder: Builder) {
             briVa = briVa,
             gopayCallback = gopayCallback,
             shopeepayCallback = shopeepayCallback,
-            uobEzpayCallback = uobEzpayCallback
+            uobEzpayCallback = uobEzpayCallback,
+            customField1 = customField1,
+            customField2 = customField2,
+            customField3 = customField3
         )
         activityContext.startActivity(intent)
     }
