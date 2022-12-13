@@ -441,21 +441,16 @@ internal class CreditCardActivity : BaseActivity() {
                     input = TextFieldValue(pointBalance.toLong().toString()),
                     totalAmount = data.total.toLong(),
                     pointBalanceAmount = data.pointBalanceAmount
-                ).let { triple ->
-                    triple.first
-                })
+                ).first)
             }
             var displayedTotalFinal by remember {
                 mutableStateOf(SnapCreditCardUtil.formatMaxPointDiscount(
                     input = TextFieldValue(pointBalance.toLong().toString()),
                     totalAmount = data.total.toLong(),
                     pointBalanceAmount = data.pointBalanceAmount
-                ).let { triple ->
-                    triple.second
-                })
+                ).second)
             }
             var isError by remember { mutableStateOf(false) }
-
 
             PointBankCard(
                 data = data,
