@@ -423,7 +423,25 @@ class OrderReviewActivity : ComponentActivity() {
                         firstName,
                         lastName,
                         email.text,
-                        phoneNumber.text
+                        phoneNumber.text,
+                        ShippingAddress(
+                            "Ferdian",
+                            "Julianto",
+                            "Pasaraya mall",
+                            "West Jakarta",
+                            "11330",
+                            "021632631131",
+                            null
+                        ),
+                        BillingAddress(
+                            "Ferdian",
+                            "Julianto",
+                            "Pasaraya mall",
+                            "West Jakarta",
+                            "11330",
+                            "021632631131",
+                            null
+                        )
                     )
                     installmentLegacy = populateInstallmentLegacy()
                     expiryLegacy = populateExpiryLegacy()

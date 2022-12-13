@@ -6,8 +6,7 @@ package com.midtrans.sdk.corekit.models;
  * Created by shivam on 10/29/15.
  */
 public class CustomerDetails extends com.midtrans.sdk.uikit.api.model.CustomerDetails {
-    public CustomerDetails(String customerIdentifier, String firstName, String lastName, String email, String phone) {
-        super(customerIdentifier, firstName, lastName, email, phone, null, null);
+    public CustomerDetails(String customerIdentifier, String firstName, String lastName, String email, String phone, ShippingAddress shippingAddress, BillingAddress billingAddress) {
+        super(customerIdentifier, firstName, lastName, email, phone, shippingAddress, billingAddress);
     }
-
 }

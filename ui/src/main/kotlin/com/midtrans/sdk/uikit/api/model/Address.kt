@@ -2,7 +2,7 @@ package com.midtrans.sdk.uikit.api.model
 
 import com.midtrans.sdk.corekit.api.model.Address
 
-class Address(
+open class Address(
     firstName: String? = null,
     lastName: String? = null,
     address: String? = null,
