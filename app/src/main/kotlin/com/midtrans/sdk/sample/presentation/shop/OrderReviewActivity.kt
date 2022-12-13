@@ -734,7 +734,7 @@ class OrderReviewActivity : ComponentActivity() {
         transactionRequest.customField3 = "test3"
         MidtransSDK.getInstance().transactionRequest = transactionRequest
         MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
-        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity)
+        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity, PaymentMethod.GO_PAY)
     }
 
     companion object {
