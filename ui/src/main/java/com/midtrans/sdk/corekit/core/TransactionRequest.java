@@ -67,6 +67,10 @@ public class TransactionRequest {
     private CreditCard creditCard;
     private ExpiryModel expiry;
 
+    private String customField1;
+    private String customField2;
+    private String customField3;
+
     private List<String> enabledPayments;
 
     private BankTransferRequestModel permataVa;
@@ -187,6 +191,30 @@ public class TransactionRequest {
 
     public void setExpiry(ExpiryModel expiry) {
         this.expiry = expiry;
+    }
+
+    public String getCustomField1() {
+        return customField1;
+    }
+
+    public void setCustomField1(String customField1) {
+        this.customField1 = customField1;
+    }
+
+    public String getCustomField2() {
+        return customField2;
+    }
+
+    public void setCustomField2(String customField2) {
+        this.customField2 = customField2;
+    }
+
+    public String getCustomField3() {
+        return customField3;
+    }
+
+    public void setCustomField3(String customField3) {
+        this.customField3 = customField3;
     }
 
     public void setCurrency(String currency) {

@@ -423,7 +423,25 @@ class OrderReviewActivity : ComponentActivity() {
                         firstName,
                         lastName,
                         email.text,
-                        phoneNumber.text
+                        phoneNumber.text,
+                        ShippingAddress(
+                            "Ferdian",
+                            "Julianto",
+                            "Pasaraya mall",
+                            "West Jakarta",
+                            "11330",
+                            "021632631131",
+                            null
+                        ),
+                        BillingAddress(
+                            "Ferdian",
+                            "Julianto",
+                            "Pasaraya mall",
+                            "West Jakarta",
+                            "11330",
+                            "021632631131",
+                            null
+                        )
                     )
                     installmentLegacy = populateInstallmentLegacy()
                     expiryLegacy = populateExpiryLegacy()
@@ -659,7 +677,10 @@ class OrderReviewActivity : ComponentActivity() {
             enabledPayment = enabledPayment,
             gopayCallback = GopayPaymentCallback("demo://snap"),
             shopeepayCallback = PaymentCallback("demo://snap"),
-            uobEzpayCallback = PaymentCallback("demo://snap")
+            uobEzpayCallback = PaymentCallback("demo://snap"),
+            customField1 = "lalalala1",
+            customField2 = "lalalala2",
+            customField3 = "lalalala3",
         )
         uiKitCustomSetting()
     }
@@ -708,6 +729,9 @@ class OrderReviewActivity : ComponentActivity() {
         transactionRequest.gopay = Gopay("demo://snap")
         transactionRequest.shopeepay = Shopeepay("demo://snap")
         transactionRequest.uobEzpay = UobEzpay("demo://snap")
+        transactionRequest.customField1 = "test1"
+        transactionRequest.customField2 = "test2"
+        transactionRequest.customField3 = "test3"
         MidtransSDK.getInstance().transactionRequest = transactionRequest
         MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity, PaymentMethod.GO_PAY)
