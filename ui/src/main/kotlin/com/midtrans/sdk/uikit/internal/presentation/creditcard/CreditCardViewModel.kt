@@ -620,6 +620,10 @@ internal class CreditCardViewModel @Inject constructor(
         _errorTypeLiveData.value = null
     }
 
+    fun resetPointBalanceAmount(){
+        _pointBalanceAmount.value = null
+    }
+
     fun getTransactionStatus(snapToken: String) {
         snapCore.getTransactionStatus(
             snapToken = snapToken,

@@ -747,6 +747,8 @@ fun NormalCardItem(
                         onCheckedChange = { onPointBankCheckedChange(it) },
                         label = stringResource(id = R.string.cc_dc_main_screen_use_point_bank_bni_saved_card)
                     )
+                } else {
+                    onPointBankCheckedChange(isPointBankShown)
                 }
             }
         }
