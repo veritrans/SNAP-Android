@@ -617,6 +617,8 @@ internal class CreditCardActivity : BaseActivity() {
     @Composable
     private fun CreditCardPageStateLess(
         state: CardItemState,
+        selectedFormData: FormData?,
+        isTransactionDenied: State<Boolean>?,
         isExpandingState: Boolean,
         isPointBankShownState: State<Boolean>?,
         withCustomerPhoneEmail: Boolean = false,
@@ -689,7 +691,9 @@ internal class CreditCardActivity : BaseActivity() {
                         savedTokenListState?.let {
                             SavedCardLayout(
                                 viewModel = viewModel,
+                                isTransactionDenied = isTransactionDenied,
                                 state = state,
+                                selectedFormData = selectedFormData,
                                 isPointBankShownState = isPointBankShownState,
                                 savedTokenListState = it,
                                 bankCodeId = bankCodeState,
@@ -869,7 +873,9 @@ internal class CreditCardActivity : BaseActivity() {
     @Composable
     private fun SavedCardLayout(
         viewModel: CreditCardViewModel?,
+        isTransactionDenied: State<Boolean>?,
         state: CardItemState,
+        selectedFormData: FormData?,
         isPointBankShownState: State<Boolean>?,
         savedTokenListState: SnapshotStateList<FormData>,
         bankCodeId: Int?,
@@ -881,6 +887,8 @@ internal class CreditCardActivity : BaseActivity() {
             modifier = Modifier
                 .padding(top = 24.dp),
             listStates = savedTokenListState,
+            selectedFormData = selectedFormData,
+            isTransactionDenied = isTransactionDenied,
             cardItemState = state,
             bankIconState = bankCodeId,
             isPointBankShownState = isPointBankShownState,
@@ -893,7 +901,13 @@ internal class CreditCardActivity : BaseActivity() {
                 )
                 savedTokenListState.remove(it)
             },
-            onCardNumberOtherCardValueChange = onCardNumberValueChange,
+            onCardNumberOtherCardValueChange = {
+                onCardNumberValueChange(it)
+                if (isTransactionDenied?.value == true) {
+                    viewModel?.resetIsTransactionDenied()
+                    state.isCardNumberInvalid = false
+                }
+            },
             onExpiryOtherCardValueChange = { state.expiry = it },
             onSavedCardRadioSelected = onSavedCardRadioSelected,
             onIsCvvSavedCardInvalidValueChange = { state.isCvvInvalid = it },
@@ -902,6 +916,13 @@ internal class CreditCardActivity : BaseActivity() {
             },
             onSavedCardCheckedChange = { state.isSavedCardChecked = it },
             onPointBankCheckedChange = onSavedCardPointBankCheckedChange,
+            onCardTextFieldFocusedChange = { focused ->
+                state.isCardTexFieldFocused = focused
+                if (focused && isTransactionDenied?.value == true && state.cardItemType == CardItemState.CardItemType.NORMAL_CARD) {
+                    viewModel?.resetIsTransactionDenied()
+                    state.isCardNumberInvalid = false
+                }
+            },
             onInputError = { viewModel?.trackSnapNotice(getStringResourceInEnglish(it)) }
         )
     }
@@ -953,6 +974,8 @@ internal class CreditCardActivity : BaseActivity() {
         private const val EXTRA_PROMOS = "card.extra.promos"
         private const val EXTRA_ITEM_INFO = "card.extra.item_info"
         private const val EXTRA_STEP_NUMBER = "card.extra.step_number"
+        private const val THREE_DS_PAGE = "threeDs"
+        private const val CREDIT_CARD_PAGE = "creditCard"
 
         fun getIntent(
             activityContext: Context,
