@@ -47,8 +47,11 @@ internal class CreditCardViewModel @Inject constructor(
     private val _errorLiveData = MutableLiveData<SnapError>()
     private val _isPointBankShown = MutableLiveData<Boolean>()
     private val _isPointBankEnabled = MutableLiveData<Boolean>()
+    private val _isTransactionDenied = MutableLiveData<Boolean>()
     private val _pointBalanceAmount = MutableLiveData<Double>()
     private val _cardToken = MutableLiveData<String>()
+    private val _is3dsTransaction = MutableLiveData<Boolean>()
+
     private var expireTimeInMillis = 0L
     private var allowRetry = false
     private var promos: List<Promo>? = null
@@ -73,7 +76,8 @@ internal class CreditCardViewModel @Inject constructor(
     val pointBalanceAmount: LiveData<Double> = _pointBalanceAmount
     private val cardToken: LiveData<String> = _cardToken
     private val isInstallmentRequired: LiveData<Boolean> = _isInstallmentRequired
-
+    val isTransactionDenied: LiveData<Boolean> = _isTransactionDenied
+    val is3dsTransaction: LiveData<Boolean> = _is3dsTransaction
 
     private var promoName: String? = null
     private var promoAmount: Double? = null
@@ -196,6 +200,14 @@ internal class CreditCardViewModel @Inject constructor(
         _bankIconId.value = null
         _binBlockedLiveData.value = false
         _isPointBankShown.value = false
+    }
+
+    fun resetIsTransactionDenied() {
+        _isTransactionDenied.value = false
+    }
+
+    fun reset3ds() {
+        _is3dsTransaction.value = false
     }
 
     fun chargeUsingCreditCard(
@@ -620,7 +632,7 @@ internal class CreditCardViewModel @Inject constructor(
         _errorTypeLiveData.value = null
     }
 
-    fun resetPointBalanceAmount(){
+    fun resetPointBalanceAmount() {
         _pointBalanceAmount.value = null
     }
 
@@ -669,6 +681,10 @@ internal class CreditCardViewModel @Inject constructor(
                 }
             }
         )
+    }
+
+    fun is3dsTransaction(response: TransactionResponse): Boolean {
+        return response.statusCode == STATUS_CODE_201 && !response.redirectUrl.isNullOrEmpty()
     }
 
     fun trackSnapButtonClicked(ctaName: String) {
