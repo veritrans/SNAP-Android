@@ -453,18 +453,22 @@ internal class CreditCardActivity : BaseActivity() {
                 pointBalanceAmount = pointBalance
             )
             var pointAmountInputted by remember {
-                mutableStateOf(SnapCreditCardUtil.formatMaxPointDiscount(
-                    input = TextFieldValue(pointBalance.toLong().toString()),
-                    totalAmount = data.total.toLong(),
-                    pointBalanceAmount = data.pointBalanceAmount
-                ).first)
+                mutableStateOf(
+                    SnapCreditCardUtil.formatMaxPointDiscount(
+                        input = TextFieldValue(pointBalance.toLong().toString()),
+                        totalAmount = data.total.toLong(),
+                        pointBalanceAmount = data.pointBalanceAmount
+                    ).first
+                )
             }
             var displayedTotalFinal by remember {
-                mutableStateOf(SnapCreditCardUtil.formatMaxPointDiscount(
-                    input = TextFieldValue(pointBalance.toLong().toString()),
-                    totalAmount = data.total.toLong(),
-                    pointBalanceAmount = data.pointBalanceAmount
-                ).second)
+                mutableStateOf(
+                    SnapCreditCardUtil.formatMaxPointDiscount(
+                        input = TextFieldValue(pointBalance.toLong().toString()),
+                        totalAmount = data.total.toLong(),
+                        pointBalanceAmount = data.pointBalanceAmount
+                    ).second
+                )
             }
             var isError by remember { mutableStateOf(false) }
 
@@ -519,7 +523,7 @@ internal class CreditCardActivity : BaseActivity() {
                 }
             }
         }
-
+        
         errorTypeState?.value.let { pair ->
             pair?.first?.let { type ->
                 val clicked = remember {
