@@ -523,7 +523,7 @@ internal class CreditCardActivity : BaseActivity() {
                 }
             }
         }
-        
+
         errorTypeState?.value.let { pair ->
             pair?.first?.let { type ->
                 val clicked = remember {
