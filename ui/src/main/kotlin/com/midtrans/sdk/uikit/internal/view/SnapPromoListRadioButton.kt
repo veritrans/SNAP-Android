@@ -22,6 +22,9 @@ import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil.INSTALLMENT_NOT_S
 @Composable
 fun SnapPromoListRadioButton(
     states: List<PromoData>,
+    cardItemState: CardItemState,
+    isTransactionDenied: State<Boolean>?,
+    allowRetry: Boolean,
     onItemSelectedListener: (promoData: PromoData) -> Unit
 ): () -> Unit {
     val (selectedOption, onOptionSelected) = remember {
@@ -31,7 +34,7 @@ fun SnapPromoListRadioButton(
     var needReset by remember { mutableStateOf(false) }
     var isFirstInit by remember { mutableStateOf(true) }
 
-    if(needReset){
+    if (needReset && isTransactionDenied?.value == false) {
         needReset = false
         onOptionSelected(states.filter { it.enabled.value }[0].also { onItemSelectedListener(it) }.promoName)
     }
@@ -43,14 +46,22 @@ fun SnapPromoListRadioButton(
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                if (isFirstInit) {
+                if (cardItemState.promoName == item.promoName && isTransactionDenied?.value == true) {
+                    onOptionSelected(item.promoName)
+                    onItemSelectedListener(item)
+                    isFirstInit = false
+                } else if (isFirstInit && isTransactionDenied?.value == false && cardItemState.promoName.isNullOrEmpty()) {
                     onOptionSelected(item.promoName)
                     onItemSelectedListener(item)
                     isFirstInit = false
                 }
                 val enabled by item.enabled
-                if((!enabled).and(item.promoName == selectedOption)){
-                    onOptionSelected(states.filter { it.enabled.value }[0].also { onItemSelectedListener(it) }.promoName)
+                if ((!enabled).and(item.promoName == selectedOption)) {
+                    onOptionSelected(states.filter {
+                        it.enabled.value
+                    }[0].also {
+                        onItemSelectedListener(it)
+                    }.promoName)
                 }
                 Row(
                     modifier = if (enabled) Modifier.selectable(
@@ -95,7 +106,7 @@ fun SnapPromoListRadioButtonItem(promoData: PromoData) {
                 style = SnapTypography.STYLES.snapTextMediumRegular,
                 color = SnapColors.getARGBColor(if (enabled) SnapColors.textPrimary else SnapColors.textMuted)
             )
-            if(enabled) {
+            if (enabled) {
                 Text(
                     text = promoData.discountAmount,
                     style = SnapTypography.STYLES.snapTextMediumRegular,
@@ -104,9 +115,12 @@ fun SnapPromoListRadioButtonItem(promoData: PromoData) {
             }
         }
         promoData.errorType?.let { errorType ->
-            if (errorType == INSTALLMENT_NOT_SUPPORTED){
+            if (errorType == INSTALLMENT_NOT_SUPPORTED) {
                 Text(
-                    text = stringResource(id = R.string.cant_continue_promo_installment_condition, getInstallmentTermsString(promoData.installmentTerm)),
+                    text = stringResource(
+                        id = R.string.cant_continue_promo_installment_condition,
+                        getInstallmentTermsString(promoData.installmentTerm)
+                    ),
                     style = SnapTypography.STYLES.snapTextSmallRegular,
                     color = SnapColors.getARGBColor(if (enabled) SnapColors.textPrimary else SnapColors.textMuted)
                 )
@@ -121,7 +135,7 @@ fun SnapPromoListRadioButtonItem(promoData: PromoData) {
     }
 }
 
-private fun getInstallmentTermsString(installmentTerms: List<String>?) : String {
+private fun getInstallmentTermsString(installmentTerms: List<String>?): String {
     var string = ""
     installmentTerms?.let {
         for (term in it) {
