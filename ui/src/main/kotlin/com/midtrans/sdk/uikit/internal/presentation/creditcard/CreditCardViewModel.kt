@@ -294,15 +294,20 @@ internal class CreditCardViewModel @Inject constructor(
                                     statusCode = result.statusCode.orEmpty(),
                                     errorMessage = result.statusMessage.orEmpty()
                                 )
-                                errorCard.getErrorCardType(result, allowRetry)
-                                    ?.let {
+                                _is3dsTransaction.value = is3dsTransaction(result)
+
+                                if (result.transactionStatus == STATUS_DENY && allowRetry) {
+                                    _transactionResponse.value = result
+                                    _isTransactionDenied.value = true
+                                } else {
+                                    errorCard.getErrorCardType(result, allowRetry)?.let {
                                         val transactionId = result.transactionId.orEmpty()
                                         _errorTypeLiveData.value = Pair(it, transactionId)
-                                    }
-                                    ?: run {
+                                    } ?: run {
                                         _transactionResponse.value = result
                                         null
                                     }
+                                }
                             }
 
                             override fun onError(error: SnapError) {
@@ -446,12 +451,25 @@ internal class CreditCardViewModel @Inject constructor(
                             paymentRequestBuilder = ccRequestBuilder,
                             callback = object : Callback<TransactionResponse> {
                                 override fun onSuccess(result: TransactionResponse) {
-                                    _transactionResponse.value = result
                                     trackSnapChargeResult(result)
                                     trackCreditCardErrorWithStatusCode(
                                         errorMessage = result.statusMessage.orEmpty(),
                                         statusCode = result.statusCode.orEmpty()
                                     )
+                                    _is3dsTransaction.value = is3dsTransaction(result)
+
+                                    if (result.transactionStatus == STATUS_DENY && allowRetry) {
+                                        _transactionResponse.value = result
+                                        _isTransactionDenied.value = true
+                                    } else {
+                                        errorCard.getErrorCardType(result, allowRetry)?.let {
+                                            val transactionId = result.transactionId.orEmpty()
+                                            _errorTypeLiveData.value = Pair(it, transactionId)
+                                        } ?: run {
+                                            _transactionResponse.value = result
+                                            null
+                                        }
+                                    }
                                 }
 
                                 override fun onError(error: SnapError) {
@@ -484,7 +502,7 @@ internal class CreditCardViewModel @Inject constructor(
         cardCvv: TextFieldValue,
         promoId: Long?
     ) {
-        val tokenRequest = formData?.let{
+        val tokenRequest = formData?.let {
             TwoClickCardTokenRequestBuilder()
                 .withCardCvv(cardCvv.text)
                 .withTokenId(formData.tokenId)
@@ -616,6 +634,20 @@ internal class CreditCardViewModel @Inject constructor(
                         errorMessage = result.statusMessage.orEmpty(),
                         statusCode = result.statusCode.orEmpty()
                     )
+                    _is3dsTransaction.value = is3dsTransaction(result)
+
+                    if (result.transactionStatus == STATUS_DENY && allowRetry) {
+                        _transactionResponse.value = result
+                        _isTransactionDenied.value = true
+                    } else {
+                        errorCard.getErrorCardType(result, allowRetry)?.let {
+                            val transactionId = result.transactionId.orEmpty()
+                            _errorTypeLiveData.value = Pair(it, transactionId)
+                        } ?: run {
+                            _transactionResponse.value = result
+                            null
+                        }
+                    }
                 }
 
                 override fun onError(error: SnapError) {
@@ -646,12 +678,17 @@ internal class CreditCardViewModel @Inject constructor(
                         errorMessage = result.statusMessage.orEmpty(),
                         statusCode = result.statusCode.orEmpty()
                     )
-                    errorCard.getErrorCardType(result, allowRetry)?.let {
-                        val transactionId = result.transactionId.orEmpty()
-                        _errorTypeLiveData.value = Pair(it, transactionId)
-                    } ?: run {
+                    if (result.transactionStatus == STATUS_DENY && allowRetry) {
                         _transactionResponse.value = result
-                        null
+                        _isTransactionDenied.value = true
+                    } else {
+                        errorCard.getErrorCardType(result, allowRetry)?.let {
+                            val transactionId = result.transactionId.orEmpty()
+                            _errorTypeLiveData.value = Pair(it, transactionId)
+                        } ?: run {
+                            _transactionResponse.value = result
+                            null
+                        }
                     }
                 }
 
@@ -794,5 +831,7 @@ internal class CreditCardViewModel @Inject constructor(
         private const val TIME_FORMAT = "%02d:%02d:%02d"
         private val timeZoneUtc = TimeZone.getTimeZone("UTC")
         private const val BANK_BNI = "bni"
+        private const val STATUS_DENY = "deny"
+        private const val STATUS_CODE_201 = "201"
     }
 }
