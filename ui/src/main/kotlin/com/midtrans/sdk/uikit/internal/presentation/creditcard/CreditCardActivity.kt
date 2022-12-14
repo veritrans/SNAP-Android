@@ -706,6 +706,7 @@ internal class CreditCardActivity : BaseActivity() {
                         if (savedTokenListState == null) {
                             NormalCardFormLayout(
                                 state = state,
+                                isTransactionDenied = isTransactionDenied,
                                 creditCard = creditCard,
                                 isPointBankShownState = isPointBankShownState,
                                 bankCodeState = bankCodeState,
@@ -732,7 +733,9 @@ internal class CreditCardActivity : BaseActivity() {
                         promoState.value?.also {
                             PromoLayout(
                                 promoData = it,
-                                cardItemState = state
+                                isTransactionDenied = isTransactionDenied,
+                                cardItemState = state,
+                                allowRetry = allowRetry
                             ).also { onResetAction ->
                                 onPromoReset = onResetAction
                             }
@@ -788,6 +791,7 @@ internal class CreditCardActivity : BaseActivity() {
     @Composable
     private fun NormalCardFormLayout(
         state: CardItemState,
+        isTransactionDenied: State<Boolean>?,
         bankCodeState: Int?,
         isPointBankShownState: State<Boolean>?,
         creditCard: CreditCard?,
@@ -795,15 +799,26 @@ internal class CreditCardActivity : BaseActivity() {
     ) {
         NormalCardItem(
             state = state,
+            isTransactionDenied = isTransactionDenied,
             bankIcon = bankCodeState,
             isPointBankShownState = isPointBankShownState,
             creditCard = creditCard,
             onCardNumberValueChange = {
                 onCardNumberValueChange(it)
+                if (isTransactionDenied?.value == true) {
+                    viewModel.resetIsTransactionDenied()
+                    state.isCardNumberInvalid = false
+                }
             },
             onExpiryDateValueChange = { state.expiry = it },
             onCvvValueChange = { state.cvv = it },
-            onCardTextFieldFocusedChange = { state.isCardTexFieldFocused = it },
+            onCardTextFieldFocusedChange = { focused ->
+                state.isCardTexFieldFocused = focused
+                if (focused && isTransactionDenied?.value == true) {
+                    viewModel.resetIsTransactionDenied()
+                    state.isCardNumberInvalid = false
+                }
+            },
             onExpiryTextFieldFocusedChange = {
                 state.isExpiryTextFieldFocused = it
             },
