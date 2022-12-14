@@ -12,6 +12,7 @@ object UiKitConstants {
     const val STATUS_FAILED = "failed"
     const val STATUS_SETTLEMENT = "settlement"
     const val STATUS_CANCELED = "canceled"
+    const val STATUS_DENY = "deny"
 
     //Status Code
     const val STATUS_CODE_200 = "200"
