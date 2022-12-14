@@ -201,6 +201,7 @@ class SavedCardActivity: BaseActivity() {
                 expiry = TextFieldValue(),
                 cvv = TextFieldValue(),
                 isCardNumberInvalid = false,
+                isTransactionDenied = false,
                 isExpiryInvalid = false,
                 isCvvInvalid = false,
                 isCardTexFieldFocused = false,
@@ -299,6 +300,7 @@ class SavedCardActivity: BaseActivity() {
                                     .padding(top = 24.dp),
                                 listStates = savedTokenListState,
                                 cardItemState = state,
+                                selectedFormData = selectedFormData,
                                 bankIconState = bankCodeId,
                                 isPointBankShownState = null,
                                 isInstallmentActive = creditCard?.installment != null,
@@ -335,7 +337,9 @@ class SavedCardActivity: BaseActivity() {
                                 },
                                 onSavedCardCheckedChange = { state.isSavedCardChecked = it },
                                 onPointBankCheckedChange = { },
-                                onInputError = { }
+                                onInputError = { },
+                                isTransactionDenied = remember{ mutableStateOf(false)},
+                                onCardTextFieldFocusedChange = {}
                             )
                             SnapButton(
                                 text = stringResource(id = R.string.cc_dc_main_screen_cta),
