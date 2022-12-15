@@ -330,7 +330,6 @@ internal class CreditCardActivity : BaseActivity() {
                     remainingTimeState = remainingTimeState,
                     onExpand = { isExpanding = it },
                     onCardNumberValueChange = {
-
                         state.cardNumber = it
                         val cardNumberWithoutSpace =
                             SnapCreditCardUtil.getCardNumberFromTextField(it)
