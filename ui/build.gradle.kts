@@ -83,6 +83,7 @@ dependencies {
         exclude(group = "androidx.lifecycle:lifecycle-viewmodel")
         exclude(group = "androidx.lifecycle:lifecycle-viewmodel-ktx")
     }
+    implementation(com.gtf.snap.ComposeUiLibraries.composeNavComponent)
 
     //TODO: work around, remove when google fix compose tooling
     debugImplementation("androidx.customview:customview:1.2.0-alpha01")

@@ -52,6 +52,7 @@ object Dependencies {
     const val hamcrestVersion = "2.2"
     const val coreLibraryDesugaringVersion = "1.1.5"
     const val leakCanaryVersion = "2.9.1"
+    const val composeNavComponent = "2.5.3"
 }
 
 object CommonLibraries {
@@ -177,6 +178,7 @@ object ComposeUiLibraries {
     const val composeRxjava = "androidx.compose.runtime:runtime-rxjava2:${Dependencies.composeRuntimeVersion}"
     const val coilCompose = "io.coil-kt:coil-compose:${Dependencies.coilComposeVersion}"
     const val coilComposeGif = "io.coil-kt:coil-gif:${Dependencies.coilComposeVersion}"
+    const val composeNavComponent = "androidx.navigation:navigation-compose:${Dependencies.composeNavComponent}"
 
 }
 
