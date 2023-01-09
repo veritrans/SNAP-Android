@@ -2,20 +2,21 @@ package com.midtrans.sdk.uikit.api.model
 
 import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.SavedToken
-import kotlinx.parcelize.Parcelize
+import com.midtrans.sdk.corekit.internal.constant.Authentication
+import com.midtrans.sdk.corekit.internal.util.Utils.mappingToCreditCardAuthentication
 
 open class CreditCard(
-    saveCard: Boolean = false,
+    saveCard: Boolean? = null,
     tokenId: String? = null,
-    secure: Boolean = false,
+    authentication: String? = null,
+    secure: Boolean = authentication != null && authentication == Authentication.AUTH_3DS,
     channel: String? = null,
     bank: String? = null,
     savedTokens: List<SavedToken>? = null,
     whitelistBins: List<String>? = null,
     blacklistBins: List<String>? = null,
     installment: Installment? = null,
-    type: String? = null,
-    authentication: String? = null
+    type: String? = null
 ) : CreditCard(
     saveCard = saveCard,
     tokenId = tokenId,
@@ -27,5 +28,5 @@ open class CreditCard(
     blacklistBins = blacklistBins,
     installment = installment,
     type = type,
-    authentication = authentication
+    authentication = mappingToCreditCardAuthentication(authentication, secure)
 )
