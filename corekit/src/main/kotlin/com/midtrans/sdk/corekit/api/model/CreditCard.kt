@@ -5,10 +5,10 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 open class CreditCard(
-    val saveCard: Boolean? = false,
+    val saveCard: Boolean = false,
     val tokenId: String? = null,
     val authentication: String? = null,
-    val secure: Boolean? = false,
+    val secure: Boolean = false,
     val channel: String? = null,
     val bank: String? = null,
     val savedTokens: List<SavedToken>? = null,

@@ -6,7 +6,7 @@ import com.midtrans.sdk.corekit.internal.constant.Authentication
 import com.midtrans.sdk.corekit.internal.util.Utils.mappingToCreditCardAuthentication
 
 open class CreditCard(
-    saveCard: Boolean? = null,
+    saveCard: Boolean = false,
     tokenId: String? = null,
     authentication: String? = null,
     secure: Boolean = authentication != null && authentication == Authentication.AUTH_3DS,
