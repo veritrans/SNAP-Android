@@ -96,6 +96,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
                         bniExpiration?.let { expiredTime = parseTime(it) }
                         briExpiration?.let { expiredTime = parseTime(it) }
                         permataExpiration?.let { expiredTime = parseTime(it) }
+                        mandiriBillExpiration?.let { expiredTime = parseTime(it) }
                         _transactionResult.value = TransactionResult(
                             status = transactionStatus.orEmpty(),
                             transactionId = transactionId.orEmpty(),
