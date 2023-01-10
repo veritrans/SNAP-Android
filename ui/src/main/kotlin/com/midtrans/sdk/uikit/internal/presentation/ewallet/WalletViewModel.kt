@@ -177,6 +177,6 @@ internal class WalletViewModel @Inject constructor(
     fun getExpiredHour(): String = datetimeUtil.getExpiredHour(expiredTime)
 
     companion object {
-        private const val DATE_FORMAT = "yyyy-MM-dd hh:mm Z"
+        private const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
     }
 }

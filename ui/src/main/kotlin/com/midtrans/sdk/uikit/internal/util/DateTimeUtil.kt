@@ -84,7 +84,7 @@ internal object DateTimeUtil {
         )
     }
 
-    const val DATE_FORMAT = "dd MMMM hh:mm Z"
+    const val DATE_FORMAT = "dd MMMM hh:mm:ss Z"
     const val TIME_FORMAT = "hh:mm:ss"
     val TIME_ZONE_WIB: TimeZone = TimeZone.getTimeZone("Asia/Jakarta")
     val TIME_ZONE_UTC: TimeZone = TimeZone.getTimeZone("UTC")
