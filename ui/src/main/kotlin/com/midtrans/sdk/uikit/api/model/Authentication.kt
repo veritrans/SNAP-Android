@@ -1,7 +1,6 @@
-package com.midtrans.sdk.corekit.internal.constant
+package com.midtrans.sdk.uikit.api.model
 
 import androidx.annotation.StringDef
-
 
 class Authentication {
     @StringDef(AUTH_3DS, AUTH_NONE, AUTH_RBA)

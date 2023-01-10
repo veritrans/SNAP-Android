@@ -2,6 +2,8 @@ package com.midtrans.sdk.uikit.internal.base
 
 import android.content.res.Configuration
 import android.util.DisplayMetrics
+import android.view.Window
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
@@ -31,5 +33,9 @@ open class BaseActivity : AppCompatActivity(){
         config.setLocale(Locale("en"))
         val localizedContext = createConfigurationContext(config)
         return localizedContext.getString(id)
+    }
+
+    fun setSecure(window: Window) {
+        window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
     }
 }

@@ -23,7 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import com.midtrans.sdk.corekit.core.MidtransSDK
-import com.midtrans.sdk.corekit.core.PaymentMethod
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.UIKitCustomSetting
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
@@ -662,6 +661,7 @@ class OrderReviewActivity : ComponentActivity() {
             creditCard = CreditCard(
                 saveCard = isSavedCard,
                 secure = isSecure,
+                authentication = Authentication.AUTH_3DS,
                 installment = installment,
                 bank = bank,
                 type = ccAuthType,
@@ -701,6 +701,7 @@ class OrderReviewActivity : ComponentActivity() {
         transactionRequest.creditCard = com.midtrans.sdk.corekit.models.snap.CreditCard(
             isSavedCard,
             null,
+            Authentication.AUTH_3DS,
             isSecure,
             null,
             bank,
@@ -709,7 +710,6 @@ class OrderReviewActivity : ComponentActivity() {
             null,
             installmentLegacy,
             ccAuthType,
-            null
         )
         //Setting Snap token custon expiry
         transactionRequest.expiry = expiryLegacy
@@ -734,7 +734,7 @@ class OrderReviewActivity : ComponentActivity() {
         transactionRequest.customField3 = "test3"
         MidtransSDK.getInstance().transactionRequest = transactionRequest
         MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
-        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity, PaymentMethod.GO_PAY)
+        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity)
     }
 
     companion object {

@@ -7,6 +7,7 @@ public class CreditCard extends com.midtrans.sdk.uikit.api.model.CreditCard {
     public CreditCard(
             boolean saveCard,
             String tokenId,
+            String authentication,
             boolean secure,
             String channel,
             String bank,
@@ -14,9 +15,8 @@ public class CreditCard extends com.midtrans.sdk.uikit.api.model.CreditCard {
             List<String> whitelistBins,
             List<String> blacklistBins,
             Installment installment,
-            String type,
-            String authentication
+            String type
     ) {
-        super(saveCard, tokenId, secure, channel, bank, savedTokens, whitelistBins, blacklistBins, installment, type, authentication);
+        super(saveCard, tokenId, authentication, secure, channel, bank, savedTokens, whitelistBins, blacklistBins, installment, type);
     }
 }

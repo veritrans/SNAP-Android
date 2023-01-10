@@ -153,6 +153,7 @@ internal class CreditCardActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setSecure(window)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.setExpiryTime(expiryTime)
         viewModel.setAllowRetry(allowRetry)
