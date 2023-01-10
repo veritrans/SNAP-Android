@@ -365,6 +365,11 @@ class UobPaymentActivity : BaseActivity() {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        setResult(RESULT_CANCELED)
+    }
+
     companion object {
         private const val EXTRA_SNAP_TOKEN = "directDebit.uobPayment.extra.snap_token"
         private const val EXTRA_UOB_MODE = "directDebit.uobPayment.extra.uob_mode"
