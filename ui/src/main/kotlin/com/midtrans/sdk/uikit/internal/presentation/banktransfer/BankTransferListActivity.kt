@@ -218,6 +218,12 @@ class BankTransferListActivity : BaseActivity() {
             finish()
         }
 
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        setResult(RESULT_CANCELED)
+    }
+
     companion object {
         private const val EXTRA_SNAP_TOKEN = "bankTransfer.extra.snap_token"
         private const val EXTRA_TOTAL_AMOUNT = "bankTransfer.extra.total_amount"

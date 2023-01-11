@@ -486,7 +486,6 @@ class PaymentOptionActivity : BaseActivity() {
                 finish()
             } else {
                 setResult(Activity.RESULT_CANCELED)
-                finish()
             }
         }
 

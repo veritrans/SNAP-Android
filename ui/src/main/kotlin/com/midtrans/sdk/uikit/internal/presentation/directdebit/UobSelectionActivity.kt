@@ -1,5 +1,6 @@
 package com.midtrans.sdk.uikit.internal.presentation.directdebit
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -234,8 +235,12 @@ class UobSelectionActivity : BaseActivity() {
 
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                setResult(result.resultCode, result?.data)
+            if (result.resultCode == Activity.RESULT_OK) {
+                setResult(Activity.RESULT_OK, result.data)
                 finish()
+            } else {
+                setResult(Activity.RESULT_CANCELED)
+            }
         }
 
     private fun updateExpiredTime(): Observable<String> {

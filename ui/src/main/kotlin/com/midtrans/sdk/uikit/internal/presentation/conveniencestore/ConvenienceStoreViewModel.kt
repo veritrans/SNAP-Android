@@ -186,6 +186,6 @@ internal class ConvenienceStoreViewModel @Inject constructor(
     fun getExpiredHour(): String = datetimeUtil.getExpiredHour(expiredTime)
 
     companion object{
-        const val DATE_FORMAT = "yyyy-MM-dd hh:mm Z"
+        const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
     }
 }
