@@ -2,7 +2,9 @@ package com.midtrans.sdk.uikit.internal.presentation.directdebit
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.midtrans.sdk.corekit.SnapCore
+import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
+import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import org.junit.Assert
 import org.junit.Before
@@ -56,5 +58,16 @@ internal class UobSelectionViewModelTest {
             UobSelectionViewModel(snapCore = snapCore, dateTimeUtil)
         uobSelectionViewModel.setExpiryTime("2022-01-06 11:32:50 +0700")
         Assert.assertEquals("00:00:01", uobSelectionViewModel.getExpiredHour())
+    }
+
+    @Test
+    fun verifyTrackOrderDetailsViewed() {
+        viewModel.trackOrderDetailsViewed()
+        verify(eventAnalytics).trackSnapOrderDetailsViewed(
+            pageName = PageName.UOB_SELECTION_PAGE,
+            paymentMethodName = PaymentType.UOB_EZPAY,
+            transactionId = null,
+            netAmount = null
+        )
     }
 }
