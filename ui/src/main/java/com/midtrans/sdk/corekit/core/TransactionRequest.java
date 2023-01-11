@@ -73,7 +73,7 @@ public class TransactionRequest {
 
     private List<String> enabledPayments;
 
-    private BankTransferRequestModel permataVa;
+    private PermataBankTransferRequestModel permataVa;
     private BcaBankTransferRequestModel bcaVa;
     private BankTransferRequestModel bniVa;
     private BankTransferRequestModel briVa;
@@ -232,11 +232,11 @@ public class TransactionRequest {
     public void setEnabledPayments(List<String> enabledPayments) {
         this.enabledPayments = enabledPayments;
     }
-    public BankTransferRequestModel getPermataVa() {
+    public PermataBankTransferRequestModel getPermataVa() {
         return permataVa;
     }
 
-    public void setPermataVa(BankTransferRequestModel permataVa) {
+    public void setPermataVa(PermataBankTransferRequestModel permataVa) {
         this.permataVa = permataVa;
     }
 

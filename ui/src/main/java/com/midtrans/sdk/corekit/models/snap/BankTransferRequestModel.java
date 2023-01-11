@@ -5,6 +5,6 @@ import com.midtrans.sdk.uikit.api.model.BankTransferRequest;
 
 public class BankTransferRequestModel extends BankTransferRequest {
     public BankTransferRequestModel(@NonNull String vaNumber) {
-        super(vaNumber, null, null);
+        super(vaNumber, null, null, null);
     }
 }
