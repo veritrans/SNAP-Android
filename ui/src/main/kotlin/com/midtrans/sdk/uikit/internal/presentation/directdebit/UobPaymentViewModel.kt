@@ -12,6 +12,7 @@ import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import java.util.*
 import javax.inject.Inject
 
 internal class UobPaymentViewModel @Inject constructor(
@@ -25,6 +26,8 @@ internal class UobPaymentViewModel @Inject constructor(
 
     private val transactionResponse = MutableLiveData<TransactionResponse>()
     private val transactionResult = MutableLiveData<Pair<String, String>>()
+
+    private var expireTimeInMillis = 0L
 
     fun getTransactionResponse(): LiveData<TransactionResponse> = transactionResponse
     fun getTransactionResult(): LiveData<Pair<String, String>> = transactionResult
@@ -141,5 +144,39 @@ internal class UobPaymentViewModel @Inject constructor(
         )
     }
 
-    fun getExpiredHour(remainingTime: Long) = dateTimeUtil.getExpiredHour(remainingTime)
+    private fun parseTime(dateString: String): Long {
+        val date = dateTimeUtil.getDate(
+            date = dateString,
+            dateFormat = DATE_FORMAT,
+            timeZone = timeZoneUtc
+        )
+        return date.time
+    }
+
+    fun setExpiryTime(expireTime: String?) {
+        expireTime?.let {
+            expireTimeInMillis = parseTime(it)
+        }
+    }
+
+    fun getExpiredHour() : String {
+        val duration = dateTimeUtil.getDuration(
+            dateTimeUtil.getTimeDiffInMillis(
+                dateTimeUtil.getCurrentMillis(),
+                expireTimeInMillis
+            )
+        )
+        return String.format(
+            TIME_FORMAT,
+            duration.toHours(),
+            duration.seconds % 3600 / 60,
+            duration.seconds % 60
+        )
+    }
+
+    companion object {
+        private const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
+        private const val TIME_FORMAT = "%02d:%02d:%02d"
+        private val timeZoneUtc = TimeZone.getTimeZone("UTC")
+    }
 }

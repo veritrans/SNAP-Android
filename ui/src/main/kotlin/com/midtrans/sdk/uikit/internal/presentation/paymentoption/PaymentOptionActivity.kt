@@ -607,7 +607,8 @@ class PaymentOptionActivity : BaseActivity() {
                         customerInfo = customerInfo,
                         itemInfo = itemInfo,
                         paymentTypeItem = this.paymentTypeItem,
-                        stepNumber = NEXT_STEP_NUMBER
+                        stepNumber = NEXT_STEP_NUMBER,
+                        expiryTime = expiryTime
                     )
                 )
             },

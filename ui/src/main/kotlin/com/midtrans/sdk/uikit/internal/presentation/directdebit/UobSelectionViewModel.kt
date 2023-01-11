@@ -5,22 +5,49 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
+import java.util.*
 import javax.inject.Inject
 
 internal class UobSelectionViewModel @Inject constructor(
     snapCore: SnapCore,
     private val dateTimeUtil: DateTimeUtil
-): BaseViewModel() {
+) : BaseViewModel() {
 
     init {
         eventAnalytics = snapCore.getEventAnalytics()
     }
 
-    private var expiredTime = dateTimeUtil.plusDateBy(dateTimeUtil.getCurrentMillis(), 1) //TODO temporary is 24H, later get value from request snap if set
+    private var expireTimeInMillis = 0L
 
-    fun getExpiredTime() = expiredTime
+    private fun parseTime(dateString: String): Long {
+        val date = dateTimeUtil.getDate(
+            date = dateString,
+            dateFormat = DATE_FORMAT,
+            timeZone = timeZoneUtc
+        )
+        return date.time
+    }
 
-    fun getExpiredHour() = dateTimeUtil.getExpiredHour(expiredTime)
+    fun setExpiryTime(expireTime: String?) {
+        expireTime?.let {
+            expireTimeInMillis = parseTime(it)
+        }
+    }
+
+    fun getExpiredHour(): String {
+        val duration = dateTimeUtil.getDuration(
+            dateTimeUtil.getTimeDiffInMillis(
+                dateTimeUtil.getCurrentMillis(),
+                expireTimeInMillis
+            )
+        )
+        return String.format(
+            TIME_FORMAT,
+            duration.toHours(),
+            duration.seconds % 3600 / 60,
+            duration.seconds % 60
+        )
+    }
 
     fun trackOrderDetailsViewed() {
         trackOrderDetailsViewed(
@@ -35,5 +62,11 @@ internal class UobSelectionViewModel @Inject constructor(
             paymentMethodName = PaymentType.UOB_EZPAY,
             stepNumber = stepNumber.toString()
         )
+    }
+
+    companion object {
+        private const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
+        private const val TIME_FORMAT = "%02d:%02d:%02d"
+        private val timeZoneUtc = TimeZone.getTimeZone("UTC")
     }
 }

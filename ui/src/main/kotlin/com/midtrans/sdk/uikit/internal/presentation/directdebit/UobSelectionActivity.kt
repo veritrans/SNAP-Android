@@ -78,6 +78,10 @@ class UobSelectionActivity : BaseActivity() {
         intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
     }
 
+    private val expiryTime: String? by lazy {
+        intent.getStringExtra(EXTRA_EXPIRY_TIME)
+    }
+
     private val viewModel: UobSelectionViewModel by lazy {
         ViewModelProvider(this, vmFactory)[UobSelectionViewModel::class.java]
     }
@@ -86,6 +90,7 @@ class UobSelectionActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.trackPageViewed(currentStepNumber)
+        viewModel.setExpiryTime(expiryTime)
         paymentTypeItem?.let { paymentType ->
             paymentType.method?.let { uobMode ->
                 resultLauncher.launch(
@@ -97,7 +102,7 @@ class UobSelectionActivity : BaseActivity() {
                         orderId = orderId,
                         customerInfo = customerInfo,
                         itemInfo = itemInfo,
-                        remainingTime = viewModel.getExpiredTime(),
+                        remainingTime = expiryTime,
                         stepNumber = currentStepNumber + 1
                     )
                 )
@@ -173,7 +178,7 @@ class UobSelectionActivity : BaseActivity() {
                                             orderId = orderId,
                                             customerInfo = customerInfo,
                                             itemInfo = itemInfo,
-                                            remainingTime = viewModel.getExpiredTime(),
+                                            remainingTime = expiryTime,
                                             stepNumber = currentStepNumber + 1
                                         )
                                     )
@@ -259,6 +264,7 @@ class UobSelectionActivity : BaseActivity() {
         private const val EXTRA_UOB_MODES = "uobSelection.extra.uob_modes"
         private const val EXTRA_PAYMENT_TYPE_ITEM = "uobSelection.extra.payment_type_item"
         private const val EXTRA_STEP_NUMBER = "uobSelection.extra.step_number"
+        private const val EXTRA_EXPIRY_TIME = "uobSelection.extra.expiry_time"
 
         fun getIntent(
             activityContext: Context,
@@ -269,7 +275,8 @@ class UobSelectionActivity : BaseActivity() {
             customerInfo: CustomerInfo?,
             itemInfo: ItemInfo?,
             paymentTypeItem: PaymentTypeItem?,
-            stepNumber: Int
+            stepNumber: Int,
+            expiryTime: String?
         ): Intent {
             return Intent(activityContext, UobSelectionActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -280,6 +287,7 @@ class UobSelectionActivity : BaseActivity() {
                 putExtra(EXTRA_PAYMENT_TYPE_ITEM, paymentTypeItem)
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
                 putStringArrayListExtra(EXTRA_UOB_MODES, uobModes)
+                putExtra(EXTRA_EXPIRY_TIME, expiryTime)
             }
         }
     }

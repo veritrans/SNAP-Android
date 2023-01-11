@@ -63,8 +63,8 @@ class UobPaymentActivity : BaseActivity() {
             ?: throw RuntimeException("Order ID must not be empty")
     }
 
-    private val remainingTime: Long by lazy {
-        intent.getLongExtra(EXTRA_REMAINING_TIME, 0)
+    private val remainingTime: String? by lazy {
+        intent.getStringExtra(EXTRA_REMAINING_TIME)
     }
 
     private val customerInfo: CustomerInfo? by lazy {
@@ -88,6 +88,7 @@ class UobPaymentActivity : BaseActivity() {
 
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.trackPageViewed(currentStepNumber)
+        viewModel.setExpiryTime(remainingTime)
         setContent {
             UobPaymentContent(
                 uobMode = uobMode,
@@ -361,7 +362,7 @@ class UobPaymentActivity : BaseActivity() {
     private fun updateExpiredTime(): Observable<String> {
         return Observable
             .interval(1L, TimeUnit.SECONDS)
-            .map { viewModel.getExpiredHour(remainingTime) }
+            .map { viewModel.getExpiredHour() }
             .observeOn(AndroidSchedulers.mainThread())
     }
 
@@ -388,7 +389,7 @@ class UobPaymentActivity : BaseActivity() {
             orderId: String,
             customerInfo: CustomerInfo?,
             itemInfo: ItemInfo?,
-            remainingTime: Long,
+            remainingTime: String?,
             stepNumber: Int
         ): Intent {
             return Intent(activityContext, UobPaymentActivity::class.java).apply {
