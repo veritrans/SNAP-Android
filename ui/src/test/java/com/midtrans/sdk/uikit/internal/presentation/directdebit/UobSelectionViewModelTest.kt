@@ -70,4 +70,15 @@ internal class UobSelectionViewModelTest {
             netAmount = null
         )
     }
+
+    @Test
+    fun verifyTrackPageViewed() {
+        viewModel.trackPageViewed(2)
+        verify(eventAnalytics).trackSnapPageViewed(
+            pageName = PageName.UOB_SELECTION_PAGE,
+            paymentMethodName = PaymentType.UOB_EZPAY,
+            transactionId = null,
+            stepNumber = "2"
+        )
+    }
 }
