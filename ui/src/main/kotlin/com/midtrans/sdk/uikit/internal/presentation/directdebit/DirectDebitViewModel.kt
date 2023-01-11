@@ -10,7 +10,9 @@ import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.DirectDebitPaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
+import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
+import java.util.*
 import javax.inject.Inject
 
 internal class DirectDebitViewModel @Inject constructor(
@@ -25,7 +27,7 @@ internal class DirectDebitViewModel @Inject constructor(
     private val transactionResponse = MutableLiveData<TransactionResponse>()
     private val exception = MutableLiveData<SnapError>()
 
-    private var expiredTime = dateTimeUtil.plusDateBy(dateTimeUtil.getCurrentMillis(), 1) //TODO temporary is 24H, later get value from request snap if set
+    private var expireTimeInMillis = 0L
 
     fun getTransactionResponse(): LiveData<TransactionResponse> = transactionResponse
     fun getException(): LiveData<SnapError> = exception //TODO what is expected in direct debit activity
@@ -168,5 +170,39 @@ internal class DirectDebitViewModel @Inject constructor(
         }
     }
 
-    fun getExpiredHour() = dateTimeUtil.getExpiredHour(expiredTime)
+    private fun parseTime(dateString: String): Long {
+        val date = dateTimeUtil.getDate(
+            date = dateString,
+            dateFormat = DATE_FORMAT,
+            timeZone = timeZoneUtc
+        )
+        return date.time
+    }
+
+    fun setExpiryTime(expireTime: String?) {
+        expireTime?.let {
+            expireTimeInMillis = parseTime(it)
+        }
+    }
+
+    fun getExpiredHour() : String {
+        val duration = dateTimeUtil.getDuration(
+            dateTimeUtil.getTimeDiffInMillis(
+                dateTimeUtil.getCurrentMillis(),
+                expireTimeInMillis
+            )
+        )
+        return String.format(
+            TIME_FORMAT,
+            duration.toHours(),
+            duration.seconds % 3600 / 60,
+            duration.seconds % 60
+        )
+    }
+
+    companion object {
+        private const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
+        private const val TIME_FORMAT = "%02d:%02d:%02d"
+        private val timeZoneUtc = TimeZone.getTimeZone("UTC")
+    }
 }
