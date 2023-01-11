@@ -169,7 +169,7 @@ class OrderReviewActivity : ComponentActivity() {
     private var installmentLegacy: com.midtrans.sdk.corekit.models.snap.Installment? = null
     private var expiryLegacy: ExpiryModel? = null
     private var bcaVaLegacy: BcaBankTransferRequestModel? = null
-    private var permataVaLegacy: BankTransferRequestModel? = null
+    private var permataVaLegacy: PermataBankTransferRequestModel? = null
     private var bniVaLegacy: BankTransferRequestModel? = null
 
     private fun setLocaleNew(languageCode: String?) {
@@ -445,7 +445,7 @@ class OrderReviewActivity : ComponentActivity() {
                     installmentLegacy = populateInstallmentLegacy()
                     expiryLegacy = populateExpiryLegacy()
                     bcaVaLegacy = populateBcaVaLegacy(bcaVa)
-                    permataVaLegacy = populateVaLegacy(permataVa)
+                    permataVaLegacy = populatePermataVaLegacy(permataVa)
                     bniVaLegacy = populateVaLegacy(bniVa)
                     buildLegacyUiKit()
                     payWithOldSnapLegacyApi()
@@ -504,6 +504,18 @@ class OrderReviewActivity : ComponentActivity() {
                     listOf(com.midtrans.sdk.corekit.models.FreeTextLanguage("Text ID inquiry 0", "Text EN inquiry 0"))
                 ),
                 null
+            )
+        }
+        return vaTransferRequest
+    }
+
+    private fun populatePermataVaLegacy(va: String): PermataBankTransferRequestModel? {
+        val permataRecipient = "Sudarsono"
+        var vaTransferRequest: PermataBankTransferRequestModel? = null
+        if (va.isNotEmpty()) {
+            vaTransferRequest = PermataBankTransferRequestModel(
+                va,
+                permataRecipient
             )
         }
         return vaTransferRequest

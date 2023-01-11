@@ -7,5 +7,6 @@ import kotlinx.parcelize.Parcelize
 open class BankTransferRequest(
     val vaNumber: String,
     val freeText: FreeText? = null,
-    val subCompanyCode: String? = null
+    val subCompanyCode: String? = null,
+    val recipientName: String? = null
 ) : Parcelable
