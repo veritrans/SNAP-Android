@@ -31,6 +31,7 @@ import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
+import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import com.midtrans.sdk.uikit.internal.view.SnapColors.supportDangerDefault
@@ -80,6 +81,10 @@ class DirectDebitActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_TRANSACTION_RESULT) as? TransactionResponse
     }
 
+    private val expiryTime: String? by lazy {
+        intent.getStringExtra(EXTRA_EXPIRY_TIME)
+    }
+
     private val viewModel: DirectDebitViewModel by lazy {
         ViewModelProvider(this, vmFactory)[DirectDebitViewModel::class.java]
     }
@@ -89,6 +94,7 @@ class DirectDebitActivity : BaseActivity() {
 
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.trackPageViewed(paymentType, currentStepNumber)
+        viewModel.setExpiryTime(expiryTime)
         setContent {
             DirectDebitContent(
                 paymentType = paymentType,
@@ -422,6 +428,7 @@ class DirectDebitActivity : BaseActivity() {
         private const val EXTRA_ITEM_INFO = "directDebit.extra.item_info"
         private const val EXTRA_STEP_NUMBER = "directDebit.extra.step_number"
         private const val EXTRA_TRANSACTION_RESULT = "directDebit.extra.transaction_result"
+        private const val EXTRA_EXPIRY_TIME = "directDebit.extra.expiry_time"
 
         fun getIntent(
             activityContext: Context,
@@ -432,7 +439,8 @@ class DirectDebitActivity : BaseActivity() {
             customerInfo: CustomerInfo?,
             itemInfo: ItemInfo?,
             stepNumber: Int,
-            result: TransactionResponse?
+            result: TransactionResponse?,
+            expiryTime: String?
         ): Intent {
             return Intent(activityContext, DirectDebitActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -443,6 +451,7 @@ class DirectDebitActivity : BaseActivity() {
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
                 putExtra(EXTRA_TRANSACTION_RESULT, result)
+                putExtra(EXTRA_EXPIRY_TIME, expiryTime)
             }
         }
     }

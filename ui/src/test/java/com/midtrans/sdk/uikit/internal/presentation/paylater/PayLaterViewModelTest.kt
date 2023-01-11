@@ -18,6 +18,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.*
+import java.time.Duration
+import java.util.*
 
 internal class PayLaterViewModelTest {
 
@@ -223,5 +225,31 @@ internal class PayLaterViewModelTest {
             transactionId = null,
             stepNumber = "2"
         )
+    }
+
+    @Test
+    fun getExpiredHourShouldReturnHHMMSS() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        Mockito.`when`(
+            dateTimeUtil.getDate(
+                date = eq("2022-01-06 11:32:50 +0700"),
+                dateFormat = eq("yyyy-MM-dd hh:mm:ss Z"),
+                timeZone = any(),
+                locale = any()
+            )
+        ).thenReturn(
+            Date(1609907570066L)//"Wed Jan 6 2021 11:32:50 +0700"// (Asia/Jakarta)
+        )
+        Mockito.`when`(dateTimeUtil.getCalendar(null)).thenReturn(
+            Calendar.getInstance().apply { time = Date(1609907570066L) }
+        )
+        Mockito.`when`(dateTimeUtil.getDuration(any()))
+            .thenReturn(Duration.ofMillis(1000L)) //only this matter for final result
+        Mockito.`when`(dateTimeUtil.getTimeDiffInMillis(any(), any())).thenReturn(100000L)
+        val payLaterViewModel =
+            PayLaterViewModel(snapCore = snapCore, dateTimeUtil)
+        payLaterViewModel.setExpiryTime("2022-01-06 11:32:50 +0700")
+        assertEquals("00:00:01", payLaterViewModel.getExpiredHour())
     }
 }

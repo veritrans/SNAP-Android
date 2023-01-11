@@ -591,6 +591,7 @@ class PaymentOptionActivity : BaseActivity() {
                             itemInfo = itemInfo,
                             stepNumber = NEXT_STEP_NUMBER,
                             result = transactionResult,
+                            expiryTime = expiryTime
                         )
                     )
                 }
@@ -606,7 +607,8 @@ class PaymentOptionActivity : BaseActivity() {
                         customerInfo = customerInfo,
                         itemInfo = itemInfo,
                         paymentTypeItem = this.paymentTypeItem,
-                        stepNumber = NEXT_STEP_NUMBER
+                        stepNumber = NEXT_STEP_NUMBER,
+                        expiryTime = expiryTime
                     )
                 )
             },
@@ -626,6 +628,7 @@ class PaymentOptionActivity : BaseActivity() {
                         itemInfo = itemInfo,
                         stepNumber = NEXT_STEP_NUMBER,
                         result = transactionResult,
+                        expiryTime = expiryTime
                     )
                 )
             },

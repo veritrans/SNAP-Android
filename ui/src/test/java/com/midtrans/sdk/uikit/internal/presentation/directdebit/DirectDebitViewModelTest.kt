@@ -18,6 +18,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.*
+import java.time.Duration
+import java.util.*
 
 internal class DirectDebitViewModelTest {
 
@@ -129,7 +131,10 @@ internal class DirectDebitViewModelTest {
                 transactionId = "transaction-id"
             )
         )
-        Assert.assertEquals("redirect-url", viewModel.getTransactionResponse().getOrAwaitValue().redirectUrl)
+        Assert.assertEquals(
+            "redirect-url",
+            viewModel.getTransactionResponse().getOrAwaitValue().redirectUrl
+        )
         verify(eventAnalytics).trackSnapChargeResult(
             transactionStatus = eq("transaction-status"),
             fraudStatus = eq("fraud-status"),
@@ -230,5 +235,31 @@ internal class DirectDebitViewModelTest {
             statusText = "text",
             noticeMessage = null
         )
+    }
+
+    @Test
+    fun getExpiredHourShouldReturnHHMMSS() {
+        val snapCore: SnapCore = mock()
+        val dateTimeUtil: DateTimeUtil = mock()
+        Mockito.`when`(
+            dateTimeUtil.getDate(
+                date = eq("2022-01-06 11:32:50 +0700"),
+                dateFormat = eq("yyyy-MM-dd hh:mm:ss Z"),
+                timeZone = any(),
+                locale = any()
+            )
+        ).thenReturn(
+            Date(1609907570066L)//"Wed Jan 6 2021 11:32:50 +0700"// (Asia/Jakarta)
+        )
+        Mockito.`when`(dateTimeUtil.getCalendar(null)).thenReturn(
+            Calendar.getInstance().apply { time = Date(1609907570066L) }
+        )
+        Mockito.`when`(dateTimeUtil.getDuration(any()))
+            .thenReturn(Duration.ofMillis(1000L)) //only this matter for final result
+        Mockito.`when`(dateTimeUtil.getTimeDiffInMillis(any(), any())).thenReturn(100000L)
+        val directDebitViewModel =
+            DirectDebitViewModel(snapCore = snapCore, dateTimeUtil)
+        directDebitViewModel.setExpiryTime("2022-01-06 11:32:50 +0700")
+        Assert.assertEquals("00:00:01", directDebitViewModel.getExpiredHour())
     }
 }
