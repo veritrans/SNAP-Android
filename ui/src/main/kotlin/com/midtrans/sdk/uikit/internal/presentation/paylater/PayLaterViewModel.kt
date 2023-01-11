@@ -11,6 +11,7 @@ import com.midtrans.sdk.corekit.api.requestbuilder.payment.PayLaterPaymentReques
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
+import java.util.*
 import javax.inject.Inject
 
 internal class PayLaterViewModel @Inject constructor(
@@ -23,7 +24,7 @@ internal class PayLaterViewModel @Inject constructor(
     }
 
     private val _transactionResponseLiveData = MutableLiveData<TransactionResponse>()
-    private var expiredTime = dateTimeUtil.plusDateBy(dateTimeUtil.getCurrentMillis(), 1) //TODO later get value from request snap if set
+    private var expireTimeInMillis = 0L
 
     val transactionResponseLiveData: LiveData<TransactionResponse> = _transactionResponseLiveData
     private val _transactionId = MutableLiveData<String>()
@@ -144,5 +145,39 @@ internal class PayLaterViewModel @Inject constructor(
         )
     }
 
-    fun getExpiredHour() = dateTimeUtil.getExpiredHour(expiredTime)
+    private fun parseTime(dateString: String): Long {
+        val date = dateTimeUtil.getDate(
+            date = dateString,
+            dateFormat = DATE_FORMAT,
+            timeZone = timeZoneUtc
+        )
+        return date.time
+    }
+
+    fun setExpiryTime(expireTime: String?) {
+        expireTime?.let {
+            expireTimeInMillis = parseTime(it)
+        }
+    }
+
+    fun getExpiredHour() : String {
+        val duration = dateTimeUtil.getDuration(
+            dateTimeUtil.getTimeDiffInMillis(
+                dateTimeUtil.getCurrentMillis(),
+                expireTimeInMillis
+            )
+        )
+        return String.format(
+            TIME_FORMAT,
+            duration.toHours(),
+            duration.seconds % 3600 / 60,
+            duration.seconds % 60
+        )
+    }
+
+    companion object {
+        private const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
+        private const val TIME_FORMAT = "%02d:%02d:%02d"
+        private val timeZoneUtc = TimeZone.getTimeZone("UTC")
+    }
 }

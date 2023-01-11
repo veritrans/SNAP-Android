@@ -627,6 +627,7 @@ class PaymentOptionActivity : BaseActivity() {
                         itemInfo = itemInfo,
                         stepNumber = NEXT_STEP_NUMBER,
                         result = transactionResult,
+                        expiryTime = expiryTime
                     )
                 )
             },

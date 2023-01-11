@@ -72,6 +72,10 @@ class PayLaterActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_TRANSACTION_RESULT) as? TransactionResponse
     }
 
+    private val expiryTime: String? by lazy {
+        intent.getStringExtra(EXTRA_EXPIRY_TIME)
+    }
+
     private val viewModel: PayLaterViewModel by lazy {
         ViewModelProvider(this, vmFactory).get(PayLaterViewModel::class.java)
     }
@@ -81,6 +85,7 @@ class PayLaterActivity : BaseActivity() {
 
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.trackPageViewed(paymentType, currentStepNumber)
+        viewModel.setExpiryTime(expiryTime)
 
         transactionResult?.let { result ->
             viewModel.getUsedToken(result)
@@ -265,6 +270,7 @@ class PayLaterActivity : BaseActivity() {
         private const val EXTRA_ITEM_INFO = "payLater.extra.item_info"
         private const val EXTRA_STEP_NUMBER = "payLater.extra.step_number"
         private const val EXTRA_TRANSACTION_RESULT = "payLater.extra.transaction_result"
+        private const val EXTRA_EXPIRY_TIME = "payLater.extra.expiry_time"
 
         fun getIntent(
             activityContext: Context,
@@ -275,7 +281,8 @@ class PayLaterActivity : BaseActivity() {
             customerInfo: CustomerInfo?,
             itemInfo: ItemInfo?,
             stepNumber: Int,
-            result: TransactionResponse?
+            result: TransactionResponse?,
+            expiryTime: String?
         ): Intent {
             return Intent(activityContext, PayLaterActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -286,6 +293,7 @@ class PayLaterActivity : BaseActivity() {
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
                 putExtra(EXTRA_TRANSACTION_RESULT, result)
+                putExtra(EXTRA_EXPIRY_TIME, expiryTime)
             }
         }
     }
