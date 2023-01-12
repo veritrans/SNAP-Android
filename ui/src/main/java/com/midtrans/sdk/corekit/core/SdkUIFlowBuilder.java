@@ -1,4 +1,4 @@
-package com.midtrans.sdk.uikit;
+package com.midtrans.sdk.corekit.core;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -7,11 +7,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.os.LocaleListCompat;
 
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
-import com.midtrans.sdk.corekit.core.IScanner;
-import com.midtrans.sdk.corekit.core.ISdkFlow;
-import com.midtrans.sdk.corekit.core.Logger;
-import com.midtrans.sdk.corekit.core.MidtransSDK;
-import com.midtrans.sdk.corekit.core.UIKitCustomSetting;
 import com.midtrans.sdk.corekit.core.themes.BaseColorTheme;
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme;
 import com.midtrans.sdk.corekit.models.PaymentMethodsModel;
@@ -194,11 +189,15 @@ public class SdkUIFlowBuilder {
         if (clientKey == null || context == null) {
             String message = "Client key  and context cannot be null or empty. Please set the client key and context";
             RuntimeException runtimeException = new RuntimeException(message);
+            Logger.e(message, runtimeException);
+            return false;
         }
 
-        if (!enableBuiltInTokenStorage && TextUtils.isEmpty(merchantServerUrl)) {
+        if (TextUtils.isEmpty(merchantServerUrl)) {
             String message = "Merchant base url cannot be null or empty (required) if you implement your own token storage. Please set your merchant base url to enable your own token storage";
             RuntimeException runtimeException = new RuntimeException(message);
+            Logger.e(message, runtimeException);
+            return false;
         }
 
         return true;

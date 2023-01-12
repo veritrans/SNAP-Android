@@ -7,7 +7,10 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import com.midtrans.sdk.uikit.SdkUIFlowBuilder;
+import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
+import com.midtrans.sdk.corekit.models.snap.TransactionResult;
+
+import java.lang.ref.WeakReference;
 
 
 /**
@@ -20,8 +23,10 @@ public class MidtransSDK {
     private static volatile MidtransSDK midtransSDK;
     private static boolean sdkNotAvailable = false;
     private TransactionRequest transactionRequest = null;
+    private String merchantServerUrl = null;
     private ISdkFlow uiflow;
     private UIKitCustomSetting uiKitCustomSetting;
+    public static WeakReference<TransactionFinishedCallback> transactionFinishedCallback = ISdkFlow.transactionFinishedCallback;
 
     private MidtransSDK() {
 
@@ -30,6 +35,7 @@ public class MidtransSDK {
     private MidtransSDK(@NonNull SdkUIFlowBuilder sdkBuilder) {
         MidtransSDK.sdkBuilder = sdkBuilder;
         uiKitCustomSetting = sdkBuilder.uiKitCustomSetting;
+        merchantServerUrl = sdkBuilder.merchantServerUrl;
     }
 
     /**
@@ -57,18 +63,27 @@ public class MidtransSDK {
      * @param context current activity.
      */
     public void startPaymentUiFlow(Context context) {
-
-        runUiSdk(context, null);
-
+        if (merchantBaseUrlAvailable()) {
+            runUiSdk(context, null);
+        }
     }
 
     public void startPaymentUiFlow(Context context, String snapToken) {
-        runUiSdk(context, snapToken);
-
+        if (snapTokenAvailable(snapToken)) {
+            runUiSdk(context, snapToken);
+        }
     }
 
     public void startPaymentUiFlow(Context context, PaymentMethod paymentMethod) {
-        runDirectPaymentUiSdk(context, paymentMethod, null);
+        if (merchantBaseUrlAvailable()) {
+            runDirectPaymentUiSdk(context, paymentMethod, null);
+        }
+    }
+
+    public void startPaymentUiFlow(Context context, PaymentMethod paymentMethod, String snapToken) {
+        if (snapTokenAvailable(snapToken)) {
+            runDirectPaymentUiSdk(context, paymentMethod, snapToken);
+        }
     }
 
     private void runDirectPaymentUiSdk(Context context, PaymentMethod paymentMethod, String snapToken) {
@@ -83,6 +98,34 @@ public class MidtransSDK {
         } else {
             Logger.e(TAG, ADD_TRANSACTION_DETAILS);
         }
+    }
+
+    private boolean snapTokenAvailable(String snapToken) {
+        if (TextUtils.isEmpty(snapToken)) {
+            String message = "snap token cannot be null or empty, please checkout transaction to get snapToken";
+            Logger.e(TAG, message);
+
+            if (transactionFinishedCallback != null) {
+                transactionFinishedCallback.get().onTransactionFinished(new TransactionResult(TransactionResult.STATUS_INVALID, message));
+            }
+
+            return false;
+        }
+        return true;
+    }
+
+    private boolean merchantBaseUrlAvailable() {
+        if (TextUtils.isEmpty(merchantServerUrl)) {
+            String message = "merchant base url is required if you want to do checkout from SDK, please set merchant base url on Midtrans SDK";
+            Logger.e(TAG, message);
+
+            if (transactionFinishedCallback != null) {
+                transactionFinishedCallback.get().onTransactionFinished(new TransactionResult(TransactionResult.STATUS_INVALID, message));
+            }
+
+            return false;
+        }
+        return true;
     }
 
     private void runUiSdk(Context context, String snapToken) {
