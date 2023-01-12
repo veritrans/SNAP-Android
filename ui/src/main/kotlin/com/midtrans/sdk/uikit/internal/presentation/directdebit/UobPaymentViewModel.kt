@@ -75,7 +75,7 @@ internal class UobPaymentViewModel @Inject constructor(
             snapToken = snapToken,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
-                    transactionResult.value = Pair(getTransactionStatus(result), result.transactionId.orEmpty())
+                    transactionResult.value = Pair(result.statusCode.orEmpty(), result.transactionId.orEmpty())
                     trackErrorStatusCode(
                         pageName = PageName.UOB_PAGE,
                         paymentMethodName = PaymentType.UOB_EZPAY,

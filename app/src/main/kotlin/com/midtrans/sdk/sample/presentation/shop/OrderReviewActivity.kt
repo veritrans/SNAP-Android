@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
+import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.UIKitCustomSetting
@@ -39,7 +40,7 @@ import com.midtrans.sdk.sample.util.DemoConstant.ONE_CLICK_TYPE
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.uikit.SdkUIFlowBuilder
+import com.midtrans.sdk.corekit.core.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.api.model.CustomerDetails
 import com.midtrans.sdk.uikit.api.model.ItemDetails
@@ -52,7 +53,25 @@ import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import java.util.*
 
 
-class OrderReviewActivity : ComponentActivity() {
+class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
+
+    override fun onTransactionFinished(result: com.midtrans.sdk.corekit.models.snap.TransactionResult) {
+        if (result.response != null) {
+            when (result.response.transactionStatus) {
+                com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_SUCCESS -> Toast.makeText(this, "Transaction Finished. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
+                com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_PENDING -> Toast.makeText(this, "Transaction Pending. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
+                com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_FAILED -> Toast.makeText(this, "Transaction Failed. ID: " + result.response.transactionId.toString() + ". Message: " + result.response.statusCode, Toast.LENGTH_LONG).show()
+            }
+        } else if (result.isTransactionCanceled) {
+            Toast.makeText(this, "Transaction Canceled", Toast.LENGTH_LONG).show()
+        } else {
+            if (result.status.equals(com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_INVALID, true)) {
+                Toast.makeText(this, "Transaction Invalid. ${result.statusMessage}", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "Transaction Finished with failure.", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 
     private val launcher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -75,11 +94,44 @@ class OrderReviewActivity : ComponentActivity() {
             val transactionResult = data?.getParcelableExtra<TransactionResult>(
                 UiKitConstants.KEY_TRANSACTION_RESULT
             )
-            Toast.makeText(
-                this@OrderReviewActivity,
-                "Transaction ${transactionResult?.transactionId.orEmpty()} status ${transactionResult?.status.orEmpty()}",
-                Toast.LENGTH_LONG
-            ).show()
+            if (transactionResult != null) {
+                when (transactionResult.status) {
+                    com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_SUCCESS -> Toast.makeText(
+                        this,
+                        "Transaction Finished. ID: " + transactionResult.transactionId,
+                        Toast.LENGTH_LONG
+                    ).show()
+                    com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_PENDING -> Toast.makeText(
+                        this,
+                        "Transaction Pending. ID: " + transactionResult.transactionId,
+                        Toast.LENGTH_LONG
+                    ).show()
+                    com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_FAILED -> Toast.makeText(
+                        this,
+                        "Transaction Failed. ID: " + transactionResult.transactionId + ". Message: " + transactionResult.status,
+                        Toast.LENGTH_LONG
+                    ).show()
+                    "canceled" -> {
+                        Toast.makeText(this,"Transaction Cancelled", Toast.LENGTH_LONG).show()
+                    }
+                    else -> Toast.makeText(
+                        this,
+                        "Transaction ID: " + transactionResult.transactionId + ". Message: " + transactionResult.status,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } else {
+                if (transactionResult?.status.equals(com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_INVALID, true)) {
+                    Toast.makeText(this, "Transaction Invalid", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "Transaction Finished with failure.", Toast.LENGTH_LONG).show()
+                }
+            }
+//            Toast.makeText(
+//                this@OrderReviewActivity,
+//                "Transaction ${transactionResult?.transactionId.orEmpty()} status ${transactionResult?.status.orEmpty()}",
+//                Toast.LENGTH_LONG
+//            ).show()
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -617,6 +669,7 @@ class OrderReviewActivity : ComponentActivity() {
             ?.setClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
 //            .setExternalScanner { _, _ -> TODO("Not yet implemented") }
             ?.enableLog(true)
+            ?.setTransactionFinishedCallback(this)
             ?.setDefaultText("fonts/SourceSansPro-Regular.ttf")
             ?.setBoldText("fonts/SourceSansPro-Bold.ttf")
             ?.setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")

@@ -1,5 +1,10 @@
 package com.midtrans.sdk.corekit.core;
 
+import static com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_FAILED;
+import static com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_INVALID;
+import static com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_PENDING;
+import static com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_SUCCESS;
+
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -11,6 +16,7 @@ import com.midtrans.sdk.uikit.api.exception.SnapError;
 import com.midtrans.sdk.uikit.api.model.SnapTransactionDetail;
 import com.midtrans.sdk.uikit.api.model.TransactionResult;
 import com.midtrans.sdk.uikit.external.UiKitApi;
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants;
 
 import java.lang.ref.WeakReference;
 
@@ -104,11 +110,40 @@ public class ISdkFlow {
     private static void deliverCallback(TransactionResult transactionResult) {
         com.midtrans.sdk.corekit.models.snap.TransactionResult result;
 
-        if (transactionResult.getStatus().contains("canceled")) {
-            result = new com.midtrans.sdk.corekit.models.snap.TransactionResult(true);
+        if (transactionResult != null) {
+            if (transactionResult.getStatus().contains("canceled")) {
+                result = new com.midtrans.sdk.corekit.models.snap.TransactionResult(true);
+            } else if (transactionResult.getStatus().equals(UiKitConstants.STATUS_CODE_200) || transactionResult.getStatus().contains("success") || transactionResult.getStatus().contains("settlement")) {
+                result = new com.midtrans.sdk.corekit.models.snap.TransactionResult(new TransactionResponse(
+                        UiKitConstants.STATUS_CODE_200,
+                        transactionResult.getTransactionId(),
+                        transactionResult.getPaymentType(),
+                        STATUS_SUCCESS
+                ));
+            } else if (transactionResult.getStatus().equals(UiKitConstants.STATUS_CODE_201) || transactionResult.getStatus().contains("pending")) {
+                result = new com.midtrans.sdk.corekit.models.snap.TransactionResult(new TransactionResponse(
+                        UiKitConstants.STATUS_CODE_201,
+                        transactionResult.getTransactionId(),
+                        transactionResult.getPaymentType(),
+                        STATUS_PENDING
+                ));
+            } else {
+                result = new com.midtrans.sdk.corekit.models.snap.TransactionResult(new TransactionResponse(
+                        transactionResult.getStatus(),
+                        transactionResult.getTransactionId(),
+                        transactionResult.getPaymentType(),
+                        STATUS_FAILED
+                ));
+            }
         } else {
-            result = new com.midtrans.sdk.corekit.models.snap.TransactionResult(new TransactionResponse(transactionResult));
+            result = new com.midtrans.sdk.corekit.models.snap.TransactionResult(new TransactionResponse(
+                    null,
+                    null,
+                    null,
+                    STATUS_INVALID
+            ));
         }
+
 
         if (transactionFinishedCallback != null && transactionFinishedCallback.get() != null) {
             transactionFinishedCallback.get().onTransactionFinished(result);
