@@ -4,6 +4,9 @@ import static com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_FAIL
 import static com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_INVALID;
 import static com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_PENDING;
 import static com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_SUCCESS;
+import static com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_200;
+import static com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_201;
+import static com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SETTLEMENT;
 
 import android.content.Context;
 
@@ -113,14 +116,14 @@ public class ISdkFlow {
         if (transactionResult != null) {
             if (transactionResult.getStatus().contains("canceled")) {
                 result = new com.midtrans.sdk.corekit.models.snap.TransactionResult(true);
-            } else if (transactionResult.getStatus().equals(UiKitConstants.STATUS_CODE_200) || transactionResult.getStatus().contains("success") || transactionResult.getStatus().contains("settlement")) {
+            } else if (isSuccess(transactionResult.getStatus())) {
                 result = new com.midtrans.sdk.corekit.models.snap.TransactionResult(new TransactionResponse(
                         UiKitConstants.STATUS_CODE_200,
                         transactionResult.getTransactionId(),
                         transactionResult.getPaymentType(),
                         STATUS_SUCCESS
                 ));
-            } else if (transactionResult.getStatus().equals(UiKitConstants.STATUS_CODE_201) || transactionResult.getStatus().contains("pending")) {
+            } else if (isPending(transactionResult.getStatus())) {
                 result = new com.midtrans.sdk.corekit.models.snap.TransactionResult(new TransactionResponse(
                         UiKitConstants.STATUS_CODE_201,
                         transactionResult.getTransactionId(),
@@ -148,5 +151,33 @@ public class ISdkFlow {
         if (transactionFinishedCallback != null && transactionFinishedCallback.get() != null) {
             transactionFinishedCallback.get().onTransactionFinished(result);
         }
+    }
+
+    private static boolean isSuccess(String status) {
+        boolean isSuccess;
+        switch (status) {
+            case STATUS_CODE_200:
+            case STATUS_SUCCESS:
+            case STATUS_SETTLEMENT:
+            case "capture":
+                isSuccess = true;
+                break;
+            default:
+                isSuccess = false;
+        }
+        return isSuccess;
+    }
+
+    private static boolean isPending(String status) {
+        boolean isPending;
+        switch (status) {
+            case STATUS_CODE_201:
+            case STATUS_PENDING:
+                isPending = true;
+                break;
+            default:
+                isPending = false;
+        }
+        return isPending;
     }
 }
