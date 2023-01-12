@@ -50,6 +50,7 @@ import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenAc
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -190,7 +191,7 @@ internal class CreditCardActivity : BaseActivity() {
             total = it.grossAmount?.currencyFormatRp().orEmpty(),
             orderId = it.orderId.toString(),
             transactionResult = TransactionResult(
-                status = it.transactionStatus.orEmpty(),
+                status = STATUS_SUCCESS,
                 transactionId = it.transactionId.orEmpty(),
                 paymentType = it.paymentType.orEmpty()
             ),

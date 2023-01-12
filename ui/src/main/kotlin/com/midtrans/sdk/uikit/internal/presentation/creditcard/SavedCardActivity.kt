@@ -23,6 +23,7 @@ import com.midtrans.sdk.corekit.api.model.CreditCard
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.api.model.PaymentType
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
@@ -30,6 +31,7 @@ import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActi
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
 import com.midtrans.sdk.uikit.internal.view.*
 import javax.inject.Inject
 
@@ -109,7 +111,7 @@ class SavedCardActivity: BaseActivity() {
                         activityContext = this@SavedCardActivity,
                         total = totalAmount,
                         orderId = it?.orderId.toString(),
-                        transactionResult = TransactionResult("","",""),
+                        transactionResult = TransactionResult(STATUS_SUCCESS, it.transactionId.orEmpty(), PaymentType.CREDIT_CARD),
                         stepNumber = 0
                     )
                     startActivity(intent)
@@ -119,7 +121,7 @@ class SavedCardActivity: BaseActivity() {
                     RESULT_OK,
                     Intent().putExtra(
                         UiKitConstants.KEY_TRANSACTION_RESULT,
-                        TransactionResult("", "", "")
+                        TransactionResult(STATUS_SUCCESS, it.transactionId.orEmpty(), PaymentType.CREDIT_CARD)
                     )
                 )
                 finish()
@@ -133,7 +135,7 @@ class SavedCardActivity: BaseActivity() {
                             activityContext = this@SavedCardActivity,
                             total = totalAmount,
                             orderId = it?.orderId.toString(),
-                            transactionResult = TransactionResult("","",""),
+                            transactionResult = TransactionResult(STATUS_SUCCESS, it.transactionId.orEmpty(), PaymentType.CREDIT_CARD),
                             stepNumber = 0
                         )
                     }
@@ -153,7 +155,7 @@ class SavedCardActivity: BaseActivity() {
                             RESULT_OK,
                             Intent().putExtra(
                                 UiKitConstants.KEY_TRANSACTION_RESULT,
-                                TransactionResult("", "", "")
+                                TransactionResult(STATUS_SUCCESS, it.transactionId.orEmpty(), PaymentType.CREDIT_CARD)
                             )
                         )
                         finish()
