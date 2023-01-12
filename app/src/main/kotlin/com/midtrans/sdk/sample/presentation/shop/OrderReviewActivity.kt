@@ -46,26 +46,31 @@ import com.midtrans.sdk.uikit.api.model.CustomerDetails
 import com.midtrans.sdk.uikit.api.model.ItemDetails
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CANCELED
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_FAILED
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import java.util.*
+import com.midtrans.sdk.corekit.models.snap.TransactionResult as TransactionResultJava
 
 
 class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
 
-    override fun onTransactionFinished(result: com.midtrans.sdk.corekit.models.snap.TransactionResult) {
+    override fun onTransactionFinished(result: TransactionResultJava) {
         if (result.response != null) {
             when (result.response.transactionStatus) {
-                com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_SUCCESS -> Toast.makeText(this, "Transaction Finished. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
-                com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_PENDING -> Toast.makeText(this, "Transaction Pending. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
-                com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_FAILED -> Toast.makeText(this, "Transaction Failed. ID: " + result.response.transactionId.toString() + ". Message: " + result.response.statusCode, Toast.LENGTH_LONG).show()
+                TransactionResultJava.STATUS_SUCCESS -> Toast.makeText(this, "Transaction Finished. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
+                TransactionResultJava.STATUS_PENDING -> Toast.makeText(this, "Transaction Pending. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
+                TransactionResultJava.STATUS_FAILED -> Toast.makeText(this, "Transaction Failed. ID: " + result.response.transactionId.toString() + ". Message: " + result.response.statusCode, Toast.LENGTH_LONG).show()
             }
         } else if (result.isTransactionCanceled) {
             Toast.makeText(this, "Transaction Canceled", Toast.LENGTH_LONG).show()
         } else {
-            if (result.status.equals(com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_INVALID, true)) {
+            if (result.status.equals(TransactionResultJava.STATUS_INVALID, true)) {
                 Toast.makeText(this, "Transaction Invalid. ${result.statusMessage}", Toast.LENGTH_LONG).show()
             } else {
                 Toast.makeText(this, "Transaction Finished with failure.", Toast.LENGTH_LONG).show()
@@ -96,22 +101,22 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             )
             if (transactionResult != null) {
                 when (transactionResult.status) {
-                    com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_SUCCESS -> Toast.makeText(
+                    STATUS_SUCCESS -> Toast.makeText(
                         this,
                         "Transaction Finished. ID: " + transactionResult.transactionId,
                         Toast.LENGTH_LONG
                     ).show()
-                    com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_PENDING -> Toast.makeText(
+                    STATUS_PENDING -> Toast.makeText(
                         this,
                         "Transaction Pending. ID: " + transactionResult.transactionId,
                         Toast.LENGTH_LONG
                     ).show()
-                    com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_FAILED -> Toast.makeText(
+                    STATUS_FAILED -> Toast.makeText(
                         this,
                         "Transaction Failed. ID: " + transactionResult.transactionId + ". Message: " + transactionResult.status,
                         Toast.LENGTH_LONG
                     ).show()
-                    "canceled" -> {
+                    STATUS_CANCELED -> {
                         Toast.makeText(this,"Transaction Cancelled", Toast.LENGTH_LONG).show()
                     }
                     else -> Toast.makeText(
@@ -121,7 +126,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                     ).show()
                 }
             } else {
-                if (transactionResult?.status.equals(com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_INVALID, true)) {
+                if (transactionResult?.status.equals("Invalid", true)) {
                     Toast.makeText(this, "Transaction Invalid", Toast.LENGTH_LONG).show()
                 } else {
                     Toast.makeText(this, "Transaction Finished with failure.", Toast.LENGTH_LONG).show()
