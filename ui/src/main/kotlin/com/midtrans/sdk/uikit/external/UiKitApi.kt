@@ -21,6 +21,8 @@ class UiKitApi private constructor(val builder: Builder) {
         DaggerUiKitComponent.builder().applicationContext(builder.context).build()
     }
 
+    private var isMerchantUrlAvailable = true
+
     init {
         setInstance(this)
         buildCoreKit(builder)
@@ -28,11 +30,15 @@ class UiKitApi private constructor(val builder: Builder) {
 
     private fun buildCoreKit(builder: Builder) {
         builder.run {
-            SnapCore.Builder()
-                .withContext(context)
-                .withMerchantUrl(merchantUrl)
-                .withMerchantClientKey(merchantClientKey)
-                .build()
+            if (merchantUrl.isEmpty()) {
+                isMerchantUrlAvailable = false
+            } else {
+                SnapCore.Builder()
+                    .withContext(context)
+                    .withMerchantUrl(merchantUrl)
+                    .withMerchantClientKey(merchantClientKey)
+                    .build()
+            }
         }
     }
 
@@ -82,12 +88,14 @@ class UiKitApi private constructor(val builder: Builder) {
             briVa = briVa,
             customField1 = customField1,
             customField2 = customField2,
-            customField3 = customField3
+            customField3 = customField3,
+            isMerchantUrlAvailable = isMerchantUrlAvailable,
+            isSnapTokenAvailable = true
         )
         launcher.launch(intent)
     }
 
-    private fun getPaymentType (paymentMethod: PaymentMethod?) : PaymentTypeItem? {
+    private fun getPaymentType(paymentMethod: PaymentMethod?): PaymentTypeItem? {
         return when (paymentMethod) {
             PaymentMethod.CREDIT_CARD -> PaymentTypeItem(PaymentType.CREDIT_CARD, null)
             PaymentMethod.BANK_TRANSFER -> PaymentTypeItem(PaymentType.BANK_TRANSFER, null)
@@ -119,10 +127,15 @@ class UiKitApi private constructor(val builder: Builder) {
         launcher: ActivityResultLauncher<Intent>,
         snapToken: String?
     ) {
+        var isSnapTokenAvailable = true
+        if(snapToken.isNullOrEmpty()) isSnapTokenAvailable = false
+
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
             activityContext = activity,
             snapToken = snapToken,
-            transactionDetails = SnapTransactionDetail("", 0.0)
+            transactionDetails = SnapTransactionDetail("", 0.0),
+            isMerchantUrlAvailable = isMerchantUrlAvailable,
+            isSnapTokenAvailable = isSnapTokenAvailable
         )
         launcher.launch(intent)
     }
@@ -159,7 +172,9 @@ class UiKitApi private constructor(val builder: Builder) {
             permataVa = permataVa,
             bcaVa = bcaVa,
             bniVa = bniVa,
-            briVa = briVa
+            briVa = briVa,
+            isMerchantUrlAvailable = isMerchantUrlAvailable,
+            isSnapTokenAvailable = true
         )
         activity.startActivityForResult(intent, requestCode)
     }
@@ -207,7 +222,9 @@ class UiKitApi private constructor(val builder: Builder) {
             uobEzpayCallback = uobEzpayCallback,
             customField1 = customField1,
             customField2 = customField2,
-            customField3 = customField3
+            customField3 = customField3,
+            isMerchantUrlAvailable = isMerchantUrlAvailable,
+            isSnapTokenAvailable = true
         )
         activityContext.startActivity(intent)
     }
@@ -221,11 +238,16 @@ class UiKitApi private constructor(val builder: Builder) {
     ) {
         UiKitApi.paymentCallback = paymentCallback
 
+        var isSnapTokenAvailable = true
+        if(snapToken.isNullOrEmpty()) isSnapTokenAvailable = false
+
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
             activityContext = activityContext,
             snapToken = snapToken,
             transactionDetails = com.midtrans.sdk.corekit.api.model.SnapTransactionDetail("", 0.0),
-            paymentType = paymentType
+            paymentType = paymentType,
+            isMerchantUrlAvailable = isMerchantUrlAvailable,
+            isSnapTokenAvailable = isSnapTokenAvailable
         )
         activityContext.startActivity(intent)
     }

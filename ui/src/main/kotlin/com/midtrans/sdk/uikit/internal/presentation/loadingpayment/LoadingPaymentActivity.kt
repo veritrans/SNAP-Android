@@ -26,6 +26,7 @@ import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActi
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.InProgressActivity
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_INVALID
 import com.midtrans.sdk.uikit.internal.view.AnimatedIcon
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -53,6 +54,8 @@ class LoadingPaymentActivity : BaseActivity() {
         private const val EXTRA_SHOPEEPAY_CALLBACK = "loadingPaymentActivity.extra.shopeepay_callback"
         private const val EXTRA_UOB_EZPAY_CALLBACK = "loadingPaymentActivity.extra.uob_ezpay_callback"
         private const val EXTRA_PAYMENT_TYPE = "loadingPaymentActivity.extra.payment_type"
+        private const val EXTRA_SNAP_TOKEN_VALID = "loadingPaymentActivity.extra.is_snap_token_valid"
+        private const val EXTRA_MERCHANT_URL_AVAILABLE = "loadingPaymentActivity.extra.is_merchant_url_available"
 
         fun getLoadingPaymentIntent(
             activityContext: Context,
@@ -75,7 +78,9 @@ class LoadingPaymentActivity : BaseActivity() {
             gopayCallback: GopayPaymentCallback? = null,
             shopeepayCallback: PaymentCallback? = null,
             uobEzpayCallback: PaymentCallback? = null,
-            paymentType: PaymentTypeItem? = null
+            paymentType: PaymentTypeItem? = null,
+            isSnapTokenAvailable: Boolean,
+            isMerchantUrlAvailable: Boolean
         ): Intent {
             return Intent(activityContext, LoadingPaymentActivity::class.java).apply {
                 putExtra(EXTRA_TRANSACTION_DETAIL, transactionDetails)
@@ -100,6 +105,8 @@ class LoadingPaymentActivity : BaseActivity() {
                 putExtra(EXTRA_SHOPEEPAY_CALLBACK, shopeepayCallback)
                 putExtra(EXTRA_UOB_EZPAY_CALLBACK, uobEzpayCallback)
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
+                putExtra(EXTRA_SNAP_TOKEN_VALID, isSnapTokenAvailable)
+                putExtra(EXTRA_MERCHANT_URL_AVAILABLE, isMerchantUrlAvailable)
             }
         }
     }
@@ -168,6 +175,12 @@ class LoadingPaymentActivity : BaseActivity() {
     private val paymentType: PaymentTypeItem? by lazy {
         intent.getParcelableExtra(EXTRA_PAYMENT_TYPE)
     }
+    private val isSnapTokenAvailable: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_SNAP_TOKEN_VALID, true)
+    }
+    private val isMerchantUrlAvailable: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_MERCHANT_URL_AVAILABLE, true)
+    }
     private val viewModel: LoadingPaymentViewModel by lazy {
         ViewModelProvider(this, vmFactory).get(LoadingPaymentViewModel::class.java)
     }
@@ -175,13 +188,41 @@ class LoadingPaymentActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        UiKitApi.getDefaultInstance().daggerComponent.inject(this)
+        if(!isMerchantUrlAvailable) {
+            val data = Intent()
+            data.putExtra(
+                UiKitConstants.KEY_TRANSACTION_RESULT,
+                com.midtrans.sdk.uikit.api.model.TransactionResult(
+                    status = STATUS_INVALID,
+                    transactionId = "",
+                    paymentType = "",
+                    message = resources.getString(R.string.invalid_merchant_base_url)
+                )
+            )
+            setResult(Activity.RESULT_OK, data)
+            finish()
+        } else if(!isSnapTokenAvailable) {
+            val data = Intent()
+            data.putExtra(
+                UiKitConstants.KEY_TRANSACTION_RESULT,
+                com.midtrans.sdk.uikit.api.model.TransactionResult(
+                    status = STATUS_INVALID,
+                    transactionId = "",
+                    paymentType = "",
+                    message = resources.getString(R.string.invalid_snap_token)
+                )
+            )
+            setResult(Activity.RESULT_OK, data)
+            finish()
+        } else {
+            UiKitApi.getDefaultInstance().daggerComponent.inject(this)
 
-        initObserver()
-        setContent {
-            LoadAnimation()
+            initObserver()
+            setContent {
+                LoadAnimation()
+            }
+            loadPaymentOptions()
         }
-        loadPaymentOptions()
     }
 
     private fun loadPaymentOptions() {

@@ -55,6 +55,7 @@ import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import java.util.*
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CANCELED
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_FAILED
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_INVALID
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
 import com.midtrans.sdk.corekit.models.snap.TransactionResult as TransactionResultJava
@@ -65,17 +66,17 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     override fun onTransactionFinished(result: TransactionResultJava) {
         if (result.response != null) {
             when (result.response.transactionStatus) {
-                TransactionResultJava.STATUS_SUCCESS -> Toast.makeText(this, "Transaction Finished. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
-                TransactionResultJava.STATUS_PENDING -> Toast.makeText(this, "Transaction Pending. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
-                TransactionResultJava.STATUS_FAILED -> Toast.makeText(this, "Transaction Failed. ID: " + result.response.transactionId.toString() + ". Message: " + result.response.statusCode, Toast.LENGTH_LONG).show()
+                TransactionResultJava.STATUS_SUCCESS -> Toast.makeText(this, "Transaction Legacy Finished. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
+                TransactionResultJava.STATUS_PENDING -> Toast.makeText(this, "Transaction Legacy Pending. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
+                TransactionResultJava.STATUS_FAILED -> Toast.makeText(this, "Transaction Legacy Failed. ID: " + result.response.transactionId.toString() + ". Message: " + result.response.statusCode, Toast.LENGTH_LONG).show()
             }
         } else if (result.isTransactionCanceled) {
-            Toast.makeText(this, "Transaction Canceled", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Transaction Legacy Canceled", Toast.LENGTH_LONG).show()
         } else {
             if (result.status.equals(TransactionResultJava.STATUS_INVALID, true)) {
-                Toast.makeText(this, "Transaction Invalid. ${result.statusMessage}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Transaction Legacy Invalid. ${result.statusMessage}", Toast.LENGTH_LONG).show()
             } else {
-                Toast.makeText(this, "Transaction Finished with failure.", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Transaction Legacy Finished with failure.", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -103,42 +104,28 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             )
             if (transactionResult != null) {
                 when (transactionResult.status) {
-                    STATUS_SUCCESS -> Toast.makeText(
-                        this,
-                        "Transaction Finished. ID: " + transactionResult.transactionId,
-                        Toast.LENGTH_LONG
-                    ).show()
-                    STATUS_PENDING -> Toast.makeText(
-                        this,
-                        "Transaction Pending. ID: " + transactionResult.transactionId,
-                        Toast.LENGTH_LONG
-                    ).show()
-                    STATUS_FAILED -> Toast.makeText(
-                        this,
-                        "Transaction Failed. ID: " + transactionResult.transactionId + ". Message: " + transactionResult.status,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    STATUS_SUCCESS -> {
+                        Toast.makeText(this,"Transaction Finished. ID: " + transactionResult.transactionId, Toast.LENGTH_LONG).show()
+                    }
+                    STATUS_PENDING -> {
+                        Toast.makeText(this,"Transaction Pending. ID: " + transactionResult.transactionId, Toast.LENGTH_LONG).show()
+                    }
+                    STATUS_FAILED -> {
+                        Toast.makeText(this,"Transaction Failed. ID: " + transactionResult.transactionId, Toast.LENGTH_LONG).show()
+                    }
                     STATUS_CANCELED -> {
                         Toast.makeText(this,"Transaction Cancelled", Toast.LENGTH_LONG).show()
                     }
-                    else -> Toast.makeText(
-                        this,
-                        "Transaction ID: " + transactionResult.transactionId + ". Message: " + transactionResult.status,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    STATUS_INVALID -> {
+                        Toast.makeText(this, "Transaction Invalid. ${transactionResult.message}", Toast.LENGTH_LONG).show()
+                    }
+                    else -> {
+                        Toast.makeText(this,"Transaction ID: " + transactionResult.transactionId + ". Message: " + transactionResult.status, Toast.LENGTH_LONG).show()
+                    }
                 }
             } else {
-                if (transactionResult?.status.equals("Invalid", true)) {
-                    Toast.makeText(this, "Transaction Invalid", Toast.LENGTH_LONG).show()
-                } else {
-                    Toast.makeText(this, "Transaction Finished with failure.", Toast.LENGTH_LONG).show()
-                }
+                Toast.makeText(this, "Transaction Invalid", Toast.LENGTH_LONG).show()
             }
-//            Toast.makeText(
-//                this@OrderReviewActivity,
-//                "Transaction ${transactionResult?.transactionId.orEmpty()} status ${transactionResult?.status.orEmpty()}",
-//                Toast.LENGTH_LONG
-//            ).show()
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -427,6 +414,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                     .fillMaxWidth(1f)
                     .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
                 onClick = {
+                    buildUiKit()
                     payWithAndroidxActivityResultLauncherToken(snapToken.text)
                 }
             )
@@ -830,7 +818,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     private fun buildUiKitStart() {
         val builder = UiKitApi.Builder()
             .withContext(this.applicationContext)
-            .withMerchantUrl("https://snap-merchant-server.herokuapp.com/api/")
+            .withMerchantUrl("")
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
             .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
 
