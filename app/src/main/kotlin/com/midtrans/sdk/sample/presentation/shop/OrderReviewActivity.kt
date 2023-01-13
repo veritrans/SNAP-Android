@@ -41,20 +41,22 @@ import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.corekit.core.SdkUIFlowBuilder
+import com.midtrans.sdk.sample.util.DemoConstant
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.api.model.CustomerDetails
 import com.midtrans.sdk.uikit.api.model.ItemDetails
 import com.midtrans.sdk.uikit.external.UiKitApi
+import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
-import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CANCELED
-import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_FAILED
-import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
-import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import java.util.*
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CANCELED
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_FAILED
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
 import com.midtrans.sdk.corekit.models.snap.TransactionResult as TransactionResultJava
 
 
@@ -187,6 +189,11 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             ?: throw RuntimeException("paymentChannels must not be empty")
     }
 
+    private val inputColor: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_COLOR)
+            ?: throw RuntimeException("Input Color must not be empty")
+    }
+
     private val bcaVa: String by lazy {
         intent.getStringExtra(EXTRA_INPUT_BCAVA)
             ?: throw throw RuntimeException("BCAva must not be empty")
@@ -236,6 +243,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        buildUiKitStart()
 //        setLocaleNew("id") // commented for now. conflict with buildLegacyUiKit
 
         setContent {
@@ -459,6 +467,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                     bcaVaRequest = populateVa(bcaVa)
                     bniVaRequest = populateVa(bniVa)
                     permataVaRequest = populateVa(permataVa)
+                    buildUiKit()
                     payWithAndroidxActivityResultLauncher()
                 }
             )
@@ -684,6 +693,17 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         uiKitCustomSettingLegacy()
     }
 
+    private fun buildUiKit() {
+        val builder = UiKitApi.Builder()
+            .withContext(this.applicationContext)
+            .withMerchantUrl("https://snap-merchant-server.herokuapp.com/api/")
+            .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
+            .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
+
+        getCustomColor(inputColor)?.let { builder.withCustomColors(it) }
+        builder.build()
+    }
+
     private fun uiKitCustomSetting() {
         val uiKitCustomSetting = uiKitApi.uiKitSetting
         uiKitCustomSetting.saveCardChecked = false
@@ -807,6 +827,45 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity)
     }
 
+    private fun buildUiKitStart() {
+        val builder = UiKitApi.Builder()
+            .withContext(this.applicationContext)
+            .withMerchantUrl("https://snap-merchant-server.herokuapp.com/api/")
+            .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
+            .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
+
+        getCustomColor(inputColor)?.let { builder.withCustomColors(it) }
+        builder.build()
+    }
+
+    private fun getCustomColor(inputColor: String): CustomColors? {
+        var color: CustomColors? = null
+        when (inputColor) {
+            DemoConstant.COLOR_BLUE -> {
+                color = CustomColors(
+                    interactiveFillInverse = 0x0e4e95,
+                    textInverse = 0xFFFFFF,
+                    supportNeutralFill = 0x3e71aa
+                )
+            }
+            DemoConstant.COLOR_RED -> {
+                color = CustomColors(
+                    interactiveFillInverse = 0xb11235,
+                    textInverse = 0xFFFFFF,
+                    supportNeutralFill = 0xf36b89
+                )
+            }
+            DemoConstant.COLOR_GREEN -> {
+                color = CustomColors(
+                    interactiveFillInverse = 0x32ad4a,
+                    textInverse = 0xFFFFFF,
+                    supportNeutralFill = 0x5bbd6e
+                )
+            }
+        }
+        return color
+    }
+
     companion object {
         private const val EXTRA_PRODUCT = "orderReview.extra.product"
         private const val EXTRA_INPUT_INSTALLMENT = "orderReview.extra.installment"
@@ -821,6 +880,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         private const val EXTRA_INPUT_ISBNIPOINTS = "orderReview.extra.isBniPoints"
         private const val EXTRA_INPUT_ISSHOWALLPAYMENT = "productList.extra.isShowAllPayment"
         private const val EXTRA_INPUT_PAYMENTCHANNELS = "productList.extra.paymentChannels"
+        private const val EXTRA_INPUT_COLOR = "productList.extra.inputColor"
 
         fun getOrderReviewActivityIntent(
             activityContext: Context,
@@ -836,7 +896,8 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             paymentChannels: ArrayList<ListItem>,
             bcaVa: String,
             bniVa: String,
-            permataVa: String
+            permataVa: String,
+            color: String
         ): Intent {
             return Intent(activityContext, OrderReviewActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT, product)
@@ -852,6 +913,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                 putExtra(EXTRA_INPUT_BCAVA, bcaVa)
                 putExtra(EXTRA_INPUT_BNIVA, bniVa)
                 putExtra(EXTRA_INPUT_PERMATAVA, permataVa)
+                putExtra(EXTRA_INPUT_COLOR, color)
             }
         }
     }
