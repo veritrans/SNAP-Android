@@ -25,6 +25,7 @@ public class TransactionResponse {
 
     private String paymentType;
     private String transactionStatus;
+    private String statusMessage;
 
 
     public TransactionResponse() { }
@@ -33,12 +34,14 @@ public class TransactionResponse {
             String statusCode,
             String transactionId,
             String paymentType,
-            String transactionStatus
+            String transactionStatus,
+            String statusMessage
     ) {
         this.statusCode = statusCode;
         this.transactionId = transactionId;
         this.paymentType = paymentType;
         this.transactionStatus = transactionStatus;
+        this.statusMessage = statusMessage;
     }
 
     public TransactionResponse(TransactionResult transactionResult){
@@ -46,6 +49,7 @@ public class TransactionResponse {
         this.transactionId = transactionResult.getTransactionId();
         this.paymentType = transactionResult.getPaymentType();
         this.transactionStatus = transactionResult.getStatus();
+        this.statusMessage = transactionResult.getMessage();
     }
 
 
@@ -61,10 +65,11 @@ public class TransactionResponse {
         return TextUtils.isEmpty(paymentType) ? "" : paymentType;
     }
 
-
-
     public String getTransactionStatus() {
         return TextUtils.isEmpty(transactionStatus) ? "" : transactionStatus;
     }
 
+    public String getStatusMessage() {
+        return statusMessage;
+    }
 }

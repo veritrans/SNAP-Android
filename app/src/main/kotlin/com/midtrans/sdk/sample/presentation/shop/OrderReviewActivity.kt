@@ -68,7 +68,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             when (result.response.transactionStatus) {
                 TransactionResultJava.STATUS_SUCCESS -> Toast.makeText(this, "Transaction Legacy Finished. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
                 TransactionResultJava.STATUS_PENDING -> Toast.makeText(this, "Transaction Legacy Pending. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
-                TransactionResultJava.STATUS_FAILED -> Toast.makeText(this, "Transaction Legacy Failed. ID: " + result.response.transactionId.toString() + ". Message: " + result.response.statusCode, Toast.LENGTH_LONG).show()
+                TransactionResultJava.STATUS_FAILED -> Toast.makeText(this, "Transaction Legacy Failed. ID: " + result.response.transactionId.toString() + ". Message: " + result.response.statusMessage, Toast.LENGTH_LONG).show()
             }
         } else if (result.isTransactionCanceled) {
             Toast.makeText(this, "Transaction Legacy Canceled", Toast.LENGTH_LONG).show()
@@ -111,7 +111,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                         Toast.makeText(this,"Transaction Pending. ID: " + transactionResult.transactionId, Toast.LENGTH_LONG).show()
                     }
                     STATUS_FAILED -> {
-                        Toast.makeText(this,"Transaction Failed. ID: " + transactionResult.transactionId, Toast.LENGTH_LONG).show()
+                        Toast.makeText(this,"Transaction Failed. ID: " + transactionResult.transactionId + ". Message: " + transactionResult.message, Toast.LENGTH_LONG).show()
                     }
                     STATUS_CANCELED -> {
                         Toast.makeText(this,"Transaction Cancelled", Toast.LENGTH_LONG).show()

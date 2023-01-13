@@ -122,21 +122,24 @@ public class ISdkFlow {
                         UiKitConstants.STATUS_CODE_200,
                         transactionResult.getTransactionId(),
                         transactionResult.getPaymentType(),
-                        STATUS_SUCCESS
+                        STATUS_SUCCESS,
+                        transactionResult.getMessage()
                 ));
             } else if (isPending(transactionResult.getStatus())) {
                 result = new com.midtrans.sdk.corekit.models.snap.TransactionResult(new TransactionResponse(
                         UiKitConstants.STATUS_CODE_201,
                         transactionResult.getTransactionId(),
                         transactionResult.getPaymentType(),
-                        STATUS_PENDING
+                        STATUS_PENDING,
+                        transactionResult.getMessage()
                 ));
             } else {
                 result = new com.midtrans.sdk.corekit.models.snap.TransactionResult(new TransactionResponse(
                         transactionResult.getStatus(),
                         transactionResult.getTransactionId(),
-                        transactionResult.getPaymentType(),
-                        STATUS_FAILED
+                        transactionResult.getMessage(),
+                        STATUS_FAILED,
+                        transactionResult.getMessage()
                 ));
             }
         } else {
@@ -144,7 +147,8 @@ public class ISdkFlow {
                     null,
                     null,
                     null,
-                    STATUS_INVALID
+                    STATUS_INVALID,
+                    transactionResult.getMessage()
             ));
         }
 
