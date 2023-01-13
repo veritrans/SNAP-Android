@@ -30,6 +30,8 @@ import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActivity
+import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_201
 import com.midtrans.sdk.uikit.internal.view.*
@@ -84,7 +86,15 @@ internal class WalletActivity : BaseActivity() {
             finish()
         }
 
+    private val errorScreenLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            setResult(result.resultCode, result?.data)
+            finish()
+            isFirstInit = false
+        }
+
     private var deepLinkUrl: String? = null
+    private var isFirstInit = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,7 +132,7 @@ internal class WalletActivity : BaseActivity() {
                 customerInfo = customerInfo,
                 isChargeError = viewModel.isQrChargeErrorLiveData.observeAsState(initial = false),
                 itemInfo = itemInfo,
-                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
+                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00:00"),
                 qrCodeUrl = viewModel.qrCodeUrlLiveData.observeAsState(initial = ""),
                 paymentType = paymentType,
                 isTablet = isTablet
@@ -200,6 +210,23 @@ internal class WalletActivity : BaseActivity() {
         }
         var error by remember { mutableStateOf(false) }
         var loading by remember { mutableStateOf(false) }
+
+        if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
+            errorScreenLauncher.launch(
+                ErrorScreenActivity.getIntent(
+                    activityContext = this@WalletActivity,
+                    title = resources.getString(R.string.expired_title),
+                    content = resources.getString(R.string.expired_desc),
+                    transactionResult = TransactionResult(
+                        status = UiKitConstants.STATUS_FAILED,
+                        transactionId = "expired",
+                        paymentType = paymentType,
+                        message = resources.getString(R.string.expired_desc)
+                    )
+                )
+            )
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxHeight(1f)
