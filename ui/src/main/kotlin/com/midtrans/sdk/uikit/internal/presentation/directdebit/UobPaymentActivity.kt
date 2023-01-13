@@ -32,6 +32,11 @@ import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_200
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_201
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_FAILED
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -105,37 +110,48 @@ class UobPaymentActivity : BaseActivity() {
 
     private fun observeTransactionStatus() {
         viewModel.getTransactionResult().observe(this) { result ->
-            val status = result.first
+            val statusCode = result.first
             val transactionId = result.second
-            when (status) {
-                UiKitConstants.STATUS_SUCCESS,
-                UiKitConstants.STATUS_SETTLEMENT -> {
+            when (statusCode) {
+                STATUS_CODE_200 -> {
                     if (isShowPaymentStatusPage()) {
                         goToSuccessScreen(
                             amount,
                             orderId,
                             TransactionResult(
-                                status = status,
+                                status = STATUS_SUCCESS,
                                 transactionId = transactionId,
                                 paymentType = PaymentType.UOB_EZPAY
                             )
                         )
                     } else {
                         setResult(RESULT_OK, Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, TransactionResult(
-                            status = status,
+                            status = STATUS_SUCCESS,
                             transactionId = transactionId,
                             paymentType = PaymentType.UOB_EZPAY
                         )))
                         finish()
                     }
                 }
-                UiKitConstants.STATUS_PENDING,
-                UiKitConstants.STATUS_FAILED -> {
+                STATUS_CODE_201 -> {
                     val data = Intent()
                     data.putExtra(
                         UiKitConstants.KEY_TRANSACTION_RESULT,
                         TransactionResult(
-                            status = status,
+                            status = STATUS_PENDING,
+                            transactionId = transactionId,
+                            paymentType = PaymentType.UOB_EZPAY
+                        )
+                    )
+                    setResult(RESULT_OK, data)
+                    finish()
+                }
+                else -> {
+                    val data = Intent()
+                    data.putExtra(
+                        UiKitConstants.KEY_TRANSACTION_RESULT,
+                        TransactionResult(
+                            status = STATUS_FAILED,
                             transactionId = transactionId,
                             paymentType = PaymentType.UOB_EZPAY
                         )
