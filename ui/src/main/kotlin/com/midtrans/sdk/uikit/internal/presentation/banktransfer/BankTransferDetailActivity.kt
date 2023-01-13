@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -29,13 +30,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
-import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
+import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
-import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActivity
+import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
@@ -87,6 +90,15 @@ internal class BankTransferDetailActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_MERCHANT_DATA) as? Merchant
     }
 
+    private var isFirstInit = true
+
+    private val errorScreenLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            setResult(result.resultCode, result?.data)
+            finish()
+            isFirstInit = false
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
@@ -103,7 +115,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 bankName = paymentType,
                 companyCodeState = viewModel.companyCodeLiveData.observeAsState(initial = null),
                 destinationBankCode = viewModel.bankCodeLiveData.observeAsState(),
-                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
+                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00:00"),
                 errorState = viewModel.isBankTransferChargeErrorLiveData.observeAsState(initial = false),
                 viewModel = viewModel
             )
@@ -176,6 +188,22 @@ internal class BankTransferDetailActivity : BaseActivity() {
             mutableStateOf(false)
         }
         val state = rememberScrollState()
+
+        if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
+            errorScreenLauncher.launch(
+                ErrorScreenActivity.getIntent(
+                    activityContext = this@BankTransferDetailActivity,
+                    title = resources.getString(R.string.expired_title),
+                    content = resources.getString(R.string.expired_desc),
+                    transactionResult = TransactionResult(
+                        status = UiKitConstants.STATUS_FAILED,
+                        transactionId = "expired",
+                        paymentType = paymentType,
+                        message = resources.getString(R.string.expired_desc)
+                    )
+                )
+            )
+        }
 
         Column {
             title[bankName]?.let {
