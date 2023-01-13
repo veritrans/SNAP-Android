@@ -4,6 +4,7 @@ import static com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_FAIL
 import static com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_INVALID;
 import static com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_PENDING;
 import static com.midtrans.sdk.corekit.models.snap.TransactionResult.STATUS_SUCCESS;
+import static com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CAPTURE;
 import static com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_200;
 import static com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_201;
 import static com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SETTLEMENT;
@@ -159,7 +160,7 @@ public class ISdkFlow {
             case STATUS_CODE_200:
             case STATUS_SUCCESS:
             case STATUS_SETTLEMENT:
-            case "capture":
+            case STATUS_CAPTURE:
                 isSuccess = true;
                 break;
             default:

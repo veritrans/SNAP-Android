@@ -617,4 +617,7 @@
 
     <string name="error_failed_load">Gagal memuat</string>
     <string name="retry_to_load">Coba lagi</string>
- </resources>
+
+    <string name="invalid_snap_token">snap token tidak boleh null atau kosong, harap checkout transaksi untuk mendapatkan snapToken</string>
+    <string name="invalid_merchant_base_url">merchant base url diperlukan jika anda ingin melakukan checkout dari SDK, silahkan set merchant base url di Midtrans SDK</string>
+</resources>

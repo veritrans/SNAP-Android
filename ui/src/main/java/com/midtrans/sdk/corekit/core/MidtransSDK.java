@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
 import com.midtrans.sdk.corekit.models.snap.TransactionResult;
+import com.midtrans.sdk.uikit.R;
 
 import java.lang.ref.WeakReference;
 
@@ -63,25 +64,25 @@ public class MidtransSDK {
      * @param context current activity.
      */
     public void startPaymentUiFlow(Context context) {
-        if (merchantBaseUrlAvailable()) {
+        if (merchantBaseUrlAvailable(context)) {
             runUiSdk(context, null);
         }
     }
 
     public void startPaymentUiFlow(Context context, String snapToken) {
-        if (snapTokenAvailable(snapToken)) {
+        if (snapTokenAvailable(context, snapToken)) {
             runUiSdk(context, snapToken);
         }
     }
 
     public void startPaymentUiFlow(Context context, PaymentMethod paymentMethod) {
-        if (merchantBaseUrlAvailable()) {
+        if (merchantBaseUrlAvailable(context)) {
             runDirectPaymentUiSdk(context, paymentMethod, null);
         }
     }
 
     public void startPaymentUiFlow(Context context, PaymentMethod paymentMethod, String snapToken) {
-        if (snapTokenAvailable(snapToken)) {
+        if (snapTokenAvailable(context, snapToken)) {
             runDirectPaymentUiSdk(context, paymentMethod, snapToken);
         }
     }
@@ -100,9 +101,9 @@ public class MidtransSDK {
         }
     }
 
-    private boolean snapTokenAvailable(String snapToken) {
+    private boolean snapTokenAvailable(Context context, String snapToken) {
         if (TextUtils.isEmpty(snapToken)) {
-            String message = "snap token cannot be null or empty, please checkout transaction to get snapToken";
+            String message = context.getString(R.string.invalid_snap_token);
             Logger.e(TAG, message);
 
             if (transactionFinishedCallback != null) {
@@ -114,9 +115,9 @@ public class MidtransSDK {
         return true;
     }
 
-    private boolean merchantBaseUrlAvailable() {
+    private boolean merchantBaseUrlAvailable(Context context) {
         if (TextUtils.isEmpty(merchantServerUrl)) {
-            String message = "merchant base url is required if you want to do checkout from SDK, please set merchant base url on Midtrans SDK";
+            String message = context.getString(R.string.invalid_merchant_base_url);
             Logger.e(TAG, message);
 
             if (transactionFinishedCallback != null) {
