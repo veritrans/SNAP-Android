@@ -30,7 +30,9 @@ import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenActivity
+import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_200
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_201
@@ -88,6 +90,15 @@ class UobPaymentActivity : BaseActivity() {
         ViewModelProvider(this, vmFactory)[UobPaymentViewModel::class.java]
     }
 
+    private var isFirstInit = true
+
+    private val errorScreenLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            setResult(result.resultCode, result?.data)
+            finish()
+            isFirstInit = false
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -102,7 +113,7 @@ class UobPaymentActivity : BaseActivity() {
                 customerInfo = customerInfo,
                 itemInfo = itemInfo,
                 response = viewModel.getTransactionResponse().observeAsState().value,
-                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
+                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00:00")
             )
         }
         observeTransactionStatus()
@@ -205,6 +216,22 @@ class UobPaymentActivity : BaseActivity() {
         val title = stringResource(getTitleId(uobMode = uobMode))
         val url = getUobDeeplinkUrl(uobMode, response)
         val remainingTime by remember { remainingTimeState }
+
+        if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
+            errorScreenLauncher.launch(
+                ErrorScreenActivity.getIntent(
+                    activityContext = this@UobPaymentActivity,
+                    title = resources.getString(R.string.expired_title),
+                    content = resources.getString(R.string.expired_desc),
+                    transactionResult = TransactionResult(
+                        status = STATUS_FAILED,
+                        transactionId = "expired",
+                        paymentType = PaymentType.UOB_EZPAY,
+                        message = resources.getString(R.string.expired_desc)
+                    )
+                )
+            )
+        }
 
         if (url.isEmpty()) {
             Column(
