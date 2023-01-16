@@ -34,6 +34,7 @@ import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActi
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_201
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -217,19 +218,33 @@ internal class WalletActivity : BaseActivity() {
         var loading by remember { mutableStateOf(false) }
 
         if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
-            errorScreenLauncher.launch(
-                ErrorScreenActivity.getIntent(
-                    activityContext = this@WalletActivity,
-                    title = resources.getString(R.string.expired_title),
-                    content = resources.getString(R.string.expired_desc),
-                    transactionResult = TransactionResult(
-                        status = UiKitConstants.STATUS_FAILED,
-                        transactionId = "expired",
-                        paymentType = paymentType,
-                        message = resources.getString(R.string.expired_desc)
+            if(viewModel.isExpired.value == true) {
+                errorScreenLauncher.launch(
+                    ErrorScreenActivity.getIntent(
+                        activityContext = this@WalletActivity,
+                        title = resources.getString(R.string.expired_title),
+                        content = resources.getString(R.string.expired_desc),
+                        transactionResult = TransactionResult(
+                            status = UiKitConstants.STATUS_FAILED,
+                            transactionId = "expired",
+                            paymentType = paymentType,
+                            message = resources.getString(R.string.expired_desc)
+                        )
                     )
                 )
-            )
+            } else {
+                val data = Intent()
+                data.putExtra(
+                    UiKitConstants.KEY_TRANSACTION_RESULT,
+                    TransactionResult(
+                        status = STATUS_PENDING,
+                        transactionId = viewModel.chargeResultLiveData.value?.transactionId ?: STATUS_PENDING,
+                        paymentType = paymentType
+                    )
+                )
+                setResult(RESULT_OK, data)
+                finish()
+            }
         }
 
         Column(

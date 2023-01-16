@@ -29,12 +29,14 @@ internal class WalletViewModel @Inject constructor(
     private val _chargeResultLiveData = MutableLiveData<TransactionResult>()
     private var _transactionId: String? = null
     private val _isQrChargeErrorLiveData = MutableLiveData<Boolean>()
+    private val _isExpired = MutableLiveData<Boolean>()
 
     val qrCodeUrlLiveData: LiveData<String> = _qrCodeUrlLiveData
     val deepLinkUrlLiveData: LiveData<String> = _deepLinkUrlLiveData
     val chargeResultLiveData: LiveData<TransactionResult> = _chargeResultLiveData
     var expiredTime = 0L
     val isQrChargeErrorLiveData: LiveData<Boolean> = _isQrChargeErrorLiveData
+    val isExpired: LiveData<Boolean> = _isExpired
 
     fun chargeQrPayment(
         snapToken: String,
@@ -52,6 +54,7 @@ internal class WalletViewModel @Inject constructor(
             paymentRequestBuilder = requestBuilder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
+                    _isExpired.value = result.validationMessages?.get(0)?.contains("expired") == true
                     result.run {
                         _transactionId = transactionId
                         qrCodeUrl?.let { _qrCodeUrlLiveData.value = it }
