@@ -80,6 +80,10 @@ internal class WalletActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_TRANSACTION_RESULT) as? TransactionResponse
     }
 
+    private val expiryTime: String? by lazy {
+        intent.getStringExtra(EXTRA_EXPIRY_TIME)
+    }
+
     private val deepLinkLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             setResult(result.resultCode, result.data)
@@ -100,6 +104,7 @@ internal class WalletActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.trackPageViewed(paymentType, currentStepNumber)
+        viewModel.setDefaultExpiryTime(expiryTime)
         var isTablet = isTabletDevice()
 
         transactionResult?.let { result ->
@@ -435,6 +440,7 @@ internal class WalletActivity : BaseActivity() {
         private const val EXTRA_SNAP_TOKEN = "wallet.extra.snap_token"
         private const val EXTRA_STEP_NUMBER = "wallet.extra.step_number"
         private const val EXTRA_TRANSACTION_RESULT = "wallet.extra.transaction_result"
+        private const val EXTRA_EXPIRY_TIME = "wallet.extra.expiry_time"
 
         fun getIntent(
             activityContext: Context,
@@ -445,7 +451,8 @@ internal class WalletActivity : BaseActivity() {
             customerInfo: CustomerInfo? = null,
             itemInfo: ItemInfo? = null,
             stepNumber: Int,
-            result: TransactionResponse?
+            result: TransactionResponse?,
+            expiryTime: String?
         ): Intent {
             return Intent(activityContext, WalletActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
@@ -456,6 +463,7 @@ internal class WalletActivity : BaseActivity() {
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
                 putExtra(EXTRA_TRANSACTION_RESULT, result)
+                putExtra(EXTRA_EXPIRY_TIME, expiryTime)
             }
         }
     }

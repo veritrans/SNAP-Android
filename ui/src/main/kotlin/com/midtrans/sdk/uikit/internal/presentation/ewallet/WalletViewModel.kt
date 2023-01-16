@@ -13,7 +13,6 @@ import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.TIME_ZONE_UTC
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 internal class WalletViewModel @Inject constructor(
@@ -34,7 +33,7 @@ internal class WalletViewModel @Inject constructor(
     val qrCodeUrlLiveData: LiveData<String> = _qrCodeUrlLiveData
     val deepLinkUrlLiveData: LiveData<String> = _deepLinkUrlLiveData
     val chargeResultLiveData: LiveData<TransactionResult> = _chargeResultLiveData
-    var expiredTime = datetimeUtil.getCurrentMillis() + TimeUnit.MINUTES.toMillis(15)
+    var expiredTime = 0L
     val isQrChargeErrorLiveData: LiveData<Boolean> = _isQrChargeErrorLiveData
 
     fun chargeQrPayment(
@@ -175,6 +174,12 @@ internal class WalletViewModel @Inject constructor(
     }
 
     fun getExpiredHour(): String = datetimeUtil.getExpiredHour(expiredTime)
+
+    fun setDefaultExpiryTime(expiryTime: String?) {
+        expiryTime?.let {
+            expiredTime = parseTime(it)
+        }
+    }
 
     companion object {
         private const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
