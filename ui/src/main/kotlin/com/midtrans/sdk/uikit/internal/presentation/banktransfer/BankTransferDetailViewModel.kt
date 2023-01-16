@@ -32,6 +32,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
     private val _transactionResult = MutableLiveData<TransactionResult>()
     private val _errorLiveData = MutableLiveData<SnapError>()
     private val _isBankTransferChargeErrorLiveData = MutableLiveData<Boolean>()
+    private val _isExpired = MutableLiveData<Boolean>()
     val vaNumberLiveData: LiveData<String> = _vaNumberLiveData
     val companyCodeLiveData: LiveData<String> = _companyCodeLiveData
     val billingNumberLiveData: LiveData<String> = _billingNumberLiveData
@@ -39,6 +40,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
     val transactionResult: LiveData<TransactionResult> = _transactionResult
     val errorLiveData: LiveData<SnapError> = _errorLiveData
     val isBankTransferChargeErrorLiveData: LiveData<Boolean> = _isBankTransferChargeErrorLiveData
+    val isExpired: LiveData<Boolean> = _isExpired
     var expiredTime = datetimeUtil.plusDateBy(datetimeUtil.getCurrentMillis(), 1)
     var merchant: Merchant? = null
 
@@ -62,6 +64,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
             paymentRequestBuilder = requestBuilder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
+                    _isExpired.value = result.validationMessages?.get(0)?.contains("expired") == true
                     trackSnapChargeResult(
                         response = result,
                         pageName = getPageName(paymentType),
