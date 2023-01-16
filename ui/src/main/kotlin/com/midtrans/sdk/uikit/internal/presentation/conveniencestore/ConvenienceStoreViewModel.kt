@@ -194,6 +194,6 @@ internal class ConvenienceStoreViewModel @Inject constructor(
     }
 
     companion object{
-        const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
+        const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss Z"
     }
 }

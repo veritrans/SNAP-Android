@@ -207,7 +207,7 @@ internal class UobPaymentViewModelTest {
         Mockito.`when`(
             dateTimeUtil.getDate(
                 date = eq("2022-01-06 11:32:50 +0700"),
-                dateFormat = eq("yyyy-MM-dd hh:mm:ss Z"),
+                dateFormat = eq("yyyy-MM-dd HH:mm:ss Z"),
                 timeZone = any(),
                 locale = any()
             )

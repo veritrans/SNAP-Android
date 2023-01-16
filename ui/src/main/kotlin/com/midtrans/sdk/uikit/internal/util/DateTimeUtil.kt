@@ -92,7 +92,7 @@ internal object DateTimeUtil {
         return date.time / 1000L
     }
 
-    const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
-    const val TIME_FORMAT = "hh:mm:ss"
+    const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss Z"
+    const val TIME_FORMAT = "HH:mm:ss"
     val TIME_ZONE_UTC: TimeZone = TimeZone.getTimeZone("UTC")
 }

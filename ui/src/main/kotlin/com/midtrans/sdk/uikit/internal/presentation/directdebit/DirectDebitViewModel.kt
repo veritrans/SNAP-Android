@@ -10,7 +10,6 @@ import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.DirectDebitPaymentRequestBuilder
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
-import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import java.util.*
 import javax.inject.Inject
@@ -201,7 +200,7 @@ internal class DirectDebitViewModel @Inject constructor(
     }
 
     companion object {
-        private const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
+        private const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss Z"
         private const val TIME_FORMAT = "%02d:%02d:%02d"
         private val timeZoneUtc = TimeZone.getTimeZone("UTC")
     }

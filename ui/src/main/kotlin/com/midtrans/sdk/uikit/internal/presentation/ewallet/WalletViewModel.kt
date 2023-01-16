@@ -185,6 +185,6 @@ internal class WalletViewModel @Inject constructor(
     }
 
     companion object {
-        private const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
+        private const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss Z"
     }
 }
