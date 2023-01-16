@@ -87,6 +87,10 @@ class BankTransferListActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_MERCHANT_DATA) as? Merchant
     }
 
+    private val expiryTime: String? by lazy {
+        intent.getStringExtra(EXTRA_EXPIRY_TIME)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
@@ -193,7 +197,8 @@ class BankTransferListActivity : BaseActivity() {
                 merchantData = merchant,
                 totalAmount = totalAmount,
                 snapToken = snapToken,
-                stepNumber = currentStepNumber + 1
+                stepNumber = currentStepNumber + 1,
+                expiryTime = expiryTime
             )
         resultLauncher.launch(intent)
     }
@@ -236,6 +241,7 @@ class BankTransferListActivity : BaseActivity() {
         private const val EXTRA_STEP_NUMBER = "bankTransfer.extra.step_number"
         private const val EXTRA_TRANSACTION_RESULT = "bankTransfer.extra.transaction_result"
         private const val EXTRA_MERCHANT_DATA = "bankTransfer.extra.merchant_data"
+        private const val EXTRA_EXPIRY_TIME = "bankTransfer.extra.expiry_time"
 
         fun getIntent(
             activityContext: Context,
@@ -249,7 +255,8 @@ class BankTransferListActivity : BaseActivity() {
             paymentTypeItem: PaymentTypeItem? = null,
             enabledPayments: List<EnabledPayment>? = null,
             stepNumber: Int,
-            result: TransactionResponse?
+            result: TransactionResponse?,
+            expiryTime: String?
         ): Intent {
             return Intent(activityContext, BankTransferListActivity::class.java).apply {
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
@@ -265,6 +272,7 @@ class BankTransferListActivity : BaseActivity() {
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
                 putExtra(EXTRA_TRANSACTION_RESULT, result)
                 merchantData?.let { putExtra(EXTRA_MERCHANT_DATA, merchantData) }
+                putExtra(EXTRA_EXPIRY_TIME, expiryTime)
             }
         }
     }

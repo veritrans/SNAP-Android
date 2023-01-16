@@ -90,6 +90,10 @@ internal class BankTransferDetailActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_MERCHANT_DATA) as? Merchant
     }
 
+    private val expiryTime: String? by lazy {
+        intent.getStringExtra(EXTRA_EXPIRY_TIME)
+    }
+
     private var isFirstInit = true
 
     private val errorScreenLauncher =
@@ -103,6 +107,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.trackPageViewed(paymentType, currentStepNumber)
+        viewModel.setDefaultExpiryTime(expiryTime)
         viewModel.merchant = merchant
         setContent {
             Content(
@@ -651,6 +656,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
         private const val EXTRA_STEP_NUMBER = "bankTransfer.extra.step_number"
         private const val BANK_CODE_MARK = "--BANK_CODE--"
         private const val EXTRA_MERCHANT_DATA = "bankTransfer.extra.merchant_data"
+        private const val EXTRA_EXPIRY_TIME = "bankTransfer.extra.expiry_time"
 
         fun getIntent(
             activityContext: Context,
@@ -661,7 +667,8 @@ internal class BankTransferDetailActivity : BaseActivity() {
             merchantData: Merchant? = null,
             customerInfo: CustomerInfo? = null,
             itemInfo: ItemInfo? = null,
-            stepNumber: Int
+            stepNumber: Int,
+            expiryTime: String?
         ): Intent {
             return Intent(activityContext, BankTransferDetailActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
@@ -672,6 +679,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
                 merchantData?.let { putExtra(EXTRA_MERCHANT_DATA, merchantData) }
+                putExtra(EXTRA_EXPIRY_TIME, expiryTime)
             }
         }
     }

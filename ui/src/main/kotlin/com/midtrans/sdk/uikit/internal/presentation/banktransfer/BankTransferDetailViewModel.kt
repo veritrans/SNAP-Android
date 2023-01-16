@@ -199,6 +199,12 @@ internal class BankTransferDetailViewModel @Inject constructor(
 
     fun getExpiredHour() = datetimeUtil.getExpiredHour(expiredTime)
 
+    fun setDefaultExpiryTime(expiryTime: String?) {
+        expiryTime?.let {
+            expiredTime = parseTime(it)
+        }
+    }
+
     companion object{
         private const val BANK_CODE_BNI = "009 - BNI"
         private const val BANK_CODE_BRI = "002 - BRI"
