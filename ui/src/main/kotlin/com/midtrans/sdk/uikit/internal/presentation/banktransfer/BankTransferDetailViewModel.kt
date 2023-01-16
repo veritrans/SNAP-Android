@@ -14,9 +14,6 @@ import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.DATE_FORMAT
-import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.TIME_ZONE_WIB
-import java.net.SocketTimeoutException
-import java.util.*
 import javax.inject.Inject
 
 internal class BankTransferDetailViewModel @Inject constructor(
@@ -92,11 +89,11 @@ internal class BankTransferDetailViewModel @Inject constructor(
                         }
                         billerCode?.let { _companyCodeLiveData.value = it }
                         billKey?.let { _billingNumberLiveData.value = it }
-                        bcaExpiration?.let { expiredTime = parseTime(it) }
-                        bniExpiration?.let { expiredTime = parseTime(it) }
-                        briExpiration?.let { expiredTime = parseTime(it) }
-                        permataExpiration?.let { expiredTime = parseTime(it) }
-                        mandiriBillExpiration?.let { expiredTime = parseTime(it) }
+                        bcaExpirationRaw?.let { expiredTime = parseTime(it) }
+                        bniExpirationRaw?.let { expiredTime = parseTime(it) }
+                        briExpirationRaw?.let { expiredTime = parseTime(it) }
+                        permataExpirationRaw?.let { expiredTime = parseTime(it) }
+                        mandiriBillExpirationRaw?.let { expiredTime = parseTime(it) }
                         _transactionResult.value = TransactionResult(
                             status = transactionStatus.orEmpty(),
                             transactionId = transactionId.orEmpty(),
@@ -120,16 +117,12 @@ internal class BankTransferDetailViewModel @Inject constructor(
     }
 
     private fun parseTime(dateString: String): Long {
-        val expCalendar = Calendar.getInstance()
-        expCalendar.time =
-            datetimeUtil.getDate(
-                date = dateString.replace("WIB", "+0700"),
-                dateFormat = DATE_FORMAT,
-                timeZone = TIME_ZONE_WIB,
-                locale = Locale.US
-            )
-        expCalendar.set(Calendar.YEAR, datetimeUtil.getCalendar().get(Calendar.YEAR))
-        return expCalendar.timeInMillis
+        val date = datetimeUtil.getDate(
+            date = dateString,
+            dateFormat = DATE_FORMAT,
+            timeZone = DateTimeUtil.TIME_ZONE_UTC
+        )
+        return date.time
     }
 
     private fun getPageName(paymentType: String): String {

@@ -1,6 +1,5 @@
 package com.midtrans.sdk.uikit.internal.util
 import java.text.DateFormat
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.*
 import java.util.*
@@ -93,8 +92,7 @@ internal object DateTimeUtil {
         return date.time / 1000L
     }
 
-    const val DATE_FORMAT = "dd MMMM hh:mm:ss Z"
+    const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
     const val TIME_FORMAT = "hh:mm:ss"
-    val TIME_ZONE_WIB: TimeZone = TimeZone.getTimeZone("Asia/Jakarta")
     val TIME_ZONE_UTC: TimeZone = TimeZone.getTimeZone("UTC")
 }
