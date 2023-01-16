@@ -43,9 +43,16 @@ data class TransactionResponse(
     var bniExpiration: String? = null,
     var briVaNumber: String? = null,
     var briExpiration: String? = null,
-
     @SerializedName("billpayment_expiration")
     var mandiriBillExpiration: String? = null,
+
+    var bcaExpirationRaw: String? = null,
+    var bniExpirationRaw: String? = null,
+    var briExpirationRaw: String? = null,
+    var permataExpirationRaw: String? = null,
+    @SerializedName("billpayment_expiration_raw")
+    var mandiriBillExpirationRaw: String? = null,
+
     var xlTunaiOrderId: String? = null,
     var xlTunaiMerchantId: String? = null,
     var xlExpiration: String? = null,

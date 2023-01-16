@@ -197,7 +197,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
     private fun buildUiKit() {
         UiKitApi.Builder()
             .withContext(this.applicationContext)
-            .withMerchantUrl("https://snap-merchant-server.herokuapp.com/api/")
+            .withMerchantUrl("")
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
             .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
             .build()

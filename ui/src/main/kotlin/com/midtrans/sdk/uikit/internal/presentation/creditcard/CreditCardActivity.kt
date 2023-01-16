@@ -48,6 +48,7 @@ import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
+import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
@@ -152,6 +153,15 @@ internal class CreditCardActivity : BaseActivity() {
 //        null
     }
 
+    private var isFirstInit = true
+
+    private val errorScreenLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            setResult(result.resultCode, result?.data)
+            finish()
+            isFirstInit = false
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSecure(window)
@@ -177,7 +187,7 @@ internal class CreditCardActivity : BaseActivity() {
                 cardIssuerBank = viewModel.cardIssuerBank.observeAsState(null),
                 totalAmount = viewModel.netAmountLiveData.observeAsState(initial = totalAmount),
                 totalAmountWithoutRp = viewModel.netAmountWithoutCurrencyLiveData.observeAsState(0.0),
-                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
+                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00:00"),
                 withCustomerPhoneEmail = withCustomerPhoneEmail,
                 errorTypeState = viewModel.errorTypeLiveData.observeAsState(initial = null),
                 promoState = viewModel.promoDataLiveData.observeAsState(initial = null)
@@ -307,9 +317,26 @@ internal class CreditCardActivity : BaseActivity() {
         val isTransactionDenied = viewModel?.isTransactionDenied?.observeAsState(false)
         val is3dsTransaction = viewModel?.is3dsTransaction?.observeAsState(false)
         val navController = rememberNavController()
+        val remainingTime by remember { remainingTimeState }
 
         if (is3dsTransaction?.value == true) {
             navController.navigate(THREE_DS_PAGE)
+        }
+
+        if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
+            errorScreenLauncher.launch(
+                ErrorScreenActivity.getIntent(
+                    activityContext = this@CreditCardActivity,
+                    title = resources.getString(R.string.expired_title),
+                    content = resources.getString(R.string.expired_desc),
+                    transactionResult = TransactionResult(
+                        status = UiKitConstants.STATUS_FAILED,
+                        transactionId = "expired",
+                        paymentType = PaymentType.CREDIT_CARD,
+                        message = resources.getString(R.string.expired_desc)
+                    )
+                )
+            )
         }
 
         NavHost(navController = navController, startDestination = CREDIT_CARD_PAGE) {

@@ -8,12 +8,14 @@ import com.midtrans.sdk.corekit.api.model.TransactionResult
 class TransactionResult internal constructor(
     val status: String,
     val transactionId: String,
-    val paymentType: String
+    val paymentType: String,
+    val message: String?
 ) : Parcelable {
     constructor(transactionResult: TransactionResult) : this(
         transactionId = transactionResult.transactionId,
         status = transactionResult.status,
-        paymentType = transactionResult.paymentType
+        paymentType = transactionResult.paymentType,
+        message = transactionResult.message
     )
 }
 //TODO check if alias is still needed

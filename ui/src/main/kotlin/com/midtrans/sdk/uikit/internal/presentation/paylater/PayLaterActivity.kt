@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -24,6 +25,8 @@ import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActivity
+import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
@@ -80,6 +83,15 @@ class PayLaterActivity : BaseActivity() {
         ViewModelProvider(this, vmFactory).get(PayLaterViewModel::class.java)
     }
 
+    private var isFirstInit = true
+
+    private val errorScreenLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            setResult(result.resultCode, result?.data)
+            finish()
+            isFirstInit = false
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -99,7 +111,7 @@ class PayLaterActivity : BaseActivity() {
                 customerInfo = customerInfo,
                 itemInfo = itemInfo,
                 response = viewModel.transactionResponseLiveData.observeAsState().value,
-                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
+                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00:00")
             )
         }
     }
@@ -120,6 +132,22 @@ class PayLaterActivity : BaseActivity() {
         val url = response?.redirectUrl.orEmpty()
         val remainingTime by remember { remainingTimeState }
         val transactionId = viewModel.transactionId.observeAsState()
+
+        if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
+            errorScreenLauncher.launch(
+                ErrorScreenActivity.getIntent(
+                    activityContext = this@PayLaterActivity,
+                    title = resources.getString(R.string.expired_title),
+                    content = resources.getString(R.string.expired_desc),
+                    transactionResult = TransactionResult(
+                        status = UiKitConstants.STATUS_FAILED,
+                        transactionId = "expired",
+                        paymentType = paymentType,
+                        message = resources.getString(R.string.expired_desc)
+                    )
+                )
+            )
+        }
 
         transactionResult?.let { result ->
             viewModel.checkStatus(snapToken)

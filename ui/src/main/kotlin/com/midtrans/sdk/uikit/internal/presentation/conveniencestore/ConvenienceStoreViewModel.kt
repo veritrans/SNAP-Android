@@ -17,7 +17,6 @@ import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.BarcodeEncoder
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.TIME_ZONE_UTC
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -36,7 +35,8 @@ internal class ConvenienceStoreViewModel @Inject constructor(
     private val _pdfUrlLiveData = MutableLiveData<String>()
     private val _paymentCodeLiveData = MutableLiveData<String>()
     private val _transactionResultLiveData = MutableLiveData<TransactionResult>()
-    private var expiredTime = datetimeUtil.getCurrentMillis() + TimeUnit.MINUTES.toMillis(15)
+    private val _isExpired = MutableLiveData<Boolean>()
+    private var expiredTime = 0L
     private val _errorLiveData = MutableLiveData<Int?>()
     private var _transactionId: String? = null
     val barCodeBitmapLiveData: LiveData<Bitmap> = _barCodeBitmapLiveData
@@ -44,6 +44,7 @@ internal class ConvenienceStoreViewModel @Inject constructor(
     val paymentCodeLiveData: MutableLiveData<String> = _paymentCodeLiveData
     val errorLiveData: LiveData<Int?> = _errorLiveData
     val transactionResultLiveData: LiveData<TransactionResult> = _transactionResultLiveData
+    val isExpired: LiveData<Boolean> = _isExpired
 
     fun chargeConvenienceStorePayment(
         snapToken: String,
@@ -59,6 +60,7 @@ internal class ConvenienceStoreViewModel @Inject constructor(
             paymentRequestBuilder = requestBuilder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
+                    _isExpired.value = result.validationMessages?.get(0)?.contains("expired") == true
                     result.run {
                         _transactionId = transactionId
                         paymentCode?.let { generateBarcode(it) }
@@ -185,7 +187,13 @@ internal class ConvenienceStoreViewModel @Inject constructor(
 
     fun getExpiredHour(): String = datetimeUtil.getExpiredHour(expiredTime)
 
+    fun setDefaultExpiryTime(expiryTime: String?) {
+        expiryTime?.let {
+            expiredTime = parseTime(it)
+        }
+    }
+
     companion object{
-        const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
+        const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss Z"
     }
 }

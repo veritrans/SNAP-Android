@@ -827,7 +827,7 @@ internal class CreditCardViewModel @Inject constructor(
     }
 
     companion object {
-        private const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
+        private const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss Z"
         private const val TIME_FORMAT = "%02d:%02d:%02d"
         private val timeZoneUtc = TimeZone.getTimeZone("UTC")
         private const val BANK_BNI = "bni"

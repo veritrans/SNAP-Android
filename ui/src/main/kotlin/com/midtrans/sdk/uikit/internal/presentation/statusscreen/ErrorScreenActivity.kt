@@ -21,8 +21,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.midtrans.sdk.uikit.internal.base.BaseActivity
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.internal.base.BaseActivity
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.SnapColors
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import kotlinx.parcelize.Parcelize
@@ -33,6 +35,9 @@ class ErrorScreenActivity : BaseActivity() {
     private val data: ErrorData by lazy {
         intent.getParcelableExtra(EXTRA_ERROR) as? ErrorData
             ?: throw RuntimeException("Input data must not be empty")
+    }
+    private val transactionResult: TransactionResult? by lazy {
+        intent.getParcelableExtra(UiKitConstants.KEY_TRANSACTION_RESULT) as? TransactionResult
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +50,7 @@ class ErrorScreenActivity : BaseActivity() {
                 tokenId = data.tokenId
             )
         }
+        setResult(RESULT_OK, Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, transactionResult))
     }
 
     @Preview
@@ -136,7 +142,8 @@ class ErrorScreenActivity : BaseActivity() {
             title: String,
             content: String,
             instruction: String? = null,
-            tokenId: String? = null
+            tokenId: String? = null,
+            transactionResult: TransactionResult? = TransactionResult("", "", "")
         ): Intent {
             return Intent(activityContext, ErrorScreenActivity::class.java).apply {
                 putExtra(
@@ -147,6 +154,7 @@ class ErrorScreenActivity : BaseActivity() {
                         tokenId = tokenId
                     )
                 )
+                putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, transactionResult)
             }
         }
     }

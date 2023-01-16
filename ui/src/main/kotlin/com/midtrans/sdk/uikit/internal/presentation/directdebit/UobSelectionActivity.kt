@@ -25,12 +25,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActivity
+import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -86,6 +90,15 @@ class UobSelectionActivity : BaseActivity() {
         ViewModelProvider(this, vmFactory)[UobSelectionViewModel::class.java]
     }
 
+    private var isFirstInit = true
+
+    private val errorScreenLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            setResult(result.resultCode, result?.data)
+            finish()
+            isFirstInit = false
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
@@ -106,6 +119,7 @@ class UobSelectionActivity : BaseActivity() {
                         stepNumber = currentStepNumber + 1
                     )
                 )
+                isFirstInit = false
             }
         } ?: run {
             setContent {
@@ -114,7 +128,7 @@ class UobSelectionActivity : BaseActivity() {
                     orderId = orderId,
                     customerInfo = customerInfo,
                     itemInfo = itemInfo,
-                    remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
+                    remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00:00")
                 )
             }
         }
@@ -127,10 +141,26 @@ class UobSelectionActivity : BaseActivity() {
         orderId: String = "order-123456",
         customerInfo: CustomerInfo? = CustomerInfo(name = "Harry", "Phone", listOf("address")),
         itemInfo: ItemInfo? = null,
-        remainingTimeState: State<String> = remember { mutableStateOf("00:00") }
+        remainingTimeState: State<String> = remember { mutableStateOf("00:00:00") }
     ) {
         var isExpanded by remember { mutableStateOf(false) }
         val remainingTime by remember { remainingTimeState }
+
+        if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
+            errorScreenLauncher.launch(
+                ErrorScreenActivity.getIntent(
+                    activityContext = this@UobSelectionActivity,
+                    title = resources.getString(R.string.expired_title),
+                    content = resources.getString(R.string.expired_desc),
+                    transactionResult = TransactionResult(
+                        status = UiKitConstants.STATUS_FAILED,
+                        transactionId = "expired",
+                        paymentType = PaymentType.UOB_EZPAY,
+                        message = resources.getString(R.string.expired_desc)
+                    )
+                )
+            )
+        }
 
         Column(modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.overlayWhite))) {
             SnapAppBar(
@@ -182,6 +212,7 @@ class UobSelectionActivity : BaseActivity() {
                                             stepNumber = currentStepNumber + 1
                                         )
                                     )
+                                    isFirstInit = false
                                 }
                             }
                         )

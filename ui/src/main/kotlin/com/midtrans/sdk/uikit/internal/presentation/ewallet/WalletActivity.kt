@@ -30,8 +30,11 @@ import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActivity
+import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_201
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -78,18 +81,31 @@ internal class WalletActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_TRANSACTION_RESULT) as? TransactionResponse
     }
 
+    private val expiryTime: String? by lazy {
+        intent.getStringExtra(EXTRA_EXPIRY_TIME)
+    }
+
     private val deepLinkLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             setResult(result.resultCode, result.data)
             finish()
         }
 
+    private val errorScreenLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            setResult(result.resultCode, result?.data)
+            finish()
+            isFirstInit = false
+        }
+
     private var deepLinkUrl: String? = null
+    private var isFirstInit = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.trackPageViewed(paymentType, currentStepNumber)
+        viewModel.setDefaultExpiryTime(expiryTime)
         var isTablet = isTabletDevice()
 
         transactionResult?.let { result ->
@@ -122,7 +138,7 @@ internal class WalletActivity : BaseActivity() {
                 customerInfo = customerInfo,
                 isChargeError = viewModel.isQrChargeErrorLiveData.observeAsState(initial = false),
                 itemInfo = itemInfo,
-                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
+                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00:00"),
                 qrCodeUrl = viewModel.qrCodeUrlLiveData.observeAsState(initial = ""),
                 paymentType = paymentType,
                 isTablet = isTablet
@@ -200,6 +216,37 @@ internal class WalletActivity : BaseActivity() {
         }
         var error by remember { mutableStateOf(false) }
         var loading by remember { mutableStateOf(false) }
+
+        if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
+            if(viewModel.isExpired.value == true) {
+                errorScreenLauncher.launch(
+                    ErrorScreenActivity.getIntent(
+                        activityContext = this@WalletActivity,
+                        title = resources.getString(R.string.expired_title),
+                        content = resources.getString(R.string.expired_desc),
+                        transactionResult = TransactionResult(
+                            status = UiKitConstants.STATUS_FAILED,
+                            transactionId = "expired",
+                            paymentType = paymentType,
+                            message = resources.getString(R.string.expired_desc)
+                        )
+                    )
+                )
+            } else {
+                val data = Intent()
+                data.putExtra(
+                    UiKitConstants.KEY_TRANSACTION_RESULT,
+                    TransactionResult(
+                        status = STATUS_PENDING,
+                        transactionId = viewModel.chargeResultLiveData.value?.transactionId ?: STATUS_PENDING,
+                        paymentType = paymentType
+                    )
+                )
+                setResult(RESULT_OK, data)
+                finish()
+            }
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxHeight(1f)
@@ -408,6 +455,7 @@ internal class WalletActivity : BaseActivity() {
         private const val EXTRA_SNAP_TOKEN = "wallet.extra.snap_token"
         private const val EXTRA_STEP_NUMBER = "wallet.extra.step_number"
         private const val EXTRA_TRANSACTION_RESULT = "wallet.extra.transaction_result"
+        private const val EXTRA_EXPIRY_TIME = "wallet.extra.expiry_time"
 
         fun getIntent(
             activityContext: Context,
@@ -418,7 +466,8 @@ internal class WalletActivity : BaseActivity() {
             customerInfo: CustomerInfo? = null,
             itemInfo: ItemInfo? = null,
             stepNumber: Int,
-            result: TransactionResponse?
+            result: TransactionResponse?,
+            expiryTime: String?
         ): Intent {
             return Intent(activityContext, WalletActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
@@ -429,6 +478,7 @@ internal class WalletActivity : BaseActivity() {
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
                 putExtra(EXTRA_TRANSACTION_RESULT, result)
+                putExtra(EXTRA_EXPIRY_TIME, expiryTime)
             }
         }
     }

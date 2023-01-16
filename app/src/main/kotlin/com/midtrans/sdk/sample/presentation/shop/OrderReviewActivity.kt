@@ -41,20 +41,23 @@ import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.corekit.core.SdkUIFlowBuilder
+import com.midtrans.sdk.sample.util.DemoConstant
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.api.model.CustomerDetails
 import com.midtrans.sdk.uikit.api.model.ItemDetails
 import com.midtrans.sdk.uikit.external.UiKitApi
+import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
-import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CANCELED
-import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_FAILED
-import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
-import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import java.util.*
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CANCELED
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_FAILED
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_INVALID
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
 import com.midtrans.sdk.corekit.models.snap.TransactionResult as TransactionResultJava
 
 
@@ -63,17 +66,17 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     override fun onTransactionFinished(result: TransactionResultJava) {
         if (result.response != null) {
             when (result.response.transactionStatus) {
-                TransactionResultJava.STATUS_SUCCESS -> Toast.makeText(this, "Transaction Finished. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
-                TransactionResultJava.STATUS_PENDING -> Toast.makeText(this, "Transaction Pending. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
-                TransactionResultJava.STATUS_FAILED -> Toast.makeText(this, "Transaction Failed. ID: " + result.response.transactionId.toString() + ". Message: " + result.response.statusCode, Toast.LENGTH_LONG).show()
+                TransactionResultJava.STATUS_SUCCESS -> Toast.makeText(this, "Transaction Legacy Finished. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
+                TransactionResultJava.STATUS_PENDING -> Toast.makeText(this, "Transaction Legacy Pending. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
+                TransactionResultJava.STATUS_FAILED -> Toast.makeText(this, "Transaction Legacy Failed. ID: " + result.response.transactionId.toString() + ". Message: " + result.response.statusMessage, Toast.LENGTH_LONG).show()
             }
         } else if (result.isTransactionCanceled) {
-            Toast.makeText(this, "Transaction Canceled", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Transaction Legacy Canceled", Toast.LENGTH_LONG).show()
         } else {
             if (result.status.equals(TransactionResultJava.STATUS_INVALID, true)) {
-                Toast.makeText(this, "Transaction Invalid. ${result.statusMessage}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Transaction Legacy Invalid. ${result.statusMessage}", Toast.LENGTH_LONG).show()
             } else {
-                Toast.makeText(this, "Transaction Finished with failure.", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Transaction Legacy Finished with failure.", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -101,42 +104,28 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             )
             if (transactionResult != null) {
                 when (transactionResult.status) {
-                    STATUS_SUCCESS -> Toast.makeText(
-                        this,
-                        "Transaction Finished. ID: " + transactionResult.transactionId,
-                        Toast.LENGTH_LONG
-                    ).show()
-                    STATUS_PENDING -> Toast.makeText(
-                        this,
-                        "Transaction Pending. ID: " + transactionResult.transactionId,
-                        Toast.LENGTH_LONG
-                    ).show()
-                    STATUS_FAILED -> Toast.makeText(
-                        this,
-                        "Transaction Failed. ID: " + transactionResult.transactionId + ". Message: " + transactionResult.status,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    STATUS_SUCCESS -> {
+                        Toast.makeText(this,"Transaction Finished. ID: " + transactionResult.transactionId, Toast.LENGTH_LONG).show()
+                    }
+                    STATUS_PENDING -> {
+                        Toast.makeText(this,"Transaction Pending. ID: " + transactionResult.transactionId, Toast.LENGTH_LONG).show()
+                    }
+                    STATUS_FAILED -> {
+                        Toast.makeText(this,"Transaction Failed. ID: " + transactionResult.transactionId + ". Message: " + transactionResult.message, Toast.LENGTH_LONG).show()
+                    }
                     STATUS_CANCELED -> {
                         Toast.makeText(this,"Transaction Cancelled", Toast.LENGTH_LONG).show()
                     }
-                    else -> Toast.makeText(
-                        this,
-                        "Transaction ID: " + transactionResult.transactionId + ". Message: " + transactionResult.status,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    STATUS_INVALID -> {
+                        Toast.makeText(this, "Transaction Invalid. ${transactionResult.message}", Toast.LENGTH_LONG).show()
+                    }
+                    else -> {
+                        Toast.makeText(this,"Transaction ID: " + transactionResult.transactionId + ". Message: " + transactionResult.status, Toast.LENGTH_LONG).show()
+                    }
                 }
             } else {
-                if (transactionResult?.status.equals("Invalid", true)) {
-                    Toast.makeText(this, "Transaction Invalid", Toast.LENGTH_LONG).show()
-                } else {
-                    Toast.makeText(this, "Transaction Finished with failure.", Toast.LENGTH_LONG).show()
-                }
+                Toast.makeText(this, "Transaction Invalid", Toast.LENGTH_LONG).show()
             }
-//            Toast.makeText(
-//                this@OrderReviewActivity,
-//                "Transaction ${transactionResult?.transactionId.orEmpty()} status ${transactionResult?.status.orEmpty()}",
-//                Toast.LENGTH_LONG
-//            ).show()
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -185,6 +174,11 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     private val paymentChannels: ArrayList<ListItem> by lazy {
         intent.getParcelableArrayListExtra(EXTRA_INPUT_PAYMENTCHANNELS)
             ?: throw RuntimeException("paymentChannels must not be empty")
+    }
+
+    private val inputColor: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_COLOR)
+            ?: throw RuntimeException("Input Color must not be empty")
     }
 
     private val bcaVa: String by lazy {
@@ -236,6 +230,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        buildUiKitStart()
 //        setLocaleNew("id") // commented for now. conflict with buildLegacyUiKit
 
         setContent {
@@ -419,6 +414,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                     .fillMaxWidth(1f)
                     .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
                 onClick = {
+                    buildUiKit()
                     payWithAndroidxActivityResultLauncherToken(snapToken.text)
                 }
             )
@@ -459,6 +455,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                     bcaVaRequest = populateVa(bcaVa)
                     bniVaRequest = populateVa(bniVa)
                     permataVaRequest = populateVa(permataVa)
+                    buildUiKit()
                     payWithAndroidxActivityResultLauncher()
                 }
             )
@@ -684,6 +681,17 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         uiKitCustomSettingLegacy()
     }
 
+    private fun buildUiKit() {
+        val builder = UiKitApi.Builder()
+            .withContext(this.applicationContext)
+            .withMerchantUrl("https://snap-merchant-server.herokuapp.com/api/")
+            .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
+            .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
+
+        getCustomColor(inputColor)?.let { builder.withCustomColors(it) }
+        builder.build()
+    }
+
     private fun uiKitCustomSetting() {
         val uiKitCustomSetting = uiKitApi.uiKitSetting
         uiKitCustomSetting.saveCardChecked = false
@@ -807,6 +815,45 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity)
     }
 
+    private fun buildUiKitStart() {
+        val builder = UiKitApi.Builder()
+            .withContext(this.applicationContext)
+            .withMerchantUrl("")
+            .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
+            .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
+
+        getCustomColor(inputColor)?.let { builder.withCustomColors(it) }
+        builder.build()
+    }
+
+    private fun getCustomColor(inputColor: String): CustomColors? {
+        var color: CustomColors? = null
+        when (inputColor) {
+            DemoConstant.COLOR_BLUE -> {
+                color = CustomColors(
+                    interactiveFillInverse = 0x0e4e95,
+                    textInverse = 0xFFFFFF,
+                    supportNeutralFill = 0x3e71aa
+                )
+            }
+            DemoConstant.COLOR_RED -> {
+                color = CustomColors(
+                    interactiveFillInverse = 0xb11235,
+                    textInverse = 0xFFFFFF,
+                    supportNeutralFill = 0xf36b89
+                )
+            }
+            DemoConstant.COLOR_GREEN -> {
+                color = CustomColors(
+                    interactiveFillInverse = 0x32ad4a,
+                    textInverse = 0xFFFFFF,
+                    supportNeutralFill = 0x5bbd6e
+                )
+            }
+        }
+        return color
+    }
+
     companion object {
         private const val EXTRA_PRODUCT = "orderReview.extra.product"
         private const val EXTRA_INPUT_INSTALLMENT = "orderReview.extra.installment"
@@ -821,6 +868,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         private const val EXTRA_INPUT_ISBNIPOINTS = "orderReview.extra.isBniPoints"
         private const val EXTRA_INPUT_ISSHOWALLPAYMENT = "productList.extra.isShowAllPayment"
         private const val EXTRA_INPUT_PAYMENTCHANNELS = "productList.extra.paymentChannels"
+        private const val EXTRA_INPUT_COLOR = "productList.extra.inputColor"
 
         fun getOrderReviewActivityIntent(
             activityContext: Context,
@@ -836,7 +884,8 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             paymentChannels: ArrayList<ListItem>,
             bcaVa: String,
             bniVa: String,
-            permataVa: String
+            permataVa: String,
+            color: String
         ): Intent {
             return Intent(activityContext, OrderReviewActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT, product)
@@ -852,6 +901,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                 putExtra(EXTRA_INPUT_BCAVA, bcaVa)
                 putExtra(EXTRA_INPUT_BNIVA, bniVa)
                 putExtra(EXTRA_INPUT_PERMATAVA, permataVa)
+                putExtra(EXTRA_INPUT_COLOR, color)
             }
         }
     }

@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -29,12 +30,16 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import coil.compose.AsyncImage
 import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActivity
+import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -50,17 +55,27 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         ViewModelProvider(this, viewModelFactory)[ConvenienceStoreViewModel::class.java]
     }
 
+    private var isFirstInit = true
+
+    private val errorScreenLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            setResult(result.resultCode, result?.data)
+            finish()
+            isFirstInit = false
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.trackPageViewed(paymentType, currentStepNumber)
+        viewModel.setDefaultExpiryTime(expiryTime)
         setContent {
             Content(
                 totalAmount = totalAmount,
                 orderId = orderId,
                 customerInfo = customerInfo,
                 itemInfo = itemInfo,
-                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
+                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00:00"),
                 barCode = viewModel.barCodeBitmapLiveData.observeAsState(initial = null),
                 paymentType = paymentType,
                 paymentCodeState = viewModel.paymentCodeLiveData.observeAsState(initial = null),
@@ -81,12 +96,13 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         }
     }
 
-    private fun charge(){
+    private fun charge() {
         viewModel.chargeConvenienceStorePayment(
             snapToken = snapToken,
             paymentType = paymentType
         )
     }
+
     private fun updateExpiredTime(): Observable<String> {
         return Observable
             .interval(1L, TimeUnit.SECONDS)
@@ -102,7 +118,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         paymentType: String,
         customerInfo: CustomerInfo?,
         itemInfo: ItemInfo?,
-        paymentCodeState:State<String?>,
+        paymentCodeState: State<String?>,
         remainingTimeState: State<String>,
         pdfUrl: State<String?>,
         errorState: State<Int?>,
@@ -114,6 +130,37 @@ internal class ConvenienceStoreActivity : BaseActivity() {
             mutableStateOf(false)
         }
         var loading by remember { mutableStateOf(true) }
+
+        if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
+            if (viewModel?.isExpired?.value == true) {
+                errorScreenLauncher.launch(
+                    ErrorScreenActivity.getIntent(
+                        activityContext = this@ConvenienceStoreActivity,
+                        title = resources.getString(R.string.expired_title),
+                        content = resources.getString(R.string.expired_desc),
+                        transactionResult = TransactionResult(
+                            status = UiKitConstants.STATUS_FAILED,
+                            transactionId = "expired",
+                            paymentType = paymentType,
+                            message = resources.getString(R.string.expired_desc)
+                        )
+                    )
+                )
+            } else {
+                val data = Intent()
+                data.putExtra(
+                    UiKitConstants.KEY_TRANSACTION_RESULT,
+                    TransactionResult(
+                        status = STATUS_PENDING,
+                        transactionId = viewModel?.transactionResultLiveData?.value?.transactionId ?: STATUS_PENDING,
+                        paymentType = paymentType
+                    )
+                )
+                setResult(RESULT_OK, data)
+                finish()
+            }
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxHeight(1f)
@@ -219,7 +266,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                             }
 
                         }
-                        if(errorState.value == null){
+                        if (errorState.value == null) {
                             if (barCode.value != null) {
                                 AsyncImage(
                                     model = barCode.value, contentDescription = null,
@@ -286,7 +333,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                enabled = errorState.value==null && !loading,
+                enabled = errorState.value == null && !loading,
                 style = SnapButton.Style.TERTIARY
             ) {
                 viewModel?.trackSnapButtonClicked(
@@ -306,8 +353,8 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(16.dp),
-                enabled = errorState.value==null && !loading,
-                style = if (errorState.value==null && !loading) SnapButton.Style.PRIMARY else SnapButton.Style.PRIMARY
+                enabled = errorState.value == null && !loading,
+                style = if (errorState.value == null && !loading) SnapButton.Style.PRIMARY else SnapButton.Style.PRIMARY
             ) {
                 viewModel?.trackSnapButtonClicked(
                     ctaName = getStringResourceInEnglish(getClosePageCtaName(paymentType)),
@@ -319,7 +366,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
     }
 
     private fun getDownloadInfoCtaName(paymentType: String): Int {
-        return when(paymentType) {
+        return when (paymentType) {
             PaymentType.INDOMARET -> R.string.indomaret_cta_1
             PaymentType.ALFAMART -> R.string.alfa_group_cta_1
             else -> 0
@@ -327,7 +374,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
     }
 
     private fun getClosePageCtaName(paymentType: String): Int {
-        return when(paymentType) {
+        return when (paymentType) {
             PaymentType.INDOMARET -> R.string.indomaret_cta_2
             PaymentType.ALFAMART -> R.string.alfa_group_cta_2
             else -> 0
@@ -350,8 +397,8 @@ internal class ConvenienceStoreActivity : BaseActivity() {
             remainingTimeState = remember { mutableStateOf("00:00") },
             barCode = remember { mutableStateOf(null) },
             pdfUrl = remember { mutableStateOf(null) },
-            paymentCodeState = remember { mutableStateOf("1234")},
-            errorState = remember { mutableStateOf(null)}
+            paymentCodeState = remember { mutableStateOf("1234") },
+            errorState = remember { mutableStateOf(null) }
         )
 
     }
@@ -388,6 +435,10 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
     }
 
+    private val expiryTime: String? by lazy {
+        intent.getStringExtra(EXTRA_EXPIRY_TIME)
+    }
+
     private val paymentHowToPay by lazy {
         mapOf(
             Pair(PaymentType.INDOMARET, R.array.indomaret_how_to_pay),
@@ -417,6 +468,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         private const val EXTRA_PAYMENT_TYPE = "convenience_store.extra.payment_type"
         private const val EXTRA_SNAP_TOKEN = "convenience_store.extra.snap_token"
         private const val EXTRA_STEP_NUMBER = "convenience_store.extra.step_number"
+        private const val EXTRA_EXPIRY_TIME = "convenience_store.extra.expiry_time"
 
         fun getIntent(
             activityContext: Context,
@@ -426,7 +478,8 @@ internal class ConvenienceStoreActivity : BaseActivity() {
             orderId: String,
             customerInfo: CustomerInfo? = null,
             itemInfo: ItemInfo? = null,
-            stepNumber: Int
+            stepNumber: Int,
+            expiryTime: String?
         ): Intent {
             return Intent(activityContext, ConvenienceStoreActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
@@ -436,6 +489,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
+                putExtra(EXTRA_EXPIRY_TIME, expiryTime)
             }
         }
     }

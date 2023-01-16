@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -29,14 +30,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
+import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
-import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
+import com.midtrans.sdk.uikit.internal.base.BaseActivity
 import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
-import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActivity
+import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -87,10 +91,24 @@ internal class BankTransferDetailActivity : BaseActivity() {
         intent.getParcelableExtra(EXTRA_MERCHANT_DATA) as? Merchant
     }
 
+    private val expiryTime: String? by lazy {
+        intent.getStringExtra(EXTRA_EXPIRY_TIME)
+    }
+
+    private var isFirstInit = true
+
+    private val errorScreenLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            setResult(result.resultCode, result?.data)
+            finish()
+            isFirstInit = false
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.trackPageViewed(paymentType, currentStepNumber)
+        viewModel.setDefaultExpiryTime(expiryTime)
         viewModel.merchant = merchant
         setContent {
             Content(
@@ -103,7 +121,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 bankName = paymentType,
                 companyCodeState = viewModel.companyCodeLiveData.observeAsState(initial = null),
                 destinationBankCode = viewModel.bankCodeLiveData.observeAsState(),
-                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
+                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00:00"),
                 errorState = viewModel.isBankTransferChargeErrorLiveData.observeAsState(initial = false),
                 viewModel = viewModel
             )
@@ -176,6 +194,36 @@ internal class BankTransferDetailActivity : BaseActivity() {
             mutableStateOf(false)
         }
         val state = rememberScrollState()
+
+        if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
+            if(viewModel?.isExpired?.value == true) {
+                errorScreenLauncher.launch(
+                    ErrorScreenActivity.getIntent(
+                        activityContext = this@BankTransferDetailActivity,
+                        title = resources.getString(R.string.expired_title),
+                        content = resources.getString(R.string.expired_desc),
+                        transactionResult = TransactionResult(
+                            status = UiKitConstants.STATUS_FAILED,
+                            transactionId = "expired",
+                            paymentType = paymentType,
+                            message = resources.getString(R.string.expired_desc)
+                        )
+                    )
+                )
+            } else {
+                val data = Intent()
+                data.putExtra(
+                    UiKitConstants.KEY_TRANSACTION_RESULT,
+                    TransactionResult(
+                        status = STATUS_PENDING,
+                        transactionId = viewModel?.transactionResult?.value?.transactionId ?: STATUS_PENDING,
+                        paymentType = paymentType
+                    )
+                )
+                setResult(RESULT_OK, data)
+                finish()
+            }
+        }
 
         Column {
             title[bankName]?.let {
@@ -623,6 +671,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
         private const val EXTRA_STEP_NUMBER = "bankTransfer.extra.step_number"
         private const val BANK_CODE_MARK = "--BANK_CODE--"
         private const val EXTRA_MERCHANT_DATA = "bankTransfer.extra.merchant_data"
+        private const val EXTRA_EXPIRY_TIME = "bankTransfer.extra.expiry_time"
 
         fun getIntent(
             activityContext: Context,
@@ -633,7 +682,8 @@ internal class BankTransferDetailActivity : BaseActivity() {
             merchantData: Merchant? = null,
             customerInfo: CustomerInfo? = null,
             itemInfo: ItemInfo? = null,
-            stepNumber: Int
+            stepNumber: Int,
+            expiryTime: String?
         ): Intent {
             return Intent(activityContext, BankTransferDetailActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
@@ -644,6 +694,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
                 merchantData?.let { putExtra(EXTRA_MERCHANT_DATA, merchantData) }
+                putExtra(EXTRA_EXPIRY_TIME, expiryTime)
             }
         }
     }

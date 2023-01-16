@@ -39,7 +39,7 @@
 
 
     <string name="success_screen_v2_status">Payment successful</string>
-    <string name="success_screen_v2_info">You can now close this browser</string>
+    <string name="success_screen_v2_info">You can now close this page</string>
 
 
     <string name="expired_title">Your transaction has expired</string>

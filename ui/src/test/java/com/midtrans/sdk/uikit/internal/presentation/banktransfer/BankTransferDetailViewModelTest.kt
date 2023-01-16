@@ -13,7 +13,6 @@ import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.corekit.internal.network.model.response.MerchantPreferences
-import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import org.junit.Assert
 import org.junit.Before
@@ -144,7 +143,7 @@ internal class BankTransferDetailViewModelTest {
         `when`(
             dateTimeUtil.getDate(
                 date = eq("06 January 11:32:50 +0700"),
-                dateFormat = eq("dd MMMM hh:mm Z"),
+                dateFormat = eq("dd MMMM HH:mm Z"),
                 timeZone = any(),//argThat { timezone -> timezone.id == "Asia/Jakarta" },
                 locale = any()
             )
@@ -193,7 +192,7 @@ internal class BankTransferDetailViewModelTest {
         `when`(
             dateTimeUtil.getDate(
                 date = eq("06 January 11:32:50 +0700"),
-                dateFormat = eq("dd MMMM hh:mm Z"),
+                dateFormat = eq("dd MMMM HH:mm Z"),
                 timeZone = any(),//argThat { timezone -> timezone.id == "Asia/Jakarta" },
                 locale = any()
             )
@@ -246,7 +245,7 @@ internal class BankTransferDetailViewModelTest {
         `when`(
             dateTimeUtil.getDate(
                 date = eq("06 January 11:32:50 +0700"),
-                dateFormat = eq("dd MMMM hh:mm Z"),
+                dateFormat = eq("dd MMMM HH:mm Z"),
                 timeZone = any(),//argThat { timezone -> timezone.id == "Asia/Jakarta" },
                 locale = any()
             )

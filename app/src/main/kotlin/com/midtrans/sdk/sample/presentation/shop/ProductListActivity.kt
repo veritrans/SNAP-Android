@@ -7,10 +7,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.presentation.shop.component.ProductListPage
-import com.midtrans.sdk.sample.util.DemoConstant.COLOR_BLUE
-import com.midtrans.sdk.sample.util.DemoConstant.COLOR_GREEN
-import com.midtrans.sdk.sample.util.DemoConstant.COLOR_RED
-import com.midtrans.sdk.uikit.api.model.CustomColors
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 
@@ -98,7 +94,8 @@ class ProductListActivity : ComponentActivity() {
                     paymentChannels = paymentChannels,
                     bcaVa = bcaVa,
                     bniVa = bniVa,
-                    permataVa = permataVa
+                    permataVa = permataVa,
+                    color = inputColor
                 )
                 startActivity(intent)
             }
@@ -155,42 +152,11 @@ class ProductListActivity : ComponentActivity() {
     }
 
     private fun buildUiKit() {
-        val builder = UiKitApi.Builder()
+        UiKitApi.Builder()
             .withContext(this.applicationContext)
-            .withMerchantUrl("https://snap-merchant-server.herokuapp.com/api/")
+            .withMerchantUrl("")
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
             .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
-
-        getCustomColor(inputColor)?.let { builder.withCustomColors(it) }
-
-        builder.build()
-    }
-
-    private fun getCustomColor(inputColor: String): CustomColors? {
-        var color: CustomColors? = null
-        when (inputColor) {
-            COLOR_BLUE -> {
-                color = CustomColors(
-                    interactiveFillInverse = 0x0e4e95,
-                    textInverse = 0xFFFFFF,
-                    supportNeutralFill = 0x3e71aa
-                )
-            }
-            COLOR_RED -> {
-                color = CustomColors(
-                    interactiveFillInverse = 0xb11235,
-                    textInverse = 0xFFFFFF,
-                    supportNeutralFill = 0xf36b89
-                )
-            }
-            COLOR_GREEN -> {
-                color = CustomColors(
-                    interactiveFillInverse = 0x32ad4a,
-                    textInverse = 0xFFFFFF,
-                    supportNeutralFill = 0x5bbd6e
-                )
-            }
-        }
-        return color
+            .build()
     }
 }
