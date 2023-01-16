@@ -211,9 +211,11 @@ class PaymentOptionActivity : BaseActivity() {
 
             if (paymentMethod == null) {
                 if (paymentType.type == PaymentType.SHOPEEPAY && isTabletDevice()) {
-                    paymentMethod = paymentMethods.paymentMethods.find { it.type == PaymentType.SHOPEEPAY_QRIS }
+                    paymentMethod =
+                        paymentMethods.paymentMethods.find { it.type == PaymentType.SHOPEEPAY_QRIS }
                 } else if (paymentType.type == PaymentType.GOPAY && isTabletDevice()) {
-                    paymentMethod = paymentMethods.paymentMethods.find { it.type == PaymentType.GOPAY_QRIS }
+                    paymentMethod =
+                        paymentMethods.paymentMethods.find { it.type == PaymentType.GOPAY_QRIS }
                 }
             }
 
@@ -510,7 +512,7 @@ class PaymentOptionActivity : BaseActivity() {
                     itemInfo = itemInfo,
                     stepNumber = NEXT_STEP_NUMBER,
                     result = transactionResult,
-                    expiryTime = expiryTime,
+                    expiryTime = expiryTime
                 )
             )
         }
@@ -525,7 +527,8 @@ class PaymentOptionActivity : BaseActivity() {
                     paymentType = paymentMethodItem.type,
                     customerInfo = customerInfo,
                     itemInfo = itemInfo,
-                    stepNumber = NEXT_STEP_NUMBER
+                    stepNumber = NEXT_STEP_NUMBER,
+                    expiryTime = expiryTime,
                 )
             )
         }

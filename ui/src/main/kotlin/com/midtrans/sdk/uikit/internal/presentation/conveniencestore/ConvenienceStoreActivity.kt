@@ -67,6 +67,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.trackPageViewed(paymentType, currentStepNumber)
+        viewModel.setDefaultExpiryTime(expiryTime)
         setContent {
             Content(
                 totalAmount = totalAmount,
@@ -418,6 +419,10 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
     }
 
+    private val expiryTime: String? by lazy {
+        intent.getStringExtra(EXTRA_EXPIRY_TIME)
+    }
+
     private val paymentHowToPay by lazy {
         mapOf(
             Pair(PaymentType.INDOMARET, R.array.indomaret_how_to_pay),
@@ -447,6 +452,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         private const val EXTRA_PAYMENT_TYPE = "convenience_store.extra.payment_type"
         private const val EXTRA_SNAP_TOKEN = "convenience_store.extra.snap_token"
         private const val EXTRA_STEP_NUMBER = "convenience_store.extra.step_number"
+        private const val EXTRA_EXPIRY_TIME = "convenience_store.extra.expiry_time"
 
         fun getIntent(
             activityContext: Context,
@@ -456,7 +462,8 @@ internal class ConvenienceStoreActivity : BaseActivity() {
             orderId: String,
             customerInfo: CustomerInfo? = null,
             itemInfo: ItemInfo? = null,
-            stepNumber: Int
+            stepNumber: Int,
+            expiryTime: String?
         ): Intent {
             return Intent(activityContext, ConvenienceStoreActivity::class.java).apply {
                 putExtra(EXTRA_TOTAL_AMOUNT, totalAmount)
@@ -466,6 +473,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 putExtra(EXTRA_ITEM_INFO, itemInfo)
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
+                putExtra(EXTRA_EXPIRY_TIME, expiryTime)
             }
         }
     }

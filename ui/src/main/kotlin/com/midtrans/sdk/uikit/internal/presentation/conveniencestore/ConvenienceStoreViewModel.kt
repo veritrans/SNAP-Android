@@ -17,7 +17,6 @@ import com.midtrans.sdk.uikit.internal.presentation.errorcard.ErrorCard
 import com.midtrans.sdk.uikit.internal.util.BarcodeEncoder
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.TIME_ZONE_UTC
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -36,7 +35,7 @@ internal class ConvenienceStoreViewModel @Inject constructor(
     private val _pdfUrlLiveData = MutableLiveData<String>()
     private val _paymentCodeLiveData = MutableLiveData<String>()
     private val _transactionResultLiveData = MutableLiveData<TransactionResult>()
-    private var expiredTime = datetimeUtil.getCurrentMillis() + TimeUnit.MINUTES.toMillis(15)
+    private var expiredTime = 0L
     private val _errorLiveData = MutableLiveData<Int?>()
     private var _transactionId: String? = null
     val barCodeBitmapLiveData: LiveData<Bitmap> = _barCodeBitmapLiveData
@@ -184,6 +183,12 @@ internal class ConvenienceStoreViewModel @Inject constructor(
     }
 
     fun getExpiredHour(): String = datetimeUtil.getExpiredHour(expiredTime)
+
+    fun setDefaultExpiryTime(expiryTime: String?) {
+        expiryTime?.let {
+            expiredTime = parseTime(it)
+        }
+    }
 
     companion object{
         const val DATE_FORMAT = "yyyy-MM-dd hh:mm:ss Z"
