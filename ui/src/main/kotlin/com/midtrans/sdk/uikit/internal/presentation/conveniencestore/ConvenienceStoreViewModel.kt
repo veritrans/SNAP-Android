@@ -35,6 +35,7 @@ internal class ConvenienceStoreViewModel @Inject constructor(
     private val _pdfUrlLiveData = MutableLiveData<String>()
     private val _paymentCodeLiveData = MutableLiveData<String>()
     private val _transactionResultLiveData = MutableLiveData<TransactionResult>()
+    private val _isExpired = MutableLiveData<Boolean>()
     private var expiredTime = 0L
     private val _errorLiveData = MutableLiveData<Int?>()
     private var _transactionId: String? = null
@@ -43,6 +44,7 @@ internal class ConvenienceStoreViewModel @Inject constructor(
     val paymentCodeLiveData: MutableLiveData<String> = _paymentCodeLiveData
     val errorLiveData: LiveData<Int?> = _errorLiveData
     val transactionResultLiveData: LiveData<TransactionResult> = _transactionResultLiveData
+    val isExpired: LiveData<Boolean> = _isExpired
 
     fun chargeConvenienceStorePayment(
         snapToken: String,
@@ -58,6 +60,7 @@ internal class ConvenienceStoreViewModel @Inject constructor(
             paymentRequestBuilder = requestBuilder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
+                    _isExpired.value = result.validationMessages?.get(0)?.contains("expired") == true
                     result.run {
                         _transactionId = transactionId
                         paymentCode?.let { generateBarcode(it) }

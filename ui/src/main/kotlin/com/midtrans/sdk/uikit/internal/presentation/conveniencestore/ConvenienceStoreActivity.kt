@@ -39,6 +39,7 @@ import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -95,12 +96,13 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         }
     }
 
-    private fun charge(){
+    private fun charge() {
         viewModel.chargeConvenienceStorePayment(
             snapToken = snapToken,
             paymentType = paymentType
         )
     }
+
     private fun updateExpiredTime(): Observable<String> {
         return Observable
             .interval(1L, TimeUnit.SECONDS)
@@ -116,7 +118,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         paymentType: String,
         customerInfo: CustomerInfo?,
         itemInfo: ItemInfo?,
-        paymentCodeState:State<String?>,
+        paymentCodeState: State<String?>,
         remainingTimeState: State<String>,
         pdfUrl: State<String?>,
         errorState: State<Int?>,
@@ -130,19 +132,33 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         var loading by remember { mutableStateOf(true) }
 
         if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
-            errorScreenLauncher.launch(
-                ErrorScreenActivity.getIntent(
-                    activityContext = this@ConvenienceStoreActivity,
-                    title = resources.getString(R.string.expired_title),
-                    content = resources.getString(R.string.expired_desc),
-                    transactionResult = TransactionResult(
-                        status = UiKitConstants.STATUS_FAILED,
-                        transactionId = "expired",
-                        paymentType = paymentType,
-                        message = resources.getString(R.string.expired_desc)
+            if (viewModel?.isExpired?.value == true) {
+                errorScreenLauncher.launch(
+                    ErrorScreenActivity.getIntent(
+                        activityContext = this@ConvenienceStoreActivity,
+                        title = resources.getString(R.string.expired_title),
+                        content = resources.getString(R.string.expired_desc),
+                        transactionResult = TransactionResult(
+                            status = UiKitConstants.STATUS_FAILED,
+                            transactionId = "expired",
+                            paymentType = paymentType,
+                            message = resources.getString(R.string.expired_desc)
+                        )
                     )
                 )
-            )
+            } else {
+                val data = Intent()
+                data.putExtra(
+                    UiKitConstants.KEY_TRANSACTION_RESULT,
+                    TransactionResult(
+                        status = STATUS_PENDING,
+                        transactionId = viewModel?.transactionResultLiveData?.value?.transactionId ?: STATUS_PENDING,
+                        paymentType = paymentType
+                    )
+                )
+                setResult(RESULT_OK, data)
+                finish()
+            }
         }
 
         Column(
@@ -250,7 +266,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                             }
 
                         }
-                        if(errorState.value == null){
+                        if (errorState.value == null) {
                             if (barCode.value != null) {
                                 AsyncImage(
                                     model = barCode.value, contentDescription = null,
@@ -317,7 +333,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                enabled = errorState.value==null && !loading,
+                enabled = errorState.value == null && !loading,
                 style = SnapButton.Style.TERTIARY
             ) {
                 viewModel?.trackSnapButtonClicked(
@@ -337,8 +353,8 @@ internal class ConvenienceStoreActivity : BaseActivity() {
                 modifier = Modifier
                     .fillMaxWidth(1f)
                     .padding(16.dp),
-                enabled = errorState.value==null && !loading,
-                style = if (errorState.value==null && !loading) SnapButton.Style.PRIMARY else SnapButton.Style.PRIMARY
+                enabled = errorState.value == null && !loading,
+                style = if (errorState.value == null && !loading) SnapButton.Style.PRIMARY else SnapButton.Style.PRIMARY
             ) {
                 viewModel?.trackSnapButtonClicked(
                     ctaName = getStringResourceInEnglish(getClosePageCtaName(paymentType)),
@@ -350,7 +366,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
     }
 
     private fun getDownloadInfoCtaName(paymentType: String): Int {
-        return when(paymentType) {
+        return when (paymentType) {
             PaymentType.INDOMARET -> R.string.indomaret_cta_1
             PaymentType.ALFAMART -> R.string.alfa_group_cta_1
             else -> 0
@@ -358,7 +374,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
     }
 
     private fun getClosePageCtaName(paymentType: String): Int {
-        return when(paymentType) {
+        return when (paymentType) {
             PaymentType.INDOMARET -> R.string.indomaret_cta_2
             PaymentType.ALFAMART -> R.string.alfa_group_cta_2
             else -> 0
@@ -381,8 +397,8 @@ internal class ConvenienceStoreActivity : BaseActivity() {
             remainingTimeState = remember { mutableStateOf("00:00") },
             barCode = remember { mutableStateOf(null) },
             pdfUrl = remember { mutableStateOf(null) },
-            paymentCodeState = remember { mutableStateOf("1234")},
-            errorState = remember { mutableStateOf(null)}
+            paymentCodeState = remember { mutableStateOf("1234") },
+            errorState = remember { mutableStateOf(null) }
         )
 
     }
