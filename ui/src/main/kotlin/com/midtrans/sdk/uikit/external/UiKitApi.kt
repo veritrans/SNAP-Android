@@ -7,8 +7,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.ui.text.font.FontFamily
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.core.PaymentMethod
-import com.midtrans.sdk.corekit.core.themes.BaseColorTheme
-import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
 import com.midtrans.sdk.uikit.api.callback.Callback
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
@@ -223,8 +221,8 @@ class UiKitApi private constructor(val builder: Builder) {
         internal var fontFamily: FontFamily? = null
         internal var uiKitSetting: UiKitSetting = UiKitSetting()
 
-        private fun baseColorThemeToCustomColors(baseColorTheme: BaseColorTheme): CustomColors {
-            return CustomColors(baseColorTheme)
+        private fun customColorThemeToCustomColors(customColorTheme: CustomColorTheme): CustomColors {
+            return CustomColors(customColorTheme)
         }
 
         fun withContext(context: Context) = apply {
@@ -244,7 +242,7 @@ class UiKitApi private constructor(val builder: Builder) {
         }
 
         fun withColorTheme(customColorTheme: CustomColorTheme) = apply {
-            this.customColors = baseColorThemeToCustomColors(customColorTheme)
+            this.customColors = customColorThemeToCustomColors(customColorTheme)
         }
 
         fun withFontFamily(fontFamily: FontFamily) = apply {

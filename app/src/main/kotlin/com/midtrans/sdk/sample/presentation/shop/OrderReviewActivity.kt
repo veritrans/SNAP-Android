@@ -26,7 +26,6 @@ import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.UIKitCustomSetting
-import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
 import com.midtrans.sdk.corekit.models.*
 import com.midtrans.sdk.corekit.models.snap.BankTransferRequestModel
 import com.midtrans.sdk.sample.model.ListItem
@@ -722,7 +721,13 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             ?.setDefaultText("fonts/SourceSansPro-Regular.ttf")
             ?.setBoldText("fonts/SourceSansPro-Bold.ttf")
             ?.setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
-            ?.setColorTheme(CustomColorTheme("#0e4e95", "#0b3b70", "#3e71aa"))
+            ?.setColorTheme(
+                com.midtrans.sdk.corekit.core.themes.CustomColorTheme(
+                    "#0e4e95",
+                    "#0b3b70",
+                    "#3e71aa"
+                )
+            )
             ?.setLanguage("en") //setLanguage to either "en" for english or "id" for bahasa
             ?.buildSDK()
         uiKitCustomSettingLegacy()
@@ -842,7 +847,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
             .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
 
-        getCustomColor(inputColor)?.let { builder.withColorTheme(it) }
+        getCustomColor(inputColor)?.let { builder.withCustomColors(CustomColors()) }
         builder.build()
     }
 
@@ -853,10 +858,18 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                 color = CustomColorTheme("#0e4e95", "#000000", "#0x3e71aa")
             }
             DemoConstant.COLOR_RED -> {
-                color = CustomColorTheme("#b11235", "#000000", "#f36b89")
+                color = CustomColorTheme(
+                    colorPrimaryHex = "#b11235",
+                    colorPrimaryDarkHex = "#000000",
+                    colorSecondaryHex = "#f36b89"
+                )
             }
             DemoConstant.COLOR_GREEN -> {
-                color = CustomColorTheme("#32ad4a", "#000000", "#5bbd6e")
+                color = CustomColorTheme(
+                    colorPrimaryHex = "#32ad4a",
+                    colorPrimaryDarkHex = "#000000",
+                    colorSecondaryHex = "#5bbd6e"
+                )
             }
         }
         return color
