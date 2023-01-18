@@ -40,29 +40,16 @@ internal class DeepLinkViewModel @Inject constructor(
                             errorMessage = statusMessage.orEmpty(),
                             statusCode = statusCode.orEmpty()
                         )
-                        when (statusCode) {
-                            STATUS_CODE_200 -> {
-                                _checkStatusResultLiveData.value =  TransactionResult(
-                                    status = STATUS_SUCCESS,
-                                    transactionId = transactionId.orEmpty(),
-                                    paymentType = this@DeepLinkViewModel.paymentType
-                                )
-                            }
-                            STATUS_CODE_201 -> {
-                                _checkStatusResultLiveData.value =  TransactionResult(
-                                    status = STATUS_PENDING,
-                                    transactionId = transactionId.orEmpty(),
-                                    paymentType = this@DeepLinkViewModel.paymentType
-                                )
-                            }
-                            else -> {
-                                _checkStatusResultLiveData.value =  TransactionResult(
-                                    status = transactionStatus.orEmpty(),
-                                    transactionId = transactionId.orEmpty(),
-                                    paymentType = this@DeepLinkViewModel.paymentType
-                                )
-                            }
+                        val status = when (statusCode) {
+                            STATUS_CODE_200 -> STATUS_SUCCESS
+                            STATUS_CODE_201 -> STATUS_PENDING
+                            else -> transactionStatus.orEmpty()
                         }
+                        _checkStatusResultLiveData.value =  TransactionResult(
+                            status = status,
+                            transactionId = transactionId.orEmpty(),
+                            paymentType = this@DeepLinkViewModel.paymentType
+                        )
                     }
                 }
 
