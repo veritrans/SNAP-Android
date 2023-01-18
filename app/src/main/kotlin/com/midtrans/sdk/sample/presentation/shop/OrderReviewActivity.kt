@@ -735,7 +735,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
             .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
 
-        getCustomColor(inputColor)?.let { builder.withCustomColors(it) }
+        getCustomColor(inputColor)?.let { builder.withColorTheme(it) }
         builder.build()
     }
 
@@ -842,7 +842,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
             .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
 
-        getCustomColor(inputColor)?.let { builder.withCustomColors(it) }
+        getCustomColor(inputColor)?.let { builder.withColorTheme(it) }
         builder.build()
     }
 

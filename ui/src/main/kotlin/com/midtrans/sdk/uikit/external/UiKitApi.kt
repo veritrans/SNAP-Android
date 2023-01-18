@@ -223,7 +223,7 @@ class UiKitApi private constructor(val builder: Builder) {
         internal var fontFamily: FontFamily? = null
         internal var uiKitSetting: UiKitSetting = UiKitSetting()
 
-        private fun baseColorThemeToCustomColors(baseColorTheme: BaseColorTheme): CustomColors? {
+        private fun baseColorThemeToCustomColors(baseColorTheme: BaseColorTheme): CustomColors {
             return CustomColors(baseColorTheme)
         }
 
@@ -239,12 +239,12 @@ class UiKitApi private constructor(val builder: Builder) {
             this.merchantClientKey = merchantClientKey
         }
 
-        fun withCustomColorsLegacy(customColors: CustomColors) = apply {
+        fun withCustomColors(customColors: CustomColors) = apply {
             this.customColors = customColors
         }
 
-        fun withCustomColors(customColors: CustomColorTheme) = apply {
-            this.customColors = baseColorThemeToCustomColors(customColors)
+        fun withColorTheme(customColorTheme: CustomColorTheme) = apply {
+            this.customColors = baseColorThemeToCustomColors(customColorTheme)
         }
 
         fun withFontFamily(fontFamily: FontFamily) = apply {

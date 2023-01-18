@@ -166,7 +166,7 @@ public class SdkUIFlowBuilder {
                 builder.withFontFamily(AssetFontLoader.INSTANCE.fontFamily(defaultText, context));
             }
             if (colorTheme != null) {
-                builder.withCustomColorsLegacy(baseColorThemeToCustomColors(colorTheme));
+                builder.withCustomColors(baseColorThemeToCustomColors(colorTheme));
             }
 
             builder.build();
