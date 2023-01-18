@@ -10,6 +10,10 @@ import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_200
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_201
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
 import javax.inject.Inject
 
 internal class DeepLinkViewModel @Inject constructor(
@@ -36,11 +40,29 @@ internal class DeepLinkViewModel @Inject constructor(
                             errorMessage = statusMessage.orEmpty(),
                             statusCode = statusCode.orEmpty()
                         )
-                        _checkStatusResultLiveData.value =  TransactionResult(
-                            status = transactionStatus.orEmpty(),
-                            transactionId = transactionId.orEmpty(),
-                            paymentType = this@DeepLinkViewModel.paymentType
-                        )
+                        when (statusCode) {
+                            STATUS_CODE_200 -> {
+                                _checkStatusResultLiveData.value =  TransactionResult(
+                                    status = STATUS_SUCCESS,
+                                    transactionId = transactionId.orEmpty(),
+                                    paymentType = this@DeepLinkViewModel.paymentType
+                                )
+                            }
+                            STATUS_CODE_201 -> {
+                                _checkStatusResultLiveData.value =  TransactionResult(
+                                    status = STATUS_PENDING,
+                                    transactionId = transactionId.orEmpty(),
+                                    paymentType = this@DeepLinkViewModel.paymentType
+                                )
+                            }
+                            else -> {
+                                _checkStatusResultLiveData.value =  TransactionResult(
+                                    status = transactionStatus.orEmpty(),
+                                    transactionId = transactionId.orEmpty(),
+                                    paymentType = this@DeepLinkViewModel.paymentType
+                                )
+                            }
+                        }
                     }
                 }
 
