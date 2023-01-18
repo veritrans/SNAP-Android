@@ -323,22 +323,6 @@ internal class CreditCardActivity : BaseActivity() {
             navController.navigate(THREE_DS_PAGE)
         }
 
-        if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
-            errorScreenLauncher.launch(
-                ErrorScreenActivity.getIntent(
-                    activityContext = this@CreditCardActivity,
-                    title = resources.getString(R.string.expired_title),
-                    content = resources.getString(R.string.expired_desc),
-                    transactionResult = TransactionResult(
-                        status = UiKitConstants.STATUS_FAILED,
-                        transactionId = "expired",
-                        paymentType = PaymentType.CREDIT_CARD,
-                        message = resources.getString(R.string.expired_desc)
-                    )
-                )
-            )
-        }
-
         NavHost(navController = navController, startDestination = CREDIT_CARD_PAGE) {
             composable(CREDIT_CARD_PAGE) {
                 CreditCardPageStateLess(
@@ -457,9 +441,25 @@ internal class CreditCardActivity : BaseActivity() {
                     onSavedCardRadioSelected = { selectedFormData = it },
                     onSavedCardPointBankCheckedChange = { state.isPointBankChecked = it }
                 )
+                if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit && is3dsTransaction?.value == false) {
+                    errorScreenLauncher.launch(
+                        ErrorScreenActivity.getIntent(
+                            activityContext = this@CreditCardActivity,
+                            title = resources.getString(R.string.expired_title),
+                            content = resources.getString(R.string.expired_desc),
+                            transactionResult = TransactionResult(
+                                status = UiKitConstants.STATUS_FAILED,
+                                transactionId = "expired",
+                                paymentType = PaymentType.CREDIT_CARD,
+                                message = resources.getString(R.string.expired_desc)
+                            )
+                        )
+                    )
+                }
             }
             composable(THREE_DS_PAGE) {
                 transactionResponse?.value?.redirectUrl?.let {
+                    isFirstInit = false
                     SnapThreeDsWebView(
                         url = it,
                         transactionResponse = transactionResponse.value,

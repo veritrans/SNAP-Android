@@ -702,37 +702,8 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         uIKitCustomSetting.setSaveCardChecked(true)
     }
 
-    private fun payWithLegacyActivityStartActivityForResult() {
-        uiKitApi.startPaymentWithLegacyAndroid(
-            activity = this@OrderReviewActivity,
-            requestCode = 1151,
-            transactionDetails = SnapTransactionDetail(
-                orderId = UUID.randomUUID().toString(),
-                grossAmount = 15005.00
-            ),
-            creditCard = CreditCard(
-                saveCard = true,
-                secure = true,
-                installment = Installment(
-                    isRequired = false,
-                    terms = mapOf("BNI" to listOf(3, 6, 12))
-                )
-            ),
-            userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
-            customerDetails = CustomerDetails(
-                firstName = "Aris",
-                lastName = "Bhaktis",
-                email = "arisbhaktis@email.com",
-                phone = "087788778212"
-            ),
-            itemDetails = itemDetails,
-            bcaVa = bcaVaRequest,
-            bniVa = bniVaRequest
-        )
-    }
-
     private fun payWithAndroidxActivityResultLauncher() {
-        uiKitApi.startPaymentWithAndroidX(
+        uiKitApi.startPaymentUiFlow(
             activity = this@OrderReviewActivity,
             launcher = launcher,
             transactionDetails = transactionDetails,
@@ -764,7 +735,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     }
 
     private fun payWithAndroidxActivityResultLauncherToken(token: String?) {
-        uiKitApi.startPaymentWithAndroidXToken(
+        uiKitApi.startPaymentUiFlow(
             activity = this@OrderReviewActivity,
             launcher = launcher,
             snapToken = token
@@ -812,7 +783,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         transactionRequest.customField3 = "test3"
         MidtransSDK.getInstance().transactionRequest = transactionRequest
         MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
-        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity)
+        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity, "")
     }
 
     private fun buildUiKitStart() {
