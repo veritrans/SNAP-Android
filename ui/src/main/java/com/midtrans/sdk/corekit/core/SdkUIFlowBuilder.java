@@ -161,7 +161,8 @@ public class SdkUIFlowBuilder {
             UiKitApi.Builder builder = new UiKitApi.Builder()
                     .withContext(context)
                     .withMerchantUrl(merchantServerUrl)
-                    .withMerchantClientKey(clientKey);
+                    .withMerchantClientKey(clientKey)
+                    .enableLog(enableLog);
             if (defaultText != null) {
                 builder.withFontFamily(AssetFontLoader.INSTANCE.fontFamily(defaultText, context));
             }

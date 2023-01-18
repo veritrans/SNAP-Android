@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.ui.text.font.FontFamily
 import com.midtrans.sdk.corekit.SnapCore
+import com.midtrans.sdk.corekit.core.Logger
 import com.midtrans.sdk.corekit.core.PaymentMethod
 import com.midtrans.sdk.uikit.api.callback.Callback
 import com.midtrans.sdk.uikit.api.model.*
@@ -30,6 +31,7 @@ class UiKitApi private constructor(val builder: Builder) {
 
     private fun buildCoreKit(builder: Builder) {
         builder.run {
+            Logger.enabled = enableLog
             if (merchantUrl.isEmpty()) {
                 isMerchantUrlAvailable = false
             } else {
@@ -220,6 +222,7 @@ class UiKitApi private constructor(val builder: Builder) {
         internal var customColors: CustomColors? = null
         internal var fontFamily: FontFamily? = null
         internal var uiKitSetting: UiKitSetting = UiKitSetting()
+        internal var enableLog: Boolean = false
 
         private fun customColorThemeToCustomColors(customColorTheme: CustomColorTheme): CustomColors {
             return CustomColors(customColorTheme)
@@ -251,6 +254,10 @@ class UiKitApi private constructor(val builder: Builder) {
 
         fun withUiKitSetting(uiKitSetting: UiKitSetting) = apply {
             this.uiKitSetting = uiKitSetting
+        }
+
+        fun enableLog(enabled: Boolean) = apply {
+            this.enableLog = enabled
         }
 
         @Throws(RuntimeException::class)
