@@ -42,12 +42,39 @@ class UiKitApi private constructor(val builder: Builder) {
         }
     }
 
+    private fun getPaymentType(paymentMethod: PaymentMethod?): PaymentTypeItem? {
+        return when (paymentMethod) {
+            PaymentMethod.CREDIT_CARD -> PaymentTypeItem(PaymentType.CREDIT_CARD, null)
+            PaymentMethod.BANK_TRANSFER -> PaymentTypeItem(PaymentType.BANK_TRANSFER, null)
+            PaymentMethod.BANK_TRANSFER_BCA -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BCA_VA)
+            PaymentMethod.BANK_TRANSFER_PERMATA -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.PERMATA_VA)
+            PaymentMethod.BANK_TRANSFER_MANDIRI -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.E_CHANNEL)
+            PaymentMethod.SHOPEEPAY -> PaymentTypeItem(PaymentType.SHOPEEPAY, null)
+            PaymentMethod.BANK_TRANSFER_BNI -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BNI_VA)
+            PaymentMethod.BANK_TRANSFER_BRI -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BRI_VA)
+            PaymentMethod.BANK_TRANSFER_OTHER -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.OTHER_VA)
+            PaymentMethod.GO_PAY -> PaymentTypeItem(PaymentType.GOPAY, null)
+            PaymentMethod.BCA_KLIKPAY -> PaymentTypeItem(PaymentType.BCA_KLIKPAY, null)
+            PaymentMethod.KLIKBCA -> PaymentTypeItem(PaymentType.KLIK_BCA, null)
+            PaymentMethod.CIMB_CLICKS -> PaymentTypeItem(PaymentType.CIMB_CLICKS, null)
+            PaymentMethod.EPAY_BRI -> PaymentTypeItem(PaymentType.BRI_EPAY, null)
+            PaymentMethod.DANAMON_ONLINE -> PaymentTypeItem(PaymentType.DANAMON_ONLINE, null)
+            PaymentMethod.INDOMARET -> PaymentTypeItem(PaymentType.INDOMARET, null)
+            PaymentMethod.AKULAKU -> PaymentTypeItem(PaymentType.AKULAKU, null)
+            PaymentMethod.ALFAMART -> PaymentTypeItem(PaymentType.ALFAMART, null)
+            PaymentMethod.UOB_EZPAY -> PaymentTypeItem(PaymentType.UOB_EZPAY, null)
+            PaymentMethod.UOB_EZPAY_APP -> PaymentTypeItem(PaymentType.UOB_EZPAY, PaymentType.UOB_EZPAY_APP)
+            PaymentMethod.UOB_EZPAY_WEB -> PaymentTypeItem(PaymentType.UOB_EZPAY, PaymentType.UOB_EZPAY_WEB)
+            else -> null
+        }
+    }
+
     internal fun getPaymentCallback() = paymentCallback
     internal val customColors = builder.customColors
     internal val customFontFamily = builder.fontFamily
     val uiKitSetting = builder.uiKitSetting
 
-    fun startPaymentWithAndroidX(
+    fun startPaymentUiFlow(
         activity: Activity,
         launcher: ActivityResultLauncher<Intent>,
         transactionDetails: SnapTransactionDetail,
@@ -95,34 +122,7 @@ class UiKitApi private constructor(val builder: Builder) {
         launcher.launch(intent)
     }
 
-    private fun getPaymentType(paymentMethod: PaymentMethod?): PaymentTypeItem? {
-        return when (paymentMethod) {
-            PaymentMethod.CREDIT_CARD -> PaymentTypeItem(PaymentType.CREDIT_CARD, null)
-            PaymentMethod.BANK_TRANSFER -> PaymentTypeItem(PaymentType.BANK_TRANSFER, null)
-            PaymentMethod.BANK_TRANSFER_BCA -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BCA_VA)
-            PaymentMethod.BANK_TRANSFER_PERMATA -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.PERMATA_VA)
-            PaymentMethod.BANK_TRANSFER_MANDIRI -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.E_CHANNEL)
-            PaymentMethod.SHOPEEPAY -> PaymentTypeItem(PaymentType.SHOPEEPAY, null)
-            PaymentMethod.BANK_TRANSFER_BNI -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BNI_VA)
-            PaymentMethod.BANK_TRANSFER_BRI -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BRI_VA)
-            PaymentMethod.BANK_TRANSFER_OTHER -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.OTHER_VA)
-            PaymentMethod.GO_PAY -> PaymentTypeItem(PaymentType.GOPAY, null)
-            PaymentMethod.BCA_KLIKPAY -> PaymentTypeItem(PaymentType.BCA_KLIKPAY, null)
-            PaymentMethod.KLIKBCA -> PaymentTypeItem(PaymentType.KLIK_BCA, null)
-            PaymentMethod.CIMB_CLICKS -> PaymentTypeItem(PaymentType.CIMB_CLICKS, null)
-            PaymentMethod.EPAY_BRI -> PaymentTypeItem(PaymentType.BRI_EPAY, null)
-            PaymentMethod.DANAMON_ONLINE -> PaymentTypeItem(PaymentType.DANAMON_ONLINE, null)
-            PaymentMethod.INDOMARET -> PaymentTypeItem(PaymentType.INDOMARET, null)
-            PaymentMethod.AKULAKU -> PaymentTypeItem(PaymentType.AKULAKU, null)
-            PaymentMethod.ALFAMART -> PaymentTypeItem(PaymentType.ALFAMART, null)
-            PaymentMethod.UOB_EZPAY -> PaymentTypeItem(PaymentType.UOB_EZPAY, null)
-            PaymentMethod.UOB_EZPAY_APP -> PaymentTypeItem(PaymentType.UOB_EZPAY, PaymentType.UOB_EZPAY_APP)
-            PaymentMethod.UOB_EZPAY_WEB -> PaymentTypeItem(PaymentType.UOB_EZPAY, PaymentType.UOB_EZPAY_WEB)
-            else -> null
-        }
-    }
-
-    fun startPaymentWithAndroidXToken(
+    fun startPaymentUiFlow(
         activity: Activity,
         launcher: ActivityResultLauncher<Intent>,
         snapToken: String?
@@ -140,46 +140,7 @@ class UiKitApi private constructor(val builder: Builder) {
         launcher.launch(intent)
     }
 
-    fun startPaymentWithLegacyAndroid(
-        activity: Activity,
-        requestCode: Int,
-        transactionDetails: SnapTransactionDetail,
-        customerDetails: CustomerDetails,
-        itemDetails: List<ItemDetails>,
-        creditCard: CreditCard,
-        userId: String,
-        uobEzpayCallback: PaymentCallback? = null,
-        snapTokenExpiry: Expiry? = null,
-        paymentType: PaymentTypeItem? = null,
-        enabledPayment: List<String>? = null,
-        permataVa: BankTransferRequest? = null,
-        bcaVa: BankTransferRequest? = null,
-        bniVa: BankTransferRequest? = null,
-        briVa: BankTransferRequest? = null
-    ) {
-
-        val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
-            activityContext = activity,
-            transactionDetails = transactionDetails,
-            customerDetails = customerDetails,
-            itemDetails = itemDetails,
-            creditCard = creditCard,
-            userId = userId,
-            uobEzpayCallback = uobEzpayCallback,
-            paymentType = paymentType,
-            expiry = snapTokenExpiry,
-            enabledPayments = enabledPayment,
-            permataVa = permataVa,
-            bcaVa = bcaVa,
-            bniVa = bniVa,
-            briVa = briVa,
-            isMerchantUrlAvailable = isMerchantUrlAvailable,
-            isSnapTokenAvailable = true
-        )
-        activity.startActivityForResult(intent, requestCode)
-    }
-
-    fun startPayment(
+    fun runPaymentLegacy(
         activityContext: Context,
         transactionDetails: SnapTransactionDetail,
         customerDetails: CustomerDetails,
@@ -230,7 +191,7 @@ class UiKitApi private constructor(val builder: Builder) {
     }
 
     //Snap Token Flow
-    fun startPayment(
+    fun runPaymentTokenLegacy(
         activityContext: Context,
         snapToken: String? = null,
         paymentType: PaymentTypeItem? = null,

@@ -44,7 +44,7 @@ public class ISdkFlow {
 
     public void runUIFlow(Context context, String snapToken) {
         if (snapToken != null) {
-            UiKitApi.Companion.getDefaultInstance().startPayment(
+            UiKitApi.Companion.getDefaultInstance().runPaymentTokenLegacy(
                     context,
                     snapToken,
                     null,
@@ -52,7 +52,7 @@ public class ISdkFlow {
             );
         } else {
             TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
-            UiKitApi.Companion.getDefaultInstance().startPayment(
+            UiKitApi.Companion.getDefaultInstance().runPaymentLegacy(
                     context,
                     new SnapTransactionDetail(
                             transactionRequest.getOrderId(),
@@ -83,7 +83,7 @@ public class ISdkFlow {
 
     public void runDirectPayment(Context context, String snapToken, PaymentMethod paymentMethod) {
         TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
-        UiKitApi.Companion.getDefaultInstance().startPayment(
+        UiKitApi.Companion.getDefaultInstance().runPaymentLegacy(
                 context,
                 new SnapTransactionDetail(
                         transactionRequest.getOrderId(),
