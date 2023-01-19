@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -21,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResult
+import com.midtrans.sdk.corekit.core.Logger
+import com.midtrans.sdk.corekit.core.Logger.TAG
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
@@ -87,7 +88,7 @@ internal class DeepLinkActivity : BaseActivity() {
                 onPageStarted = { loading = true },
                 onPageFinished = { loading = false },
                 urlLoadingOverride = { webview, url ->
-                    Log.e("urlOverload", url)
+                    Logger.e(TAG, "urlOverload: $url")
 
                     if (url.contains("gojek") || url.contains("shopee")) {  // TODO: fill with exact scheme
                         try {

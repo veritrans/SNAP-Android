@@ -1,6 +1,5 @@
 package com.midtrans.sdk.uikit.internal.presentation.creditcard
 
-import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,6 +11,8 @@ import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.NormalCardTokenRequ
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.TwoClickCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.CreditCardPaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.OneClickCardPaymentRequestBuilder
+import com.midtrans.sdk.corekit.core.Logger
+import com.midtrans.sdk.corekit.core.Logger.TAG
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
@@ -484,7 +485,7 @@ internal class CreditCardViewModel @Inject constructor(
 
                     override fun onError(error: SnapError) {
                         //TODO: Need to confirm how to handle get token error on UI
-                        Log.e("error get 2click token", "error, error, error")
+                        Logger.e(TAG, "error get 2click token")
                         trackCreditCardErrorWithSnapError(error)
                         _errorLiveData.value = error
                     }
@@ -708,11 +709,11 @@ internal class CreditCardViewModel @Inject constructor(
             maskedCard = maskedCard,
             callback = object : Callback<DeleteSavedCardResponse> {
                 override fun onSuccess(result: DeleteSavedCardResponse) {
-                    Log.e("Delete Card Success", "Delete Card Success")
+                    Logger.e(TAG, "Delete Card Success")
                 }
 
                 override fun onError(error: SnapError) {
-                    Log.e("Delete Card Error", "Delete Card Error")
+                    Logger.e(TAG, "Delete Card Error")
                     trackCreditCardErrorWithSnapError(error)
                     _errorLiveData.value = error
                 }
