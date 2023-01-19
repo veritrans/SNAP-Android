@@ -739,7 +739,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             .withMerchantUrl("https://snap-merchant-server.herokuapp.com/api/")
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
             .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
-            .enableLog(false)
+            .enableLog(true)
 
         getCustomColor(inputColor)?.let { builder.withColorTheme(it) }
         builder.build()
