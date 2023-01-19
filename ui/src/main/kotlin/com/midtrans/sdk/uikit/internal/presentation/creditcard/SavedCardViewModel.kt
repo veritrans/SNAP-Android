@@ -36,6 +36,7 @@ class SavedCardViewModel @Inject constructor(
             binNumber = binNumber,
             callback = object : Callback<BinResponse> {
                 override fun onSuccess(result: BinResponse) {
+                    Logger.d("Saved Card get bin data successfuly")
                     result.run {
                         data?.bankCode?.let {
                             bankIconId.value = SnapCreditCardUtil.getBankIcon(it.lowercase())
@@ -43,6 +44,7 @@ class SavedCardViewModel @Inject constructor(
                     }
                 }
                 override fun onError(error: SnapError) {
+                    Logger.e("Saved Card error get bin data")
                     TODO("Not yet implemented")
                 }
             }
@@ -59,7 +61,7 @@ class SavedCardViewModel @Inject constructor(
             maskedCard = maskedCard,
             callback = object : Callback<DeleteSavedCardResponse> {
                 override fun onSuccess(result: DeleteSavedCardResponse) {
-                    Logger.e(Logger.TAG, "Delete Card Success")
+                    Logger.d(Logger.TAG, "Delete Card Success")
                 }
                 override fun onError(error: SnapError) {
                     Logger.e(Logger.TAG, "Delete Card Error")
@@ -83,9 +85,11 @@ class SavedCardViewModel @Inject constructor(
                     .withMaskedCard(formData.displayedMaskedCard),
                 callback = object : Callback<TransactionResponse> {
                     override fun onSuccess(result: TransactionResponse) {
+                        Logger.d("Saved Card pay successfuly")
                         _transactionResponse.value = result
                     }
                     override fun onError(error: SnapError) {
+                        Logger.d("Saved Card error pay")
                         _error.value = error
                     }
                 }
@@ -108,6 +112,7 @@ class SavedCardViewModel @Inject constructor(
             snapCore.getCardToken(cardTokenRequestBuilder = tokenRequest ,
                 callback = object : Callback<CardTokenResponse> {
                     override fun onSuccess(result: CardTokenResponse) {
+                        Logger.d("Saved Card get card token successfuly")
                         var ccRequestBuilder = CreditCardPaymentRequestBuilder()
                             .withPaymentType(PaymentType.CREDIT_CARD)
                             .withCustomerEmail(customerEmail)
@@ -121,9 +126,11 @@ class SavedCardViewModel @Inject constructor(
                             paymentRequestBuilder = ccRequestBuilder,
                             callback = object : Callback<TransactionResponse> {
                                 override fun onSuccess(result: TransactionResponse) {
+                                    Logger.d("Saved Card pay successfuly")
                                     _transactionResponse.value = result
                                 }
                                 override fun onError(error: SnapError) {
+                                    Logger.e("Saved Card pay successfuly")
                                     _error.value = error
                                 }
                             }
@@ -166,6 +173,7 @@ class SavedCardViewModel @Inject constructor(
             cardTokenRequestBuilder = tokenRequest,
             callback = object : Callback<CardTokenResponse>{
                 override fun onSuccess(result: CardTokenResponse) {
+                    Logger.d("Saved Card get card token successfuly")
 
                     var ccRequestBuilder = CreditCardPaymentRequestBuilder()
                         .withSaveCard(isSavedCard)
@@ -180,15 +188,18 @@ class SavedCardViewModel @Inject constructor(
                         paymentRequestBuilder = ccRequestBuilder,
                         callback = object : Callback<TransactionResponse> {
                             override fun onSuccess(result: TransactionResponse) {
+                                Logger.d("Saved Card pay successfuly")
                                 _transactionResponse.value = result
                             }
                             override fun onError(error: SnapError) {
+                                Logger.e("Saved Card error pay")
                                 _error.value = error
                             }
                         }
                     )
                 }
                 override fun onError(error: SnapError) {
+                    Logger.e("Saved Card error get card token")
                     //TODO:Need to confirm how to handle card token error on UI
                 }
             }
@@ -200,9 +211,11 @@ class SavedCardViewModel @Inject constructor(
             snapToken = snapToken,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
+                    Logger.d("Saved Card get transaction status succesfully")
                     _transactionStatus.value = result
                 }
                 override fun onError(error: SnapError) {
+                    Logger.e("Saved Card get transaction status succesfully")
                     _error.value = error
                 }
             }

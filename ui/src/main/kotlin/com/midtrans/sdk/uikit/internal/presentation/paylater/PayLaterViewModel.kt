@@ -8,6 +8,7 @@ import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.PayLaterPaymentRequestBuilder
+import com.midtrans.sdk.corekit.core.Logger
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
@@ -35,6 +36,7 @@ internal class PayLaterViewModel @Inject constructor(
             snapToken = snapToken,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
+                    Logger.d("Paylater get transaction status successfully")
                     result.run {
                         _transactionId.value = transactionId.orEmpty()
                         trackErrorStatusCode(
@@ -46,6 +48,7 @@ internal class PayLaterViewModel @Inject constructor(
                     }
                 }
                 override fun onError(error: SnapError) {
+                    Logger.d("Paylater error get transaction status")
                     trackSnapError(
                         pageName = PageName.AKULAKU_PAGE,
                         paymentMethodName = PaymentType.AKULAKU,
@@ -72,6 +75,7 @@ internal class PayLaterViewModel @Inject constructor(
             paymentRequestBuilder = builder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
+                    Logger.d("Paylater pay successfully")
                     trackSnapChargeResult(
                         response = result,
                         pageName = PageName.AKULAKU_PAGE,
@@ -87,6 +91,7 @@ internal class PayLaterViewModel @Inject constructor(
                 }
 
                 override fun onError(error: SnapError) {
+                    Logger.e("Paylater error pay")
                     //TODO need to handle error dialog?
                     trackSnapError(
                         pageName = PageName.AKULAKU_PAGE,

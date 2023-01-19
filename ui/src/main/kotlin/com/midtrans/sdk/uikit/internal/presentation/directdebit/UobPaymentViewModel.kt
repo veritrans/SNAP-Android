@@ -8,6 +8,7 @@ import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.DirectDebitPaymentRequestBuilder
+import com.midtrans.sdk.corekit.core.Logger
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
@@ -45,6 +46,7 @@ internal class UobPaymentViewModel @Inject constructor(
             paymentRequestBuilder = builder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
+                    Logger.d("UOB Payment pay successfully")
                     transactionResponse.value = result
                     trackSnapChargeResult(
                         response = result,
@@ -60,6 +62,7 @@ internal class UobPaymentViewModel @Inject constructor(
                 }
 
                 override fun onError(error: SnapError) {
+                    Logger.e("UOB Payment error pay")
                     trackSnapError(
                         pageName = PageName.UOB_PAGE,
                         paymentMethodName = PaymentType.UOB_EZPAY,
@@ -75,6 +78,7 @@ internal class UobPaymentViewModel @Inject constructor(
             snapToken = snapToken,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
+                    Logger.d("Uob Payment get transaction status succesfully")
                     transactionResult.value = Pair(result.statusCode.orEmpty(), result.transactionId.orEmpty())
                     trackErrorStatusCode(
                         pageName = PageName.UOB_PAGE,
@@ -85,6 +89,7 @@ internal class UobPaymentViewModel @Inject constructor(
                 }
 
                 override fun onError(error: SnapError) {
+                    Logger.e("Uob Payment get transaction status succesfully")
                     trackSnapError(
                         pageName = PageName.UOB_PAGE,
                         paymentMethodName = PaymentType.UOB_EZPAY,

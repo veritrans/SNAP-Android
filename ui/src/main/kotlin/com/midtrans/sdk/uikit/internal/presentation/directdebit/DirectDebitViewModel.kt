@@ -8,6 +8,7 @@ import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.DirectDebitPaymentRequestBuilder
+import com.midtrans.sdk.corekit.core.Logger
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
@@ -38,6 +39,7 @@ internal class DirectDebitViewModel @Inject constructor(
             snapToken = snapToken,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
+                    Logger.d("Direct Debit check status successfully")
                     result.run {
                         _transactionId.value = transactionId.orEmpty()
                         trackErrorStatusCode(
@@ -49,6 +51,7 @@ internal class DirectDebitViewModel @Inject constructor(
                     }
                 }
                 override fun onError(error: SnapError) {
+                    Logger.e("Direct Debit error check status")
                     trackSnapError(
                         pageName = getPageName(paymentType),
                         paymentMethodName = paymentType,
@@ -78,6 +81,7 @@ internal class DirectDebitViewModel @Inject constructor(
             paymentRequestBuilder = builder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
+                    Logger.d("Direct Debit pay successfully")
                     transactionResponse.value = result
                     trackSnapChargeResult(
                         response = result,
@@ -93,6 +97,7 @@ internal class DirectDebitViewModel @Inject constructor(
                 }
 
                 override fun onError(error: SnapError) {
+                    Logger.e("Direct Debit error pay")
                     trackSnapError(
                         pageName = getPageName(paymentType),
                         paymentMethodName = paymentType,

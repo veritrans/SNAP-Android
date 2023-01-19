@@ -9,6 +9,7 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.BankTransferPaymentRequestBuilder
+import com.midtrans.sdk.corekit.core.Logger
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.corekit.internal.network.model.response.Merchant
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
@@ -104,9 +105,11 @@ internal class BankTransferDetailViewModel @Inject constructor(
                         )
                     }
                     _isBankTransferChargeErrorLiveData.value = false
+                    Logger.d("Bank Transfer Pay Success")
                 }
 
                 override fun onError(error: SnapError) {
+                    Logger.e("Bank Transfer Pay Error")
                     trackSnapError(
                         pageName = getPageName(paymentType),
                         paymentMethodName = paymentType,

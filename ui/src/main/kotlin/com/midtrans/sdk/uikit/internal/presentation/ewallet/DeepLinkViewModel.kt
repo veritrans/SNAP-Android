@@ -8,6 +8,7 @@ import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResult
+import com.midtrans.sdk.corekit.core.Logger
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_200
@@ -33,6 +34,7 @@ internal class DeepLinkViewModel @Inject constructor(
             snapToken = snapToken,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
+                    Logger.d("Deep Link get transaction status succesfully")
                     result.run {
                         trackErrorStatusCode(
                             pageName = getPageName(this@DeepLinkViewModel.paymentType),
