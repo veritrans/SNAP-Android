@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.*
+import com.midtrans.sdk.corekit.core.Logger
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.api.model.PublicTransactionResult
 import com.midtrans.sdk.uikit.external.UiKitApi
@@ -189,6 +190,7 @@ class LoadingPaymentActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         if(!isMerchantUrlAvailable) {
+            Logger.e(resources.getString(R.string.invalid_merchant_base_url))
             val data = Intent()
             data.putExtra(
                 UiKitConstants.KEY_TRANSACTION_RESULT,
@@ -202,6 +204,7 @@ class LoadingPaymentActivity : BaseActivity() {
             setResult(Activity.RESULT_OK, data)
             finish()
         } else if(!isSnapTokenAvailable) {
+            Logger.e(resources.getString(R.string.invalid_snap_token))
             val data = Intent()
             data.putExtra(
                 UiKitConstants.KEY_TRANSACTION_RESULT,
