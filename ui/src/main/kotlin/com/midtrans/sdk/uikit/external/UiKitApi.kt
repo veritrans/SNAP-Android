@@ -39,6 +39,7 @@ class UiKitApi private constructor(val builder: Builder) {
                     .withContext(context)
                     .withMerchantUrl(merchantUrl)
                     .withMerchantClientKey(merchantClientKey)
+                    .enableLog(enableLog)
                     .build()
             }
         }

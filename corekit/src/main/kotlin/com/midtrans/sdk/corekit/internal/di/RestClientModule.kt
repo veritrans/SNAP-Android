@@ -170,8 +170,8 @@ internal class RestClientModule {
     }
 
     @Provides
-    fun provideHttpLoggingInterceptor() : HttpLoggingInterceptor {
-        return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    fun provideHttpLoggingInterceptor(@Named("enable_log") enableLog: Boolean): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().setLevel(if (enableLog) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE)
     }
 
     @Provides
