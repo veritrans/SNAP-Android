@@ -221,6 +221,10 @@ class UiKitApi private constructor(val builder: Builder) {
         internal var fontFamily: FontFamily? = null
         internal var uiKitSetting: UiKitSetting = UiKitSetting()
 
+        private fun customColorThemeToCustomColors(customColorTheme: CustomColorTheme): CustomColors {
+            return CustomColors(customColorTheme)
+        }
+
         fun withContext(context: Context) = apply {
             this.context = context.applicationContext
         }
@@ -235,6 +239,10 @@ class UiKitApi private constructor(val builder: Builder) {
 
         fun withCustomColors(customColors: CustomColors) = apply {
             this.customColors = customColors
+        }
+
+        fun withColorTheme(customColorTheme: CustomColorTheme) = apply {
+            this.customColors = customColorThemeToCustomColors(customColorTheme)
         }
 
         fun withFontFamily(fontFamily: FontFamily) = apply {

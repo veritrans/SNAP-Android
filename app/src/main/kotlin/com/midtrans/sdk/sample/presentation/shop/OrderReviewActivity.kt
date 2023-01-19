@@ -26,7 +26,6 @@ import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.UIKitCustomSetting
-import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
 import com.midtrans.sdk.corekit.models.*
 import com.midtrans.sdk.corekit.models.snap.BankTransferRequestModel
 import com.midtrans.sdk.sample.model.ListItem
@@ -66,17 +65,34 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     override fun onTransactionFinished(result: TransactionResultJava) {
         if (result.response != null) {
             when (result.response.transactionStatus) {
-                TransactionResultJava.STATUS_SUCCESS -> Toast.makeText(this, "Transaction Legacy Finished. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
-                TransactionResultJava.STATUS_PENDING -> Toast.makeText(this, "Transaction Legacy Pending. ID: " + result.response.transactionId, Toast.LENGTH_LONG).show()
-                TransactionResultJava.STATUS_FAILED -> Toast.makeText(this, "Transaction Legacy Failed. ID: " + result.response.transactionId.toString() + ". Message: " + result.response.statusMessage, Toast.LENGTH_LONG).show()
+                TransactionResultJava.STATUS_SUCCESS -> Toast.makeText(
+                    this,
+                    "Transaction Legacy Finished. ID: " + result.response.transactionId,
+                    Toast.LENGTH_LONG
+                ).show()
+                TransactionResultJava.STATUS_PENDING -> Toast.makeText(
+                    this,
+                    "Transaction Legacy Pending. ID: " + result.response.transactionId,
+                    Toast.LENGTH_LONG
+                ).show()
+                TransactionResultJava.STATUS_FAILED -> Toast.makeText(
+                    this,
+                    "Transaction Legacy Failed. ID: " + result.response.transactionId.toString() + ". Message: " + result.response.statusMessage,
+                    Toast.LENGTH_LONG
+                ).show()
             }
         } else if (result.isTransactionCanceled) {
             Toast.makeText(this, "Transaction Legacy Canceled", Toast.LENGTH_LONG).show()
         } else {
             if (result.status.equals(TransactionResultJava.STATUS_INVALID, true)) {
-                Toast.makeText(this, "Transaction Legacy Invalid. ${result.statusMessage}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    "Transaction Legacy Invalid. ${result.statusMessage}",
+                    Toast.LENGTH_LONG
+                ).show()
             } else {
-                Toast.makeText(this, "Transaction Legacy Finished with failure.", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Transaction Legacy Finished with failure.", Toast.LENGTH_LONG)
+                    .show()
             }
         }
     }
@@ -105,22 +121,42 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             if (transactionResult != null) {
                 when (transactionResult.status) {
                     STATUS_SUCCESS -> {
-                        Toast.makeText(this,"Transaction Finished. ID: " + transactionResult.transactionId, Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this,
+                            "Transaction Finished. ID: " + transactionResult.transactionId,
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                     STATUS_PENDING -> {
-                        Toast.makeText(this,"Transaction Pending. ID: " + transactionResult.transactionId, Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this,
+                            "Transaction Pending. ID: " + transactionResult.transactionId,
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                     STATUS_FAILED -> {
-                        Toast.makeText(this,"Transaction Failed. ID: " + transactionResult.transactionId + ". Message: " + transactionResult.message, Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this,
+                            "Transaction Failed. ID: " + transactionResult.transactionId + ". Message: " + transactionResult.message,
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                     STATUS_CANCELED -> {
-                        Toast.makeText(this,"Transaction Cancelled", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "Transaction Cancelled", Toast.LENGTH_LONG).show()
                     }
                     STATUS_INVALID -> {
-                        Toast.makeText(this, "Transaction Invalid. ${transactionResult.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this,
+                            "Transaction Invalid. ${transactionResult.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                     else -> {
-                        Toast.makeText(this,"Transaction ID: " + transactionResult.transactionId + ". Message: " + transactionResult.status, Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this,
+                            "Transaction ID: " + transactionResult.transactionId + ". Message: " + transactionResult.status,
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             } else {
@@ -509,10 +545,10 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     }
 
     private fun populateEnabledPayment(): List<String>? {
-        var payment : List<String>? = null
+        var payment: List<String>? = null
         val channels = mutableListOf<String>()
-        if(!isShowAllPaymentChannels){
-            for (i in paymentChannels){
+        if (!isShowAllPaymentChannels) {
+            for (i in paymentChannels) {
                 channels.add(i.type)
             }
             payment = channels
@@ -554,8 +590,18 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             vaTransferRequest = BcaBankTransferRequestModel(
                 va,
                 com.midtrans.sdk.corekit.models.FreeText(
-                    listOf(com.midtrans.sdk.corekit.models.FreeTextLanguage("Text ID inquiry 0", "Text EN inquiry 0")),
-                    listOf(com.midtrans.sdk.corekit.models.FreeTextLanguage("Text ID inquiry 0", "Text EN inquiry 0"))
+                    listOf(
+                        com.midtrans.sdk.corekit.models.FreeTextLanguage(
+                            "Text ID inquiry 0",
+                            "Text EN inquiry 0"
+                        )
+                    ),
+                    listOf(
+                        com.midtrans.sdk.corekit.models.FreeTextLanguage(
+                            "Text ID inquiry 0",
+                            "Text EN inquiry 0"
+                        )
+                    )
                 ),
                 null
             )
@@ -675,7 +721,13 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             ?.setDefaultText("fonts/SourceSansPro-Regular.ttf")
             ?.setBoldText("fonts/SourceSansPro-Bold.ttf")
             ?.setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
-            ?.setColorTheme(CustomColorTheme("#0e4e95", "#0b3b70", "#3e71aa"))
+            ?.setColorTheme(
+                com.midtrans.sdk.corekit.core.themes.CustomColorTheme(
+                    "#0e4e95",
+                    "#0b3b70",
+                    "#3e71aa"
+                )
+            )
             ?.setLanguage("en") //setLanguage to either "en" for english or "id" for bahasa
             ?.buildSDK()
         uiKitCustomSettingLegacy()
@@ -688,7 +740,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
             .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
 
-        getCustomColor(inputColor)?.let { builder.withCustomColors(it) }
+        getCustomColor(inputColor)?.let { builder.withColorTheme(it) }
         builder.build()
     }
 
@@ -764,12 +816,14 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         transactionRequest.expiry = expiryLegacy
         transactionRequest.customerDetails = customerDetailsLegacy
 
-        val itemDetails = arrayListOf(com.midtrans.sdk.corekit.models.ItemDetails(
-            "Test01",
-            product.price,
-            1,
-            product.name
-        ))
+        val itemDetails = arrayListOf(
+            com.midtrans.sdk.corekit.models.ItemDetails(
+                "Test01",
+                product.price,
+                1,
+                product.name
+            )
+        )
         transactionRequest.itemDetails = itemDetails
         transactionRequest.bcaVa = bcaVaLegacy
         transactionRequest.bniVa = bniVaLegacy
@@ -783,7 +837,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         transactionRequest.customField3 = "test3"
         MidtransSDK.getInstance().transactionRequest = transactionRequest
         MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
-        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity, "")
+        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity)
     }
 
     private fun buildUiKitStart() {
@@ -793,32 +847,28 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
             .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
 
-        getCustomColor(inputColor)?.let { builder.withCustomColors(it) }
+        getCustomColor(inputColor)?.let { builder.withCustomColors(CustomColors()) }
         builder.build()
     }
 
-    private fun getCustomColor(inputColor: String): CustomColors? {
-        var color: CustomColors? = null
+    private fun getCustomColor(inputColor: String): CustomColorTheme? {
+        var color: CustomColorTheme? = null
         when (inputColor) {
             DemoConstant.COLOR_BLUE -> {
-                color = CustomColors(
-                    interactiveFillInverse = 0x0e4e95,
-                    textInverse = 0xFFFFFF,
-                    supportNeutralFill = 0x3e71aa
-                )
+                color = CustomColorTheme("#0e4e95", "#000000", "#0x3e71aa")
             }
             DemoConstant.COLOR_RED -> {
-                color = CustomColors(
-                    interactiveFillInverse = 0xb11235,
-                    textInverse = 0xFFFFFF,
-                    supportNeutralFill = 0xf36b89
+                color = CustomColorTheme(
+                    colorPrimaryHex = "#b11235",
+                    colorPrimaryDarkHex = "#000000",
+                    colorSecondaryHex = "#f36b89"
                 )
             }
             DemoConstant.COLOR_GREEN -> {
-                color = CustomColors(
-                    interactiveFillInverse = 0x32ad4a,
-                    textInverse = 0xFFFFFF,
-                    supportNeutralFill = 0x5bbd6e
+                color = CustomColorTheme(
+                    colorPrimaryHex = "#32ad4a",
+                    colorPrimaryDarkHex = "#000000",
+                    colorSecondaryHex = "#5bbd6e"
                 )
             }
         }

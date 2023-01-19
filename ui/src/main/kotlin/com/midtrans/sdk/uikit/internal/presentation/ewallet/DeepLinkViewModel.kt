@@ -10,6 +10,10 @@ import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_200
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_201
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
 import javax.inject.Inject
 
 internal class DeepLinkViewModel @Inject constructor(
@@ -36,8 +40,13 @@ internal class DeepLinkViewModel @Inject constructor(
                             errorMessage = statusMessage.orEmpty(),
                             statusCode = statusCode.orEmpty()
                         )
+                        val status = when (statusCode) {
+                            STATUS_CODE_200 -> STATUS_SUCCESS
+                            STATUS_CODE_201 -> STATUS_PENDING
+                            else -> transactionStatus.orEmpty()
+                        }
                         _checkStatusResultLiveData.value =  TransactionResult(
-                            status = transactionStatus.orEmpty(),
+                            status = status,
                             transactionId = transactionId.orEmpty(),
                             paymentType = this@DeepLinkViewModel.paymentType
                         )

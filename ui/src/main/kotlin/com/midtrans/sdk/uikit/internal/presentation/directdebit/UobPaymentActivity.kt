@@ -217,22 +217,6 @@ class UobPaymentActivity : BaseActivity() {
         val url = getUobDeeplinkUrl(uobMode, response)
         val remainingTime by remember { remainingTimeState }
 
-        if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
-            errorScreenLauncher.launch(
-                ErrorScreenActivity.getIntent(
-                    activityContext = this@UobPaymentActivity,
-                    title = resources.getString(R.string.expired_title),
-                    content = resources.getString(R.string.expired_desc),
-                    transactionResult = TransactionResult(
-                        status = STATUS_FAILED,
-                        transactionId = "expired",
-                        paymentType = PaymentType.UOB_EZPAY,
-                        message = resources.getString(R.string.expired_desc)
-                    )
-                )
-            )
-        }
-
         if (url.isEmpty()) {
             Column(
                 modifier = Modifier
@@ -312,6 +296,21 @@ class UobPaymentActivity : BaseActivity() {
                     )
                     viewModel.payUob(snapToken)
                 }
+            }
+            if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
+                errorScreenLauncher.launch(
+                    ErrorScreenActivity.getIntent(
+                        activityContext = this@UobPaymentActivity,
+                        title = resources.getString(R.string.expired_title),
+                        content = resources.getString(R.string.expired_desc),
+                        transactionResult = TransactionResult(
+                            status = STATUS_FAILED,
+                            transactionId = "expired",
+                            paymentType = PaymentType.UOB_EZPAY,
+                            message = resources.getString(R.string.expired_desc)
+                        )
+                    )
+                )
             }
         } else {
             response?.run {

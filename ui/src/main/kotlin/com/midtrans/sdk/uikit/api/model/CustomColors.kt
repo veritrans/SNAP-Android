@@ -81,4 +81,24 @@ data class CustomColors(
             ), -0.2f
         )
     )
+
+    constructor(customColorTheme: CustomColorTheme) : this(
+        interactiveFillInverse = customColorTheme.getPrimaryColor(),
+        supportNeutralFill = HslConverter.addSaturation(
+            HslConverter.addBrightness(
+                customColorTheme.getPrimaryColor(),
+                0.38f
+            ), -0.3f
+        ),
+        backgroundBorderSolidPrimary = customColorTheme.getPrimaryColor(),
+        textPrimary = customColorTheme.getPrimaryDarkColor(),
+        interactiveBorderInput = customColorTheme.getPrimaryColor(),
+        textMuted = customColorTheme.getSecondaryColor(),
+        lineLightMuted = HslConverter.addSaturation(
+            HslConverter.addBrightness(
+                customColorTheme.getPrimaryColor(),
+                0.2f
+            ), -0.2f
+        )
+    )
 }
