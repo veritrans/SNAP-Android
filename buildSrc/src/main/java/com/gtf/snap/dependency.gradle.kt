@@ -16,7 +16,7 @@ object Dependencies {
     const val mockitoVersion = "2.25.0"
     const val mockitoKotlinVersion = "4.0.0"
     const val mixpanelVersion = "6.5.2"
-    const val okHttpVersion = "3.12.1"
+    const val okHttpVersion = "4.10.0"
     const val curlLoggerInterceptorVersion = "0.1"
     const val chuckVersion = "3.5.2"
     const val retrofitVersion = "2.5.0"

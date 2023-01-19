@@ -15,6 +15,7 @@ import com.midtrans.sdk.corekit.internal.network.restapi.SnapApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -55,14 +56,16 @@ internal class RestClientModule {
     @Named("merchant_client")
     fun provideMerchantOkHttpClient(
         chuckInterceptor: ChuckerInterceptor,
+        httpLoggingInterceptor: HttpLoggingInterceptor,
         merchantInterceptor: MerchantInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .readTimeout(READ_TIME_OUT.toLong(), TimeUnit.SECONDS)
             .writeTimeout(WRITE_TIME_OUT.toLong(), TimeUnit.SECONDS)
             .connectTimeout(CONNECTION_TIME_OUT.toLong(), TimeUnit.SECONDS)
-            .addInterceptor(merchantInterceptor)
             .addInterceptor(chuckInterceptor)
+            .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(merchantInterceptor)
             .build()
     }
 
@@ -101,6 +104,7 @@ internal class RestClientModule {
     @Named("snap_client")
     fun provideSnapOkHttpClient(
         chuckInterceptor: ChuckerInterceptor,
+        httpLoggingInterceptor: HttpLoggingInterceptor,
         snapRequestInterceptor: SnapRequestInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
@@ -108,6 +112,7 @@ internal class RestClientModule {
             .writeTimeout(WRITE_TIME_OUT.toLong(), TimeUnit.SECONDS)
             .connectTimeout(CONNECTION_TIME_OUT.toLong(), TimeUnit.SECONDS)
             .addInterceptor(chuckInterceptor)
+            .addInterceptor(httpLoggingInterceptor)
             .addInterceptor(snapRequestInterceptor)
             .build()
     }
@@ -145,7 +150,8 @@ internal class RestClientModule {
     @Singleton
     @Named("core_client")
     fun provideCoreApiOkHttpClient(
-        chuckInterceptor: ChuckerInterceptor
+        chuckInterceptor: ChuckerInterceptor,
+        httpLoggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
 
         return OkHttpClient.Builder()
@@ -153,6 +159,7 @@ internal class RestClientModule {
             .writeTimeout(WRITE_TIME_OUT.toLong(), TimeUnit.SECONDS)
             .connectTimeout(CONNECTION_TIME_OUT.toLong(), TimeUnit.SECONDS)
             .addInterceptor(chuckInterceptor)
+            .addInterceptor(httpLoggingInterceptor)
             .build()
 
     }
@@ -160,6 +167,11 @@ internal class RestClientModule {
     @Provides
     fun provideChuckInterceptor(context: Context): ChuckerInterceptor {
         return ChuckerInterceptor.Builder(context).build()
+    }
+
+    @Provides
+    fun provideHttpLoggingInterceptor() : HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
     }
 
     @Provides
