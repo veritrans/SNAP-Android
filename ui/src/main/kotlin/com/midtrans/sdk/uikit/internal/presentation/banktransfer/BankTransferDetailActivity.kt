@@ -110,24 +110,29 @@ internal class BankTransferDetailActivity : BaseActivity() {
         viewModel.trackPageViewed(paymentType, currentStepNumber)
         viewModel.setDefaultExpiryTime(expiryTime)
         viewModel.merchant = merchant
-        setContent {
-            Content(
-                totalAmount = totalAmount,
-                orderId = orderId,
-                customerInfo = customerInfo,
-                itemInfo = itemInfo,
-                vaNumberState = viewModel.vaNumberLiveData.observeAsState(initial = null),
-                billingNumberState = viewModel.billingNumberLiveData.observeAsState(initial = null),
-                bankName = paymentType,
-                companyCodeState = viewModel.companyCodeLiveData.observeAsState(initial = null),
-                destinationBankCode = viewModel.bankCodeLiveData.observeAsState(),
-                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00:00"),
-                errorState = viewModel.isBankTransferChargeErrorLiveData.observeAsState(initial = false),
-                viewModel = viewModel
-            )
+
+        if (DateTimeUtil.getExpiredSeconds(viewModel.getExpiredHour()) <= 0L && isFirstInit) {
+            launchExpiredErrorScreen()
+        } else {
+            setContent {
+                Content(
+                    totalAmount = totalAmount,
+                    orderId = orderId,
+                    customerInfo = customerInfo,
+                    itemInfo = itemInfo,
+                    vaNumberState = viewModel.vaNumberLiveData.observeAsState(initial = null),
+                    billingNumberState = viewModel.billingNumberLiveData.observeAsState(initial = null),
+                    bankName = paymentType,
+                    companyCodeState = viewModel.companyCodeLiveData.observeAsState(initial = null),
+                    destinationBankCode = viewModel.bankCodeLiveData.observeAsState(),
+                    remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
+                    errorState = viewModel.isBankTransferChargeErrorLiveData.observeAsState(initial = false),
+                    viewModel = viewModel
+                )
+            }
+            chargeBankTransfer()
+            observeData()
         }
-        chargeBankTransfer()
-        observeData()
     }
 
     private fun chargeBankTransfer() {
@@ -172,6 +177,22 @@ internal class BankTransferDetailActivity : BaseActivity() {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    private fun launchExpiredErrorScreen() {
+        errorScreenLauncher.launch(
+            ErrorScreenActivity.getIntent(
+                activityContext = this@BankTransferDetailActivity,
+                title = resources.getString(R.string.expired_title),
+                content = resources.getString(R.string.expired_desc),
+                transactionResult = TransactionResult(
+                    status = UiKitConstants.STATUS_FAILED,
+                    transactionId = "expired",
+                    paymentType = paymentType,
+                    message = resources.getString(R.string.expired_desc)
+                )
+            )
+        )
+    }
+
     @Composable
     private fun Content(
         totalAmount: String,
@@ -195,21 +216,9 @@ internal class BankTransferDetailActivity : BaseActivity() {
         }
         val state = rememberScrollState()
 
-        if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
+        if (DateTimeUtil.getExpiredSeconds(remainingTime) <= 0L && isFirstInit) {
             if(viewModel?.isExpired?.value == true) {
-                errorScreenLauncher.launch(
-                    ErrorScreenActivity.getIntent(
-                        activityContext = this@BankTransferDetailActivity,
-                        title = resources.getString(R.string.expired_title),
-                        content = resources.getString(R.string.expired_desc),
-                        transactionResult = TransactionResult(
-                            status = UiKitConstants.STATUS_FAILED,
-                            transactionId = "expired",
-                            paymentType = paymentType,
-                            message = resources.getString(R.string.expired_desc)
-                        )
-                    )
-                )
+                launchExpiredErrorScreen()
             } else {
                 val data = Intent()
                 data.putExtra(
