@@ -24,7 +24,8 @@ class SnapCore private constructor(builder: Builder) {
         buildDaggerComponent(
             builder.context,
             builder.merchantUrl,
-            builder.merchantClientKey
+            builder.merchantClientKey,
+            builder.enableLog
         ).inject(this)
     }
 
@@ -94,12 +95,14 @@ class SnapCore private constructor(builder: Builder) {
         internal fun buildDaggerComponent(
             applicationContext: Context,
             merchantUrl: String,
-            merchantClientKey: String
+            merchantClientKey: String,
+            enableLog: Boolean
         ): SnapComponent {
             return DaggerSnapComponent.builder()
                 .applicationContext(applicationContext)
                 .merchantUrl(merchantUrl)
                 .merchantClientKey(merchantClientKey)
+                .enableLog(enableLog)
                 .build()
         }
 
@@ -110,6 +113,7 @@ class SnapCore private constructor(builder: Builder) {
         internal lateinit var context: Context
         internal lateinit var merchantUrl: String
         internal lateinit var merchantClientKey: String
+        internal var enableLog: Boolean = false
 
         fun withContext(context: Context) = apply {
             this.context = context
@@ -121,6 +125,10 @@ class SnapCore private constructor(builder: Builder) {
 
         fun withMerchantClientKey(merchantClientKey: String) = apply {
             this.merchantClientKey = merchantClientKey
+        }
+
+        fun enableLog(enableLog: Boolean) =  apply {
+            this.enableLog = enableLog
         }
 
         @Throws(RuntimeException::class)

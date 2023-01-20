@@ -9,6 +9,7 @@ import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.EWalletPaymentRequestBuilder
+import com.midtrans.sdk.corekit.core.Logger
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
@@ -54,6 +55,7 @@ internal class WalletViewModel @Inject constructor(
             paymentRequestBuilder = requestBuilder,
             callback = object : Callback<TransactionResponse> {
                 override fun onSuccess(result: TransactionResponse) {
+                    Logger.d("Wallet pay successfully")
                     _isExpired.value = result.validationMessages?.get(0)?.contains("expired") == true
                     result.run {
                         _transactionId = transactionId
@@ -84,6 +86,7 @@ internal class WalletViewModel @Inject constructor(
                 }
 
                 override fun onError(error: SnapError) {
+                    Logger.e("Wallet error pay")
                     // TODO: error dialog etc
                     trackSnapError(
                         pageName = pageName,

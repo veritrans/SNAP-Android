@@ -49,7 +49,7 @@ public class MidtransSDK {
         if (transactionRequest != null) {
             this.transactionRequest = transactionRequest;
         } else {
-            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+            Logger.e(ADD_TRANSACTION_DETAILS);
         }
     }
 
@@ -97,14 +97,14 @@ public class MidtransSDK {
                 uiflow.runDirectPayment(context, snapToken, paymentMethod);
             }
         } else {
-            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+            Logger.e(ADD_TRANSACTION_DETAILS);
         }
     }
 
     private boolean snapTokenAvailable(Context context, String snapToken) {
         if (TextUtils.isEmpty(snapToken)) {
             String message = context.getString(R.string.invalid_snap_token);
-            Logger.e(TAG, message);
+            Logger.e(message);
 
             if (transactionFinishedCallback != null) {
                 transactionFinishedCallback.get().onTransactionFinished(new TransactionResult(TransactionResult.STATUS_INVALID, message));
@@ -118,7 +118,7 @@ public class MidtransSDK {
     private boolean merchantBaseUrlAvailable(Context context) {
         if (TextUtils.isEmpty(merchantServerUrl)) {
             String message = context.getString(R.string.invalid_merchant_base_url);
-            Logger.e(TAG, message);
+            Logger.e(message);
 
             if (transactionFinishedCallback != null) {
                 transactionFinishedCallback.get().onTransactionFinished(new TransactionResult(TransactionResult.STATUS_INVALID, message));
@@ -133,7 +133,7 @@ public class MidtransSDK {
         if (isTransactionRequestAvailable() && uiflow != null) {
             uiflow.runUIFlow(context, snapToken);
         } else {
-            Logger.e(TAG, ADD_TRANSACTION_DETAILS);
+            Logger.e(ADD_TRANSACTION_DETAILS);
         }
     }
 

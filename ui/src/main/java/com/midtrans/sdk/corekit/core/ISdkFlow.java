@@ -33,12 +33,13 @@ public class ISdkFlow {
     private static Callback<TransactionResult> wrapperCallback = new Callback<TransactionResult>() {
         @Override
         public void onSuccess(TransactionResult result) {
+            Logger.d("Callback received Succesffully");
             deliverCallback(result);
         }
 
         @Override
         public void onError(@NonNull SnapError error) {
-
+            Logger.d("Error Callback");
         }
     };
 

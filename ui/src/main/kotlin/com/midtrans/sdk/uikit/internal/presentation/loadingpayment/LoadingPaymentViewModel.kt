@@ -8,6 +8,7 @@ import com.midtrans.sdk.corekit.api.callback.Callback
 import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
+import com.midtrans.sdk.corekit.core.Logger
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
@@ -69,10 +70,12 @@ class LoadingPaymentViewModel @Inject constructor(
             ?.getPaymentOption(snapToken = snapToken, builder = builder, object :
                 Callback<PaymentOption> {
                 override fun onSuccess(result: PaymentOption) {
+                    Logger.d("Get Payment Option Succesfully")
                     _paymentOptionLiveData.postValue(result)
                 }
 
                 override fun onError(error: SnapError) {
+                    Logger.e("Error Get Payment Option")
                     _error.postValue(error)
                     eventAnalytics.trackSnapError(
                         pageName = PageName.PAYMENT_LIST_PAGE,

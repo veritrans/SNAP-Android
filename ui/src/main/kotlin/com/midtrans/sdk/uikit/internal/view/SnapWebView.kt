@@ -1,7 +1,6 @@
 package com.midtrans.sdk.uikit.internal.view
 
 import android.graphics.Bitmap
-import android.util.Log
 import android.view.ViewGroup
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
@@ -19,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.core.Logger
+import com.midtrans.sdk.corekit.core.Logger.TAG
 
 @Composable
 @Preview(showBackground = true)
@@ -27,8 +28,8 @@ fun WebViewPreview() {
         title = "Page Title",
         paymentType = PaymentType.BCA_KLIKPAY,
         url = "https://simulator.sandbox.midtrans.com/gopay/ui/index",
-        onPageStarted = { Log.d("SnapWebView", "Started") },
-        onPageFinished = { Log.d("SnapWebView", "Finish") }
+        onPageStarted = { Logger.d(TAG, "SnapWebView Started") },
+        onPageFinished = { Logger.d(TAG, "SnapWebView Finished") }
     )
 }
 
@@ -70,7 +71,7 @@ fun SnapWebView(
                 webViewClient = object : WebViewClient() {
                     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                         super.onPageStarted(view, url, favicon)
-                        Log.d("SnapWebView", "onPageStarted visibility : ${view?.visibility}")
+                        Logger.d(TAG, "Snap Web View, onPageStarted visibility : ${view?.visibility}")
                         finishWebView(
                             paymentType = paymentType,
                             url = url.orEmpty(),
@@ -80,7 +81,7 @@ fun SnapWebView(
 
                     override fun onPageFinished(view: WebView?, url: String?) {
                         super.onPageFinished(view, url)
-                        Log.d("SnapWebView", "onPageFinished url : $url")
+                        Logger.d(TAG, "Snap Web View, onPageFinished url : $url")
                         finishWebView(
                             paymentType = paymentType,
                             url = url.orEmpty(),
@@ -243,7 +244,7 @@ private class SnapWebViewClient(
 ) : WebViewClient() {
     override fun onPageFinished(view: WebView?, url: String?) {
         super.onPageFinished(view, url)
-        Log.d("SnapWebView", "onPageFinished url : $url")
+        Logger.d(TAG, "Snap Web View, onPageFinished url : $url")
         onPageFinishedListener.invoke(url.orEmpty())
     }
 
