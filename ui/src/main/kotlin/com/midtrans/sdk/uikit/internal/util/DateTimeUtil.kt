@@ -1,4 +1,5 @@
 package com.midtrans.sdk.uikit.internal.util
+
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.*
@@ -86,10 +87,14 @@ internal object DateTimeUtil {
     }
 
     fun getExpiredSeconds(remainingTime: String): Long {
-        val dateFormat: DateFormat = SimpleDateFormat(TIME_FORMAT)
-        dateFormat.timeZone = TIME_ZONE_UTC
-        val date = dateFormat.parse(remainingTime) as Date
-        return date.time / 1000L
+        return try {
+            val dateFormat: DateFormat = SimpleDateFormat(TIME_FORMAT)
+            dateFormat.timeZone = TIME_ZONE_UTC
+            val date = dateFormat.parse(remainingTime) as Date
+            date.time / 1000L
+        } catch (e: Exception) {
+            100
+        }
     }
 
     const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss Z"

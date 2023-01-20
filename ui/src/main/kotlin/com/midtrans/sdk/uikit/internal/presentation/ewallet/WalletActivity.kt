@@ -131,19 +131,39 @@ internal class WalletActivity : BaseActivity() {
             observeLiveData(isTablet)
         }
 
-        setContent {
-            Content(
-                totalAmount = totalAmount,
-                orderId = orderId,
-                customerInfo = customerInfo,
-                isChargeError = viewModel.isQrChargeErrorLiveData.observeAsState(initial = false),
-                itemInfo = itemInfo,
-                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00:00"),
-                qrCodeUrl = viewModel.qrCodeUrlLiveData.observeAsState(initial = ""),
-                paymentType = paymentType,
-                isTablet = isTablet
-            )
+        if (DateTimeUtil.getExpiredSeconds(viewModel.getExpiredHour()) <= 0L && isFirstInit) {
+            launchExpiredErrorScreen()
+        } else {
+            setContent {
+                Content(
+                    totalAmount = totalAmount,
+                    orderId = orderId,
+                    customerInfo = customerInfo,
+                    isChargeError = viewModel.isQrChargeErrorLiveData.observeAsState(initial = false),
+                    itemInfo = itemInfo,
+                    remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
+                    qrCodeUrl = viewModel.qrCodeUrlLiveData.observeAsState(initial = ""),
+                    paymentType = paymentType,
+                    isTablet = isTablet
+                )
+            }
         }
+    }
+
+    private fun launchExpiredErrorScreen() {
+        errorScreenLauncher.launch(
+            ErrorScreenActivity.getIntent(
+                activityContext = this@WalletActivity,
+                title = resources.getString(R.string.expired_title),
+                content = resources.getString(R.string.expired_desc),
+                transactionResult = TransactionResult(
+                    status = UiKitConstants.STATUS_FAILED,
+                    transactionId = "expired",
+                    paymentType = paymentType,
+                    message = resources.getString(R.string.expired_desc)
+                )
+            )
+        )
     }
 
     private fun chargeQrPayment() {
@@ -217,21 +237,9 @@ internal class WalletActivity : BaseActivity() {
         var error by remember { mutableStateOf(false) }
         var loading by remember { mutableStateOf(false) }
 
-        if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
+        if (DateTimeUtil.getExpiredSeconds(remainingTime) <= 0L && isFirstInit) {
             if(viewModel.isExpired.value == true) {
-                errorScreenLauncher.launch(
-                    ErrorScreenActivity.getIntent(
-                        activityContext = this@WalletActivity,
-                        title = resources.getString(R.string.expired_title),
-                        content = resources.getString(R.string.expired_desc),
-                        transactionResult = TransactionResult(
-                            status = UiKitConstants.STATUS_FAILED,
-                            transactionId = "expired",
-                            paymentType = paymentType,
-                            message = resources.getString(R.string.expired_desc)
-                        )
-                    )
-                )
+                launchExpiredErrorScreen()
             } else {
                 val data = Intent()
                 data.putExtra(
