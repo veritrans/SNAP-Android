@@ -13,6 +13,7 @@ import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import retrofit2.HttpException
 import java.util.*
 import javax.inject.Inject
 
@@ -27,11 +28,14 @@ internal class UobPaymentViewModel @Inject constructor(
 
     private val transactionResponse = MutableLiveData<TransactionResponse>()
     private val transactionResult = MutableLiveData<Pair<String, String>>()
+    private val _isExpired = MutableLiveData<Boolean>()
 
     private var expireTimeInMillis = 0L
 
     fun getTransactionResponse(): LiveData<TransactionResponse> = transactionResponse
     fun getTransactionResult(): LiveData<Pair<String, String>> = transactionResult
+
+    val isExpired: LiveData<Boolean> = _isExpired
 
     fun payUob(snapToken: String) {
         val builder = DirectDebitPaymentRequestBuilder()
@@ -95,6 +99,10 @@ internal class UobPaymentViewModel @Inject constructor(
                         paymentMethodName = PaymentType.UOB_EZPAY,
                         error = error
                     )
+                    if (error.cause is HttpException) {
+                        val exception: HttpException = error.cause as HttpException
+                        _isExpired.value = exception.code() == 400
+                    }
                 }
             }
         )
