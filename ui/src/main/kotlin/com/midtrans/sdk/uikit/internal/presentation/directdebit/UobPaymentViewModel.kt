@@ -89,7 +89,7 @@ internal class UobPaymentViewModel @Inject constructor(
                 }
 
                 override fun onError(error: SnapError) {
-                    Logger.e("Uob Payment get transaction status succesfully")
+                    Logger.e("Uob Payment Error get transaction status")
                     trackSnapError(
                         pageName = PageName.UOB_PAGE,
                         paymentMethodName = PaymentType.UOB_EZPAY,
