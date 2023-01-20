@@ -174,24 +174,29 @@ internal class CreditCardActivity : BaseActivity() {
         viewModel.setCreditCardDetails(creditCard)
         viewModel.trackPageViewed(currentStepNumber)
         initTransactionResultScreenObserver()
-        setContent {
-            CreditCardPageStateFull(
-                transactionDetails = transactionDetails,
-                customerDetail = customerDetail,
-                itemInfo = itemInfo,
-                savedTokenListState = savedTokenList,
-                creditCard = creditCard,
-                viewModel = viewModel,
-                bankCodeIdState = viewModel.bankIconId.observeAsState(null),
-                binType = viewModel.binType.observeAsState(null),
-                cardIssuerBank = viewModel.cardIssuerBank.observeAsState(null),
-                totalAmount = viewModel.netAmountLiveData.observeAsState(initial = totalAmount),
-                totalAmountWithoutRp = viewModel.netAmountWithoutCurrencyLiveData.observeAsState(0.0),
-                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00:00"),
-                withCustomerPhoneEmail = withCustomerPhoneEmail,
-                errorTypeState = viewModel.errorTypeLiveData.observeAsState(initial = null),
-                promoState = viewModel.promoDataLiveData.observeAsState(initial = null)
-            )
+
+        if (DateTimeUtil.getExpiredSeconds(viewModel.getExpiredHour()) <= 0L && isFirstInit) {
+            launchExpiredErrorScreen()
+        } else {
+            setContent {
+                CreditCardPageStateFull(
+                    transactionDetails = transactionDetails,
+                    customerDetail = customerDetail,
+                    itemInfo = itemInfo,
+                    savedTokenListState = savedTokenList,
+                    creditCard = creditCard,
+                    viewModel = viewModel,
+                    bankCodeIdState = viewModel.bankIconId.observeAsState(null),
+                    binType = viewModel.binType.observeAsState(null),
+                    cardIssuerBank = viewModel.cardIssuerBank.observeAsState(null),
+                    totalAmount = viewModel.netAmountLiveData.observeAsState(initial = totalAmount),
+                    totalAmountWithoutRp = viewModel.netAmountWithoutCurrencyLiveData.observeAsState(0.0),
+                    remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
+                    withCustomerPhoneEmail = withCustomerPhoneEmail,
+                    errorTypeState = viewModel.errorTypeLiveData.observeAsState(initial = null),
+                    promoState = viewModel.promoDataLiveData.observeAsState(initial = null)
+                )
+            }
         }
     }
 
@@ -261,6 +266,22 @@ internal class CreditCardActivity : BaseActivity() {
             setResult(result.resultCode, result.data)
             finish()
         }
+
+    private fun launchExpiredErrorScreen() {
+        errorScreenLauncher.launch(
+            ErrorScreenActivity.getIntent(
+                activityContext = this@CreditCardActivity,
+                title = resources.getString(R.string.expired_title),
+                content = resources.getString(R.string.expired_desc),
+                transactionResult = TransactionResult(
+                    status = UiKitConstants.STATUS_FAILED,
+                    transactionId = "expired",
+                    paymentType = PaymentType.CREDIT_CARD,
+                    message = resources.getString(R.string.expired_desc)
+                )
+            )
+        )
+    }
 
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
@@ -441,21 +462,7 @@ internal class CreditCardActivity : BaseActivity() {
                     onSavedCardRadioSelected = { selectedFormData = it },
                     onSavedCardPointBankCheckedChange = { state.isPointBankChecked = it }
                 )
-                if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit && is3dsTransaction?.value == false) {
-                    errorScreenLauncher.launch(
-                        ErrorScreenActivity.getIntent(
-                            activityContext = this@CreditCardActivity,
-                            title = resources.getString(R.string.expired_title),
-                            content = resources.getString(R.string.expired_desc),
-                            transactionResult = TransactionResult(
-                                status = UiKitConstants.STATUS_FAILED,
-                                transactionId = "expired",
-                                paymentType = PaymentType.CREDIT_CARD,
-                                message = resources.getString(R.string.expired_desc)
-                            )
-                        )
-                    )
-                }
+                if (DateTimeUtil.getExpiredSeconds(remainingTime) <= 0L && isFirstInit && is3dsTransaction?.value == false) launchExpiredErrorScreen()
             }
             composable(THREE_DS_PAGE) {
                 transactionResponse?.value?.redirectUrl?.let {
