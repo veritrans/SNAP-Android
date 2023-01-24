@@ -93,10 +93,11 @@ internal object DateTimeUtil {
             val date = dateFormat.parse(remainingTime) as Date
             TimeUnit.MILLISECONDS.toSeconds(date.time)
         } catch (e: Exception) {
-            100
+            INVALID_FORMAT
         }
     }
 
+    private const val INVALID_FORMAT: Long = 100
     const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss Z"
     const val TIME_FORMAT = "HH:mm:ss"
     val TIME_ZONE_UTC: TimeZone = TimeZone.getTimeZone("UTC")
