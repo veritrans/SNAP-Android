@@ -194,7 +194,9 @@ internal class WalletActivity : BaseActivity() {
                 paymentType = paymentType,
                 url = it,
                 snapToken = snapToken,
-                stepNumber = currentStepNumber + 1
+                stepNumber = currentStepNumber + 1,
+                amount = totalAmount,
+                orderId = orderId
             )
             deepLinkLauncher.launch(intent)
         }

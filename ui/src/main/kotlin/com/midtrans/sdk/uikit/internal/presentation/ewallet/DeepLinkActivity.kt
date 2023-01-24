@@ -13,9 +13,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResult
+import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActivity
+import com.midtrans.sdk.uikit.internal.presentation.statusscreen.SuccessScreenActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
+import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
 import javax.inject.Inject
 
 internal class DeepLinkActivity : BaseActivity() {
@@ -31,6 +36,17 @@ internal class DeepLinkActivity : BaseActivity() {
         intent.getIntExtra(EXTRA_STEP_NUMBER, 0)
     }
 
+    private val amount: String by lazy {
+        intent.getStringExtra(EXTRA_AMOUNT)
+            ?: throw RuntimeException("Total amount must not be empty")
+    }
+
+    private val orderId: String by lazy {
+        intent.getStringExtra(EXTRA_ORDER_ID)
+            ?: throw RuntimeException("Order Id must not be empty")
+    }
+
+    private var isFirstInit = true
 
     private val deepLinkLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -42,15 +58,78 @@ internal class DeepLinkActivity : BaseActivity() {
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.setPaymentType(paymentType)
         viewModel.trackPageViewed(currentStepNumber)
-        setContent { Content(url = url, snapToken = snapToken) }
+        setContent { Content(url = url, snapToken = snapToken, amount = amount, orderId = orderId) }
+        observeIsExpired()
         observeData()
     }
 
     private fun observeData() {
         viewModel.checkStatusResultLiveData.observe(this) {
-            setResult(it)
+            when (it.status) {
+                STATUS_SUCCESS -> {
+                    goToSuccessScreen(amount, orderId, it)
+                }
+                STATUS_PENDING -> {
+                    setResult(it)
+                    finish()
+                }
+                else -> {
+                    setResult(it)
+                    finish()
+                }
+            }
+        }
+    }
+
+    private fun observeIsExpired() {
+        viewModel.isExpired.observe(this) {
+            if(it) launchExpiredErrorScreen()
+        }
+    }
+
+    private val errorScreenLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            setResult(result.resultCode, result?.data)
+            finish()
+            isFirstInit = false
+        }
+
+    private val successScreenLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            setResult(result.resultCode, result?.data)
             finish()
         }
+
+    private fun launchExpiredErrorScreen() {
+        errorScreenLauncher.launch(
+            ErrorScreenActivity.getIntent(
+                activityContext = this@DeepLinkActivity,
+                title = resources.getString(R.string.expired_title),
+                content = resources.getString(R.string.expired_desc),
+                transactionResult = TransactionResult(
+                    status = UiKitConstants.STATUS_FAILED,
+                    transactionId = "expired",
+                    paymentType = paymentType,
+                    message = resources.getString(R.string.expired_desc)
+                )
+            )
+        )
+    }
+
+    private fun goToSuccessScreen(
+        amount: String,
+        orderId: String,
+        transactionResult: TransactionResult
+    ) {
+        successScreenLauncher.launch(
+            SuccessScreenActivity.getIntent(
+                activityContext = this,
+                total = amount,
+                orderId = orderId,
+                transactionResult = transactionResult,
+                stepNumber = currentStepNumber + 1
+            )
+        )
     }
 
     private fun setResult(data: TransactionResult) {
@@ -59,7 +138,7 @@ internal class DeepLinkActivity : BaseActivity() {
     }
 
     @Composable
-    private fun Content(url: String, snapToken: String) {
+    private fun Content(url: String, snapToken: String, amount: String, orderId: String) {
         if (isValidUrl(url)) {
             try {
                 intent = Intent(Intent.ACTION_VIEW)
@@ -76,7 +155,7 @@ internal class DeepLinkActivity : BaseActivity() {
     @Preview
     @Composable
     private fun ForPreview() {
-        Content(url = "http://", snapToken = "")
+        Content(url = "http://", snapToken = "", amount = amount, orderId = orderId)
     }
 
     private fun getAppPackageName(): String {
@@ -141,6 +220,8 @@ internal class DeepLinkActivity : BaseActivity() {
         private const val EXTRA_PAYMENT_TYPE = "deeplinkactivity.extra.payment_type"
         private const val EXTRA_SNAP_TOKEN = "deeplinkactivity.extra.snap_token"
         private const val EXTRA_STEP_NUMBER = "deeplinkactivity.extra.step_number"
+        private const val EXTRA_AMOUNT = "deeplinkactivity.extra.amount"
+        private const val EXTRA_ORDER_ID = "deeplinkactivity.extra.order_id"
         private const val GOJEK_PACKAGE_NAME = "com.gojek.app"
         private const val SHOPEE_PACKAGE_NAME = "com.shopee.id"
 
@@ -149,13 +230,17 @@ internal class DeepLinkActivity : BaseActivity() {
             paymentType: String,
             url: String,
             snapToken: String,
-            stepNumber: Int
+            stepNumber: Int,
+            amount: String,
+            orderId: String
         ): Intent {
             return Intent(activityContext, DeepLinkActivity::class.java).apply {
                 putExtra(EXTRA_URL, url)
                 putExtra(EXTRA_PAYMENT_TYPE, paymentType)
                 putExtra(EXTRA_SNAP_TOKEN, snapToken)
                 putExtra(EXTRA_STEP_NUMBER, stepNumber)
+                putExtra(EXTRA_AMOUNT, amount)
+                putExtra(EXTRA_ORDER_ID, orderId)
             }
         }
     }
