@@ -101,7 +101,7 @@ internal class UobPaymentViewModel @Inject constructor(
                     )
                     if (error.cause is HttpException) {
                         val exception: HttpException = error.cause as HttpException
-                        _isExpired.value = exception.code() == 400
+                        _isExpired.value = exception.code() == STATUS_CODE_400
                     }
                 }
             }
@@ -191,5 +191,6 @@ internal class UobPaymentViewModel @Inject constructor(
         private const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss Z"
         private const val TIME_FORMAT = "%02d:%02d:%02d"
         private val timeZoneUtc = TimeZone.getTimeZone("UTC")
+        private const val STATUS_CODE_400 = 400
     }
 }
