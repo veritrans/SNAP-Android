@@ -139,15 +139,11 @@ internal class DeepLinkActivity : BaseActivity() {
 
     @Composable
     private fun Content(url: String, snapToken: String, amount: String, orderId: String) {
-        if (isValidUrl(url)) {
-            try {
-                intent = Intent(Intent.ACTION_VIEW)
-                intent.setData(Uri.parse(url))
-                deepLinkLauncher.launch(intent)
-            } catch (e: Throwable) {
-                openAppInPlayStore()
-            }
-        } else {
+        try {
+            intent = Intent(Intent.ACTION_VIEW)
+            intent.setData(Uri.parse(url))
+            deepLinkLauncher.launch(intent)
+        } catch (e: Throwable) {
             openAppInPlayStore()
         }
     }
@@ -179,18 +175,6 @@ internal class DeepLinkActivity : BaseActivity() {
 
     private val snapToken: String by lazy {
         intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
-    }
-
-    private fun isValidUrl(url: String): Boolean {
-        if (url.contains("gojek://") ||
-            url.contains("shopeeid://") ||
-            // This is handle for sandbox Simulator
-            url.contains("/gopay/partner/") ||
-            url.contains("/shopeepay/")
-        ) {  // TODO: fill with exact scheme
-            return true
-        }
-        return false
     }
 
     private fun openAppInPlayStore() {
