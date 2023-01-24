@@ -176,18 +176,6 @@ internal class DeepLinkActivity : BaseActivity() {
         intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
     }
 
-    private fun isValidUrl(url: String): Boolean {
-        if (url.contains("gojek://") ||
-            url.contains("shopeeid://") ||
-            // This is handle for sandbox Simulator
-            url.contains("/gopay/partner/") ||
-            url.contains("/shopeepay/")
-        ) {  // TODO: fill with exact scheme
-            return true
-        }
-        return false
-    }
-
     private fun openAppInPlayStore() {
         try {
             deepLinkLauncher.launch(
