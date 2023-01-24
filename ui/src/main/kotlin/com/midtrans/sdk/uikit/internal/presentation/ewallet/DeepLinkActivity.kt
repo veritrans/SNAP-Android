@@ -108,7 +108,6 @@ internal class DeepLinkActivity : BaseActivity() {
                 content = resources.getString(R.string.expired_desc),
                 transactionResult = TransactionResult(
                     status = UiKitConstants.STATUS_FAILED,
-                    transactionId = "expired",
                     paymentType = paymentType,
                     message = resources.getString(R.string.expired_desc)
                 )
@@ -175,6 +174,18 @@ internal class DeepLinkActivity : BaseActivity() {
 
     private val snapToken: String by lazy {
         intent.getStringExtra(EXTRA_SNAP_TOKEN).orEmpty()
+    }
+
+    private fun isValidUrl(url: String): Boolean {
+        if (url.contains("gojek://") ||
+            url.contains("shopeeid://") ||
+            // This is handle for sandbox Simulator
+            url.contains("/gopay/partner/") ||
+            url.contains("/shopeepay/")
+        ) {  // TODO: fill with exact scheme
+            return true
+        }
+        return false
     }
 
     private fun openAppInPlayStore() {

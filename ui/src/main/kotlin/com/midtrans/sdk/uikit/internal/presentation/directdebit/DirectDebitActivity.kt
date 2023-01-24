@@ -132,7 +132,6 @@ class DirectDebitActivity : BaseActivity() {
                 content = resources.getString(R.string.expired_desc),
                 transactionResult = TransactionResult(
                     status = UiKitConstants.STATUS_FAILED,
-                    transactionId = "expired",
                     paymentType = paymentType,
                     message = resources.getString(R.string.expired_desc)
                 )

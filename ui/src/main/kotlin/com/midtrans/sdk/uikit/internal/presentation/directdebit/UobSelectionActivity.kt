@@ -146,7 +146,6 @@ class UobSelectionActivity : BaseActivity() {
                 content = resources.getString(R.string.expired_desc),
                 transactionResult = TransactionResult(
                     status = UiKitConstants.STATUS_FAILED,
-                    transactionId = "expired",
                     paymentType = PaymentType.UOB_EZPAY,
                     message = resources.getString(R.string.expired_desc)
                 )

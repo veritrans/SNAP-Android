@@ -275,7 +275,6 @@ internal class CreditCardActivity : BaseActivity() {
                 content = resources.getString(R.string.expired_desc),
                 transactionResult = TransactionResult(
                     status = UiKitConstants.STATUS_FAILED,
-                    transactionId = "expired",
                     paymentType = PaymentType.CREDIT_CARD,
                     message = resources.getString(R.string.expired_desc)
                 )
