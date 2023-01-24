@@ -91,7 +91,7 @@ internal object DateTimeUtil {
             val dateFormat: DateFormat = SimpleDateFormat(TIME_FORMAT)
             dateFormat.timeZone = TIME_ZONE_UTC
             val date = dateFormat.parse(remainingTime) as Date
-            date.time / 1000L
+            TimeUnit.MILLISECONDS.toSeconds(date.time)
         } catch (e: Exception) {
             100
         }
