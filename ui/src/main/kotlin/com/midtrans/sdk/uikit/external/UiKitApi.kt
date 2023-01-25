@@ -165,7 +165,7 @@ class UiKitApi private constructor(val builder: Builder) {
     fun runPaymentLegacy(
         activityContext: Context,
         transactionDetails: SnapTransactionDetail,
-        customerDetails: CustomerDetails,
+        customerDetails: com.midtrans.sdk.corekit.models.CustomerDetails,
         itemDetails: List<ItemDetails>,
         creditCard: CreditCard,
         userId: String,
@@ -189,7 +189,7 @@ class UiKitApi private constructor(val builder: Builder) {
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
             activityContext = activityContext,
             transactionDetails = transactionDetails,
-            customerDetails = customerDetails,
+            customerDetails = customerDetailsLegacyToRevamp(customerDetails),
             itemDetails = itemDetails,
             creditCard = creditCard,
             userId = userId,
@@ -217,6 +217,10 @@ class UiKitApi private constructor(val builder: Builder) {
             return Expiry(expiry.startTime, expiry.unit, expiry.duration)
         }
         return null
+    }
+
+    private fun customerDetailsLegacyToRevamp(customerDetails: com.midtrans.sdk.corekit.models.CustomerDetails): CustomerDetails {
+        return CustomerDetails(customerDetails.customerIdentifier, customerDetails.firstName, customerDetails.lastName, customerDetails.email, customerDetails.phone, customerDetails.shippingAddress, customerDetails.billingAddress)
     }
 
     //Snap Token Flow

@@ -506,23 +506,13 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                     val index = name.lastIndexOf(' ')
                     val firstName = index.let { name.substring(0, it) }
                     val lastName = index.plus(1).let { name.substring(it) }
-
-                    customerDetailsLegacy = com.midtrans.sdk.corekit.models.CustomerDetails(
-                        "3A8788CE-B96F-449C-8180-B5901A08B50A",
-                        firstName,
-                        lastName,
-                        email.text,
-                        phoneNumber.text,
-                        ShippingAddress(
-                            "Ferdian",
-                            "Julianto",
-                            "Pasaraya mall",
-                            "West Jakarta",
-                            "11330",
-                            "021632631131",
-                            null
-                        ),
-                        BillingAddress(
+                    customerDetailsLegacy = com.midtrans.sdk.corekit.models.CustomerDetails()
+                    customerDetailsLegacy.setCustomerIdentifier("3A8788CE-B96F-449C-8180-B5901A08B50A")
+                    customerDetailsLegacy.setFirstName(firstName)
+                    customerDetailsLegacy.setLastName(lastName)
+                    customerDetailsLegacy.setEmail(email.text)
+                    customerDetailsLegacy.setPhone(phoneNumber.text)
+                    customerDetailsLegacy.shippingAddress = ShippingAddress(
                             "Ferdian",
                             "Julianto",
                             "Pasaraya mall",
@@ -531,7 +521,17 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                             "021632631131",
                             null
                         )
+                    customerDetailsLegacy.billingAddress = BillingAddress(
+
+                        "Ferdian",
+                        "Julianto",
+                        "Pasaraya mall",
+                        "West Jakarta",
+                        "11330",
+                        "021632631131",
+                        null
                     )
+
                     installmentLegacy = populateInstallmentLegacy()
                     expiryLegacy = populateExpiryLegacy()
                     bcaVaLegacy = populateBcaVaLegacy(bcaVa)
