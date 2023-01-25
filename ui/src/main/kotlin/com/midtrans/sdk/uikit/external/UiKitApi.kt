@@ -8,7 +8,9 @@ import androidx.compose.ui.text.font.FontFamily
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.core.Logger
 import com.midtrans.sdk.corekit.core.PaymentMethod
+import com.midtrans.sdk.corekit.models.BillingAddress
 import com.midtrans.sdk.corekit.models.ExpiryModel
+import com.midtrans.sdk.corekit.models.ShippingAddress
 import com.midtrans.sdk.uikit.api.callback.Callback
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
@@ -220,7 +222,39 @@ class UiKitApi private constructor(val builder: Builder) {
     }
 
     private fun customerDetailsLegacyToRevamp(customerDetails: com.midtrans.sdk.corekit.models.CustomerDetails): CustomerDetails {
-        return CustomerDetails(customerDetails.customerIdentifier, customerDetails.firstName, customerDetails.lastName, customerDetails.email, customerDetails.phone, customerDetails.shippingAddress, customerDetails.billingAddress)
+        return CustomerDetails(
+            customerDetails.customerIdentifier,
+            customerDetails.firstName,
+            customerDetails.lastName,
+            customerDetails.email,
+            customerDetails.phone,
+            shippingAddressToAddressRevamp(customerDetails.shippingAddress),
+            billingAddressLegacyToAddressRevamp(customerDetails.billingAddress)
+        )
+    }
+
+    private fun billingAddressLegacyToAddressRevamp(billingAddress: BillingAddress): Address {
+        return Address(
+            billingAddress.firstName,
+            billingAddress.lastName,
+            billingAddress.address,
+            billingAddress.city,
+            billingAddress.postalCode,
+            billingAddress.phone,
+            billingAddress.countryCode
+        )
+    }
+
+    private fun shippingAddressToAddressRevamp(shippingAddress: ShippingAddress): Address {
+        return Address(
+            shippingAddress.firstName,
+            shippingAddress.lastName,
+            shippingAddress.address,
+            shippingAddress.city,
+            shippingAddress.postalCode,
+            shippingAddress.phone,
+            shippingAddress.countryCode
+        )
     }
 
     //Snap Token Flow

@@ -506,31 +506,25 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                     val index = name.lastIndexOf(' ')
                     val firstName = index.let { name.substring(0, it) }
                     val lastName = index.plus(1).let { name.substring(it) }
+
+                    val shippingAddress = ShippingAddress();
+                    shippingAddress.setAddress("Jalan Andalas Gang Sebelah No. 1")
+                    shippingAddress.setCity("Jakarta")
+                    shippingAddress.setPostalCode("10220")
+
+                    val billingAddress = BillingAddress();
+                    billingAddress.setAddress("Jalan Andalas Gang Sebelah No. 1")
+                    billingAddress.setCity("Jakarta")
+                    billingAddress.setPostalCode("10220")
+
                     customerDetailsLegacy = com.midtrans.sdk.corekit.models.CustomerDetails()
                     customerDetailsLegacy.setCustomerIdentifier("3A8788CE-B96F-449C-8180-B5901A08B50A")
                     customerDetailsLegacy.setFirstName(firstName)
                     customerDetailsLegacy.setLastName(lastName)
                     customerDetailsLegacy.setEmail(email.text)
                     customerDetailsLegacy.setPhone(phoneNumber.text)
-                    customerDetailsLegacy.shippingAddress = ShippingAddress(
-                            "Ferdian",
-                            "Julianto",
-                            "Pasaraya mall",
-                            "West Jakarta",
-                            "11330",
-                            "021632631131",
-                            null
-                        )
-                    customerDetailsLegacy.billingAddress = BillingAddress(
-
-                        "Ferdian",
-                        "Julianto",
-                        "Pasaraya mall",
-                        "West Jakarta",
-                        "11330",
-                        "021632631131",
-                        null
-                    )
+                    customerDetailsLegacy.setBillingAddress(billingAddress)
+                    customerDetailsLegacy.setShippingAddress(shippingAddress)
 
                     installmentLegacy = populateInstallmentLegacy()
                     expiryLegacy = populateExpiryLegacy()
