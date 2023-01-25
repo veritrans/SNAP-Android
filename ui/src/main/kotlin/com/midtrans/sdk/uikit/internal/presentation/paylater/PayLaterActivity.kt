@@ -103,17 +103,36 @@ class PayLaterActivity : BaseActivity() {
             viewModel.getUsedToken(result)
         }
 
-        setContent {
-            PayLaterContent(
-                paymentType = paymentType,
-                amount = amount,
-                orderId = orderId,
-                customerInfo = customerInfo,
-                itemInfo = itemInfo,
-                response = viewModel.transactionResponseLiveData.observeAsState().value,
-                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00:00")
-            )
+        if (DateTimeUtil.getExpiredSeconds(viewModel.getExpiredHour()) <= 0L && isFirstInit) {
+            launchExpiredErrorScreen()
+        } else {
+            setContent {
+                PayLaterContent(
+                    paymentType = paymentType,
+                    amount = amount,
+                    orderId = orderId,
+                    customerInfo = customerInfo,
+                    itemInfo = itemInfo,
+                    response = viewModel.transactionResponseLiveData.observeAsState().value,
+                    remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
+                )
+            }
         }
+    }
+
+    private fun launchExpiredErrorScreen() {
+        errorScreenLauncher.launch(
+            ErrorScreenActivity.getIntent(
+                activityContext = this@PayLaterActivity,
+                title = resources.getString(R.string.expired_title),
+                content = resources.getString(R.string.expired_desc),
+                transactionResult = TransactionResult(
+                    status = UiKitConstants.STATUS_FAILED,
+                    paymentType = paymentType,
+                    message = resources.getString(R.string.expired_desc)
+                )
+            )
+        )
     }
 
     @Composable
@@ -133,21 +152,7 @@ class PayLaterActivity : BaseActivity() {
         val remainingTime by remember { remainingTimeState }
         val transactionId = viewModel.transactionId.observeAsState()
 
-        if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
-            errorScreenLauncher.launch(
-                ErrorScreenActivity.getIntent(
-                    activityContext = this@PayLaterActivity,
-                    title = resources.getString(R.string.expired_title),
-                    content = resources.getString(R.string.expired_desc),
-                    transactionResult = TransactionResult(
-                        status = UiKitConstants.STATUS_FAILED,
-                        transactionId = "expired",
-                        paymentType = paymentType,
-                        message = resources.getString(R.string.expired_desc)
-                    )
-                )
-            )
-        }
+        if (DateTimeUtil.getExpiredSeconds(remainingTime) <= 0L && isFirstInit) launchExpiredErrorScreen()
 
         transactionResult?.let { result ->
             viewModel.checkStatus(snapToken)

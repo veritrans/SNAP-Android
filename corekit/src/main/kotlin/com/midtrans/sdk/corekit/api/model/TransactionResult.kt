@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 open class TransactionResult(
     val status: String,
-    val transactionId: String,
+    val transactionId: String? = null,
     val paymentType: String,
     val message: String? = null
 ) : Parcelable

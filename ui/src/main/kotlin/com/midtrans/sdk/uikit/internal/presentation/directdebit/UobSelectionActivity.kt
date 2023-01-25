@@ -122,16 +122,35 @@ class UobSelectionActivity : BaseActivity() {
                 isFirstInit = false
             }
         } ?: run {
-            setContent {
-                UobSelectionContent(
-                    amount = amount,
-                    orderId = orderId,
-                    customerInfo = customerInfo,
-                    itemInfo = itemInfo,
-                    remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00:00")
-                )
+            if (DateTimeUtil.getExpiredSeconds(viewModel.getExpiredHour()) <= 0L && isFirstInit) {
+                launchExpiredErrorScreen()
+            } else {
+                setContent {
+                    UobSelectionContent(
+                        amount = amount,
+                        orderId = orderId,
+                        customerInfo = customerInfo,
+                        itemInfo = itemInfo,
+                        remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
+                    )
+                }
             }
         }
+    }
+
+    private fun launchExpiredErrorScreen() {
+        errorScreenLauncher.launch(
+            ErrorScreenActivity.getIntent(
+                activityContext = this@UobSelectionActivity,
+                title = resources.getString(R.string.expired_title),
+                content = resources.getString(R.string.expired_desc),
+                transactionResult = TransactionResult(
+                    status = UiKitConstants.STATUS_FAILED,
+                    paymentType = PaymentType.UOB_EZPAY,
+                    message = resources.getString(R.string.expired_desc)
+                )
+            )
+        )
     }
 
     @Preview(showBackground = true)
@@ -141,26 +160,12 @@ class UobSelectionActivity : BaseActivity() {
         orderId: String = "order-123456",
         customerInfo: CustomerInfo? = CustomerInfo(name = "Harry", "Phone", listOf("address")),
         itemInfo: ItemInfo? = null,
-        remainingTimeState: State<String> = remember { mutableStateOf("00:00:00") }
+        remainingTimeState: State<String> = remember { mutableStateOf("00:00") }
     ) {
         var isExpanded by remember { mutableStateOf(false) }
         val remainingTime by remember { remainingTimeState }
 
-        if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
-            errorScreenLauncher.launch(
-                ErrorScreenActivity.getIntent(
-                    activityContext = this@UobSelectionActivity,
-                    title = resources.getString(R.string.expired_title),
-                    content = resources.getString(R.string.expired_desc),
-                    transactionResult = TransactionResult(
-                        status = UiKitConstants.STATUS_FAILED,
-                        transactionId = "expired",
-                        paymentType = PaymentType.UOB_EZPAY,
-                        message = resources.getString(R.string.expired_desc)
-                    )
-                )
-            )
-        }
+        if (DateTimeUtil.getExpiredSeconds(remainingTime) <= 0L && isFirstInit) launchExpiredErrorScreen()
 
         Column(modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.overlayWhite))) {
             SnapAppBar(

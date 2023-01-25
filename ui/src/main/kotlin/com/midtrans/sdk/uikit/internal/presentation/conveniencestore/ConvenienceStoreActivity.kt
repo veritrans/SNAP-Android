@@ -69,24 +69,29 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.trackPageViewed(paymentType, currentStepNumber)
         viewModel.setDefaultExpiryTime(expiryTime)
-        setContent {
-            Content(
-                totalAmount = totalAmount,
-                orderId = orderId,
-                customerInfo = customerInfo,
-                itemInfo = itemInfo,
-                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00:00"),
-                barCode = viewModel.barCodeBitmapLiveData.observeAsState(initial = null),
-                paymentType = paymentType,
-                paymentCodeState = viewModel.paymentCodeLiveData.observeAsState(initial = null),
-                pdfUrl = viewModel.pdfUrlLiveData.observeAsState(initial = null),
-                errorState = viewModel.errorLiveData.observeAsState(initial = null),
-                viewModel = viewModel,
-                clipboardManager = LocalClipboardManager.current
-            )
+
+        if (DateTimeUtil.getExpiredSeconds(viewModel.getExpiredHour()) <= 0L && isFirstInit) {
+            launchExpiredErrorScreen()
+        } else {
+            setContent {
+                Content(
+                    totalAmount = totalAmount,
+                    orderId = orderId,
+                    customerInfo = customerInfo,
+                    itemInfo = itemInfo,
+                    remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
+                    barCode = viewModel.barCodeBitmapLiveData.observeAsState(initial = null),
+                    paymentType = paymentType,
+                    paymentCodeState = viewModel.paymentCodeLiveData.observeAsState(initial = null),
+                    pdfUrl = viewModel.pdfUrlLiveData.observeAsState(initial = null),
+                    errorState = viewModel.errorLiveData.observeAsState(initial = null),
+                    viewModel = viewModel,
+                    clipboardManager = LocalClipboardManager.current
+                )
+            }
+            charge()
+            observeTransactionResultLiveData()
         }
-        charge()
-        observeTransactionResultLiveData()
     }
 
     private fun observeTransactionResultLiveData() {
@@ -110,6 +115,21 @@ internal class ConvenienceStoreActivity : BaseActivity() {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    private fun launchExpiredErrorScreen() {
+        errorScreenLauncher.launch(
+            ErrorScreenActivity.getIntent(
+                activityContext = this@ConvenienceStoreActivity,
+                title = resources.getString(R.string.expired_title),
+                content = resources.getString(R.string.expired_desc),
+                transactionResult = TransactionResult(
+                    status = UiKitConstants.STATUS_FAILED,
+                    paymentType = paymentType,
+                    message = resources.getString(R.string.expired_desc)
+                )
+            )
+        )
+    }
+
     @Composable
     private fun Content(
         totalAmount: String,
@@ -131,21 +151,9 @@ internal class ConvenienceStoreActivity : BaseActivity() {
         }
         var loading by remember { mutableStateOf(true) }
 
-        if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
+        if (DateTimeUtil.getExpiredSeconds(remainingTime) <= 0L && isFirstInit) {
             if (viewModel?.isExpired?.value == true) {
-                errorScreenLauncher.launch(
-                    ErrorScreenActivity.getIntent(
-                        activityContext = this@ConvenienceStoreActivity,
-                        title = resources.getString(R.string.expired_title),
-                        content = resources.getString(R.string.expired_desc),
-                        transactionResult = TransactionResult(
-                            status = UiKitConstants.STATUS_FAILED,
-                            transactionId = "expired",
-                            paymentType = paymentType,
-                            message = resources.getString(R.string.expired_desc)
-                        )
-                    )
-                )
+                launchExpiredErrorScreen()
             } else {
                 val data = Intent()
                 data.putExtra(

@@ -105,18 +105,30 @@ class UobPaymentActivity : BaseActivity() {
         UiKitApi.getDefaultInstance().daggerComponent.inject(this)
         viewModel.trackPageViewed(currentStepNumber)
         viewModel.setExpiryTime(remainingTime)
-        setContent {
-            UobPaymentContent(
-                uobMode = uobMode,
-                amount = amount,
-                orderId = orderId,
-                customerInfo = customerInfo,
-                itemInfo = itemInfo,
-                response = viewModel.getTransactionResponse().observeAsState().value,
-                remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00:00")
-            )
+
+        if (DateTimeUtil.getExpiredSeconds(viewModel.getExpiredHour()) <= 0L && isFirstInit) {
+            launchExpiredErrorScreen()
+        } else {
+            setContent {
+                UobPaymentContent(
+                    uobMode = uobMode,
+                    amount = amount,
+                    orderId = orderId,
+                    customerInfo = customerInfo,
+                    itemInfo = itemInfo,
+                    response = viewModel.getTransactionResponse().observeAsState().value,
+                    remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00")
+                )
+            }
         }
+        observeIsExpired()
         observeTransactionStatus()
+    }
+
+    private fun observeIsExpired() {
+        viewModel.isExpired.observe(this) {
+            if(it) launchExpiredErrorScreen()
+        }
     }
 
     private fun observeTransactionStatus() {
@@ -158,17 +170,7 @@ class UobPaymentActivity : BaseActivity() {
                     finish()
                 }
                 else -> {
-                    val data = Intent()
-                    data.putExtra(
-                        UiKitConstants.KEY_TRANSACTION_RESULT,
-                        TransactionResult(
-                            status = STATUS_FAILED,
-                            transactionId = transactionId,
-                            paymentType = PaymentType.UOB_EZPAY
-                        )
-                    )
-                    setResult(RESULT_OK, data)
-                    finish()
+                    launchExpiredErrorScreen()
                 }
             }
         }
@@ -197,6 +199,21 @@ class UobPaymentActivity : BaseActivity() {
                 orderId = orderId,
                 transactionResult = transactionResult,
                 stepNumber = currentStepNumber + 1
+            )
+        )
+    }
+
+    private fun launchExpiredErrorScreen() {
+        errorScreenLauncher.launch(
+            ErrorScreenActivity.getIntent(
+                activityContext = this@UobPaymentActivity,
+                title = resources.getString(R.string.expired_title),
+                content = resources.getString(R.string.expired_desc),
+                transactionResult = TransactionResult(
+                    status = STATUS_FAILED,
+                    paymentType = PaymentType.UOB_EZPAY,
+                    message = resources.getString(R.string.expired_desc)
+                )
             )
         )
     }
@@ -297,20 +314,8 @@ class UobPaymentActivity : BaseActivity() {
                     viewModel.payUob(snapToken)
                 }
             }
-            if (DateTimeUtil.getExpiredSeconds(remainingTime) < 0L && isFirstInit) {
-                errorScreenLauncher.launch(
-                    ErrorScreenActivity.getIntent(
-                        activityContext = this@UobPaymentActivity,
-                        title = resources.getString(R.string.expired_title),
-                        content = resources.getString(R.string.expired_desc),
-                        transactionResult = TransactionResult(
-                            status = STATUS_FAILED,
-                            transactionId = "expired",
-                            paymentType = PaymentType.UOB_EZPAY,
-                            message = resources.getString(R.string.expired_desc)
-                        )
-                    )
-                )
+            if (DateTimeUtil.getExpiredSeconds(remainingTime) <= 0L && isFirstInit) {
+                launchExpiredErrorScreen()
             }
         } else {
             response?.run {

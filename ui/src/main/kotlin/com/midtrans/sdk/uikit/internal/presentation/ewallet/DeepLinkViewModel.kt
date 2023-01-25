@@ -15,6 +15,7 @@ import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_200
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_201
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
+import retrofit2.HttpException
 import javax.inject.Inject
 
 internal class DeepLinkViewModel @Inject constructor(
@@ -27,7 +28,10 @@ internal class DeepLinkViewModel @Inject constructor(
 
     private lateinit var paymentType: String
     private val _checkStatusResultLiveData = MutableLiveData<TransactionResult>()
+    private val _isExpired = MutableLiveData<Boolean>()
+
     val checkStatusResultLiveData: LiveData<TransactionResult> = _checkStatusResultLiveData
+    val isExpired: LiveData<Boolean> = _isExpired
 
     fun checkStatus(snapToken: String) {
         snapCore.getTransactionStatus(
@@ -56,11 +60,16 @@ internal class DeepLinkViewModel @Inject constructor(
                 }
 
                 override fun onError(error: SnapError) {
+                    Logger.e("Deep Link error get transaction status")
                     trackSnapError(
                         pageName = getPageName(paymentType),
                         paymentMethodName = paymentType,
                         error = error
                     )
+                    if (error.cause is HttpException) {
+                        val exception: HttpException = error.cause as HttpException
+                        _isExpired.value = exception.code() == 400
+                    }
                 }
             }
         )
