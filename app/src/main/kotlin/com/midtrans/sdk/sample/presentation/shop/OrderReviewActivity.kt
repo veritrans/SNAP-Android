@@ -250,7 +250,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     private var isSavedCard: Boolean = false
     private var isSecure: Boolean = false
     private var ccAuthType: String? = null
-    private var whitelistBins: List<String> = listOf()
+    private var whitelistBins: ArrayList<String> = arrayListOf()
 
     private lateinit var customerDetailsLegacy: com.midtrans.sdk.corekit.models.CustomerDetails
     private var installmentLegacy: com.midtrans.sdk.corekit.models.snap.Installment? = null
@@ -616,8 +616,8 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         return vaTransferRequest
     }
 
-    private fun populateWhitelistBins(): List<String> {
-        val whitelistBins = mutableListOf<String>()
+    private fun populateWhitelistBins(): ArrayList<String> {
+        val whitelistBins = arrayListOf<String>()
         if (isBniPointOnly) whitelistBins.add("bni")
         return whitelistBins
     }
@@ -684,14 +684,14 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     }
 
     private fun populateInstallmentLegacy(): com.midtrans.sdk.corekit.models.snap.Installment? {
-        var installment: com.midtrans.sdk.corekit.models.snap.Installment? = null
+        var output: com.midtrans.sdk.corekit.models.snap.Installment? = null
         if (installmentBank != NO_INSTALLMENT) {
-            installment = com.midtrans.sdk.corekit.models.snap.Installment(
-                isRequiredInstallment,
-                mapOf(installmentBank to listOf(3, 6, 12))
-            )
+            val installment = com.midtrans.sdk.corekit.models.snap.Installment()
+            installment.terms = mapOf(installmentBank to listOf(3, 6, 12))
+            installment.isRequired = isRequiredInstallment
+            output = installment
         }
-        return installment
+        return output
     }
 
     private fun populateInstallment(): Installment? {
@@ -794,19 +794,21 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             UUID.randomUUID().toString(),
             product.price
         )
-        transactionRequest.creditCard = com.midtrans.sdk.corekit.models.snap.CreditCard(
-            isSavedCard,
-            null,
-            Authentication.AUTH_3DS,
-            isSecure,
-            null,
-            bank,
-            null,
-            whitelistBins,
-            null,
-            installmentLegacy,
-            ccAuthType,
-        )
+        val creditCard = com.midtrans.sdk.corekit.models.snap.CreditCard()
+        creditCard.setSaveCard(isSavedCard)
+        creditCard.setTokenId(null)
+        creditCard.setAuthentication(Authentication.AUTH_3DS)
+        creditCard.setSecure(isSecure)
+        creditCard.setChannel(com.midtrans.sdk.corekit.models.snap.CreditCard.MIGS)
+        creditCard.setBank(bank)
+        creditCard.setSavedTokens(null)
+        creditCard.setWhitelistBins(whitelistBins)
+        creditCard.setBlacklistBins(null)
+        creditCard.setInstallment(installmentLegacy)
+        creditCard.setType(ccAuthType)
+
+        transactionRequest.creditCard = creditCard
+
         //Setting Snap token custon expiry
         transactionRequest.expiry = expiryLegacy
         transactionRequest.customerDetails = customerDetailsLegacy

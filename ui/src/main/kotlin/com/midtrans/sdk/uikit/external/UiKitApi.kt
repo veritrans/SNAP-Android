@@ -178,7 +178,7 @@ class UiKitApi private constructor(val builder: Builder) {
         transactionDetails: SnapTransactionDetail,
         customerDetails: com.midtrans.sdk.corekit.models.CustomerDetails,
         itemDetails: List<ItemDetails>,
-        creditCard: CreditCard,
+        creditCard: com.midtrans.sdk.corekit.models.snap.CreditCard,
         userId: String,
         uobEzpayCallback: PaymentCallback,
         paymentCallback: Callback<TransactionResult>,
@@ -202,7 +202,7 @@ class UiKitApi private constructor(val builder: Builder) {
             transactionDetails = transactionDetails,
             customerDetails = convertToRevamp(customerDetails),
             itemDetails = itemDetails,
-            creditCard = creditCard,
+            creditCard = convertToRevamp(creditCard),
             userId = userId,
             paymentType = getPaymentType(paymentMethod),
             expiry = convertToRevamp(snapTokenExpiry),
@@ -221,6 +221,17 @@ class UiKitApi private constructor(val builder: Builder) {
             isSnapTokenAvailable = true
         )
         activityContext.startActivity(intent)
+    }
+
+    private fun convertToRevamp(creditCard: com.midtrans.sdk.corekit.models.snap.CreditCard): CreditCard {
+        return CreditCard(creditCard.isSaveCard, creditCard.tokenId, creditCard.authentication, creditCard.isSecure, creditCard.channel, creditCard.bank, creditCard.savedTokens, creditCard.whitelistBins, creditCard.blacklistBins, convertToRevamp(creditCard.installment), creditCard.type)
+    }
+
+    private fun convertToRevamp(installment: com.midtrans.sdk.corekit.models.snap.Installment?): Installment? {
+        installment?.let {
+            return Installment(installment.isRequired, installment.terms)
+        }
+        return null
     }
 
     private fun convertToRevamp(permataVa: PermataBankTransferRequestModel?): com.midtrans.sdk.corekit.api.model.BankTransferRequest? {
