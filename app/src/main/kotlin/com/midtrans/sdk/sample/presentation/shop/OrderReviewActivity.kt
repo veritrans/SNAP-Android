@@ -507,12 +507,12 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                     val firstName = index.let { name.substring(0, it) }
                     val lastName = index.plus(1).let { name.substring(it) }
 
-                    val shippingAddress = ShippingAddress();
+                    val shippingAddress = ShippingAddress()
                     shippingAddress.setAddress("Jalan Andalas Gang Sebelah No. 1")
                     shippingAddress.setCity("Jakarta")
                     shippingAddress.setPostalCode("10220")
 
-                    val billingAddress = BillingAddress();
+                    val billingAddress = BillingAddress()
                     billingAddress.setAddress("Jalan Andalas Gang Sebelah No. 1")
                     billingAddress.setCity("Jakarta")
                     billingAddress.setPostalCode("10220")
@@ -584,24 +584,23 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     private fun populateBcaVaLegacy(va: String): BcaBankTransferRequestModel? {
         var vaTransferRequest: BcaBankTransferRequestModel? = null
         if (va.isNotEmpty()) {
-            vaTransferRequest = BcaBankTransferRequestModel(
-                va,
-                com.midtrans.sdk.corekit.models.FreeText(
-                    listOf(
-                        com.midtrans.sdk.corekit.models.FreeTextLanguage(
-                            "Text ID inquiry 0",
-                            "Text EN inquiry 0"
-                        )
-                    ),
-                    listOf(
-                        com.midtrans.sdk.corekit.models.FreeTextLanguage(
-                            "Text ID inquiry 0",
-                            "Text EN inquiry 0"
-                        )
+            val SUB_COMPANY_CODE_BCA = "12321"
+            val bcaRequestModel = BcaBankTransferRequestModel(va, com.midtrans.sdk.corekit.models.FreeText(
+                listOf(
+                    com.midtrans.sdk.corekit.models.FreeTextLanguage(
+                        "Text ID inquiry 0",
+                        "Text EN inquiry 0"
                     )
                 ),
-                null
-            )
+                listOf(
+                    com.midtrans.sdk.corekit.models.FreeTextLanguage(
+                        "Text ID inquiry 0",
+                        "Text EN inquiry 0"
+                    )
+                )
+            ))
+            bcaRequestModel.subCompanyCode = SUB_COMPANY_CODE_BCA
+            vaTransferRequest = bcaRequestModel
         }
         return vaTransferRequest
     }
@@ -610,10 +609,9 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         val permataRecipient = "Sudarsono"
         var vaTransferRequest: PermataBankTransferRequestModel? = null
         if (va.isNotEmpty()) {
-            vaTransferRequest = PermataBankTransferRequestModel(
-                va,
-                permataRecipient
-            )
+            val permataRequest = PermataBankTransferRequestModel(va)
+            permataRequest.setRecipientName(permataRecipient)
+            vaTransferRequest = permataRequest
         }
         return vaTransferRequest
     }

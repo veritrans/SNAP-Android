@@ -1,10 +1,19 @@
 package com.midtrans.sdk.corekit.models.snap;
 
-import androidx.annotation.NonNull;
-import com.midtrans.sdk.uikit.api.model.BankTransferRequest;
+public class BankTransferRequestModel {
+    private String vaNumber;
 
-public class BankTransferRequestModel extends BankTransferRequest {
-    public BankTransferRequestModel(@NonNull String vaNumber) {
-        super(vaNumber, null, null, null);
+    public BankTransferRequestModel() {}
+
+    public BankTransferRequestModel(String vaNumber) {
+        setVaNumber(vaNumber);
+    }
+
+    public String getVaNumber() {
+        return vaNumber;
+    }
+
+    public void setVaNumber(String vaNumber) {
+        this.vaNumber = vaNumber;
     }
 }

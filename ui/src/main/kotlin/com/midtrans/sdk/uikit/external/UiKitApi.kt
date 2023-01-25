@@ -8,9 +8,12 @@ import androidx.compose.ui.text.font.FontFamily
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.core.Logger
 import com.midtrans.sdk.corekit.core.PaymentMethod
+import com.midtrans.sdk.corekit.models.BcaBankTransferRequestModel
 import com.midtrans.sdk.corekit.models.BillingAddress
 import com.midtrans.sdk.corekit.models.ExpiryModel
+import com.midtrans.sdk.corekit.models.PermataBankTransferRequestModel
 import com.midtrans.sdk.corekit.models.ShippingAddress
+import com.midtrans.sdk.corekit.models.snap.BankTransferRequestModel
 import com.midtrans.sdk.uikit.api.callback.Callback
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
@@ -182,10 +185,10 @@ class UiKitApi private constructor(val builder: Builder) {
         snapTokenExpiry: ExpiryModel? = null,
         paymentMethod: PaymentMethod? = null,
         enabledPayment: List<String>? = null,
-        permataVa: BankTransferRequest? = null,
-        bcaVa: BankTransferRequest? = null,
-        bniVa: BankTransferRequest? = null,
-        briVa: BankTransferRequest? = null,
+        permataVa: PermataBankTransferRequestModel? = null,
+        bcaVa: BcaBankTransferRequestModel? = null,
+        bniVa: BankTransferRequestModel? = null,
+        briVa: BankTransferRequestModel? = null,
         gopayCallback: GopayPaymentCallback? = null,
         shopeepayCallback: PaymentCallback? = null,
         customField1: String? = null,
@@ -204,10 +207,10 @@ class UiKitApi private constructor(val builder: Builder) {
             paymentType = getPaymentType(paymentMethod),
             expiry = convertToRevamp(snapTokenExpiry),
             enabledPayments = enabledPayment,
-            permataVa = permataVa,
-            bcaVa = bcaVa,
-            bniVa = bniVa,
-            briVa = briVa,
+            permataVa = convertToRevamp(permataVa),
+            bcaVa = convertToRevamp(bcaVa),
+            bniVa = convertToRevamp(bniVa),
+            briVa = convertToRevamp(briVa),
             gopayCallback = gopayCallback,
             shopeepayCallback = shopeepayCallback,
             uobEzpayCallback = uobEzpayCallback,
@@ -218,6 +221,27 @@ class UiKitApi private constructor(val builder: Builder) {
             isSnapTokenAvailable = true
         )
         activityContext.startActivity(intent)
+    }
+
+    private fun convertToRevamp(permataVa: PermataBankTransferRequestModel?): com.midtrans.sdk.corekit.api.model.BankTransferRequest? {
+        permataVa?.let {
+            return com.midtrans.sdk.corekit.api.model.BankTransferRequest(it.vaNumber, null, null, it.recipientName)
+        }
+        return null
+    }
+
+    private fun convertToRevamp(va: BankTransferRequestModel?): com.midtrans.sdk.corekit.api.model.BankTransferRequest? {
+        va?.let {
+            return com.midtrans.sdk.corekit.api.model.BankTransferRequest(it.vaNumber, null, null, null)
+        }
+        return null
+    }
+
+    private fun convertToRevamp(bcaVa: BcaBankTransferRequestModel?): com.midtrans.sdk.corekit.api.model.BankTransferRequest? {
+        bcaVa?.let {
+            return com.midtrans.sdk.corekit.api.model.BankTransferRequest(it.vaNumber, it.freeText, it.subCompanyCode, null)
+        }
+        return null
     }
 
     private fun convertToRevamp(expiry: ExpiryModel?): Expiry? {
