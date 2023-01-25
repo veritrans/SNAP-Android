@@ -24,12 +24,14 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback
 import com.midtrans.sdk.corekit.core.MidtransSDK
+import com.midtrans.sdk.corekit.core.SdkUIFlowBuilder
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.UIKitCustomSetting
 import com.midtrans.sdk.corekit.models.*
 import com.midtrans.sdk.corekit.models.snap.BankTransferRequestModel
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.model.Product
+import com.midtrans.sdk.sample.util.DemoConstant
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.NONE
 import com.midtrans.sdk.sample.util.DemoConstant.NORMAL_CC_PAYMENT
@@ -39,24 +41,22 @@ import com.midtrans.sdk.sample.util.DemoConstant.ONE_CLICK_TYPE
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.corekit.core.SdkUIFlowBuilder
-import com.midtrans.sdk.sample.util.DemoConstant
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.api.model.CustomerDetails
 import com.midtrans.sdk.uikit.api.model.ItemDetails
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
-import com.midtrans.sdk.uikit.internal.view.SnapAppBar
-import com.midtrans.sdk.uikit.internal.view.SnapButton
-import com.midtrans.sdk.uikit.internal.view.SnapTextField
-import com.midtrans.sdk.uikit.internal.view.SnapTypography
-import java.util.*
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CANCELED
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_FAILED
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_INVALID
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
+import com.midtrans.sdk.uikit.internal.view.SnapAppBar
+import com.midtrans.sdk.uikit.internal.view.SnapButton
+import com.midtrans.sdk.uikit.internal.view.SnapTextField
+import com.midtrans.sdk.uikit.internal.view.SnapTypography
+import java.util.*
 import com.midtrans.sdk.corekit.models.snap.TransactionResult as TransactionResultJava
 
 
@@ -569,12 +569,15 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     private fun populateExpiryLegacy(): ExpiryModel? {
         var expiry: ExpiryModel? = null
         if (customExpiry != NONE) {
-            expiry = ExpiryModel(
-                DemoUtils.getFormattedTime(System.currentTimeMillis()),
+            expiry = ExpiryModel()
+            expiry.setStartTime(DemoUtils.getFormattedTime(System.currentTimeMillis()))
+            expiry.setUnit(
                 when (customExpiry) {
                     ONE_HOUR -> Expiry.UNIT_HOUR
                     else -> Expiry.UNIT_MINUTE
-                },
+                }
+            )
+            expiry.setDuration(
                 when (customExpiry) {
                     FIVE_MINUTE -> 5
                     else -> 1
@@ -712,24 +715,23 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
 
     private fun buildLegacyUiKit() {
         SdkUIFlowBuilder.init()
-            ?.setContext(this.applicationContext)
-            ?.setMerchantBaseUrl("https://snap-merchant-server.herokuapp.com/api/")
-            ?.setClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
-//            .setExternalScanner { _, _ -> TODO("Not yet implemented") }
-            ?.enableLog(true)
-            ?.setTransactionFinishedCallback(this)
-            ?.setDefaultText("fonts/SourceSansPro-Regular.ttf")
-            ?.setBoldText("fonts/SourceSansPro-Bold.ttf")
-            ?.setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
-            ?.setColorTheme(
+            .setClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
+            .setContext(this.applicationContext)
+            .setTransactionFinishedCallback(this)
+            .setMerchantBaseUrl("https://snap-merchant-server.herokuapp.com/api/")
+            .enableLog(true)
+            .setDefaultText("fonts/SourceSansPro-Regular.ttf")
+            .setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
+            .setBoldText("fonts/SourceSansPro-Bold.ttf")
+            .setColorTheme(
                 com.midtrans.sdk.corekit.core.themes.CustomColorTheme(
                     "#0e4e95",
                     "#0b3b70",
                     "#3e71aa"
                 )
             )
-            ?.setLanguage("en") //setLanguage to either "en" for english or "id" for bahasa
-            ?.buildSDK()
+            .setLanguage("en") //setLanguage to either "en" for english or "id" for bahasa
+            .buildSDK()
         uiKitCustomSettingLegacy()
     }
 
