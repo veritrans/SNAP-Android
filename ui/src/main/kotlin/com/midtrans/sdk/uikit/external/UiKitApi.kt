@@ -87,8 +87,14 @@ class UiKitApi private constructor(val builder: Builder) {
             PaymentMethod.AKULAKU -> PaymentTypeItem(PaymentType.AKULAKU, null)
             PaymentMethod.ALFAMART -> PaymentTypeItem(PaymentType.ALFAMART, null)
             PaymentMethod.UOB_EZPAY -> PaymentTypeItem(PaymentType.UOB_EZPAY, null)
-            PaymentMethod.UOB_EZPAY_APP -> PaymentTypeItem(PaymentType.UOB_EZPAY, PaymentType.UOB_EZPAY_APP)
-            PaymentMethod.UOB_EZPAY_WEB -> PaymentTypeItem(PaymentType.UOB_EZPAY, PaymentType.UOB_EZPAY_WEB)
+            PaymentMethod.UOB_EZPAY_APP -> PaymentTypeItem(
+                PaymentType.UOB_EZPAY,
+                PaymentType.UOB_EZPAY_APP
+            )
+            PaymentMethod.UOB_EZPAY_WEB -> PaymentTypeItem(
+                PaymentType.UOB_EZPAY,
+                PaymentType.UOB_EZPAY_WEB
+            )
             else -> null
         }
     }
@@ -191,12 +197,12 @@ class UiKitApi private constructor(val builder: Builder) {
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
             activityContext = activityContext,
             transactionDetails = transactionDetails,
-            customerDetails = customerDetailsLegacyToRevamp(customerDetails),
+            customerDetails = convertToRevamp(customerDetails),
             itemDetails = itemDetails,
             creditCard = creditCard,
             userId = userId,
             paymentType = getPaymentType(paymentMethod),
-            expiry = expiryModelToSnapExpiry(snapTokenExpiry),
+            expiry = convertToRevamp(snapTokenExpiry),
             enabledPayments = enabledPayment,
             permataVa = permataVa,
             bcaVa = bcaVa,
@@ -214,26 +220,26 @@ class UiKitApi private constructor(val builder: Builder) {
         activityContext.startActivity(intent)
     }
 
-    private fun expiryModelToSnapExpiry(expiry: ExpiryModel?): Expiry? {
+    private fun convertToRevamp(expiry: ExpiryModel?): Expiry? {
         expiry?.let {
-            return Expiry(expiry.startTime, expiry.unit, expiry.duration)
+            return Expiry(it.startTime, it.unit, it.duration)
         }
         return null
     }
 
-    private fun customerDetailsLegacyToRevamp(customerDetails: com.midtrans.sdk.corekit.models.CustomerDetails): CustomerDetails {
+    private fun convertToRevamp(customerDetails: com.midtrans.sdk.corekit.models.CustomerDetails): CustomerDetails {
         return CustomerDetails(
             customerDetails.customerIdentifier,
             customerDetails.firstName,
             customerDetails.lastName,
             customerDetails.email,
             customerDetails.phone,
-            shippingAddressToAddressRevamp(customerDetails.shippingAddress),
-            billingAddressLegacyToAddressRevamp(customerDetails.billingAddress)
+            convertToRevamp(customerDetails.shippingAddress),
+            convertToRevamp(customerDetails.billingAddress)
         )
     }
 
-    private fun billingAddressLegacyToAddressRevamp(billingAddress: BillingAddress): Address {
+    private fun convertToRevamp(billingAddress: BillingAddress): Address {
         return Address(
             billingAddress.firstName,
             billingAddress.lastName,
@@ -245,7 +251,7 @@ class UiKitApi private constructor(val builder: Builder) {
         )
     }
 
-    private fun shippingAddressToAddressRevamp(shippingAddress: ShippingAddress): Address {
+    private fun convertToRevamp(shippingAddress: ShippingAddress): Address {
         return Address(
             shippingAddress.firstName,
             shippingAddress.lastName,
