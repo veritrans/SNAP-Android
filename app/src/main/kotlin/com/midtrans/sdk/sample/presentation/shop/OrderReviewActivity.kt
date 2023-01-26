@@ -41,6 +41,7 @@ import com.midtrans.sdk.sample.util.DemoConstant.ONE_CLICK_TYPE
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.api.CardTokenRequest
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.api.model.CustomerDetails
 import com.midtrans.sdk.uikit.api.model.ItemDetails
@@ -624,9 +625,9 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
 
     private fun populateCCAuthType(): String {
         val ccAuthType = if (isPreAuth) {
-            "authorize"
+            CardTokenRequest.TYPE_AUTHORIZE
         } else {
-            "authorize_capture"
+            CardTokenRequest.TYPE_CAPTURE
         }
         return ccAuthType
     }
@@ -687,7 +688,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         var output: com.midtrans.sdk.corekit.models.snap.Installment? = null
         if (installmentBank != NO_INSTALLMENT) {
             val installment = com.midtrans.sdk.corekit.models.snap.Installment()
-            installment.terms = mapOf(installmentBank to listOf(3, 6, 12))
+            installment.terms = mapOf(installmentBank to arrayListOf(3, 6, 12))
             installment.isRequired = isRequiredInstallment
             output = installment
         }
