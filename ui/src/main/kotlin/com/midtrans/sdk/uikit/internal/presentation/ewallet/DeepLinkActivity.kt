@@ -67,7 +67,12 @@ internal class DeepLinkActivity : BaseActivity() {
         viewModel.checkStatusResultLiveData.observe(this) {
             when (it.status) {
                 STATUS_SUCCESS -> {
-                    goToSuccessScreen(amount, orderId, it)
+                    if (isShowPaymentStatusPage()) {
+                        goToSuccessScreen(amount, orderId, it)
+                    } else {
+                        setResult(it)
+                        finish()
+                    }
                 }
                 STATUS_PENDING -> {
                     setResult(it)
