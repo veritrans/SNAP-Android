@@ -833,7 +833,12 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         transactionRequest.customField2 = "test2"
         transactionRequest.customField3 = "test3"
         MidtransSDK.getInstance().transactionRequest = transactionRequest
-        MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
+
+        val uisetting = UIKitCustomSetting()
+        uisetting.setShowPaymentStatus(false) // hide sdk payment status
+        uisetting.setSaveCardChecked(false)
+        MidtransSDK.getInstance().setUiKitCustomSetting(uisetting)
+
         MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity)
     }
 

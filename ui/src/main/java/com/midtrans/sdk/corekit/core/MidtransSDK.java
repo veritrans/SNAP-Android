@@ -166,6 +166,10 @@ public class MidtransSDK {
         return uiKitCustomSetting;
     }
 
+    public void setUiKitCustomSetting(UIKitCustomSetting uiKitCustomSetting) {
+        this.uiKitCustomSetting = uiKitCustomSetting;
+    }
+
 
     /**
      * Returns instance of midtrans sdk.
