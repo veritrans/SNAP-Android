@@ -25,7 +25,10 @@ public class MidtransSDK {
     private static boolean sdkNotAvailable = false;
     private TransactionRequest transactionRequest = null;
     private String merchantServerUrl = null;
-    private BaseColorTheme colorTheme;
+    private BaseColorTheme colorTheme = null;
+    private String defaultText = null;
+    private String boldText = null;
+    private String semiBoldText = null;
     private ISdkFlow uiflow;
     private UIKitCustomSetting uiKitCustomSetting;
     public static WeakReference<TransactionFinishedCallback> transactionFinishedCallback = ISdkFlow.transactionFinishedCallback;
@@ -64,6 +67,30 @@ public class MidtransSDK {
 
     public BaseColorTheme getColorTheme() {
         return colorTheme;
+    }
+
+    public String getDefaultText() {
+        return defaultText;
+    }
+
+    public void setDefaultText(String defaultText) {
+        this.defaultText = defaultText;
+    }
+
+    public String getBoldText() {
+        return boldText;
+    }
+
+    public void setBoldText(String boldText) {
+        this.boldText = boldText;
+    }
+
+    public String getSemiBoldText() {
+        return semiBoldText;
+    }
+
+    public void setSemiBoldText(String semiBoldText) {
+        this.semiBoldText = semiBoldText;
     }
 
     /**

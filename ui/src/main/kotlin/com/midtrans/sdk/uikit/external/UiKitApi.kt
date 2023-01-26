@@ -104,7 +104,7 @@ class UiKitApi private constructor(val builder: Builder) {
 
     internal fun getPaymentCallback() = paymentCallback
     var customColors = builder.customColors
-    internal val customFontFamily = builder.fontFamily
+    var customFontFamily = builder.fontFamily
     val uiKitSetting = builder.uiKitSetting
 
     fun startPaymentUiFlow(

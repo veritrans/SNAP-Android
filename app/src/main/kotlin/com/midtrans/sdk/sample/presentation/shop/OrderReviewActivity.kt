@@ -713,9 +713,9 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             .setTransactionFinishedCallback(this)
             .setMerchantBaseUrl("https://snap-merchant-server.herokuapp.com/api/")
             .enableLog(true)
-            .setDefaultText("fonts/SourceSansPro-Italic.ttf")
-            .setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
-            .setBoldText("fonts/SourceSansPro-Bold.ttf")
+//            .setDefaultText("fonts/SourceSansPro-Italic.ttf")
+//            .setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
+//            .setBoldText("fonts/SourceSansPro-Bold.ttf")
 //            .setColorTheme(
 //                com.midtrans.sdk.corekit.core.themes.CustomColorTheme(
 //                    "#0e4e95",
@@ -725,7 +725,15 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
 //            )
             .setLanguage("en") //setLanguage to either "en" for english or "id" for bahasa
             .buildSDK()
-        uiKitCustomSettingLegacy()
+
+        MidtransSDK.getInstance().setDefaultText("fonts/SourceSansPro-Bold.ttf")
+        MidtransSDK.getInstance().setSemiBoldText("fonts/SourceSansPro-Regular.ttf")
+        MidtransSDK.getInstance().setBoldText("fonts/SourceSansPro-Regular.ttf")
+        MidtransSDK.getInstance().setColorTheme(com.midtrans.sdk.corekit.core.themes.CustomColorTheme(
+            "#0e4e95",
+            "#0b3b70",
+            "#3e71aa"
+        ))
     }
 
     private fun buildUiKit() {
