@@ -65,10 +65,9 @@ import com.midtrans.sdk.corekit.models.snap.TransactionResult as TransactionResu
 
 
 class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
-
     override fun onTransactionFinished(result: TransactionResultJava) {
         if (result.response != null) {
-            when (result.response.transactionStatus) {
+            when (result.status) {
                 TransactionResultJava.STATUS_SUCCESS -> Toast.makeText(
                     this,
                     "Transaction Legacy Finished. ID: " + result.response.transactionId,
