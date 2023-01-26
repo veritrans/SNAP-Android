@@ -568,8 +568,8 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             expiry.setStartTime(DemoUtils.getFormattedTime(System.currentTimeMillis()))
             expiry.setUnit(
                 when (customExpiry) {
-                    ONE_HOUR -> Expiry.UNIT_HOUR
-                    else -> Expiry.UNIT_MINUTE
+                    ONE_HOUR -> ExpiryModel.UNIT_HOUR
+                    else -> ExpiryModel.UNIT_MINUTE
                 }
             )
             expiry.setDuration(

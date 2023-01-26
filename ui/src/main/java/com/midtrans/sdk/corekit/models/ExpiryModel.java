@@ -1,6 +1,10 @@
 package com.midtrans.sdk.corekit.models;
 
 public class ExpiryModel {
+    public static final String UNIT_SECONDS = "seconds";
+    public static final String UNIT_MINUTE = "minutes";
+    public static final String UNIT_HOUR = "hours";
+    public static final String UNIT_DAY = "days";
 
     private String startTime;
     private String unit;
@@ -29,4 +33,6 @@ public class ExpiryModel {
     public void setDuration(int duration) {
         this.duration = duration;
     }
+
+
 }
