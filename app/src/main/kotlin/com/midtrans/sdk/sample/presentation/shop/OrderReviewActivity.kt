@@ -29,6 +29,9 @@ import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.UIKitCustomSetting
 import com.midtrans.sdk.corekit.models.*
 import com.midtrans.sdk.corekit.models.snap.BankTransferRequestModel
+import com.midtrans.sdk.corekit.models.snap.Gopay
+import com.midtrans.sdk.corekit.models.snap.Shopeepay
+import com.midtrans.sdk.corekit.models.snap.UobEzpay
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant
@@ -835,16 +838,19 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         transactionRequest.bniVa = bniVaLegacy
         transactionRequest.permataVa = permataVaLegacy
         transactionRequest.enabledPayments = enabledPayment
-        transactionRequest.gopay = Gopay("demo://snap")
-        transactionRequest.shopeepay = Shopeepay("demo://snap")
-        transactionRequest.uobEzpay = UobEzpay("demo://snap")
+        transactionRequest.gopay =
+            Gopay("demo://snap")
+        transactionRequest.shopeepay =
+            Shopeepay("demo://snap")
+        transactionRequest.uobEzpay =
+            UobEzpay("demo://snap")
         transactionRequest.customField1 = "test1"
         transactionRequest.customField2 = "test2"
         transactionRequest.customField3 = "test3"
         MidtransSDK.getInstance().transactionRequest = transactionRequest
 
         val uisetting = UIKitCustomSetting()
-        uisetting.setShowPaymentStatus(false) // hide sdk payment status
+        uisetting.setShowPaymentStatus(true) // hide sdk payment status
         uisetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().setUiKitCustomSetting(uisetting)
 
