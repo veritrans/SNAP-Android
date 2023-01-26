@@ -1,13 +1,13 @@
 package com.midtrans.sdk.corekit.core;
 
-import static com.midtrans.sdk.corekit.core.Logger.TAG;
-
 import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
+import com.midtrans.sdk.corekit.core.themes.BaseColorTheme;
+import com.midtrans.sdk.corekit.core.themes.CustomColorTheme;
 import com.midtrans.sdk.corekit.models.snap.TransactionResult;
 import com.midtrans.sdk.uikit.R;
 
@@ -25,6 +25,7 @@ public class MidtransSDK {
     private static boolean sdkNotAvailable = false;
     private TransactionRequest transactionRequest = null;
     private String merchantServerUrl = null;
+    private BaseColorTheme colorTheme;
     private ISdkFlow uiflow;
     private UIKitCustomSetting uiKitCustomSetting;
     public static WeakReference<TransactionFinishedCallback> transactionFinishedCallback = ISdkFlow.transactionFinishedCallback;
@@ -55,6 +56,14 @@ public class MidtransSDK {
 
     public TransactionRequest getTransactionRequest() {
         return transactionRequest;
+    }
+
+    public void setColorTheme(CustomColorTheme colorTheme) {
+        this.colorTheme = colorTheme;
+    }
+
+    public BaseColorTheme getColorTheme() {
+        return colorTheme;
     }
 
     /**

@@ -103,7 +103,7 @@ class UiKitApi private constructor(val builder: Builder) {
     }
 
     internal fun getPaymentCallback() = paymentCallback
-    internal val customColors = builder.customColors
+    var customColors = builder.customColors
     internal val customFontFamily = builder.fontFamily
     val uiKitSetting = builder.uiKitSetting
 

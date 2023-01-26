@@ -713,16 +713,16 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             .setTransactionFinishedCallback(this)
             .setMerchantBaseUrl("https://snap-merchant-server.herokuapp.com/api/")
             .enableLog(true)
-            .setDefaultText("fonts/SourceSansPro-Regular.ttf")
+            .setDefaultText("fonts/SourceSansPro-Italic.ttf")
             .setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
             .setBoldText("fonts/SourceSansPro-Bold.ttf")
-            .setColorTheme(
-                com.midtrans.sdk.corekit.core.themes.CustomColorTheme(
-                    "#0e4e95",
-                    "#0b3b70",
-                    "#3e71aa"
-                )
-            )
+//            .setColorTheme(
+//                com.midtrans.sdk.corekit.core.themes.CustomColorTheme(
+//                    "#0e4e95",
+//                    "#0b3b70",
+//                    "#3e71aa"
+//                )
+//            )
             .setLanguage("en") //setLanguage to either "en" for english or "id" for bahasa
             .buildSDK()
         uiKitCustomSettingLegacy()
@@ -733,7 +733,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             .withContext(this.applicationContext)
             .withMerchantUrl("https://snap-merchant-server.herokuapp.com/api/")
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
-            .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
+            .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Italic.ttf", this))
             .enableLog(true)
 
         getCustomColor(inputColor)?.let { builder.withColorTheme(it) }
@@ -837,8 +837,16 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
 
         val uisetting = UIKitCustomSetting()
         uisetting.setShowPaymentStatus(false) // hide sdk payment status
-        uisetting.setSaveCardChecked(false)
+        uisetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().setUiKitCustomSetting(uisetting)
+
+        MidtransSDK.getInstance().setColorTheme(
+            com.midtrans.sdk.corekit.core.themes.CustomColorTheme(
+                "#b11235",
+                "#000000",
+                "#f36b89"
+            )
+        )
 
         MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity)
     }
