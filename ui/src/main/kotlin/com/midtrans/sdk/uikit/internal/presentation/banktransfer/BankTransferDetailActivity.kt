@@ -177,19 +177,30 @@ internal class BankTransferDetailActivity : BaseActivity() {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    private fun setResult(data: TransactionResult) {
+        val resultIntent = Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, data)
+        setResult(Activity.RESULT_OK, resultIntent)
+    }
+
     private fun launchExpiredErrorScreen() {
-        errorScreenLauncher.launch(
-            ErrorScreenActivity.getIntent(
-                activityContext = this@BankTransferDetailActivity,
-                title = resources.getString(R.string.expired_title),
-                content = resources.getString(R.string.expired_desc),
-                transactionResult = TransactionResult(
-                    status = UiKitConstants.STATUS_FAILED,
-                    paymentType = paymentType,
-                    message = resources.getString(R.string.expired_desc)
+        val expiredTransactionResult = TransactionResult(
+            status = UiKitConstants.STATUS_FAILED,
+            paymentType = paymentType,
+            message = resources.getString(R.string.expired_desc)
+        )
+        if (isShowPaymentStatusPage()) {
+            errorScreenLauncher.launch(
+                ErrorScreenActivity.getIntent(
+                    activityContext = this@BankTransferDetailActivity,
+                    title = resources.getString(R.string.expired_title),
+                    content = resources.getString(R.string.expired_desc),
+                    transactionResult = expiredTransactionResult
                 )
             )
-        )
+        } else {
+            setResult(expiredTransactionResult)
+            finish()
+        }
     }
 
     @Composable
@@ -216,7 +227,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
         val state = rememberScrollState()
 
         if (DateTimeUtil.getExpiredSeconds(remainingTime) <= 0L && isFirstInit) {
-            if(viewModel?.isExpired?.value == true) {
+            if (viewModel?.isExpired?.value == true) {
                 launchExpiredErrorScreen()
             } else {
                 val data = Intent()

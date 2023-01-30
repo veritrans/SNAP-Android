@@ -24,12 +24,17 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback
 import com.midtrans.sdk.corekit.core.MidtransSDK
+import com.midtrans.sdk.corekit.core.SdkUIFlowBuilder
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.UIKitCustomSetting
 import com.midtrans.sdk.corekit.models.*
 import com.midtrans.sdk.corekit.models.snap.BankTransferRequestModel
+import com.midtrans.sdk.corekit.models.snap.Gopay
+import com.midtrans.sdk.corekit.models.snap.Shopeepay
+import com.midtrans.sdk.corekit.models.snap.UobEzpay
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.model.Product
+import com.midtrans.sdk.sample.util.DemoConstant
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.NONE
 import com.midtrans.sdk.sample.util.DemoConstant.NORMAL_CC_PAYMENT
@@ -39,32 +44,30 @@ import com.midtrans.sdk.sample.util.DemoConstant.ONE_CLICK_TYPE
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.corekit.core.SdkUIFlowBuilder
-import com.midtrans.sdk.sample.util.DemoConstant
+import com.midtrans.sdk.uikit.api.CardTokenRequest
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.api.model.CustomerDetails
 import com.midtrans.sdk.uikit.api.model.ItemDetails
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
-import com.midtrans.sdk.uikit.internal.view.SnapAppBar
-import com.midtrans.sdk.uikit.internal.view.SnapButton
-import com.midtrans.sdk.uikit.internal.view.SnapTextField
-import com.midtrans.sdk.uikit.internal.view.SnapTypography
-import java.util.*
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CANCELED
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_FAILED
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_INVALID
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
+import com.midtrans.sdk.uikit.internal.view.SnapAppBar
+import com.midtrans.sdk.uikit.internal.view.SnapButton
+import com.midtrans.sdk.uikit.internal.view.SnapTextField
+import com.midtrans.sdk.uikit.internal.view.SnapTypography
+import java.util.*
 import com.midtrans.sdk.corekit.models.snap.TransactionResult as TransactionResultJava
 
 
 class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
-
     override fun onTransactionFinished(result: TransactionResultJava) {
         if (result.response != null) {
-            when (result.response.transactionStatus) {
+            when (result.status) {
                 TransactionResultJava.STATUS_SUCCESS -> Toast.makeText(
                     this,
                     "Transaction Legacy Finished. ID: " + result.response.transactionId,
@@ -250,7 +253,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     private var isSavedCard: Boolean = false
     private var isSecure: Boolean = false
     private var ccAuthType: String? = null
-    private var whitelistBins: List<String> = listOf()
+    private var whitelistBins: ArrayList<String> = arrayListOf()
 
     private lateinit var customerDetailsLegacy: com.midtrans.sdk.corekit.models.CustomerDetails
     private var installmentLegacy: com.midtrans.sdk.corekit.models.snap.Installment? = null
@@ -507,31 +510,25 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                     val firstName = index.let { name.substring(0, it) }
                     val lastName = index.plus(1).let { name.substring(it) }
 
-                    customerDetailsLegacy = com.midtrans.sdk.corekit.models.CustomerDetails(
-                        "3A8788CE-B96F-449C-8180-B5901A08B50A",
-                        firstName,
-                        lastName,
-                        email.text,
-                        phoneNumber.text,
-                        ShippingAddress(
-                            "Ferdian",
-                            "Julianto",
-                            "Pasaraya mall",
-                            "West Jakarta",
-                            "11330",
-                            "021632631131",
-                            null
-                        ),
-                        BillingAddress(
-                            "Ferdian",
-                            "Julianto",
-                            "Pasaraya mall",
-                            "West Jakarta",
-                            "11330",
-                            "021632631131",
-                            null
-                        )
-                    )
+                    val shippingAddress = ShippingAddress()
+                    shippingAddress.setAddress("Jalan Andalas Gang Sebelah No. 1")
+                    shippingAddress.setCity("Jakarta")
+                    shippingAddress.setPostalCode("10220")
+
+                    val billingAddress = BillingAddress()
+                    billingAddress.setAddress("Jalan Andalas Gang Sebelah No. 1")
+                    billingAddress.setCity("Jakarta")
+                    billingAddress.setPostalCode("10220")
+
+                    customerDetailsLegacy = com.midtrans.sdk.corekit.models.CustomerDetails()
+                    customerDetailsLegacy.setCustomerIdentifier("3A8788CE-B96F-449C-8180-B5901A08B50A")
+                    customerDetailsLegacy.setFirstName(firstName)
+                    customerDetailsLegacy.setLastName(lastName)
+                    customerDetailsLegacy.setEmail(email.text)
+                    customerDetailsLegacy.setPhone(phoneNumber.text)
+                    customerDetailsLegacy.setBillingAddress(billingAddress)
+                    customerDetailsLegacy.setShippingAddress(shippingAddress)
+
                     installmentLegacy = populateInstallmentLegacy()
                     expiryLegacy = populateExpiryLegacy()
                     bcaVaLegacy = populateBcaVaLegacy(bcaVa)
@@ -569,12 +566,15 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     private fun populateExpiryLegacy(): ExpiryModel? {
         var expiry: ExpiryModel? = null
         if (customExpiry != NONE) {
-            expiry = ExpiryModel(
-                DemoUtils.getFormattedTime(System.currentTimeMillis()),
+            expiry = ExpiryModel()
+            expiry.setStartTime(DemoUtils.getFormattedTime(System.currentTimeMillis()))
+            expiry.setUnit(
                 when (customExpiry) {
-                    ONE_HOUR -> Expiry.UNIT_HOUR
-                    else -> Expiry.UNIT_MINUTE
-                },
+                    ONE_HOUR -> ExpiryModel.UNIT_HOUR
+                    else -> ExpiryModel.UNIT_MINUTE
+                }
+            )
+            expiry.setDuration(
                 when (customExpiry) {
                     FIVE_MINUTE -> 5
                     else -> 1
@@ -587,24 +587,23 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     private fun populateBcaVaLegacy(va: String): BcaBankTransferRequestModel? {
         var vaTransferRequest: BcaBankTransferRequestModel? = null
         if (va.isNotEmpty()) {
-            vaTransferRequest = BcaBankTransferRequestModel(
-                va,
-                com.midtrans.sdk.corekit.models.FreeText(
-                    listOf(
-                        com.midtrans.sdk.corekit.models.FreeTextLanguage(
-                            "Text ID inquiry 0",
-                            "Text EN inquiry 0"
-                        )
-                    ),
-                    listOf(
-                        com.midtrans.sdk.corekit.models.FreeTextLanguage(
-                            "Text ID inquiry 0",
-                            "Text EN inquiry 0"
-                        )
+            val SUB_COMPANY_CODE_BCA = "12321"
+            val bcaRequestModel = BcaBankTransferRequestModel(va, com.midtrans.sdk.corekit.models.FreeText(
+                listOf(
+                    com.midtrans.sdk.corekit.models.FreeTextLanguage(
+                        "Text ID inquiry 0",
+                        "Text EN inquiry 0"
                     )
                 ),
-                null
-            )
+                listOf(
+                    com.midtrans.sdk.corekit.models.FreeTextLanguage(
+                        "Text ID inquiry 0",
+                        "Text EN inquiry 0"
+                    )
+                )
+            ))
+            bcaRequestModel.subCompanyCode = SUB_COMPANY_CODE_BCA
+            vaTransferRequest = bcaRequestModel
         }
         return vaTransferRequest
     }
@@ -613,25 +612,24 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         val permataRecipient = "Sudarsono"
         var vaTransferRequest: PermataBankTransferRequestModel? = null
         if (va.isNotEmpty()) {
-            vaTransferRequest = PermataBankTransferRequestModel(
-                va,
-                permataRecipient
-            )
+            val permataRequest = PermataBankTransferRequestModel(va)
+            permataRequest.setRecipientName(permataRecipient)
+            vaTransferRequest = permataRequest
         }
         return vaTransferRequest
     }
 
-    private fun populateWhitelistBins(): List<String> {
-        val whitelistBins = mutableListOf<String>()
+    private fun populateWhitelistBins(): ArrayList<String> {
+        val whitelistBins = arrayListOf<String>()
         if (isBniPointOnly) whitelistBins.add("bni")
         return whitelistBins
     }
 
     private fun populateCCAuthType(): String {
         val ccAuthType = if (isPreAuth) {
-            "authorize"
+            CardTokenRequest.TYPE_AUTHORIZE
         } else {
-            "authorize_capture"
+            CardTokenRequest.TYPE_CAPTURE
         }
         return ccAuthType
     }
@@ -689,14 +687,14 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     }
 
     private fun populateInstallmentLegacy(): com.midtrans.sdk.corekit.models.snap.Installment? {
-        var installment: com.midtrans.sdk.corekit.models.snap.Installment? = null
+        var output: com.midtrans.sdk.corekit.models.snap.Installment? = null
         if (installmentBank != NO_INSTALLMENT) {
-            installment = com.midtrans.sdk.corekit.models.snap.Installment(
-                isRequiredInstallment,
-                mapOf(installmentBank to listOf(3, 6, 12))
-            )
+            val installment = com.midtrans.sdk.corekit.models.snap.Installment()
+            installment.terms = mapOf(installmentBank to arrayListOf(3, 6, 12))
+            installment.isRequired = isRequiredInstallment
+            output = installment
         }
-        return installment
+        return output
     }
 
     private fun populateInstallment(): Installment? {
@@ -712,25 +710,32 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
 
     private fun buildLegacyUiKit() {
         SdkUIFlowBuilder.init()
-            ?.setContext(this.applicationContext)
-            ?.setMerchantBaseUrl("https://snap-merchant-server.herokuapp.com/api/")
-            ?.setClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
-//            .setExternalScanner { _, _ -> TODO("Not yet implemented") }
-            ?.enableLog(true)
-            ?.setTransactionFinishedCallback(this)
-            ?.setDefaultText("fonts/SourceSansPro-Regular.ttf")
-            ?.setBoldText("fonts/SourceSansPro-Bold.ttf")
-            ?.setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
-            ?.setColorTheme(
-                com.midtrans.sdk.corekit.core.themes.CustomColorTheme(
-                    "#0e4e95",
-                    "#0b3b70",
-                    "#3e71aa"
-                )
-            )
-            ?.setLanguage("en") //setLanguage to either "en" for english or "id" for bahasa
-            ?.buildSDK()
-        uiKitCustomSettingLegacy()
+            .setClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
+            .setContext(this.applicationContext)
+            .setTransactionFinishedCallback(this)
+            .setMerchantBaseUrl("https://snap-merchant-server.herokuapp.com/api/")
+            .enableLog(true)
+//            .setDefaultText("fonts/SourceSansPro-Italic.ttf")
+//            .setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
+//            .setBoldText("fonts/SourceSansPro-Bold.ttf")
+//            .setColorTheme(
+//                com.midtrans.sdk.corekit.core.themes.CustomColorTheme(
+//                    "#0e4e95",
+//                    "#0b3b70",
+//                    "#3e71aa"
+//                )
+//            )
+            .setLanguage("en") //setLanguage to either "en" for english or "id" for bahasa
+            .buildSDK()
+
+        MidtransSDK.getInstance().setDefaultText("fonts/SourceSansPro-Bold.ttf")
+        MidtransSDK.getInstance().setSemiBoldText("fonts/SourceSansPro-Regular.ttf")
+        MidtransSDK.getInstance().setBoldText("fonts/SourceSansPro-Regular.ttf")
+        MidtransSDK.getInstance().setColorTheme(com.midtrans.sdk.corekit.core.themes.CustomColorTheme(
+            "#0e4e95",
+            "#0b3b70",
+            "#3e71aa"
+        ))
     }
 
     private fun buildUiKit() {
@@ -738,7 +743,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             .withContext(this.applicationContext)
             .withMerchantUrl("https://snap-merchant-server.herokuapp.com/api/")
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
-            .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
+            .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Italic.ttf", this))
             .enableLog(true)
 
         getCustomColor(inputColor)?.let { builder.withColorTheme(it) }
@@ -800,19 +805,21 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             UUID.randomUUID().toString(),
             product.price
         )
-        transactionRequest.creditCard = com.midtrans.sdk.corekit.models.snap.CreditCard(
-            isSavedCard,
-            null,
-            Authentication.AUTH_3DS,
-            isSecure,
-            null,
-            bank,
-            null,
-            whitelistBins,
-            null,
-            installmentLegacy,
-            ccAuthType,
-        )
+        val creditCard = com.midtrans.sdk.corekit.models.snap.CreditCard()
+        creditCard.setSaveCard(isSavedCard)
+        creditCard.setTokenId(null)
+        creditCard.setAuthentication(Authentication.AUTH_3DS)
+        creditCard.setSecure(isSecure)
+        creditCard.setChannel(com.midtrans.sdk.corekit.models.snap.CreditCard.MIGS)
+        creditCard.setBank(bank)
+        creditCard.setSavedTokens(null)
+        creditCard.setWhitelistBins(whitelistBins)
+        creditCard.setBlacklistBins(null)
+        creditCard.setInstallment(installmentLegacy)
+        creditCard.setType(ccAuthType)
+
+        transactionRequest.creditCard = creditCard
+
         //Setting Snap token custon expiry
         transactionRequest.expiry = expiryLegacy
         transactionRequest.customerDetails = customerDetailsLegacy
@@ -830,14 +837,30 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         transactionRequest.bniVa = bniVaLegacy
         transactionRequest.permataVa = permataVaLegacy
         transactionRequest.enabledPayments = enabledPayment
-        transactionRequest.gopay = Gopay("demo://snap")
-        transactionRequest.shopeepay = Shopeepay("demo://snap")
-        transactionRequest.uobEzpay = UobEzpay("demo://snap")
+        transactionRequest.gopay =
+            Gopay("demo://snap")
+        transactionRequest.shopeepay =
+            Shopeepay("demo://snap")
+        transactionRequest.uobEzpay =
+            UobEzpay("demo://snap")
         transactionRequest.customField1 = "test1"
         transactionRequest.customField2 = "test2"
         transactionRequest.customField3 = "test3"
         MidtransSDK.getInstance().transactionRequest = transactionRequest
-        MidtransSDK.getInstance().uiKitCustomSetting.setSaveCardChecked(true)
+
+        val uisetting = UIKitCustomSetting()
+        uisetting.setShowPaymentStatus(true) // hide sdk payment status
+        uisetting.setSaveCardChecked(true)
+        MidtransSDK.getInstance().setUiKitCustomSetting(uisetting)
+
+        MidtransSDK.getInstance().setColorTheme(
+            com.midtrans.sdk.corekit.core.themes.CustomColorTheme(
+                "#b11235",
+                "#000000",
+                "#f36b89"
+            )
+        )
+
         MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity)
     }
 

@@ -1,13 +1,13 @@
 package com.midtrans.sdk.corekit.core;
 
-import static com.midtrans.sdk.corekit.core.Logger.TAG;
-
 import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
+import com.midtrans.sdk.corekit.core.themes.BaseColorTheme;
+import com.midtrans.sdk.corekit.core.themes.CustomColorTheme;
 import com.midtrans.sdk.corekit.models.snap.TransactionResult;
 import com.midtrans.sdk.uikit.R;
 
@@ -25,6 +25,10 @@ public class MidtransSDK {
     private static boolean sdkNotAvailable = false;
     private TransactionRequest transactionRequest = null;
     private String merchantServerUrl = null;
+    private BaseColorTheme colorTheme = null;
+    private String defaultText = null;
+    private String boldText = null;
+    private String semiBoldText = null;
     private ISdkFlow uiflow;
     private UIKitCustomSetting uiKitCustomSetting;
     public static WeakReference<TransactionFinishedCallback> transactionFinishedCallback = ISdkFlow.transactionFinishedCallback;
@@ -55,6 +59,38 @@ public class MidtransSDK {
 
     public TransactionRequest getTransactionRequest() {
         return transactionRequest;
+    }
+
+    public void setColorTheme(CustomColorTheme colorTheme) {
+        this.colorTheme = colorTheme;
+    }
+
+    public BaseColorTheme getColorTheme() {
+        return colorTheme;
+    }
+
+    public String getDefaultText() {
+        return defaultText;
+    }
+
+    public void setDefaultText(String defaultText) {
+        this.defaultText = defaultText;
+    }
+
+    public String getBoldText() {
+        return boldText;
+    }
+
+    public void setBoldText(String boldText) {
+        this.boldText = boldText;
+    }
+
+    public String getSemiBoldText() {
+        return semiBoldText;
+    }
+
+    public void setSemiBoldText(String semiBoldText) {
+        this.semiBoldText = semiBoldText;
     }
 
     /**
@@ -164,6 +200,10 @@ public class MidtransSDK {
             this.uiKitCustomSetting = new UIKitCustomSetting();
         }
         return uiKitCustomSetting;
+    }
+
+    public void setUiKitCustomSetting(UIKitCustomSetting uiKitCustomSetting) {
+        this.uiKitCustomSetting = uiKitCustomSetting;
     }
 
 

@@ -67,7 +67,12 @@ internal class DeepLinkActivity : BaseActivity() {
         viewModel.checkStatusResultLiveData.observe(this) {
             when (it.status) {
                 STATUS_SUCCESS -> {
-                    goToSuccessScreen(amount, orderId, it)
+                    if (isShowPaymentStatusPage()) {
+                        goToSuccessScreen(amount, orderId, it)
+                    } else {
+                        setResult(it)
+                        finish()
+                    }
                 }
                 STATUS_PENDING -> {
                     setResult(it)
@@ -83,7 +88,7 @@ internal class DeepLinkActivity : BaseActivity() {
 
     private fun observeIsExpired() {
         viewModel.isExpired.observe(this) {
-            if(it) launchExpiredErrorScreen()
+            if (it) launchExpiredErrorScreen()
         }
     }
 
@@ -101,18 +106,24 @@ internal class DeepLinkActivity : BaseActivity() {
         }
 
     private fun launchExpiredErrorScreen() {
-        errorScreenLauncher.launch(
-            ErrorScreenActivity.getIntent(
-                activityContext = this@DeepLinkActivity,
-                title = resources.getString(R.string.expired_title),
-                content = resources.getString(R.string.expired_desc),
-                transactionResult = TransactionResult(
-                    status = UiKitConstants.STATUS_FAILED,
-                    paymentType = paymentType,
-                    message = resources.getString(R.string.expired_desc)
+        val expiredTransactionResult = TransactionResult(
+            status = UiKitConstants.STATUS_FAILED,
+            paymentType = paymentType,
+            message = resources.getString(R.string.expired_desc)
+        )
+        if (isShowPaymentStatusPage()) {
+            errorScreenLauncher.launch(
+                ErrorScreenActivity.getIntent(
+                    activityContext = this@DeepLinkActivity,
+                    title = resources.getString(R.string.expired_title),
+                    content = resources.getString(R.string.expired_desc),
+                    transactionResult = expiredTransactionResult
                 )
             )
-        )
+        } else {
+            setResult(expiredTransactionResult)
+            finish()
+        }
     }
 
     private fun goToSuccessScreen(

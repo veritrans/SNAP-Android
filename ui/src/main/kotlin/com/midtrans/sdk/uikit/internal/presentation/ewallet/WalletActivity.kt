@@ -151,18 +151,24 @@ internal class WalletActivity : BaseActivity() {
     }
 
     private fun launchExpiredErrorScreen() {
-        errorScreenLauncher.launch(
-            ErrorScreenActivity.getIntent(
-                activityContext = this@WalletActivity,
-                title = resources.getString(R.string.expired_title),
-                content = resources.getString(R.string.expired_desc),
-                transactionResult = TransactionResult(
-                    status = UiKitConstants.STATUS_FAILED,
-                    paymentType = paymentType,
-                    message = resources.getString(R.string.expired_desc)
+        val expiredTransactionResult = TransactionResult(
+            status = UiKitConstants.STATUS_FAILED,
+            paymentType = paymentType,
+            message = resources.getString(R.string.expired_desc)
+        )
+        if (isShowPaymentStatusPage()) {
+            errorScreenLauncher.launch(
+                ErrorScreenActivity.getIntent(
+                    activityContext = this@WalletActivity,
+                    title = resources.getString(R.string.expired_title),
+                    content = resources.getString(R.string.expired_desc),
+                    transactionResult = expiredTransactionResult
                 )
             )
-        )
+        } else {
+            setResult(expiredTransactionResult)
+            finish()
+        }
     }
 
     private fun chargeQrPayment() {
@@ -239,7 +245,7 @@ internal class WalletActivity : BaseActivity() {
         var loading by remember { mutableStateOf(false) }
 
         if (DateTimeUtil.getExpiredSeconds(remainingTime) <= 0L && isFirstInit) {
-            if(viewModel.isExpired.value == true) {
+            if (viewModel.isExpired.value == true) {
                 launchExpiredErrorScreen()
             } else {
                 val data = Intent()

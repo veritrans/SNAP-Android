@@ -8,6 +8,12 @@ import androidx.compose.ui.text.font.FontFamily
 import com.midtrans.sdk.corekit.SnapCore
 import com.midtrans.sdk.corekit.core.Logger
 import com.midtrans.sdk.corekit.core.PaymentMethod
+import com.midtrans.sdk.corekit.models.BcaBankTransferRequestModel
+import com.midtrans.sdk.corekit.models.BillingAddress
+import com.midtrans.sdk.corekit.models.ExpiryModel
+import com.midtrans.sdk.corekit.models.PermataBankTransferRequestModel
+import com.midtrans.sdk.corekit.models.ShippingAddress
+import com.midtrans.sdk.corekit.models.snap.BankTransferRequestModel
 import com.midtrans.sdk.uikit.api.callback.Callback
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
@@ -49,13 +55,31 @@ class UiKitApi private constructor(val builder: Builder) {
         return when (paymentMethod) {
             PaymentMethod.CREDIT_CARD -> PaymentTypeItem(PaymentType.CREDIT_CARD, null)
             PaymentMethod.BANK_TRANSFER -> PaymentTypeItem(PaymentType.BANK_TRANSFER, null)
-            PaymentMethod.BANK_TRANSFER_BCA -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BCA_VA)
-            PaymentMethod.BANK_TRANSFER_PERMATA -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.PERMATA_VA)
-            PaymentMethod.BANK_TRANSFER_MANDIRI -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.E_CHANNEL)
+            PaymentMethod.BANK_TRANSFER_BCA -> PaymentTypeItem(
+                PaymentType.BANK_TRANSFER,
+                PaymentType.BCA_VA
+            )
+            PaymentMethod.BANK_TRANSFER_PERMATA -> PaymentTypeItem(
+                PaymentType.BANK_TRANSFER,
+                PaymentType.PERMATA_VA
+            )
+            PaymentMethod.BANK_TRANSFER_MANDIRI -> PaymentTypeItem(
+                PaymentType.BANK_TRANSFER,
+                PaymentType.E_CHANNEL
+            )
             PaymentMethod.SHOPEEPAY -> PaymentTypeItem(PaymentType.SHOPEEPAY, null)
-            PaymentMethod.BANK_TRANSFER_BNI -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BNI_VA)
-            PaymentMethod.BANK_TRANSFER_BRI -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.BRI_VA)
-            PaymentMethod.BANK_TRANSFER_OTHER -> PaymentTypeItem(PaymentType.BANK_TRANSFER, PaymentType.OTHER_VA)
+            PaymentMethod.BANK_TRANSFER_BNI -> PaymentTypeItem(
+                PaymentType.BANK_TRANSFER,
+                PaymentType.BNI_VA
+            )
+            PaymentMethod.BANK_TRANSFER_BRI -> PaymentTypeItem(
+                PaymentType.BANK_TRANSFER,
+                PaymentType.BRI_VA
+            )
+            PaymentMethod.BANK_TRANSFER_OTHER -> PaymentTypeItem(
+                PaymentType.BANK_TRANSFER,
+                PaymentType.OTHER_VA
+            )
             PaymentMethod.GO_PAY -> PaymentTypeItem(PaymentType.GOPAY, null)
             PaymentMethod.BCA_KLIKPAY -> PaymentTypeItem(PaymentType.BCA_KLIKPAY, null)
             PaymentMethod.KLIKBCA -> PaymentTypeItem(PaymentType.KLIK_BCA, null)
@@ -66,15 +90,21 @@ class UiKitApi private constructor(val builder: Builder) {
             PaymentMethod.AKULAKU -> PaymentTypeItem(PaymentType.AKULAKU, null)
             PaymentMethod.ALFAMART -> PaymentTypeItem(PaymentType.ALFAMART, null)
             PaymentMethod.UOB_EZPAY -> PaymentTypeItem(PaymentType.UOB_EZPAY, null)
-            PaymentMethod.UOB_EZPAY_APP -> PaymentTypeItem(PaymentType.UOB_EZPAY, PaymentType.UOB_EZPAY_APP)
-            PaymentMethod.UOB_EZPAY_WEB -> PaymentTypeItem(PaymentType.UOB_EZPAY, PaymentType.UOB_EZPAY_WEB)
+            PaymentMethod.UOB_EZPAY_APP -> PaymentTypeItem(
+                PaymentType.UOB_EZPAY,
+                PaymentType.UOB_EZPAY_APP
+            )
+            PaymentMethod.UOB_EZPAY_WEB -> PaymentTypeItem(
+                PaymentType.UOB_EZPAY,
+                PaymentType.UOB_EZPAY_WEB
+            )
             else -> null
         }
     }
 
     internal fun getPaymentCallback() = paymentCallback
-    internal val customColors = builder.customColors
-    internal val customFontFamily = builder.fontFamily
+    var customColors = builder.customColors
+    var customFontFamily = builder.fontFamily
     val uiKitSetting = builder.uiKitSetting
 
     fun startPaymentUiFlow(
@@ -131,7 +161,7 @@ class UiKitApi private constructor(val builder: Builder) {
         snapToken: String?
     ) {
         var isSnapTokenAvailable = true
-        if(snapToken.isNullOrEmpty()) isSnapTokenAvailable = false
+        if (snapToken.isNullOrEmpty()) isSnapTokenAvailable = false
 
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
             activityContext = activity,
@@ -146,19 +176,19 @@ class UiKitApi private constructor(val builder: Builder) {
     fun runPaymentLegacy(
         activityContext: Context,
         transactionDetails: SnapTransactionDetail,
-        customerDetails: CustomerDetails,
+        customerDetails: com.midtrans.sdk.corekit.models.CustomerDetails,
         itemDetails: List<ItemDetails>,
-        creditCard: CreditCard,
+        creditCard: com.midtrans.sdk.corekit.models.snap.CreditCard,
         userId: String,
         uobEzpayCallback: PaymentCallback,
         paymentCallback: Callback<TransactionResult>,
-        snapTokenExpiry: Expiry? = null,
+        snapTokenExpiry: ExpiryModel? = null,
         paymentMethod: PaymentMethod? = null,
         enabledPayment: List<String>? = null,
-        permataVa: BankTransferRequest? = null,
-        bcaVa: BankTransferRequest? = null,
-        bniVa: BankTransferRequest? = null,
-        briVa: BankTransferRequest? = null,
+        permataVa: PermataBankTransferRequestModel? = null,
+        bcaVa: BcaBankTransferRequestModel? = null,
+        bniVa: BankTransferRequestModel? = null,
+        briVa: BankTransferRequestModel? = null,
         gopayCallback: GopayPaymentCallback? = null,
         shopeepayCallback: PaymentCallback? = null,
         customField1: String? = null,
@@ -170,17 +200,17 @@ class UiKitApi private constructor(val builder: Builder) {
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
             activityContext = activityContext,
             transactionDetails = transactionDetails,
-            customerDetails = customerDetails,
+            customerDetails = convertToRevamp(customerDetails),
             itemDetails = itemDetails,
-            creditCard = creditCard,
+            creditCard = convertToRevamp(creditCard),
             userId = userId,
             paymentType = getPaymentType(paymentMethod),
-            expiry = snapTokenExpiry,
+            expiry = convertToRevamp(snapTokenExpiry),
             enabledPayments = enabledPayment,
-            permataVa = permataVa,
-            bcaVa = bcaVa,
-            bniVa = bniVa,
-            briVa = briVa,
+            permataVa = convertToRevamp(permataVa),
+            bcaVa = convertToRevamp(bcaVa),
+            bniVa = convertToRevamp(bniVa),
+            briVa = convertToRevamp(briVa),
             gopayCallback = gopayCallback,
             shopeepayCallback = shopeepayCallback,
             uobEzpayCallback = uobEzpayCallback,
@@ -193,6 +223,81 @@ class UiKitApi private constructor(val builder: Builder) {
         activityContext.startActivity(intent)
     }
 
+    private fun convertToRevamp(creditCard: com.midtrans.sdk.corekit.models.snap.CreditCard): CreditCard {
+        return CreditCard(creditCard.isSaveCard, creditCard.tokenId, creditCard.authentication, creditCard.isSecure, creditCard.channel, creditCard.bank, creditCard.savedTokens, creditCard.whitelistBins, creditCard.blacklistBins, convertToRevamp(creditCard.installment), creditCard.type)
+    }
+
+    private fun convertToRevamp(installment: com.midtrans.sdk.corekit.models.snap.Installment?): Installment? {
+        installment?.let {
+            return Installment(installment.isRequired, installment.terms)
+        }
+        return null
+    }
+
+    private fun convertToRevamp(permataVa: PermataBankTransferRequestModel?): com.midtrans.sdk.corekit.api.model.BankTransferRequest? {
+        permataVa?.let {
+            return com.midtrans.sdk.corekit.api.model.BankTransferRequest(it.vaNumber, null, null, it.recipientName)
+        }
+        return null
+    }
+
+    private fun convertToRevamp(va: BankTransferRequestModel?): com.midtrans.sdk.corekit.api.model.BankTransferRequest? {
+        va?.let {
+            return com.midtrans.sdk.corekit.api.model.BankTransferRequest(it.vaNumber, null, null, null)
+        }
+        return null
+    }
+
+    private fun convertToRevamp(bcaVa: BcaBankTransferRequestModel?): com.midtrans.sdk.corekit.api.model.BankTransferRequest? {
+        bcaVa?.let {
+            return com.midtrans.sdk.corekit.api.model.BankTransferRequest(it.vaNumber, it.freeText, it.subCompanyCode, null)
+        }
+        return null
+    }
+
+    private fun convertToRevamp(expiry: ExpiryModel?): Expiry? {
+        expiry?.let {
+            return Expiry(it.startTime, it.unit, it.duration)
+        }
+        return null
+    }
+
+    private fun convertToRevamp(customerDetails: com.midtrans.sdk.corekit.models.CustomerDetails): CustomerDetails {
+        return CustomerDetails(
+            customerDetails.customerIdentifier,
+            customerDetails.firstName,
+            customerDetails.lastName,
+            customerDetails.email,
+            customerDetails.phone,
+            convertToRevamp(customerDetails.shippingAddress),
+            convertToRevamp(customerDetails.billingAddress)
+        )
+    }
+
+    private fun convertToRevamp(billingAddress: BillingAddress): Address {
+        return Address(
+            billingAddress.firstName,
+            billingAddress.lastName,
+            billingAddress.address,
+            billingAddress.city,
+            billingAddress.postalCode,
+            billingAddress.phone,
+            billingAddress.countryCode
+        )
+    }
+
+    private fun convertToRevamp(shippingAddress: ShippingAddress): Address {
+        return Address(
+            shippingAddress.firstName,
+            shippingAddress.lastName,
+            shippingAddress.address,
+            shippingAddress.city,
+            shippingAddress.postalCode,
+            shippingAddress.phone,
+            shippingAddress.countryCode
+        )
+    }
+
     //Snap Token Flow
     fun runPaymentTokenLegacy(
         activityContext: Context,
@@ -203,7 +308,7 @@ class UiKitApi private constructor(val builder: Builder) {
         UiKitApi.paymentCallback = paymentCallback
 
         var isSnapTokenAvailable = true
-        if(snapToken.isNullOrEmpty()) isSnapTokenAvailable = false
+        if (snapToken.isNullOrEmpty()) isSnapTokenAvailable = false
 
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
             activityContext = activityContext,

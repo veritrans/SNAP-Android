@@ -267,19 +267,30 @@ internal class CreditCardActivity : BaseActivity() {
             finish()
         }
 
+    private fun setResult(data: TransactionResult) {
+        val resultIntent = Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, data)
+        setResult(Activity.RESULT_OK, resultIntent)
+    }
+
     private fun launchExpiredErrorScreen() {
-        errorScreenLauncher.launch(
-            ErrorScreenActivity.getIntent(
-                activityContext = this@CreditCardActivity,
-                title = resources.getString(R.string.expired_title),
-                content = resources.getString(R.string.expired_desc),
-                transactionResult = TransactionResult(
-                    status = UiKitConstants.STATUS_FAILED,
-                    paymentType = PaymentType.CREDIT_CARD,
-                    message = resources.getString(R.string.expired_desc)
+        val expiredTransactionResult = TransactionResult(
+            status = UiKitConstants.STATUS_FAILED,
+            paymentType = PaymentType.CREDIT_CARD,
+            message = resources.getString(R.string.expired_desc)
+        )
+        if (isShowPaymentStatusPage()) {
+            errorScreenLauncher.launch(
+                ErrorScreenActivity.getIntent(
+                    activityContext = this@CreditCardActivity,
+                    title = resources.getString(R.string.expired_title),
+                    content = resources.getString(R.string.expired_desc),
+                    transactionResult = expiredTransactionResult
                 )
             )
-        )
+        } else {
+            setResult(expiredTransactionResult)
+            finish()
+        }
     }
 
     @OptIn(ExperimentalMaterialApi::class)

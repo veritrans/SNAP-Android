@@ -34,7 +34,6 @@ public class SdkUIFlowBuilder {
     protected String clientKey = null;
     protected Context context = null;
     protected boolean enableLog = false;
-    protected boolean enableBuiltInTokenStorage = true;
     protected String merchantServerUrl = null;
     protected String merchantName = null;
     protected ISdkFlow sdkFlow;
@@ -133,11 +132,6 @@ public class SdkUIFlowBuilder {
 
     public SdkUIFlowBuilder setSelectedPaymentMethods(ArrayList<PaymentMethodsModel> selectedPaymentMethods) {
         this.selectedPaymentMethods = selectedPaymentMethods;
-        return this;
-    }
-
-    public SdkUIFlowBuilder useBuiltInTokenStorage(boolean enableBuiltInTokenStorage) {
-        this.enableBuiltInTokenStorage = enableBuiltInTokenStorage;
         return this;
     }
 

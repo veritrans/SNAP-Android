@@ -105,7 +105,7 @@ class SavedCardActivity: BaseActivity() {
     private fun initTransactionResultScreenObserver(){
         //TODO: Need to be revisit on handling all the payment status
         viewModel.getTransactionResponseLiveData().observe(this, Observer {
-            if(isShowPaymentStatusPage()) {
+            if (isShowPaymentStatusPage()) {
                 if (it.statusCode != UiKitConstants.STATUS_CODE_201 && it.redirectUrl.isNullOrEmpty()) {
                     val intent = SuccessScreenActivity.getIntent(
                         activityContext = this@SavedCardActivity,
@@ -318,7 +318,7 @@ class SavedCardActivity: BaseActivity() {
                                 onCardNumberOtherCardValueChange = {
                                     state.cardNumber = it
                                     val cardNumberWithoutSpace = SnapCreditCardUtil.getCardNumberFromTextField(it)
-                                    if(cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER){
+                                    if (cardNumberWithoutSpace.length >= SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER){
                                         val eightDigitNumber = cardNumberWithoutSpace.substring(0, SnapCreditCardUtil.SUPPORTED_MAX_BIN_NUMBER)
                                         if (eightDigitNumber != previousEightDigitNumber){
                                             previousEightDigitNumber = eightDigitNumber

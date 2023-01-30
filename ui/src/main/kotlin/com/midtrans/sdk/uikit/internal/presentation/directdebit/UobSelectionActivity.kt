@@ -138,19 +138,30 @@ class UobSelectionActivity : BaseActivity() {
         }
     }
 
+    private fun setResult(data: TransactionResult) {
+        val resultIntent = Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, data)
+        setResult(Activity.RESULT_OK, resultIntent)
+    }
+
     private fun launchExpiredErrorScreen() {
-        errorScreenLauncher.launch(
-            ErrorScreenActivity.getIntent(
-                activityContext = this@UobSelectionActivity,
-                title = resources.getString(R.string.expired_title),
-                content = resources.getString(R.string.expired_desc),
-                transactionResult = TransactionResult(
-                    status = UiKitConstants.STATUS_FAILED,
-                    paymentType = PaymentType.UOB_EZPAY,
-                    message = resources.getString(R.string.expired_desc)
+        val expiredTransactionResult = TransactionResult(
+            status = UiKitConstants.STATUS_FAILED,
+            paymentType = PaymentType.UOB_EZPAY,
+            message = resources.getString(R.string.expired_desc)
+        )
+        if (isShowPaymentStatusPage()) {
+            errorScreenLauncher.launch(
+                ErrorScreenActivity.getIntent(
+                    activityContext = this@UobSelectionActivity,
+                    title = resources.getString(R.string.expired_title),
+                    content = resources.getString(R.string.expired_desc),
+                    transactionResult = expiredTransactionResult
                 )
             )
-        )
+        } else {
+            setResult(expiredTransactionResult)
+            finish()
+        }
     }
 
     @Preview(showBackground = true)

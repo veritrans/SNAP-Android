@@ -14,12 +14,15 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
+import com.midtrans.sdk.corekit.core.themes.BaseColorTheme;
 import com.midtrans.sdk.corekit.models.TransactionResponse;
 import com.midtrans.sdk.uikit.api.callback.Callback;
 import com.midtrans.sdk.uikit.api.exception.SnapError;
+import com.midtrans.sdk.uikit.api.model.CustomColors;
 import com.midtrans.sdk.uikit.api.model.SnapTransactionDetail;
 import com.midtrans.sdk.uikit.api.model.TransactionResult;
 import com.midtrans.sdk.uikit.external.UiKitApi;
+import com.midtrans.sdk.uikit.internal.util.AssetFontLoader;
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants;
 
 import java.lang.ref.WeakReference;
@@ -43,7 +46,17 @@ public class ISdkFlow {
         }
     };
 
+    private CustomColors customColorThemeToCustomColors(BaseColorTheme baseColorTheme) {
+        return new CustomColors(baseColorTheme);
+    }
+
     public void runUIFlow(Context context, String snapToken) {
+        if (MidtransSDK.getInstance().getColorTheme() != null) {
+            UiKitApi.Companion.getDefaultInstance().setCustomColors(customColorThemeToCustomColors(MidtransSDK.getInstance().getColorTheme()));
+        }
+        if (MidtransSDK.getInstance().getDefaultText() != null) {
+            UiKitApi.Companion.getDefaultInstance().setCustomFontFamily(AssetFontLoader.INSTANCE.fontFamily(MidtransSDK.getInstance().getDefaultText(), context));
+        }
         if (snapToken != null) {
             UiKitApi.Companion.getDefaultInstance().runPaymentTokenLegacy(
                     context,
@@ -83,6 +96,12 @@ public class ISdkFlow {
     }
 
     public void runDirectPayment(Context context, String snapToken, PaymentMethod paymentMethod) {
+        if (MidtransSDK.getInstance().getColorTheme() != null) {
+            UiKitApi.Companion.getDefaultInstance().setCustomColors(customColorThemeToCustomColors(MidtransSDK.getInstance().getColorTheme()));
+        }
+        if (MidtransSDK.getInstance().getDefaultText() != null) {
+            UiKitApi.Companion.getDefaultInstance().setCustomFontFamily(AssetFontLoader.INSTANCE.fontFamily(MidtransSDK.getInstance().getDefaultText(), context));
+        }
         TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
         UiKitApi.Companion.getDefaultInstance().runPaymentLegacy(
                 context,

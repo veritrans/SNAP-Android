@@ -5,31 +5,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 class SnapTypography private constructor(){
-    val snapButton = TextStyle(
+    val snapButton get() = TextStyle(
         fontFamily = getPoppinsFontFamily(),
         fontSize = 16.sp,
         fontWeight = FontWeight.Normal
     )
 
-    val snapAppBar = TextStyle(
+    val snapAppBar get() = TextStyle(
         fontFamily = getRobotoFontFamily(),
         fontSize = 18.sp,
         fontWeight = FontWeight.SemiBold
     )
 
-    val snapBigNumberSemiBold = TextStyle(
+    val snapBigNumberSemiBold get() = TextStyle(
         fontFamily = getPoppinsFontFamily(),
         fontSize = 24.sp,
         fontWeight = FontWeight.SemiBold
     )
 
-    val snapTextBigRegular = TextStyle(
+    val snapTextBigRegular get() = TextStyle(
         fontFamily = getPoppinsFontFamily(),
         fontSize = 16.sp,
         fontWeight = FontWeight.Normal
     )
 
-    val snapTextMediumRegular = TextStyle(
+    val snapTextMediumRegular get() = TextStyle(
         fontFamily = getPoppinsFontFamily(),
         fontSize = 14.sp,
         fontWeight = FontWeight.Normal
@@ -37,31 +37,31 @@ class SnapTypography private constructor(){
 
     val snaTextBodySmall = snapTextMediumRegular
 
-    val snapTextSmallRegular = TextStyle(
+    val snapTextSmallRegular get() = TextStyle(
         fontFamily = getPoppinsFontFamily(),
         fontSize = 12.sp,
         fontWeight = FontWeight.Normal
     )
 
-    val snapTextMediumMedium = TextStyle(
+    val snapTextMediumMedium get() = TextStyle(
         fontFamily = getPoppinsFontFamily(),
         fontSize = 14.sp,
         fontWeight = FontWeight.SemiBold
     )
 
-    val snapTextLabelMedium = TextStyle(
+    val snapTextLabelMedium get() = TextStyle(
         fontFamily = getPoppinsFontFamily(),
         fontSize = 16.sp,
         fontWeight = FontWeight.Medium
     )
 
-    val snapHeadingL = TextStyle(
+    val snapHeadingL get() = TextStyle(
         fontFamily = getPoppinsFontFamily(),
         fontSize = 18.sp,
         fontWeight = FontWeight.SemiBold
     )
 
-    val snapHeading2Xl = TextStyle(
+    val snapHeading2Xl get() = TextStyle(
         fontFamily = getPoppinsFontFamily(),
         fontSize = 24.sp,
         fontWeight = FontWeight.SemiBold

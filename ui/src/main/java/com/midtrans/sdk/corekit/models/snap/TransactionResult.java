@@ -16,6 +16,7 @@ public class TransactionResult {
 
     public TransactionResult(TransactionResponse response) {
         setResponse(response);
+        status = response.getTransactionStatus();
     }
 
     public TransactionResult() {
