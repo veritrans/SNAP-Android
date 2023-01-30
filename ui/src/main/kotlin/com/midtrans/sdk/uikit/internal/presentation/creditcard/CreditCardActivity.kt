@@ -278,7 +278,7 @@ internal class CreditCardActivity : BaseActivity() {
             paymentType = PaymentType.CREDIT_CARD,
             message = resources.getString(R.string.expired_desc)
         )
-        if(isShowPaymentStatusPage()) {
+        if (isShowPaymentStatusPage()) {
             errorScreenLauncher.launch(
                 ErrorScreenActivity.getIntent(
                     activityContext = this@CreditCardActivity,

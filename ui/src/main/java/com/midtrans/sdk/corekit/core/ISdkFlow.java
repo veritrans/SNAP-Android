@@ -51,10 +51,10 @@ public class ISdkFlow {
     }
 
     public void runUIFlow(Context context, String snapToken) {
-        if(MidtransSDK.getInstance().getColorTheme() != null) {
+        if (MidtransSDK.getInstance().getColorTheme() != null) {
             UiKitApi.Companion.getDefaultInstance().setCustomColors(customColorThemeToCustomColors(MidtransSDK.getInstance().getColorTheme()));
         }
-        if(MidtransSDK.getInstance().getDefaultText() != null) {
+        if (MidtransSDK.getInstance().getDefaultText() != null) {
             UiKitApi.Companion.getDefaultInstance().setCustomFontFamily(AssetFontLoader.INSTANCE.fontFamily(MidtransSDK.getInstance().getDefaultText(), context));
         }
         if (snapToken != null) {
@@ -96,10 +96,10 @@ public class ISdkFlow {
     }
 
     public void runDirectPayment(Context context, String snapToken, PaymentMethod paymentMethod) {
-        if(MidtransSDK.getInstance().getColorTheme() != null) {
+        if (MidtransSDK.getInstance().getColorTheme() != null) {
             UiKitApi.Companion.getDefaultInstance().setCustomColors(customColorThemeToCustomColors(MidtransSDK.getInstance().getColorTheme()));
         }
-        if(MidtransSDK.getInstance().getDefaultText() != null) {
+        if (MidtransSDK.getInstance().getDefaultText() != null) {
             UiKitApi.Companion.getDefaultInstance().setCustomFontFamily(AssetFontLoader.INSTANCE.fontFamily(MidtransSDK.getInstance().getDefaultText(), context));
         }
         TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();

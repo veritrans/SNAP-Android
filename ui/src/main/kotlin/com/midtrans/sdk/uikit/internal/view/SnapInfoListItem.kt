@@ -51,7 +51,7 @@ fun SnapCopyableInfoListItem(
                 )
             }
 
-            if(isError){
+            if (isError){
                 Text(
                     text = stringResource(id = R.string.error_failed_load),
                     modifier = Modifier.weight(1f),
@@ -101,7 +101,7 @@ fun SnapCopyableInfoListItem(
             }
 
         }
-        if(withDivider) {
+        if (withDivider) {
             Divider(
                 thickness = 1.dp,
                 color = SnapColors.getARGBColor(SnapColors.backgroundBorderSolidSecondary),

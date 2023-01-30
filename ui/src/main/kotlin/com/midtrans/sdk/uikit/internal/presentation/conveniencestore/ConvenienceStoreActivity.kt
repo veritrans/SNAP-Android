@@ -126,7 +126,7 @@ internal class ConvenienceStoreActivity : BaseActivity() {
             paymentType = paymentType,
             message = resources.getString(R.string.expired_desc)
         )
-        if(isShowPaymentStatusPage()) {
+        if (isShowPaymentStatusPage()) {
             errorScreenLauncher.launch(
                 ErrorScreenActivity.getIntent(
                     activityContext = this@ConvenienceStoreActivity,

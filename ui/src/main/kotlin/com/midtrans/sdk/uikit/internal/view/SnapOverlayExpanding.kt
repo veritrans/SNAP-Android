@@ -117,7 +117,7 @@ fun SnapTotal(
                 style = SnapTypography.STYLES.snapBigNumberSemiBold,
                 color = SnapColors.getARGBColor(SnapColors.textPrimary)
             )
-            if(isPromo){
+            if (isPromo){
                 Icon(
                     modifier = Modifier.padding(start = 8.dp, top = 8.dp),
                     painter = painterResource(id = R.drawable.ic_promo),

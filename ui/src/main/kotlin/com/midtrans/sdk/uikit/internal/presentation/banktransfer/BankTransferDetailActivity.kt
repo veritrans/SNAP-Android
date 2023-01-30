@@ -188,7 +188,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
             paymentType = paymentType,
             message = resources.getString(R.string.expired_desc)
         )
-        if(isShowPaymentStatusPage()) {
+        if (isShowPaymentStatusPage()) {
             errorScreenLauncher.launch(
                 ErrorScreenActivity.getIntent(
                     activityContext = this@BankTransferDetailActivity,
@@ -227,7 +227,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
         val state = rememberScrollState()
 
         if (DateTimeUtil.getExpiredSeconds(remainingTime) <= 0L && isFirstInit) {
-            if(viewModel?.isExpired?.value == true) {
+            if (viewModel?.isExpired?.value == true) {
                 launchExpiredErrorScreen()
             } else {
                 val data = Intent()

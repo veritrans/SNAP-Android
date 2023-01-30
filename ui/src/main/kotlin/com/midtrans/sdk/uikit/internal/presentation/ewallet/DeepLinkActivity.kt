@@ -88,7 +88,7 @@ internal class DeepLinkActivity : BaseActivity() {
 
     private fun observeIsExpired() {
         viewModel.isExpired.observe(this) {
-            if(it) launchExpiredErrorScreen()
+            if (it) launchExpiredErrorScreen()
         }
     }
 
@@ -111,7 +111,7 @@ internal class DeepLinkActivity : BaseActivity() {
             paymentType = paymentType,
             message = resources.getString(R.string.expired_desc)
         )
-        if(isShowPaymentStatusPage()) {
+        if (isShowPaymentStatusPage()) {
             errorScreenLauncher.launch(
                 ErrorScreenActivity.getIntent(
                     activityContext = this@DeepLinkActivity,

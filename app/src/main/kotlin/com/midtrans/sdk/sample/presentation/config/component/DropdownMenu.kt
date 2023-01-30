@@ -186,7 +186,7 @@ fun AlertDialogDropdownMenu(
                             when (title) {
                                 SHOW_ALL_PAYMENT_CHANNELS -> {
                                     state.isShowAllPaymentChannels = selectedOptionText == SHOW_ALL
-                                    if(!state.isShowAllPaymentChannels) {
+                                    if (!state.isShowAllPaymentChannels) {
                                         openDialog.value = true
                                     }
                                 }
@@ -303,13 +303,13 @@ fun CustomTextField(title: String, state: InputState, modifier: Modifier = Modif
                 .padding(bottom = 10.dp)
         )
 
-        if(state.bcaVa.length > 11 && title == CUSTOM_BCA_VA){
+        if (state.bcaVa.length > 11 && title == CUSTOM_BCA_VA){
             Text(text = "Numbers only. Length should be within 1 to 11.", color = Color.Red)
         }
-        if(state.bniVa.length > 8 && title == CUSTOM_BNI_VA){
+        if (state.bniVa.length > 8 && title == CUSTOM_BNI_VA){
             Text(text = "Numbers only. Length should be within 1 to 8.", color = Color.Red)
         }
-        if(state.permataVa.isNotEmpty() && state.permataVa.length != 10 && title == CUSTOM_PERMATA_VA){
+        if (state.permataVa.isNotEmpty() && state.permataVa.length != 10 && title == CUSTOM_PERMATA_VA){
             Text(text = "Numbers only. Length should be 10.", color = Color.Red)
         }
     }

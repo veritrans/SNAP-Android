@@ -136,7 +136,7 @@ class DirectDebitActivity : BaseActivity() {
             paymentType = paymentType,
             message = resources.getString(R.string.expired_desc)
         )
-        if(isShowPaymentStatusPage()) {
+        if (isShowPaymentStatusPage()) {
             errorScreenLauncher.launch(
                 ErrorScreenActivity.getIntent(
                     activityContext = this@DirectDebitActivity,
@@ -191,7 +191,7 @@ class DirectDebitActivity : BaseActivity() {
 
         transactionResult?.let { result ->
             result.redirectUrl?.let { url ->
-                if(result.chargeType == PaymentType.KLIK_BCA) {
+                if (result.chargeType == PaymentType.KLIK_BCA) {
                     viewModel.checkStatus(snapToken, PaymentType.KLIK_BCA)
                     transactionId.value?.let {
                         openWebLink(url, result.transactionStatus, it)

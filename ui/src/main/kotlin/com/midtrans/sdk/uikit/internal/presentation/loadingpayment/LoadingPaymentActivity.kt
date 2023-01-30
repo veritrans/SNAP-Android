@@ -189,7 +189,7 @@ class LoadingPaymentActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if(!isMerchantUrlAvailable) {
+        if (!isMerchantUrlAvailable) {
             Logger.e(resources.getString(R.string.invalid_merchant_base_url))
             val data = Intent()
             data.putExtra(
@@ -203,7 +203,7 @@ class LoadingPaymentActivity : BaseActivity() {
             )
             setResult(Activity.RESULT_OK, data)
             finish()
-        } else if(!isSnapTokenAvailable) {
+        } else if (!isSnapTokenAvailable) {
             Logger.e(resources.getString(R.string.invalid_snap_token))
             val data = Intent()
             data.putExtra(
