@@ -111,10 +111,10 @@ class UiKitApi private constructor(val builder: Builder) {
         activity: Activity,
         launcher: ActivityResultLauncher<Intent>,
         transactionDetails: SnapTransactionDetail,
-        customerDetails: CustomerDetails,
-        itemDetails: List<ItemDetails>,
-        creditCard: CreditCard,
-        userId: String,
+        customerDetails: CustomerDetails? = null,
+        itemDetails: List<ItemDetails>? = null,
+        creditCard: CreditCard? = null,
+        userId: String? = null,
         uobEzpayCallback: PaymentCallback? = null,
         gopayCallback: GopayPaymentCallback? = null,
         shopeepayCallback: PaymentCallback? = null,
@@ -176,11 +176,11 @@ class UiKitApi private constructor(val builder: Builder) {
     fun runPaymentLegacy(
         activityContext: Context,
         transactionDetails: SnapTransactionDetail,
-        customerDetails: com.midtrans.sdk.corekit.models.CustomerDetails,
-        itemDetails: List<ItemDetails>,
-        creditCard: com.midtrans.sdk.corekit.models.snap.CreditCard,
-        userId: String,
-        uobEzpayCallback: PaymentCallback,
+        customerDetails: com.midtrans.sdk.corekit.models.CustomerDetails? = null,
+        itemDetails: List<ItemDetails>? = null,
+        creditCard: com.midtrans.sdk.corekit.models.snap.CreditCard? = null,
+        userId: String? = null,
+        uobEzpayCallback: PaymentCallback? = null,
         paymentCallback: Callback<TransactionResult>,
         snapTokenExpiry: ExpiryModel? = null,
         paymentMethod: PaymentMethod? = null,
@@ -223,8 +223,11 @@ class UiKitApi private constructor(val builder: Builder) {
         activityContext.startActivity(intent)
     }
 
-    private fun convertToRevamp(creditCard: com.midtrans.sdk.corekit.models.snap.CreditCard): CreditCard {
-        return CreditCard(creditCard.isSaveCard, creditCard.tokenId, creditCard.authentication, creditCard.isSecure, creditCard.channel, creditCard.bank, creditCard.savedTokens, creditCard.whitelistBins, creditCard.blacklistBins, convertToRevamp(creditCard.installment), creditCard.type)
+    private fun convertToRevamp(creditCard: com.midtrans.sdk.corekit.models.snap.CreditCard?): CreditCard? {
+        creditCard?.let {
+            return CreditCard(it.isSaveCard, it.tokenId, it.authentication, it.isSecure, it.channel, it.bank, it.savedTokens, it.whitelistBins, it.blacklistBins, convertToRevamp(it.installment), it.type)
+        }
+        return null
     }
 
     private fun convertToRevamp(installment: com.midtrans.sdk.corekit.models.snap.Installment?): Installment? {
@@ -262,40 +265,49 @@ class UiKitApi private constructor(val builder: Builder) {
         return null
     }
 
-    private fun convertToRevamp(customerDetails: com.midtrans.sdk.corekit.models.CustomerDetails): CustomerDetails {
-        return CustomerDetails(
-            customerDetails.customerIdentifier,
-            customerDetails.firstName,
-            customerDetails.lastName,
-            customerDetails.email,
-            customerDetails.phone,
-            convertToRevamp(customerDetails.shippingAddress),
-            convertToRevamp(customerDetails.billingAddress)
-        )
+    private fun convertToRevamp(customerDetails: com.midtrans.sdk.corekit.models.CustomerDetails?): CustomerDetails? {
+        customerDetails?.let {
+            return CustomerDetails(
+                customerDetails.customerIdentifier,
+                customerDetails.firstName,
+                customerDetails.lastName,
+                customerDetails.email,
+                customerDetails.phone,
+                convertToRevamp(customerDetails.shippingAddress),
+                convertToRevamp(customerDetails.billingAddress)
+            )
+        }
+        return null
     }
 
-    private fun convertToRevamp(billingAddress: BillingAddress): Address {
-        return Address(
-            billingAddress.firstName,
-            billingAddress.lastName,
-            billingAddress.address,
-            billingAddress.city,
-            billingAddress.postalCode,
-            billingAddress.phone,
-            billingAddress.countryCode
-        )
+    private fun convertToRevamp(billingAddress: BillingAddress?): Address? {
+        billingAddress?.let {
+            return Address(
+                it.firstName,
+                it.lastName,
+                it.address,
+                it.city,
+                it.postalCode,
+                it.phone,
+                it.countryCode
+            )
+        }
+        return null
     }
 
-    private fun convertToRevamp(shippingAddress: ShippingAddress): Address {
-        return Address(
-            shippingAddress.firstName,
-            shippingAddress.lastName,
-            shippingAddress.address,
-            shippingAddress.city,
-            shippingAddress.postalCode,
-            shippingAddress.phone,
-            shippingAddress.countryCode
-        )
+    private fun convertToRevamp(shippingAddress: ShippingAddress?): Address? {
+        shippingAddress?.let {
+            return Address(
+                it.firstName,
+                it.lastName,
+                it.address,
+                it.city,
+                it.postalCode,
+                it.phone,
+                it.countryCode
+            )
+        }
+        return null
     }
 
     //Snap Token Flow
