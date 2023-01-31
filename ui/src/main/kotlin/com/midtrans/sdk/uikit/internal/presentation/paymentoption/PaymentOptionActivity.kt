@@ -302,11 +302,19 @@ class PaymentOptionActivity : BaseActivity() {
     private fun getPaymentType(enabledPayments: List<EnabledPayment>): String {
         val bankTransfer: (EnabledPayment) -> Boolean = { it.category == PaymentType.BANK_TRANSFER }
         val isAllBankTransfer = enabledPayments.all(bankTransfer)
-        val paymentType = if (isAllBankTransfer) {
-            PaymentType.BANK_TRANSFER
+        val isGopay = enabledPayments.find { it.type == PaymentType.GOPAY } != null && enabledPayments.size == 2
+        val isShopeepay = enabledPayments.find { it.type == PaymentType.SHOPEEPAY } != null && enabledPayments.size == 2
+        var paymentType = ""
+
+        if (isAllBankTransfer) {
+            paymentType = PaymentType.BANK_TRANSFER
         } else if (enabledPayments.size == 1) {
-            enabledPayments[0].type
-        } else ""
+            paymentType = enabledPayments[0].type
+        } else if (isGopay) {
+            paymentType = if(isTabletDevice()) PaymentType.GOPAY_QRIS else PaymentType.GOPAY
+        } else if (isShopeepay) {
+            paymentType = if(isTabletDevice()) PaymentType.SHOPEEPAY_QRIS else PaymentType.SHOPEEPAY
+        }
 
         return paymentType
     }

@@ -19,7 +19,6 @@ class PaymentType {
         INDOMARET,
         GOPAY,
         SHOPEEPAY,
-        QRIS,
         DANAMON_ONLINE,
         AKULAKU,
         CSTORE,
@@ -27,7 +26,6 @@ class PaymentType {
         UOB_EZPAY_WEB,
         UOB_EZPAY_APP,
         UOB_EZPAY,
-        SHOPEEPAY_QRIS
     )
     @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
     annotation class Def
@@ -56,8 +54,6 @@ class PaymentType {
         const val UOB_EZPAY_APP = "uob_ezpay_deeplink"
 
         //E-WALLET
-        const val SHOPEEPAY_QRIS = "shopeepay_qris"
-        const val QRIS = "qris"
         const val GOPAY = "gopay"
         const val SHOPEEPAY = "shopeepay"
 
