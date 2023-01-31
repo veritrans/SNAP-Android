@@ -1,4 +1,4 @@
-package com.midtrans.sdk.corekit.core;
+package com.midtrans.sdk.uikit;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -7,6 +7,11 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.os.LocaleListCompat;
 
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback;
+import com.midtrans.sdk.corekit.core.IScanner;
+import com.midtrans.sdk.corekit.core.ISdkFlow;
+import com.midtrans.sdk.corekit.core.Logger;
+import com.midtrans.sdk.corekit.core.MidtransSDK;
+import com.midtrans.sdk.corekit.core.UIKitCustomSetting;
 import com.midtrans.sdk.corekit.core.themes.BaseColorTheme;
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme;
 import com.midtrans.sdk.corekit.models.PaymentMethodsModel;
@@ -34,7 +39,6 @@ public class SdkUIFlowBuilder {
     protected String clientKey = null;
     protected Context context = null;
     protected boolean enableLog = false;
-    protected String merchantServerUrl = null;
     protected String merchantName = null;
     protected ISdkFlow sdkFlow;
     protected String defaultText;
@@ -45,6 +49,7 @@ public class SdkUIFlowBuilder {
     protected String flow;
     protected BaseColorTheme colorTheme;
     protected String languageCode = "en";
+    public String merchantServerUrl = null;
     public UIKitCustomSetting uiKitCustomSetting;
 
     private SdkUIFlowBuilder(Context context, String clientKey, String merchantServerUrl, TransactionFinishedCallback callback) {
