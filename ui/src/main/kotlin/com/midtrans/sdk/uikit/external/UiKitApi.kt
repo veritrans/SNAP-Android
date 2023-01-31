@@ -224,65 +224,58 @@ class UiKitApi private constructor(val builder: Builder) {
     }
 
     private fun convertToRevamp(creditCard: com.midtrans.sdk.corekit.models.snap.CreditCard?): CreditCard? {
-        creditCard?.let {
-            return CreditCard(it.isSaveCard, it.tokenId, it.authentication, it.isSecure, it.channel, it.bank, it.savedTokens, it.whitelistBins, it.blacklistBins, convertToRevamp(it.installment), it.type)
+        return creditCard?.let {
+            CreditCard(it.isSaveCard, it.tokenId, it.authentication, it.isSecure, it.channel, it.bank, it.savedTokens, it.whitelistBins, it.blacklistBins, convertToRevamp(it.installment), it.type)
         }
-        return null
     }
 
     private fun convertToRevamp(installment: com.midtrans.sdk.corekit.models.snap.Installment?): Installment? {
-        installment?.let {
-            return Installment(installment.isRequired, installment.terms)
+        return installment?.let {
+            Installment(installment.isRequired, installment.terms)
         }
-        return null
     }
 
     private fun convertToRevamp(permataVa: PermataBankTransferRequestModel?): com.midtrans.sdk.corekit.api.model.BankTransferRequest? {
-        permataVa?.let {
-            return com.midtrans.sdk.corekit.api.model.BankTransferRequest(it.vaNumber, null, null, it.recipientName)
+        return permataVa?.let {
+            com.midtrans.sdk.corekit.api.model.BankTransferRequest(it.vaNumber, null, null, it.recipientName)
         }
-        return null
     }
 
     private fun convertToRevamp(va: BankTransferRequestModel?): com.midtrans.sdk.corekit.api.model.BankTransferRequest? {
-        va?.let {
-            return com.midtrans.sdk.corekit.api.model.BankTransferRequest(it.vaNumber, null, null, null)
+        return va?.let {
+            com.midtrans.sdk.corekit.api.model.BankTransferRequest(it.vaNumber, null, null, null)
         }
-        return null
     }
 
     private fun convertToRevamp(bcaVa: BcaBankTransferRequestModel?): com.midtrans.sdk.corekit.api.model.BankTransferRequest? {
-        bcaVa?.let {
-            return com.midtrans.sdk.corekit.api.model.BankTransferRequest(it.vaNumber, it.freeText, it.subCompanyCode, null)
+        return bcaVa?.let {
+            com.midtrans.sdk.corekit.api.model.BankTransferRequest(it.vaNumber, it.freeText, it.subCompanyCode, null)
         }
-        return null
     }
 
     private fun convertToRevamp(expiry: ExpiryModel?): Expiry? {
-        expiry?.let {
-            return Expiry(it.startTime, it.unit, it.duration)
+        return expiry?.let {
+            Expiry(it.startTime, it.unit, it.duration)
         }
-        return null
     }
 
     private fun convertToRevamp(customerDetails: com.midtrans.sdk.corekit.models.CustomerDetails?): CustomerDetails? {
-        customerDetails?.let {
-            return CustomerDetails(
-                customerDetails.customerIdentifier,
-                customerDetails.firstName,
-                customerDetails.lastName,
-                customerDetails.email,
-                customerDetails.phone,
-                convertToRevamp(customerDetails.shippingAddress),
-                convertToRevamp(customerDetails.billingAddress)
+        return customerDetails?.let {
+            CustomerDetails(
+                it.customerIdentifier,
+                it.firstName,
+                it.lastName,
+                it.email,
+                it.phone,
+                convertToRevamp(it.shippingAddress),
+                convertToRevamp(it.billingAddress)
             )
         }
-        return null
     }
 
     private fun convertToRevamp(billingAddress: BillingAddress?): Address? {
-        billingAddress?.let {
-            return Address(
+        return billingAddress?.let {
+            Address(
                 it.firstName,
                 it.lastName,
                 it.address,
@@ -292,12 +285,11 @@ class UiKitApi private constructor(val builder: Builder) {
                 it.countryCode
             )
         }
-        return null
     }
 
     private fun convertToRevamp(shippingAddress: ShippingAddress?): Address? {
-        shippingAddress?.let {
-            return Address(
+        return shippingAddress?.let {
+            Address(
                 it.firstName,
                 it.lastName,
                 it.address,
@@ -307,7 +299,6 @@ class UiKitApi private constructor(val builder: Builder) {
                 it.countryCode
             )
         }
-        return null
     }
 
     //Snap Token Flow
