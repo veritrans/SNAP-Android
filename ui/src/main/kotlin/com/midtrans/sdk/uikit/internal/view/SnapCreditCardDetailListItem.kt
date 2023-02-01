@@ -117,6 +117,13 @@ fun SnapCCDetailListItem(
                         color = SnapColors.getARGBColor(supportDangerDefault)
                     )
                     onCvvValueChange(TextFieldValue())
+                } else if (state.isBinBlocked) {
+                    Text(
+                        text = stringResource(id = R.string.card_error_bank_blacklisted_by_merchant),
+                        style = SnapTypography.STYLES.snapTextSmallRegular,
+                        color = SnapColors.getARGBColor(supportDangerDefault)
+                    )
+                    onCvvValueChange(TextFieldValue())
                 } else {
                     Column(
                         modifier = Modifier
