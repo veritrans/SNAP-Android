@@ -311,9 +311,9 @@ class PaymentOptionActivity : BaseActivity() {
         } else if (enabledPayments.size == 1) {
             paymentType = enabledPayments[0].type
         } else if (isGopay) {
-            paymentType = if(isTabletDevice()) PaymentType.GOPAY_QRIS else PaymentType.GOPAY
+            paymentType = if (isTabletDevice()) PaymentType.GOPAY_QRIS else PaymentType.GOPAY
         } else if (isShopeepay) {
-            paymentType = if(isTabletDevice()) PaymentType.SHOPEEPAY_QRIS else PaymentType.SHOPEEPAY
+            paymentType = if (isTabletDevice()) PaymentType.SHOPEEPAY_QRIS else PaymentType.SHOPEEPAY
         }
 
         return paymentType
@@ -494,10 +494,29 @@ class PaymentOptionActivity : BaseActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 setResult(Activity.RESULT_OK, result.data)
                 finish()
+            } else if (result.resultCode == Activity.RESULT_CANCELED){
+                if(isDirectPayment()) {
+                    val resultIntent = Intent().putExtra(
+                        UiKitConstants.KEY_TRANSACTION_RESULT,
+                        TransactionResult(
+                            status = STATUS_CANCELED,
+                            transactionId = "",
+                            paymentType = ""
+                        )
+                    )
+                    setResult(Activity.RESULT_OK, resultIntent)
+                    finish()
+                } else {
+                    setResult(Activity.RESULT_CANCELED)
+                }
             } else {
                 setResult(Activity.RESULT_CANCELED)
             }
         }
+
+    private fun isDirectPayment(): Boolean {
+        return paymentTypeItem != null
+    }
 
     private fun getOnPaymentItemClick(
         paymentType: String,
