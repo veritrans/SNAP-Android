@@ -225,7 +225,7 @@ class UiKitApi private constructor(val builder: Builder) {
 
     private fun convertToRevamp(creditCard: com.midtrans.sdk.corekit.models.snap.CreditCard?): CreditCard? {
         return creditCard?.let {
-            CreditCard(it.isSaveCard, it.tokenId, it.authentication, it.isSecure, it.channel, it.bank, it.savedTokens, it.whitelistBins, it.blacklistBins, convertToRevamp(it.installment), it.type)
+            CreditCard(it.isSaveCard, it.tokenId, it.authentication, it.channel, it.bank, it.savedTokens, it.whitelistBins, it.blacklistBins, convertToRevamp(it.installment), it.type)
         }
     }
 
