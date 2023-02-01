@@ -8,7 +8,6 @@ import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDet
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.conveniencestore.ConvenienceStoreActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
-import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobPaymentActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobSelectionActivity
@@ -46,7 +45,6 @@ internal interface UiKitComponent {
     fun inject(activity: DeepLinkActivity)
     fun inject(activity: CreditCardActivity)
     fun inject(activity: DirectDebitActivity)
-    fun inject(activity: SavedCardActivity)
     fun inject(activity: UobPaymentActivity)
     fun inject(activity: UobSelectionActivity)
     fun inject(activity: PayLaterActivity)

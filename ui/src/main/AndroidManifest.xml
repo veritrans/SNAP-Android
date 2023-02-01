@@ -41,11 +41,6 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".internal.presentation.creditcard.SavedCardActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustPan" />
-
-        <activity
             android:name=".internal.presentation.directdebit.DirectDebitActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 

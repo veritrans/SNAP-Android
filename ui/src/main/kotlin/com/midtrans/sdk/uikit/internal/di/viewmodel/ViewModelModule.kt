@@ -5,7 +5,6 @@ import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferDet
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListViewModel
 import com.midtrans.sdk.uikit.internal.presentation.conveniencestore.ConvenienceStoreViewModel
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardViewModel
-import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardViewModel
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitViewModel
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobPaymentViewModel
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobSelectionViewModel
@@ -51,11 +50,6 @@ internal abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(UobSelectionViewModel::class)
     abstract fun bindUobSelectionViewModel(viewModel: UobSelectionViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SavedCardViewModel::class)
-    abstract fun bindSavedCardViewModel(viewModel: SavedCardViewModel): ViewModel
 
     @Binds
     @IntoMap

@@ -33,7 +33,6 @@ import com.midtrans.sdk.uikit.internal.model.*
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.conveniencestore.ConvenienceStoreActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
-import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobSelectionActivity
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
@@ -581,33 +580,19 @@ class PaymentOptionActivity : BaseActivity() {
             },
             Pair(PaymentType.CREDIT_CARD) {
                 resultLauncher.launch(
-                    //TODO: Need to revisit, if we need to enable adding a flag on sdk to force Normal Transaction like old ios sdk
-                    if (creditCard?.savedTokens.isNullOrEmpty().or(true)) {
-                        CreditCardActivity.getIntent(
-                            activityContext = this,
-                            snapToken = snapToken,
-                            transactionDetails = transactionDetails,
-                            totalAmount = totalAmount,
-                            customerInfo = customerInfo,
-                            itemInfo = itemInfo,
-                            creditCard = creditCard,
-                            expiryTime = expiryTime,
-                            withMerchantData = merchant,
-                            promos = promos,
-                            stepNumber = NEXT_STEP_NUMBER
-                        )
-                    } else {
-                        //TODO currently set to CreditCardActivity for testing purpose
-                        SavedCardActivity.getIntent(
-                            activityContext = this,
-                            snapToken = snapToken,
-                            transactionDetails = transactionDetails,
-                            totalAmount = totalAmount,
-                            customerInfo = customerInfo,
-                            creditCard = creditCard
-//                            expiryTime = expiryTime //TODO will be fixed by pak wahyu
-                        )
-                    }
+                    CreditCardActivity.getIntent(
+                        activityContext = this,
+                        snapToken = snapToken,
+                        transactionDetails = transactionDetails,
+                        totalAmount = totalAmount,
+                        customerInfo = customerInfo,
+                        itemInfo = itemInfo,
+                        creditCard = creditCard,
+                        expiryTime = expiryTime,
+                        withMerchantData = merchant,
+                        promos = promos,
+                        stepNumber = NEXT_STEP_NUMBER
+                    )
                 )
             },
             checkDirectDebitType(paymentType).let {
