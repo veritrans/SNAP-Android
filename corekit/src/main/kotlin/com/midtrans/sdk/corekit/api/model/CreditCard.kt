@@ -19,8 +19,5 @@ open class CreditCard(
 ) : Parcelable {
     companion object {
         const val MIGS = "migs"
-
-        @Deprecated("")
-        val RBA = "rba"
     }
 }

@@ -28,4 +28,8 @@ open class CreditCard(
     installment = installment,
     type = type,
     authentication = mappingToCreditCardAuthentication(authentication, authentication != null && authentication == Authentication.AUTH_3DS,)
-)
+) {
+    companion object {
+        const val MIGS = "migs"
+    }
+}

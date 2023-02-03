@@ -769,9 +769,10 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                 saveCard = isSavedCard,
                 authentication = Authentication.AUTH_3DS,
                 installment = installment,
-                bank = bank,
+                bank = BankType.MANDIRI,
                 type = ccAuthType,
-                whitelistBins = whitelistBins
+                whitelistBins = whitelistBins,
+                channel = CreditCard.MIGS
             ),
             snapTokenExpiry = expiry,
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
