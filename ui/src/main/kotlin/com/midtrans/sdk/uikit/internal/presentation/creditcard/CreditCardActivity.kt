@@ -816,6 +816,7 @@ internal class CreditCardActivity : BaseActivity() {
         return !(state.isCardNumberInvalid ||
                 state.isExpiryInvalid ||
                 state.isCvvInvalid ||
+                state.isBinBlocked ||
                 state.cardNumber.text.isEmpty() ||
                 state.expiry.text.isEmpty() ||
                 state.cvv.text.isEmpty()
