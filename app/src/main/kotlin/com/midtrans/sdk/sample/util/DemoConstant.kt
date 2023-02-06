@@ -1,5 +1,7 @@
 package com.midtrans.sdk.sample.util
 
+import com.midtrans.sdk.uikit.api.model.Authentication
+
 object DemoConstant {
     //Dropdown Title
     const val ACQUIRING_BANK = "Acquiring Bank"
@@ -7,7 +9,7 @@ object DemoConstant {
     const val INSTALLMENT = "Installment"
     const val IS_INSTALLMENT_REQUIRED = "Is Installment Required"
     const val CUSTOM_EXPIRY = "Custom Expiry"
-    const val CREDIT_CARD_PAYMENT_TYPE = "Credit Card Payment"
+    const val CREDIT_CARD_AUTHENTICATION = "Credit Card Authentication"
     const val PRE_AUTH = "Pre-Auth"
     const val BNI_POINT_ONLY = "Bni Point Only"
     const val SHOW_ALL_PAYMENT_CHANNELS = "Show All Payment Channels"
@@ -47,10 +49,9 @@ object DemoConstant {
     const val NO_ACQUIRING_BANK = "No Acquiring Bank"
     const val MEGA = "Mega"
 
-    //CC payment
-    const val NORMAL_CC_PAYMENT = "Normal"
-    const val ONE_CLICK_TYPE = "One Click"
-    const val TWO_CLICK_TYPE = "Two Click"
+    //Authentication
+    const val AUTH_NONE = Authentication.AUTH_NONE
+    const val AUTH_3DS = Authentication.AUTH_3DS
 
     //Boolean List
     const val DISABLED = "Disabled"

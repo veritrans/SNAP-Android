@@ -36,10 +36,8 @@ import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.NONE
-import com.midtrans.sdk.sample.util.DemoConstant.NORMAL_CC_PAYMENT
 import com.midtrans.sdk.sample.util.DemoConstant.NO_ACQUIRING_BANK
 import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
-import com.midtrans.sdk.sample.util.DemoConstant.ONE_CLICK_TYPE
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
@@ -193,8 +191,8 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             ?: throw RuntimeException("Expiry must not be empty")
     }
 
-    private val ccPaymentType: String by lazy {
-        intent.getStringExtra(EXTRA_INPUT_CCPAYMENTTYPE)
+    private val authenticationType: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_CCAUTHENTICATIONTYPE)
             ?: throw RuntimeException("CCPaymentType must not be empty")
     }
 
@@ -251,7 +249,6 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
 
     private var bank: String? = null
     private var isSavedCard: Boolean = false
-    private var isSecure: Boolean = false
     private var ccAuthType: String? = null
     private var whitelistBins: ArrayList<String> = arrayListOf()
 
@@ -459,8 +456,6 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             )
 
             bank = populateAcquiringBank()
-            isSecure = populateIsSecure()
-            isSavedCard = populateIsSavedCard()
             ccAuthType = populateCCAuthType()
             whitelistBins = populateWhitelistBins()
             enabledPayment = populateEnabledPayment()
@@ -644,22 +639,6 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         return vaTransferRequest
     }
 
-    private fun populateIsSavedCard(): Boolean {
-        var isSaved = false
-        if (ccPaymentType != NORMAL_CC_PAYMENT) {
-            isSaved = true
-        }
-        return isSaved
-    }
-
-    private fun populateIsSecure(): Boolean {
-        var isSecure = false
-        if (ccPaymentType == ONE_CLICK_TYPE) {
-            isSecure = true
-        }
-        return isSecure
-    }
-
     private fun populateAcquiringBank(): String? {
         var bank: String? = null
         if (acquiringBank != NO_ACQUIRING_BANK) {
@@ -767,7 +746,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             transactionDetails = transactionDetails,
             creditCard = CreditCard(
                 saveCard = isSavedCard,
-                authentication = Authentication.AUTH_3DS,
+                authentication = authenticationType,
                 installment = installment,
                 bank = BankType.MANDIRI,
                 type = ccAuthType,
@@ -808,7 +787,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         val creditCard = com.midtrans.sdk.corekit.models.snap.CreditCard()
         creditCard.setSaveCard(isSavedCard)
         creditCard.setTokenId(null)
-        creditCard.setAuthentication(Authentication.AUTH_NONE)
+        creditCard.setAuthentication(authenticationType)
         creditCard.setChannel(com.midtrans.sdk.corekit.models.snap.CreditCard.MIGS)
         creditCard.setBank(bank)
         creditCard.setSavedTokens(null)
@@ -904,7 +883,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         private const val EXTRA_INPUT_ISREQUIRED = "orderReview.extra.isRequired"
         private const val EXTRA_INPUT_ACQUIRINGBANK = "orderReview.extra.acquiringBank"
         private const val EXTRA_INPUT_EXPIRY = "orderReview.extra.expiry"
-        private const val EXTRA_INPUT_CCPAYMENTTYPE = "orderReview.extra.ccPaymentType"
+        private const val EXTRA_INPUT_CCAUTHENTICATIONTYPE = "orderReview.extra.ccAuthenticationType"
         private const val EXTRA_INPUT_BCAVA = "orderReview.extra.bcaVa"
         private const val EXTRA_INPUT_BNIVA = "orderReview.extra.bniVa"
         private const val EXTRA_INPUT_PERMATAVA = "orderReview.extra.permataVa"
@@ -921,7 +900,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             isRequiredInstallment: Boolean,
             acquiringBank: String,
             customExpiry: String,
-            ccPaymentType: String,
+            authenticationType: String,
             isPreAuth: Boolean,
             isBniPointsOnly: Boolean,
             isShowAllPaymentChannels: Boolean,
@@ -937,7 +916,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                 putExtra(EXTRA_INPUT_ISREQUIRED, isRequiredInstallment)
                 putExtra(EXTRA_INPUT_ACQUIRINGBANK, acquiringBank)
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
-                putExtra(EXTRA_INPUT_CCPAYMENTTYPE, ccPaymentType)
+                putExtra(EXTRA_INPUT_CCAUTHENTICATIONTYPE, authenticationType)
                 putExtra(EXTRA_INPUT_ISPREAUTH, isPreAuth)
                 putExtra(EXTRA_INPUT_ISBNIPOINTS, isBniPointsOnly)
                 putExtra(EXTRA_INPUT_ISSHOWALLPAYMENT, isShowAllPaymentChannels)

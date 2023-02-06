@@ -36,9 +36,9 @@ class ProductListActivity : ComponentActivity() {
             ?: throw throw RuntimeException("Expiry must not be empty")
     }
 
-    private val ccPaymentType: String by lazy {
-        intent.getStringExtra(EXTRA_INPUT_CCPAYMENTTYPE)
-            ?: throw throw RuntimeException("CCPaymentType must not be empty")
+    private val authenticationType: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_CCAUTHENTICATIONTYPE)
+            ?: throw throw RuntimeException("CC Authentication Type must not be empty")
     }
 
     private val isPreAuth: Boolean by lazy {
@@ -87,7 +87,7 @@ class ProductListActivity : ComponentActivity() {
                     isRequiredInstallment = isRequiredInstallment,
                     acquiringBank = acquiringBank,
                     customExpiry = customExpiry,
-                    ccPaymentType = ccPaymentType,
+                    authenticationType = authenticationType,
                     isPreAuth = isPreAuth,
                     isBniPointsOnly = isBniPointsOnly,
                     isShowAllPaymentChannels = isShowAllPaymentChannels,
@@ -108,7 +108,7 @@ class ProductListActivity : ComponentActivity() {
         private const val EXTRA_INPUT_ISREQUIRED = "productList.extra.isRequired"
         private const val EXTRA_INPUT_ACQUIRINGBANK = "productList.extra.acquiringBank"
         private const val EXTRA_INPUT_EXPIRY = "productList.extra.inputExpiry"
-        private const val EXTRA_INPUT_CCPAYMENTTYPE = "productList.extra.ccPaymentType"
+        private const val EXTRA_INPUT_CCAUTHENTICATIONTYPE = "productList.extra.ccAuthenticationType"
         private const val EXTRA_INPUT_BCAVA = "productList.extra.bcaVa"
         private const val EXTRA_INPUT_BNIVA = "productList.extra.bniVa"
         private const val EXTRA_INPUT_PERMATAVA = "productList.extra.permataVa"
@@ -124,7 +124,7 @@ class ProductListActivity : ComponentActivity() {
             isRequiredInstallment: Boolean,
             acquiringBank: String,
             customExpiry: String,
-            ccPaymentType: String,
+            authenticationType: String,
             isPreAuth: Boolean,
             isBniPointsOnly: Boolean,
             isShowAllPaymentChannels: Boolean,
@@ -139,7 +139,7 @@ class ProductListActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_ISREQUIRED, isRequiredInstallment)
                 putExtra(EXTRA_INPUT_ACQUIRINGBANK, acquiringBank)
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
-                putExtra(EXTRA_INPUT_CCPAYMENTTYPE, ccPaymentType)
+                putExtra(EXTRA_INPUT_CCAUTHENTICATIONTYPE, authenticationType)
                 putExtra(EXTRA_INPUT_ISPREAUTH, isPreAuth)
                 putExtra(EXTRA_INPUT_ISBNIPOINTS, isBniPointsOnly)
                 putExtra(EXTRA_INPUT_ISSHOWALLPAYMENT, isShowAllPaymentChannels)

@@ -17,7 +17,7 @@ import com.midtrans.sdk.sample.presentation.config.InputState
 import com.midtrans.sdk.sample.util.DemoConstant.ACQUIRING_BANK
 import com.midtrans.sdk.sample.util.DemoConstant.BNI_POINT_ONLY
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_THEME
-import com.midtrans.sdk.sample.util.DemoConstant.CREDIT_CARD_PAYMENT_TYPE
+import com.midtrans.sdk.sample.util.DemoConstant.CREDIT_CARD_AUTHENTICATION
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BCA_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BNI_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_EXPIRY
@@ -82,7 +82,7 @@ fun BasicDropdownMenu(title: String, optionList: List<String>, state: InputState
                                 ACQUIRING_BANK-> state.acquiringBank = selectedOptionText
                                 COLOR_THEME -> state.color = selectedOptionText
                                 CUSTOM_EXPIRY -> state.expiry = selectedOptionText
-                                CREDIT_CARD_PAYMENT_TYPE -> state.ccPaymentType = selectedOptionText
+                                CREDIT_CARD_AUTHENTICATION -> state.authenticationType = selectedOptionText
                                 PRE_AUTH -> state.isPreAuth = selectedOptionText == ENABLED
                                 BNI_POINT_ONLY -> state.isBniPointOnly = selectedOptionText == ENABLED
                                 SHOW_ALL_PAYMENT_CHANNELS -> state.isShowAllPaymentChannels = selectedOptionText == SHOW_ALL

@@ -18,6 +18,8 @@ import com.midtrans.sdk.sample.presentation.config.component.BasicDropdownMenu
 import com.midtrans.sdk.sample.presentation.config.component.CustomTextField
 import com.midtrans.sdk.sample.presentation.shop.ProductListActivity
 import com.midtrans.sdk.sample.util.DemoConstant.ACQUIRING_BANK
+import com.midtrans.sdk.sample.util.DemoConstant.AUTH_3DS
+import com.midtrans.sdk.sample.util.DemoConstant.AUTH_NONE
 import com.midtrans.sdk.sample.util.DemoConstant.BCA
 import com.midtrans.sdk.sample.util.DemoConstant.BNI
 import com.midtrans.sdk.sample.util.DemoConstant.BNI_POINT_ONLY
@@ -28,7 +30,7 @@ import com.midtrans.sdk.sample.util.DemoConstant.COLOR_DEFAULT
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_GREEN
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_RED
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_THEME
-import com.midtrans.sdk.sample.util.DemoConstant.CREDIT_CARD_PAYMENT_TYPE
+import com.midtrans.sdk.sample.util.DemoConstant.CREDIT_CARD_AUTHENTICATION
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BCA_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BNI_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_EXPIRY
@@ -42,11 +44,9 @@ import com.midtrans.sdk.sample.util.DemoConstant.MANDIRI
 import com.midtrans.sdk.sample.util.DemoConstant.MAYBANK
 import com.midtrans.sdk.sample.util.DemoConstant.MEGA
 import com.midtrans.sdk.sample.util.DemoConstant.NONE
-import com.midtrans.sdk.sample.util.DemoConstant.NORMAL_CC_PAYMENT
 import com.midtrans.sdk.sample.util.DemoConstant.NO_ACQUIRING_BANK
 import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.OFFLINE
-import com.midtrans.sdk.sample.util.DemoConstant.ONE_CLICK_TYPE
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.OPTIONAL
@@ -55,7 +55,6 @@ import com.midtrans.sdk.sample.util.DemoConstant.REQUIRED
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL_PAYMENT_CHANNELS
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_SELECTED_ONLY
-import com.midtrans.sdk.sample.util.DemoConstant.TWO_CLICK_TYPE
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.view.SnapButton
@@ -80,7 +79,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
             listOf(NO_ACQUIRING_BANK, MANDIRI, BCA, BNI, BRI, CIMB, MAYBANK, MEGA)
         val themeColorList = listOf(COLOR_DEFAULT, COLOR_RED, COLOR_BLUE, COLOR_GREEN)
         val customExpiryList = listOf(NONE, ONE_MINUTE, FIVE_MINUTE, ONE_HOUR)
-        val ccPaymentTypeList = listOf(NORMAL_CC_PAYMENT, TWO_CLICK_TYPE, ONE_CLICK_TYPE)
+        val authenticationList = listOf(AUTH_NONE, AUTH_3DS)
         val booleanList = listOf(DISABLED, ENABLED)
         val showPaymentList = listOf(SHOW_ALL, SHOW_SELECTED_ONLY)
         val state = remember {
@@ -90,7 +89,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 acquiringBank = NO_ACQUIRING_BANK,
                 color = COLOR_DEFAULT,
                 customExpiry = NONE,
-                ccPaymentType = NORMAL_CC_PAYMENT,
+                authenticationType = AUTH_NONE,
                 isPreAuth = false,
                 isBniPointOnly = false,
                 isShowAllPaymentChannels = true,
@@ -133,8 +132,8 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 state = state
             )
             BasicDropdownMenu(
-                title = CREDIT_CARD_PAYMENT_TYPE,
-                optionList = ccPaymentTypeList,
+                title = CREDIT_CARD_AUTHENTICATION,
+                optionList = authenticationList,
                 state = state
             )
             BasicDropdownMenu(
@@ -179,7 +178,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                         state.isRequired,
                         state.acquiringBank,
                         state.expiry,
-                        state.ccPaymentType,
+                        state.authenticationType,
                         state.isPreAuth,
                         state.isBniPointOnly,
                         state.isShowAllPaymentChannels,
@@ -210,7 +209,7 @@ class InputState(
     isRequired: Boolean,
     acquiringBank: String,
     customExpiry: String,
-    ccPaymentType: String,
+    authenticationType: String,
     isPreAuth: Boolean,
     isBniPointOnly: Boolean,
     isShowAllPaymentChannels: Boolean,
@@ -224,7 +223,7 @@ class InputState(
     var isRequired by mutableStateOf(isRequired)
     var acquiringBank by mutableStateOf(acquiringBank)
     var expiry by mutableStateOf(customExpiry)
-    var ccPaymentType by mutableStateOf(ccPaymentType)
+    var authenticationType by mutableStateOf(authenticationType)
     var isPreAuth by mutableStateOf(isPreAuth)
     var isBniPointOnly by mutableStateOf(isBniPointOnly)
     var isShowAllPaymentChannels by mutableStateOf(isShowAllPaymentChannels)
