@@ -27,6 +27,7 @@ import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
 import com.midtrans.sdk.sample.util.DemoConstant.OPTIONAL
 import com.midtrans.sdk.sample.util.DemoConstant.PRE_AUTH
+import com.midtrans.sdk.sample.util.DemoConstant.SAVED_CARD
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL_PAYMENT_CHANNELS
 import com.midtrans.sdk.uikit.api.model.PaymentType
@@ -83,6 +84,7 @@ fun BasicDropdownMenu(title: String, optionList: List<String>, state: InputState
                                 COLOR_THEME -> state.color = selectedOptionText
                                 CUSTOM_EXPIRY -> state.expiry = selectedOptionText
                                 CREDIT_CARD_AUTHENTICATION -> state.authenticationType = selectedOptionText
+                                SAVED_CARD -> state.isSavedCard = selectedOptionText == ENABLED
                                 PRE_AUTH -> state.isPreAuth = selectedOptionText == ENABLED
                                 BNI_POINT_ONLY -> state.isBniPointOnly = selectedOptionText == ENABLED
                                 SHOW_ALL_PAYMENT_CHANNELS -> state.isShowAllPaymentChannels = selectedOptionText == SHOW_ALL

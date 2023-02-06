@@ -41,6 +41,10 @@ class ProductListActivity : ComponentActivity() {
             ?: throw throw RuntimeException("CC Authentication Type must not be empty")
     }
 
+    private val isSavedCard: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_INPUT_ISSAVEDCARD, false)
+    }
+
     private val isPreAuth: Boolean by lazy {
         intent.getBooleanExtra(EXTRA_INPUT_ISPREAUTH, false)
     }
@@ -88,6 +92,7 @@ class ProductListActivity : ComponentActivity() {
                     acquiringBank = acquiringBank,
                     customExpiry = customExpiry,
                     authenticationType = authenticationType,
+                    isSavedCard = isSavedCard,
                     isPreAuth = isPreAuth,
                     isBniPointsOnly = isBniPointsOnly,
                     isShowAllPaymentChannels = isShowAllPaymentChannels,
@@ -112,6 +117,7 @@ class ProductListActivity : ComponentActivity() {
         private const val EXTRA_INPUT_BCAVA = "productList.extra.bcaVa"
         private const val EXTRA_INPUT_BNIVA = "productList.extra.bniVa"
         private const val EXTRA_INPUT_PERMATAVA = "productList.extra.permataVa"
+        private const val EXTRA_INPUT_ISSAVEDCARD = "productList.extra.isSavedCard"
         private const val EXTRA_INPUT_ISPREAUTH = "productList.extra.isPreAuth"
         private const val EXTRA_INPUT_ISBNIPOINTS = "productList.extra.isBniPoints"
         private const val EXTRA_INPUT_ISSHOWALLPAYMENT = "productList.extra.isShowAllPayment"
@@ -125,6 +131,7 @@ class ProductListActivity : ComponentActivity() {
             acquiringBank: String,
             customExpiry: String,
             authenticationType: String,
+            isSavedCard: Boolean,
             isPreAuth: Boolean,
             isBniPointsOnly: Boolean,
             isShowAllPaymentChannels: Boolean,
@@ -140,6 +147,7 @@ class ProductListActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_ACQUIRINGBANK, acquiringBank)
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
                 putExtra(EXTRA_INPUT_CCAUTHENTICATIONTYPE, authenticationType)
+                putExtra(EXTRA_INPUT_ISSAVEDCARD, isSavedCard)
                 putExtra(EXTRA_INPUT_ISPREAUTH, isPreAuth)
                 putExtra(EXTRA_INPUT_ISBNIPOINTS, isBniPointsOnly)
                 putExtra(EXTRA_INPUT_ISSHOWALLPAYMENT, isShowAllPaymentChannels)

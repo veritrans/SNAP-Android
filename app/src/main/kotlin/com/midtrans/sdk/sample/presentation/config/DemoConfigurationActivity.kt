@@ -52,6 +52,7 @@ import com.midtrans.sdk.sample.util.DemoConstant.ONE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.OPTIONAL
 import com.midtrans.sdk.sample.util.DemoConstant.PRE_AUTH
 import com.midtrans.sdk.sample.util.DemoConstant.REQUIRED
+import com.midtrans.sdk.sample.util.DemoConstant.SAVED_CARD
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL_PAYMENT_CHANNELS
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_SELECTED_ONLY
@@ -90,6 +91,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 color = COLOR_DEFAULT,
                 customExpiry = NONE,
                 authenticationType = AUTH_NONE,
+                isSavedCard = false,
                 isPreAuth = false,
                 isBniPointOnly = false,
                 isShowAllPaymentChannels = true,
@@ -137,6 +139,11 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 state = state
             )
             BasicDropdownMenu(
+                title = SAVED_CARD,
+                optionList = booleanList,
+                state = state
+            )
+            BasicDropdownMenu(
                 title = PRE_AUTH,
                 optionList = booleanList,
                 state = state
@@ -179,6 +186,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                         state.acquiringBank,
                         state.expiry,
                         state.authenticationType,
+                        state.isSavedCard,
                         state.isPreAuth,
                         state.isBniPointOnly,
                         state.isShowAllPaymentChannels,
@@ -210,13 +218,14 @@ class InputState(
     acquiringBank: String,
     customExpiry: String,
     authenticationType: String,
+    isSavedCard: Boolean,
     isPreAuth: Boolean,
     isBniPointOnly: Boolean,
     isShowAllPaymentChannels: Boolean,
     allPaymentChannels: ArrayList<ListItem>,
     bcaVa: String,
     bniVa: String,
-    permataVa: String
+    permataVa: String,
 ) {
     var installment by mutableStateOf(installment)
     var color by mutableStateOf(color)
@@ -224,6 +233,7 @@ class InputState(
     var acquiringBank by mutableStateOf(acquiringBank)
     var expiry by mutableStateOf(customExpiry)
     var authenticationType by mutableStateOf(authenticationType)
+    var isSavedCard by mutableStateOf(isSavedCard)
     var isPreAuth by mutableStateOf(isPreAuth)
     var isBniPointOnly by mutableStateOf(isBniPointOnly)
     var isShowAllPaymentChannels by mutableStateOf(isShowAllPaymentChannels)

@@ -10,6 +10,7 @@ object DemoConstant {
     const val IS_INSTALLMENT_REQUIRED = "Is Installment Required"
     const val CUSTOM_EXPIRY = "Custom Expiry"
     const val CREDIT_CARD_AUTHENTICATION = "Credit Card Authentication"
+    const val SAVED_CARD = "Saved Card"
     const val PRE_AUTH = "Pre-Auth"
     const val BNI_POINT_ONLY = "Bni Point Only"
     const val SHOW_ALL_PAYMENT_CHANNELS = "Show All Payment Channels"
