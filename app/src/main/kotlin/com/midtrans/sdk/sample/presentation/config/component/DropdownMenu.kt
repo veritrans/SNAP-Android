@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.presentation.config.InputState
 import com.midtrans.sdk.sample.util.DemoConstant.ACQUIRING_BANK
+import com.midtrans.sdk.sample.util.DemoConstant.BLACKLIST_BINS
 import com.midtrans.sdk.sample.util.DemoConstant.BNI_POINT_ONLY
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_THEME
 import com.midtrans.sdk.sample.util.DemoConstant.CREDIT_CARD_AUTHENTICATION
@@ -30,6 +31,7 @@ import com.midtrans.sdk.sample.util.DemoConstant.PRE_AUTH
 import com.midtrans.sdk.sample.util.DemoConstant.SAVED_CARD
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL_PAYMENT_CHANNELS
+import com.midtrans.sdk.sample.util.DemoConstant.WHITELIST_BINS
 import com.midtrans.sdk.uikit.api.model.PaymentType
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
@@ -291,6 +293,8 @@ fun CustomTextField(title: String, state: InputState, modifier: Modifier = Modif
             onValueChange = {
                 textField = it
                 when (title) {
+                    WHITELIST_BINS -> state.whitelistBins = textField.text
+                    BLACKLIST_BINS -> state.blacklistBins = textField.text
                     CUSTOM_BCA_VA -> state.bcaVa = textField.text
                     CUSTOM_BNI_VA -> state.bniVa = textField.text
                     CUSTOM_PERMATA_VA -> state.permataVa = textField.text

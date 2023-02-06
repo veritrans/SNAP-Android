@@ -21,6 +21,7 @@ import com.midtrans.sdk.sample.util.DemoConstant.ACQUIRING_BANK
 import com.midtrans.sdk.sample.util.DemoConstant.AUTH_3DS
 import com.midtrans.sdk.sample.util.DemoConstant.AUTH_NONE
 import com.midtrans.sdk.sample.util.DemoConstant.BCA
+import com.midtrans.sdk.sample.util.DemoConstant.BLACKLIST_BINS
 import com.midtrans.sdk.sample.util.DemoConstant.BNI
 import com.midtrans.sdk.sample.util.DemoConstant.BNI_POINT_ONLY
 import com.midtrans.sdk.sample.util.DemoConstant.BRI
@@ -56,6 +57,7 @@ import com.midtrans.sdk.sample.util.DemoConstant.SAVED_CARD
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL_PAYMENT_CHANNELS
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_SELECTED_ONLY
+import com.midtrans.sdk.sample.util.DemoConstant.WHITELIST_BINS
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.view.SnapButton
@@ -96,6 +98,8 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 isBniPointOnly = false,
                 isShowAllPaymentChannels = true,
                 allPaymentChannels = ArrayList(),
+                whitelistBins = "",
+                blacklistBins = "",
                 bcaVa = "",
                 bniVa = "",
                 permataVa = ""
@@ -160,6 +164,14 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 openDialog = openDialog
             )
             CustomTextField(
+                title = WHITELIST_BINS,
+                state = state
+            )
+            CustomTextField(
+                title = BLACKLIST_BINS,
+                state = state
+            )
+            CustomTextField(
                 title = CUSTOM_BCA_VA,
                 state = state
             )
@@ -191,6 +203,8 @@ class DemoConfigurationActivity : AppCompatActivity() {
                         state.isBniPointOnly,
                         state.isShowAllPaymentChannels,
                         state.allPaymentChannels,
+                        state.whitelistBins,
+                        state.blacklistBins,
                         state.bcaVa,
                         state.bniVa,
                         state.permataVa,
@@ -223,6 +237,8 @@ class InputState(
     isBniPointOnly: Boolean,
     isShowAllPaymentChannels: Boolean,
     allPaymentChannels: ArrayList<ListItem>,
+    whitelistBins: String,
+    blacklistBins: String,
     bcaVa: String,
     bniVa: String,
     permataVa: String,
@@ -238,6 +254,8 @@ class InputState(
     var isBniPointOnly by mutableStateOf(isBniPointOnly)
     var isShowAllPaymentChannels by mutableStateOf(isShowAllPaymentChannels)
     var allPaymentChannels by mutableStateOf(allPaymentChannels)
+    var whitelistBins by mutableStateOf(whitelistBins)
+    var blacklistBins by mutableStateOf(blacklistBins)
     var bcaVa by mutableStateOf(bcaVa)
     var bniVa by mutableStateOf(bniVa)
     var permataVa by mutableStateOf(permataVa)

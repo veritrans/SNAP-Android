@@ -62,6 +62,16 @@ class ProductListActivity : ComponentActivity() {
             ?: throw RuntimeException("paymentChannels must not be empty")
     }
 
+    private val whitelistBins: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_WHITELISTBINS)
+            ?: throw throw RuntimeException("Whitelist Bins must not be empty")
+    }
+
+    private val blacklistBins: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_BLACKLISTBINS)
+            ?: throw throw RuntimeException("Blacklist Bins must not be empty")
+    }
+
     private val bcaVa: String by lazy {
         intent.getStringExtra(EXTRA_INPUT_BCAVA)
             ?: throw throw RuntimeException("BCAva must not be empty")
@@ -97,6 +107,8 @@ class ProductListActivity : ComponentActivity() {
                     isBniPointsOnly = isBniPointsOnly,
                     isShowAllPaymentChannels = isShowAllPaymentChannels,
                     paymentChannels = paymentChannels,
+                    whitelistBins = whitelistBins,
+                    blacklistBins = blacklistBins,
                     bcaVa = bcaVa,
                     bniVa = bniVa,
                     permataVa = permataVa,
@@ -122,6 +134,8 @@ class ProductListActivity : ComponentActivity() {
         private const val EXTRA_INPUT_ISBNIPOINTS = "productList.extra.isBniPoints"
         private const val EXTRA_INPUT_ISSHOWALLPAYMENT = "productList.extra.isShowAllPayment"
         private const val EXTRA_INPUT_PAYMENTCHANNELS = "productList.extra.paymentChannels"
+        private const val EXTRA_INPUT_WHITELISTBINS = "productList.extra.whitelistBins"
+        private const val EXTRA_INPUT_BLACKLISTBINS = "productList.extra.blacklistBins"
 
         fun getProductListActivity(
             activityContext: Context,
@@ -136,6 +150,8 @@ class ProductListActivity : ComponentActivity() {
             isBniPointsOnly: Boolean,
             isShowAllPaymentChannels: Boolean,
             paymentChannels: ArrayList<ListItem>,
+            whitelistBins: String,
+            blacklistBins: String,
             bcaVa: String,
             bniVa: String,
             permataVa: String
@@ -152,6 +168,8 @@ class ProductListActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_ISBNIPOINTS, isBniPointsOnly)
                 putExtra(EXTRA_INPUT_ISSHOWALLPAYMENT, isShowAllPaymentChannels)
                 putExtra(EXTRA_INPUT_PAYMENTCHANNELS, paymentChannels)
+                putExtra(EXTRA_INPUT_WHITELISTBINS, whitelistBins)
+                putExtra(EXTRA_INPUT_BLACKLISTBINS, blacklistBins)
                 putExtra(EXTRA_INPUT_BCAVA, bcaVa)
                 putExtra(EXTRA_INPUT_BNIVA, bniVa)
                 putExtra(EXTRA_INPUT_PERMATAVA, permataVa)

@@ -16,6 +16,8 @@ object DemoConstant {
     const val SHOW_ALL_PAYMENT_CHANNELS = "Show All Payment Channels"
 
     //Input Field Title
+    const val WHITELIST_BINS = "Whitelist Bins (Ex: 481111, 481122)"
+    const val BLACKLIST_BINS = "Blacklist Bins (Ex: 481111, 481122)"
     const val CUSTOM_BCA_VA = "Custom BCA VA"
     const val CUSTOM_BNI_VA = "Custom BNI VA"
     const val CUSTOM_PERMATA_VA = "Custom Permata VA"
