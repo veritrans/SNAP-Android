@@ -810,11 +810,8 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         )
         val creditCard = com.midtrans.sdk.corekit.models.snap.CreditCard()
         creditCard.setSaveCard(isSavedCard)
-        creditCard.setTokenId(null)
         creditCard.setAuthentication(authenticationType)
-        creditCard.setChannel(com.midtrans.sdk.corekit.models.snap.CreditCard.MIGS)
         creditCard.setBank(bank)
-        creditCard.setSavedTokens(null)
         creditCard.setWhitelistBins(finalWhitelistBins)
         creditCard.setBlacklistBins(finalBlacklistBins)
         creditCard.setInstallment(installmentLegacy)
@@ -822,7 +819,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
 
         transactionRequest.creditCard = creditCard
 
-        //Setting Snap token custon expiry
+        //Setting Snap token custom expiry
         transactionRequest.expiry = expiryLegacy
         transactionRequest.customerDetails = customerDetailsLegacy
 
