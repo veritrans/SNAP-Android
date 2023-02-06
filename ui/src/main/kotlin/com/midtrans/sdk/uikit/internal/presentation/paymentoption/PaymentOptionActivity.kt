@@ -33,7 +33,6 @@ import com.midtrans.sdk.uikit.internal.model.*
 import com.midtrans.sdk.uikit.internal.presentation.banktransfer.BankTransferListActivity
 import com.midtrans.sdk.uikit.internal.presentation.conveniencestore.ConvenienceStoreActivity
 import com.midtrans.sdk.uikit.internal.presentation.creditcard.CreditCardActivity
-import com.midtrans.sdk.uikit.internal.presentation.creditcard.SavedCardActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.DirectDebitActivity
 import com.midtrans.sdk.uikit.internal.presentation.directdebit.UobSelectionActivity
 import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
@@ -302,11 +301,19 @@ class PaymentOptionActivity : BaseActivity() {
     private fun getPaymentType(enabledPayments: List<EnabledPayment>): String {
         val bankTransfer: (EnabledPayment) -> Boolean = { it.category == PaymentType.BANK_TRANSFER }
         val isAllBankTransfer = enabledPayments.all(bankTransfer)
-        val paymentType = if (isAllBankTransfer) {
-            PaymentType.BANK_TRANSFER
+        val isGopay = enabledPayments.find { it.type == PaymentType.GOPAY } != null && enabledPayments.size == 2
+        val isShopeepay = enabledPayments.find { it.type == PaymentType.SHOPEEPAY } != null && enabledPayments.size == 2
+        var paymentType = ""
+
+        if (isAllBankTransfer) {
+            paymentType = PaymentType.BANK_TRANSFER
         } else if (enabledPayments.size == 1) {
-            enabledPayments[0].type
-        } else ""
+            paymentType = enabledPayments[0].type
+        } else if (isGopay) {
+            paymentType = if (isTabletDevice()) PaymentType.GOPAY_QRIS else PaymentType.GOPAY
+        } else if (isShopeepay) {
+            paymentType = if (isTabletDevice()) PaymentType.SHOPEEPAY_QRIS else PaymentType.SHOPEEPAY
+        }
 
         return paymentType
     }
@@ -486,10 +493,29 @@ class PaymentOptionActivity : BaseActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 setResult(Activity.RESULT_OK, result.data)
                 finish()
+            } else if (result.resultCode == Activity.RESULT_CANCELED){
+                if(isDirectPayment()) {
+                    val resultIntent = Intent().putExtra(
+                        UiKitConstants.KEY_TRANSACTION_RESULT,
+                        TransactionResult(
+                            status = STATUS_CANCELED,
+                            transactionId = "",
+                            paymentType = ""
+                        )
+                    )
+                    setResult(Activity.RESULT_OK, resultIntent)
+                    finish()
+                } else {
+                    setResult(Activity.RESULT_CANCELED)
+                }
             } else {
                 setResult(Activity.RESULT_CANCELED)
             }
         }
+
+    private fun isDirectPayment(): Boolean {
+        return paymentTypeItem != null
+    }
 
     private fun getOnPaymentItemClick(
         paymentType: String,
@@ -554,33 +580,19 @@ class PaymentOptionActivity : BaseActivity() {
             },
             Pair(PaymentType.CREDIT_CARD) {
                 resultLauncher.launch(
-                    //TODO: Need to revisit, if we need to enable adding a flag on sdk to force Normal Transaction like old ios sdk
-                    if (creditCard?.savedTokens.isNullOrEmpty().or(true)) {
-                        CreditCardActivity.getIntent(
-                            activityContext = this,
-                            snapToken = snapToken,
-                            transactionDetails = transactionDetails,
-                            totalAmount = totalAmount,
-                            customerInfo = customerInfo,
-                            itemInfo = itemInfo,
-                            creditCard = creditCard,
-                            expiryTime = expiryTime,
-                            withMerchantData = merchant,
-                            promos = promos,
-                            stepNumber = NEXT_STEP_NUMBER
-                        )
-                    } else {
-                        //TODO currently set to CreditCardActivity for testing purpose
-                        SavedCardActivity.getIntent(
-                            activityContext = this,
-                            snapToken = snapToken,
-                            transactionDetails = transactionDetails,
-                            totalAmount = totalAmount,
-                            customerInfo = customerInfo,
-                            creditCard = creditCard
-//                            expiryTime = expiryTime //TODO will be fixed by pak wahyu
-                        )
-                    }
+                    CreditCardActivity.getIntent(
+                        activityContext = this,
+                        snapToken = snapToken,
+                        transactionDetails = transactionDetails,
+                        totalAmount = totalAmount,
+                        customerInfo = customerInfo,
+                        itemInfo = itemInfo,
+                        creditCard = creditCard,
+                        expiryTime = expiryTime,
+                        withMerchantData = merchant,
+                        promos = promos,
+                        stepNumber = NEXT_STEP_NUMBER
+                    )
                 )
             },
             checkDirectDebitType(paymentType).let {

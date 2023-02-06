@@ -70,7 +70,7 @@ internal class ConvenienceStoreViewModel @Inject constructor(
                         alfamartExpirationRaw?.let { expiredTime = parseTime(it) }
                         pdfUrl.let { _pdfUrlLiveData.value = it }
                         _transactionResultLiveData.value = TransactionResult(
-                            status = statusCode.orEmpty(),
+                            status = transactionStatus.orEmpty(),
                             transactionId = transactionId.orEmpty(),
                             paymentType = paymentType
                         )

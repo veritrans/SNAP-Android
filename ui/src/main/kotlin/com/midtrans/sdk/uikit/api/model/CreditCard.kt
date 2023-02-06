@@ -9,7 +9,6 @@ open class CreditCard(
     saveCard: Boolean = false,
     tokenId: String? = null,
     authentication: String? = null,
-    secure: Boolean = authentication != null && authentication == Authentication.AUTH_3DS,
     channel: String? = null,
     bank: String? = null,
     savedTokens: List<SavedToken>? = null,
@@ -20,7 +19,7 @@ open class CreditCard(
 ) : CreditCard(
     saveCard = saveCard,
     tokenId = tokenId,
-    secure = secure,
+    secure = authentication != null && authentication == Authentication.AUTH_3DS,
     channel = channel,
     bank = bank,
     savedTokens = savedTokens,
@@ -28,5 +27,9 @@ open class CreditCard(
     blacklistBins = blacklistBins,
     installment = installment,
     type = type,
-    authentication = mappingToCreditCardAuthentication(authentication, secure)
-)
+    authentication = mappingToCreditCardAuthentication(authentication, authentication != null && authentication == Authentication.AUTH_3DS,)
+) {
+    companion object {
+        const val MIGS = "migs"
+    }
+}

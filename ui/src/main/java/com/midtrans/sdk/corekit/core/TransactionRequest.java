@@ -48,7 +48,7 @@ public class TransactionRequest {
     /**
      * list of purchased items.
      */
-    private ArrayList<ItemDetails> itemDetails = new ArrayList<>();
+    private ArrayList<ItemDetails> itemDetails = null;
 
     /**
      * contains details about customer

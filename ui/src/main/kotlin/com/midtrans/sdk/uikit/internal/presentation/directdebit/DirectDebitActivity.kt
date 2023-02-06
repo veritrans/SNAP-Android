@@ -293,7 +293,7 @@ class DirectDebitActivity : BaseActivity() {
         } else {
             val status = response?.transactionStatus
             val transactionId = response?.transactionId
-
+            isFirstInit = false
             viewModel.trackOpenRedirectionUrl(paymentType)
             if (paymentType == PaymentType.KLIK_BCA) {
                 openWebLink(

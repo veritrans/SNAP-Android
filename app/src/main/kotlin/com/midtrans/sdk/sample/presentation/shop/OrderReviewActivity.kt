@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback
 import com.midtrans.sdk.corekit.core.MidtransSDK
-import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.UIKitCustomSetting
 import com.midtrans.sdk.corekit.models.*
@@ -44,6 +43,7 @@ import com.midtrans.sdk.sample.util.DemoConstant.ONE_CLICK_TYPE
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
+import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.CardTokenRequest
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.api.model.CustomerDetails
@@ -767,12 +767,12 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             transactionDetails = transactionDetails,
             creditCard = CreditCard(
                 saveCard = isSavedCard,
-                secure = isSecure,
                 authentication = Authentication.AUTH_3DS,
                 installment = installment,
-                bank = bank,
+                bank = BankType.MANDIRI,
                 type = ccAuthType,
-                whitelistBins = whitelistBins
+                whitelistBins = whitelistBins,
+                channel = CreditCard.MIGS
             ),
             snapTokenExpiry = expiry,
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
@@ -808,8 +808,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         val creditCard = com.midtrans.sdk.corekit.models.snap.CreditCard()
         creditCard.setSaveCard(isSavedCard)
         creditCard.setTokenId(null)
-        creditCard.setAuthentication(Authentication.AUTH_3DS)
-        creditCard.setSecure(isSecure)
+        creditCard.setAuthentication(Authentication.AUTH_NONE)
         creditCard.setChannel(com.midtrans.sdk.corekit.models.snap.CreditCard.MIGS)
         creditCard.setBank(bank)
         creditCard.setSavedTokens(null)

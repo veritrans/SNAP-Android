@@ -40,14 +40,6 @@ public class CreditCard {
         this.tokenId = tokenId;
     }
 
-    public boolean isSecure() {
-        return secure;
-    }
-
-    public void setSecure(boolean secure) {
-        this.secure = secure;
-    }
-
     public String getChannel() {
         return channel;
     }

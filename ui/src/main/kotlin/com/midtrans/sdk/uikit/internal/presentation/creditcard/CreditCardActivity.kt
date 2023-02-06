@@ -456,6 +456,7 @@ internal class CreditCardActivity : BaseActivity() {
                                     promoId = state.promoId
                                 )
                             }
+                            isFirstInit = false
                         }
                     },
                     onInstallmentTermSelected = {
