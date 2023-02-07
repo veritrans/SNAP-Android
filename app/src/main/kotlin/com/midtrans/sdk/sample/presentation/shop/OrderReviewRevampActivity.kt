@@ -27,12 +27,10 @@ import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.NONE
-import com.midtrans.sdk.sample.util.DemoConstant.NO_ACQUIRING_BANK
 import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.uikit.api.CardTokenRequest
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
@@ -211,12 +209,12 @@ class OrderReviewRevampActivity : ComponentActivity() {
     private var bcaVaRequest: BankTransferRequest? = null
     private var bniVaRequest: BankTransferRequest? = null
     private var permataVaRequest: BankTransferRequest? = null
-    private var enabledPayment: List<String>? = null
 
     private var bank: String? = null
     private var ccAuthType: String? = null
     private var finalWhitelistBins: ArrayList<String> = arrayListOf()
     private var finalBlacklistBins: ArrayList<String> = arrayListOf()
+    private var enabledPayment: List<String>? = null
 
     private fun setLocaleNew(languageCode: String?) {
         val locales = LocaleListCompat.forLanguageTags(languageCode)
@@ -414,11 +412,11 @@ class OrderReviewRevampActivity : ComponentActivity() {
                 }
             )
 
-            bank = populateAcquiringBank()
-            ccAuthType = populateCCAuthType()
-            finalWhitelistBins = populateWhitelistBins()
-            finalBlacklistBins = populateBlacklistBins()
-            enabledPayment = populateEnabledPayment()
+            bank = DemoUtils.populateAcquiringBank(acquiringBank)
+            ccAuthType = DemoUtils.populateCCAuthType(isPreAuth)
+            finalWhitelistBins = DemoUtils.populateWhitelistBins(whitelistBins, isBniPointOnly)
+            finalBlacklistBins = DemoUtils.populateBlacklistBins(blacklistBins)
+            enabledPayment = DemoUtils.populateEnabledPayment(paymentChannels, isShowAllPaymentChannels)
 
             SnapButton(
                 text = "Pay Rp.${(product.price).toString().dropLast(2)}",
@@ -456,41 +454,6 @@ class OrderReviewRevampActivity : ComponentActivity() {
         }
     }
 
-    private fun populateEnabledPayment(): List<String>? {
-        var payment: List<String>? = null
-        val channels = mutableListOf<String>()
-        if (!isShowAllPaymentChannels) {
-            for (i in paymentChannels) {
-                channels.add(i.type)
-            }
-            payment = channels
-        }
-        return payment
-    }
-
-    private fun populateWhitelistBins(): ArrayList<String> {
-        var output = arrayListOf<String>()
-        if (isBniPointOnly) {
-            output.add("bni")
-        } else if (whitelistBins.isNotEmpty()) {
-            output = ArrayList(whitelistBins.split(", "))
-        }
-        return output
-    }
-
-    private fun populateBlacklistBins(): ArrayList<String> {
-        return ArrayList(blacklistBins.split(", "))
-    }
-
-    private fun populateCCAuthType(): String {
-        val ccAuthType = if (isPreAuth) {
-            CardTokenRequest.TYPE_AUTHORIZE
-        } else {
-            CardTokenRequest.TYPE_CAPTURE
-        }
-        return ccAuthType
-    }
-
     private fun populateVa(va: String): BankTransferRequest? {
         var vaTransferRequest: BankTransferRequest? = null
         if (va.isNotEmpty()) {
@@ -499,14 +462,6 @@ class OrderReviewRevampActivity : ComponentActivity() {
             )
         }
         return vaTransferRequest
-    }
-
-    private fun populateAcquiringBank(): String? {
-        var bank: String? = null
-        if (acquiringBank != NO_ACQUIRING_BANK) {
-            bank = acquiringBank
-        }
-        return bank
     }
 
     private fun populateExpiry(): Expiry? {
