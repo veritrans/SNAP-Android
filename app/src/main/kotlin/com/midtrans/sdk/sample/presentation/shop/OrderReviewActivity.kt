@@ -36,10 +36,8 @@ import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.NONE
-import com.midtrans.sdk.sample.util.DemoConstant.NORMAL_CC_PAYMENT
 import com.midtrans.sdk.sample.util.DemoConstant.NO_ACQUIRING_BANK
 import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
-import com.midtrans.sdk.sample.util.DemoConstant.ONE_CLICK_TYPE
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
@@ -61,6 +59,7 @@ import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import java.util.*
+import kotlin.collections.ArrayList
 import com.midtrans.sdk.corekit.models.snap.TransactionResult as TransactionResultJava
 
 
@@ -193,9 +192,13 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             ?: throw RuntimeException("Expiry must not be empty")
     }
 
-    private val ccPaymentType: String by lazy {
-        intent.getStringExtra(EXTRA_INPUT_CCPAYMENTTYPE)
+    private val authenticationType: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_CCAUTHENTICATIONTYPE)
             ?: throw RuntimeException("CCPaymentType must not be empty")
+    }
+
+    private val isSavedCard: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_INPUT_ISSAVEDCARD, false)
     }
 
     private val isPreAuth: Boolean by lazy {
@@ -218,6 +221,16 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     private val inputColor: String by lazy {
         intent.getStringExtra(EXTRA_INPUT_COLOR)
             ?: throw RuntimeException("Input Color must not be empty")
+    }
+
+    private val whitelistBins: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_WHITELISTBINS)
+            ?: throw throw RuntimeException("Whitelist Bins must not be empty")
+    }
+
+    private val blacklistBins: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_BLACKLISTBINS)
+            ?: throw throw RuntimeException("Blacklist Bins must not be empty")
     }
 
     private val bcaVa: String by lazy {
@@ -250,10 +263,9 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     private var enabledPayment: List<String>? = null
 
     private var bank: String? = null
-    private var isSavedCard: Boolean = false
-    private var isSecure: Boolean = false
     private var ccAuthType: String? = null
-    private var whitelistBins: ArrayList<String> = arrayListOf()
+    private var finalWhitelistBins: ArrayList<String> = arrayListOf()
+    private var finalBlacklistBins: ArrayList<String> = arrayListOf()
 
     private lateinit var customerDetailsLegacy: com.midtrans.sdk.corekit.models.CustomerDetails
     private var installmentLegacy: com.midtrans.sdk.corekit.models.snap.Installment? = null
@@ -459,10 +471,9 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             )
 
             bank = populateAcquiringBank()
-            isSecure = populateIsSecure()
-            isSavedCard = populateIsSavedCard()
             ccAuthType = populateCCAuthType()
-            whitelistBins = populateWhitelistBins()
+            finalWhitelistBins = populateWhitelistBins()
+            finalBlacklistBins = populateBlacklistBins()
             enabledPayment = populateEnabledPayment()
 
             SnapButton(
@@ -620,9 +631,17 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     }
 
     private fun populateWhitelistBins(): ArrayList<String> {
-        val whitelistBins = arrayListOf<String>()
-        if (isBniPointOnly) whitelistBins.add("bni")
-        return whitelistBins
+        var output = arrayListOf<String>()
+        if (isBniPointOnly) {
+            output.add("bni")
+        } else if (whitelistBins.isNotEmpty()) {
+            output = ArrayList(whitelistBins.split(", "))
+        }
+        return output
+    }
+
+    private fun populateBlacklistBins(): ArrayList<String> {
+        return ArrayList(blacklistBins.split(", "))
     }
 
     private fun populateCCAuthType(): String {
@@ -642,22 +661,6 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             )
         }
         return vaTransferRequest
-    }
-
-    private fun populateIsSavedCard(): Boolean {
-        var isSaved = false
-        if (ccPaymentType != NORMAL_CC_PAYMENT) {
-            isSaved = true
-        }
-        return isSaved
-    }
-
-    private fun populateIsSecure(): Boolean {
-        var isSecure = false
-        if (ccPaymentType == ONE_CLICK_TYPE) {
-            isSecure = true
-        }
-        return isSecure
     }
 
     private fun populateAcquiringBank(): String? {
@@ -767,12 +770,12 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             transactionDetails = transactionDetails,
             creditCard = CreditCard(
                 saveCard = isSavedCard,
-                authentication = Authentication.AUTH_3DS,
+                authentication = authenticationType,
                 installment = installment,
-                bank = BankType.MANDIRI,
+                bank = bank,
                 type = ccAuthType,
-                whitelistBins = whitelistBins,
-                channel = CreditCard.MIGS
+                whitelistBins = finalWhitelistBins,
+                blacklistBins = finalBlacklistBins
             ),
             snapTokenExpiry = expiry,
             userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
@@ -807,19 +810,16 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         )
         val creditCard = com.midtrans.sdk.corekit.models.snap.CreditCard()
         creditCard.setSaveCard(isSavedCard)
-        creditCard.setTokenId(null)
-        creditCard.setAuthentication(Authentication.AUTH_NONE)
-        creditCard.setChannel(com.midtrans.sdk.corekit.models.snap.CreditCard.MIGS)
+        creditCard.setAuthentication(authenticationType)
         creditCard.setBank(bank)
-        creditCard.setSavedTokens(null)
-        creditCard.setWhitelistBins(whitelistBins)
-        creditCard.setBlacklistBins(null)
+        creditCard.setWhitelistBins(finalWhitelistBins)
+        creditCard.setBlacklistBins(finalBlacklistBins)
         creditCard.setInstallment(installmentLegacy)
         creditCard.setType(ccAuthType)
 
         transactionRequest.creditCard = creditCard
 
-        //Setting Snap token custon expiry
+        //Setting Snap token custom expiry
         transactionRequest.expiry = expiryLegacy
         transactionRequest.customerDetails = customerDetailsLegacy
 
@@ -904,10 +904,13 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
         private const val EXTRA_INPUT_ISREQUIRED = "orderReview.extra.isRequired"
         private const val EXTRA_INPUT_ACQUIRINGBANK = "orderReview.extra.acquiringBank"
         private const val EXTRA_INPUT_EXPIRY = "orderReview.extra.expiry"
-        private const val EXTRA_INPUT_CCPAYMENTTYPE = "orderReview.extra.ccPaymentType"
+        private const val EXTRA_INPUT_CCAUTHENTICATIONTYPE = "orderReview.extra.ccAuthenticationType"
+        private const val EXTRA_INPUT_WHITELISTBINS = "orderReview.extra.whitelistBins"
+        private const val EXTRA_INPUT_BLACKLISTBINS = "orderReview.extra.blacklistBins"
         private const val EXTRA_INPUT_BCAVA = "orderReview.extra.bcaVa"
         private const val EXTRA_INPUT_BNIVA = "orderReview.extra.bniVa"
         private const val EXTRA_INPUT_PERMATAVA = "orderReview.extra.permataVa"
+        private const val EXTRA_INPUT_ISSAVEDCARD = "orderReview.extra.isSavedCard"
         private const val EXTRA_INPUT_ISPREAUTH = "orderReview.extra.isPreAuth"
         private const val EXTRA_INPUT_ISBNIPOINTS = "orderReview.extra.isBniPoints"
         private const val EXTRA_INPUT_ISSHOWALLPAYMENT = "productList.extra.isShowAllPayment"
@@ -921,11 +924,14 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             isRequiredInstallment: Boolean,
             acquiringBank: String,
             customExpiry: String,
-            ccPaymentType: String,
+            authenticationType: String,
+            isSavedCard: Boolean,
             isPreAuth: Boolean,
             isBniPointsOnly: Boolean,
             isShowAllPaymentChannels: Boolean,
             paymentChannels: ArrayList<ListItem>,
+            whitelistBins: String,
+            blacklistBins: String,
             bcaVa: String,
             bniVa: String,
             permataVa: String,
@@ -937,11 +943,14 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                 putExtra(EXTRA_INPUT_ISREQUIRED, isRequiredInstallment)
                 putExtra(EXTRA_INPUT_ACQUIRINGBANK, acquiringBank)
                 putExtra(EXTRA_INPUT_EXPIRY, customExpiry)
-                putExtra(EXTRA_INPUT_CCPAYMENTTYPE, ccPaymentType)
+                putExtra(EXTRA_INPUT_CCAUTHENTICATIONTYPE, authenticationType)
+                putExtra(EXTRA_INPUT_ISSAVEDCARD, isSavedCard)
                 putExtra(EXTRA_INPUT_ISPREAUTH, isPreAuth)
                 putExtra(EXTRA_INPUT_ISBNIPOINTS, isBniPointsOnly)
                 putExtra(EXTRA_INPUT_ISSHOWALLPAYMENT, isShowAllPaymentChannels)
                 putExtra(EXTRA_INPUT_PAYMENTCHANNELS, paymentChannels)
+                putExtra(EXTRA_INPUT_WHITELISTBINS, whitelistBins)
+                putExtra(EXTRA_INPUT_BLACKLISTBINS, blacklistBins)
                 putExtra(EXTRA_INPUT_BCAVA, bcaVa)
                 putExtra(EXTRA_INPUT_BNIVA, bniVa)
                 putExtra(EXTRA_INPUT_PERMATAVA, permataVa)

@@ -15,9 +15,10 @@ import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.presentation.config.InputState
 import com.midtrans.sdk.sample.util.DemoConstant.ACQUIRING_BANK
+import com.midtrans.sdk.sample.util.DemoConstant.BLACKLIST_BINS
 import com.midtrans.sdk.sample.util.DemoConstant.BNI_POINT_ONLY
 import com.midtrans.sdk.sample.util.DemoConstant.COLOR_THEME
-import com.midtrans.sdk.sample.util.DemoConstant.CREDIT_CARD_PAYMENT_TYPE
+import com.midtrans.sdk.sample.util.DemoConstant.CREDIT_CARD_AUTHENTICATION
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BCA_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BNI_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_EXPIRY
@@ -27,8 +28,10 @@ import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
 import com.midtrans.sdk.sample.util.DemoConstant.OPTIONAL
 import com.midtrans.sdk.sample.util.DemoConstant.PRE_AUTH
+import com.midtrans.sdk.sample.util.DemoConstant.SAVED_CARD
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL_PAYMENT_CHANNELS
+import com.midtrans.sdk.sample.util.DemoConstant.WHITELIST_BINS
 import com.midtrans.sdk.uikit.api.model.PaymentType
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
@@ -82,7 +85,8 @@ fun BasicDropdownMenu(title: String, optionList: List<String>, state: InputState
                                 ACQUIRING_BANK-> state.acquiringBank = selectedOptionText
                                 COLOR_THEME -> state.color = selectedOptionText
                                 CUSTOM_EXPIRY -> state.expiry = selectedOptionText
-                                CREDIT_CARD_PAYMENT_TYPE -> state.ccPaymentType = selectedOptionText
+                                CREDIT_CARD_AUTHENTICATION -> state.authenticationType = selectedOptionText
+                                SAVED_CARD -> state.isSavedCard = selectedOptionText == ENABLED
                                 PRE_AUTH -> state.isPreAuth = selectedOptionText == ENABLED
                                 BNI_POINT_ONLY -> state.isBniPointOnly = selectedOptionText == ENABLED
                                 SHOW_ALL_PAYMENT_CHANNELS -> state.isShowAllPaymentChannels = selectedOptionText == SHOW_ALL
@@ -289,6 +293,8 @@ fun CustomTextField(title: String, state: InputState, modifier: Modifier = Modif
             onValueChange = {
                 textField = it
                 when (title) {
+                    WHITELIST_BINS -> state.whitelistBins = textField.text
+                    BLACKLIST_BINS -> state.blacklistBins = textField.text
                     CUSTOM_BCA_VA -> state.bcaVa = textField.text
                     CUSTOM_BNI_VA -> state.bniVa = textField.text
                     CUSTOM_PERMATA_VA -> state.permataVa = textField.text
