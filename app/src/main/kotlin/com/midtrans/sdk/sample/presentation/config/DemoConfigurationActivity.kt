@@ -208,6 +208,37 @@ class DemoConfigurationActivity : AppCompatActivity() {
                         state.bcaVa,
                         state.bniVa,
                         state.permataVa,
+                        true
+                    )
+                    startActivity(intent)
+                }
+            )
+
+            SnapButton(
+                text = "Launch Demo App (Legacy)", style = SnapButton.Style.PRIMARY,
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
+                onClick = {
+                    val intent = ProductListActivity.getProductListActivity(
+                        this@DemoConfigurationActivity,
+                        state.color,
+                        state.installment,
+                        state.isRequired,
+                        state.acquiringBank,
+                        state.expiry,
+                        state.authenticationType,
+                        state.isSavedCard,
+                        state.isPreAuth,
+                        state.isBniPointOnly,
+                        state.isShowAllPaymentChannels,
+                        state.allPaymentChannels,
+                        state.whitelistBins,
+                        state.blacklistBins,
+                        state.bcaVa,
+                        state.bniVa,
+                        state.permataVa,
+                        false
                     )
                     startActivity(intent)
                 }

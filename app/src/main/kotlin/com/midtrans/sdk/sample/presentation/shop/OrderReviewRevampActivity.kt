@@ -63,7 +63,7 @@ import kotlin.collections.ArrayList
 import com.midtrans.sdk.corekit.models.snap.TransactionResult as TransactionResultJava
 
 
-class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
+class OrderReviewRevampActivity : ComponentActivity(), TransactionFinishedCallback {
     override fun onTransactionFinished(result: TransactionResultJava) {
         if (result.response != null) {
             when (result.status) {
@@ -107,7 +107,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
                         UiKitConstants.KEY_TRANSACTION_RESULT
                     )
                     Toast.makeText(
-                        this@OrderReviewActivity,
+                        this@OrderReviewRevampActivity,
                         "Coba trxid ${transactionResult?.transactionId.orEmpty()}",
                         Toast.LENGTH_LONG
                     ).show()
@@ -765,7 +765,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
 
     private fun payWithAndroidxActivityResultLauncher() {
         uiKitApi.startPaymentUiFlow(
-            activity = this@OrderReviewActivity,
+            activity = this@OrderReviewRevampActivity,
             launcher = launcher,
             transactionDetails = transactionDetails,
             creditCard = CreditCard(
@@ -797,7 +797,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
 
     private fun payWithAndroidxActivityResultLauncherToken(token: String?) {
         uiKitApi.startPaymentUiFlow(
-            activity = this@OrderReviewActivity,
+            activity = this@OrderReviewRevampActivity,
             launcher = launcher,
             snapToken = token
         )
@@ -860,7 +860,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             )
         )
 
-        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewActivity)
+        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewRevampActivity)
     }
 
     private fun buildUiKitStart() {
@@ -899,25 +899,25 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
     }
 
     companion object {
-        private const val EXTRA_PRODUCT = "orderReview.extra.product"
-        private const val EXTRA_INPUT_INSTALLMENT = "orderReview.extra.installment"
-        private const val EXTRA_INPUT_ISREQUIRED = "orderReview.extra.isRequired"
-        private const val EXTRA_INPUT_ACQUIRINGBANK = "orderReview.extra.acquiringBank"
-        private const val EXTRA_INPUT_EXPIRY = "orderReview.extra.expiry"
-        private const val EXTRA_INPUT_CCAUTHENTICATIONTYPE = "orderReview.extra.ccAuthenticationType"
-        private const val EXTRA_INPUT_WHITELISTBINS = "orderReview.extra.whitelistBins"
-        private const val EXTRA_INPUT_BLACKLISTBINS = "orderReview.extra.blacklistBins"
-        private const val EXTRA_INPUT_BCAVA = "orderReview.extra.bcaVa"
-        private const val EXTRA_INPUT_BNIVA = "orderReview.extra.bniVa"
-        private const val EXTRA_INPUT_PERMATAVA = "orderReview.extra.permataVa"
-        private const val EXTRA_INPUT_ISSAVEDCARD = "orderReview.extra.isSavedCard"
-        private const val EXTRA_INPUT_ISPREAUTH = "orderReview.extra.isPreAuth"
-        private const val EXTRA_INPUT_ISBNIPOINTS = "orderReview.extra.isBniPoints"
-        private const val EXTRA_INPUT_ISSHOWALLPAYMENT = "productList.extra.isShowAllPayment"
-        private const val EXTRA_INPUT_PAYMENTCHANNELS = "productList.extra.paymentChannels"
-        private const val EXTRA_INPUT_COLOR = "productList.extra.inputColor"
+        private const val EXTRA_PRODUCT = "orderReviewRevamp.extra.product"
+        private const val EXTRA_INPUT_INSTALLMENT = "orderReviewRevamp.extra.installment"
+        private const val EXTRA_INPUT_ISREQUIRED = "orderReviewRevamp.extra.isRequired"
+        private const val EXTRA_INPUT_ACQUIRINGBANK = "orderReviewRevamp.extra.acquiringBank"
+        private const val EXTRA_INPUT_EXPIRY = "orderReviewRevamp.extra.expiry"
+        private const val EXTRA_INPUT_CCAUTHENTICATIONTYPE = "orderReviewRevamp.extra.ccAuthenticationType"
+        private const val EXTRA_INPUT_WHITELISTBINS = "orderReviewRevamp.extra.whitelistBins"
+        private const val EXTRA_INPUT_BLACKLISTBINS = "orderReviewRevamp.extra.blacklistBins"
+        private const val EXTRA_INPUT_BCAVA = "orderReviewRevamp.extra.bcaVa"
+        private const val EXTRA_INPUT_BNIVA = "orderReviewRevamp.extra.bniVa"
+        private const val EXTRA_INPUT_PERMATAVA = "orderReviewRevamp.extra.permataVa"
+        private const val EXTRA_INPUT_ISSAVEDCARD = "orderReviewRevamp.extra.isSavedCard"
+        private const val EXTRA_INPUT_ISPREAUTH = "orderReviewRevamp.extra.isPreAuth"
+        private const val EXTRA_INPUT_ISBNIPOINTS = "orderReviewRevamp.extra.isBniPoints"
+        private const val EXTRA_INPUT_ISSHOWALLPAYMENT = "orderReviewRevamp.extra.isShowAllPayment"
+        private const val EXTRA_INPUT_PAYMENTCHANNELS = "orderReviewRevamp.extra.paymentChannels"
+        private const val EXTRA_INPUT_COLOR = "orderReviewRevamp.extra.inputColor"
 
-        fun getOrderReviewActivityIntent(
+        fun getOrderReviewRevampActivityIntent(
             activityContext: Context,
             product: Product,
             installmentBank: String,
@@ -937,7 +937,7 @@ class OrderReviewActivity : ComponentActivity(), TransactionFinishedCallback {
             permataVa: String,
             color: String
         ): Intent {
-            return Intent(activityContext, OrderReviewActivity::class.java).apply {
+            return Intent(activityContext, OrderReviewRevampActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT, product)
                 putExtra(EXTRA_INPUT_INSTALLMENT, installmentBank)
                 putExtra(EXTRA_INPUT_ISREQUIRED, isRequiredInstallment)
