@@ -22,15 +22,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
-import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback
-import com.midtrans.sdk.corekit.core.MidtransSDK
-import com.midtrans.sdk.corekit.core.TransactionRequest
-import com.midtrans.sdk.corekit.core.UIKitCustomSetting
-import com.midtrans.sdk.corekit.models.*
-import com.midtrans.sdk.corekit.models.snap.BankTransferRequestModel
-import com.midtrans.sdk.corekit.models.snap.Gopay
-import com.midtrans.sdk.corekit.models.snap.Shopeepay
-import com.midtrans.sdk.corekit.models.snap.UobEzpay
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant
@@ -41,11 +32,8 @@ import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
-import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 import com.midtrans.sdk.uikit.api.CardTokenRequest
 import com.midtrans.sdk.uikit.api.model.*
-import com.midtrans.sdk.uikit.api.model.CustomerDetails
-import com.midtrans.sdk.uikit.api.model.ItemDetails
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
@@ -59,45 +47,8 @@ import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
 import java.util.*
-import kotlin.collections.ArrayList
-import com.midtrans.sdk.corekit.models.snap.TransactionResult as TransactionResultJava
 
-
-class OrderReviewRevampActivity : ComponentActivity(), TransactionFinishedCallback {
-    override fun onTransactionFinished(result: TransactionResultJava) {
-        if (result.response != null) {
-            when (result.status) {
-                TransactionResultJava.STATUS_SUCCESS -> Toast.makeText(
-                    this,
-                    "Transaction Legacy Finished. ID: " + result.response.transactionId,
-                    Toast.LENGTH_LONG
-                ).show()
-                TransactionResultJava.STATUS_PENDING -> Toast.makeText(
-                    this,
-                    "Transaction Legacy Pending. ID: " + result.response.transactionId,
-                    Toast.LENGTH_LONG
-                ).show()
-                TransactionResultJava.STATUS_FAILED -> Toast.makeText(
-                    this,
-                    "Transaction Legacy Failed. ID: " + result.response.transactionId.toString() + ". Message: " + result.response.statusMessage,
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        } else if (result.isTransactionCanceled) {
-            Toast.makeText(this, "Transaction Legacy Canceled", Toast.LENGTH_LONG).show()
-        } else {
-            if (result.status.equals(TransactionResultJava.STATUS_INVALID, true)) {
-                Toast.makeText(
-                    this,
-                    "Transaction Legacy Invalid. ${result.statusMessage}",
-                    Toast.LENGTH_LONG
-                ).show()
-            } else {
-                Toast.makeText(this, "Transaction Legacy Finished with failure.", Toast.LENGTH_LONG)
-                    .show()
-            }
-        }
-    }
+class OrderReviewRevampActivity : ComponentActivity() {
 
     private val launcher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -267,13 +218,6 @@ class OrderReviewRevampActivity : ComponentActivity(), TransactionFinishedCallba
     private var finalWhitelistBins: ArrayList<String> = arrayListOf()
     private var finalBlacklistBins: ArrayList<String> = arrayListOf()
 
-    private lateinit var customerDetailsLegacy: com.midtrans.sdk.corekit.models.CustomerDetails
-    private var installmentLegacy: com.midtrans.sdk.corekit.models.snap.Installment? = null
-    private var expiryLegacy: ExpiryModel? = null
-    private var bcaVaLegacy: BcaBankTransferRequestModel? = null
-    private var permataVaLegacy: PermataBankTransferRequestModel? = null
-    private var bniVaLegacy: BankTransferRequestModel? = null
-
     private fun setLocaleNew(languageCode: String?) {
         val locales = LocaleListCompat.forLanguageTags(languageCode)
         AppCompatDelegate.setApplicationLocales(locales)
@@ -282,7 +226,7 @@ class OrderReviewRevampActivity : ComponentActivity(), TransactionFinishedCallba
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         buildUiKitStart()
-//        setLocaleNew("id") // commented for now. conflict with buildLegacyUiKit
+        setLocaleNew("id")
 
         setContent {
             OrderListPage()
@@ -509,46 +453,6 @@ class OrderReviewRevampActivity : ComponentActivity(), TransactionFinishedCallba
                     payWithAndroidxActivityResultLauncher()
                 }
             )
-            SnapButton(
-                text = "Pay Rp.${(product.price).toString().dropLast(2)} with legacy",
-                style = SnapButton.Style.PRIMARY,
-                modifier = Modifier
-                    .fillMaxWidth(1f)
-                    .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
-                onClick = {
-                    val name = fullName.text
-                    val index = name.lastIndexOf(' ')
-                    val firstName = index.let { name.substring(0, it) }
-                    val lastName = index.plus(1).let { name.substring(it) }
-
-                    val shippingAddress = ShippingAddress()
-                    shippingAddress.setAddress("Jalan Andalas Gang Sebelah No. 1")
-                    shippingAddress.setCity("Jakarta")
-                    shippingAddress.setPostalCode("10220")
-
-                    val billingAddress = BillingAddress()
-                    billingAddress.setAddress("Jalan Andalas Gang Sebelah No. 1")
-                    billingAddress.setCity("Jakarta")
-                    billingAddress.setPostalCode("10220")
-
-                    customerDetailsLegacy = com.midtrans.sdk.corekit.models.CustomerDetails()
-                    customerDetailsLegacy.setCustomerIdentifier("3A8788CE-B96F-449C-8180-B5901A08B50A")
-                    customerDetailsLegacy.setFirstName(firstName)
-                    customerDetailsLegacy.setLastName(lastName)
-                    customerDetailsLegacy.setEmail(email.text)
-                    customerDetailsLegacy.setPhone(phoneNumber.text)
-                    customerDetailsLegacy.setBillingAddress(billingAddress)
-                    customerDetailsLegacy.setShippingAddress(shippingAddress)
-
-                    installmentLegacy = populateInstallmentLegacy()
-                    expiryLegacy = populateExpiryLegacy()
-                    bcaVaLegacy = populateBcaVaLegacy(bcaVa)
-                    permataVaLegacy = populatePermataVaLegacy(permataVa)
-                    bniVaLegacy = populateVaLegacy(bniVa)
-                    buildLegacyUiKit()
-                    payWithOldSnapLegacyApi()
-                }
-            )
         }
     }
 
@@ -562,72 +466,6 @@ class OrderReviewRevampActivity : ComponentActivity(), TransactionFinishedCallba
             payment = channels
         }
         return payment
-    }
-
-    private fun populateVaLegacy(va: String): BankTransferRequestModel? {
-        var vaTransferRequest: BankTransferRequestModel? = null
-        if (va.isNotEmpty()) {
-            vaTransferRequest = BankTransferRequestModel(
-                va
-            )
-        }
-        return vaTransferRequest
-    }
-
-    private fun populateExpiryLegacy(): ExpiryModel? {
-        var expiry: ExpiryModel? = null
-        if (customExpiry != NONE) {
-            expiry = ExpiryModel()
-            expiry.setStartTime(DemoUtils.getFormattedTime(System.currentTimeMillis()))
-            expiry.setUnit(
-                when (customExpiry) {
-                    ONE_HOUR -> ExpiryModel.UNIT_HOUR
-                    else -> ExpiryModel.UNIT_MINUTE
-                }
-            )
-            expiry.setDuration(
-                when (customExpiry) {
-                    FIVE_MINUTE -> 5
-                    else -> 1
-                }
-            )
-        }
-        return expiry
-    }
-
-    private fun populateBcaVaLegacy(va: String): BcaBankTransferRequestModel? {
-        var vaTransferRequest: BcaBankTransferRequestModel? = null
-        if (va.isNotEmpty()) {
-            val SUB_COMPANY_CODE_BCA = "12321"
-            val bcaRequestModel = BcaBankTransferRequestModel(va, com.midtrans.sdk.corekit.models.FreeText(
-                listOf(
-                    com.midtrans.sdk.corekit.models.FreeTextLanguage(
-                        "Text ID inquiry 0",
-                        "Text EN inquiry 0"
-                    )
-                ),
-                listOf(
-                    com.midtrans.sdk.corekit.models.FreeTextLanguage(
-                        "Text ID inquiry 0",
-                        "Text EN inquiry 0"
-                    )
-                )
-            ))
-            bcaRequestModel.subCompanyCode = SUB_COMPANY_CODE_BCA
-            vaTransferRequest = bcaRequestModel
-        }
-        return vaTransferRequest
-    }
-
-    private fun populatePermataVaLegacy(va: String): PermataBankTransferRequestModel? {
-        val permataRecipient = "Sudarsono"
-        var vaTransferRequest: PermataBankTransferRequestModel? = null
-        if (va.isNotEmpty()) {
-            val permataRequest = PermataBankTransferRequestModel(va)
-            permataRequest.setRecipientName(permataRecipient)
-            vaTransferRequest = permataRequest
-        }
-        return vaTransferRequest
     }
 
     private fun populateWhitelistBins(): ArrayList<String> {
@@ -689,17 +527,6 @@ class OrderReviewRevampActivity : ComponentActivity(), TransactionFinishedCallba
         return expiry
     }
 
-    private fun populateInstallmentLegacy(): com.midtrans.sdk.corekit.models.snap.Installment? {
-        var output: com.midtrans.sdk.corekit.models.snap.Installment? = null
-        if (installmentBank != NO_INSTALLMENT) {
-            val installment = com.midtrans.sdk.corekit.models.snap.Installment()
-            installment.terms = mapOf(installmentBank to arrayListOf(3, 6, 12))
-            installment.isRequired = isRequiredInstallment
-            output = installment
-        }
-        return output
-    }
-
     private fun populateInstallment(): Installment? {
         var installment: Installment? = null
         if (installmentBank != NO_INSTALLMENT) {
@@ -709,36 +536,6 @@ class OrderReviewRevampActivity : ComponentActivity(), TransactionFinishedCallba
             )
         }
         return installment
-    }
-
-    private fun buildLegacyUiKit() {
-        SdkUIFlowBuilder.init()
-            .setClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
-            .setContext(this.applicationContext)
-            .setTransactionFinishedCallback(this)
-            .setMerchantBaseUrl("https://snap-merchant-server.herokuapp.com/api/")
-            .enableLog(true)
-//            .setDefaultText("fonts/SourceSansPro-Italic.ttf")
-//            .setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
-//            .setBoldText("fonts/SourceSansPro-Bold.ttf")
-//            .setColorTheme(
-//                com.midtrans.sdk.corekit.core.themes.CustomColorTheme(
-//                    "#0e4e95",
-//                    "#0b3b70",
-//                    "#3e71aa"
-//                )
-//            )
-            .setLanguage("en") //setLanguage to either "en" for english or "id" for bahasa
-            .buildSDK()
-
-        MidtransSDK.getInstance().setDefaultText("fonts/SourceSansPro-Bold.ttf")
-        MidtransSDK.getInstance().setSemiBoldText("fonts/SourceSansPro-Regular.ttf")
-        MidtransSDK.getInstance().setBoldText("fonts/SourceSansPro-Regular.ttf")
-        MidtransSDK.getInstance().setColorTheme(com.midtrans.sdk.corekit.core.themes.CustomColorTheme(
-            "#0e4e95",
-            "#0b3b70",
-            "#3e71aa"
-        ))
     }
 
     private fun buildUiKit() {
@@ -756,11 +553,6 @@ class OrderReviewRevampActivity : ComponentActivity(), TransactionFinishedCallba
     private fun uiKitCustomSetting() {
         val uiKitCustomSetting = uiKitApi.uiKitSetting
         uiKitCustomSetting.saveCardChecked = false
-    }
-
-    private fun uiKitCustomSettingLegacy() {
-        val uIKitCustomSetting = UIKitCustomSetting()
-        uIKitCustomSetting.setSaveCardChecked(true)
     }
 
     private fun payWithAndroidxActivityResultLauncher() {
@@ -801,66 +593,6 @@ class OrderReviewRevampActivity : ComponentActivity(), TransactionFinishedCallba
             launcher = launcher,
             snapToken = token
         )
-    }
-
-    private fun payWithOldSnapLegacyApi() {
-        val transactionRequest = TransactionRequest(
-            UUID.randomUUID().toString(),
-            product.price
-        )
-        val creditCard = com.midtrans.sdk.corekit.models.snap.CreditCard()
-        creditCard.setSaveCard(isSavedCard)
-        creditCard.setAuthentication(authenticationType)
-        creditCard.setBank(bank)
-        creditCard.setWhitelistBins(finalWhitelistBins)
-        creditCard.setBlacklistBins(finalBlacklistBins)
-        creditCard.setInstallment(installmentLegacy)
-        creditCard.setType(ccAuthType)
-
-        transactionRequest.creditCard = creditCard
-
-        //Setting Snap token custom expiry
-        transactionRequest.expiry = expiryLegacy
-        transactionRequest.customerDetails = customerDetailsLegacy
-
-        val itemDetails = arrayListOf(
-            com.midtrans.sdk.corekit.models.ItemDetails(
-                "Test01",
-                product.price,
-                1,
-                product.name
-            )
-        )
-        transactionRequest.itemDetails = itemDetails
-        transactionRequest.bcaVa = bcaVaLegacy
-        transactionRequest.bniVa = bniVaLegacy
-        transactionRequest.permataVa = permataVaLegacy
-        transactionRequest.enabledPayments = enabledPayment
-        transactionRequest.gopay =
-            Gopay("demo://snap")
-        transactionRequest.shopeepay =
-            Shopeepay("demo://snap")
-        transactionRequest.uobEzpay =
-            UobEzpay("demo://snap")
-        transactionRequest.customField1 = "test1"
-        transactionRequest.customField2 = "test2"
-        transactionRequest.customField3 = "test3"
-        MidtransSDK.getInstance().transactionRequest = transactionRequest
-
-        val uisetting = UIKitCustomSetting()
-        uisetting.setShowPaymentStatus(true) // hide sdk payment status
-        uisetting.setSaveCardChecked(true)
-        MidtransSDK.getInstance().setUiKitCustomSetting(uisetting)
-
-        MidtransSDK.getInstance().setColorTheme(
-            com.midtrans.sdk.corekit.core.themes.CustomColorTheme(
-                "#b11235",
-                "#000000",
-                "#f36b89"
-            )
-        )
-
-        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewRevampActivity)
     }
 
     private fun buildUiKitStart() {
