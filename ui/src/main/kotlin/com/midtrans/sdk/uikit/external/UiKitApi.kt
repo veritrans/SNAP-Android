@@ -20,6 +20,7 @@ import com.midtrans.sdk.uikit.internal.di.DaggerUiKitComponent
 import com.midtrans.sdk.uikit.internal.di.UiKitComponent
 import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
 import com.midtrans.sdk.uikit.internal.presentation.loadingpayment.LoadingPaymentActivity
+import com.midtrans.sdk.uikit.internal.util.AssetFontLoader.fontFamily
 import java.lang.ref.WeakReference
 
 class UiKitApi private constructor(val builder: Builder) {
@@ -337,6 +338,10 @@ class UiKitApi private constructor(val builder: Builder) {
             return CustomColors(customColorTheme)
         }
 
+        private fun stringToFamilyFont(fontFamily: String) : FontFamily {
+            return fontFamily(fontFamily, context)
+        }
+
         fun withContext(context: Context) = apply {
             this.context = context.applicationContext
         }
@@ -357,12 +362,8 @@ class UiKitApi private constructor(val builder: Builder) {
             this.customColors = customColorThemeToCustomColors(customColorTheme)
         }
 
-        fun withFontFamily(fontFamily: FontFamily) = apply {
-            this.fontFamily = fontFamily
-        }
-
-        fun withUiKitSetting(uiKitSetting: UiKitSetting) = apply {
-            this.uiKitSetting = uiKitSetting
+        fun withFontFamily(fontFamily: String) = apply {
+            this.fontFamily = stringToFamilyFont(fontFamily)
         }
 
         fun enableLog(enabled: Boolean) = apply {

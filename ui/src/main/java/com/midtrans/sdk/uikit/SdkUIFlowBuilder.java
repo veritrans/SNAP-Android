@@ -163,7 +163,7 @@ public class SdkUIFlowBuilder {
                     .withMerchantClientKey(clientKey)
                     .enableLog(enableLog);
             if (defaultText != null) {
-                builder.withFontFamily(AssetFontLoader.INSTANCE.fontFamily(defaultText, context));
+                builder.withFontFamily(defaultText);
             }
             if (colorTheme != null) {
                 builder.withCustomColors(baseColorThemeToCustomColors(colorTheme));

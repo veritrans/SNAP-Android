@@ -8,7 +8,6 @@ import androidx.activity.compose.setContent
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.presentation.shop.component.ProductListPage
 import com.midtrans.sdk.uikit.external.UiKitApi
-import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 
 class ProductListActivity : ComponentActivity() {
 
@@ -213,7 +212,7 @@ class ProductListActivity : ComponentActivity() {
             .withContext(this.applicationContext)
             .withMerchantUrl("")
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
-            .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
+            .withFontFamily("fonts/SourceSansPro-Regular.ttf")
             .build()
     }
 }

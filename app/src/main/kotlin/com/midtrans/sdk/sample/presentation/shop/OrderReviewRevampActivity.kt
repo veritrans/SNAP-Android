@@ -33,7 +33,6 @@ import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
-import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CANCELED
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_FAILED
@@ -498,7 +497,7 @@ class OrderReviewRevampActivity : ComponentActivity() {
             .withContext(this.applicationContext)
             .withMerchantUrl("https://snap-merchant-server.herokuapp.com/api/")
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
-            .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Italic.ttf", this))
+            .withFontFamily("fonts/SourceSansPro-Italic.ttf")
             .enableLog(true)
 
         getCustomColor(inputColor)?.let { builder.withColorTheme(it) }
@@ -555,7 +554,7 @@ class OrderReviewRevampActivity : ComponentActivity() {
             .withContext(this.applicationContext)
             .withMerchantUrl("")
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
-            .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
+            .withFontFamily("fonts/SourceSansPro-Regular.ttf")
 
         getCustomColor(inputColor)?.let { builder.withCustomColors(CustomColors()) }
         builder.build()

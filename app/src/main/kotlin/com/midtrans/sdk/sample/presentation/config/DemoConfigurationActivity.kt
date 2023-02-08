@@ -59,7 +59,6 @@ import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL_PAYMENT_CHANNELS
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_SELECTED_ONLY
 import com.midtrans.sdk.sample.util.DemoConstant.WHITELIST_BINS
 import com.midtrans.sdk.uikit.external.UiKitApi
-import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 
 
@@ -251,7 +250,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
             .withContext(this.applicationContext)
             .withMerchantUrl("")
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
-            .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
+            .withFontFamily("fonts/SourceSansPro-Regular.ttf")
             .build()
     }
 }
