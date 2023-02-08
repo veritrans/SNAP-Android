@@ -140,11 +140,6 @@ public class SdkUIFlowBuilder {
         return this;
     }
 
-    public SdkUIFlowBuilder setUIkitCustomSetting(UIKitCustomSetting setting) {
-        this.uiKitCustomSetting = setting;
-        return this;
-    }
-
     public SdkUIFlowBuilder setColorTheme(CustomColorTheme customColorTheme) {
         this.colorTheme = customColorTheme;
         return this;
