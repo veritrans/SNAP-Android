@@ -452,7 +452,6 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
         uisetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().setUiKitCustomSetting(uisetting)
 
-        MidtransSDK.getInstance().setColorTheme(CustomColorTheme("#b11235","#000000", "#f36b89"))
         MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewLegacyActivity)
     }
 
@@ -536,18 +535,18 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
     }
 
     private fun buildLegacyUiKit() {
-        SdkUIFlowBuilder.init()
+        val builder = SdkUIFlowBuilder.init()
             .setClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
             .setContext(this.applicationContext)
             .setTransactionFinishedCallback(this)
             .setMerchantBaseUrl("https://snap-merchant-server.herokuapp.com/api/")
-            .enableLog(true)
-            .setDefaultText("fonts/SourceSansPro-Bold.ttf")
+            .setDefaultText("fonts/SourceSansPro-Regular.ttf")
             .setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
             .setBoldText("fonts/SourceSansPro-Bold.ttf")
-            .setColorTheme(CustomColorTheme("0e4e95", "0b3b70", "3e71aa"))
             .setLanguage("en")
-            .buildSDK()
+
+        getCustomColor(inputColor)?.let { builder.setColorTheme(it) }
+        builder.buildSDK()
     }
 
     private fun buildLegacyUiKitStart() {
