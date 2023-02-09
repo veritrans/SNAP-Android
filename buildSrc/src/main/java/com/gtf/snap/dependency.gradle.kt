@@ -111,7 +111,7 @@ object NetworkLibraries {
     const val retrofitRx = "com.squareup.retrofit2:adapter-rxjava2:${Dependencies.retrofitVersion}"
 
     const val chuck = "com.github.chuckerteam.chucker:library:${Dependencies.chuckVersion}"
-    const val chuckNoOp = "com.github.chuckerteam.chucker:library:${Dependencies.chuckVersion}"
+    const val chuckNoOp = "com.github.chuckerteam.chucker:library-no-op:${Dependencies.chuckVersion}"
 
     const val gson = "com.google.code.gson:gson:${Dependencies.gsonVersion}"
     const val curlLoggerInterceptor =
