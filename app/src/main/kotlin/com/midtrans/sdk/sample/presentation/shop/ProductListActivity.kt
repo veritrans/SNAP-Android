@@ -8,7 +8,6 @@ import androidx.activity.compose.setContent
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.presentation.shop.component.ProductListPage
 import com.midtrans.sdk.uikit.external.UiKitApi
-import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 
 class ProductListActivity : ComponentActivity() {
 
@@ -57,6 +56,10 @@ class ProductListActivity : ComponentActivity() {
         intent.getBooleanExtra(EXTRA_INPUT_ISSHOWALLPAYMENT, true)
     }
 
+    private val isRevamp: Boolean by lazy {
+        intent.getBooleanExtra(EXTRA_INPUT_ISREVAMP, true)
+    }
+
     private val paymentChannels: ArrayList<ListItem> by lazy {
         intent.getParcelableArrayListExtra(EXTRA_INPUT_PAYMENTCHANNELS)
             ?: throw RuntimeException("paymentChannels must not be empty")
@@ -93,27 +96,51 @@ class ProductListActivity : ComponentActivity() {
         buildUiKit()
 
         setContent {
+            val isRevamp = isRevamp
             ProductListPage {
-                val intent = OrderReviewActivity.getOrderReviewActivityIntent(
-                    activityContext = this@ProductListActivity,
-                    product = it,
-                    installmentBank = installmentBank,
-                    isRequiredInstallment = isRequiredInstallment,
-                    acquiringBank = acquiringBank,
-                    customExpiry = customExpiry,
-                    authenticationType = authenticationType,
-                    isSavedCard = isSavedCard,
-                    isPreAuth = isPreAuth,
-                    isBniPointsOnly = isBniPointsOnly,
-                    isShowAllPaymentChannels = isShowAllPaymentChannels,
-                    paymentChannels = paymentChannels,
-                    whitelistBins = whitelistBins,
-                    blacklistBins = blacklistBins,
-                    bcaVa = bcaVa,
-                    bniVa = bniVa,
-                    permataVa = permataVa,
-                    color = inputColor
-                )
+                val intent = if (isRevamp) {
+                    OrderReviewRevampActivity.getOrderReviewRevampActivityIntent(
+                        activityContext = this@ProductListActivity,
+                        product = it,
+                        installmentBank = installmentBank,
+                        isRequiredInstallment = isRequiredInstallment,
+                        acquiringBank = acquiringBank,
+                        customExpiry = customExpiry,
+                        authenticationType = authenticationType,
+                        isSavedCard = isSavedCard,
+                        isPreAuth = isPreAuth,
+                        isBniPointsOnly = isBniPointsOnly,
+                        isShowAllPaymentChannels = isShowAllPaymentChannels,
+                        paymentChannels = paymentChannels,
+                        whitelistBins = whitelistBins,
+                        blacklistBins = blacklistBins,
+                        bcaVa = bcaVa,
+                        bniVa = bniVa,
+                        permataVa = permataVa,
+                        color = inputColor
+                    )
+                } else {
+                    OrderReviewLegacyActivity.getOrderReviewLegacyActivityIntent(
+                        activityContext = this@ProductListActivity,
+                        product = it,
+                        installmentBank = installmentBank,
+                        isRequiredInstallment = isRequiredInstallment,
+                        acquiringBank = acquiringBank,
+                        customExpiry = customExpiry,
+                        authenticationType = authenticationType,
+                        isSavedCard = isSavedCard,
+                        isPreAuth = isPreAuth,
+                        isBniPointsOnly = isBniPointsOnly,
+                        isShowAllPaymentChannels = isShowAllPaymentChannels,
+                        paymentChannels = paymentChannels,
+                        whitelistBins = whitelistBins,
+                        blacklistBins = blacklistBins,
+                        bcaVa = bcaVa,
+                        bniVa = bniVa,
+                        permataVa = permataVa,
+                        color = inputColor
+                    )
+                }
                 startActivity(intent)
             }
         }
@@ -133,6 +160,7 @@ class ProductListActivity : ComponentActivity() {
         private const val EXTRA_INPUT_ISPREAUTH = "productList.extra.isPreAuth"
         private const val EXTRA_INPUT_ISBNIPOINTS = "productList.extra.isBniPoints"
         private const val EXTRA_INPUT_ISSHOWALLPAYMENT = "productList.extra.isShowAllPayment"
+        private const val EXTRA_INPUT_ISREVAMP = "productList.extra.isRevamp"
         private const val EXTRA_INPUT_PAYMENTCHANNELS = "productList.extra.paymentChannels"
         private const val EXTRA_INPUT_WHITELISTBINS = "productList.extra.whitelistBins"
         private const val EXTRA_INPUT_BLACKLISTBINS = "productList.extra.blacklistBins"
@@ -154,7 +182,8 @@ class ProductListActivity : ComponentActivity() {
             blacklistBins: String,
             bcaVa: String,
             bniVa: String,
-            permataVa: String
+            permataVa: String,
+            isRevamp: Boolean
         ): Intent {
             return Intent(activityContext, ProductListActivity::class.java).apply {
                 putExtra(EXTRA_INPUT_COLOR, color)
@@ -173,6 +202,7 @@ class ProductListActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_BCAVA, bcaVa)
                 putExtra(EXTRA_INPUT_BNIVA, bniVa)
                 putExtra(EXTRA_INPUT_PERMATAVA, permataVa)
+                putExtra(EXTRA_INPUT_ISREVAMP, isRevamp)
             }
         }
     }
@@ -182,7 +212,7 @@ class ProductListActivity : ComponentActivity() {
             .withContext(this.applicationContext)
             .withMerchantUrl("")
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
-            .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
+            .withFontFamily("fonts/SourceSansPro-Regular.ttf")
             .build()
     }
 }

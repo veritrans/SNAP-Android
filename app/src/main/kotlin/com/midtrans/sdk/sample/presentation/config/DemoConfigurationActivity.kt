@@ -59,7 +59,6 @@ import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL_PAYMENT_CHANNELS
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_SELECTED_ONLY
 import com.midtrans.sdk.sample.util.DemoConstant.WHITELIST_BINS
 import com.midtrans.sdk.uikit.external.UiKitApi
-import com.midtrans.sdk.uikit.internal.util.AssetFontLoader
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 
 
@@ -208,6 +207,37 @@ class DemoConfigurationActivity : AppCompatActivity() {
                         state.bcaVa,
                         state.bniVa,
                         state.permataVa,
+                        true
+                    )
+                    startActivity(intent)
+                }
+            )
+
+            SnapButton(
+                text = "Launch Demo App (Legacy)", style = SnapButton.Style.PRIMARY,
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
+                onClick = {
+                    val intent = ProductListActivity.getProductListActivity(
+                        this@DemoConfigurationActivity,
+                        state.color,
+                        state.installment,
+                        state.isRequired,
+                        state.acquiringBank,
+                        state.expiry,
+                        state.authenticationType,
+                        state.isSavedCard,
+                        state.isPreAuth,
+                        state.isBniPointOnly,
+                        state.isShowAllPaymentChannels,
+                        state.allPaymentChannels,
+                        state.whitelistBins,
+                        state.blacklistBins,
+                        state.bcaVa,
+                        state.bniVa,
+                        state.permataVa,
+                        false
                     )
                     startActivity(intent)
                 }
@@ -220,7 +250,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
             .withContext(this.applicationContext)
             .withMerchantUrl("")
             .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
-            .withFontFamily(AssetFontLoader.fontFamily("fonts/SourceSansPro-Regular.ttf", this))
+            .withFontFamily("fonts/SourceSansPro-Regular.ttf")
             .build()
     }
 }

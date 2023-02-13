@@ -140,11 +140,6 @@ public class SdkUIFlowBuilder {
         return this;
     }
 
-    public SdkUIFlowBuilder setUIkitCustomSetting(UIKitCustomSetting setting) {
-        this.uiKitCustomSetting = setting;
-        return this;
-    }
-
     public SdkUIFlowBuilder setColorTheme(CustomColorTheme customColorTheme) {
         this.colorTheme = customColorTheme;
         return this;
@@ -163,7 +158,7 @@ public class SdkUIFlowBuilder {
                     .withMerchantClientKey(clientKey)
                     .enableLog(enableLog);
             if (defaultText != null) {
-                builder.withFontFamily(AssetFontLoader.INSTANCE.fontFamily(defaultText, context));
+                builder.withFontFamily(defaultText);
             }
             if (colorTheme != null) {
                 builder.withCustomColors(baseColorThemeToCustomColors(colorTheme));
