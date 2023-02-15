@@ -58,7 +58,7 @@ internal object SnapCreditCardUtil {
         rawCardNumber: TextFieldValue,
         isBinBlocked: Boolean
     ): Boolean {
-        val cardNumber = getCardNumberFromTextField(rawCardNumber)
+        val cardNumber = getCardNumberFromTextField(formatCreditCardNumber(rawCardNumber))
         val formattedCardNumberLength = formatCreditCardNumber(rawCardNumber).text.length
 
         return isBinBlocked
