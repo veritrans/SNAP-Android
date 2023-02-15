@@ -330,36 +330,38 @@ fun SnapSavedCardRadioGroup(
                     modifier = Modifier.selectable(
                         selected = (item.identifier == selectedOption),
                         onClick = {
-                            onOptionSelected(item.identifier)
-                            when (item) {
-                                is SavedCreditCardFormData -> {
-                                    cvvSavedCardTextFieldValue =
-                                        getCvvTextFieldValueBasedOnTokenType(item.tokenType)
-                                    cardItemState.cvv = cvvSavedCardTextFieldValue
-                                    onCardNumberOtherCardValueChange(TextFieldValue(item.maskedCardNumber))
-                                    onSavedCardRadioSelected(item)
-                                    cardItemState.cardItemType =
-                                        CardItemState.CardItemType.SAVED_CARD
-                                    cardItemState.isCvvInvalid = false
-                                    cardItemState.isCardNumberInvalid = false
-                                    cardItemState.isExpiryInvalid = false
+                            if (item.identifier != selectedOption) {
+                                onOptionSelected(item.identifier)
+                                when (item) {
+                                    is SavedCreditCardFormData -> {
+                                        cvvSavedCardTextFieldValue =
+                                            getCvvTextFieldValueBasedOnTokenType(item.tokenType)
+                                        cardItemState.cvv = cvvSavedCardTextFieldValue
+                                        onCardNumberOtherCardValueChange(TextFieldValue(item.maskedCardNumber))
+                                        onSavedCardRadioSelected(item)
+                                        cardItemState.cardItemType =
+                                            CardItemState.CardItemType.SAVED_CARD
+                                        cardItemState.isCvvInvalid = false
+                                        cardItemState.isCardNumberInvalid = false
+                                        cardItemState.isExpiryInvalid = false
 
+                                    }
+                                    is NewCardFormData -> {
+                                        cvvSavedCardTextFieldValue = TextFieldValue("")
+                                        cardItemState.cvv = cvvSavedCardTextFieldValue
+                                        cardItemState.cardNumber = TextFieldValue("")
+                                        cardItemState.expiry = TextFieldValue("")
+                                        onSavedCardRadioSelected(item)
+                                        cardItemState.cardItemType =
+                                            CardItemState.CardItemType.NORMAL_CARD
+                                        cardItemState.isCvvInvalid = false
+                                        cardItemState.isCardNumberInvalid = false
+                                        cardItemState.isExpiryInvalid = false
+                                        onCardNumberOtherCardValueChange(cardItemState.cardNumber)
+                                    }
                                 }
-                                is NewCardFormData -> {
-                                    cvvSavedCardTextFieldValue = TextFieldValue("")
-                                    cardItemState.cvv = cvvSavedCardTextFieldValue
-                                    cardItemState.cardNumber = TextFieldValue("")
-                                    cardItemState.expiry = TextFieldValue("")
-                                    onSavedCardRadioSelected(item)
-                                    cardItemState.cardItemType =
-                                        CardItemState.CardItemType.NORMAL_CARD
-                                    cardItemState.isCvvInvalid = false
-                                    cardItemState.isCardNumberInvalid = false
-                                    cardItemState.isExpiryInvalid = false
-                                    onCardNumberOtherCardValueChange(cardItemState.cardNumber)
-                                }
+                                onCvvValueChange(cardItemState.cvv)
                             }
-                            onCvvValueChange(cardItemState.cvv)
                         },
                         role = Role.RadioButton
                     ),

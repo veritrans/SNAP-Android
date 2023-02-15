@@ -167,7 +167,7 @@ public class MidtransSDK {
     }
 
     private void runUiSdk(Context context, String snapToken) {
-        if (isTransactionRequestAvailable() && uiflow != null) {
+        if (snapToken != null || (isTransactionRequestAvailable() && uiflow != null)) {
             uiflow.runUIFlow(context, snapToken);
         } else {
             Logger.e(ADD_TRANSACTION_DETAILS);
