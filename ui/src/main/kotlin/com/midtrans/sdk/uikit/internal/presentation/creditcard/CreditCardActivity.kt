@@ -349,6 +349,8 @@ internal class CreditCardActivity : BaseActivity() {
         val is3dsTransaction = viewModel?.is3dsTransaction?.observeAsState(false)
         val navController = rememberNavController()
         val remainingTime by remember { remainingTimeState }
+        var itemRemovedFormData: SavedCreditCardFormData? by remember { mutableStateOf(null) }
+        var isDeleteConfirmationShownState by remember { mutableStateOf(false) }
 
         if (is3dsTransaction?.value == true) {
             navController.navigate(THREE_DS_PAGE)
@@ -471,7 +473,11 @@ internal class CreditCardActivity : BaseActivity() {
                     withCustomerPhoneEmail = withCustomerPhoneEmail,
                     promoState = promoState,
                     onSavedCardRadioSelected = { selectedFormData = it },
-                    onSavedCardPointBankCheckedChange = { state.isPointBankChecked = it }
+                    onSavedCardPointBankCheckedChange = { state.isPointBankChecked = it },
+                    onItemRemoveClicked = {
+                        isDeleteConfirmationShownState = true
+                        itemRemovedFormData = it
+                    }
                 )
                 if (DateTimeUtil.getExpiredSeconds(remainingTime) <= 0L && isFirstInit && is3dsTransaction?.value == false) launchExpiredErrorScreen()
             }
@@ -490,6 +496,24 @@ internal class CreditCardActivity : BaseActivity() {
                     )
                 }
             }
+        }
+
+        if (isDeleteConfirmationShownState) {
+            ConfirmationCard(
+                onSheetStateChange = {},
+                onConfirmClicked = {
+                    itemRemovedFormData?.let {
+                        viewModel?.deleteSavedCard(
+                            snapToken = snapToken,
+                            maskedCard = it.displayedMaskedCard
+                        )
+                        savedTokenListState?.remove(it)
+                        isDeleteConfirmationShownState = false
+                    }
+                },
+                onCancelClicked = {
+                    isDeleteConfirmationShownState = false
+                })
         }
 
         pointBalanceAmount?.value?.let { pointBalance ->
@@ -684,7 +708,8 @@ internal class CreditCardActivity : BaseActivity() {
         onSavedCardRadioSelected: (item: FormData?) -> Unit,
         onSavedCardPointBankCheckedChange: (Boolean) -> Unit,
         onInstallmentTermSelected: (String) -> Unit,
-        onClick: () -> Unit
+        onClick: () -> Unit,
+        onItemRemoveClicked: (SavedCreditCardFormData) -> Unit
     ) {
         Column(
             modifier = Modifier.background(SnapColors.getARGBColor(SnapColors.backgroundFillPrimary)),
@@ -745,7 +770,8 @@ internal class CreditCardActivity : BaseActivity() {
                                 bankCodeId = bankCodeState,
                                 onCardNumberValueChange = onCardNumberValueChange,
                                 onSavedCardRadioSelected = onSavedCardRadioSelected,
-                                onSavedCardPointBankCheckedChange = onSavedCardPointBankCheckedChange
+                                onSavedCardPointBankCheckedChange = onSavedCardPointBankCheckedChange,
+                                onItemRemoveClicked = onItemRemoveClicked
                             )
                         }
 
@@ -943,7 +969,8 @@ internal class CreditCardActivity : BaseActivity() {
         bankCodeId: Int?,
         onCardNumberValueChange: (TextFieldValue) -> Unit,
         onSavedCardRadioSelected: (item: FormData?) -> Unit,
-        onSavedCardPointBankCheckedChange: (Boolean) -> Unit
+        onSavedCardPointBankCheckedChange: (Boolean) -> Unit,
+        onItemRemoveClicked: (SavedCreditCardFormData) -> Unit
     ) {
         SnapSavedCardRadioGroup(
             modifier = Modifier
@@ -956,13 +983,7 @@ internal class CreditCardActivity : BaseActivity() {
             isPointBankShownState = isPointBankShownState,
             isInstallmentActive = creditCard?.installment != null,
             creditCard = creditCard,
-            onItemRemoveClicked = {
-                viewModel?.deleteSavedCard(
-                    snapToken = snapToken,
-                    maskedCard = it.displayedMaskedCard
-                )
-                savedTokenListState.remove(it)
-            },
+            onItemRemoveClicked = onItemRemoveClicked,
             onCardNumberOtherCardValueChange = {
                 onCardNumberValueChange(it)
                 if (isTransactionDenied?.value == true) {
