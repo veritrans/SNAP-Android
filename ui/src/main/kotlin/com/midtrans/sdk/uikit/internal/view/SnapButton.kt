@@ -14,7 +14,8 @@ import androidx.compose.ui.unit.dp
 object SnapButton {
     enum class Style {
         PRIMARY,
-        TERTIARY
+        TERTIARY,
+        NEGATIVE
     }
 }
 
@@ -57,6 +58,12 @@ private fun selectButtonColors(style: SnapButton.Style): ButtonColors {
             disabledContentColor = SnapColors.getARGBColor(SnapColors.textDisabled),
             disabledBackgroundColor = Color(SnapColors.transparent)
         )
+        SnapButton.Style.NEGATIVE -> ButtonDefaults.buttonColors(
+            backgroundColor = SnapColors.getARGBColor(SnapColors.supportDangerDefault),
+            contentColor = SnapColors.getARGBColor(SnapColors.textInverse),
+            disabledContentColor = SnapColors.getARGBColor(SnapColors.textDisabled),
+            disabledBackgroundColor = SnapColors.getARGBColor(SnapColors.supportDangerDefault)
+        )
     }
 }
 
@@ -70,6 +77,10 @@ private fun selectBorderStroke(style: SnapButton.Style): BorderStroke {
         SnapButton.Style.TERTIARY -> BorderStroke(
             ButtonDefaults.OutlinedBorderSize,
             SnapColors.getARGBColor(SnapColors.interactiveBorderAction)
+        )
+        SnapButton.Style.NEGATIVE -> BorderStroke(
+            ButtonDefaults.OutlinedBorderSize,
+            SnapColors.getARGBColor(SnapColors.supportDangerDefault)
         )
     }
 }
