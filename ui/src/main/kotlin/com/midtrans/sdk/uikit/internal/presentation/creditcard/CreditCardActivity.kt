@@ -448,15 +448,30 @@ internal class CreditCardActivity : BaseActivity() {
                                     promoId = state.promoId
                                 )
                             } else {
-                                viewModel?.chargeUsingCreditCard(
-                                    formData = selectedFormData as SavedCreditCardFormData,
-                                    snapToken = snapToken,
-                                    cardCvv = state.cvv,
-                                    customerEmail = state.customerEmail.text,
-                                    transactionDetails = transactionDetails,
-                                    installmentTerm = installmentTerm,
-                                    promoId = state.promoId
-                                )
+                                if (savedTokenListState != null && savedTokenListState.size > 1) {
+                                    viewModel?.chargeUsingCreditCard(
+                                        formData = selectedFormData as SavedCreditCardFormData,
+                                        snapToken = snapToken,
+                                        cardCvv = state.cvv,
+                                        customerEmail = state.customerEmail.text,
+                                        transactionDetails = transactionDetails,
+                                        installmentTerm = installmentTerm,
+                                        promoId = state.promoId
+                                    )
+                                } else {
+                                    viewModel?.chargeUsingCreditCard(
+                                        transactionDetails = transactionDetails,
+                                        cardNumber = state.cardNumber,
+                                        cardExpiry = state.expiry,
+                                        cardCvv = state.cvv,
+                                        isSavedCard = state.isSavedCardChecked,
+                                        customerEmail = state.customerEmail.text,
+                                        customerPhone = state.customerPhone.text,
+                                        installmentTerm = installmentTerm,
+                                        snapToken = snapToken,
+                                        promoId = state.promoId
+                                    )
+                                }
                             }
                             isFirstInit = false
                         }
@@ -509,6 +524,9 @@ internal class CreditCardActivity : BaseActivity() {
                         )
                         savedTokenListState?.remove(it)
                         isDeleteConfirmationShownState = false
+                        state.cardNumber = TextFieldValue()
+                        state.expiry = TextFieldValue()
+                        state.cvv = TextFieldValue()
                     }
                 },
                 onCancelClicked = {
@@ -759,23 +777,21 @@ internal class CreditCardActivity : BaseActivity() {
                             CustomerPhoneLayout(state = state)
                         }
 
-                        savedTokenListState?.let {
+                        if (savedTokenListState != null && savedTokenListState.size > 1) {
                             SavedCardLayout(
                                 viewModel = viewModel,
                                 isTransactionDenied = isTransactionDenied,
                                 state = state,
                                 selectedFormData = selectedFormData,
                                 isPointBankShownState = isPointBankShownState,
-                                savedTokenListState = it,
+                                savedTokenListState = savedTokenListState,
                                 bankCodeId = bankCodeState,
                                 onCardNumberValueChange = onCardNumberValueChange,
                                 onSavedCardRadioSelected = onSavedCardRadioSelected,
                                 onSavedCardPointBankCheckedChange = onSavedCardPointBankCheckedChange,
                                 onItemRemoveClicked = onItemRemoveClicked
                             )
-                        }
-
-                        if (savedTokenListState == null) {
+                        } else {
                             NormalCardFormLayout(
                                 state = state,
                                 isTransactionDenied = isTransactionDenied,
