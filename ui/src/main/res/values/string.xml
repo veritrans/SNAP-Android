@@ -617,6 +617,10 @@
     <string name="card_error_declined_disallow_retry_content">Failed to process payment. Please place your order again.</string>
     <string name="card_error_declined_disallow_retry_cta">OK</string>
 
+    <string name="incorrect_card_info_title">Your card info is incorrect</string>
+    <string name="incorrect_card_info_content">Please make sure you enter a correct card detail and try again.</string>
+    <string name="incorrect_card_info_cta">Review card detail</string>
+
     <string name="error_failed_load">Failed to load</string>
     <string name="retry_to_load">Reload</string>
 

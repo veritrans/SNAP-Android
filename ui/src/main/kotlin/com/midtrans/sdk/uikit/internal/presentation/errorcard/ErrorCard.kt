@@ -75,6 +75,7 @@ object ErrorCard {
     const val TID_MID_ERROR_OTHER_PAY_METHOD_AVAILABLE = 4
     const val TID_MID_ERROR_OTHER_PAY_METHOD_NOT_AVAILABLE = 5
     const val CARD_ERROR_DECLINED_DISALLOW_RETRY = 6
+    const val INCORRECT_CARD_INFO = 7
     internal val errorComponentMap = mapOf(
         Pair(
             TIMEOUT_ERROR_DIALOG_FROM_BANK, ErrorComponent(
@@ -117,8 +118,14 @@ object ErrorCard {
                 message = R.string.card_error_declined_disallow_retry_content,
                 cta = R.string.card_error_declined_disallow_retry_cta
             )
+        ),
+        Pair(
+            INCORRECT_CARD_INFO, ErrorComponent(
+                title = R.string.incorrect_card_info_title,
+                message = R.string.incorrect_card_info_content,
+                cta = R.string.incorrect_card_info_cta
+            )
         )
-
     )
 
     internal data class ErrorComponent(
