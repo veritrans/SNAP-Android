@@ -5,6 +5,7 @@ object UiKitConstants {
     const val KEY_TRANSACTION_RESULT = "UiKitConstants.key_transaction_result"
     const val KEY_ERROR_NAME = "UiKitConstant.key_error_name"
     const val KEY_ERROR_MESSAGE ="UiKitConstant.key_error_message"
+    const val KEY_SNAP_TOKEN = "UiKitConstant.key_snap_token"
 
     //Transaction Status
     const val STATUS_PENDING = "pending"
@@ -22,4 +23,7 @@ object UiKitConstants {
 
     //Symbol
     const val BULLET_LIST = "\u2022"
+
+    //Activity Result
+    const val ACTIVITY_CC_CHANGES = 2
 }

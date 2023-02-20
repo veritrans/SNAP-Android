@@ -124,6 +124,7 @@ internal class CreditCardActivity : BaseActivity() {
     }
 
     private var onPromoReset: () -> Unit = {}
+    private var isCreditCardChanged = false
 
     private val savedTokenList: SnapshotStateList<FormData>? by lazy {
         creditCard?.savedTokens?.mapIndexed { index, savedToken ->
@@ -524,6 +525,7 @@ internal class CreditCardActivity : BaseActivity() {
                         )
                         savedTokenListState?.remove(it)
                         isDeleteConfirmationShownState = false
+                        isCreditCardChanged = true
                         state.cardNumber = TextFieldValue()
                         state.expiry = TextFieldValue()
                         state.cvv = TextFieldValue()
@@ -1031,6 +1033,11 @@ internal class CreditCardActivity : BaseActivity() {
             .interval(1L, TimeUnit.SECONDS)
             .map { viewModel.getExpiredHour() }
             .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun onBackPressed() {
+        if (isCreditCardChanged) setResult(UiKitConstants.ACTIVITY_CC_CHANGES)
+        super.onBackPressed()
     }
 
     @Preview

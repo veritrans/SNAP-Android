@@ -508,6 +508,13 @@ class PaymentOptionActivity : BaseActivity() {
                 } else {
                     setResult(Activity.RESULT_CANCELED)
                 }
+            } else if (result.resultCode == UiKitConstants.ACTIVITY_CC_CHANGES) {
+                val resultIntent = Intent().putExtra(
+                    UiKitConstants.KEY_SNAP_TOKEN,
+                    snapToken
+                )
+                setResult(UiKitConstants.ACTIVITY_CC_CHANGES, resultIntent)
+                finish()
             } else {
                 setResult(Activity.RESULT_CANCELED)
             }
