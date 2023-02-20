@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("kotlin-parcelize")
+    id("maven-publish")
 }
 
 android {
@@ -26,11 +27,22 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "SNAP_BASE_URL", "\"https://app.midtrans.com/snap/\"")
+            buildConfigField("String", "CORE_API_BASE_URL", "\"https://api.midtrans.com/\"")
+            buildConfigField("String", "MIXPANEL_TOKEN", "\"84ed63a9507c49b373945b13633b8a0c\"")
+            buildConfigField("String", "SDK_VERSION", "${project.property("sdkVersion")}")
+        }
+
+        debug {
+            buildConfigField("String", "SNAP_BASE_URL", "\"https://app.sandbox.midtrans.com/snap/\"")
+            buildConfigField("String", "CORE_API_BASE_URL", "\"https://api.sandbox.midtrans.com/\"")
+            buildConfigField("String", "MIXPANEL_TOKEN", "\"f070570da8b882fda74c77541f0926a0\"")
+            buildConfigField("String", "SDK_VERSION", "${project.property("sdkVersion")}")
         }
     }
 
     compileOptions {
-        isCoreLibraryDesugaringEnabled = true
+        isCoreLibraryDesugaringEnabled = false
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -92,7 +104,6 @@ dependencies {
     //TODO: work around, remove when google fix compose tooling
     debugImplementation("androidx.customview:customview:1.2.0-alpha01")
     debugImplementation("androidx.customview:customview-poolingcontainer:1.0.0-alpha01")
-    implementation(project(":corekit"))
 
     //rx android
     implementation(com.gtf.snap.RxLibraries.rxAndroid2)
@@ -115,4 +126,34 @@ dependencies {
     implementation(com.gtf.snap.CommonLibraries.zxing)
 
     debugImplementation(com.gtf.snap.CommonLibraries.leakCanary)
+
+    // Migrate corekit to uikit
+    implementation(com.gtf.snap.NetworkLibraries.retrofit)
+    implementation(com.gtf.snap.NetworkLibraries.retrofitGson)
+    implementation(com.gtf.snap.NetworkLibraries.retrofitRx)
+    implementation(com.gtf.snap.NetworkLibraries.okHttp)
+    implementation(com.gtf.snap.NetworkLibraries.okHttpLogging)
+    implementation(com.gtf.snap.NetworkLibraries.okHttpUrlConnection)
+
+    debugImplementation(com.gtf.snap.NetworkLibraries.chuck)
+    releaseImplementation(com.gtf.snap.NetworkLibraries.chuckNoOp)
+    implementation(com.gtf.snap.CommonLibraries.mixpanel)
+
+    implementation(com.gtf.snap.CommonLibraries.androidxDatastore)
+    implementation(com.gtf.snap.CommonLibraries.uuid)
+}
+afterEvaluate {
+    publishing {
+        publications {
+            register<MavenPublication>("debug") {
+                groupId = "com.snap"
+                artifactId = "uikit-test"
+                version = "1.0"
+
+                afterEvaluate {
+                    from(components["debug"])
+                }
+            }
+        }
+    }
 }

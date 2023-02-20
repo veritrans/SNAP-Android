@@ -6,7 +6,7 @@ import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.internal.bind.DateTypeAdapter
-import com.midtrans.sdk.corekit.BuildConfig
+import com.midtrans.sdk.uikit.BuildConfig
 import com.midtrans.sdk.corekit.internal.network.MerchantInterceptor
 import com.midtrans.sdk.corekit.internal.network.SnapRequestInterceptor
 import com.midtrans.sdk.corekit.internal.network.restapi.CoreApi

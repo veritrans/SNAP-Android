@@ -2,14 +2,8 @@ package com.midtrans.sdk.corekit.core;
 
 import android.util.Log;
 
-import com.midtrans.sdk.corekit.BuildConfig;
+import com.midtrans.sdk.uikit.BuildConfig;
 
-/**
- * helper class to display log messages on logcat.</p> you can also disable log message for example
- * in release mode of your application using instance of {@link SdkCoreFlowBuilder#enableLog(boolean)}
- * <p>
- * Created by shivam on 10/20/15.
- */
 public class Logger {
     public static boolean enabled = false;
 
