@@ -228,14 +228,14 @@ class LoadingPaymentActivity : BaseActivity() {
         }
     }
 
-    private fun loadPaymentOptions() {
+    private fun loadPaymentOptions(token: String? = snapToken) {
         viewModel.registerCommonProperties(
             isTablet = isTabletDevice(),
             merchantUrl = UiKitApi.getDefaultInstance().builder.merchantUrl
         )
         viewModel.getPaymentOption(
             transactionDetails = transactionDetails,
-            snapToken = snapToken,
+            snapToken = token,
             customerDetails = customerDetails,
             itemDetails = itemDetails,
             creditCard = creditCard,
@@ -281,6 +281,14 @@ class LoadingPaymentActivity : BaseActivity() {
                 }
                 Activity.RESULT_CANCELED -> {
                     finish()
+                }
+                UiKitConstants.ACTIVITY_CC_CHANGES -> {
+                    result?.run {
+                        data?.also {
+                            val snapToken = it.getStringExtra(UiKitConstants.KEY_SNAP_TOKEN)
+                            loadPaymentOptions(snapToken)
+                        }
+                    }
                 }
                 else -> {
                     loadPaymentOptions()

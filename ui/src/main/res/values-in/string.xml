@@ -615,6 +615,10 @@
     <string name="card_error_declined_disallow_retry_content">Pembayaran gagal diproses. Silakan lakukan pemesanan ulang.</string>
     <string name="card_error_declined_disallow_retry_cta">Oke</string>
 
+    <string name="incorrect_card_info_title">Info pada kartu anda salah</string>
+    <string name="incorrect_card_info_content">Pastikan anda memasukkan detail kartu dengan benar, lalu coba lagi.</string>
+    <string name="incorrect_card_info_cta">Periksa detail kartu</string>
+
     <string name="error_failed_load">Gagal memuat</string>
     <string name="retry_to_load">Coba lagi</string>
 

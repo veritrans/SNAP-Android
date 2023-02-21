@@ -250,79 +250,82 @@ internal class CreditCardViewModel @Inject constructor(
                         statusCode = result.statusCode.orEmpty(),
                         errorMessage = result.statusMessage.orEmpty()
                     )
+                    if (result.statusCode == STATUS_CODE_400) {
+                        _errorTypeLiveData.value = Pair(ErrorCard.INCORRECT_CARD_INFO, "")
+                    } else {
+                        val ccRequestBuilder = CreditCardPaymentRequestBuilder()
+                            .withSaveCard(isSavedCard)
+                            .withPaymentType(PaymentType.CREDIT_CARD)
+                            .withCustomerEmail(customerEmail)
+                            .withCustomerPhone(customerPhone)
+                            .withInstallment(installmentTerm)
 
-                    val ccRequestBuilder = CreditCardPaymentRequestBuilder()
-                        .withSaveCard(isSavedCard)
-                        .withPaymentType(PaymentType.CREDIT_CARD)
-                        .withCustomerEmail(customerEmail)
-                        .withCustomerPhone(customerPhone)
-                        .withInstallment(installmentTerm)
+                        promos
+                            ?.find { it.id == promoId }
+                            ?.also { promoName = it.name }
+                            ?.discountedGrossAmount
+                            ?.let {
+                                promoAmount = it
+                                ccRequestBuilder.withPromo(
+                                    discountedGrossAmount = it,
+                                    promoId = promoId.toString()
+                                )
+                            }
 
-                    promos
-                        ?.find { it.id == promoId }
-                        ?.also { promoName = it.name }
-                        ?.discountedGrossAmount
-                        ?.let {
-                            promoAmount = it
-                            ccRequestBuilder.withPromo(
-                                discountedGrossAmount = it,
-                                promoId = promoId.toString()
-                            )
+                        result.tokenId?.let {
+                            ccRequestBuilder.withCardToken(it)
                         }
 
-                    result.tokenId?.let {
-                        ccRequestBuilder.withCardToken(it)
-                    }
+                        trackCreditCardTokenizationResult(
+                            statusCode = result.statusCode.orEmpty(),
+                            tokenId = result.tokenId.orEmpty()
+                        )
 
-                    trackCreditCardTokenizationResult(
-                        statusCode = result.statusCode.orEmpty(),
-                        tokenId = result.tokenId.orEmpty()
-                    )
+                        trackSnapChargeRequest(
+                            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+                            paymentMethodName = PaymentType.CREDIT_CARD,
+                            promoName = promoName,
+                            promoAmount = promoAmount?.toString(),
+                            promoId = promoId?.toString(),
+                            creditCardPoint = null //TODO add this after point implemented
+                        )
 
-                    trackSnapChargeRequest(
-                        pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
-                        paymentMethodName = PaymentType.CREDIT_CARD,
-                        promoName = promoName,
-                        promoAmount = promoAmount?.toString(),
-                        promoId = promoId?.toString(),
-                        creditCardPoint = null //TODO add this after point implemented
-                    )
+                        snapCore.pay(
+                            snapToken = snapToken,
+                            paymentRequestBuilder = ccRequestBuilder,
+                            callback = object : Callback<TransactionResponse> {
+                                override fun onSuccess(result: TransactionResponse) {
+                                    Logger.d("Credit Card pay successfully")
+                                    trackSnapChargeResult(result)
+                                    trackCreditCardErrorWithStatusCode(
+                                        statusCode = result.statusCode.orEmpty(),
+                                        errorMessage = result.statusMessage.orEmpty()
+                                    )
+                                    _is3dsTransaction.value = is3dsTransaction(result)
 
-                    snapCore.pay(
-                        snapToken = snapToken,
-                        paymentRequestBuilder = ccRequestBuilder,
-                        callback = object : Callback<TransactionResponse> {
-                            override fun onSuccess(result: TransactionResponse) {
-                                Logger.d("Credit Card pay successfully")
-                                trackSnapChargeResult(result)
-                                trackCreditCardErrorWithStatusCode(
-                                    statusCode = result.statusCode.orEmpty(),
-                                    errorMessage = result.statusMessage.orEmpty()
-                                )
-                                _is3dsTransaction.value = is3dsTransaction(result)
-
-                                if (result.transactionStatus == STATUS_DENY && allowRetry) {
-                                    _transactionResponse.value = result
-                                    _isTransactionDenied.value = true
-                                } else {
-                                    errorCard.getErrorCardType(result, allowRetry)?.let {
-                                        val transactionId = result.transactionId.orEmpty()
-                                        _errorTypeLiveData.value = Pair(it, transactionId)
-                                    } ?: run {
+                                    if (result.transactionStatus == STATUS_DENY && allowRetry) {
                                         _transactionResponse.value = result
-                                        null
+                                        _isTransactionDenied.value = true
+                                    } else {
+                                        errorCard.getErrorCardType(result, allowRetry)?.let {
+                                            val transactionId = result.transactionId.orEmpty()
+                                            _errorTypeLiveData.value = Pair(it, transactionId)
+                                        } ?: run {
+                                            _transactionResponse.value = result
+                                            null
+                                        }
                                     }
                                 }
-                            }
 
-                            override fun onError(error: SnapError) {
-                                Logger.e("Credit Card error pay")
-                                trackCreditCardErrorWithSnapError(error)
-                                val errorType = errorCard.getErrorCardType(error, allowRetry)
-                                _errorTypeLiveData.value = Pair(errorType, "")
+                                override fun onError(error: SnapError) {
+                                    Logger.e("Credit Card error pay")
+                                    trackCreditCardErrorWithSnapError(error)
+                                    val errorType = errorCard.getErrorCardType(error, allowRetry)
+                                    _errorTypeLiveData.value = Pair(errorType, "")
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
 
                 override fun onError(error: SnapError) {
@@ -413,85 +416,88 @@ internal class CreditCardViewModel @Inject constructor(
                 callback = object : Callback<CardTokenResponse> {
                     override fun onSuccess(result: CardTokenResponse) {
                         Logger.d("Credit Card get token successfully")
-                        var promoName: String? = null
-                        var promoAmount: Double? = null
-
-                        val ccRequestBuilder = CreditCardPaymentRequestBuilder()
-                            .withPaymentType(PaymentType.CREDIT_CARD)
-                            .withInstallment(installmentTerm)
-                            .withCustomerEmail(customerEmail).apply {
-                                promos
-                                    ?.find { it.id == promoId }
-                                    ?.also { promoName = it.name }
-                                    ?.discountedGrossAmount
-                                    ?.let {
-                                        promoAmount = it
-                                        withPromo(
-                                            discountedGrossAmount = it,
-                                            promoId = promoId.toString()
-                                        )
-                                    }
-                            }
-
-                        result.tokenId?.let {
-                            ccRequestBuilder.withCardToken(it)
-                        }
-
-                        trackCreditCardTokenizationResult(
-                            statusCode = result.statusCode.orEmpty(),
-                            tokenId = result.tokenId.orEmpty()
-                        )
-
-                        trackSnapChargeRequest(
-                            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
-                            paymentMethodName = PaymentType.CREDIT_CARD,
-                            promoName = promoName,
-                            promoAmount = promoAmount?.toString(),
-                            promoId = promoId?.toString(),
-                            creditCardPoint = null
-                        )
-
                         trackCreditCardErrorWithStatusCode(
                             errorMessage = result.statusMessage.orEmpty(),
                             statusCode = result.statusCode.orEmpty()
                         )
+                        if (result.statusCode == STATUS_CODE_400) {
+                            _errorTypeLiveData.value = Pair(ErrorCard.INCORRECT_CARD_INFO, "")
+                        } else {
+                            var promoName: String? = null
+                            var promoAmount: Double? = null
 
-                        snapCore.pay(
-                            snapToken = snapToken,
-                            paymentRequestBuilder = ccRequestBuilder,
-                            callback = object : Callback<TransactionResponse> {
-                                override fun onSuccess(result: TransactionResponse) {
-                                    Logger.d("Credit Card pay successfully")
-                                    trackSnapChargeResult(result)
-                                    trackCreditCardErrorWithStatusCode(
-                                        errorMessage = result.statusMessage.orEmpty(),
-                                        statusCode = result.statusCode.orEmpty()
-                                    )
-                                    _is3dsTransaction.value = is3dsTransaction(result)
+                            val ccRequestBuilder = CreditCardPaymentRequestBuilder()
+                                .withPaymentType(PaymentType.CREDIT_CARD)
+                                .withInstallment(installmentTerm)
+                                .withCustomerEmail(customerEmail).apply {
+                                    promos
+                                        ?.find { it.id == promoId }
+                                        ?.also { promoName = it.name }
+                                        ?.discountedGrossAmount
+                                        ?.let {
+                                            promoAmount = it
+                                            withPromo(
+                                                discountedGrossAmount = it,
+                                                promoId = promoId.toString()
+                                            )
+                                        }
+                                }
 
-                                    if (result.transactionStatus == STATUS_DENY && allowRetry) {
-                                        _transactionResponse.value = result
-                                        _isTransactionDenied.value = true
-                                    } else {
-                                        errorCard.getErrorCardType(result, allowRetry)?.let {
-                                            val transactionId = result.transactionId.orEmpty()
-                                            _errorTypeLiveData.value = Pair(it, transactionId)
-                                        } ?: run {
+                            result.tokenId?.let {
+                                ccRequestBuilder.withCardToken(it)
+                            }
+
+                            trackCreditCardTokenizationResult(
+                                statusCode = result.statusCode.orEmpty(),
+                                tokenId = result.tokenId.orEmpty()
+                            )
+
+                            trackSnapChargeRequest(
+                                pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+                                paymentMethodName = PaymentType.CREDIT_CARD,
+                                promoName = promoName,
+                                promoAmount = promoAmount?.toString(),
+                                promoId = promoId?.toString(),
+                                creditCardPoint = null
+                            )
+
+                            snapCore.pay(
+                                snapToken = snapToken,
+                                paymentRequestBuilder = ccRequestBuilder,
+                                callback = object : Callback<TransactionResponse> {
+                                    override fun onSuccess(result: TransactionResponse) {
+                                        Logger.d("Credit Card pay successfully")
+                                        trackSnapChargeResult(result)
+                                        trackCreditCardErrorWithStatusCode(
+                                            errorMessage = result.statusMessage.orEmpty(),
+                                            statusCode = result.statusCode.orEmpty()
+                                        )
+                                        _is3dsTransaction.value = is3dsTransaction(result)
+
+                                        if (result.transactionStatus == STATUS_DENY && allowRetry) {
                                             _transactionResponse.value = result
-                                            null
+                                            _isTransactionDenied.value = true
+                                        } else {
+                                            errorCard.getErrorCardType(result, allowRetry)?.let {
+                                                val transactionId = result.transactionId.orEmpty()
+                                                _errorTypeLiveData.value = Pair(it, transactionId)
+                                            } ?: run {
+                                                _transactionResponse.value = result
+                                                null
+                                            }
                                         }
                                     }
-                                }
 
-                                override fun onError(error: SnapError) {
-                                    Logger.e("Credit Card error pay")
-                                    trackCreditCardErrorWithSnapError(error)
-                                    val errorType = errorCard.getErrorCardType(error, allowRetry)
-                                    _errorTypeLiveData.value = Pair(errorType, "")
-                                    _errorLiveData.value = error
+                                    override fun onError(error: SnapError) {
+                                        Logger.e("Credit Card error pay")
+                                        trackCreditCardErrorWithSnapError(error)
+                                        val errorType = errorCard.getErrorCardType(error, allowRetry)
+                                        _errorTypeLiveData.value = Pair(errorType, "")
+                                        _errorLiveData.value = error
+                                    }
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
 
                     override fun onError(error: SnapError) {
@@ -555,33 +561,37 @@ internal class CreditCardViewModel @Inject constructor(
                         errorMessage = result.statusMessage.orEmpty(),
                         statusCode = result.statusCode.orEmpty()
                     )
-                    result.tokenId?.let { tokenId ->
-                        _cardToken.value = tokenId
-                        snapCore.getBankPoint(
-                            snapToken = snapToken,
-                            cardToken = tokenId,
-                            grossAmount = finalAmount,
-                            callback = object : Callback<BankPointResponse> {
-                                override fun onSuccess(result: BankPointResponse) {
-                                    Logger.d("Credit Card get bank point successfuly")
-                                    trackCreditCardErrorWithStatusCode(
-                                        errorMessage = result.statusMessage.orEmpty(),
-                                        statusCode = result.statusCode.orEmpty()
-                                    )
-                                    result.pointBalanceAmount?.toDouble().let {
-                                        _pointBalanceAmount.value = it
+                    if (result.statusCode == STATUS_CODE_400) {
+                        _errorTypeLiveData.value = Pair(ErrorCard.INCORRECT_CARD_INFO, "")
+                    } else {
+                        result.tokenId?.let { tokenId ->
+                            _cardToken.value = tokenId
+                            snapCore.getBankPoint(
+                                snapToken = snapToken,
+                                cardToken = tokenId,
+                                grossAmount = finalAmount,
+                                callback = object : Callback<BankPointResponse> {
+                                    override fun onSuccess(result: BankPointResponse) {
+                                        Logger.d("Credit Card get bank point successfuly")
+                                        trackCreditCardErrorWithStatusCode(
+                                            errorMessage = result.statusMessage.orEmpty(),
+                                            statusCode = result.statusCode.orEmpty()
+                                        )
+                                        result.pointBalanceAmount?.toDouble().let {
+                                            _pointBalanceAmount.value = it
+                                        }
+                                    }
+
+                                    override fun onError(error: SnapError) {
+                                        Logger.e("Credit Card error get bank point")
+                                        trackCreditCardErrorWithSnapError(error)
+                                        val errorType = errorCard.getErrorCardType(error, allowRetry)
+                                        _errorTypeLiveData.value = Pair(errorType, "")
+                                        _errorLiveData.value = error
                                     }
                                 }
-
-                                override fun onError(error: SnapError) {
-                                    Logger.e("Credit Card error get bank point")
-                                    trackCreditCardErrorWithSnapError(error)
-                                    val errorType = errorCard.getErrorCardType(error, allowRetry)
-                                    _errorTypeLiveData.value = Pair(errorType, "")
-                                    _errorLiveData.value = error
-                                }
-                            }
-                        )
+                            )
+                        }
                     }
                 }
 
@@ -853,5 +863,6 @@ internal class CreditCardViewModel @Inject constructor(
         private const val BANK_BNI = "bni"
         private const val STATUS_DENY = "deny"
         private const val STATUS_CODE_201 = "201"
+        private const val STATUS_CODE_400 = "400"
     }
 }
