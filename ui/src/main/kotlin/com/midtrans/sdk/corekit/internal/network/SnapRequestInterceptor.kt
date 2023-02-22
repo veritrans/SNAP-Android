@@ -1,6 +1,6 @@
 package com.midtrans.sdk.corekit.internal.network
 
-import com.midtrans.sdk.corekit.BuildConfig
+import com.midtrans.sdk.uikit.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
 

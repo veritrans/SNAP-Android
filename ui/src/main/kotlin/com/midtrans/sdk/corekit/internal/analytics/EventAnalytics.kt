@@ -1,6 +1,6 @@
 package com.midtrans.sdk.corekit.internal.analytics
 
-import com.midtrans.sdk.corekit.BuildConfig
+import com.midtrans.sdk.uikit.BuildConfig
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_3DS_RESULT
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_ACCOUNT_NUMBER_COPIED
 import com.midtrans.sdk.corekit.internal.analytics.EventName.EVENT_SNAP_CHARGE_REQUEST

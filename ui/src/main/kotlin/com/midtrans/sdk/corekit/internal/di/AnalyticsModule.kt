@@ -1,7 +1,7 @@
 package com.midtrans.sdk.corekit.internal.di
 
 import android.content.Context
-import com.midtrans.sdk.corekit.BuildConfig
+import com.midtrans.sdk.uikit.BuildConfig
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.MixpanelTracker
 import com.mixpanel.android.mpmetrics.MixpanelAPI
