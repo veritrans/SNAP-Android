@@ -288,12 +288,14 @@ class PayLaterActivity : BaseActivity() {
     private fun getTitleId(paymentType: String): Int {
         return when (paymentType) {
             PaymentType.AKULAKU -> R.string.akulaku_title
+            PaymentType.KREDIVO -> R.string.kredivo_title
             else -> 0
         }
     }
 
     private fun getCta(paymentType: String): Int {
         return when (paymentType) {
+            PaymentType.KREDIVO,
             PaymentType.AKULAKU -> R.string.akulaku_cta
             else -> 0
         }

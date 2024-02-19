@@ -30,6 +30,7 @@ class MixpanelTracker(private val mixpanelApi: MixpanelAPI) {
         properties: Map<String, Any>
     ) {
         mixpanelApi.registerSuperProperties(JSONObject(properties))
+
     }
 
     companion object {

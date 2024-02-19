@@ -79,6 +79,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
                     )
                     result.run {
                         bcaVaNumber?.let { _vaNumberLiveData.value = it }
+                        cimbVaNumber?.let { _vaNumberLiveData.value = it }
                         bniVaNumber?.let {
                             _vaNumberLiveData.value = it
                             _bankCodeLiveData.value = BANK_CODE_BNI
@@ -98,6 +99,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
                         briExpirationRaw?.let { expiredTime = parseTime(it) }
                         permataExpirationRaw?.let { expiredTime = parseTime(it) }
                         mandiriBillExpirationRaw?.let { expiredTime = parseTime(it) }
+                        cimbExpirationRaw?.let { expiredTime = parseTime(it) }
                         _transactionResult.value = TransactionResult(
                             status = transactionStatus.orEmpty(),
                             transactionId = transactionId.orEmpty(),
@@ -136,6 +138,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
             PaymentType.BCA_VA -> PageName.BCA_VA_PAGE
             PaymentType.BNI_VA -> PageName.BNI_VA_PAGE
             PaymentType.BRI_VA -> PageName.BRI_VA_PAGE
+            PaymentType.CIMB_VA -> PageName.CIMB_VA_PAGE
             PaymentType.PERMATA_VA -> PageName.PERMATA_VA_PAGE
             PaymentType.E_CHANNEL -> PageName.MANDIRI_E_CHANNEL_PAGE
             else -> PageName.OTHER_VA_PAGE

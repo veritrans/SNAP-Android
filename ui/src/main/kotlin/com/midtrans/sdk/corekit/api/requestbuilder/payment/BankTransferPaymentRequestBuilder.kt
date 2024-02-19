@@ -22,6 +22,7 @@ class BankTransferPaymentRequestBuilder: PaymentRequestBuilder() {
             PaymentType.BCA_VA,
             PaymentType.PERMATA_VA,
             PaymentType.BNI_VA,
+                PaymentType.CIMB_VA,
             PaymentType.BRI_VA,
             PaymentType.OTHER_VA,
             PaymentType.E_CHANNEL -> PaymentRequest(

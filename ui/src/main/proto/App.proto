@@ -1,0 +1,24 @@
+//platform="ios,android"
+syntax = "proto3";
+
+package snap_sdk.clickstream.meta;
+
+option java_multiple_files = true;
+option java_package = "com.snap_sdk.clickstream.meta";
+option java_outer_classname = "AppProto";
+
+option go_package="source.golabs.io/mobile/clickstream-go-proto/snap_sdk/clickstream/meta";
+
+message App {
+  string app_name = 1;
+  string sdk_version = 2;
+  string sdk_flow_type = 3;
+
+   // mobile-ios mobile-android
+  string source_type = 4;
+
+  string merchant_url = 5;
+  string colour_scheme = 6;
+  string step_number = 7;
+  bool allow_retry = 8;
+}

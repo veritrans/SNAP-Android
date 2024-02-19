@@ -77,6 +77,8 @@ public class TransactionRequest {
     private BankTransferRequestModel bniVa;
     private BankTransferRequestModel briVa;
 
+    private BankTransferRequestModel cimbVa;
+
     /**
      * @param orderId  order id of transaction.
      * @param amount   amount to charge.
@@ -257,6 +259,14 @@ public class TransactionRequest {
 
     public BankTransferRequestModel getBriVa() {
         return briVa;
+    }
+
+    public BankTransferRequestModel getCimbVa() {
+        return cimbVa;
+    }
+
+    public void setCimbVa(BankTransferRequestModel cimbVa) {
+        this.cimbVa = cimbVa;
     }
 
     public void setBriVa(BankTransferRequestModel briVa) {

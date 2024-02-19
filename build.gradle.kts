@@ -11,6 +11,7 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
         classpath("org.jacoco:org.jacoco.core:$jacoco_version")
         classpath("org.jfrog.buildinfo:build-info-extractor-gradle:4.18.2")
+//        classpath("com.google.protobuf:protobuf-gradle-plugin:0.9.4")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -25,3 +26,4 @@ plugins {
 tasks.register("clean", Delete::class) {
     delete(rootProject.buildDir)
 }
+

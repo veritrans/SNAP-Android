@@ -95,6 +95,7 @@ import com.midtrans.sdk.corekit.internal.analytics.EventName.PROPERTY_TWO_CLICK_
 class EventAnalytics(
     private val mixpanelTracker: MixpanelTracker
 ) {
+
     fun setUserIdentity(
         userId: String,
         userName: String,
@@ -124,6 +125,9 @@ class EventAnalytics(
                 PROPERTY_PLATFORM to platform
             ) + optionalProperties
         )
+
+//        clickstreamTracker
+//        var appname = App.newBuilder().setAppName("appName")
     }
 
     fun registerCommonTransactionProperties(
@@ -482,6 +486,10 @@ class EventAnalytics(
             eventName = EVENT_SNAP_CHARGE_REQUEST,
             properties = properties
         )
+
+
+
+//        clickstreamTracker.trackEvent(EVENT_SNAP_CHARGE_REQUEST, messageLite = )
     }
 
     fun trackSnapChargeResult(

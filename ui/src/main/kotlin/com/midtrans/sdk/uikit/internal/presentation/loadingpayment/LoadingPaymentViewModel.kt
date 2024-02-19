@@ -9,6 +9,8 @@ import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
 import com.midtrans.sdk.corekit.core.Logger
+import com.midtrans.sdk.corekit.internal.analytics.ClickstreamEventAnalytics
+import com.midtrans.sdk.corekit.internal.analytics.ClickstreamTracker
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.corekit.internal.network.model.response.TransactionDetails
 import com.midtrans.sdk.uikit.internal.util.CurrencyFormat.currencyFormatRp
@@ -21,6 +23,8 @@ class LoadingPaymentViewModel @Inject constructor(
     private val _paymentOptionLiveData = MutableLiveData<PaymentOption>()
     private val _error = MutableLiveData<SnapError>()
     private val eventAnalytics = snapCore.getEventAnalytics()
+
+//    var clickstreamEventAnalytics = ClickstreamEventAnalytics(clickstreamTracker = ClickstreamTracker())
 
     fun getPaymentOptionLiveData(): LiveData<PaymentOption> = _paymentOptionLiveData
     fun getErrorLiveData(): LiveData<SnapError> = _error
@@ -36,6 +40,7 @@ class LoadingPaymentViewModel @Inject constructor(
         bcaVa: BankTransferRequest?,
         bniVa: BankTransferRequest?,
         briVa: BankTransferRequest?,
+        cimbVa: BankTransferRequest?,
         enabledPayments: List<String>?,
         expiry: Expiry?,
         promoRequest: PromoRequest?,
@@ -83,6 +88,12 @@ class LoadingPaymentViewModel @Inject constructor(
                         errorMessage = error.getErrorInformation(),
                         statusCode = error.getHttpStatusCode()?.toString()
                     )
+//                    clickstreamEventAnalytics.trackSnapError(
+//                        pageName = PageName.PAYMENT_LIST_PAGE,
+//                        paymentMethodName = "not selected",
+//                        errorMessage = error.getErrorInformation(),
+//                        statusCode = error.getHttpStatusCode()?.toString()
+//                    )
                 }
             })
     }
@@ -101,5 +112,6 @@ class LoadingPaymentViewModel @Inject constructor(
     ) {
         val platform = if (isTablet) "Tablet" else "Mobile"
         eventAnalytics.registerCommonProperties(platform, merchantUrl)
+//        clickstreamEventAnalytics.registerCommonProperties(platform, merchantUrl)
     }
 }

@@ -21,6 +21,7 @@ import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.GOPAY
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.GOPAY_QRIS
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.INDOMARET
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.KLIK_BCA
+import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.KREDIVO
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.OTHER_VA
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.PERMATA_VA
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY
@@ -76,6 +77,7 @@ internal class PaymentOptionViewModel @Inject constructor(
             || type == UOB_EZPAY
             || type == CREDIT_CARD
             || type == AKULAKU
+                || type == KREDIVO
             || (type == GOPAY && !isTabletDevice)
             || (type == GOPAY_QRIS && isTabletDevice)
             || (type == SHOPEEPAY && !isTabletDevice)
@@ -98,6 +100,7 @@ internal class PaymentOptionViewModel @Inject constructor(
                 R.drawable.ic_outline_amex_40
             )
             AKULAKU -> listOf(R.drawable.ic_outline_akulaku_40)
+            KREDIVO -> listOf(R.drawable.ic_outline_akulaku_40)
             GOPAY -> listOf(R.drawable.ic_outline_gopaylogo_40)
             GOPAY_QRIS -> {
                 listOf(
@@ -135,6 +138,7 @@ internal class PaymentOptionViewModel @Inject constructor(
             UOB_EZPAY -> R.string.payment_summary_uobezpay
             CREDIT_CARD -> R.string.payment_summary_cc_dc
             AKULAKU -> R.string.payment_summary_akulaku
+            KREDIVO -> R.string.payment_summary_akulaku
             INDOMARET -> R.string.payment_summary_indomaret
             ALFAMART -> R.string.payment_summary_alfamart
             SHOPEEPAY -> R.string.payment_title_shopeepay

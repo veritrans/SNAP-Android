@@ -22,6 +22,7 @@ class SnapTokenRequestBuilder {
     private var bcaVa: BankTransferRequest? = null
     private var bniVa: BankTransferRequest? = null
     private var briVa: BankTransferRequest? = null
+    private var cimbVa: BankTransferRequest? = null
     private var enabledPayments: List<String>? = null
     private var expiry: Expiry? = null
     private var promoRequest: PromoRequest? = null
@@ -41,6 +42,8 @@ class SnapTokenRequestBuilder {
     fun withBcaVa(value: BankTransferRequest?) = apply { bcaVa = value }
     fun withBniVa(value: BankTransferRequest?) = apply { bniVa = value }
     fun withBriVa(value: BankTransferRequest?) = apply { briVa = value }
+
+    fun withCimbVa(value: BankTransferRequest?) = apply { cimbVa = value }
     fun withEnabledPayments(value: List<String>?) = apply { enabledPayments = value }
     fun withExpiry(value: Expiry?) = apply { expiry = value }
     fun withPromo(value: PromoRequest?) = apply { promoRequest = value }
@@ -66,6 +69,7 @@ class SnapTokenRequestBuilder {
             bcaVa = bcaVa,
             bniVa = bniVa,
             briVa = briVa,
+            cimbVa = cimbVa,
             enabledPayments = enabledPayments,
             expiry = expiry,
             promoRequest = promoRequest,

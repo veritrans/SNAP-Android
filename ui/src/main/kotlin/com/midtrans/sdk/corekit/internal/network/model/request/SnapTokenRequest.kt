@@ -13,6 +13,7 @@ internal data class SnapTokenRequest(
     val bcaVa: BankTransferRequest? = null,
     val bniVa: BankTransferRequest? = null,
     val briVa: BankTransferRequest? = null,
+    val cimbVa: BankTransferRequest? = null,
     val enabledPayments: List<String>? = null,
     val expiry: Expiry? = null,
     val promoRequest: PromoRequest? = null,

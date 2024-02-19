@@ -12,6 +12,8 @@ public enum PaymentMethod {
     BANK_TRANSFER_PERMATA,
     BANK_TRANSFER_BNI,
     BANK_TRANSFER_BRI,
+
+    BANK_TRANSFER_CIMB,
     BANK_TRANSFER_OTHER,
     GO_PAY,
     SHOPEEPAY,
@@ -25,5 +27,6 @@ public enum PaymentMethod {
     UOB_EZPAY_APP,
     INDOMARET,
     AKULAKU,
-    ALFAMART
+    ALFAMART,
+    KREDIVO
 }

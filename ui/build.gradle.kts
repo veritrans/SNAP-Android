@@ -1,9 +1,13 @@
+//import com.google.protobuf.gradle.*
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("kotlin-parcelize")
     id("maven-publish")
+//    id("com.google.protobuf")
+//    id("com.google.protobuf").version("0.8.12")
 }
 
 android {
@@ -62,9 +66,35 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+//    sourceSets {
+//        getByName("main").java.srcDirs("src/main/java")
+//    }
 }
 
+
+
 dependencies {
+
+////    implementation ("com.google.protobuf:protobuf-javalite:3.19.1")
+//    implementation("com.google.protobuf:protobuf-java:3.25.2")
+////    implementation ("com.google.protobuf:protobuf-javalite:3.25.2")
+//
+//    implementation ("com.gojek.clickstream:clickstream-android:2.0.0-alpha-1")
+//    implementation ("com.gojek.clickstream:clickstream-lifecycle:2.0.0-alpha-1")
+//
+//    // Optional
+//    implementation ("com.gojek.clickstream:clickstream-health-metrics:2.0.0-alpha-1")
+    implementation (files("libs/midtrans-clickstream-proto.jar"))
+//    implementation(files("libs/clickstream-4.0.4-midtrans.aar"))
+    implementation("com.google.protobuf:protobuf-java-util:3.11.1")
+//    {
+//        exclude( group = "com.google.protobuf.Timestamp")
+//    }
+
+    implementation("com.gojek.clickstream:clickstream-event-visualiser:2.0.0-alpha-1")
+    implementation("com.gojek.clickstream:clickstream-event-visualiser-ui:2.0.0-alpha-1")
+    implementation("com.gojek.clickstream:clickstream-event-listener:2.0.0-alpha-1")
 
     implementation("androidx.core:core-ktx:1.7.0")
     implementation(com.gtf.snap.CommonLibraries.appCompat)
@@ -157,3 +187,41 @@ afterEvaluate {
         }
     }
 }
+
+//protobuf {
+//    protoc {
+//        artifact = "com.google.protobuf:protoc:3.25.2"
+//    }
+//    plugins {
+//        this.create("javalite") {
+//            artifact = "com.google.protobuf:protoc-gen-javalite:3.25.2"
+//        }
+//    }
+//    generateProtoTasks {
+//        all().forEach {
+//            it.plugins {
+//                create("javalite"){}
+//            }
+//        }
+//    }
+//}
+//protobuf {
+//    protobuf.protoc {
+//        artifact = "com.google.protobuf:protoc:3.19.1"
+//    }
+//    protobuf.plugins {
+//        create("kotlin"){
+//            artifact = "com.google.protobuf:protoc-gen-javalite:3.19.1"
+//        }
+//    }
+//    protobuf.generateProtoTasks {
+//        all().forEach {
+//            // omitted plugins config
+//            it.builtins {
+//                this.id("kotlin")
+//            }
+//        }
+//    }
+//}
+
+

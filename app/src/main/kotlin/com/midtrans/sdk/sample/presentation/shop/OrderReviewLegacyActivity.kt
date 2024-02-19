@@ -536,14 +536,15 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
 
     private fun buildLegacyUiKit() {
         val builder = SdkUIFlowBuilder.init()
-            .setClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
+            .setClientKey("VT-client-yrHf-c8Sxr-ck8tx")
             .setContext(this.applicationContext)
             .setTransactionFinishedCallback(this)
-            .setMerchantBaseUrl("https://snap-merchant-server.herokuapp.com/api/")
+            .setMerchantBaseUrl("https://demo.midtrans.com/api/")
             .setDefaultText("fonts/SourceSansPro-Regular.ttf")
             .setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
             .setBoldText("fonts/SourceSansPro-Bold.ttf")
             .setLanguage("en")
+            .enableLog(true)
 
         getCustomColor(inputColor)?.let { builder.setColorTheme(it) }
         builder.buildSDK()
@@ -551,14 +552,15 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
 
     private fun buildLegacyUiKitStart() {
         val builder = SdkUIFlowBuilder.init()
-            .setClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
+            .setClientKey("VT-client-yrHf-c8Sxr-ck8tx")
             .setContext(this.applicationContext)
             .setTransactionFinishedCallback(this)
-            .setMerchantBaseUrl("https://snap-merchant-server.herokuapp.com/api/")
+            .setMerchantBaseUrl("https://demo.midtrans.com/api/")
             .setDefaultText("fonts/SourceSansPro-Regular.ttf")
             .setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
             .setBoldText("fonts/SourceSansPro-Bold.ttf")
             .setLanguage("en")
+            .enableLog(true)
 
         getCustomColor(inputColor)?.let { builder.setColorTheme(it) }
         builder.buildSDK()

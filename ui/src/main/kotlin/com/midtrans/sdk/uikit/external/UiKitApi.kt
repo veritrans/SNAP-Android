@@ -1,6 +1,7 @@
 package com.midtrans.sdk.uikit.external
 
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
@@ -77,6 +78,10 @@ class UiKitApi private constructor(val builder: Builder) {
                 PaymentType.BANK_TRANSFER,
                 PaymentType.BRI_VA
             )
+            PaymentMethod.BANK_TRANSFER_CIMB -> PaymentTypeItem(
+                PaymentType.BANK_TRANSFER,
+                PaymentType.CIMB_VA
+            )
             PaymentMethod.BANK_TRANSFER_OTHER -> PaymentTypeItem(
                 PaymentType.BANK_TRANSFER,
                 PaymentType.OTHER_VA
@@ -89,6 +94,7 @@ class UiKitApi private constructor(val builder: Builder) {
             PaymentMethod.DANAMON_ONLINE -> PaymentTypeItem(PaymentType.DANAMON_ONLINE, null)
             PaymentMethod.INDOMARET -> PaymentTypeItem(PaymentType.INDOMARET, null)
             PaymentMethod.AKULAKU -> PaymentTypeItem(PaymentType.AKULAKU, null)
+            PaymentMethod.KREDIVO -> PaymentTypeItem(PaymentType.KREDIVO, null)
             PaymentMethod.ALFAMART -> PaymentTypeItem(PaymentType.ALFAMART, null)
             PaymentMethod.UOB_EZPAY -> PaymentTypeItem(PaymentType.UOB_EZPAY, null)
             PaymentMethod.UOB_EZPAY_APP -> PaymentTypeItem(
@@ -126,6 +132,7 @@ class UiKitApi private constructor(val builder: Builder) {
         bcaVa: BankTransferRequest? = null,
         bniVa: BankTransferRequest? = null,
         briVa: BankTransferRequest? = null,
+        cimbVa: BankTransferRequest? = null,
         customField1: String? = null,
         customField2: String? = null,
         customField3: String? = null,
@@ -147,6 +154,7 @@ class UiKitApi private constructor(val builder: Builder) {
             bcaVa = bcaVa,
             bniVa = bniVa,
             briVa = briVa,
+            cimbVa = cimbVa,
             customField1 = customField1,
             customField2 = customField2,
             customField3 = customField3,
@@ -190,6 +198,7 @@ class UiKitApi private constructor(val builder: Builder) {
         bcaVa: BcaBankTransferRequestModel? = null,
         bniVa: BankTransferRequestModel? = null,
         briVa: BankTransferRequestModel? = null,
+        cimbVa: BankTransferRequestModel? = null,
         gopayCallback: GopayPaymentCallback? = null,
         shopeepayCallback: PaymentCallback? = null,
         customField1: String? = null,
@@ -212,6 +221,7 @@ class UiKitApi private constructor(val builder: Builder) {
             bcaVa = convertToRevamp(bcaVa),
             bniVa = convertToRevamp(bniVa),
             briVa = convertToRevamp(briVa),
+            cimbVa = convertToRevamp(cimbVa),
             gopayCallback = gopayCallback,
             shopeepayCallback = shopeepayCallback,
             uobEzpayCallback = uobEzpayCallback,
@@ -333,6 +343,8 @@ class UiKitApi private constructor(val builder: Builder) {
         internal var fontFamily: FontFamily? = null
         internal var uiKitSetting: UiKitSetting = UiKitSetting()
         internal var enableLog: Boolean = false
+        internal var enableClickstreamLog: Boolean = false
+        internal var application: Application? = null
 
         private fun customColorThemeToCustomColors(customColorTheme: CustomColorTheme): CustomColors {
             return CustomColors(customColorTheme)

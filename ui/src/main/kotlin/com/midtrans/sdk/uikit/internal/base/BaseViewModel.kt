@@ -5,6 +5,8 @@ import com.midtrans.sdk.corekit.api.exception.SnapError
 import com.midtrans.sdk.corekit.api.model.BinData
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
+import com.midtrans.sdk.corekit.internal.analytics.ClickstreamEventAnalytics
+import com.midtrans.sdk.corekit.internal.analytics.ClickstreamTracker
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
@@ -14,6 +16,7 @@ import io.reactivex.disposables.Disposable
 internal open class BaseViewModel : ViewModel() {
 
     protected var eventAnalytics: EventAnalytics? = null
+    protected var clickstreamEventAnalytics: ClickstreamEventAnalytics? = null
 
     private var requestTime = 0L
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
@@ -58,6 +61,17 @@ internal open class BaseViewModel : ViewModel() {
         )?.apply {
             initRequestTime()
         }
+
+//        clickstreamEventAnalytics?.trackSnapChargeRequest(
+//            pageName = pageName,
+//            paymentMethodName = paymentMethodName,
+//            promoName = promoName,
+//            promoAmount = promoAmount,
+//            promoId = promoId,
+//            creditCardPoint = creditCardPoint
+//        )?.apply {
+//            initRequestTime()
+//        }
     }
 
     protected fun trackSnapChargeResult(
@@ -80,6 +94,23 @@ internal open class BaseViewModel : ViewModel() {
             cardType = response.cardType,
             threeDsVersion = response.threeDsVersion
         )
+//
+//        clickstreamEventAnalytics?.trackSnapChargeResult(
+//            pageName = pageName,
+//            transactionStatus = response.transactionStatus.orEmpty(),
+//            fraudStatus = response.fraudStatus.orEmpty(),
+//            currency = response.currency.orEmpty(),
+//            statusCode = response.statusCode.orEmpty(),
+//            transactionId = response.transactionId.orEmpty(),
+//            paymentMethodName = paymentMethodName,
+//            responseTime = getResponseTime(),
+//            bank = response.bank,
+//            channelResponseCode = response.channelResponseCode,
+//            channelResponseMessage = response.channelResponseMessage,
+//            cardType = response.cardType,
+//            threeDsVersion = response.threeDsVersion
+//        )
+
     }
 
     protected fun trackCtaClicked(

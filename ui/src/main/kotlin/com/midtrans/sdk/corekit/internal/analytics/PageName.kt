@@ -13,6 +13,7 @@ class PageName {
         INDOMARET_PAGE,
         ALFAMART_PAGE,
         AKULAKU_PAGE,
+        KREDIVO_PAGE,
         KLIK_BCA_PAGE,
         BCA_KLIK_PAY_PAGE,
         OCTO_CLICKS_PAGE,
@@ -25,6 +26,7 @@ class PageName {
         BCA_VA_PAGE,
         BNI_VA_PAGE,
         BRI_VA_PAGE,
+        CIMB_VA_PAGE,
         PERMATA_VA_PAGE,
         MANDIRI_E_CHANNEL_PAGE,
         OTHER_VA_PAGE,
@@ -44,6 +46,7 @@ class PageName {
         const val INDOMARET_PAGE = "Indomaret Page"
         const val ALFAMART_PAGE = "Alfamart Page"
         const val AKULAKU_PAGE = "Akulaku  Instruction"
+        const val KREDIVO_PAGE = "Kredivo  Instruction"
         const val KLIK_BCA_PAGE = "KlikBCA  Instruction"
         const val BCA_KLIK_PAY_PAGE = "BCAKlikPay  Instruction"
         const val OCTO_CLICKS_PAGE = "OCTOClicks Instruction"
@@ -58,6 +61,7 @@ class PageName {
         const val BCA_VA_PAGE = "BCA VA Page"
         const val BNI_VA_PAGE = "BNI VA Page"
         const val BRI_VA_PAGE = "BRI VA Page"
+        const val CIMB_VA_PAGE = "CIMB VA Page"
         const val PERMATA_VA_PAGE = "Permata VA Page"
         const val MANDIRI_E_CHANNEL_PAGE = "Mandiri BP Page"
         const val OTHER_VA_PAGE = "Other VA Page"
