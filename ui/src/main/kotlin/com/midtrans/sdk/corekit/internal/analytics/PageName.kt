@@ -25,6 +25,7 @@ class PageName {
         BCA_VA_PAGE,
         BNI_VA_PAGE,
         BRI_VA_PAGE,
+        CIMB_VA_PAGE,
         PERMATA_VA_PAGE,
         MANDIRI_E_CHANNEL_PAGE,
         OTHER_VA_PAGE,
@@ -58,6 +59,7 @@ class PageName {
         const val BCA_VA_PAGE = "BCA VA Page"
         const val BNI_VA_PAGE = "BNI VA Page"
         const val BRI_VA_PAGE = "BRI VA Page"
+        const val CIMB_VA_PAGE = "CIMB VA Page"
         const val PERMATA_VA_PAGE = "Permata VA Page"
         const val MANDIRI_E_CHANNEL_PAGE = "Mandiri BP Page"
         const val OTHER_VA_PAGE = "Other VA Page"
