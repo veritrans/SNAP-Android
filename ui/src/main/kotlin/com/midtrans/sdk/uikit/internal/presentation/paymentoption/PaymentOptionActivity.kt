@@ -253,6 +253,7 @@ class PaymentOptionActivity : BaseActivity() {
                 PaymentType.BCA_VA,
                 PaymentType.BNI_VA,
                 PaymentType.BRI_VA,
+                PaymentType.CIMB_VA,
                 PaymentType.OTHER_VA,
                 PaymentType.E_CHANNEL
             )
@@ -550,6 +551,23 @@ class PaymentOptionActivity : BaseActivity() {
             )
         }
 
+        val payLaterPaymentLauncher =  {
+            resultLauncher.launch(
+                PayLaterActivity.getIntent(
+                    activityContext = this,
+                    snapToken = snapToken,
+                    paymentType = paymentType,
+                    amount = totalAmount,
+                    orderId = orderId,
+                    customerInfo = customerInfo,
+                    itemInfo = itemInfo,
+                    stepNumber = NEXT_STEP_NUMBER,
+                    result = transactionResult,
+                    expiryTime = expiryTime
+                )
+            )
+        }
+
         val cStorePaymentLauncher = {
             resultLauncher.launch(
                 ConvenienceStoreActivity.getIntent(
@@ -640,24 +658,9 @@ class PaymentOptionActivity : BaseActivity() {
             Pair(PaymentType.SHOPEEPAY_QRIS, eWalletPaymentLauncher),
             Pair(PaymentType.GOPAY, eWalletPaymentLauncher),
             Pair(PaymentType.GOPAY_QRIS, eWalletPaymentLauncher),
-            Pair(PaymentType.AKULAKU) {
-                resultLauncher.launch(
-                    PayLaterActivity.getIntent(
-                        activityContext = this,
-                        snapToken = snapToken,
-                        paymentType = paymentType,
-                        amount = totalAmount,
-                        orderId = orderId,
-                        customerInfo = customerInfo,
-                        itemInfo = itemInfo,
-                        stepNumber = NEXT_STEP_NUMBER,
-                        result = transactionResult,
-                        expiryTime = expiryTime
-                    )
-                )
-            },
             Pair(PaymentType.ALFAMART, cStorePaymentLauncher),
-            Pair(PaymentType.INDOMARET, cStorePaymentLauncher)
+            Pair(PaymentType.INDOMARET, cStorePaymentLauncher),
+            Pair(PaymentType.AKULAKU, payLaterPaymentLauncher)
         )
     }
 
