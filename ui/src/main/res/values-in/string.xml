@@ -170,6 +170,7 @@
 
     <string name="general_instruction_bca">Lakukan pembayaran dari rekening bank BCA ke nomor virtual account berikut.</string>
     <string name="general_instruction_mandiri">Lakukan pembayaran dari rekening bank Mandiri ke nomor virtual account berikut.</string>
+    <string name="general_instruction_cimb">Lakukan pembayaran dari rekening bank CIMB ke nomor virtual account berikut.</string>
     <string name="general_instruction_bni_bri_permata_other_bank">Lakukan pembayaran dari bank apa saja ke nomor virtual account berikut.</string>
 
     <string name="general_instruction_company_code_mandiri_only">Kode perusahan</string>
@@ -582,11 +583,50 @@
         <item><data><![CDATA[Pembayaran selesai.]]></data></item>
     </string-array>
 
+    <string name="cimb_instruction_atm_title">ATM CIMB NIAGA</string>
+    <string-array name="cimb_instruction_atm">
+        <item><data><![CDATA[Pilih <b>pembayaran</b> pada menu utama.]]></data></item>
+        <item><data><![CDATA[Pilih <b>virtual account</b>.]]></data></item>
+        <item><data><![CDATA[Masukkan <b>nomor virtual account</b>, lalu <b>konfirmasi</b>.]]></data></item>
+        <item><data><![CDATA[Pembayaran selesai.]]></data></item>
+    </string-array>
+
+    <string name="cimb_instruction_octo_clicks_title">OCTO Clicks</string>
+    <string-array name="cimb_instruction_octo_clicks">
+        <item><data><![CDATA[Pilih <b>pembayaran tagihan</b> pada menu utama.]]></data></item>
+        <item><data><![CDATA[Pilih <b>mobile rekening virtual</b>.]]></data></item>
+        <item><data><![CDATA[Masukkan <b>nomor virtual account</b>, lalu klik <b>lanjut untuk verifikasi detail</b>.]]></data></item>
+        <item><data><![CDATA[Pilih <b>kirim OTP untuk lanjut</b> selesai.]]></data></item>
+        <item><data><![CDATA[Masukkan <b>OTP</b> yang dikirimkan ke nomor HP Anda, lalu <b>konfirmasi</b>]]></data></item>
+        <item><data><![CDATA[Pembayaran selesai.]]></data></item>
+    </string-array>
+
+    <string name="cimb_instruction_octo_mobile_title">OCTO Mobile</string>
+    <string-array name="cimb_instruction_octo_mobile">
+        <item><data><![CDATA[ Pilih menu <b>transfer</b>.]]></data></item>
+        <item><data><![CDATA[Pilih <b>transfer to other CIMB Niaga account</b>.]]></data></item>
+        <item><data><![CDATA[Pilih sumber dana: <b>CASA</b> atau <b>rekening ponsel</b>]]></data></item>
+        <item><data><![CDATA[Masukkan <b>nomor virtual account</b>.]]></data></item>
+        <item><data><![CDATA[Masukkan <b>jumlah yang akan dibayar</b>.]]></data></item>
+        <item><data><![CDATA[Ikuti instruksi untuk menyelesaikan pembayaran.]]></data></item>
+        <item><data><![CDATA[Pembayaran selesai.]]></data></item>
+    </string-array>
+
+    <string name="cimb_instruction_other_bank_title">Via bank lainnya</string>
+    <string-array name="cimb_instruction_other_bank">
+        <item><data><![CDATA[ Pilih <b>bank</b> &amp; <b>cara bayar</b> (ATM/internet/mobile banking) <b>yang Anda inginkan</b>.]]></data></item>
+        <item><data><![CDATA[Pilih <b>transfer ke bank lain</b>.]]></data></item>
+        <item><data><![CDATA[Masukkan <b>nomor virtual account CIMB Niaga.</b>.]]></data></item>
+        <item><data><![CDATA[Masukkan <b>jumlah yang akan dibayar, lalu konfirmasi.</b>.]]></data></item>
+        <item><data><![CDATA[Pembayaran selesai.]]></data></item>
+    </string-array>
+
     <string name="payment_instruction_how_to_pay_title">Cara bayar</string>
 
     <string name="bank_bca">BCA</string>
     <string name="bank_permata">Permata</string>
     <string name="bank_bri">BRI</string>
+    <string name="bank_cimb">CIMB</string>
     <string name="bank_mandiri">Mandiri</string>
     <string name="bank_bni">BNI</string>
     <string name="bank_other">Bank Lainnya</string>
