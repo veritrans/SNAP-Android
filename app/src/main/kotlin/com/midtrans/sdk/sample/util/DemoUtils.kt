@@ -44,7 +44,11 @@ object DemoUtils {
     }
 
     fun populateBlacklistBins(blacklistBins: String): ArrayList<String> {
-        return ArrayList(blacklistBins.split(", "))
+        var output = arrayListOf<String>()
+        if (blacklistBins.isNotEmpty()){
+            output = ArrayList(blacklistBins.split(", "))
+        }
+        return output
     }
 
     fun populateEnabledPayment(paymentChannels: ArrayList<ListItem>, isShowAllPaymentChannels: Boolean = true): List<String>? {
