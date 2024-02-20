@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -475,6 +476,12 @@ internal class BankTransferDetailActivity : BaseActivity() {
                 viewModel = viewModel,
                 isChargeResponseError = isChargeResponseError
             )),
+            Pair(PaymentType.CIMB_VA,  getDetailWithVaNumber(
+                vaNumber = vaNumber,
+                paymentType = PaymentType.CIMB_VA,
+                viewModel = viewModel,
+                isChargeResponseError = isChargeResponseError
+            )),
             Pair(PaymentType.PERMATA_VA,  getDetailWithVaNumber(
                 vaNumber = vaNumber,
                 paymentType = PaymentType.PERMATA_VA,
@@ -551,6 +558,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
             Pair(PaymentType.E_CHANNEL, mandiriPaymentInstruction),
             Pair(PaymentType.BNI_VA, bniPaymentInstruction),
             Pair(PaymentType.BRI_VA, briPaymentInstruction),
+            Pair(PaymentType.CIMB_VA, cimbPaymentInstruction),
             Pair(PaymentType.PERMATA_VA, permataPaymentInstruction),
             Pair(PaymentType.OTHER_VA, otherBankPaymentInstruction)
         )
@@ -562,6 +570,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
             Pair(PaymentType.E_CHANNEL, R.string.general_instruction_mandiri),
             Pair(PaymentType.BNI_VA, R.string.general_instruction_bni_bri_permata_other_bank),
             Pair(PaymentType.BRI_VA, R.string.general_instruction_bni_bri_permata_other_bank),
+            Pair(PaymentType.CIMB_VA, R.string.general_instruction_cimb),
             Pair(PaymentType.PERMATA_VA, R.string.general_instruction_bni_bri_permata_other_bank),
             Pair(PaymentType.OTHER_VA, R.string.general_instruction_bni_bri_permata_other_bank)
         )
@@ -648,7 +657,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
             Pair(
                 R.string.bri_instruction_other_bank_title,
                 R.array.bri_instruction_other_bank
-            )
+            ),
         )
     }
 
@@ -669,12 +678,34 @@ internal class BankTransferDetailActivity : BaseActivity() {
         )
     }
 
+    private val cimbPaymentInstruction by lazy {
+        listOf(
+            Pair(
+                R.string.cimb_instruction_atm_title,
+                R.array.cimb_instruction_atm
+            ),
+            Pair(
+                R.string.cimb_instruction_octo_clicks_title,
+                R.array.cimb_instruction_octo_clicks
+            ),
+            Pair(
+                R.string.cimb_instruction_octo_mobile_title,
+                R.array.cimb_instruction_octo_mobile
+            ),
+            Pair(
+                R.string.cimb_instruction_other_bank_title,
+                R.array.cimb_instruction_other_bank
+            )
+        )
+    }
+
     private val title by lazy {
         mapOf(
             Pair(PaymentType.BCA_VA, R.string.bank_bca),
             Pair(PaymentType.E_CHANNEL, R.string.bank_mandiri),
             Pair(PaymentType.PERMATA_VA, R.string.bank_permata),
             Pair(PaymentType.BRI_VA, R.string.bank_bri),
+            Pair(PaymentType.CIMB_VA, R.string.bank_cimb),
             Pair(PaymentType.BNI_VA, R.string.bank_bni),
             Pair(PaymentType.OTHER_VA, R.string.bank_other),
         )

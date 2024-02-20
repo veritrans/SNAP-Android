@@ -77,6 +77,10 @@ class UiKitApi private constructor(val builder: Builder) {
                 PaymentType.BANK_TRANSFER,
                 PaymentType.BRI_VA
             )
+            PaymentMethod.BANK_TRANSFER_CIMB -> PaymentTypeItem(
+                PaymentType.BANK_TRANSFER,
+                PaymentType.CIMB_VA
+            )
             PaymentMethod.BANK_TRANSFER_OTHER -> PaymentTypeItem(
                 PaymentType.BANK_TRANSFER,
                 PaymentType.OTHER_VA
@@ -126,6 +130,7 @@ class UiKitApi private constructor(val builder: Builder) {
         bcaVa: BankTransferRequest? = null,
         bniVa: BankTransferRequest? = null,
         briVa: BankTransferRequest? = null,
+        cimbVa: BankTransferRequest? = null,
         customField1: String? = null,
         customField2: String? = null,
         customField3: String? = null,
@@ -147,6 +152,7 @@ class UiKitApi private constructor(val builder: Builder) {
             bcaVa = bcaVa,
             bniVa = bniVa,
             briVa = briVa,
+            cimbVa = cimbVa,
             customField1 = customField1,
             customField2 = customField2,
             customField3 = customField3,
@@ -190,6 +196,7 @@ class UiKitApi private constructor(val builder: Builder) {
         bcaVa: BcaBankTransferRequestModel? = null,
         bniVa: BankTransferRequestModel? = null,
         briVa: BankTransferRequestModel? = null,
+        cimbVa: BankTransferRequestModel? = null,
         gopayCallback: GopayPaymentCallback? = null,
         shopeepayCallback: PaymentCallback? = null,
         customField1: String? = null,
@@ -212,6 +219,7 @@ class UiKitApi private constructor(val builder: Builder) {
             bcaVa = convertToRevamp(bcaVa),
             bniVa = convertToRevamp(bniVa),
             briVa = convertToRevamp(briVa),
+            cimbVa = convertToRevamp(cimbVa),
             gopayCallback = gopayCallback,
             shopeepayCallback = shopeepayCallback,
             uobEzpayCallback = uobEzpayCallback,

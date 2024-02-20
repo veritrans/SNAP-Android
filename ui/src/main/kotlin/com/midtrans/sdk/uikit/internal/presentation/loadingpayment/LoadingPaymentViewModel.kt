@@ -36,6 +36,7 @@ class LoadingPaymentViewModel @Inject constructor(
         bcaVa: BankTransferRequest?,
         bniVa: BankTransferRequest?,
         briVa: BankTransferRequest?,
+        cimbVa: BankTransferRequest?,
         enabledPayments: List<String>?,
         expiry: Expiry?,
         promoRequest: PromoRequest?,

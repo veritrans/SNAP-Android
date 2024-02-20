@@ -45,6 +45,7 @@ class LoadingPaymentActivity : BaseActivity() {
         private const val EXTRA_BCA_VA = "loadingPaymentActivity.extra.bca_va"
         private const val EXTRA_BNI_VA = "loadingPaymentActivity.extra.bni_va"
         private const val EXTRA_BRI_VA = "loadingPaymentActivity.extra.bri_va"
+        private const val EXTRA_CIMB_VA = "loadingPaymentActivity.extra.cimb_va"
         private const val EXTRA_ENABLED_PAYMENTS = "loadingPaymentActivity.extra.enabled_payments"
         private const val EXTRA_EXPIRY = "loadingPaymentActivity.extra.expiry"
         private const val EXTRA_PROMO = "loadingPaymentActivity.extra.promo"
@@ -70,6 +71,7 @@ class LoadingPaymentActivity : BaseActivity() {
             bcaVa: BankTransferRequest? = null,
             bniVa: BankTransferRequest? = null,
             briVa: BankTransferRequest? = null,
+            cimbVa: BankTransferRequest? = null,
             enabledPayments: List<String>? = null,
             expiry: Expiry? = null,
             promoRequest: PromoRequest? = null,
@@ -94,6 +96,7 @@ class LoadingPaymentActivity : BaseActivity() {
                 putExtra(EXTRA_BCA_VA, bcaVa)
                 putExtra(EXTRA_BNI_VA, bniVa)
                 putExtra(EXTRA_BRI_VA, briVa)
+                putExtra(EXTRA_CIMB_VA, cimbVa)
                 putStringArrayListExtra(
                     EXTRA_ENABLED_PAYMENTS,
                     enabledPayments?.let { ArrayList(it) })
@@ -145,6 +148,9 @@ class LoadingPaymentActivity : BaseActivity() {
     }
     private val briVa: BankTransferRequest? by lazy {
         intent.getParcelableExtra(EXTRA_BRI_VA) as? BankTransferRequest
+    }
+    private val cimbVa: BankTransferRequest? by lazy {
+        intent.getParcelableExtra(EXTRA_CIMB_VA) as? BankTransferRequest
     }
     private val enabledPayments: List<String>? by lazy {
         intent.getStringArrayListExtra(EXTRA_ENABLED_PAYMENTS)
@@ -244,6 +250,7 @@ class LoadingPaymentActivity : BaseActivity() {
             bcaVa = bcaVa,
             bniVa = bniVa,
             briVa = briVa,
+            cimbVa = cimbVa,
             enabledPayments = enabledPayments,
             expiry = expiry,
             promoRequest = promoRequest,
