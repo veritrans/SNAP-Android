@@ -495,8 +495,8 @@ class OrderReviewRevampActivity : ComponentActivity() {
     private fun buildUiKit() {
         val builder = UiKitApi.Builder()
             .withContext(this.applicationContext)
-            .withMerchantUrl("https://snap-merchant-server.herokuapp.com/api/")
-            .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
+            .withMerchantUrl("https://demo.midtrans.com/api/")
+            .withMerchantClientKey("VT-client-yrHf-c8Sxr-ck8tx")
             .withFontFamily("fonts/SourceSansPro-Italic.ttf")
             .enableLog(true)
 
@@ -552,8 +552,8 @@ class OrderReviewRevampActivity : ComponentActivity() {
     private fun buildUiKitStart() {
         val builder = UiKitApi.Builder()
             .withContext(this.applicationContext)
-            .withMerchantUrl("")
-            .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
+            .withMerchantUrl("https://demo.midtrans.com/api/")
+            .withMerchantClientKey("VT-client-yrHf-c8Sxr-ck8tx")
             .withFontFamily("fonts/SourceSansPro-Regular.ttf")
 
         getCustomColor(inputColor)?.let { builder.withCustomColors(CustomColors()) }

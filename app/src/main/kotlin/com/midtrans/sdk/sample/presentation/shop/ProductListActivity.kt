@@ -210,8 +210,8 @@ class ProductListActivity : ComponentActivity() {
     private fun buildUiKit() {
         UiKitApi.Builder()
             .withContext(this.applicationContext)
-            .withMerchantUrl("")
-            .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
+            .withMerchantUrl("https://demo.midtrans.com/api/")
+            .withMerchantClientKey("VT-client-yrHf-c8Sxr-ck8tx")
             .withFontFamily("fonts/SourceSansPro-Regular.ttf")
             .build()
     }
