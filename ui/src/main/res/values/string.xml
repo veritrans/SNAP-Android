@@ -616,7 +616,7 @@
         <item><data><![CDATA[Payment completed.]]></data></item>
     </string-array>
 
-    <string name="cimb_instruction_other_bank_title">Via bank lainnya</string>
+    <string name="cimb_instruction_other_bank_title">Via other banks</string>
     <string-array name="cimb_instruction_other_bank">
         <item><data><![CDATA[Select your <b>preferred bank & payment channel</b> (ATM/internet/mobile banking).]]></data></item>
         <item><data><![CDATA[Select <b>transfer to other bank</b>.]]></data></item>
