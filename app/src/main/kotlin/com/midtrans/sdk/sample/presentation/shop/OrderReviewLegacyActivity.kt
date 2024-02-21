@@ -174,7 +174,6 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        buildLegacyUiKitStart()
 
         setContent {
             OrderListPage()
@@ -549,23 +548,6 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
         getCustomColor(inputColor)?.let { builder.setColorTheme(it) }
         builder.buildSDK()
     }
-
-    private fun buildLegacyUiKitStart() {
-        val builder = SdkUIFlowBuilder.init()
-            .setClientKey("VT-client-yrHf-c8Sxr-ck8tx")
-            .setContext(this.applicationContext)
-            .setTransactionFinishedCallback(this)
-            .setMerchantBaseUrl("https://demo.midtrans.com/api/")
-            .setDefaultText("fonts/SourceSansPro-Regular.ttf")
-            .setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
-            .setBoldText("fonts/SourceSansPro-Bold.ttf")
-            .setLanguage("en")
-            .enableLog(true)
-
-        getCustomColor(inputColor)?.let { builder.setColorTheme(it) }
-        builder.buildSDK()
-    }
-
     private fun getCustomColor(inputColor: String): CustomColorTheme? {
         var color: CustomColorTheme? = null
         when (inputColor) {

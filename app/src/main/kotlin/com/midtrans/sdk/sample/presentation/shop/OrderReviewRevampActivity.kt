@@ -222,7 +222,6 @@ class OrderReviewRevampActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        buildUiKitStart()
         setLocaleNew("id")
 
         setContent {
@@ -548,18 +547,6 @@ class OrderReviewRevampActivity : ComponentActivity() {
             snapToken = token
         )
     }
-
-    private fun buildUiKitStart() {
-        val builder = UiKitApi.Builder()
-            .withContext(this.applicationContext)
-            .withMerchantUrl("https://demo.midtrans.com/api/")
-            .withMerchantClientKey("VT-client-yrHf-c8Sxr-ck8tx")
-            .withFontFamily("fonts/SourceSansPro-Regular.ttf")
-
-        getCustomColor(inputColor)?.let { builder.withCustomColors(CustomColors()) }
-        builder.build()
-    }
-
     private fun getCustomColor(inputColor: String): CustomColorTheme? {
         var color: CustomColorTheme? = null
         when (inputColor) {
