@@ -165,7 +165,8 @@ class UiKitApi private constructor(val builder: Builder) {
     fun startPaymentUiFlow(
         activity: Activity,
         launcher: ActivityResultLauncher<Intent>,
-        snapToken: String?
+        snapToken: String?,
+        paymentMethod: PaymentMethod? = null
     ) {
         var isSnapTokenAvailable = true
         if (snapToken.isNullOrEmpty()) isSnapTokenAvailable = false
@@ -175,7 +176,8 @@ class UiKitApi private constructor(val builder: Builder) {
             snapToken = snapToken,
             transactionDetails = SnapTransactionDetail("", 0.0),
             isMerchantUrlAvailable = isMerchantUrlAvailable,
-            isSnapTokenAvailable = isSnapTokenAvailable
+            isSnapTokenAvailable = isSnapTokenAvailable,
+            paymentType = getPaymentType(paymentMethod)
         )
         launcher.launch(intent)
     }
@@ -314,7 +316,7 @@ class UiKitApi private constructor(val builder: Builder) {
     fun runPaymentTokenLegacy(
         activityContext: Context,
         snapToken: String? = null,
-        paymentType: PaymentTypeItem? = null,
+        paymentMethod: PaymentMethod? = null,
         paymentCallback: Callback<TransactionResult>
     ) {
         UiKitApi.paymentCallback = paymentCallback
@@ -326,7 +328,7 @@ class UiKitApi private constructor(val builder: Builder) {
             activityContext = activityContext,
             snapToken = snapToken,
             transactionDetails = com.midtrans.sdk.corekit.api.model.SnapTransactionDetail("", 0.0),
-            paymentType = paymentType,
+            paymentType = getPaymentType(paymentMethod),
             isMerchantUrlAvailable = isMerchantUrlAvailable,
             isSnapTokenAvailable = isSnapTokenAvailable
         )
