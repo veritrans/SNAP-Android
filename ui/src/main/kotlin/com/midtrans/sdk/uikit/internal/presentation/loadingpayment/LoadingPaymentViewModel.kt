@@ -57,6 +57,7 @@ class LoadingPaymentViewModel @Inject constructor(
             .withBcaVa(bcaVa)
             .withBniVa(bniVa)
             .withBriVa(briVa)
+            .withCimbVa(cimbVa)
             .withEnabledPayments(enabledPayments)
             .withExpiry(expiry)
             .withPromo(promoRequest)
