@@ -12,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.midtrans.sdk.corekit.core.PaymentMethod
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.presentation.config.component.AlertDialogDropdownMenu
 import com.midtrans.sdk.sample.presentation.config.component.BasicDropdownMenu
@@ -34,8 +35,10 @@ import com.midtrans.sdk.sample.util.DemoConstant.COLOR_THEME
 import com.midtrans.sdk.sample.util.DemoConstant.CREDIT_CARD_AUTHENTICATION
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BCA_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BNI_VA
+import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_CIMB_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_EXPIRY
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_PERMATA_VA
+import com.midtrans.sdk.sample.util.DemoConstant.DIRECT_PAYMENT_SCREEN_ENABLED
 import com.midtrans.sdk.sample.util.DemoConstant.DISABLED
 import com.midtrans.sdk.sample.util.DemoConstant.ENABLED
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
@@ -76,6 +79,17 @@ class DemoConfigurationActivity : AppCompatActivity() {
     @Composable
     fun DemoConfigurationScreen(scrollState: ScrollState) {
         val installmentTerm = listOf(NO_INSTALLMENT, MANDIRI, BCA, BNI, BRI, CIMB, MAYBANK, OFFLINE)
+        val paymentMethodList = listOf( DISABLED,
+            PaymentMethod.CREDIT_CARD, PaymentMethod.BANK_TRANSFER, PaymentMethod.BANK_TRANSFER_BCA,
+            PaymentMethod.BANK_TRANSFER_MANDIRI, PaymentMethod.BANK_TRANSFER_PERMATA, PaymentMethod.BANK_TRANSFER_BNI,
+            PaymentMethod.BANK_TRANSFER_BRI, PaymentMethod.BANK_TRANSFER_CIMB, PaymentMethod.BANK_TRANSFER_OTHER,
+            PaymentMethod.GO_PAY, PaymentMethod.SHOPEEPAY, PaymentMethod.KLIKBCA, PaymentMethod.BCA_KLIKPAY,
+            PaymentMethod.CIMB_CLICKS, PaymentMethod.EPAY_BRI, PaymentMethod.DANAMON_ONLINE,
+            PaymentMethod.UOB_EZPAY, PaymentMethod.UOB_EZPAY_APP, PaymentMethod.UOB_EZPAY_WEB,
+            PaymentMethod.INDOMARET, PaymentMethod.ALFAMART, PaymentMethod.AKULAKU
+        ).map {
+            it.toString()
+        }
         val isRequiredList = listOf(OPTIONAL, REQUIRED)
         val acquringBankList =
             listOf(NO_ACQUIRING_BANK, MANDIRI, BCA, BNI, BRI, CIMB, MAYBANK, MEGA)
@@ -101,7 +115,9 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 blacklistBins = "",
                 bcaVa = "",
                 bniVa = "",
-                permataVa = ""
+                permataVa = "",
+                cimbVa = "",
+                directPaymentScreen = DISABLED
             )
         }
         val openDialog = remember { mutableStateOf(true) }
@@ -162,6 +178,11 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 state = state,
                 openDialog = openDialog
             )
+            BasicDropdownMenu(
+                title = DIRECT_PAYMENT_SCREEN_ENABLED,
+                optionList = paymentMethodList,
+                state = state
+            )
             CustomTextField(
                 title = WHITELIST_BINS,
                 state = state
@@ -180,6 +201,10 @@ class DemoConfigurationActivity : AppCompatActivity() {
             )
             CustomTextField(
                 title = CUSTOM_PERMATA_VA,
+                state = state
+            )
+            CustomTextField(
+                title = CUSTOM_CIMB_VA,
                 state = state
             )
 
@@ -207,6 +232,8 @@ class DemoConfigurationActivity : AppCompatActivity() {
                         state.bcaVa,
                         state.bniVa,
                         state.permataVa,
+                        state.cimbVa,
+                        state.directPaymentScreen,
                         true
                     )
                     startActivity(intent)
@@ -237,6 +264,9 @@ class DemoConfigurationActivity : AppCompatActivity() {
                         state.bcaVa,
                         state.bniVa,
                         state.permataVa,
+                        state.cimbVa,
+                        state.directPaymentScreen,
+
                         false
                     )
                     startActivity(intent)
@@ -272,6 +302,8 @@ class InputState(
     bcaVa: String,
     bniVa: String,
     permataVa: String,
+    cimbVa: String,
+    directPaymentScreen: String
 ) {
     var installment by mutableStateOf(installment)
     var color by mutableStateOf(color)
@@ -289,4 +321,6 @@ class InputState(
     var bcaVa by mutableStateOf(bcaVa)
     var bniVa by mutableStateOf(bniVa)
     var permataVa by mutableStateOf(permataVa)
+    var cimbVa by mutableStateOf(cimbVa)
+    var directPaymentScreen by mutableStateOf(directPaymentScreen)
 }
