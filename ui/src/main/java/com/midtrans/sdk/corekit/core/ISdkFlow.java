@@ -10,6 +10,7 @@ import static com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_20
 import static com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SETTLEMENT;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -104,33 +105,39 @@ public class ISdkFlow {
             UiKitApi.Companion.getDefaultInstance().setCustomFontFamily(AssetFontLoader.INSTANCE.fontFamily(MidtransSDK.getInstance().getDefaultText(), context));
         }
         TransactionRequest transactionRequest = MidtransSDK.getInstance().getTransactionRequest();
-        UiKitApi.Companion.getDefaultInstance().runPaymentLegacy(
-                context,
-                new SnapTransactionDetail(
-                        transactionRequest.getOrderId(),
-                        transactionRequest.getAmount(),
-                        transactionRequest.getCurrency()
-                ),
-                transactionRequest.getCustomerDetails(),
-                transactionRequest.getItemDetails(),
-                transactionRequest.getCreditCard(),
-                transactionRequest.getCustomerDetails().getCustomerIdentifier(),
-                transactionRequest.getUobEzpay(),
-                wrapperCallback,
-                transactionRequest.getExpiry(),
-                paymentMethod,
-                transactionRequest.getEnabledPayments(),
-                transactionRequest.getPermataVa(),
-                transactionRequest.getBcaVa(),
-                transactionRequest.getBniVa(),
-                transactionRequest.getBriVa(),
-                transactionRequest.getCimbVa(),
-                transactionRequest.getGopay(),
-                transactionRequest.getShopeepay(),
-                transactionRequest.getCustomField1(),
-                transactionRequest.getCustomField2(),
-                transactionRequest.getCustomField3()
-        );
+
+        if (snapToken != null){
+            UiKitApi.Companion.getDefaultInstance().runPaymentTokenLegacy(context,snapToken,paymentMethod, wrapperCallback);
+
+        } else {
+            UiKitApi.Companion.getDefaultInstance().runPaymentLegacy(
+                    context,
+                    new SnapTransactionDetail(
+                            transactionRequest.getOrderId(),
+                            transactionRequest.getAmount(),
+                            transactionRequest.getCurrency()
+                    ),
+                    transactionRequest.getCustomerDetails(),
+                    transactionRequest.getItemDetails(),
+                    transactionRequest.getCreditCard(),
+                    transactionRequest.getCustomerDetails().getCustomerIdentifier(),
+                    transactionRequest.getUobEzpay(),
+                    wrapperCallback,
+                    transactionRequest.getExpiry(),
+                    paymentMethod,
+                    transactionRequest.getEnabledPayments(),
+                    transactionRequest.getPermataVa(),
+                    transactionRequest.getBcaVa(),
+                    transactionRequest.getBniVa(),
+                    transactionRequest.getBriVa(),
+                    transactionRequest.getCimbVa(),
+                    transactionRequest.getGopay(),
+                    transactionRequest.getShopeepay(),
+                    transactionRequest.getCustomField1(),
+                    transactionRequest.getCustomField2(),
+                    transactionRequest.getCustomField3()
+            );
+        }
     }
 
     private static void deliverCallback(TransactionResult transactionResult) {

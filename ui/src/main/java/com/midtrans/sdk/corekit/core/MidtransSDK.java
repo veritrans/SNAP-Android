@@ -129,11 +129,9 @@ public class MidtransSDK {
     }
 
     private void startDirectPayment(Context context, String snapToken, PaymentMethod paymentMethod) {
-        if (isTransactionRequestAvailable()) {
-            if (uiflow != null) {
-                uiflow.runDirectPayment(context, snapToken, paymentMethod);
-            }
-        } else {
+        if (uiflow != null) {
+            uiflow.runDirectPayment(context, snapToken, paymentMethod);
+        } else if (snapToken == null && !isTransactionRequestAvailable()){
             Logger.e(ADD_TRANSACTION_DETAILS);
         }
     }
