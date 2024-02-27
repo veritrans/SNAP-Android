@@ -86,7 +86,7 @@ dependencies {
 //    // Optional
 //    implementation ("com.gojek.clickstream:clickstream-health-metrics:2.0.0-alpha-1")
     implementation (files("libs/midtrans-clickstream-proto.jar"))
-//    implementation(files("libs/clickstream-4.0.4-midtrans.aar"))
+    implementation(files("libs/clickstream-4.0.5-midtrans.aar"))
     implementation("com.google.protobuf:protobuf-java-util:3.11.1")
 //    {
 //        exclude( group = "com.google.protobuf.Timestamp")
