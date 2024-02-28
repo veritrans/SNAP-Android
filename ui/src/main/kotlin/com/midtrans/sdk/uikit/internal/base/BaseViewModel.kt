@@ -51,18 +51,7 @@ internal open class BaseViewModel : ViewModel() {
         promoId: String? = null,
         creditCardPoint: String? = null
     ) {
-        eventAnalytics?.trackSnapChargeRequest(
-            pageName = pageName,
-            paymentMethodName = paymentMethodName,
-            promoName = promoName,
-            promoAmount = promoAmount,
-            promoId = promoId,
-            creditCardPoint = creditCardPoint
-        )?.apply {
-            initRequestTime()
-        }
-
-//        clickstreamEventAnalytics?.trackSnapChargeRequest(
+//        eventAnalytics?.trackSnapChargeRequest(
 //            pageName = pageName,
 //            paymentMethodName = paymentMethodName,
 //            promoName = promoName,
@@ -72,6 +61,17 @@ internal open class BaseViewModel : ViewModel() {
 //        )?.apply {
 //            initRequestTime()
 //        }
+
+        clickstreamEventAnalytics?.trackSnapChargeRequest(
+            pageName = pageName,
+            paymentMethodName = paymentMethodName,
+            promoName = promoName,
+            promoAmount = promoAmount,
+            promoId = promoId,
+            creditCardPoint = creditCardPoint
+        )?.apply {
+            initRequestTime()
+        }
     }
 
     protected fun trackSnapChargeResult(
@@ -79,23 +79,7 @@ internal open class BaseViewModel : ViewModel() {
         pageName: String,
         paymentMethodName: String
     ) {
-        eventAnalytics?.trackSnapChargeResult(
-            pageName = pageName,
-            transactionStatus = response.transactionStatus.orEmpty(),
-            fraudStatus = response.fraudStatus.orEmpty(),
-            currency = response.currency.orEmpty(),
-            statusCode = response.statusCode.orEmpty(),
-            transactionId = response.transactionId.orEmpty(),
-            paymentMethodName = paymentMethodName,
-            responseTime = getResponseTime(),
-            bank = response.bank,
-            channelResponseCode = response.channelResponseCode,
-            channelResponseMessage = response.channelResponseMessage,
-            cardType = response.cardType,
-            threeDsVersion = response.threeDsVersion
-        )
-//
-//        clickstreamEventAnalytics?.trackSnapChargeResult(
+//        eventAnalytics?.trackSnapChargeResult(
 //            pageName = pageName,
 //            transactionStatus = response.transactionStatus.orEmpty(),
 //            fraudStatus = response.fraudStatus.orEmpty(),
@@ -110,6 +94,22 @@ internal open class BaseViewModel : ViewModel() {
 //            cardType = response.cardType,
 //            threeDsVersion = response.threeDsVersion
 //        )
+//
+        clickstreamEventAnalytics?.trackSnapChargeResult(
+            pageName = pageName,
+            transactionStatus = response.transactionStatus.orEmpty(),
+            fraudStatus = response.fraudStatus.orEmpty(),
+            currency = response.currency.orEmpty(),
+            statusCode = response.statusCode.orEmpty(),
+            transactionId = response.transactionId.orEmpty(),
+            paymentMethodName = paymentMethodName,
+            responseTime = getResponseTime(),
+            bank = response.bank,
+            channelResponseCode = response.channelResponseCode,
+            channelResponseMessage = response.channelResponseMessage,
+            cardType = response.cardType,
+            threeDsVersion = response.threeDsVersion
+        )
 
     }
 
@@ -118,7 +118,13 @@ internal open class BaseViewModel : ViewModel() {
         pageName: String,
         paymentMethodName: String
     ) {
-        eventAnalytics?.trackSnapCtaClicked(
+//        eventAnalytics?.trackSnapCtaClicked(
+//            ctaName = ctaName,
+//            pageName = pageName,
+//            paymentMethodName = paymentMethodName
+//        )
+
+        clickstreamEventAnalytics?.trackSnapCtaClicked(
             ctaName = ctaName,
             pageName = pageName,
             paymentMethodName = paymentMethodName
@@ -129,14 +135,30 @@ internal open class BaseViewModel : ViewModel() {
         pageName: String,
         paymentMethodName: String
     ) {
-        eventAnalytics?.trackSnapHowToPayViewed(
+//        eventAnalytics?.trackSnapHowToPayViewed(
+//            pageName = pageName,
+//            paymentMethodName = paymentMethodName
+//        )
+        clickstreamEventAnalytics?.trackSnapHowToPayViewed(
             pageName = pageName,
             paymentMethodName = paymentMethodName
         )
     }
 
     protected fun trackCreditDebitCardExbinResponse(binData: BinData?) {
-        eventAnalytics?.trackSnapExbinResponse(
+//        eventAnalytics?.trackSnapExbinResponse(
+//            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+//            paymentMethodName = PaymentType.CREDIT_CARD,
+//            registrationRequired = binData?.registrationRequired,
+//            countryCode = binData?.countryCode,
+//            channel = binData?.channel,
+//            brand = binData?.brand,
+//            binType = binData?.binType,
+//            binClass = binData?.binClass,
+//            bin = binData?.bin,
+//            bankCode = binData?.bankCode,
+//        )
+        clickstreamEventAnalytics?.trackSnapExbinResponse(
             pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
             paymentMethodName = PaymentType.CREDIT_CARD,
             registrationRequired = binData?.registrationRequired,
@@ -158,7 +180,11 @@ internal open class BaseViewModel : ViewModel() {
         pageName: String,
         paymentMethodName: String
     ) {
-        eventAnalytics?.trackSnapOpenDeeplink(
+//        eventAnalytics?.trackSnapOpenDeeplink(
+//            pageName = pageName,
+//            paymentMethodName = paymentMethodName
+//        )
+        clickstreamEventAnalytics?.trackSnapOpenDeeplink(
             pageName = pageName,
             paymentMethodName = paymentMethodName
         )
@@ -172,7 +198,16 @@ internal open class BaseViewModel : ViewModel() {
         channelResponseCode: String?,
         eci: String?
     ) {
-        eventAnalytics?.trackSnap3DsResult(
+//        eventAnalytics?.trackSnap3DsResult(
+//            transactionStatus = transactionStatus,
+//            cardType = cardType,
+//            bank = bank,
+//            threeDsVersion = threeDsVersion,
+//            channelResponseCode = channelResponseCode,
+//            eci = eci,
+//            paymentMethodName = PaymentType.CREDIT_CARD
+//        )
+        clickstreamEventAnalytics?.trackSnap3DsResult(
             transactionStatus = transactionStatus,
             cardType = cardType,
             bank = bank,
@@ -189,7 +224,13 @@ internal open class BaseViewModel : ViewModel() {
         transactionId: String? = null,
         netAmount: String? = null
     ) {
-        eventAnalytics?.trackSnapOrderDetailsViewed(
+//        eventAnalytics?.trackSnapOrderDetailsViewed(
+//            pageName = pageName,
+//            paymentMethodName = paymentMethodName,
+//            transactionId = transactionId,
+//            netAmount = netAmount
+//        )
+        clickstreamEventAnalytics?.trackSnapOrderDetailsViewed(
             pageName = pageName,
             paymentMethodName = paymentMethodName,
             transactionId = transactionId,
@@ -203,7 +244,13 @@ internal open class BaseViewModel : ViewModel() {
         transactionId: String? = null,
         stepNumber: String? = null
     ) {
-        eventAnalytics?.trackSnapPageViewed(
+//        eventAnalytics?.trackSnapPageViewed(
+//            pageName = pageName,
+//            paymentMethodName = paymentMethodName,
+//            transactionId = transactionId,
+//            stepNumber = stepNumber
+//        )
+        clickstreamEventAnalytics?.trackSnapPageViewed(
             pageName = pageName,
             paymentMethodName = paymentMethodName,
             transactionId = transactionId,
@@ -215,7 +262,13 @@ internal open class BaseViewModel : ViewModel() {
         statusCode: String,
         tokenId: String
     ) {
-        eventAnalytics?.trackSnapTokenizationResult(
+//        eventAnalytics?.trackSnapTokenizationResult(
+//            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+//            paymentMethodName = PaymentType.CREDIT_CARD,
+//            statusCode = statusCode,
+//            tokenId = tokenId
+//        )
+        clickstreamEventAnalytics?.trackSnapTokenizationResult(
             pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
             paymentMethodName = PaymentType.CREDIT_CARD,
             statusCode = statusCode,
@@ -228,7 +281,14 @@ internal open class BaseViewModel : ViewModel() {
         phoneNumber: String?,
         displayField: String
     ) {
-        eventAnalytics?.trackSnapCustomerDataInput(
+//        eventAnalytics?.trackSnapCustomerDataInput(
+//            pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
+//            paymentMethodName = PaymentType.CREDIT_CARD,
+//            email = email,
+//            phoneNumber = phoneNumber,
+//            displayField = displayField
+//        )
+        clickstreamEventAnalytics?.trackSnapCustomerDataInput(
             pageName = PageName.CREDIT_DEBIT_CARD_PAGE,
             paymentMethodName = PaymentType.CREDIT_CARD,
             email = email,
@@ -242,7 +302,13 @@ internal open class BaseViewModel : ViewModel() {
         paymentMethodName: String,
         error: SnapError
     ) {
-        eventAnalytics?.trackSnapError(
+//        eventAnalytics?.trackSnapError(
+//            pageName = pageName,
+//            paymentMethodName = paymentMethodName,
+//            statusCode = error.getHttpStatusCode()?.toString(),
+//            errorMessage = error.getErrorInformation()
+//        )
+        clickstreamEventAnalytics?.trackSnapError(
             pageName = pageName,
             paymentMethodName = paymentMethodName,
             statusCode = error.getHttpStatusCode()?.toString(),
@@ -257,7 +323,13 @@ internal open class BaseViewModel : ViewModel() {
         statusCode: String
     ) {
         if (!isChargeResponseSuccess(statusCode)) {
-            eventAnalytics?.trackSnapError(
+//            eventAnalytics?.trackSnapError(
+//                pageName = pageName,
+//                paymentMethodName = paymentMethodName,
+//                statusCode = statusCode,
+//                errorMessage = errorMessage
+//            )
+            clickstreamEventAnalytics?.trackSnapError(
                 pageName = pageName,
                 paymentMethodName = paymentMethodName,
                 statusCode = statusCode,
@@ -275,7 +347,13 @@ internal open class BaseViewModel : ViewModel() {
         statusText: String,
         noticeMessage: String? = null
     ) {
-        eventAnalytics?.trackSnapNotice(
+//        eventAnalytics?.trackSnapNotice(
+//            pageName = pageName,
+//            paymentMethodName = paymentMethodName,
+//            statusText = statusText,
+//            noticeMessage = noticeMessage
+//        )
+        clickstreamEventAnalytics?.trackSnapNotice(
             pageName = pageName,
             paymentMethodName = paymentMethodName,
             statusText = statusText,

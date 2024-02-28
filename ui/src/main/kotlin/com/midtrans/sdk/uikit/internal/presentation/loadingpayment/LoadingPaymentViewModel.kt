@@ -23,6 +23,7 @@ class LoadingPaymentViewModel @Inject constructor(
     private val _paymentOptionLiveData = MutableLiveData<PaymentOption>()
     private val _error = MutableLiveData<SnapError>()
     private val eventAnalytics = snapCore.getEventAnalytics()
+    private val clickstreamEventAnalytics = snapCore.getClickStreamEventAnalytics()
 
 //    var clickstreamEventAnalytics = ClickstreamEventAnalytics(clickstreamTracker = ClickstreamTracker())
 
@@ -82,18 +83,18 @@ class LoadingPaymentViewModel @Inject constructor(
                 override fun onError(error: SnapError) {
                     Logger.e("Error Get Payment Option")
                     _error.postValue(error)
-                    eventAnalytics.trackSnapError(
-                        pageName = PageName.PAYMENT_LIST_PAGE,
-                        paymentMethodName = "not selected",
-                        errorMessage = error.getErrorInformation(),
-                        statusCode = error.getHttpStatusCode()?.toString()
-                    )
-//                    clickstreamEventAnalytics.trackSnapError(
+//                    eventAnalytics.trackSnapError(
 //                        pageName = PageName.PAYMENT_LIST_PAGE,
 //                        paymentMethodName = "not selected",
 //                        errorMessage = error.getErrorInformation(),
 //                        statusCode = error.getHttpStatusCode()?.toString()
 //                    )
+                    clickstreamEventAnalytics.trackSnapError(
+                        pageName = PageName.PAYMENT_LIST_PAGE,
+                        paymentMethodName = "not selected",
+                        errorMessage = error.getErrorInformation(),
+                        statusCode = error.getHttpStatusCode()?.toString()
+                    )
                 }
             })
     }
@@ -111,7 +112,7 @@ class LoadingPaymentViewModel @Inject constructor(
         merchantUrl: String
     ) {
         val platform = if (isTablet) "Tablet" else "Mobile"
-        eventAnalytics.registerCommonProperties(platform, merchantUrl)
-//        clickstreamEventAnalytics.registerCommonProperties(platform, merchantUrl)
+//        eventAnalytics.registerCommonProperties(platform, merchantUrl)
+        clickstreamEventAnalytics.registerCommonProperties(platform, merchantUrl)
     }
 }

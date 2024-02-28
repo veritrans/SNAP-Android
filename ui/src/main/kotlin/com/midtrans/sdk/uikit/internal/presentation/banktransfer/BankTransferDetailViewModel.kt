@@ -24,6 +24,7 @@ internal class BankTransferDetailViewModel @Inject constructor(
 
     init {
         eventAnalytics = snapCore.getEventAnalytics()
+        clickstreamEventAnalytics = snapCore.getClickStreamEventAnalytics()
     }
 
     private val _vaNumberLiveData = MutableLiveData<String>()

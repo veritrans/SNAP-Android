@@ -75,22 +75,10 @@ android {
 
 
 dependencies {
-
-////    implementation ("com.google.protobuf:protobuf-javalite:3.19.1")
-//    implementation("com.google.protobuf:protobuf-java:3.25.2")
-////    implementation ("com.google.protobuf:protobuf-javalite:3.25.2")
-//
-//    implementation ("com.gojek.clickstream:clickstream-android:2.0.0-alpha-1")
-//    implementation ("com.gojek.clickstream:clickstream-lifecycle:2.0.0-alpha-1")
-//
-//    // Optional
-//    implementation ("com.gojek.clickstream:clickstream-health-metrics:2.0.0-alpha-1")
+    //clickStream
     implementation (files("libs/midtrans-clickstream-proto.jar"))
     implementation(files("libs/clickstream-4.0.5-midtrans.aar"))
-    implementation("com.google.protobuf:protobuf-java-util:3.11.1")
-//    {
-//        exclude( group = "com.google.protobuf.Timestamp")
-//    }
+    implementation ("com.google.protobuf:protobuf-javalite:3.11.0")
 
     implementation("com.gojek.clickstream:clickstream-event-visualiser:2.0.0-alpha-1")
     implementation("com.gojek.clickstream:clickstream-event-visualiser-ui:2.0.0-alpha-1")

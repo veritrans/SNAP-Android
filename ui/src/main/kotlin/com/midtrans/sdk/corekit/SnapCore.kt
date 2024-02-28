@@ -6,6 +6,7 @@ import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.CreditCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.PaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
+import com.midtrans.sdk.corekit.internal.analytics.ClickstreamEventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.di.DaggerSnapComponent
 import com.midtrans.sdk.corekit.internal.di.SnapComponent
@@ -19,6 +20,9 @@ class SnapCore private constructor(builder: Builder) {
 
     @Inject
     internal lateinit var eventAnalytics: EventAnalytics
+
+    @Inject
+    internal lateinit var clickStreamEventAnalytics: ClickstreamEventAnalytics
 
     init {
         buildDaggerComponent(
@@ -88,6 +92,7 @@ class SnapCore private constructor(builder: Builder) {
     }
 
     fun getEventAnalytics() = eventAnalytics
+    fun getClickStreamEventAnalytics() = clickStreamEventAnalytics
 
     companion object {
         private var INSTANCE: SnapCore? = null

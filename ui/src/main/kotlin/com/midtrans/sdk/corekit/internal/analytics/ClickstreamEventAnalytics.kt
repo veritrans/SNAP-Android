@@ -717,7 +717,6 @@ class ClickstreamEventAnalytics(
             .setExchange(exchange)
             .setMeta(getCommonMeta())
             .build()
-
         clickstreamTracker.trackEvent(page)
     }
     

@@ -1,5 +1,6 @@
 package com.midtrans.sdk.corekit.internal.di
 
+import com.midtrans.sdk.corekit.internal.analytics.ClickstreamEventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.data.repository.CoreApiRepository
 import com.midtrans.sdk.corekit.internal.data.repository.MerchantApiRepository
@@ -18,7 +19,8 @@ internal class UsecaseModule {
         coreApiRepository: CoreApiRepository,
         merchantApiRepository: MerchantApiRepository,
         @Named("merchant_client_key") clientKey: String,
-        eventAnalytics: EventAnalytics
+        eventAnalytics: EventAnalytics,
+        clickstreamEventAnalytics: ClickstreamEventAnalytics
     ): PaymentUsecase {
         return PaymentUsecase(
             SdkScheduler(),
@@ -26,7 +28,8 @@ internal class UsecaseModule {
             coreApiRepository,
             merchantApiRepository,
             clientKey,
-            eventAnalytics
+            eventAnalytics,
+            clickstreamEventAnalytics
         )
     }
 }

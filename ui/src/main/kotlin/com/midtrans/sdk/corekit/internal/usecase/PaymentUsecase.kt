@@ -14,6 +14,7 @@ import com.midtrans.sdk.corekit.api.model.SavedToken.Companion.TWO_CLICKS
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.CreditCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.PaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
+import com.midtrans.sdk.corekit.internal.analytics.ClickstreamEventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.constant.CommonConstant
 import com.midtrans.sdk.corekit.internal.data.repository.CoreApiRepository
@@ -32,7 +33,8 @@ internal class PaymentUsecase(
     private val coreApiRepository: CoreApiRepository,
     private val merchantApiRepository: MerchantApiRepository,
     private val clientKey: String,
-    private val eventAnalytics: EventAnalytics
+    private val eventAnalytics: EventAnalytics,
+    private val clickstreamEventAnalytics: ClickstreamEventAnalytics
 ) {
 
     @SuppressLint("CheckResult")

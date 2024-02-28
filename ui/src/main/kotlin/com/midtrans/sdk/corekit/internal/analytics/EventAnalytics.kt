@@ -128,6 +128,7 @@ class EventAnalytics(
 
 //        clickstreamTracker
 //        var appname = App.newBuilder().setAppName("appName")
+
     }
 
     fun registerCommonTransactionProperties(
