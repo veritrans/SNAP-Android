@@ -170,7 +170,7 @@
 
     <string name="general_instruction_bca">Lakukan pembayaran dari rekening bank BCA ke nomor virtual account berikut.</string>
     <string name="general_instruction_mandiri">Lakukan pembayaran dari rekening bank Mandiri ke nomor virtual account berikut.</string>
-    <string name="general_instruction_cimb">Lakukan pembayaran dari rekening bank CIMB ke nomor virtual account berikut.</string>
+    <string name="general_instruction_cimb">Lakukan pembayaran dari rekening bank CIMB Niaga ke nomor virtual account berikut.</string>
     <string name="general_instruction_bni_bri_permata_other_bank">Lakukan pembayaran dari bank apa saja ke nomor virtual account berikut.</string>
 
     <string name="general_instruction_company_code_mandiri_only">Kode perusahan</string>

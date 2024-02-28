@@ -254,8 +254,8 @@ class PaymentOptionActivity : BaseActivity() {
                 PaymentType.BNI_VA,
                 PaymentType.BRI_VA,
                 PaymentType.CIMB_VA,
-                PaymentType.OTHER_VA,
-                PaymentType.E_CHANNEL
+                PaymentType.E_CHANNEL,
+                PaymentType.OTHER_VA
             )
             val paymentType = if (bankTransferList.contains(result.chargeType)) {
                 PaymentType.BANK_TRANSFER
@@ -360,7 +360,8 @@ class PaymentOptionActivity : BaseActivity() {
                             R.drawable.ic_outline_bca_40,
                             R.drawable.ic_outline_bni_40,
                             R.drawable.ic_outline_bri_40,
-                            R.drawable.ic_outline_mandiri_40
+                            R.drawable.ic_outline_mandiri_40,
+                            R.drawable.ic_bank_cimb_40
                         )
                     ),
                     PaymentMethodItem(

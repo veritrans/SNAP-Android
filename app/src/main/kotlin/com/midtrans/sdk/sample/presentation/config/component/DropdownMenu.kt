@@ -132,6 +132,7 @@ fun AlertDialogDropdownMenu(
                 ListItem("BNI VA", PaymentType.BNI_VA, isSelected = false),
                 ListItem("Permata VA", PaymentType.PERMATA_VA, isSelected = false),
                 ListItem("BRI VA", PaymentType.BRI_VA, isSelected = false),
+                ListItem("CIMB VA", PaymentType.CIMB_VA, isSelected = false),
                 ListItem("Other VA", PaymentType.OTHER_VA, isSelected = false),
 
                 ListItem("Gopay", PaymentType.GOPAY, isSelected = false),
