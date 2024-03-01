@@ -37,6 +37,9 @@ import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
+import com.midtrans.sdk.uikit.api.model.GopayPaymentCallback
+import com.midtrans.sdk.uikit.api.model.PaymentCallback
+import com.midtrans.sdk.uikit.api.model.PaymentType
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
@@ -446,9 +449,9 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
         transactionRequest.bniVa = bniVaLegacy
         transactionRequest.permataVa = permataVaLegacy
         transactionRequest.enabledPayments = enabledPayment
-        transactionRequest.gopay = Gopay("demo://snap")
-        transactionRequest.shopeepay = Shopeepay("demo://snap")
-        transactionRequest.uobEzpay = UobEzpay("demo://snap")
+        transactionRequest.gopay = handleGopayCallbackUrlCreation()
+        transactionRequest.shopeepay = handleShopeePayCallbackUrlCreation()
+        transactionRequest.uobEzpay = handleUOBCallbackUrlCreation()
         transactionRequest.customField1 = "test1"
         transactionRequest.customField2 = "test2"
         transactionRequest.customField3 = "test3"
@@ -459,6 +462,26 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
         MidtransSDK.getInstance().setUiKitCustomSetting(uisetting)
 
         MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewLegacyActivity, handleDirectPaymentMethodSelection())
+    }
+
+    private fun handleGopayCallbackUrlCreation() : Gopay? {
+        if (enabledPayment?.contains(PaymentType.GOPAY) == true) {
+            return  Gopay("demo://snap")
+        }
+        return  null
+    }
+    private fun handleShopeePayCallbackUrlCreation() : Shopeepay? {
+        if (enabledPayment?.contains(PaymentType.SHOPEEPAY) == true) {
+            return  Shopeepay("demo://snap")
+        }
+        return  null
+    }
+
+    private fun handleUOBCallbackUrlCreation() : UobEzpay? {
+        if (enabledPayment?.contains(PaymentType.UOB_EZPAY) == true) {
+            return  UobEzpay("demo://snap")
+        }
+        return  null
     }
 
     private fun populateInstallmentLegacy(): Installment? {
