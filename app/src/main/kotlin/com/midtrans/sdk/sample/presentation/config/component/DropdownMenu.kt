@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.midtrans.sdk.corekit.core.PaymentMethod
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.presentation.config.InputState
 import com.midtrans.sdk.sample.util.DemoConstant.ACQUIRING_BANK
@@ -21,8 +22,11 @@ import com.midtrans.sdk.sample.util.DemoConstant.COLOR_THEME
 import com.midtrans.sdk.sample.util.DemoConstant.CREDIT_CARD_AUTHENTICATION
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BCA_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_BNI_VA
+import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_CIMB_VA
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_EXPIRY
 import com.midtrans.sdk.sample.util.DemoConstant.CUSTOM_PERMATA_VA
+import com.midtrans.sdk.sample.util.DemoConstant.DIRECT_PAYMENT_SCREEN_ENABLED
+import com.midtrans.sdk.sample.util.DemoConstant.DISABLED
 import com.midtrans.sdk.sample.util.DemoConstant.ENABLED
 import com.midtrans.sdk.sample.util.DemoConstant.INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.IS_INSTALLMENT_REQUIRED
@@ -38,7 +42,7 @@ import com.midtrans.sdk.uikit.internal.view.SnapTypography
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun BasicDropdownMenu(title: String, optionList: List<String>, state: InputState) {
+fun BasicDropdownMenu(title: String, optionList: List<String>, state: InputState, paymentMethod: PaymentMethod? = null) {
     val options by remember { mutableStateOf(optionList) }
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(options[0]) }
@@ -90,6 +94,8 @@ fun BasicDropdownMenu(title: String, optionList: List<String>, state: InputState
                                 PRE_AUTH -> state.isPreAuth = selectedOptionText == ENABLED
                                 BNI_POINT_ONLY -> state.isBniPointOnly = selectedOptionText == ENABLED
                                 SHOW_ALL_PAYMENT_CHANNELS -> state.isShowAllPaymentChannels = selectedOptionText == SHOW_ALL
+                                DIRECT_PAYMENT_SCREEN_ENABLED -> state.directPaymentScreen = selectedOptionText
+
                             }
                         },
                         enabled = true
@@ -126,6 +132,7 @@ fun AlertDialogDropdownMenu(
                 ListItem("BNI VA", PaymentType.BNI_VA, isSelected = false),
                 ListItem("Permata VA", PaymentType.PERMATA_VA, isSelected = false),
                 ListItem("BRI VA", PaymentType.BRI_VA, isSelected = false),
+                ListItem("CIMB VA", PaymentType.CIMB_VA, isSelected = false),
                 ListItem("Other VA", PaymentType.OTHER_VA, isSelected = false),
 
                 ListItem("Gopay", PaymentType.GOPAY, isSelected = false),
@@ -299,6 +306,7 @@ fun CustomTextField(title: String, state: InputState, modifier: Modifier = Modif
                     CUSTOM_BCA_VA -> state.bcaVa = textField.text
                     CUSTOM_BNI_VA -> state.bniVa = textField.text
                     CUSTOM_PERMATA_VA -> state.permataVa = textField.text
+                    CUSTOM_CIMB_VA -> state.cimbVa = textField.text
                 }
             },
             isFocused = textFieldFocused,
@@ -318,6 +326,9 @@ fun CustomTextField(title: String, state: InputState, modifier: Modifier = Modif
         }
         if (state.permataVa.isNotEmpty() && state.permataVa.length != 10 && title == CUSTOM_PERMATA_VA){
             Text(text = "Numbers only. Length should be 10.", color = Color.Red)
+        }
+        if (state.bcaVa.length > 16 && title == CUSTOM_CIMB_VA){
+            Text(text = "Numbers only. Length should be within 1 to 16.", color = Color.Red)
         }
     }
 }

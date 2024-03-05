@@ -14,6 +14,7 @@ import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.BNI_VA
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.BRI_EPAY
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.BRI_VA
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.CIMB_CLICKS
+import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.CIMB_VA
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.CREDIT_CARD
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.DANAMON_ONLINE
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.E_CHANNEL
@@ -153,6 +154,7 @@ internal class PaymentOptionViewModel @Inject constructor(
                 BNI_VA -> icons.add(R.drawable.ic_outline_bni_40)
                 BRI_VA -> icons.add(R.drawable.ic_outline_bri_40)
                 E_CHANNEL -> icons.add(R.drawable.ic_outline_mandiri_40)
+                CIMB_VA -> icons.add(R.drawable.ic_outline_cimb_40)
                 OTHER_VA -> icons.add(R.drawable.ic_bank_other_bordered_40)
             }
         }

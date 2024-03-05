@@ -22,9 +22,11 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
+import com.midtrans.sdk.corekit.core.PaymentMethod
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant
+import com.midtrans.sdk.sample.util.DemoConstant.DISABLED
 import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
 import com.midtrans.sdk.sample.util.DemoConstant.NONE
 import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
@@ -196,6 +198,16 @@ class OrderReviewRevampActivity : ComponentActivity() {
             ?: throw throw RuntimeException("PermataVA must not be empty")
     }
 
+    private val cimbVa: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_CIMBVA)
+            ?: throw throw RuntimeException("CimbVA must not be empty")
+    }
+
+    private val directPaymentScreen: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_DIRECT_PAYMENT_SCREEN)
+            ?: throw throw RuntimeException("Direct Payment Screen value error")
+    }
+
     private val uiKitApi: UiKitApi by lazy {
         UiKitApi.getDefaultInstance()
     }
@@ -208,6 +220,7 @@ class OrderReviewRevampActivity : ComponentActivity() {
     private var bcaVaRequest: BankTransferRequest? = null
     private var bniVaRequest: BankTransferRequest? = null
     private var permataVaRequest: BankTransferRequest? = null
+    private var cimbVaRequest: BankTransferRequest? = null
 
     private var bank: String? = null
     private var ccAuthType: String? = null
@@ -222,7 +235,6 @@ class OrderReviewRevampActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        buildUiKitStart()
         setLocaleNew("id")
 
         setContent {
@@ -446,6 +458,7 @@ class OrderReviewRevampActivity : ComponentActivity() {
                     bcaVaRequest = populateVa(bcaVa)
                     bniVaRequest = populateVa(bniVa)
                     permataVaRequest = populateVa(permataVa)
+                    cimbVaRequest = populateVa(cimbVa)
                     buildUiKit()
                     payWithAndroidxActivityResultLauncher()
                 }
@@ -495,8 +508,8 @@ class OrderReviewRevampActivity : ComponentActivity() {
     private fun buildUiKit() {
         val builder = UiKitApi.Builder()
             .withContext(this.applicationContext)
-            .withMerchantUrl("https://snap-merchant-server.herokuapp.com/api/")
-            .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
+            .withMerchantUrl("https://demo.midtrans.com/api/")
+            .withMerchantClientKey("VT-client-yrHf-c8Sxr-ck8tx")
             .withFontFamily("fonts/SourceSansPro-Italic.ttf")
             .enableLog(true)
 
@@ -530,36 +543,55 @@ class OrderReviewRevampActivity : ComponentActivity() {
             bcaVa = bcaVaRequest,
             bniVa = bniVaRequest,
             permataVa = permataVaRequest,
+            cimbVa = cimbVaRequest,
             enabledPayment = enabledPayment,
-            gopayCallback = GopayPaymentCallback("demo://snap"),
-            shopeepayCallback = PaymentCallback("demo://snap"),
-            uobEzpayCallback = PaymentCallback("demo://snap"),
+            gopayCallback = handleGopayCallbackUrlCreation(),
+            shopeepayCallback = handleShopeePayCallbackUrlCreation(),
+            uobEzpayCallback = handleUOBCallbackUrlCreation(),
             customField1 = "lalalala1",
             customField2 = "lalalala2",
             customField3 = "lalalala3",
+            paymentMethod = handleDirectPaymentMethodSelection()
         )
         uiKitCustomSetting()
+    }
+
+    private fun handleGopayCallbackUrlCreation() : GopayPaymentCallback? {
+        if (enabledPayment?.contains(PaymentType.GOPAY) == true) {
+            return  GopayPaymentCallback("demo://snap")
+        }
+        return  null
+    }
+    private fun handleShopeePayCallbackUrlCreation() : PaymentCallback? {
+        if (enabledPayment?.contains(PaymentType.SHOPEEPAY) == true) {
+            return  PaymentCallback("demo://snap")
+        }
+        return  null
+    }
+
+    private fun handleUOBCallbackUrlCreation() : PaymentCallback? {
+        if (enabledPayment?.contains(PaymentType.UOB_EZPAY) == true) {
+            return  PaymentCallback("demo://snap")
+        }
+        return  null
+    }
+
+    private fun handleDirectPaymentMethodSelection(): PaymentMethod? {
+        return if (directPaymentScreen == DISABLED){
+            null
+        } else {
+            PaymentMethod.valueOf(directPaymentScreen)
+        }
     }
 
     private fun payWithAndroidxActivityResultLauncherToken(token: String?) {
         uiKitApi.startPaymentUiFlow(
             activity = this@OrderReviewRevampActivity,
             launcher = launcher,
-            snapToken = token
+            snapToken = token,
+            paymentMethod = handleDirectPaymentMethodSelection()
         )
     }
-
-    private fun buildUiKitStart() {
-        val builder = UiKitApi.Builder()
-            .withContext(this.applicationContext)
-            .withMerchantUrl("")
-            .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
-            .withFontFamily("fonts/SourceSansPro-Regular.ttf")
-
-        getCustomColor(inputColor)?.let { builder.withCustomColors(CustomColors()) }
-        builder.build()
-    }
-
     private fun getCustomColor(inputColor: String): CustomColorTheme? {
         var color: CustomColorTheme? = null
         when (inputColor) {
@@ -596,12 +628,14 @@ class OrderReviewRevampActivity : ComponentActivity() {
         private const val EXTRA_INPUT_BCAVA = "orderReviewRevamp.extra.bcaVa"
         private const val EXTRA_INPUT_BNIVA = "orderReviewRevamp.extra.bniVa"
         private const val EXTRA_INPUT_PERMATAVA = "orderReviewRevamp.extra.permataVa"
+        private const val EXTRA_INPUT_CIMBVA = "orderReviewRevamp.extra.cimbVa"
         private const val EXTRA_INPUT_ISSAVEDCARD = "orderReviewRevamp.extra.isSavedCard"
         private const val EXTRA_INPUT_ISPREAUTH = "orderReviewRevamp.extra.isPreAuth"
         private const val EXTRA_INPUT_ISBNIPOINTS = "orderReviewRevamp.extra.isBniPoints"
         private const val EXTRA_INPUT_ISSHOWALLPAYMENT = "orderReviewRevamp.extra.isShowAllPayment"
         private const val EXTRA_INPUT_PAYMENTCHANNELS = "orderReviewRevamp.extra.paymentChannels"
         private const val EXTRA_INPUT_COLOR = "orderReviewRevamp.extra.inputColor"
+        private const val EXTRA_INPUT_DIRECT_PAYMENT_SCREEN = "orderReviewRevamp.extra.directPaymentScreen"
 
         fun getOrderReviewRevampActivityIntent(
             activityContext: Context,
@@ -621,7 +655,9 @@ class OrderReviewRevampActivity : ComponentActivity() {
             bcaVa: String,
             bniVa: String,
             permataVa: String,
-            color: String
+            cimbVa: String,
+            color: String,
+            directPaymentScreen: String
         ): Intent {
             return Intent(activityContext, OrderReviewRevampActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT, product)
@@ -640,7 +676,9 @@ class OrderReviewRevampActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_BCAVA, bcaVa)
                 putExtra(EXTRA_INPUT_BNIVA, bniVa)
                 putExtra(EXTRA_INPUT_PERMATAVA, permataVa)
+                putExtra(EXTRA_INPUT_CIMBVA, cimbVa)
                 putExtra(EXTRA_INPUT_COLOR, color)
+                putExtra(EXTRA_INPUT_DIRECT_PAYMENT_SCREEN, directPaymentScreen)
             }
         }
     }

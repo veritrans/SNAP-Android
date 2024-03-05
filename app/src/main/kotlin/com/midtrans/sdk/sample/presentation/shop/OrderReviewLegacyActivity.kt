@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback
 import com.midtrans.sdk.corekit.core.MidtransSDK
+import com.midtrans.sdk.corekit.core.PaymentMethod
 import com.midtrans.sdk.corekit.core.TransactionRequest
 import com.midtrans.sdk.corekit.core.UIKitCustomSetting
 import com.midtrans.sdk.corekit.core.themes.CustomColorTheme
@@ -36,6 +37,9 @@ import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
+import com.midtrans.sdk.uikit.api.model.GopayPaymentCallback
+import com.midtrans.sdk.uikit.api.model.PaymentCallback
+import com.midtrans.sdk.uikit.api.model.PaymentType
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapTextField
@@ -159,12 +163,18 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
             ?: throw throw RuntimeException("PermataVA must not be empty")
     }
 
+    private val directPaymentScreen: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_DIRECT_PAYMENT_SCREEN)
+            ?: throw throw RuntimeException("Direct Payment Screen value error")
+    }
+
     private lateinit var customerDetailsLegacy: CustomerDetails
     private var installmentLegacy: Installment? = null
     private var expiryLegacy: ExpiryModel? = null
     private var bcaVaLegacy: BcaBankTransferRequestModel? = null
     private var permataVaLegacy: PermataBankTransferRequestModel? = null
     private var bniVaLegacy: BankTransferRequestModel? = null
+    private var directPaymentScreenLegacy: PaymentMethod? = null
 
     private var bank: String? = null
     private var ccAuthType: String? = null
@@ -174,7 +184,6 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        buildLegacyUiKitStart()
 
         setContent {
             OrderListPage()
@@ -412,7 +421,7 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
     }
 
     private fun payWithSnapToken(snapToken: String) {
-        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewLegacyActivity, snapToken)
+        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewLegacyActivity, handleDirectPaymentMethodSelection(),snapToken)
     }
     private fun payWithOldSnapLegacyApi() {
         val transactionRequest = TransactionRequest(
@@ -440,9 +449,9 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
         transactionRequest.bniVa = bniVaLegacy
         transactionRequest.permataVa = permataVaLegacy
         transactionRequest.enabledPayments = enabledPayment
-        transactionRequest.gopay = Gopay("demo://snap")
-        transactionRequest.shopeepay = Shopeepay("demo://snap")
-        transactionRequest.uobEzpay = UobEzpay("demo://snap")
+        transactionRequest.gopay = handleGopayCallbackUrlCreation()
+        transactionRequest.shopeepay = handleShopeePayCallbackUrlCreation()
+        transactionRequest.uobEzpay = handleUOBCallbackUrlCreation()
         transactionRequest.customField1 = "test1"
         transactionRequest.customField2 = "test2"
         transactionRequest.customField3 = "test3"
@@ -452,7 +461,27 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
         uisetting.setSaveCardChecked(true)
         MidtransSDK.getInstance().setUiKitCustomSetting(uisetting)
 
-        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewLegacyActivity)
+        MidtransSDK.getInstance().startPaymentUiFlow(this@OrderReviewLegacyActivity, handleDirectPaymentMethodSelection())
+    }
+
+    private fun handleGopayCallbackUrlCreation() : Gopay? {
+        if (enabledPayment?.contains(PaymentType.GOPAY) == true) {
+            return  Gopay("demo://snap")
+        }
+        return  null
+    }
+    private fun handleShopeePayCallbackUrlCreation() : Shopeepay? {
+        if (enabledPayment?.contains(PaymentType.SHOPEEPAY) == true) {
+            return  Shopeepay("demo://snap")
+        }
+        return  null
+    }
+
+    private fun handleUOBCallbackUrlCreation() : UobEzpay? {
+        if (enabledPayment?.contains(PaymentType.UOB_EZPAY) == true) {
+            return  UobEzpay("demo://snap")
+        }
+        return  null
     }
 
     private fun populateInstallmentLegacy(): Installment? {
@@ -485,6 +514,14 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
             )
         }
         return expiryModel
+    }
+
+    private fun handleDirectPaymentMethodSelection(): PaymentMethod? {
+        return if (directPaymentScreen == DemoConstant.DISABLED){
+            null
+        } else {
+            PaymentMethod.valueOf(directPaymentScreen)
+        }
     }
 
     private fun populateBcaVaLegacy(va: String): BcaBankTransferRequestModel? {
@@ -536,34 +573,19 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
 
     private fun buildLegacyUiKit() {
         val builder = SdkUIFlowBuilder.init()
-            .setClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
+            .setClientKey("VT-client-yrHf-c8Sxr-ck8tx")
             .setContext(this.applicationContext)
             .setTransactionFinishedCallback(this)
-            .setMerchantBaseUrl("https://snap-merchant-server.herokuapp.com/api/")
+            .setMerchantBaseUrl("https://demo.midtrans.com/api/")
             .setDefaultText("fonts/SourceSansPro-Regular.ttf")
             .setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
             .setBoldText("fonts/SourceSansPro-Bold.ttf")
             .setLanguage("en")
+            .enableLog(true)
 
         getCustomColor(inputColor)?.let { builder.setColorTheme(it) }
         builder.buildSDK()
     }
-
-    private fun buildLegacyUiKitStart() {
-        val builder = SdkUIFlowBuilder.init()
-            .setClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
-            .setContext(this.applicationContext)
-            .setTransactionFinishedCallback(this)
-            .setMerchantBaseUrl("https://snap-merchant-server.herokuapp.com/api/")
-            .setDefaultText("fonts/SourceSansPro-Regular.ttf")
-            .setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
-            .setBoldText("fonts/SourceSansPro-Bold.ttf")
-            .setLanguage("en")
-
-        getCustomColor(inputColor)?.let { builder.setColorTheme(it) }
-        builder.buildSDK()
-    }
-
     private fun getCustomColor(inputColor: String): CustomColorTheme? {
         var color: CustomColorTheme? = null
         when (inputColor) {
@@ -604,12 +626,14 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
         private const val EXTRA_INPUT_BCAVA = "orderReviewLegacy.extra.bcaVa"
         private const val EXTRA_INPUT_BNIVA = "orderReviewLegacy.extra.bniVa"
         private const val EXTRA_INPUT_PERMATAVA = "orderReviewLegacy.extra.permataVa"
+        private const val EXTRA_INPUT_CIMBAVA = "orderReviewLegacy.extra.cimbVa"
         private const val EXTRA_INPUT_ISSAVEDCARD = "orderReviewLegacy.extra.isSavedCard"
         private const val EXTRA_INPUT_ISPREAUTH = "orderReviewLegacy.extra.isPreAuth"
         private const val EXTRA_INPUT_ISBNIPOINTS = "orderReviewLegacy.extra.isBniPoints"
         private const val EXTRA_INPUT_ISSHOWALLPAYMENT = "orderReviewLegacy.extra.isShowAllPayment"
         private const val EXTRA_INPUT_PAYMENTCHANNELS = "orderReviewLegacy.extra.paymentChannels"
         private const val EXTRA_INPUT_COLOR = "orderReviewLegacy.extra.inputColor"
+        private const val EXTRA_INPUT_DIRECT_PAYMENT_SCREEN = "orderReviewLegacy.extra.directPaymentScreen"
 
         fun getOrderReviewLegacyActivityIntent(
             activityContext: Context,
@@ -629,7 +653,9 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
             bcaVa: String,
             bniVa: String,
             permataVa: String,
-            color: String
+            cimbVa: String,
+            color: String,
+            directPaymentScreen: String
         ): Intent {
             return Intent(activityContext, OrderReviewLegacyActivity::class.java).apply {
                 putExtra(EXTRA_PRODUCT, product)
@@ -648,7 +674,9 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
                 putExtra(EXTRA_INPUT_BCAVA, bcaVa)
                 putExtra(EXTRA_INPUT_BNIVA, bniVa)
                 putExtra(EXTRA_INPUT_PERMATAVA, permataVa)
+                putExtra(EXTRA_INPUT_CIMBAVA, cimbVa)
                 putExtra(EXTRA_INPUT_COLOR, color)
+                putExtra(EXTRA_INPUT_DIRECT_PAYMENT_SCREEN, directPaymentScreen)
             }
         }
     }

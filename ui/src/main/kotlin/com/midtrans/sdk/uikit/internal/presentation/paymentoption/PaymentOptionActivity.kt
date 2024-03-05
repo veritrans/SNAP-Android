@@ -253,8 +253,9 @@ class PaymentOptionActivity : BaseActivity() {
                 PaymentType.BCA_VA,
                 PaymentType.BNI_VA,
                 PaymentType.BRI_VA,
-                PaymentType.OTHER_VA,
-                PaymentType.E_CHANNEL
+                PaymentType.CIMB_VA,
+                PaymentType.E_CHANNEL,
+                PaymentType.OTHER_VA
             )
             val paymentType = if (bankTransferList.contains(result.chargeType)) {
                 PaymentType.BANK_TRANSFER
@@ -359,7 +360,8 @@ class PaymentOptionActivity : BaseActivity() {
                             R.drawable.ic_outline_bca_40,
                             R.drawable.ic_outline_bni_40,
                             R.drawable.ic_outline_bri_40,
-                            R.drawable.ic_outline_mandiri_40
+                            R.drawable.ic_outline_mandiri_40,
+                            R.drawable.ic_bank_cimb_40
                         )
                     ),
                     PaymentMethodItem(
@@ -550,6 +552,23 @@ class PaymentOptionActivity : BaseActivity() {
             )
         }
 
+        val payLaterPaymentLauncher =  {
+            resultLauncher.launch(
+                PayLaterActivity.getIntent(
+                    activityContext = this,
+                    snapToken = snapToken,
+                    paymentType = paymentType,
+                    amount = totalAmount,
+                    orderId = orderId,
+                    customerInfo = customerInfo,
+                    itemInfo = itemInfo,
+                    stepNumber = NEXT_STEP_NUMBER,
+                    result = transactionResult,
+                    expiryTime = expiryTime
+                )
+            )
+        }
+
         val cStorePaymentLauncher = {
             resultLauncher.launch(
                 ConvenienceStoreActivity.getIntent(
@@ -640,24 +659,9 @@ class PaymentOptionActivity : BaseActivity() {
             Pair(PaymentType.SHOPEEPAY_QRIS, eWalletPaymentLauncher),
             Pair(PaymentType.GOPAY, eWalletPaymentLauncher),
             Pair(PaymentType.GOPAY_QRIS, eWalletPaymentLauncher),
-            Pair(PaymentType.AKULAKU) {
-                resultLauncher.launch(
-                    PayLaterActivity.getIntent(
-                        activityContext = this,
-                        snapToken = snapToken,
-                        paymentType = paymentType,
-                        amount = totalAmount,
-                        orderId = orderId,
-                        customerInfo = customerInfo,
-                        itemInfo = itemInfo,
-                        stepNumber = NEXT_STEP_NUMBER,
-                        result = transactionResult,
-                        expiryTime = expiryTime
-                    )
-                )
-            },
             Pair(PaymentType.ALFAMART, cStorePaymentLauncher),
-            Pair(PaymentType.INDOMARET, cStorePaymentLauncher)
+            Pair(PaymentType.INDOMARET, cStorePaymentLauncher),
+            Pair(PaymentType.AKULAKU, payLaterPaymentLauncher)
         )
     }
 

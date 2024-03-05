@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.midtrans.sdk.corekit.core.PaymentMethod
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.presentation.shop.component.ProductListPage
 import com.midtrans.sdk.uikit.external.UiKitApi
@@ -82,12 +83,22 @@ class ProductListActivity : ComponentActivity() {
 
     private val bniVa: String by lazy {
         intent.getStringExtra(EXTRA_INPUT_BNIVA)
-            ?: throw throw RuntimeException("BCAva must not be empty")
+            ?: throw throw RuntimeException("BniVa must not be empty")
     }
 
     private val permataVa: String by lazy {
         intent.getStringExtra(EXTRA_INPUT_PERMATAVA)
-            ?: throw throw RuntimeException("BCAva must not be empty")
+            ?: throw throw RuntimeException("PermataVa must not be empty")
+    }
+
+    private val cimbVa: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_CIMBVA)
+            ?: throw throw RuntimeException("CimbVa must not be empty")
+    }
+
+    private val directPaymentScreen: String by lazy {
+        intent.getStringExtra(EXTRA_INPUT_DIRECT_PAYMENT_SCREEN) ?:
+        throw throw RuntimeException("Direct Payment Screen value error")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -117,7 +128,9 @@ class ProductListActivity : ComponentActivity() {
                         bcaVa = bcaVa,
                         bniVa = bniVa,
                         permataVa = permataVa,
-                        color = inputColor
+                        cimbVa= cimbVa,
+                        color = inputColor,
+                        directPaymentScreen = directPaymentScreen
                     )
                 } else {
                     OrderReviewLegacyActivity.getOrderReviewLegacyActivityIntent(
@@ -138,7 +151,9 @@ class ProductListActivity : ComponentActivity() {
                         bcaVa = bcaVa,
                         bniVa = bniVa,
                         permataVa = permataVa,
-                        color = inputColor
+                        cimbVa = cimbVa,
+                        color = inputColor,
+                        directPaymentScreen = directPaymentScreen
                     )
                 }
                 startActivity(intent)
@@ -156,6 +171,7 @@ class ProductListActivity : ComponentActivity() {
         private const val EXTRA_INPUT_BCAVA = "productList.extra.bcaVa"
         private const val EXTRA_INPUT_BNIVA = "productList.extra.bniVa"
         private const val EXTRA_INPUT_PERMATAVA = "productList.extra.permataVa"
+        private const val EXTRA_INPUT_CIMBVA = "productList.extra.cimbVa"
         private const val EXTRA_INPUT_ISSAVEDCARD = "productList.extra.isSavedCard"
         private const val EXTRA_INPUT_ISPREAUTH = "productList.extra.isPreAuth"
         private const val EXTRA_INPUT_ISBNIPOINTS = "productList.extra.isBniPoints"
@@ -164,6 +180,7 @@ class ProductListActivity : ComponentActivity() {
         private const val EXTRA_INPUT_PAYMENTCHANNELS = "productList.extra.paymentChannels"
         private const val EXTRA_INPUT_WHITELISTBINS = "productList.extra.whitelistBins"
         private const val EXTRA_INPUT_BLACKLISTBINS = "productList.extra.blacklistBins"
+        private const val EXTRA_INPUT_DIRECT_PAYMENT_SCREEN = "productList.extra.directPaymentScreen"
 
         fun getProductListActivity(
             activityContext: Context,
@@ -183,6 +200,8 @@ class ProductListActivity : ComponentActivity() {
             bcaVa: String,
             bniVa: String,
             permataVa: String,
+            cimbVa:String,
+            directPaymentScreen: String,
             isRevamp: Boolean
         ): Intent {
             return Intent(activityContext, ProductListActivity::class.java).apply {
@@ -202,7 +221,9 @@ class ProductListActivity : ComponentActivity() {
                 putExtra(EXTRA_INPUT_BCAVA, bcaVa)
                 putExtra(EXTRA_INPUT_BNIVA, bniVa)
                 putExtra(EXTRA_INPUT_PERMATAVA, permataVa)
+                putExtra(EXTRA_INPUT_CIMBVA, cimbVa)
                 putExtra(EXTRA_INPUT_ISREVAMP, isRevamp)
+                putExtra(EXTRA_INPUT_DIRECT_PAYMENT_SCREEN, directPaymentScreen)
             }
         }
     }
@@ -210,8 +231,8 @@ class ProductListActivity : ComponentActivity() {
     private fun buildUiKit() {
         UiKitApi.Builder()
             .withContext(this.applicationContext)
-            .withMerchantUrl("")
-            .withMerchantClientKey("SB-Mid-client-hOWJXiCCDRvT0RGr")
+            .withMerchantUrl("https://demo.midtrans.com/api/")
+            .withMerchantClientKey("VT-client-yrHf-c8Sxr-ck8tx")
             .withFontFamily("fonts/SourceSansPro-Regular.ttf")
             .build()
     }

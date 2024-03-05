@@ -77,6 +77,10 @@ class UiKitApi private constructor(val builder: Builder) {
                 PaymentType.BANK_TRANSFER,
                 PaymentType.BRI_VA
             )
+            PaymentMethod.BANK_TRANSFER_CIMB -> PaymentTypeItem(
+                PaymentType.BANK_TRANSFER,
+                PaymentType.CIMB_VA
+            )
             PaymentMethod.BANK_TRANSFER_OTHER -> PaymentTypeItem(
                 PaymentType.BANK_TRANSFER,
                 PaymentType.OTHER_VA
@@ -126,6 +130,7 @@ class UiKitApi private constructor(val builder: Builder) {
         bcaVa: BankTransferRequest? = null,
         bniVa: BankTransferRequest? = null,
         briVa: BankTransferRequest? = null,
+        cimbVa: BankTransferRequest? = null,
         customField1: String? = null,
         customField2: String? = null,
         customField3: String? = null,
@@ -147,6 +152,7 @@ class UiKitApi private constructor(val builder: Builder) {
             bcaVa = bcaVa,
             bniVa = bniVa,
             briVa = briVa,
+            cimbVa = cimbVa,
             customField1 = customField1,
             customField2 = customField2,
             customField3 = customField3,
@@ -159,7 +165,8 @@ class UiKitApi private constructor(val builder: Builder) {
     fun startPaymentUiFlow(
         activity: Activity,
         launcher: ActivityResultLauncher<Intent>,
-        snapToken: String?
+        snapToken: String?,
+        paymentMethod: PaymentMethod? = null
     ) {
         var isSnapTokenAvailable = true
         if (snapToken.isNullOrEmpty()) isSnapTokenAvailable = false
@@ -169,7 +176,8 @@ class UiKitApi private constructor(val builder: Builder) {
             snapToken = snapToken,
             transactionDetails = SnapTransactionDetail("", 0.0),
             isMerchantUrlAvailable = isMerchantUrlAvailable,
-            isSnapTokenAvailable = isSnapTokenAvailable
+            isSnapTokenAvailable = isSnapTokenAvailable,
+            paymentType = getPaymentType(paymentMethod)
         )
         launcher.launch(intent)
     }
@@ -190,6 +198,7 @@ class UiKitApi private constructor(val builder: Builder) {
         bcaVa: BcaBankTransferRequestModel? = null,
         bniVa: BankTransferRequestModel? = null,
         briVa: BankTransferRequestModel? = null,
+        cimbVa: BankTransferRequestModel? = null,
         gopayCallback: GopayPaymentCallback? = null,
         shopeepayCallback: PaymentCallback? = null,
         customField1: String? = null,
@@ -212,6 +221,7 @@ class UiKitApi private constructor(val builder: Builder) {
             bcaVa = convertToRevamp(bcaVa),
             bniVa = convertToRevamp(bniVa),
             briVa = convertToRevamp(briVa),
+            cimbVa = convertToRevamp(cimbVa),
             gopayCallback = gopayCallback,
             shopeepayCallback = shopeepayCallback,
             uobEzpayCallback = uobEzpayCallback,
@@ -306,7 +316,7 @@ class UiKitApi private constructor(val builder: Builder) {
     fun runPaymentTokenLegacy(
         activityContext: Context,
         snapToken: String? = null,
-        paymentType: PaymentTypeItem? = null,
+        paymentMethod: PaymentMethod? = null,
         paymentCallback: Callback<TransactionResult>
     ) {
         UiKitApi.paymentCallback = paymentCallback
@@ -318,7 +328,7 @@ class UiKitApi private constructor(val builder: Builder) {
             activityContext = activityContext,
             snapToken = snapToken,
             transactionDetails = com.midtrans.sdk.corekit.api.model.SnapTransactionDetail("", 0.0),
-            paymentType = paymentType,
+            paymentType = getPaymentType(paymentMethod),
             isMerchantUrlAvailable = isMerchantUrlAvailable,
             isSnapTokenAvailable = isSnapTokenAvailable
         )

@@ -91,7 +91,9 @@ private fun Preview() {
         R.drawable.ic_outline_bca_40,
         R.drawable.ic_outline_bni_40,
         R.drawable.ic_outline_bri_40,
-        R.drawable.ic_outline_mandiri_40
+        R.drawable.ic_outline_mandiri_40,
+        R.drawable.ic_outline_cimb_40
+
     ) , creditCard = CreditCard(),
         paymentType = "credit_card") {
     }
