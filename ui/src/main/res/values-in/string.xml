@@ -26,6 +26,7 @@
     <string name="payment_summary_danamonob">Danamon Online Banking</string>
     <string name="payment_summary_uobezpay">UOB EZ Pay</string>
     <string name="payment_summary_akulaku">Akulaku PayLater</string>
+    <string name="payment_summary_kredivo">Kredivo</string>
     <string name="payment_summary_shopeepay">ShopeePay/e-Wallet Lainnya</string>
     <string name="payment_summary_alfamart">Alfa Group</string>
     <string name="payment_summary_indomaret">Indomaret</string>
@@ -356,14 +357,16 @@
     </string-array>
     <string name="brimo_cta">Bayar sekarang</string>
 
-
-    <string name="kredivo_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/website Krevido.</string>
-
-    <string name="kredivo_how_to_pay_title">Cara bayar</string>
-    <string name="kredivo_step_by_step">1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman Kredivo. 2. Login ke akun Kredivo Anda. 3. Pilih jangka waktu cicilan yang diinginkan. 4. Masukkan kode OTP yang telah dikirimkan ke nomor HP-mu. 4. Klik Bayar. 5. Anda akan mendapatkan konfirmasi pada layar jika transaksi berhasil.</string>
-
-    <string name="kredivo_cta">Bayar sekarang</string>
-
+    <string name="kredivo_title">Kredivo</string>
+    <string name="kredivo_instruction">Akulaku PayLater memungkinkan Anda untuk berbelanja dengan angsuran tanpa menggunakan kartu kredit.</string>
+    <string-array name="kredivo_how_to_pay">
+        <item><data><![CDATA[Click <b>Pay Now</b>, then you will be directed to Kredivo page.]]></data></item>
+        <item><data><![CDATA[Login to your Kredivo account.]]></data></item>
+        <item><data><![CDATA[Choose the installment term.]]></data></item>
+        <item><data><![CDATA[Enter the OTP code that has been sent to your mobile number.]]></data></item>
+        <item><data><![CDATA[Tap <b>Pay</b>.]]></data></item>
+        <item><data><![CDATA[You\'ll get confirmation message on the screen once transaction is successful.]]></data></item>
+    </string-array>
 
     <string name="kredivo_redirection_main_message">Mengalihkan ke Kredivo…</string>
     <string name="kredivo_redirection_cta">Buka sekarang</string>

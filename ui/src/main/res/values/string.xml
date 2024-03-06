@@ -26,6 +26,7 @@
     <string name="payment_summary_danamonob">Danamon Online Banking</string>
     <string name="payment_summary_uobezpay">UOB EZ Pay</string>
     <string name="payment_summary_akulaku">Akulaku PayLater</string>
+    <string name="payment_summary_kredivo">Kredivo</string>
     <string name="payment_summary_shopeepay">ShopeePay/other e-Wallets</string>
     <string name="payment_summary_alfamart">Alfa Group</string>
     <string name="payment_summary_indomaret">Indomaret</string>
@@ -361,13 +362,16 @@
     <string name="brimo_cta">Pay now</string>
 
 
-    <string name="kredivo_instruction">Please complete the payment through Kredivo app/website.</string>
-
-    <string name="kredivo_how_to_pay_title">How to pay</string>
-    <string name="kredivo_step_by_step">1. Tap Pay now and you will be redirected to Kredivo page. 2. Login to your Kredivo account. 3. Choose the installment term. 4. Enter the OTP code that has been sent to your mobile number. 5. Tap Pay. 6. You\'ll get confirmation message on the screen once transaction is successful.</string>
-
-    <string name="kredivo_cta">Pay now</string>
-
+    <string name="kredivo_title">Kredivo</string>
+    <string name="kredivo_instruction">Akulaku PayLater memungkinkan Anda untuk berbelanja dengan angsuran tanpa menggunakan kartu kredit.</string>
+    <string-array name="kredivo_how_to_pay">
+        <item><data><![CDATA[Click <b>Pay Now</b>, then you will be directed to Kredivo page.]]></data></item>
+        <item><data><![CDATA[Login to your Kredivo account.]]></data></item>
+        <item><data><![CDATA[Choose the installment term.]]></data></item>
+        <item><data><![CDATA[Enter the OTP code that has been sent to your mobile number.]]></data></item>
+        <item><data><![CDATA[Tap <b>Pay</b>.]]></data></item>
+        <item><data><![CDATA[You\'ll get confirmation message on the screen once transaction is successful.]]></data></item>
+    </string-array>
 
     <string name="kredivo_redirection_main_message">Redirecting to Kredivo…</string>
     <string name="kredivo_redirection_cta">Open now</string>
