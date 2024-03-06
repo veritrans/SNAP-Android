@@ -26,5 +26,6 @@ public enum PaymentMethod {
     UOB_EZPAY_APP,
     INDOMARET,
     AKULAKU,
-    ALFAMART
+    ALFAMART,
+    KREDIVO
 }

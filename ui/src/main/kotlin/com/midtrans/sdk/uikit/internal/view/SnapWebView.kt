@@ -231,6 +231,11 @@ private inline fun finishWebView(
                 onFinishWebView.invoke()
             }
         }
+        PaymentType.KREDIVO -> {
+            if (url.contains(SnapWebViewClient.CALLBACK_KREDIVO, true)) {
+                onFinishWebView.invoke()
+            }
+        }
         PaymentType.GOPAY,
         PaymentType.SHOPEEPAY,
         PaymentType.UOB_EZPAY_APP-> {
@@ -256,5 +261,6 @@ private class SnapWebViewClient(
         const val CALLBACK_AKULAKU = "?refNo="
         const val CALLBACK_OLD_THREE_DS = "callback"
         const val CALLBACK_NEW_THREE_DS = "result-completion"
+        const val CALLBACK_KREDIVO = "order_id"
     }
 }

@@ -13,6 +13,7 @@ class PageName {
         INDOMARET_PAGE,
         ALFAMART_PAGE,
         AKULAKU_PAGE,
+        KREDIVO_PAGE,
         KLIK_BCA_PAGE,
         BCA_KLIK_PAY_PAGE,
         OCTO_CLICKS_PAGE,
@@ -45,6 +46,7 @@ class PageName {
         const val INDOMARET_PAGE = "Indomaret Page"
         const val ALFAMART_PAGE = "Alfamart Page"
         const val AKULAKU_PAGE = "Akulaku  Instruction"
+        const val KREDIVO_PAGE = "Kredivo  Instruction"
         const val KLIK_BCA_PAGE = "KlikBCA  Instruction"
         const val BCA_KLIK_PAY_PAGE = "BCAKlikPay  Instruction"
         const val OCTO_CLICKS_PAGE = "OCTOClicks Instruction"

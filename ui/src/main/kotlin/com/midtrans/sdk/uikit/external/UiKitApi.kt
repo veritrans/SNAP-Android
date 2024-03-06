@@ -93,6 +93,7 @@ class UiKitApi private constructor(val builder: Builder) {
             PaymentMethod.DANAMON_ONLINE -> PaymentTypeItem(PaymentType.DANAMON_ONLINE, null)
             PaymentMethod.INDOMARET -> PaymentTypeItem(PaymentType.INDOMARET, null)
             PaymentMethod.AKULAKU -> PaymentTypeItem(PaymentType.AKULAKU, null)
+            PaymentMethod.KREDIVO -> PaymentTypeItem(PaymentType.KREDIVO, null)
             PaymentMethod.ALFAMART -> PaymentTypeItem(PaymentType.ALFAMART, null)
             PaymentMethod.UOB_EZPAY -> PaymentTypeItem(PaymentType.UOB_EZPAY, null)
             PaymentMethod.UOB_EZPAY_APP -> PaymentTypeItem(

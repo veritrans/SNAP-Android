@@ -23,6 +23,7 @@ class PaymentType {
         QRIS,
         DANAMON_ONLINE,
         AKULAKU,
+        KREDIVO,
         CSTORE,
         ALFAMART,
         UOB_EZPAY_WEB,
@@ -67,6 +68,7 @@ class PaymentType {
 
         //PAY LATER
         const val AKULAKU = "akulaku"
+        const val KREDIVO = "kredivo"
 
         //CONVENIENCE STORE
         const val CSTORE = "cstore"
