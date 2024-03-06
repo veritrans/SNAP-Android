@@ -148,6 +148,7 @@ fun AlertDialogDropdownMenu(
                 ListItem("Alfamart", PaymentType.ALFAMART, isSelected = false),
 
                 ListItem("Akulaku", PaymentType.AKULAKU, isSelected = false),
+                ListItem("KREDIVO", PaymentType.KREDIVO, isSelected = false),
                 ListItem("UOB", PaymentType.UOB_EZPAY, isSelected = false),
             )
         )

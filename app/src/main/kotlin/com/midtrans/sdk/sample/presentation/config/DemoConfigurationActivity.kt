@@ -86,7 +86,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
             PaymentMethod.GO_PAY, PaymentMethod.SHOPEEPAY, PaymentMethod.KLIKBCA, PaymentMethod.BCA_KLIKPAY,
             PaymentMethod.CIMB_CLICKS, PaymentMethod.EPAY_BRI, PaymentMethod.DANAMON_ONLINE,
             PaymentMethod.UOB_EZPAY, PaymentMethod.UOB_EZPAY_APP, PaymentMethod.UOB_EZPAY_WEB,
-            PaymentMethod.INDOMARET, PaymentMethod.ALFAMART, PaymentMethod.AKULAKU
+            PaymentMethod.INDOMARET, PaymentMethod.ALFAMART, PaymentMethod.AKULAKU, PaymentMethod.KREDIVO
         ).map {
             it.toString()
         }
