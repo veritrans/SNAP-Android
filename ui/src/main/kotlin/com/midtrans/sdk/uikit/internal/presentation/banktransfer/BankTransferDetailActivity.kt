@@ -302,7 +302,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
                         SnapInstructionButton(
                             isExpanded = isExpanded,
                             iconResId = R.drawable.ic_help,
-                            title = stringResource(id = R.string.kredivo_how_to_pay_title),
+                            title = stringResource(id = R.string.payment_instruction_how_to_pay_title),
                             onExpandClick = {
                                 viewModel?.trackHowToPayClicked(paymentType)
                                 isExpanded = !isExpanded
