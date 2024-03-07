@@ -363,7 +363,6 @@
 
 
     <string name="kredivo_title">Kredivo</string>
-    <string name="kredivo_instruction">Akulaku PayLater memungkinkan Anda untuk berbelanja dengan angsuran tanpa menggunakan kartu kredit.</string>
     <string-array name="kredivo_how_to_pay">
         <item><data><![CDATA[Click <b>Pay Now</b>, then you will be directed to Kredivo page.]]></data></item>
         <item><data><![CDATA[Login to your Kredivo account.]]></data></item>
@@ -372,10 +371,7 @@
         <item><data><![CDATA[Tap <b>Pay</b>.]]></data></item>
         <item><data><![CDATA[You\'ll get confirmation message on the screen once transaction is successful.]]></data></item>
     </string-array>
-
-    <string name="kredivo_redirection_main_message">Redirecting to Kredivo…</string>
-    <string name="kredivo_redirection_cta">Open now</string>
-
+    
     <string name="uob_ez_pay_title">UOB EZ Pay</string>
     <string name="uob_web_method_name">UOB EZ Pay via web</string>
     <string name="uob_web_instruction">Please make sure that you have registered ID and complete your payment via UOB EZ Pay.</string>

@@ -358,18 +358,14 @@
     <string name="brimo_cta">Bayar sekarang</string>
 
     <string name="kredivo_title">Kredivo</string>
-    <string name="kredivo_instruction">Akulaku PayLater memungkinkan Anda untuk berbelanja dengan angsuran tanpa menggunakan kartu kredit.</string>
     <string-array name="kredivo_how_to_pay">
-        <item><data><![CDATA[Click <b>Pay Now</b>, then you will be directed to Kredivo page.]]></data></item>
-        <item><data><![CDATA[Login to your Kredivo account.]]></data></item>
-        <item><data><![CDATA[Choose the installment term.]]></data></item>
-        <item><data><![CDATA[Enter the OTP code that has been sent to your mobile number.]]></data></item>
-        <item><data><![CDATA[Tap <b>Pay</b>.]]></data></item>
-        <item><data><![CDATA[You\'ll get confirmation message on the screen once transaction is successful.]]></data></item>
+        <item><data><![CDATA[Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke halaman Kredivo.]]></data></item>
+        <item><data><![CDATA[Login ke akun Kredivo Anda.]]></data></item>
+        <item><data><![CDATA[Pilih jangka waktu cicilan yang diinginkan.]]></data></item>
+        <item><data><![CDATA[Masukkan kode OTP yang telah dikirimkan ke nomor HP-mu.]]></data></item>
+        <item><data><![CDATA[Klik <b>Bayar</b>.]]></data></item>
+        <item><data><![CDATA[Anda akan mendapatkan konfirmasi pada layar jika transaksi berhasil.]]></data></item>
     </string-array>
-
-    <string name="kredivo_redirection_main_message">Mengalihkan ke Kredivo…</string>
-    <string name="kredivo_redirection_cta">Buka sekarang</string>
 
     <string name="uob_ez_pay_title">UOB EZ Pay</string>
     <string name="uob_web_method_name">UOB EZ Pay via web</string>
