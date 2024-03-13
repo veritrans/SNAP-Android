@@ -366,6 +366,7 @@
         <item><data><![CDATA[Klik <b>Bayar</b>.]]></data></item>
         <item><data><![CDATA[Anda akan mendapatkan konfirmasi pada layar jika transaksi berhasil.]]></data></item>
     </string-array>
+    <string name="kredivo_cta">Bayar sekarang</string>
 
     <string name="uob_ez_pay_title">UOB EZ Pay</string>
     <string name="uob_web_method_name">UOB EZ Pay via web</string>

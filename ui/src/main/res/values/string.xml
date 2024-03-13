@@ -371,6 +371,7 @@
         <item><data><![CDATA[Tap <b>Pay</b>.]]></data></item>
         <item><data><![CDATA[You\'ll get confirmation message on the screen once transaction is successful.]]></data></item>
     </string-array>
+    <string name="kredivo_cta">Pay now</string>
     
     <string name="uob_ez_pay_title">UOB EZ Pay</string>
     <string name="uob_web_method_name">UOB EZ Pay via web</string>
