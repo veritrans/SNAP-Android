@@ -295,7 +295,7 @@ class PayLaterActivity : BaseActivity() {
 
     private fun getCta(paymentType: String): Int {
         return when (paymentType) {
-            PaymentType.KREDIVO,
+            PaymentType.KREDIVO -> R.string.kredivo_cta
             PaymentType.AKULAKU -> R.string.akulaku_cta
             else -> 0
         }
