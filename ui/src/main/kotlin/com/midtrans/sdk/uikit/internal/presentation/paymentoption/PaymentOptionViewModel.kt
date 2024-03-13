@@ -68,20 +68,21 @@ internal class PaymentOptionViewModel @Inject constructor(
 
     private fun isValidMethod(type: String, isTabletDevice: Boolean): Boolean {
         return type == INDOMARET
-            || type == ALFAMART
-            || type == BANK_TRANSFER
-            || type == KLIK_BCA
-            || type == BCA_KLIKPAY
-            || type == CIMB_CLICKS
-            || type == BRI_EPAY
-            || type == DANAMON_ONLINE
-            || type == UOB_EZPAY
-            || type == CREDIT_CARD
-            || type == AKULAKU || type == KREDIVO
-            || (type == GOPAY && !isTabletDevice)
-            || (type == GOPAY_QRIS && isTabletDevice)
-            || (type == SHOPEEPAY && !isTabletDevice)
-            || (type == SHOPEEPAY_QRIS && isTabletDevice)
+                || type == ALFAMART
+                || type == BANK_TRANSFER
+                || type == KLIK_BCA
+                || type == BCA_KLIKPAY
+                || type == CIMB_CLICKS
+                || type == BRI_EPAY
+                || type == DANAMON_ONLINE
+                || type == UOB_EZPAY
+                || type == CREDIT_CARD
+                || type == AKULAKU
+                || type == KREDIVO
+                || (type == GOPAY && !isTabletDevice)
+                || (type == GOPAY_QRIS && isTabletDevice)
+                || (type == SHOPEEPAY && !isTabletDevice)
+                || (type == SHOPEEPAY_QRIS && isTabletDevice)
     }
 
     private fun getIcons(type: String, channels: List<String>, isTabletDevice: Boolean): List<Int> {
