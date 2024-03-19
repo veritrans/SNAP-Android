@@ -1,3 +1,7 @@
+import java.net.URI
+apply(from = "publish-variables.gradle")
+
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -6,11 +10,16 @@ plugins {
     id("maven-publish")
 }
 
+//from publish-variables.gradle
+//creating constant here only works form publish-variables, not from gradle.properties(global), somehow it set to null on "publish"
+val sdkVersion = project.findProperty("sdkVersion")?.toString()
+val mavenRepo = project.findProperty("mavenRepo")?.toString()
+val mavenUrl = project.findProperty("mavenUrl")?.toString()
+val mixpanelTokenSandbox = project.findProperty("mixpanelTokenSandbox")?.toString()
+val mixpanelTokenProduction = project.findProperty("mixpanelTokenProduction")?.toString()
+
 android {
     compileSdk = 33
-    project.property("sdkVersion")?.let {
-        version = it
-    }
 
     defaultConfig {
         minSdk = 21
@@ -27,19 +36,35 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "SNAP_BASE_URL", "\"https://app.midtrans.com/snap/\"")
-            buildConfigField("String", "CORE_API_BASE_URL", "\"https://api.midtrans.com/\"")
-            buildConfigField("String", "MIXPANEL_TOKEN", "\"84ed63a9507c49b373945b13633b8a0c\"")
-            buildConfigField("String", "SDK_VERSION", "${project.property("sdkVersion")}")
         }
 
         debug {
-            buildConfigField("String", "SNAP_BASE_URL", "\"https://app.sandbox.midtrans.com/snap/\"")
-            buildConfigField("String", "CORE_API_BASE_URL", "\"https://api.sandbox.midtrans.com/\"")
-            buildConfigField("String", "MIXPANEL_TOKEN", "\"f070570da8b882fda74c77541f0926a0\"")
-            buildConfigField("String", "SDK_VERSION", "${project.property("sdkVersion")}")
+            isTestCoverageEnabled = true
         }
     }
+
+    flavorDimensions.add("env")
+    productFlavors {
+        create("sandbox") {
+            dimension = "env"
+            buildConfigField("String", "SNAP_BASE_URL", "\"https://app.sandbox.midtrans.com/snap/\"")
+            buildConfigField("String", "CORE_API_BASE_URL", "\"https://api.sandbox.midtrans.com/\"")
+            buildConfigField("String", "MIXPANEL_TOKEN", "$mixpanelTokenSandbox")
+            buildConfigField("String", "SDK_VERSION", "\"$sdkVersion\"")
+            matchingFallbacks.add("sandbox")
+            manifestPlaceholders["isByPassNonSsl"] = false
+        }
+        create("production") {
+            dimension = "env"
+            buildConfigField("String", "SNAP_BASE_URL", "\"https://app.midtrans.com/snap/\"")
+            buildConfigField("String", "CORE_API_BASE_URL", "\"https://api.midtrans.com/\"")
+            buildConfigField("String", "MIXPANEL_TOKEN", "$mixpanelTokenProduction")
+            buildConfigField("String", "SDK_VERSION", "\"$sdkVersion\"")
+            matchingFallbacks.add("production")
+            manifestPlaceholders["isByPassNonSsl"] = false
+        }
+    }
+    setPublishNonDefault(true)
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = false
@@ -61,6 +86,13 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
     }
 }
 
@@ -142,16 +174,86 @@ dependencies {
     implementation(com.gtf.snap.CommonLibraries.androidxDatastore)
     implementation(com.gtf.snap.CommonLibraries.uuid)
 }
+
 afterEvaluate {
     publishing {
         publications {
-            register<MavenPublication>("debug") {
-                groupId = "com.snap"
-                artifactId = "uikit-test"
-                version = "1.0"
+            register<MavenPublication>("sandbox") {
+                groupId = project.findProperty("groupId")?.toString()
+                artifactId = project.findProperty("artifactId")?.toString()
+                version = project.findProperty("sdkVersion")?.toString() + "-SANDBOX"
+//                artifact("$buildDir/outputs/aar/ui-sandbox-release.aar")
 
+                pom {
+                    name.set(project.findProperty("libraryNameUiKit")?.toString())
+                    description.set(project.findProperty("libraryDescription")?.toString())
+                    url.set(project.findProperty("gitUrl")?.toString())
+                    licenses {
+                        license {
+                            name.set(project.findProperty("licenseName")?.toString())
+                            url.set(project.findProperty("licenseUrl")?.toString())
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set(project.findProperty("developerId")?.toString())
+                            name.set(project.findProperty("developerName")?.toString())
+                            email.set(project.findProperty("developerEmail")?.toString())
+                        }
+                    }
+                    scm {
+                        connection.set(project.findProperty("scmConnection")?.toString())
+                        developerConnection.set(project.findProperty("scmDeveloperConnection")?.toString())
+                        url.set(project.findProperty("scmUrl")?.toString())
+                    }
+                }
                 afterEvaluate {
-                    from(components["debug"])
+                    from(components["sandboxRelease"])
+                }
+            }
+
+            register<MavenPublication>("production") {
+                groupId = project.findProperty("groupId")?.toString()
+                artifactId = project.findProperty("artifactId")?.toString()
+                version = project.findProperty("sdkVersion")?.toString()
+//                artifact("$buildDir/outputs/aar/ui-production-release.aar")
+
+                pom {
+                    name.set(project.findProperty("libraryNameUiKit")?.toString())
+                    description.set(project.findProperty("libraryDescription")?.toString())
+                    url.set(project.findProperty("gitUrl")?.toString())
+                    licenses {
+                        license {
+                            name.set(project.findProperty("licenseName")?.toString())
+                            url.set(project.findProperty("licenseUrl")?.toString())
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set(project.findProperty("developerId")?.toString())
+                            name.set(project.findProperty("developerName")?.toString())
+                            email.set(project.findProperty("developerEmail")?.toString())
+                        }
+                    }
+                    scm {
+                        connection.set(project.findProperty("scmConnection")?.toString())
+                        developerConnection.set(project.findProperty("scmDeveloperConnection")?.toString())
+                        url.set(project.findProperty("scmUrl")?.toString())
+                    }
+                }
+                afterEvaluate {
+                    from(components["productionRelease"])
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                name = mavenRepo
+                url = URI (mavenUrl)
+                credentials {
+                    username = project.findProperty("ossrhUsername")?.toString()
+                    password = project.findProperty("ossrhPassword")?.toString()
                 }
             }
         }
