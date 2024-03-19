@@ -1,0 +1,18 @@
+ext {
+    groupId = 'com.midtrans'
+    sdkVersion = '2.0.1'
+    artifactId = 'uikit'
+    sdkEnvSandbox = '-SANDBOX'
+    sdkEnvProduction = '-PRODUCTION'
+
+    mavenRepo = 'mavencentral'
+    mavenUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+    gitUrl = 'https://github.com/veritrans/veritrans-android'
+    libraryNameUiKit = 'Midtrans-UiKit'
+    libraryDescription = 'Android SDK for integrating with midtrans.com'
+    licenseName = 'Midtrans License'
+    licenseUrl = 'https://github.com/veritrans/veritrans-android/blob/master/LICENSE'
+    scmConnection = 'scm:git:github.com:veritrans/veritrans-android.git'
+    scmDeveloperConnection = 'scm:git:ssh://github.com/veritrans/veritrans-android.git'
+    scmUrl = 'https://github.com/veritrans/veritrans-android/tree/master'
+}
