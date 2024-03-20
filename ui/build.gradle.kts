@@ -78,7 +78,7 @@ android {
             buildConfigField(
                 "String",
                 "MIXPANEL_TOKEN",
-                project.findProperty("mixpanelTokenSandbox").toString()
+                project.findProperty("mixpanelTokenProduction").toString()
             )
             buildConfigField("String", "SDK_VERSION", "\"$sdkVersion\"")
             matchingFallbacks.add("production")
