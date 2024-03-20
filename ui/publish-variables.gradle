@@ -1,10 +1,8 @@
 ext {
-    groupId = 'com.midtrans'
+    sdkGroupId = 'com.midtrans'
     sdkVersion = '2.0.1'
-    artifactId = 'uikit'
+    sdkArtifactId = 'uikit'
     sdkEnvSandbox = '-SANDBOX'
-    sdkEnvProduction = '-PRODUCTION'
-
     mavenRepo = 'mavencentral'
     mavenUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
     gitUrl = 'https://github.com/veritrans/veritrans-android'
