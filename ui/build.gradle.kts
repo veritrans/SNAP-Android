@@ -1,4 +1,5 @@
 import java.net.URI
+
 apply(from = "publish-variables.gradle")
 
 
@@ -11,12 +12,22 @@ plugins {
 }
 
 //from publish-variables.gradle
-//creating constant here only works form publish-variables, not from gradle.properties(global), somehow it set to null on "publish"
-val sdkVersion = project.findProperty("sdkVersion")?.toString()
-val mavenRepo = project.findProperty("mavenRepo")?.toString()
-val mavenUrl = project.findProperty("mavenUrl")?.toString()
-val mixpanelTokenSandbox = project.findProperty("mixpanelTokenSandbox")?.toString()
-val mixpanelTokenProduction = project.findProperty("mixpanelTokenProduction")?.toString()
+//creating constant variable here only works form publish-variables.gradle, not from gradle.properties(global), somehow it's set to null on "publish",
+//also make sure it's unique, using a common name as `groupId` causes the value to be `Snap` not `com.midtrans` which causes error 400 on upload.
+val sdkGroupId: String by project.properties
+val sdkVersion: String by project.properties
+val sdkArtifactId: String by project.properties
+val sdkEnvSandbox: String by project.properties
+val mavenRepo: String by project.properties
+val mavenUrl: String by project.properties
+val gitUrl: String by project.properties
+val libraryNameUiKit: String by project.properties
+val libraryDescription: String by project.properties
+val licenseName: String by project.properties
+val licenseUrl: String by project.properties
+val scmConnection: String by project.properties
+val scmDeveloperConnection: String by project.properties
+val scmUrl: String by project.properties
 
 android {
     compileSdk = 33
@@ -47,9 +58,15 @@ android {
     productFlavors {
         create("sandbox") {
             dimension = "env"
-            buildConfigField("String", "SNAP_BASE_URL", "\"https://app.sandbox.midtrans.com/snap/\"")
+            buildConfigField(
+                "String",
+                "SNAP_BASE_URL",
+                "\"https://app.sandbox.midtrans.com/snap/\""
+            )
             buildConfigField("String", "CORE_API_BASE_URL", "\"https://api.sandbox.midtrans.com/\"")
-            buildConfigField("String", "MIXPANEL_TOKEN", "$mixpanelTokenSandbox")
+            buildConfigField(
+                "String", "MIXPANEL_TOKEN", project.findProperty("mixpanelTokenSandbox").toString()
+            )
             buildConfigField("String", "SDK_VERSION", "\"$sdkVersion\"")
             matchingFallbacks.add("sandbox")
             manifestPlaceholders["isByPassNonSsl"] = false
@@ -58,7 +75,11 @@ android {
             dimension = "env"
             buildConfigField("String", "SNAP_BASE_URL", "\"https://app.midtrans.com/snap/\"")
             buildConfigField("String", "CORE_API_BASE_URL", "\"https://api.midtrans.com/\"")
-            buildConfigField("String", "MIXPANEL_TOKEN", "$mixpanelTokenProduction")
+            buildConfigField(
+                "String",
+                "MIXPANEL_TOKEN",
+                project.findProperty("mixpanelTokenSandbox").toString()
+            )
             buildConfigField("String", "SDK_VERSION", "\"$sdkVersion\"")
             matchingFallbacks.add("production")
             manifestPlaceholders["isByPassNonSsl"] = false
@@ -179,19 +200,17 @@ afterEvaluate {
     publishing {
         publications {
             register<MavenPublication>("sandbox") {
-                groupId = project.findProperty("groupId")?.toString()
-                artifactId = project.findProperty("artifactId")?.toString()
-                version = project.findProperty("sdkVersion")?.toString() + "-SANDBOX"
-//                artifact("$buildDir/outputs/aar/ui-sandbox-release.aar")
-
+                groupId = sdkGroupId
+                artifactId = sdkArtifactId
+                version = "$sdkVersion-SANDBOX"
                 pom {
-                    name.set(project.findProperty("libraryNameUiKit")?.toString())
-                    description.set(project.findProperty("libraryDescription")?.toString())
-                    url.set(project.findProperty("gitUrl")?.toString())
+                    name.set(libraryNameUiKit)
+                    description.set(libraryDescription)
+                    url.set(gitUrl)
                     licenses {
                         license {
-                            name.set(project.findProperty("licenseName")?.toString())
-                            url.set(project.findProperty("licenseUrl")?.toString())
+                            name.set(licenseName)
+                            url.set(licenseUrl)
                         }
                     }
                     developers {
@@ -202,9 +221,9 @@ afterEvaluate {
                         }
                     }
                     scm {
-                        connection.set(project.findProperty("scmConnection")?.toString())
-                        developerConnection.set(project.findProperty("scmDeveloperConnection")?.toString())
-                        url.set(project.findProperty("scmUrl")?.toString())
+                        connection.set(scmConnection)
+                        developerConnection.set(scmDeveloperConnection)
+                        url.set(scmUrl)
                     }
                 }
                 afterEvaluate {
@@ -213,19 +232,17 @@ afterEvaluate {
             }
 
             register<MavenPublication>("production") {
-                groupId = project.findProperty("groupId")?.toString()
-                artifactId = project.findProperty("artifactId")?.toString()
-                version = project.findProperty("sdkVersion")?.toString()
-//                artifact("$buildDir/outputs/aar/ui-production-release.aar")
-
+                groupId = sdkGroupId
+                artifactId = sdkArtifactId
+                version = sdkVersion
                 pom {
-                    name.set(project.findProperty("libraryNameUiKit")?.toString())
-                    description.set(project.findProperty("libraryDescription")?.toString())
-                    url.set(project.findProperty("gitUrl")?.toString())
+                    name.set(libraryNameUiKit)
+                    description.set(libraryDescription)
+                    url.set(gitUrl)
                     licenses {
                         license {
-                            name.set(project.findProperty("licenseName")?.toString())
-                            url.set(project.findProperty("licenseUrl")?.toString())
+                            name.set(licenseName)
+                            url.set(licenseUrl)
                         }
                     }
                     developers {
@@ -236,9 +253,9 @@ afterEvaluate {
                         }
                     }
                     scm {
-                        connection.set(project.findProperty("scmConnection")?.toString())
-                        developerConnection.set(project.findProperty("scmDeveloperConnection")?.toString())
-                        url.set(project.findProperty("scmUrl")?.toString())
+                        connection.set(scmConnection)
+                        developerConnection.set(scmDeveloperConnection)
+                        url.set(scmUrl)
                     }
                 }
                 afterEvaluate {
@@ -250,7 +267,7 @@ afterEvaluate {
         repositories {
             maven {
                 name = mavenRepo
-                url = URI (mavenUrl)
+                url = URI(mavenUrl)
                 credentials {
                     username = project.findProperty("ossrhUsername")?.toString()
                     password = project.findProperty("ossrhPassword")?.toString()
