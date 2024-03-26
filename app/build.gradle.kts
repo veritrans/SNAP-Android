@@ -7,23 +7,55 @@ plugins {
     id("maven-publish")
 }
 
-
 android {
     compileSdk = 33
+    buildToolsVersion = "30.0.3"
 
     defaultConfig {
+        applicationId = "com.midtrans.sdk.sample"
         minSdk = 21
         targetSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-//        consumerProguardFiles = "consumer-rules.pro"
+        versionCode = 5
+        versionName = "2.0.1"
     }
 
+    signingConfigs {
+        create("release") {
+            keyAlias = project.findProperty("keyAlias")?.toString()
+            keyPassword = project.findProperty("keyPassword")?.toString()
+            storeFile = file("keystorefile.jks")
+            storePassword = project.findProperty("keystorePassword")?.toString()
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles.add(getDefaultProguardFile("proguard-android.txt"))
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            signingConfig = signingConfigs.getByName("release")
+        }
+        debug {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
 
+        flavorDimensions.add("env")
+        productFlavors {
+            create("sandbox") {
+                dimension = "env"
+                matchingFallbacks += "sandbox"
+            }
+            create("production") {
+                dimension = "env"
+                matchingFallbacks += "production"
+            }
         }
     }
     compileOptions {
@@ -42,6 +74,13 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
     }
 }
 
