@@ -363,6 +363,7 @@
 
 
     <string name="kredivo_title">Kredivo</string>
+    <string name="kredivo_instruction">Please complete the payment through Kredivo app/website.</string>
     <string-array name="kredivo_how_to_pay">
         <item><data><![CDATA[Click <b>Pay Now</b>, then you will be directed to Kredivo page.]]></data></item>
         <item><data><![CDATA[Login to your Kredivo account.]]></data></item>

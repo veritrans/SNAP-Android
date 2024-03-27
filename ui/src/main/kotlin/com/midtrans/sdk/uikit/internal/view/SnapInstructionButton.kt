@@ -129,6 +129,7 @@ private fun getHowToPayId(paymentType: String): Int? {
 private fun getInstructionId(paymentType: String): Int? {
     return when (paymentType) {
         PaymentType.AKULAKU -> R.string.akulaku_instruction
+        PaymentType.KREDIVO -> R.string.kredivo_instruction
         else -> null
     }
 }

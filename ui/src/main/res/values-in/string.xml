@@ -358,6 +358,7 @@
     <string name="brimo_cta">Bayar sekarang</string>
 
     <string name="kredivo_title">Kredivo</string>
+    <string name="kredivo_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/website kredivo.</string>
     <string-array name="kredivo_how_to_pay">
         <item><data><![CDATA[Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke halaman Kredivo.]]></data></item>
         <item><data><![CDATA[Login ke akun Kredivo Anda.]]></data></item>
