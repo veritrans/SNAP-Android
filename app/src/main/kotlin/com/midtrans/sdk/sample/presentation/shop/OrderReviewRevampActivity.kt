@@ -58,7 +58,7 @@ class OrderReviewRevampActivity : ComponentActivity() {
                     )
                     Toast.makeText(
                         this@OrderReviewRevampActivity,
-                        "Coba trxid ${transactionResult?.transactionId.orEmpty()}",
+                        "Coba trxid ${transactionResult?.transactionId.orEmpty()} trx status ${transactionResult?.status.orEmpty()}",
                         Toast.LENGTH_LONG
                     ).show()
                 }

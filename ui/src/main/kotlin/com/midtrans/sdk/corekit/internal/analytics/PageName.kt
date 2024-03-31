@@ -13,6 +13,7 @@ class PageName {
         INDOMARET_PAGE,
         ALFAMART_PAGE,
         AKULAKU_PAGE,
+        KREDIVO_PAGE,
         KLIK_BCA_PAGE,
         BCA_KLIK_PAY_PAGE,
         OCTO_CLICKS_PAGE,
@@ -44,13 +45,14 @@ class PageName {
         const val SHOPEEPAY_DEEPLINK_PAGE = "Shopeepay Deeplink Instruction"
         const val INDOMARET_PAGE = "Indomaret Page"
         const val ALFAMART_PAGE = "Alfamart Page"
-        const val AKULAKU_PAGE = "Akulaku  Instruction"
-        const val KLIK_BCA_PAGE = "KlikBCA  Instruction"
-        const val BCA_KLIK_PAY_PAGE = "BCAKlikPay  Instruction"
+        const val AKULAKU_PAGE = "Akulaku Instruction"
+        const val KREDIVO_PAGE = "Kredivo Instruction"
+        const val KLIK_BCA_PAGE = "KlikBCA Instruction"
+        const val BCA_KLIK_PAY_PAGE = "BCAKlikPay Instruction"
         const val OCTO_CLICKS_PAGE = "OCTOClicks Instruction"
         const val DANAMON_ONLINE_PAGE = "Danamon Online Banking Instruction"
         const val BRIMO_PAGE = "BRImo  Instruction"
-        const val UOB_PAGE = "UOB EZpay  Instruction"
+        const val UOB_PAGE = "UOB EZpay Instruction"
         const val UOB_SELECTION_PAGE = "UOB EZpay Selection"
         const val REDIRECTION_PAGE = "Redirection Page"
         const val SUCCESS_PAGE = "Success Page"

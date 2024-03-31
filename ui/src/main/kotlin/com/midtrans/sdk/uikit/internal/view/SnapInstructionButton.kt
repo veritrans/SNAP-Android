@@ -121,6 +121,7 @@ fun SnapInstructionButton(
 private fun getHowToPayId(paymentType: String): Int? {
     return when (paymentType) {
         PaymentType.AKULAKU -> R.array.akulaku_how_to_pay
+        PaymentType.KREDIVO -> R.array.kredivo_how_to_pay
         else -> null
     }
 }
@@ -128,6 +129,7 @@ private fun getHowToPayId(paymentType: String): Int? {
 private fun getInstructionId(paymentType: String): Int? {
     return when (paymentType) {
         PaymentType.AKULAKU -> R.string.akulaku_instruction
+        PaymentType.KREDIVO -> R.string.kredivo_instruction
         else -> null
     }
 }

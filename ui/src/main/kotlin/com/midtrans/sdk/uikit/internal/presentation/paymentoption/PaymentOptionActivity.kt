@@ -661,7 +661,8 @@ class PaymentOptionActivity : BaseActivity() {
             Pair(PaymentType.GOPAY_QRIS, eWalletPaymentLauncher),
             Pair(PaymentType.ALFAMART, cStorePaymentLauncher),
             Pair(PaymentType.INDOMARET, cStorePaymentLauncher),
-            Pair(PaymentType.AKULAKU, payLaterPaymentLauncher)
+            Pair(PaymentType.AKULAKU, payLaterPaymentLauncher),
+            Pair(PaymentType.KREDIVO, payLaterPaymentLauncher)
         )
     }
 

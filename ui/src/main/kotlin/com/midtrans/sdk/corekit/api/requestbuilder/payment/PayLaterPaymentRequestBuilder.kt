@@ -13,7 +13,8 @@ class PayLaterPaymentRequestBuilder : PaymentRequestBuilder() {
 
     override fun build(): PaymentRequest {
         return when (paymentType) {
-            PaymentType.AKULAKU -> PaymentRequest(paymentType = paymentType)
+            PaymentType.AKULAKU,
+            PaymentType.KREDIVO -> PaymentRequest(paymentType = paymentType)
             else -> throw InvalidPaymentTypeException()
         }
     }

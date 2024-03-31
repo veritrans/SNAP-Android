@@ -376,7 +376,7 @@ internal class WalletActivity : BaseActivity() {
                         modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
                         isExpanded = isExpanded,
                         iconResId = R.drawable.ic_help,
-                        title = stringResource(id = R.string.kredivo_how_to_pay_title),
+                        title = stringResource(id = R.string.payment_instruction_how_to_pay_title),
                         onExpandClick = {
                             viewModel.trackHowToPayClicked(paymentType)
                             isExpanded = !isExpanded

@@ -26,6 +26,7 @@
     <string name="payment_summary_danamonob">Danamon Online Banking</string>
     <string name="payment_summary_uobezpay">UOB EZ Pay</string>
     <string name="payment_summary_akulaku">Akulaku PayLater</string>
+    <string name="payment_summary_kredivo">Kredivo</string>
     <string name="payment_summary_shopeepay">ShopeePay/e-Wallet Lainnya</string>
     <string name="payment_summary_alfamart">Alfa Group</string>
     <string name="payment_summary_indomaret">Indomaret</string>
@@ -356,17 +357,17 @@
     </string-array>
     <string name="brimo_cta">Bayar sekarang</string>
 
-
-    <string name="kredivo_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/website Krevido.</string>
-
-    <string name="kredivo_how_to_pay_title">Cara bayar</string>
-    <string name="kredivo_step_by_step">1. Klik Bayar sekarang dan Anda akan diarahkan ke halaman Kredivo. 2. Login ke akun Kredivo Anda. 3. Pilih jangka waktu cicilan yang diinginkan. 4. Masukkan kode OTP yang telah dikirimkan ke nomor HP-mu. 4. Klik Bayar. 5. Anda akan mendapatkan konfirmasi pada layar jika transaksi berhasil.</string>
-
+    <string name="kredivo_title">Kredivo</string>
+    <string name="kredivo_instruction">Mohon untuk menyelesaikan pembayaran melalui aplikasi/website kredivo.</string>
+    <string-array name="kredivo_how_to_pay">
+        <item><data><![CDATA[Klik <b>Bayar sekarang</b> dan Anda akan diarahkan ke halaman Kredivo.]]></data></item>
+        <item><data><![CDATA[Login ke akun Kredivo Anda.]]></data></item>
+        <item><data><![CDATA[Pilih jangka waktu cicilan yang diinginkan.]]></data></item>
+        <item><data><![CDATA[Masukkan kode OTP yang telah dikirimkan ke nomor HP-mu.]]></data></item>
+        <item><data><![CDATA[Klik <b>Bayar</b>.]]></data></item>
+        <item><data><![CDATA[Anda akan mendapatkan konfirmasi pada layar jika transaksi berhasil.]]></data></item>
+    </string-array>
     <string name="kredivo_cta">Bayar sekarang</string>
-
-
-    <string name="kredivo_redirection_main_message">Mengalihkan ke Kredivo…</string>
-    <string name="kredivo_redirection_cta">Buka sekarang</string>
 
     <string name="uob_ez_pay_title">UOB EZ Pay</string>
     <string name="uob_web_method_name">UOB EZ Pay via web</string>
