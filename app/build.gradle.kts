@@ -18,7 +18,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         versionCode = 5
-        versionName = "2.0.1"
+        versionName = "2.1.0"
     }
 
     signingConfigs {
