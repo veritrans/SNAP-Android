@@ -9,6 +9,7 @@ plugins {
     id("kotlin-kapt")
     id("kotlin-parcelize")
     id("maven-publish")
+    id("signing")
 }
 
 //from publish-variables.gradle
@@ -278,3 +279,8 @@ afterEvaluate {
         }
     }
 }
+
+signing {
+    sign(publishing.publications)
+}
+
