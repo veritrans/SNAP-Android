@@ -75,6 +75,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    namespace = "com.midtrans.sdk.sample"
 
     publishing {
         singleVariant("release") {

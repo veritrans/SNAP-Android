@@ -7,7 +7,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.2.2")
+        classpath("com.android.tools.build:gradle:7.4.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
         classpath("org.jacoco:org.jacoco.core:$jacoco_version")
         classpath("org.jfrog.buildinfo:build-info-extractor-gradle:4.18.2")
