@@ -9,6 +9,7 @@ plugins {
     id("kotlin-kapt")
     id("kotlin-parcelize")
     id("maven-publish")
+    id("signing")
 }
 
 //from publish-variables.gradle
@@ -92,9 +93,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-
     packagingOptions {
-        exclude("META-INF/*.kotlin_module")
+        resources {
+            excludes += setOf("META-INF/*.kotlin_module")
+        }
     }
 
     buildFeatures {
@@ -108,6 +110,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    namespace = "com.midtrans.sdk.uikit"
 
     publishing {
         singleVariant("release") {
@@ -276,3 +279,8 @@ afterEvaluate {
         }
     }
 }
+
+signing {
+    sign(publishing.publications)
+}
+

@@ -18,7 +18,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         versionCode = 5
-        versionName = "2.0.1"
+        versionName = "2.1.0"
     }
 
     signingConfigs {
@@ -75,6 +75,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    namespace = "com.midtrans.sdk.sample"
 
     publishing {
         singleVariant("release") {
