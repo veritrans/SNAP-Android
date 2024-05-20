@@ -26,6 +26,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.IntentCompat.getParcelableArrayListExtra
+import androidx.core.content.IntentCompat.getParcelableExtra
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -71,7 +73,7 @@ internal class CreditCardActivity : BaseActivity() {
     private var previousEightDigitNumber = ""
 
     private val transactionDetails: TransactionDetails? by lazy {
-        intent.getParcelableExtra(EXTRA_TRANSACTION_DETAILS) as? TransactionDetails
+        getParcelableExtra(intent, EXTRA_TRANSACTION_DETAILS, TransactionDetails::class.java)
     }
 
     private val totalAmount: String by lazy {
@@ -80,15 +82,15 @@ internal class CreditCardActivity : BaseActivity() {
     }
 
     private val customerDetail: CustomerInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
+        getParcelableExtra(intent, EXTRA_CUSTOMER_DETAIL, CustomerInfo::class.java)
     }
 
     private val itemInfo: ItemInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
+        getParcelableExtra(intent, EXTRA_ITEM_INFO, ItemInfo::class.java)
     }
 
     private val creditCard: CreditCard? by lazy {
-        intent.getParcelableExtra(EXTRA_CREDIT_CARD) as? CreditCard
+        getParcelableExtra(intent, EXTRA_CREDIT_CARD, CreditCard::class.java)
     }
 
     private val snapToken: String by lazy {
@@ -101,7 +103,7 @@ internal class CreditCardActivity : BaseActivity() {
     }
 
     private val merchant: Merchant? by lazy {
-        intent.getParcelableExtra(EXTRA_MERCHANT_DATA) as? Merchant
+        getParcelableExtra(intent, EXTRA_MERCHANT_DATA, Merchant::class.java)
     }
 
     private val currentStepNumber: Int by lazy {
@@ -109,7 +111,7 @@ internal class CreditCardActivity : BaseActivity() {
     }
 
     private val promos: List<Promo>? by lazy {
-        intent.getParcelableArrayListExtra<Promo?>(EXTRA_PROMOS)
+        getParcelableArrayListExtra(intent, EXTRA_PROMOS, Promo::class.java)
             ?.apply {
                 sortByDescending { it.calculatedDiscountAmount }
             }

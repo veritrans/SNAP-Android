@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.IntentCompat.getParcelableExtra
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.internal.base.BaseActivity
@@ -33,11 +34,11 @@ import kotlinx.parcelize.Parcelize
 class ErrorScreenActivity : BaseActivity() {
 
     private val data: ErrorData by lazy {
-        intent.getParcelableExtra(EXTRA_ERROR) as? ErrorData
+        getParcelableExtra(intent, EXTRA_ERROR, ErrorData::class.java)
             ?: throw RuntimeException("Input data must not be empty")
     }
     private val transactionResult: TransactionResult? by lazy {
-        intent.getParcelableExtra(UiKitConstants.KEY_TRANSACTION_RESULT) as? TransactionResult
+        getParcelableExtra(intent, UiKitConstants.KEY_TRANSACTION_RESULT, TransactionResult::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

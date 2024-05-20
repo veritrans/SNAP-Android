@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.core.content.IntentCompat.getParcelableArrayListExtra
+import androidx.core.content.IntentCompat.getParcelableExtra
+import androidx.core.content.IntentCompat.getSerializableExtra
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.*
@@ -119,47 +122,47 @@ class LoadingPaymentActivity : BaseActivity() {
     internal lateinit var vmFactory: ViewModelProvider.Factory
 
     private val transactionDetails: SnapTransactionDetail by lazy {
-        intent.getParcelableExtra(EXTRA_TRANSACTION_DETAIL) as? SnapTransactionDetail
+        getParcelableExtra(intent, EXTRA_TRANSACTION_DETAIL, SnapTransactionDetail::class.java)
             ?: throw RuntimeException("Transaction detail must be present")
     }
     private val snapToken: String? by lazy {
         intent.getStringExtra(EXTRA_SNAP_TOKEN)
     }
     private val customerDetails: CustomerDetails? by lazy {
-        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAILS) as? CustomerDetails
+        getParcelableExtra(intent, EXTRA_CUSTOMER_DETAILS, CustomerDetails::class.java)
     }
     private val itemDetails: List<ItemDetails>? by lazy {
-        intent.getParcelableArrayListExtra(EXTRA_ITEM_DETAILS)
+        getParcelableArrayListExtra(intent, EXTRA_ITEM_DETAILS, ItemDetails::class.java)
     }
     private val creditCard: CreditCard? by lazy {
-        intent.getParcelableExtra(EXTRA_CREDIT_CARD) as? CreditCard
+        getParcelableExtra(intent, EXTRA_CREDIT_CARD, CreditCard::class.java)
     }
     private val userId: String? by lazy {
         intent.getStringExtra(EXTRA_USER_ID)
     }
     private val permataVa: BankTransferRequest? by lazy {
-        intent.getParcelableExtra(EXTRA_PERMATA_VA) as? BankTransferRequest
+        getParcelableExtra(intent, EXTRA_PERMATA_VA, BankTransferRequest::class.java)
     }
     private val bcaVa: BankTransferRequest? by lazy {
-        intent.getParcelableExtra(EXTRA_BCA_VA) as? BankTransferRequest
+        getParcelableExtra(intent, EXTRA_BCA_VA, BankTransferRequest::class.java)
     }
     private val bniVa: BankTransferRequest? by lazy {
-        intent.getParcelableExtra(EXTRA_BNI_VA) as? BankTransferRequest
+        getParcelableExtra(intent, EXTRA_BNI_VA, BankTransferRequest::class.java)
     }
     private val briVa: BankTransferRequest? by lazy {
-        intent.getParcelableExtra(EXTRA_BRI_VA) as? BankTransferRequest
+        getParcelableExtra(intent, EXTRA_BRI_VA, BankTransferRequest::class.java)
     }
     private val cimbVa: BankTransferRequest? by lazy {
-        intent.getParcelableExtra(EXTRA_CIMB_VA) as? BankTransferRequest
+        getParcelableExtra(intent, EXTRA_CIMB_VA, BankTransferRequest::class.java)
     }
     private val enabledPayments: List<String>? by lazy {
         intent.getStringArrayListExtra(EXTRA_ENABLED_PAYMENTS)
     }
     private val expiry: Expiry? by lazy {
-        intent.getParcelableExtra(EXTRA_EXPIRY) as? Expiry
+        getParcelableExtra(intent, EXTRA_EXPIRY, Expiry::class.java)
     }
     private val promoRequest: PromoRequest? by lazy {
-        intent.getParcelableExtra(EXTRA_PROMO) as? PromoRequest
+        getParcelableExtra(intent, EXTRA_PROMO, PromoRequest::class.java)
     }
     private val customField1: String? by lazy {
         intent.getStringExtra(EXTRA_CUSTOM_FIELD1)
@@ -171,16 +174,16 @@ class LoadingPaymentActivity : BaseActivity() {
         intent.getStringExtra(EXTRA_CUSTOM_FIELD3)
     }
     private val gopayCallback: GopayPaymentCallback? by lazy {
-        intent.getSerializableExtra(EXTRA_GOPAY_CALLBACK) as? GopayPaymentCallback
+        getSerializableExtra(intent, EXTRA_GOPAY_CALLBACK, GopayPaymentCallback::class.java)
     }
     private val shopeepayCallback: PaymentCallback? by lazy {
-        intent.getSerializableExtra(EXTRA_SHOPEEPAY_CALLBACK) as? PaymentCallback
+        getSerializableExtra(intent, EXTRA_SHOPEEPAY_CALLBACK, PaymentCallback::class.java)
     }
     private val uobEzpayCallback: PaymentCallback? by lazy {
-        intent.getSerializableExtra(EXTRA_UOB_EZPAY_CALLBACK) as? PaymentCallback
+        getSerializableExtra(intent, EXTRA_UOB_EZPAY_CALLBACK, PaymentCallback::class.java)
     }
     private val paymentType: PaymentTypeItem? by lazy {
-        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE)
+        getParcelableExtra(intent, EXTRA_PAYMENT_TYPE, PaymentTypeItem::class.java)
     }
     private val isSnapTokenAvailable: Boolean by lazy {
         intent.getBooleanExtra(EXTRA_SNAP_TOKEN_VALID, true)
@@ -270,7 +273,7 @@ class LoadingPaymentActivity : BaseActivity() {
                     result?.run {
                         data?.also {
                             val transactionResult =
-                                it.getParcelableExtra<TransactionResult>(UiKitConstants.KEY_TRANSACTION_RESULT)
+                                getParcelableExtra(it, UiKitConstants.KEY_TRANSACTION_RESULT, TransactionResult::class.java)
                             val resultIntent = Intent()
                             transactionResult?.let {
                                 val resultForHost = PublicTransactionResult(transactionResult)

@@ -21,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.IntentCompat.getParcelableArrayListExtra
+import androidx.core.content.IntentCompat.getParcelableExtra
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.*
 import com.midtrans.sdk.corekit.internal.network.model.response.EnabledPayment
@@ -128,28 +130,28 @@ class PaymentOptionActivity : BaseActivity() {
     }
 
     private val paymentList: List<PaymentMethod> by lazy {
-        intent.getParcelableArrayListExtra<PaymentMethod>(EXTRA_PAYMENT_LIST) as? List<PaymentMethod>
+        getParcelableArrayListExtra(intent, EXTRA_PAYMENT_LIST, PaymentMethod::class.java) as? List<PaymentMethod>
             ?: throw RuntimeException("Payment list must not be empty")
     }
 
     private val promos: List<Promo>? by lazy {
-        intent.getParcelableArrayListExtra(EXTRA_PROMOS)
+        getParcelableArrayListExtra(intent, EXTRA_PROMOS, Promo::class.java)
     }
 
     private val itemDetails: List<ItemDetails>? by lazy {
-        intent.getParcelableArrayListExtra(EXTRA_ITEM_DETAILS)
+        getParcelableArrayListExtra(intent, EXTRA_ITEM_DETAILS, ItemDetails::class.java)
     }
 
     private val customerDetail: CustomerDetails? by lazy {
-        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAILS) as? CustomerDetails
+        getParcelableExtra(intent, EXTRA_CUSTOMER_DETAILS, CustomerDetails::class.java)
     }
 
     private val creditCard: CreditCard? by lazy {
-        intent.getParcelableExtra(EXTRA_CREDIT_CARD) as? CreditCard
+        getParcelableExtra(intent, EXTRA_CREDIT_CARD, CreditCard::class.java)
     }
 
     private val transactionDetails: TransactionDetails? by lazy {
-        intent.getParcelableExtra(EXTRA_TRANSACTION_DETAILS) as? TransactionDetails
+        getParcelableExtra(intent, EXTRA_TRANSACTION_DETAILS, TransactionDetails::class.java)
     }
 
     private val expiryTime: String? by lazy {
@@ -157,19 +159,19 @@ class PaymentOptionActivity : BaseActivity() {
     }
 
     private val paymentTypeItem: PaymentTypeItem? by lazy {
-        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE_ITEM)
+        getParcelableExtra(intent, EXTRA_PAYMENT_TYPE_ITEM, PaymentTypeItem::class.java)
     }
 
     private val enabledPayments: List<EnabledPayment>? by lazy {
-        intent.getParcelableArrayListExtra(EXTRA_ENABLED_PAYMENT)
+        getParcelableArrayListExtra(intent, EXTRA_ENABLED_PAYMENT, EnabledPayment::class.java)
     }
 
     private val merchant: Merchant? by lazy {
-        intent.getParcelableExtra(EXTRA_MERCHANT_DATA)
+        getParcelableExtra(intent, EXTRA_MERCHANT_DATA, Merchant::class.java)
     }
 
     private val transactionResult: TransactionResponse? by lazy {
-        intent.getParcelableExtra(EXTRA_TRANSACTION_RESULT) as? TransactionResponse
+        getParcelableExtra(intent, EXTRA_TRANSACTION_RESULT, TransactionResponse::class.java)
     }
 
     private var customerInfo: CustomerInfo? = null

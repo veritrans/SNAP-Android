@@ -15,6 +15,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.IntentCompat.getParcelableArrayListExtra
+import androidx.core.content.IntentCompat.getParcelableExtra
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
@@ -55,28 +57,28 @@ class BankTransferListActivity : BaseActivity() {
     }
 
     private val customerInfo: CustomerInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
+        getParcelableExtra(intent, EXTRA_CUSTOMER_INFO, CustomerInfo::class.java)
     }
 
     private val itemInfo: ItemInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
+        getParcelableExtra(intent, EXTRA_ITEM_INFO, ItemInfo::class.java)
     }
 
     private val paymentMethodItem: PaymentMethodItem by lazy {
-        intent.getParcelableExtra(EXTRA_PAYMENT_METHOD_ITEM) as? PaymentMethodItem
+        getParcelableExtra(intent, EXTRA_PAYMENT_METHOD_ITEM, PaymentMethodItem::class.java)
             ?: throw RuntimeException("Order ID must not be empty")
     }
 
     private val paymentTypeItem: PaymentTypeItem? by lazy {
-        intent.getParcelableExtra(EXTRA_PAYMENT_TYPE_ITEM)
+        getParcelableExtra(intent, EXTRA_PAYMENT_TYPE_ITEM, PaymentTypeItem::class.java)
     }
 
     private val enabledPayments: List<EnabledPayment>? by lazy {
-        intent.getParcelableArrayListExtra(EXTRA_ENABLED_PAYMENT)
+        getParcelableArrayListExtra(intent, EXTRA_ENABLED_PAYMENT, EnabledPayment::class.java)
     }
 
     private val transactionResult: TransactionResponse? by lazy {
-        intent.getParcelableExtra(EXTRA_TRANSACTION_RESULT) as? TransactionResponse
+        getParcelableExtra(intent, EXTRA_TRANSACTION_RESULT, TransactionResponse::class.java)
     }
 
     private val currentStepNumber: Int by lazy {
@@ -84,7 +86,7 @@ class BankTransferListActivity : BaseActivity() {
     }
 
     private val merchant: Merchant? by lazy {
-        intent.getParcelableExtra(EXTRA_MERCHANT_DATA) as? Merchant
+        getParcelableExtra(intent, EXTRA_MERCHANT_DATA, Merchant::class.java)
     }
 
     private val expiryTime: String? by lazy {

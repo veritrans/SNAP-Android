@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.IntentCompat.getParcelableExtra
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
@@ -76,11 +77,11 @@ class UobPaymentActivity : BaseActivity() {
     }
 
     private val customerInfo: CustomerInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_CUSTOMER_INFO) as? CustomerInfo
+        getParcelableExtra(intent, EXTRA_CUSTOMER_INFO, CustomerInfo::class.java)
     }
 
     private val itemInfo: ItemInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
+        getParcelableExtra(intent, EXTRA_ITEM_INFO, ItemInfo::class.java)
     }
 
     private val currentStepNumber: Int by lazy {

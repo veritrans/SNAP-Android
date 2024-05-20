@@ -1,6 +1,7 @@
 package com.midtrans.sdk.uikit.internal.presentation.ewallet
 
 import android.app.Activity
+import android.content.ClipData.Item
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.IntentCompat.getParcelableExtra
 import coil.compose.AsyncImage
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
@@ -57,11 +59,11 @@ internal class WalletActivity : BaseActivity() {
     }
 
     private val customerInfo: CustomerInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
+        getParcelableExtra(intent, EXTRA_CUSTOMER_DETAIL, CustomerInfo::class.java)
     }
 
     private val itemInfo: ItemInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
+        getParcelableExtra(intent, EXTRA_ITEM_INFO, ItemInfo::class.java)
     }
 
     private val paymentType: String by lazy {
@@ -78,7 +80,7 @@ internal class WalletActivity : BaseActivity() {
     }
 
     private val transactionResult: TransactionResponse? by lazy {
-        intent.getParcelableExtra(EXTRA_TRANSACTION_RESULT) as? TransactionResponse
+        getParcelableExtra(intent, EXTRA_TRANSACTION_RESULT, TransactionResponse::class.java)
     }
 
     private val expiryTime: String? by lazy {
