@@ -108,7 +108,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = "17"
     }
     namespace = "com.midtrans.sdk.uikit"
 
