@@ -137,14 +137,14 @@ internal class UobPaymentViewModelTest {
         val callback = callbackCaptor.firstValue
         callback.onSuccess(
             TransactionResponse(
-                transactionStatus = "settlement",
+                statusCode = "statusCode",
                 transactionId = "transaction-id"
             )
         )
         Assert.assertEquals(
             Pair(
-                "settlement",
-                "transaction-id"
+                "statusCode",
+                "transaction-id",
             ),
             viewModel.getTransactionResult().getOrAwaitValue()
         )
