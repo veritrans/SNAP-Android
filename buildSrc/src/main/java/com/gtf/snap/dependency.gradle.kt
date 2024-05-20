@@ -14,7 +14,7 @@ object Dependencies {
     const val constraintLayoutVersion = "2.0.4"
     const val daggerVersion = "2.51.1"
     const val mockitoVersion = "2.25.0"
-    const val mockitoKotlinVersion = "5.3.1"
+    const val mockitoKotlinVersion = "4.1.0"
     const val mixpanelVersion = "7.5.2"
     const val okHttpVersion = "4.12.0"
     const val curlLoggerInterceptorVersion = "0.1"
