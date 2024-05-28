@@ -14,6 +14,7 @@ import com.midtrans.sdk.corekit.api.model.SavedToken.Companion.TWO_CLICKS
 import com.midtrans.sdk.corekit.api.requestbuilder.cardtoken.CreditCardTokenRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.payment.PaymentRequestBuilder
 import com.midtrans.sdk.corekit.api.requestbuilder.snaptoken.SnapTokenRequestBuilder
+import com.midtrans.sdk.corekit.core.Logger
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.constant.CommonConstant
 import com.midtrans.sdk.corekit.internal.data.repository.CoreApiRepository
@@ -34,7 +35,7 @@ internal class PaymentUsecase(
     private val clientKey: String,
     private val eventAnalytics: EventAnalytics
 ) {
-
+    private var promoDetails = PromoDetails()
     @SuppressLint("CheckResult")
     fun getPaymentOption(
         snapToken: String?,
@@ -59,6 +60,7 @@ internal class PaymentUsecase(
                     )
                 }
                 .flatMap { response ->
+                    getPromo(response.token.orEmpty())
                     snapRepository
                         .getTransactionDetail(response.token.orEmpty())
                         .map (setAnalyticsUserIdentityWithSnapToken(isUserSet))
@@ -84,7 +86,7 @@ internal class PaymentUsecase(
                                 token = token.orEmpty(),
                                 options = methods,
                                 creditCard = responseData.creditCard,
-                                promos = responseData.promoDetails?.promos,
+                                promos = promoDetails.promos,
                                 merchantData = responseData.merchant,
                                 customerDetails = responseData.customerDetails,
                                 transactionDetails = responseData.transactionDetails,
@@ -99,6 +101,7 @@ internal class PaymentUsecase(
                     }
                 )
         } else {
+            getPromo(snapToken)
             snapRepository.getTransactionDetail(snapToken)
                 .map (setAnalyticsUserIdentityWithSnapToken(isUserSet))
                 .map (trackCommonTransactionProperties(null))
@@ -117,7 +120,7 @@ internal class PaymentUsecase(
                                 token = snapToken,
                                 options = methods,
                                 creditCard = responseData.creditCard,
-                                promos = responseData.promoDetails?.promos,
+                                promos = promoDetails.promos,
                                 merchantData = responseData.merchant,
                                 customerDetails = responseData.customerDetails,
                                 transactionDetails = responseData.transactionDetails,
@@ -472,5 +475,18 @@ internal class PaymentUsecase(
         } catch (error: Throwable) {
             deliverError(error, callback)
         }
+    }
+    private fun getPromo(
+        snapToken: String
+    ){
+        snapRepository.getPromo(snapToken).subscribeOn(scheduler.io())
+            .observeOn(scheduler.ui())
+            .subscribe(
+                {
+                    promoDetails = it
+                },
+                {
+                    Logger.d("Failed on getting promo")
+                })
     }
 }
