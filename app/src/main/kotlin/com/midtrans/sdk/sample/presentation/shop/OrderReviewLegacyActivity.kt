@@ -464,20 +464,20 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
     }
 
     private fun handleGopayCallbackUrlCreation() : Gopay? {
-        if (enabledPayment?.contains(PaymentType.GOPAY) == true) {
+        if (enabledPayment?.contains(PaymentType.GOPAY) == true || enabledPayment.isNullOrEmpty()) {
             return  Gopay("demo://snap")
         }
         return  null
     }
     private fun handleShopeePayCallbackUrlCreation() : Shopeepay? {
-        if (enabledPayment?.contains(PaymentType.SHOPEEPAY) == true) {
+        if (enabledPayment?.contains(PaymentType.SHOPEEPAY) == true || enabledPayment.isNullOrEmpty()) {
             return  Shopeepay("demo://snap")
         }
         return  null
     }
 
     private fun handleUOBCallbackUrlCreation() : UobEzpay? {
-        if (enabledPayment?.contains(PaymentType.UOB_EZPAY) == true) {
+        if (enabledPayment?.contains(PaymentType.UOB_EZPAY) == true || enabledPayment.isNullOrEmpty()) {
             return  UobEzpay("demo://snap")
         }
         return  null

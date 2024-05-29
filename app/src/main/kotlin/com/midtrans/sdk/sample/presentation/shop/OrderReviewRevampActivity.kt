@@ -562,20 +562,20 @@ class OrderReviewRevampActivity : ComponentActivity() {
     }
 
     private fun handleGopayCallbackUrlCreation() : GopayPaymentCallback? {
-        if (enabledPayment?.contains(PaymentType.GOPAY) == true) {
+        if (enabledPayment?.contains(PaymentType.GOPAY) == true || enabledPayment.isNullOrEmpty() ) {
             return  GopayPaymentCallback("demo://snap")
         }
         return  null
     }
     private fun handleShopeePayCallbackUrlCreation() : PaymentCallback? {
-        if (enabledPayment?.contains(PaymentType.SHOPEEPAY) == true) {
+        if (enabledPayment?.contains(PaymentType.SHOPEEPAY) == true || enabledPayment.isNullOrEmpty()) {
             return  PaymentCallback("demo://snap")
         }
         return  null
     }
 
     private fun handleUOBCallbackUrlCreation() : PaymentCallback? {
-        if (enabledPayment?.contains(PaymentType.UOB_EZPAY) == true) {
+        if (enabledPayment?.contains(PaymentType.UOB_EZPAY) == true || enabledPayment.isNullOrEmpty()) {
             return  PaymentCallback("demo://snap")
         }
         return  null
