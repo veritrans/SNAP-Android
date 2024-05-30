@@ -60,7 +60,6 @@ internal class PaymentUsecase(
                     )
                 }
                 .flatMap { response ->
-                    getPromo(response.token.orEmpty())
                     snapRepository
                         .getTransactionDetail(response.token.orEmpty())
                         .map (setAnalyticsUserIdentityWithSnapToken(isUserSet))
@@ -81,27 +80,54 @@ internal class PaymentUsecase(
                         }
                         val responseTime = System.currentTimeMillis() - requestTime
                         eventAnalytics.trackSnapGetTokenResult(token.orEmpty(), responseTime.toString())
-                        callback.onSuccess(
-                            PaymentOption(
-                                token = token.orEmpty(),
-                                options = methods,
-                                creditCard = responseData.creditCard,
-                                promos = promoDetails.promos,
-                                merchantData = responseData.merchant,
-                                customerDetails = responseData.customerDetails,
-                                transactionDetails = responseData.transactionDetails,
-                                expiryTme = responseData.expiryTime,
-                                enabledPayment = responseData.enabledPayments,
-                                result = responseData.result
+                        if (responseData?.featureTypes?.contains(CommonConstant.PROMO) == true) {
+                            snapRepository.getPromo(token.orEmpty()).subscribeOn(scheduler.io())
+                                .observeOn(scheduler.ui())
+                                .doFinally{
+                                    callback.onSuccess(
+                                        PaymentOption(
+                                            token = token.orEmpty(),
+                                            options = methods,
+                                            creditCard = responseData.creditCard,
+                                            promos = promoDetails.promos,
+                                            merchantData = responseData.merchant,
+                                            customerDetails = responseData.customerDetails,
+                                            transactionDetails = responseData.transactionDetails,
+                                            expiryTme = responseData.expiryTime,
+                                            enabledPayment = responseData.enabledPayments,
+                                            result = responseData.result
+                                        )
+                                    )
+                                }
+                                .subscribe(
+                                    {
+                                        promoDetails = it
+                                    },
+                                    {
+                                        Logger.d("Failed on getting promo")
+                                    })
+                        } else {
+                            callback.onSuccess(
+                                PaymentOption(
+                                    token = token.orEmpty(),
+                                    options = methods,
+                                    creditCard = responseData.creditCard,
+                                    promos = promoDetails.promos,
+                                    merchantData = responseData.merchant,
+                                    customerDetails = responseData.customerDetails,
+                                    transactionDetails = responseData.transactionDetails,
+                                    expiryTme = responseData.expiryTime,
+                                    enabledPayment = responseData.enabledPayments,
+                                    result = responseData.result
+                                )
                             )
-                        )
+                        }
                     },
                     {
                         deliverError(it, callback)
                     }
                 )
         } else {
-            getPromo(snapToken)
             snapRepository.getTransactionDetail(snapToken)
                 .map (setAnalyticsUserIdentityWithSnapToken(isUserSet))
                 .map (trackCommonTransactionProperties(null))
@@ -115,20 +141,48 @@ internal class PaymentUsecase(
                         responseData.enabledPayments?.forEach {
                             addPaymentMethod(it, methods)
                         }
-                        callback.onSuccess(
-                            PaymentOption(
-                                token = snapToken,
-                                options = methods,
-                                creditCard = responseData.creditCard,
-                                promos = promoDetails.promos,
-                                merchantData = responseData.merchant,
-                                customerDetails = responseData.customerDetails,
-                                transactionDetails = responseData.transactionDetails,
-                                expiryTme = responseData.expiryTime,
-                                enabledPayment = responseData.enabledPayments,
-                                result = responseData.result
+                        if (responseData?.featureTypes?.contains(CommonConstant.PROMO) == true) {
+                            snapRepository.getPromo(snapToken).subscribeOn(scheduler.io())
+                                .observeOn(scheduler.ui())
+                                .doFinally {
+                                    callback.onSuccess(
+                                        PaymentOption(
+                                            token = snapToken,
+                                            options = methods,
+                                            creditCard = responseData.creditCard,
+                                            promos = promoDetails.promos,
+                                            merchantData = responseData.merchant,
+                                            customerDetails = responseData.customerDetails,
+                                            transactionDetails = responseData.transactionDetails,
+                                            expiryTme = responseData.expiryTime,
+                                            enabledPayment = responseData.enabledPayments,
+                                            result = responseData.result
+                                        )
+                                    )
+                                }
+                                .subscribe(
+                                    {
+                                        promoDetails = it
+                                    },
+                                    {
+                                        Logger.d("Failed on getting promo")
+                                    })
+                        } else {
+                            callback.onSuccess(
+                                PaymentOption(
+                                    token = snapToken,
+                                    options = methods,
+                                    creditCard = responseData.creditCard,
+                                    promos = promoDetails.promos,
+                                    merchantData = responseData.merchant,
+                                    customerDetails = responseData.customerDetails,
+                                    transactionDetails = responseData.transactionDetails,
+                                    expiryTme = responseData.expiryTime,
+                                    enabledPayment = responseData.enabledPayments,
+                                    result = responseData.result
+                                )
                             )
-                        )
+                        }
                     },
                     {
                         deliverError(it, callback)
@@ -475,18 +529,5 @@ internal class PaymentUsecase(
         } catch (error: Throwable) {
             deliverError(error, callback)
         }
-    }
-    private fun getPromo(
-        snapToken: String
-    ){
-        snapRepository.getPromo(snapToken).subscribeOn(scheduler.io())
-            .observeOn(scheduler.ui())
-            .subscribe(
-                {
-                    promoDetails = it
-                },
-                {
-                    Logger.d("Failed on getting promo")
-                })
     }
 }
