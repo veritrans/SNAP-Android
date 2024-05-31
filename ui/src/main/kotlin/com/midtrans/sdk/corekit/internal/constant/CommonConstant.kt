@@ -6,4 +6,6 @@ object CommonConstant {
     const val HTTP_RESPONSE_407 = 407
     const val HTTP_RESPONSE_408 = 408
     const val HTTP_RESPONSE_409 = 409
+
+    const val PROMO = "PROMO"
 }

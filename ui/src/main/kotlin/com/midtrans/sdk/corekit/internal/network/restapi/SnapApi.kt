@@ -2,6 +2,7 @@ package com.midtrans.sdk.corekit.internal.network.restapi
 
 import com.midtrans.sdk.corekit.api.model.BankPointResponse
 import com.midtrans.sdk.corekit.api.model.DeleteSavedCardResponse
+import com.midtrans.sdk.corekit.api.model.PromoDetails
 import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.network.model.request.PaymentRequest
 import com.midtrans.sdk.corekit.internal.network.model.response.Transaction
@@ -34,4 +35,7 @@ internal interface SnapApi {
 
     @GET("v1/transactions/{snap_token}/status")
     fun getTransactionStatus(@Path("snap_token") snapToken: String?): Single<TransactionResponse>
+
+    @POST("v1/promos/{snap_token}/search")
+    fun getPromo(@Path("snap_token") snapToken: String): Single<PromoDetails>
 }

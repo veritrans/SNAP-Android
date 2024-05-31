@@ -15,5 +15,6 @@ internal data class Transaction(
     val customerDetails: CustomerDetails? = null,
     val gopay: PaymentCallback? = null,
     val expiryTime: String? = null,
-    val result: TransactionResponse? = null
+    val result: TransactionResponse? = null,
+    val featureTypes: List<String>? = null
 )
