@@ -1,6 +1,6 @@
 ext {
     sdkGroupId = 'com.midtrans'
-    sdkVersion = '2.1.0'
+    sdkVersion = '2.2.0'
     sdkArtifactId = 'uikit'
     sdkEnvSandbox = '-SANDBOX'
     mavenRepo = 'mavencentral'
