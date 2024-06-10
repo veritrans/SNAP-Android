@@ -16,7 +16,7 @@ internal class AnalyticsModule {
     fun provideMixpanelTracker(
         context: Context
     ): MixpanelTracker {
-        return MixpanelTracker(MixpanelAPI.getInstance(context, BuildConfig.MIXPANEL_TOKEN))
+        return MixpanelTracker(MixpanelAPI.getInstance(context, BuildConfig.MIXPANEL_TOKEN, true))
     }
 
     @Provides

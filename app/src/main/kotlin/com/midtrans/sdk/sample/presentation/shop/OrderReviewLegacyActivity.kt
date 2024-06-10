@@ -19,6 +19,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.IntentCompat.getParcelableArrayListExtra
+import androidx.core.content.IntentCompat.getParcelableExtra
 import com.midtrans.sdk.corekit.callback.TransactionFinishedCallback
 import com.midtrans.sdk.corekit.core.MidtransSDK
 import com.midtrans.sdk.corekit.core.PaymentMethod
@@ -37,8 +39,6 @@ import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
-import com.midtrans.sdk.uikit.api.model.GopayPaymentCallback
-import com.midtrans.sdk.uikit.api.model.PaymentCallback
 import com.midtrans.sdk.uikit.api.model.PaymentType
 import com.midtrans.sdk.uikit.internal.view.SnapAppBar
 import com.midtrans.sdk.uikit.internal.view.SnapButton
@@ -84,7 +84,7 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
     }
 
     private val product: Product by lazy {
-        intent.getParcelableExtra(EXTRA_PRODUCT) as? Product
+        getParcelableExtra(intent, EXTRA_PRODUCT, Product::class.java)
             ?: throw RuntimeException("Order ID must not be empty")
     }
 
@@ -129,7 +129,7 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
     }
 
     private val paymentChannels: ArrayList<ListItem> by lazy {
-        intent.getParcelableArrayListExtra(EXTRA_INPUT_PAYMENTCHANNELS)
+        getParcelableArrayListExtra(intent, EXTRA_INPUT_PAYMENTCHANNELS, ListItem::class.java)
             ?: throw RuntimeException("paymentChannels must not be empty")
     }
 
@@ -174,7 +174,6 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
     private var bcaVaLegacy: BcaBankTransferRequestModel? = null
     private var permataVaLegacy: PermataBankTransferRequestModel? = null
     private var bniVaLegacy: BankTransferRequestModel? = null
-    private var directPaymentScreenLegacy: PaymentMethod? = null
 
     private var bank: String? = null
     private var ccAuthType: String? = null
@@ -465,20 +464,20 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
     }
 
     private fun handleGopayCallbackUrlCreation() : Gopay? {
-        if (enabledPayment?.contains(PaymentType.GOPAY) == true) {
+        if (enabledPayment?.contains(PaymentType.GOPAY) == true || enabledPayment.isNullOrEmpty()) {
             return  Gopay("demo://snap")
         }
         return  null
     }
     private fun handleShopeePayCallbackUrlCreation() : Shopeepay? {
-        if (enabledPayment?.contains(PaymentType.SHOPEEPAY) == true) {
+        if (enabledPayment?.contains(PaymentType.SHOPEEPAY) == true || enabledPayment.isNullOrEmpty()) {
             return  Shopeepay("demo://snap")
         }
         return  null
     }
 
     private fun handleUOBCallbackUrlCreation() : UobEzpay? {
-        if (enabledPayment?.contains(PaymentType.UOB_EZPAY) == true) {
+        if (enabledPayment?.contains(PaymentType.UOB_EZPAY) == true || enabledPayment.isNullOrEmpty()) {
             return  UobEzpay("demo://snap")
         }
         return  null

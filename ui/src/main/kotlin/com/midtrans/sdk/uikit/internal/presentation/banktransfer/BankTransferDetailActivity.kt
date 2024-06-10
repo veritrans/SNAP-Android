@@ -28,6 +28,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.IntentCompat.getParcelableExtra
 import androidx.lifecycle.ViewModelProvider
 import com.midtrans.sdk.corekit.api.model.PaymentType
 import com.midtrans.sdk.corekit.api.model.TransactionResult
@@ -67,11 +68,11 @@ internal class BankTransferDetailActivity : BaseActivity() {
     }
 
     private val customerInfo: CustomerInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_CUSTOMER_DETAIL) as? CustomerInfo
+        getParcelableExtra(intent, EXTRA_CUSTOMER_DETAIL, CustomerInfo::class.java)
     }
 
     private val itemInfo: ItemInfo? by lazy {
-        intent.getParcelableExtra(EXTRA_ITEM_INFO) as? ItemInfo
+        getParcelableExtra(intent, EXTRA_ITEM_INFO, ItemInfo::class.java)
     }
 
     private val paymentType: String by lazy {
@@ -88,7 +89,7 @@ internal class BankTransferDetailActivity : BaseActivity() {
     }
 
     private val merchant: Merchant? by lazy {
-        intent.getParcelableExtra(EXTRA_MERCHANT_DATA) as? Merchant
+        getParcelableExtra(intent, EXTRA_MERCHANT_DATA, Merchant::class.java)
     }
 
     private val expiryTime: String? by lazy {

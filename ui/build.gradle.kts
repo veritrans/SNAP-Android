@@ -31,11 +31,10 @@ val scmDeveloperConnection: String by project.properties
 val scmUrl: String by project.properties
 
 android {
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -51,7 +50,7 @@ android {
         }
 
         debug {
-            isTestCoverageEnabled = true
+            enableUnitTestCoverage = true
         }
     }
 
@@ -93,7 +92,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes += setOf("META-INF/*.kotlin_module")
         }
@@ -101,6 +100,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {
@@ -122,15 +122,15 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.core:core-ktx:1.13.1")
     implementation(com.gtf.snap.CommonLibraries.appCompat)
     testImplementation(com.gtf.snap.TestLibraries.junit)
     testImplementation(com.gtf.snap.TestLibraries.hamcrest)
     implementation(com.gtf.snap.CommonLibraries.coreLibraryDesugaring)
     testImplementation(com.gtf.snap.TestLibraries.mockitoKotlin)
     testImplementation(com.gtf.snap.TestLibraries.androidxArchTesting)
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     implementation(com.gtf.snap.ComposeUiLibraries.compose)
     implementation(com.gtf.snap.ComposeUiLibraries.composeTool)
@@ -158,8 +158,8 @@ dependencies {
     implementation(com.gtf.snap.ComposeUiLibraries.composeNavComponent)
 
     //TODO: work around, remove when google fix compose tooling
-    debugImplementation("androidx.customview:customview:1.2.0-alpha01")
-    debugImplementation("androidx.customview:customview-poolingcontainer:1.0.0-alpha01")
+    debugImplementation("androidx.customview:customview:1.2.0-alpha02")
+    debugImplementation("androidx.customview:customview-poolingcontainer:1.0.0")
 
     //rx android
     implementation(com.gtf.snap.RxLibraries.rxAndroid2)

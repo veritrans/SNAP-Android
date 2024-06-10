@@ -21,6 +21,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.IntentCompat.getParcelableArrayListExtra
+import androidx.core.content.IntentCompat.getParcelableExtra
 import androidx.core.os.LocaleListCompat
 import com.midtrans.sdk.corekit.core.PaymentMethod
 import com.midtrans.sdk.sample.model.ListItem
@@ -53,8 +55,8 @@ class OrderReviewRevampActivity : ComponentActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result?.resultCode == RESULT_OK) {
                 result.data?.let {
-                    val transactionResult = it.getParcelableExtra<TransactionResult>(
-                        UiKitConstants.KEY_TRANSACTION_RESULT
+                    val transactionResult = getParcelableExtra(it,
+                        UiKitConstants.KEY_TRANSACTION_RESULT, TransactionResult::class.java
                     )
                     Toast.makeText(
                         this@OrderReviewRevampActivity,
@@ -67,9 +69,12 @@ class OrderReviewRevampActivity : ComponentActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == RESULT_OK) {
-            val transactionResult = data?.getParcelableExtra<TransactionResult>(
-                UiKitConstants.KEY_TRANSACTION_RESULT
-            )
+            val transactionResult = data?.let {
+                getParcelableExtra(
+                    it,
+                    UiKitConstants.KEY_TRANSACTION_RESULT, TransactionResult::class.java
+                )
+            }
             if (transactionResult != null) {
                 when (transactionResult.status) {
                     STATUS_SUCCESS -> {
@@ -119,7 +124,7 @@ class OrderReviewRevampActivity : ComponentActivity() {
     }
 
     private val product: Product by lazy {
-        intent.getParcelableExtra(EXTRA_PRODUCT) as? Product
+        getParcelableExtra(intent, EXTRA_PRODUCT, Product::class.java)
             ?: throw RuntimeException("Order ID must not be empty")
     }
 
@@ -164,7 +169,7 @@ class OrderReviewRevampActivity : ComponentActivity() {
     }
 
     private val paymentChannels: ArrayList<ListItem> by lazy {
-        intent.getParcelableArrayListExtra(EXTRA_INPUT_PAYMENTCHANNELS)
+        getParcelableArrayListExtra(intent, EXTRA_INPUT_PAYMENTCHANNELS, ListItem::class.java)
             ?: throw RuntimeException("paymentChannels must not be empty")
     }
 
@@ -557,20 +562,20 @@ class OrderReviewRevampActivity : ComponentActivity() {
     }
 
     private fun handleGopayCallbackUrlCreation() : GopayPaymentCallback? {
-        if (enabledPayment?.contains(PaymentType.GOPAY) == true) {
+        if (enabledPayment?.contains(PaymentType.GOPAY) == true || enabledPayment.isNullOrEmpty() ) {
             return  GopayPaymentCallback("demo://snap")
         }
         return  null
     }
     private fun handleShopeePayCallbackUrlCreation() : PaymentCallback? {
-        if (enabledPayment?.contains(PaymentType.SHOPEEPAY) == true) {
+        if (enabledPayment?.contains(PaymentType.SHOPEEPAY) == true || enabledPayment.isNullOrEmpty()) {
             return  PaymentCallback("demo://snap")
         }
         return  null
     }
 
     private fun handleUOBCallbackUrlCreation() : PaymentCallback? {
-        if (enabledPayment?.contains(PaymentType.UOB_EZPAY) == true) {
+        if (enabledPayment?.contains(PaymentType.UOB_EZPAY) == true || enabledPayment.isNullOrEmpty()) {
             return  PaymentCallback("demo://snap")
         }
         return  null

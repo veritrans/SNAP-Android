@@ -396,8 +396,8 @@ internal class BankTransferDetailViewModelTest {
         var data: T? = null
         val latch = CountDownLatch(1)
         val observer = object : Observer<T> {
-            override fun onChanged(o: T?) {
-                data = o
+            override fun onChanged(value: T) {
+                data = value
                 latch.countDown()
                 this@getOrAwaitValue.removeObserver(this)
             }

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.core.content.IntentCompat.getParcelableArrayListExtra
 import com.midtrans.sdk.corekit.core.PaymentMethod
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.presentation.shop.component.ProductListPage
@@ -62,7 +63,7 @@ class ProductListActivity : ComponentActivity() {
     }
 
     private val paymentChannels: ArrayList<ListItem> by lazy {
-        intent.getParcelableArrayListExtra(EXTRA_INPUT_PAYMENTCHANNELS)
+        getParcelableArrayListExtra(intent, EXTRA_INPUT_PAYMENTCHANNELS, ListItem::class.java)
             ?: throw RuntimeException("paymentChannels must not be empty")
     }
 
