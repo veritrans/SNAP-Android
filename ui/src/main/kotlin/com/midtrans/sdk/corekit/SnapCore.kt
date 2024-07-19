@@ -20,6 +20,8 @@ class SnapCore private constructor(builder: Builder) {
     @Inject
     internal lateinit var eventAnalytics: EventAnalytics
 
+    var isSnapTokenFlow = false
+
     init {
         buildDaggerComponent(
             builder.context,

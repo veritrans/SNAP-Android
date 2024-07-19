@@ -171,6 +171,7 @@ class UiKitApi private constructor(val builder: Builder) {
     ) {
         var isSnapTokenAvailable = true
         if (snapToken.isNullOrEmpty()) isSnapTokenAvailable = false
+        SnapCore.getInstance()?.isSnapTokenFlow = isSnapTokenAvailable
 
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
             activityContext = activity,
@@ -324,6 +325,7 @@ class UiKitApi private constructor(val builder: Builder) {
 
         var isSnapTokenAvailable = true
         if (snapToken.isNullOrEmpty()) isSnapTokenAvailable = false
+        SnapCore.getInstance()?.isSnapTokenFlow = isSnapTokenAvailable
 
         val intent = LoadingPaymentActivity.getLoadingPaymentIntent(
             activityContext = activityContext,
