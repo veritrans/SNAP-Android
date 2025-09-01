@@ -8,8 +8,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("kotlin-parcelize")
-    id("maven-publish")
-    id("signing")
+    id("com.vanniktech.maven.publish")
 }
 
 //from publish-variables.gradle
@@ -199,88 +198,57 @@ dependencies {
     implementation(com.gtf.snap.CommonLibraries.uuid)
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            register<MavenPublication>("sandbox") {
-                groupId = sdkGroupId
-                artifactId = sdkArtifactId
-                version = "$sdkVersion-SANDBOX"
-                pom {
-                    name.set(libraryNameUiKit)
-                    description.set(libraryDescription)
-                    url.set(gitUrl)
-                    licenses {
-                        license {
-                            name.set(licenseName)
-                            url.set(licenseUrl)
-                        }
-                    }
-                    developers {
-                        developer {
-                            id.set(project.findProperty("developerId")?.toString())
-                            name.set(project.findProperty("developerName")?.toString())
-                            email.set(project.findProperty("developerEmail")?.toString())
-                        }
-                    }
-                    scm {
-                        connection.set(scmConnection)
-                        developerConnection.set(scmDeveloperConnection)
-                        url.set(scmUrl)
-                    }
-                }
-                afterEvaluate {
-                    from(components["sandboxRelease"])
-                }
-            }
 
-            register<MavenPublication>("production") {
-                groupId = sdkGroupId
-                artifactId = sdkArtifactId
-                version = sdkVersion
-                pom {
-                    name.set(libraryNameUiKit)
-                    description.set(libraryDescription)
-                    url.set(gitUrl)
-                    licenses {
-                        license {
-                            name.set(licenseName)
-                            url.set(licenseUrl)
-                        }
-                    }
-                    developers {
-                        developer {
-                            id.set(project.findProperty("developerId")?.toString())
-                            name.set(project.findProperty("developerName")?.toString())
-                            email.set(project.findProperty("developerEmail")?.toString())
-                        }
-                    }
-                    scm {
-                        connection.set(scmConnection)
-                        developerConnection.set(scmDeveloperConnection)
-                        url.set(scmUrl)
-                    }
-                }
-                afterEvaluate {
-                    from(components["productionRelease"])
-                }
+// Vanniktech Maven Publish Plugin Configuration for Central Portal
+// Since Central Portal doesn't support direct Gradle publishing, we need this plugin for releasing the SDK to maven.
+
+mavenPublishing {
+    val isProduction = project.findProperty("publishVariant") == "production"
+    
+    // Set based on variant
+    if (isProduction) {
+        coordinates(sdkGroupId, sdkArtifactId, sdkVersion)
+    } else {
+        coordinates(sdkGroupId, sdkArtifactId, "$sdkVersion-SANDBOX")
+    }
+    
+    // Configure POM
+    pom {
+        name.set(libraryNameUiKit)
+        description.set(libraryDescription)
+        url.set(gitUrl)
+        
+        licenses {
+            license {
+                name.set(licenseName)
+                url.set(licenseUrl)
             }
         }
-
-        repositories {
-            maven {
-                name = mavenRepo
-                url = URI(mavenUrl)
-                credentials {
-                    username = project.findProperty("ossrhUsername")?.toString()
-                    password = project.findProperty("ossrhPassword")?.toString()
-                }
+        
+        developers {
+            developer {
+                id.set(project.findProperty("developerId")?.toString() ?: "midtrans")
+                name.set(project.findProperty("developerName")?.toString() ?: "Midtrans")
+                email.set(project.findProperty("developerEmail")?.toString() ?: "support@midtrans.com")
             }
+        }
+        
+        scm {
+            connection.set(scmConnection)
+            developerConnection.set(scmDeveloperConnection)
+            url.set(scmUrl)
         }
     }
-}
 
-signing {
-    sign(publishing.publications)
+    publishToMavenCentral(com.vanniktech.maven.publish.SonatypeHost.CENTRAL_PORTAL)
+    
+    signAllPublications()
+    
+    // Configure variant
+    configure(com.vanniktech.maven.publish.AndroidSingleVariantLibrary(
+        variant = if (isProduction) "productionRelease" else "sandboxRelease",
+        sourcesJar = true,
+        publishJavadocJar = true
+    ))
 }
 
