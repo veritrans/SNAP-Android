@@ -1,9 +1,13 @@
-# Midtrans SDK ProGuard Rules
+# Midtrans Snap SDK ProGuard Rules
 
 # Keep all public API classes
 -keep class com.midtrans.sdk.uikit.api.** { *; }
 -keep class com.midtrans.sdk.uikit.external.** { *; }
 -keep class com.midtrans.sdk.corekit.api.** { *; }
+
+# Keep ALL legacy corekit classes (all Java classes were public APIs)
+-keep class com.midtrans.sdk.corekit.** { *; }
+-keep interface com.midtrans.sdk.corekit.** { *; }
 
 # Keep Parcelize classes
 -keepclassmembers class * implements android.os.Parcelable {
@@ -16,11 +20,12 @@
     public static final ** CREATOR;
 }
 
-# Keep data models used for JSON serialization
+# Keep internal models used for JSON serialization
 -keep class com.midtrans.sdk.corekit.internal.network.model.** { *; }
 -keep class com.midtrans.sdk.uikit.internal.model.** { *; }
--keep class com.midtrans.sdk.corekit.api.model.** { *; }
--keep class com.midtrans.sdk.uikit.api.model.** { *; }
+
+# Keep legacy UI builder for backward compatibility
+-keep class com.midtrans.sdk.uikit.SdkUIFlowBuilder { *; }
 
 # Keep @SerializedName fields for Gson
 -keepattributes Signature
@@ -43,12 +48,12 @@
 
 # Gson
 -keep class com.google.gson.stream.** { *; }
--keep class sun.misc.Unsafe { *; }
+-dontwarn sun.misc.Unsafe
 -keep class com.google.gson.examples.android.model.** { <fields>; }
 
 # Keep ViewModel classes
 -keep class * extends androidx.lifecycle.ViewModel { *; }
--keep class com.midtrans.sdk.uikit.internal.presentation.** { *; }
+-keep class com.midtrans.sdk.uikit.internal.presentation.** extends androidx.lifecycle.ViewModel { *; }
 
 # Compose (if obfuscating Compose code causes issues)
 -keep class androidx.compose.** { *; }
@@ -62,10 +67,11 @@
     @javax.inject.* <methods>;
 }
 
-# Keep enum classes
+# Keep enum classes - IMPORTANT: Must keep enum fields for SDK users
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
+    public static final ** *;
 }
 
 # Keep WebView JavaScript interfaces
@@ -84,8 +90,6 @@
 # Keep custom views
 -keep class com.midtrans.sdk.uikit.internal.view.** { *; }
 
-# Payment type constants
--keep class com.midtrans.sdk.corekit.api.model.PaymentType { *; }
 
 # Keep companion objects
 -keep class * {

@@ -9,6 +9,9 @@ class MinificationTestApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         
+        // Save the original handler BEFORE setting the new one
+        val originalHandler = Thread.getDefaultUncaughtExceptionHandler()
+        
         // Set up crash detection for minification issues
         Thread.setDefaultUncaughtExceptionHandler { thread, exception ->
             Log.e("MinificationTest", "===========================================")
@@ -51,8 +54,8 @@ class MinificationTestApplication : Application() {
                 }
             }
             
-            // Rethrow to maintain default behavior
-            Thread.getDefaultUncaughtExceptionHandler()?.uncaughtException(thread, exception)
+            // Pass to the original handler (not the one we just set!)
+            originalHandler?.uncaughtException(thread, exception)
         }
         
         // Test if critical SDK classes are accessible
@@ -63,7 +66,7 @@ class MinificationTestApplication : Application() {
         try {
             // Test if main SDK classes can be loaded
             val classes = listOf(
-                "com.midtrans.sdk.uikit.api.UiKitApi",
+                "com.midtrans.sdk.uikit.external.UiKitApi",
                 "com.midtrans.sdk.uikit.api.model.TransactionResult",
                 "com.midtrans.sdk.corekit.api.model.TransactionResponse",
                 "com.midtrans.sdk.uikit.internal.model.CustomerInfo"
