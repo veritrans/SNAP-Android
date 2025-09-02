@@ -125,7 +125,8 @@ dependencies {
     implementation(com.gtf.snap.CommonLibraries.appCompat)
     testImplementation(com.gtf.snap.TestLibraries.junit)
     testImplementation(com.gtf.snap.TestLibraries.hamcrest)
-    implementation(com.gtf.snap.CommonLibraries.coreLibraryDesugaring)
+    // Removed desugar library - causes R8 conflicts when users minify their apps
+    // implementation(com.gtf.snap.CommonLibraries.coreLibraryDesugaring)
     testImplementation(com.gtf.snap.TestLibraries.mockitoKotlin)
     testImplementation(com.gtf.snap.TestLibraries.androidxArchTesting)
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
