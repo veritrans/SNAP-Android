@@ -54,6 +54,7 @@ import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.SnapCreditCardUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
+import com.midtrans.sdk.uikit.internal.util.snapSafeBottomPadding
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -844,7 +845,8 @@ internal class CreditCardActivity : BaseActivity() {
                 style = SnapButton.Style.PRIMARY,
                 modifier = Modifier
                     .fillMaxWidth(1f)
-                    .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
+                    .padding(start = 16.dp, end = 16.dp)
+                    .snapSafeBottomPadding(),
                 enabled = isValidNormalCard(state)
                     .or(isValidSavedCard(state)),
                 onClick = { onClick() }

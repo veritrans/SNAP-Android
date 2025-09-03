@@ -41,6 +41,7 @@ import com.midtrans.sdk.uikit.internal.presentation.ewallet.WalletActivity
 import com.midtrans.sdk.uikit.internal.presentation.paylater.PayLaterActivity
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CANCELED
+import com.midtrans.sdk.uikit.internal.util.snapSafeBottomPadding
 import com.midtrans.sdk.uikit.internal.view.*
 import javax.inject.Inject
 
@@ -459,7 +460,9 @@ class PaymentOptionActivity : BaseActivity() {
                     )
                 },
                 followingContent = {
-                    LazyColumn {
+                    LazyColumn(
+                        modifier = Modifier.snapSafeBottomPadding()
+                    ) {
                         items(
                             items = paymentMethods.paymentMethods,
                             key = {

@@ -41,6 +41,7 @@ import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_201
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_FAILED
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_SUCCESS
+import com.midtrans.sdk.uikit.internal.util.snapSafeBottomPadding
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -316,7 +317,8 @@ class UobPaymentActivity : BaseActivity() {
                 SnapButton(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 40.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
+                        .padding(top = 40.dp, start = 16.dp, end = 16.dp)
+                        .snapSafeBottomPadding(),
                     enabled = true,
                     text = stringResource(id = getUobCta(uobMode)),
                     style = SnapButton.Style.PRIMARY

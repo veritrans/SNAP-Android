@@ -29,6 +29,7 @@ import com.midtrans.sdk.uikit.internal.model.CustomerInfo
 import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.model.PaymentMethodItem
 import com.midtrans.sdk.uikit.internal.model.PaymentTypeItem
+import com.midtrans.sdk.uikit.internal.util.snapSafeBottomPadding
 import com.midtrans.sdk.uikit.internal.view.*
 import javax.inject.Inject
 
@@ -162,7 +163,9 @@ class BankTransferListActivity : BaseActivity() {
                         )
                     }
                 ) {
-                    LazyColumn {
+                    LazyColumn(
+                        modifier = Modifier.snapSafeBottomPadding()
+                    ) {
                         paymentMethodItem.methods?.forEachIndexed { _, method ->
                             item {
                                 bankNameMap[method]?.let {

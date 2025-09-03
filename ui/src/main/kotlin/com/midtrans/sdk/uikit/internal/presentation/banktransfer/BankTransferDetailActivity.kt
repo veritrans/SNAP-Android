@@ -41,6 +41,7 @@ import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.util.snapSafeBottomPadding
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
@@ -359,7 +360,9 @@ internal class BankTransferDetailActivity : BaseActivity() {
 
                 SnapButton(
                     text = stringResource(id = R.string.i_have_already_paid),
-                    modifier = Modifier.fillMaxWidth(1f)
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                        .snapSafeBottomPadding()
                 ) {
                     viewModel?.trackSnapButtonClicked(
                         ctaName = getStringResourceInEnglish(R.string.i_have_already_paid),

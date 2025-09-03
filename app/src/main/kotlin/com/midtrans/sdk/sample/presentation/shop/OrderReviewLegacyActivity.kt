@@ -259,7 +259,7 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
         var phoneNumber by remember { mutableStateOf(TextFieldValue("083812345678")) }
         var phoneNumberFieldFocused by remember { mutableStateOf(false) }
 
-        var email by remember { mutableStateOf(TextFieldValue("hobinyabelajar@gmail.com")) }
+        var email by remember { mutableStateOf(TextFieldValue("muhammad.masykur+sdk@gojek.com")) }
         var emailFocused by remember { mutableStateOf(false) }
 
         var address by remember { mutableStateOf(TextFieldValue("Pasaraya Blok M Gedung B Lt. 3")) }
