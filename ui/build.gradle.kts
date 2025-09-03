@@ -30,7 +30,7 @@ val scmDeveloperConnection: String by project.properties
 val scmUrl: String by project.properties
 
 android {
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 21
