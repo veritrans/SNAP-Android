@@ -31,7 +31,7 @@ fun ProductListPage(onClick: (Product) -> Unit) {
             verticalArrangement = Arrangement.spacedBy((-30).dp),
             contentPadding = PaddingValues(
                 top = 24.dp,
-                bottom = 80.dp, // Extra padding for navigation bar
+                bottom = 80.dp,
                 start = 24.dp,
                 end = 24.dp
             ),
