@@ -34,6 +34,7 @@ import com.midtrans.sdk.sample.util.DemoConstant.NONE
 import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
 import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
+import com.midtrans.sdk.sample.util.safeBottomPadding
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
@@ -259,7 +260,9 @@ class OrderReviewRevampActivity : ComponentActivity() {
         state: ScrollState
     ) {
         Column(
-            modifier = Modifier.verticalScroll(state)
+            modifier = Modifier
+                .verticalScroll(state)
+                .safeBottomPadding()
         ) {
             OrderSummary()
             CustomerDetailsForm()
@@ -421,7 +424,7 @@ class OrderReviewRevampActivity : ComponentActivity() {
                 text = "pay with snap token", style = SnapButton.Style.TERTIARY,
                 modifier = Modifier
                     .fillMaxWidth(1f)
-                    .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
+                    .padding(horizontal = 16.dp),
                 onClick = {
                     buildUiKit()
                     payWithAndroidxActivityResultLauncherToken(snapToken.text)
@@ -439,7 +442,7 @@ class OrderReviewRevampActivity : ComponentActivity() {
                 style = SnapButton.Style.PRIMARY,
                 modifier = Modifier
                     .fillMaxWidth(1f)
-                    .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
+                    .padding(top = 8.dp, start = 16.dp, end = 16.dp),
                 onClick = {
                     val name = fullName.text
                     val index = name.lastIndexOf(' ')
