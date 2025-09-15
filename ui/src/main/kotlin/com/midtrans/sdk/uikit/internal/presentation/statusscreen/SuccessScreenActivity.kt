@@ -32,6 +32,7 @@ import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 import com.midtrans.sdk.uikit.internal.view.SnapColors
 import com.midtrans.sdk.uikit.internal.view.SnapTypography
+import com.midtrans.sdk.uikit.internal.util.snapSafeBottomPadding
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
@@ -143,7 +144,8 @@ class SuccessScreenActivity : BaseActivity() {
                     text = stringResource(id = R.string.success_screen_v1_cta),
                     modifier = Modifier
                         .fillMaxWidth(1f)
-                        .padding(16.dp)
+                        .padding(horizontal = 16.dp)
+                        .snapSafeBottomPadding()
                 ) {
                     viewModel.trackSnapButtonClicked(
                         ctaName = getStringResourceInEnglish(R.string.success_screen_v1_cta),

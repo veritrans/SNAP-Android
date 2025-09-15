@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.midtrans.sdk.uikit.internal.view.SnapColors.backgroundFillLight
+import com.midtrans.sdk.uikit.internal.util.snapStatusBarsPadding
 
 @Composable
 fun SnapAppBar(
@@ -29,9 +30,10 @@ fun SnapAppBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
         modifier = Modifier
-            .height(64.dp)
             .background(color = SnapColors.getARGBColor(backgroundFillLight))
             .fillMaxWidth(fraction = 1.0f)
+            .snapStatusBarsPadding()
+            .height(64.dp)
     ) {
         IconButton(onClick = onClick) {
             Icon(

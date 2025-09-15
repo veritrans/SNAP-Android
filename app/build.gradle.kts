@@ -8,17 +8,17 @@ plugins {
 }
 
 android {
-    compileSdk = 34
-    buildToolsVersion = "34.0.0"
+    compileSdk = 36
+    buildToolsVersion = "35.0.0"
 
     defaultConfig {
         applicationId = "com.midtrans.sdk.sample"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 36
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         versionCode = 5
-        versionName = "2.2.0"
+        versionName = "2.4.0"
     }
 
     signingConfigs {
@@ -31,7 +31,7 @@ android {
     }
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

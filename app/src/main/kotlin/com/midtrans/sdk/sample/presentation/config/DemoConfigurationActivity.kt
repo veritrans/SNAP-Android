@@ -61,6 +61,8 @@ import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_ALL_PAYMENT_CHANNELS
 import com.midtrans.sdk.sample.util.DemoConstant.SHOW_SELECTED_ONLY
 import com.midtrans.sdk.sample.util.DemoConstant.WHITELIST_BINS
+import com.midtrans.sdk.sample.util.safeBottomPadding
+import com.midtrans.sdk.sample.util.safeStatusBarsPadding
 import com.midtrans.sdk.uikit.external.UiKitApi
 import com.midtrans.sdk.uikit.internal.view.SnapButton
 
@@ -124,8 +126,10 @@ class DemoConfigurationActivity : AppCompatActivity() {
 
         Column(
             Modifier
+                .safeStatusBarsPadding()
                 .padding(16.dp)
                 .verticalScroll(scrollState)
+                .safeBottomPadding()
         ) {
             BasicDropdownMenu(
                 title = INSTALLMENT,
@@ -212,7 +216,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 text = "Launch Demo App", style = SnapButton.Style.PRIMARY,
                 modifier = Modifier
                     .fillMaxWidth(1f)
-                    .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
+                    .padding(horizontal = 16.dp),
                 onClick = {
                     val intent = ProductListActivity.getProductListActivity(
                         this@DemoConfigurationActivity,
@@ -244,7 +248,7 @@ class DemoConfigurationActivity : AppCompatActivity() {
                 text = "Launch Demo App (Legacy)", style = SnapButton.Style.PRIMARY,
                 modifier = Modifier
                     .fillMaxWidth(1f)
-                    .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
+                    .padding(top = 8.dp, start = 16.dp, end = 16.dp),
                 onClick = {
                     val intent = ProductListActivity.getProductListActivity(
                         this@DemoConfigurationActivity,

@@ -35,6 +35,7 @@ import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.util.snapSafeBottomPadding
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_201
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
 import com.midtrans.sdk.uikit.internal.view.*
@@ -402,7 +403,8 @@ internal class WalletActivity : BaseActivity() {
                 text = stringResource(ctaId),
                 modifier = Modifier
                     .fillMaxWidth(1f)
-                    .padding(16.dp),
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                    .snapSafeBottomPadding(),
                 enabled = !error && !loading,
                 style = if (!error && !loading) SnapButton.Style.PRIMARY else SnapButton.Style.PRIMARY
             ) {

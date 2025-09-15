@@ -21,22 +21,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.model.getData
+import com.midtrans.sdk.sample.util.WindowInsetsHelper
 
 @Composable
 fun ProductListPage(onClick: (Product) -> Unit) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy((-30).dp),
-        contentPadding = PaddingValues(vertical = 24.dp, horizontal = 24.dp),
-        content = {
-            item {
-                Header()
-            }
-            items(items = getData(), key = { it.name }) {
-                ProductsCard(it) {
-                    onClick.invoke(it)
+    with(WindowInsetsHelper) {
+        LazyColumn(
+            modifier = Modifier.safeSystemBarsPadding(),
+            verticalArrangement = Arrangement.spacedBy((-30).dp),
+            contentPadding = PaddingValues(
+                top = 24.dp,
+                bottom = 80.dp,
+                start = 24.dp,
+                end = 24.dp
+            ),
+            content = {
+                item {
+                    Header()
                 }
-            }
-        })
+                items(items = getData(), key = { it.name }) {
+                    ProductsCard(it) {
+                        onClick.invoke(it)
+                    }
+                }
+            })
+    }
 }
 
 @Composable

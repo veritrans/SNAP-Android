@@ -32,10 +32,7 @@ import com.midtrans.sdk.corekit.models.snap.*
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant
-import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
-import com.midtrans.sdk.sample.util.DemoConstant.NONE
-import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
-import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
+import com.midtrans.sdk.sample.util.DemoConstant.*
 import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
@@ -253,16 +250,16 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
 
     @Composable
     fun CustomerDetailsForm(modifier: Modifier = Modifier) {
-        var fullName by remember { mutableStateOf(TextFieldValue("Ferdian Julianto")) }
+        var fullName by remember { mutableStateOf(TextFieldValue(DEMO_CUSTOMER_FULL_NAME)) }
         var fullNameFieldFocused by remember { mutableStateOf(false) }
 
-        var phoneNumber by remember { mutableStateOf(TextFieldValue("083812345678")) }
+        var phoneNumber by remember { mutableStateOf(TextFieldValue(DEMO_CUSTOMER_PHONE)) }
         var phoneNumberFieldFocused by remember { mutableStateOf(false) }
 
-        var email by remember { mutableStateOf(TextFieldValue("hobinyabelajar@gmail.com")) }
+        var email by remember { mutableStateOf(TextFieldValue(DEMO_CUSTOMER_EMAIL)) }
         var emailFocused by remember { mutableStateOf(false) }
 
-        var address by remember { mutableStateOf(TextFieldValue("Pasaraya Blok M Gedung B Lt. 3")) }
+        var address by remember { mutableStateOf(TextFieldValue(DEMO_CUSTOMER_ADDRESS)) }
         var addressFocused by remember { mutableStateOf(false) }
 
         var snapToken by remember { mutableStateOf(TextFieldValue()) }
@@ -389,17 +386,17 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
                     val lastName = index.plus(1).let { name.substring(it) }
 
                     val shippingAddress = ShippingAddress()
-                    shippingAddress.setAddress("Jalan Andalas Gang Sebelah No. 1")
-                    shippingAddress.setCity("Jakarta")
-                    shippingAddress.setPostalCode("10220")
+                    shippingAddress.setAddress(DEMO_BILLING_ADDRESS)
+                    shippingAddress.setCity(DEMO_BILLING_CITY)
+                    shippingAddress.setPostalCode(DEMO_BILLING_POSTAL_CODE)
 
                     val billingAddress = BillingAddress()
-                    billingAddress.setAddress("Jalan Andalas Gang Sebelah No. 1")
-                    billingAddress.setCity("Jakarta")
-                    billingAddress.setPostalCode("10220")
+                    billingAddress.setAddress(DEMO_BILLING_ADDRESS)
+                    billingAddress.setCity(DEMO_BILLING_CITY)
+                    billingAddress.setPostalCode(DEMO_BILLING_POSTAL_CODE)
 
                     customerDetailsLegacy = CustomerDetails()
-                    customerDetailsLegacy.setCustomerIdentifier("3A8788CE-B96F-449C-8180-B5901A08B50A")
+                    customerDetailsLegacy.setCustomerIdentifier(DEMO_CUSTOMER_IDENTIFIER)
                     customerDetailsLegacy.setFirstName(firstName)
                     customerDetailsLegacy.setLastName(lastName)
                     customerDetailsLegacy.setEmail(email.text)
@@ -465,20 +462,20 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
 
     private fun handleGopayCallbackUrlCreation() : Gopay? {
         if (enabledPayment?.contains(PaymentType.GOPAY) == true || enabledPayment.isNullOrEmpty()) {
-            return  Gopay("demo://snap")
+            return  Gopay(DEMO_CALLBACK_URL)
         }
         return  null
     }
     private fun handleShopeePayCallbackUrlCreation() : Shopeepay? {
         if (enabledPayment?.contains(PaymentType.SHOPEEPAY) == true || enabledPayment.isNullOrEmpty()) {
-            return  Shopeepay("demo://snap")
+            return  Shopeepay(DEMO_CALLBACK_URL)
         }
         return  null
     }
 
     private fun handleUOBCallbackUrlCreation() : UobEzpay? {
         if (enabledPayment?.contains(PaymentType.UOB_EZPAY) == true || enabledPayment.isNullOrEmpty()) {
-            return  UobEzpay("demo://snap")
+            return  UobEzpay(DEMO_CALLBACK_URL)
         }
         return  null
     }
@@ -526,7 +523,6 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
     private fun populateBcaVaLegacy(va: String): BcaBankTransferRequestModel? {
         var vaTransferRequest: BcaBankTransferRequestModel? = null
         if (va.isNotEmpty()) {
-            val SUB_COMPANY_CODE_BCA = "12321"
             val bcaRequestModel = BcaBankTransferRequestModel(
                 va, FreeText(
                     listOf(
@@ -543,18 +539,17 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
                     )
                 )
             )
-            bcaRequestModel.subCompanyCode = SUB_COMPANY_CODE_BCA
+            bcaRequestModel.subCompanyCode = DEMO_BCA_SUB_COMPANY_CODE
             vaTransferRequest = bcaRequestModel
         }
         return vaTransferRequest
     }
 
     private fun populatePermataVaLegacy(va: String): PermataBankTransferRequestModel? {
-        val permataRecipient = "Sudarsono"
         var vaTransferRequest: PermataBankTransferRequestModel? = null
         if (va.isNotEmpty()) {
             val permataRequest = PermataBankTransferRequestModel(va)
-            permataRequest.setRecipientName(permataRecipient)
+            permataRequest.setRecipientName(DEMO_PERMATA_RECIPIENT)
             vaTransferRequest = permataRequest
         }
         return vaTransferRequest
@@ -572,13 +567,13 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
 
     private fun buildLegacyUiKit() {
         val builder = SdkUIFlowBuilder.init()
-            .setClientKey("VT-client-yrHf-c8Sxr-ck8tx")
+            .setClientKey(DEMO_MERCHANT_CLIENT_KEY)
             .setContext(this.applicationContext)
             .setTransactionFinishedCallback(this)
-            .setMerchantBaseUrl("https://demo.midtrans.com/api/")
-            .setDefaultText("fonts/SourceSansPro-Regular.ttf")
-            .setSemiBoldText("fonts/SourceSansPro-Semibold.ttf")
-            .setBoldText("fonts/SourceSansPro-Bold.ttf")
+            .setMerchantBaseUrl(DEMO_MERCHANT_URL)
+            .setDefaultText(FONT_SOURCE_SANS_REGULAR)
+            .setSemiBoldText(FONT_SOURCE_SANS_SEMIBOLD)
+            .setBoldText(FONT_SOURCE_SANS_BOLD)
             .setLanguage("en")
             .enableLog(true)
 

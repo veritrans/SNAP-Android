@@ -37,6 +37,7 @@ import com.midtrans.sdk.uikit.internal.model.ItemInfo
 import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActivity
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
+import com.midtrans.sdk.uikit.internal.util.snapSafeBottomPadding
 import com.midtrans.sdk.uikit.internal.view.*
 import com.midtrans.sdk.uikit.internal.view.SnapColors.supportDangerDefault
 import io.reactivex.Observable
@@ -275,7 +276,8 @@ class DirectDebitActivity : BaseActivity() {
                 SnapButton(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 40.dp, bottom = 16.dp, start = 16.dp, end = 16.dp),
+                        .padding(top = 40.dp, start = 16.dp, end = 16.dp)
+                        .snapSafeBottomPadding(),
                     enabled = enableButton(paymentType, userId),
                     text = stringResource(getCta(paymentType)),
                     style = SnapButton.Style.PRIMARY
