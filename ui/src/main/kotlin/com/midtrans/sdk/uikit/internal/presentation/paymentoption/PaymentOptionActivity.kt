@@ -190,7 +190,7 @@ class PaymentOptionActivity : BaseActivity() {
 
         transactionResult?.let { result ->
             paymentMethods = when (result.chargeType) {
-                PaymentType.QRIS -> {
+                PaymentType.QRIS, PaymentType.OTHER_QRIS -> {
                     viewModel.initiateList(paymentList, true)
                 }
                 PaymentType.GOPAY, PaymentType.SHOPEEPAY -> {
@@ -266,6 +266,9 @@ class PaymentOptionActivity : BaseActivity() {
                 PaymentType.SHOPEEPAY_QRIS
             } else if (result.chargeType == PaymentType.QRIS && result.qrisAcquirer == gopayResponse) {
                 PaymentType.GOPAY_QRIS
+            } else if (result.chargeType == PaymentType.OTHER_QRIS || 
+                      (result.chargeType == PaymentType.QRIS && result.qrisAcquirer.isNullOrEmpty())) {
+                PaymentType.OTHER_QRIS
             } else {
                 result.chargeType
             }
@@ -664,6 +667,7 @@ class PaymentOptionActivity : BaseActivity() {
             Pair(PaymentType.SHOPEEPAY_QRIS, eWalletPaymentLauncher),
             Pair(PaymentType.GOPAY, eWalletPaymentLauncher),
             Pair(PaymentType.GOPAY_QRIS, eWalletPaymentLauncher),
+            Pair(PaymentType.OTHER_QRIS, eWalletPaymentLauncher),
             Pair(PaymentType.ALFAMART, cStorePaymentLauncher),
             Pair(PaymentType.INDOMARET, cStorePaymentLauncher),
             Pair(PaymentType.AKULAKU, payLaterPaymentLauncher),

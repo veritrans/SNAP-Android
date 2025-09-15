@@ -32,7 +32,11 @@
     <string name="payment_summary_indomaret">Indomaret</string>
     <string name="payment_title_gopay">GoPay</string>
     <string name="payment_title_shopeepay">ShopeePay</string>
-
+    <string name="payment_title_other_qris">QRIS</string>
+    <string name="download_qris">Unduh QRIS</string>
+    <string name="qris_saved_to_gallery">QRIS berhasil disimpan ke galeri</string>
+    <string name="failed_to_save_qris">Gagal menyimpan QRIS</string>
+    <string name="permission_required_to_save_image">Izin penyimpanan diperlukan untuk menyimpan gambar QRIS</string>
 
     <string name="success_screen_v1_status">Pembayaran berhasil</string>
     <string name="success_screen_v1_order_id">Order ID %s</string>
@@ -230,6 +234,13 @@
         <item><data><![CDATA[Buka <b>aplikasi Shopee</b> atau <b>e-wallet lain</b> Anda.]]></data></item>
         <item><data><![CDATA[Pindai <b>kode QR</b> pada monitor.]]></data></item>
         <item><data><![CDATA[Konfirmasi pembayaran pada aplikasi.]]></data></item>
+        <item><data><![CDATA[Pembayaran selesai.]]></data></item>
+    </string-array>
+
+    <string-array name="scan_qr_instruction_other_qris">
+        <item><data><![CDATA[Buka <b>aplikasi e-wallet</b> yang mendukung QRIS.]]></data></item>
+        <item><data><![CDATA[Scan <b>kode QR</b> di monitor Anda.]]></data></item>
+        <item><data><![CDATA[Konfirmasi pembayaran di aplikasi.]]></data></item>
         <item><data><![CDATA[Pembayaran selesai.]]></data></item>
     </string-array>
 

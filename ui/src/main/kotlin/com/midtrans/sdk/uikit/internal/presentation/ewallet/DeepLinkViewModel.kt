@@ -104,6 +104,7 @@ internal class DeepLinkViewModel @Inject constructor(
             PaymentType.GOPAY_QRIS -> PageName.GOPAY_QR_PAGE
             PaymentType.SHOPEEPAY -> PageName.SHOPEEPAY_DEEPLINK_PAGE
             PaymentType.SHOPEEPAY_QRIS -> PageName.SHOPEEPAY_QR_PAGE
+            PaymentType.OTHER_QRIS -> PageName.OTHER_QRIS_PAGE
             else -> ""
         }
     }

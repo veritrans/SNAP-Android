@@ -32,6 +32,11 @@
     <string name="payment_summary_indomaret">Indomaret</string>
     <string name="payment_title_gopay">GoPay</string>
     <string name="payment_title_shopeepay">ShopeePay</string>
+    <string name="payment_title_other_qris">QRIS</string>
+    <string name="download_qris">Download QRIS</string>
+    <string name="qris_saved_to_gallery">QRIS saved to gallery</string>
+    <string name="failed_to_save_qris">Failed to save QRIS</string>
+    <string name="permission_required_to_save_image">Storage permission is required to save QRIS image</string>
 
     <string name="success_screen_v1_status">Payment successful</string>
     <string name="success_screen_v1_order_id">Order ID %s</string>
@@ -232,6 +237,13 @@
 
     <string-array name="scan_qr_instruction_shopeepay_message">
         <item><data><![CDATA[Open your <b>Shopee</b> or <b>other e-wallet app</b>.]]></data></item>
+        <item><data><![CDATA[Scan the <b>QR code</b> on your monitor.]]></data></item>
+        <item><data><![CDATA[Confirm payment in the app.]]></data></item>
+        <item><data><![CDATA[Payment complete.]]></data></item>
+    </string-array>
+
+    <string-array name="scan_qr_instruction_other_qris">
+        <item><data><![CDATA[Open your <b>e-wallet app</b> that supports QRIS.]]></data></item>
         <item><data><![CDATA[Scan the <b>QR code</b> on your monitor.]]></data></item>
         <item><data><![CDATA[Confirm payment in the app.]]></data></item>
         <item><data><![CDATA[Payment complete.]]></data></item>
