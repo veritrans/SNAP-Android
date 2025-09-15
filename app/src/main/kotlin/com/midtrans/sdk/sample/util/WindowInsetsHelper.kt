@@ -14,49 +14,44 @@ internal object WindowInsetsHelper {
     
     @Composable
     fun Modifier.safeNavigationBarsPadding(): Modifier {
-        return if (Build.VERSION.SDK_INT >= 35) {
-            this.navigationBarsPadding()
-        } else {
-            this
+        if (Build.VERSION.SDK_INT >= 35) {
+            return this.navigationBarsPadding()
         }
+        return this
     }
     
     @Composable
     fun Modifier.safeSystemBarsPadding(): Modifier {
-        return if (Build.VERSION.SDK_INT >= 35) {
-            this.systemBarsPadding()
-        } else {
-            this
+        if (Build.VERSION.SDK_INT >= 35) {
+            return this.systemBarsPadding()
         }
+        return this
     }
     
     @Composable
     fun Modifier.safeStatusBarsPadding(): Modifier {
-        return if (Build.VERSION.SDK_INT >= 35) {
-            this.statusBarsPadding()
-        } else {
-            this
+        if (Build.VERSION.SDK_INT >= 35) {
+            return this.statusBarsPadding()
         }
+        return this
     }
 
     @Composable
     fun Modifier.safeBottomPadding(): Modifier {
-        return if (Build.VERSION.SDK_INT >= 35) {
-            this
+        if (Build.VERSION.SDK_INT >= 35) {
+            return this
                 .navigationBarsPadding()
                 .padding(bottom = 16.dp)
-        } else {
-            this.padding(bottom = 16.dp)
         }
+        return this.padding(bottom = 16.dp)
     }
     
     @Composable
     fun Modifier.safeImePadding(): Modifier {
-        return if (Build.VERSION.SDK_INT >= 35) {
-            this.imePadding()
-        } else {
-            this
+        if (Build.VERSION.SDK_INT >= 35) {
+            return this.imePadding()
         }
+        return this
     }
 }
 

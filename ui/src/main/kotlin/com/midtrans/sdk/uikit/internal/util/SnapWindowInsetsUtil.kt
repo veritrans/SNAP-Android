@@ -15,22 +15,20 @@ internal object SnapWindowInsetsUtil {
 
     @Composable
     fun Modifier.snapStatusBarsPadding(): Modifier {
-        return if (Build.VERSION.SDK_INT >= 35) {
-            this.statusBarsPadding()
-        } else {
-            this
+        if (Build.VERSION.SDK_INT >= 35) {
+            return this.statusBarsPadding()
         }
+        return this
     }
 
     @Composable
     fun Modifier.snapSafeBottomPadding(): Modifier {
-        return if (Build.VERSION.SDK_INT >= 35) {
-            this
+        if (Build.VERSION.SDK_INT >= 35) {
+            return this
                 .navigationBarsPadding()
                 .padding(bottom = 16.dp)
-        } else {
-            this.padding(bottom = 16.dp)
         }
+        return this.padding(bottom = 16.dp)
     }
 }
 
