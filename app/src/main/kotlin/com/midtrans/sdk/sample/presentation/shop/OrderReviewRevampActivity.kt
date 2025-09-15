@@ -28,13 +28,8 @@ import com.midtrans.sdk.corekit.core.PaymentMethod
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant
-import com.midtrans.sdk.sample.util.DemoConstant.DISABLED
-import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
-import com.midtrans.sdk.sample.util.DemoConstant.NONE
-import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
-import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
+import com.midtrans.sdk.sample.util.DemoConstant.*
 import com.midtrans.sdk.sample.util.DemoUtils
-import com.midtrans.sdk.sample.util.safeBottomPadding
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.api.model.*
 import com.midtrans.sdk.uikit.external.UiKitApi
@@ -260,9 +255,7 @@ class OrderReviewRevampActivity : ComponentActivity() {
         state: ScrollState
     ) {
         Column(
-            modifier = Modifier
-                .verticalScroll(state)
-                .safeBottomPadding()
+            modifier = Modifier.verticalScroll(state)
         ) {
             OrderSummary()
             CustomerDetailsForm()
@@ -314,16 +307,16 @@ class OrderReviewRevampActivity : ComponentActivity() {
 
     @Composable
     fun CustomerDetailsForm(modifier: Modifier = Modifier) {
-        var fullName by remember { mutableStateOf(TextFieldValue("Ferdian Julianto")) }
+        var fullName by remember { mutableStateOf(TextFieldValue(DEMO_CUSTOMER_FULL_NAME)) }
         var fullNameFieldFocused by remember { mutableStateOf(false) }
 
-        var phoneNumber by remember { mutableStateOf(TextFieldValue("083812345678")) }
+        var phoneNumber by remember { mutableStateOf(TextFieldValue(DEMO_CUSTOMER_PHONE)) }
         var phoneNumberFieldFocused by remember { mutableStateOf(false) }
 
-        var email by remember { mutableStateOf(TextFieldValue("muhammad.masykur+sdk@gojek.com")) }
+        var email by remember { mutableStateOf(TextFieldValue(DEMO_CUSTOMER_EMAIL)) }
         var emailFocused by remember { mutableStateOf(false) }
 
-        var address by remember { mutableStateOf(TextFieldValue("Pasaraya Blok M Gedung B Lt. 3")) }
+        var address by remember { mutableStateOf(TextFieldValue(DEMO_CUSTOMER_ADDRESS)) }
         var addressFocused by remember { mutableStateOf(false) }
 
         var snapToken by remember { mutableStateOf(TextFieldValue()) }
@@ -424,7 +417,7 @@ class OrderReviewRevampActivity : ComponentActivity() {
                 text = "pay with snap token", style = SnapButton.Style.TERTIARY,
                 modifier = Modifier
                     .fillMaxWidth(1f)
-                    .padding(horizontal = 16.dp),
+                    .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
                 onClick = {
                     buildUiKit()
                     payWithAndroidxActivityResultLauncherToken(snapToken.text)
@@ -442,7 +435,7 @@ class OrderReviewRevampActivity : ComponentActivity() {
                 style = SnapButton.Style.PRIMARY,
                 modifier = Modifier
                     .fillMaxWidth(1f)
-                    .padding(top = 8.dp, start = 16.dp, end = 16.dp),
+                    .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
                 onClick = {
                     val name = fullName.text
                     val index = name.lastIndexOf(' ')
@@ -516,9 +509,9 @@ class OrderReviewRevampActivity : ComponentActivity() {
     private fun buildUiKit() {
         val builder = UiKitApi.Builder()
             .withContext(this.applicationContext)
-            .withMerchantUrl("https://demo.midtrans.com/api/")
-            .withMerchantClientKey("VT-client-yrHf-c8Sxr-ck8tx")
-            .withFontFamily("fonts/SourceSansPro-Italic.ttf")
+            .withMerchantUrl(DEMO_MERCHANT_URL)
+            .withMerchantClientKey(DEMO_MERCHANT_CLIENT_KEY)
+            .withFontFamily(FONT_SOURCE_SANS_ITALIC)
             .enableLog(true)
 
         getCustomColor(inputColor)?.let { builder.withColorTheme(it) }
@@ -545,7 +538,7 @@ class OrderReviewRevampActivity : ComponentActivity() {
                 blacklistBins = finalBlacklistBins
             ),
             snapTokenExpiry = expiry,
-            userId = "3A8788CE-B96F-449C-8180-B5901A08B50A",
+            userId = DEMO_CUSTOMER_IDENTIFIER,
             customerDetails = customerDetails,
             itemDetails = itemDetails,
             bcaVa = bcaVaRequest,
@@ -566,20 +559,20 @@ class OrderReviewRevampActivity : ComponentActivity() {
 
     private fun handleGopayCallbackUrlCreation() : GopayPaymentCallback? {
         if (enabledPayment?.contains(PaymentType.GOPAY) == true || enabledPayment.isNullOrEmpty() ) {
-            return  GopayPaymentCallback("demo://snap")
+            return  GopayPaymentCallback(DEMO_CALLBACK_URL)
         }
         return  null
     }
     private fun handleShopeePayCallbackUrlCreation() : PaymentCallback? {
         if (enabledPayment?.contains(PaymentType.SHOPEEPAY) == true || enabledPayment.isNullOrEmpty()) {
-            return  PaymentCallback("demo://snap")
+            return  PaymentCallback(DEMO_CALLBACK_URL)
         }
         return  null
     }
 
     private fun handleUOBCallbackUrlCreation() : PaymentCallback? {
         if (enabledPayment?.contains(PaymentType.UOB_EZPAY) == true || enabledPayment.isNullOrEmpty()) {
-            return  PaymentCallback("demo://snap")
+            return  PaymentCallback(DEMO_CALLBACK_URL)
         }
         return  null
     }

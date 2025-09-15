@@ -65,4 +65,33 @@ object DemoConstant {
     // Payment Channels
     const val SHOW_ALL = "Show All"
     const val SHOW_SELECTED_ONLY = "Show Selected Only"
+
+    // Demo Customer Details
+    const val DEMO_CUSTOMER_FULL_NAME = "Ferdian Julianto"
+    const val DEMO_CUSTOMER_PHONE = "083812345678"
+    const val DEMO_CUSTOMER_EMAIL = "muhammad.masykur+sdk@gojek.com"
+    const val DEMO_CUSTOMER_ADDRESS = "Pasaraya Blok M Gedung B Lt. 3"
+    const val DEMO_CUSTOMER_IDENTIFIER = "3A8788CE-B96F-449C-8180-B5901A08B50A"
+    
+    // Demo Address Details
+    const val DEMO_BILLING_ADDRESS = "Jalan Andalas Gang Sebelah No. 1"
+    const val DEMO_BILLING_CITY = "Jakarta"
+    const val DEMO_BILLING_POSTAL_CODE = "10220"
+    
+    // Demo Merchant Details
+    const val DEMO_MERCHANT_URL = "https://demo.midtrans.com/api/"
+    const val DEMO_MERCHANT_CLIENT_KEY = "VT-client-yrHf-c8Sxr-ck8tx"
+    
+    // Demo Font Paths
+    const val FONT_SOURCE_SANS_REGULAR = "fonts/SourceSansPro-Regular.ttf"
+    const val FONT_SOURCE_SANS_SEMIBOLD = "fonts/SourceSansPro-Semibold.ttf"
+    const val FONT_SOURCE_SANS_BOLD = "fonts/SourceSansPro-Bold.ttf"
+    const val FONT_SOURCE_SANS_ITALIC = "fonts/SourceSansPro-Italic.ttf"
+    
+    // Demo Callback URLs
+    const val DEMO_CALLBACK_URL = "demo://snap"
+    
+    // Demo VA Details
+    const val DEMO_BCA_SUB_COMPANY_CODE = "12321"
+    const val DEMO_PERMATA_RECIPIENT = "Sudarsono"
 }
