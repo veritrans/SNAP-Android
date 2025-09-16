@@ -3,7 +3,6 @@ package com.midtrans.sdk.uikit.internal.util
 import android.os.Build
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -16,7 +15,7 @@ internal object SnapWindowInsetsUtil {
     @Composable
     fun Modifier.snapStatusBarsPadding(): Modifier {
         if (Build.VERSION.SDK_INT >= 35) {
-            return this.statusBarsPadding()
+            return this.padding(top = 40.dp)
         }
         return this
     }
