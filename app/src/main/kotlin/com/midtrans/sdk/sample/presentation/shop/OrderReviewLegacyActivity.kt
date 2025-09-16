@@ -32,7 +32,26 @@ import com.midtrans.sdk.corekit.models.snap.*
 import com.midtrans.sdk.sample.model.ListItem
 import com.midtrans.sdk.sample.model.Product
 import com.midtrans.sdk.sample.util.DemoConstant
-import com.midtrans.sdk.sample.util.DemoConstant.*
+import com.midtrans.sdk.sample.util.DemoConstant.DEMO_BILLING_ADDRESS
+import com.midtrans.sdk.sample.util.DemoConstant.DEMO_BILLING_CITY
+import com.midtrans.sdk.sample.util.DemoConstant.DEMO_BILLING_POSTAL_CODE
+import com.midtrans.sdk.sample.util.DemoConstant.DEMO_BCA_SUB_COMPANY_CODE
+import com.midtrans.sdk.sample.util.DemoConstant.DEMO_CALLBACK_URL
+import com.midtrans.sdk.sample.util.DemoConstant.DEMO_CUSTOMER_ADDRESS
+import com.midtrans.sdk.sample.util.DemoConstant.DEMO_CUSTOMER_EMAIL
+import com.midtrans.sdk.sample.util.DemoConstant.DEMO_CUSTOMER_FULL_NAME
+import com.midtrans.sdk.sample.util.DemoConstant.DEMO_CUSTOMER_IDENTIFIER
+import com.midtrans.sdk.sample.util.DemoConstant.DEMO_CUSTOMER_PHONE
+import com.midtrans.sdk.sample.util.DemoConstant.DEMO_MERCHANT_CLIENT_KEY
+import com.midtrans.sdk.sample.util.DemoConstant.DEMO_MERCHANT_URL
+import com.midtrans.sdk.sample.util.DemoConstant.DEMO_PERMATA_RECIPIENT
+import com.midtrans.sdk.sample.util.DemoConstant.FIVE_MINUTE
+import com.midtrans.sdk.sample.util.DemoConstant.FONT_SOURCE_SANS_BOLD
+import com.midtrans.sdk.sample.util.DemoConstant.FONT_SOURCE_SANS_REGULAR
+import com.midtrans.sdk.sample.util.DemoConstant.FONT_SOURCE_SANS_SEMIBOLD
+import com.midtrans.sdk.sample.util.DemoConstant.NONE
+import com.midtrans.sdk.sample.util.DemoConstant.NO_INSTALLMENT
+import com.midtrans.sdk.sample.util.DemoConstant.ONE_HOUR
 import com.midtrans.sdk.sample.util.DemoUtils
 import com.midtrans.sdk.uikit.R
 import com.midtrans.sdk.uikit.SdkUIFlowBuilder
@@ -382,8 +401,8 @@ class OrderReviewLegacyActivity : ComponentActivity(), TransactionFinishedCallba
                 onClick = {
                     val name = fullName.text
                     val index = name.lastIndexOf(' ')
-                    val firstName = index.let { name.substring(0, it) }
-                    val lastName = index.plus(1).let { name.substring(it) }
+                    val firstName = name.substring(0, index)
+                    val lastName = name.substring(index + 1)
 
                     val shippingAddress = ShippingAddress()
                     shippingAddress.setAddress(DEMO_BILLING_ADDRESS)
