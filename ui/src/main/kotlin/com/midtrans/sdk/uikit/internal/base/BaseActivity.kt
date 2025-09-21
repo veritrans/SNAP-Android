@@ -1,6 +1,7 @@
 package com.midtrans.sdk.uikit.internal.base
 
 import android.content.res.Configuration
+import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.Window
 import android.view.WindowManager
@@ -11,6 +12,11 @@ import java.util.*
 import kotlin.math.sqrt
 
 open class BaseActivity : AppCompatActivity(){
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
+    }
     protected fun isTabletDevice(): Boolean {
         val metrics = DisplayMetrics()
         this.windowManager.defaultDisplay.getMetrics(metrics)
