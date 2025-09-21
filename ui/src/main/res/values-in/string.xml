@@ -238,10 +238,10 @@
     </string-array>
 
     <string-array name="scan_qr_instruction_other_qris">
-        <item><data><![CDATA[Buka <b>aplikasi e-wallet</b> yang mendukung QRIS.]]></data></item>
-        <item><data><![CDATA[Scan <b>kode QR</b> di monitor Anda.]]></data></item>
-        <item><data><![CDATA[Konfirmasi pembayaran di aplikasi.]]></data></item>
-        <item><data><![CDATA[Pembayaran selesai.]]></data></item>
+        <item><data><![CDATA[Buka aplikasi yang mendukung pembayaran dengan QRIS.]]></data></item>
+        <item><data><![CDATA[Download atau pindai QRIS pada layar.]]></data></item>
+        <item><data><![CDATA[Konfirmasi pembayaran pada aplikasi.]]></data></item>
+        <item><data><![CDATA[Pembayaran berhasil.]]></data></item>
     </string-array>
 
     <string name="indomaret_instruction">Tunjukkan barcode ke kasir atau masukkan kode bayar ke aplikasi i.saku.</string>

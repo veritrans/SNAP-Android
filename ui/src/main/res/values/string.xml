@@ -243,10 +243,10 @@
     </string-array>
 
     <string-array name="scan_qr_instruction_other_qris">
-        <item><data><![CDATA[Open your <b>e-wallet app</b> that supports QRIS.]]></data></item>
-        <item><data><![CDATA[Scan the <b>QR code</b> on your monitor.]]></data></item>
+        <item><data><![CDATA[Open any supporting QRIS payment app.]]></data></item>
+        <item><data><![CDATA[Download or scan QRIS on your monitor.]]></data></item>
         <item><data><![CDATA[Confirm payment in the app.]]></data></item>
-        <item><data><![CDATA[Payment complete.]]></data></item>
+        <item><data><![CDATA[Payment completed.]]></data></item>
     </string-array>
 
 
