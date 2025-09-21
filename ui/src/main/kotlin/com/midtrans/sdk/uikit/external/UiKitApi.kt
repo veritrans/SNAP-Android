@@ -104,6 +104,7 @@ class UiKitApi private constructor(val builder: Builder) {
                 PaymentType.UOB_EZPAY,
                 PaymentType.UOB_EZPAY_WEB
             )
+            PaymentMethod.OTHER_QRIS -> PaymentTypeItem(PaymentType.OTHER_QRIS, null)
             else -> null
         }
     }

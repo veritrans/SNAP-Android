@@ -121,7 +121,12 @@ internal class PaymentOptionViewModel @Inject constructor(
                 )
             }
             OTHER_QRIS -> {
-                listOf(R.drawable.ic_outline_qris_40)
+                listOf(
+                    R.drawable.ic_outline_qris_40,
+                    R.drawable.ic_outline_dana_40,
+                    R.drawable.ic_outline_ovo_40,
+                    R.drawable.ic_outline_linkaja_40
+                )
             }
             INDOMARET -> listOf(R.drawable.ic_outline_indomaret_40, R.drawable.ic_outline_isaku_40)
             ALFAMART -> listOf(
