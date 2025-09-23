@@ -197,7 +197,6 @@ internal class WalletActivity : BaseActivity() {
         viewModel.downloadResultLiveData.observe(this) { result ->
             when {
                 result.requiresPermission && result.imageUrl != null -> {
-                    // Check permission and download
                     if (Build.VERSION.SDK_INT in Build.VERSION_CODES.M..Build.VERSION_CODES.P) {
                         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                             pendingDownloadUrl = result.imageUrl
@@ -277,7 +276,6 @@ internal class WalletActivity : BaseActivity() {
             mutableStateOf(false)
         }
         var error by remember { mutableStateOf(false) }
-        // Loading state: wait for QR code or deeplink URL from charge response
         var loading = if (viewModel.shouldShowQrCode(paymentType, isTablet)) {
             qrCodeUrl.value.isBlank() && !isChargeError.value
         } else {
@@ -434,7 +432,6 @@ internal class WalletActivity : BaseActivity() {
                 }
             }
 
-            // Download QRIS button - only for OTHER_QRIS payment type
             if (paymentType == PaymentType.OTHER_QRIS) {
                 SnapButton(
                     modifier = Modifier
@@ -471,8 +468,6 @@ internal class WalletActivity : BaseActivity() {
                 if (!isTablet && paymentType != PaymentType.OTHER_QRIS) {
                     openDeepLink(deepLinkUrlState.value)
                 } else {
-                    // For all QRIS on tablet (including OTHER_QRIS), just go back
-                    // The result is already set by observeChargeResult
                     onBackPressed()
                 }
             }
