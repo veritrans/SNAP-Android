@@ -22,12 +22,12 @@ repositories {
     
 dependencies {
     // For using the Midtrans Sandbox
-    implementation 'com.midtrans:uikit:2.2.0-SANDBOX' // change the number to the latest version
+    implementation 'com.midtrans:uikit:2.4.0-SANDBOX' // change the number to the latest version
   }
   
 dependencies {
     // For using the Midtrans Production
-    implementation 'com.midtrans:uikit:2.2.0' // change the number to the latest version
+    implementation 'com.midtrans:uikit:2.4.0' // change the number to the latest version
 }
 ```
 
