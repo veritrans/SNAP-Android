@@ -73,7 +73,7 @@ internal class WalletViewModel @Inject constructor(
                         _chargeResultLiveData.value = TransactionResult(
                             status = transactionStatus.orEmpty(),
                             transactionId = transactionId.orEmpty(),
-                            paymentType = paymentType
+                            paymentType = paymentType.orEmpty()
                         )
                     }
                     trackSnapChargeResult(
@@ -207,16 +207,6 @@ internal class WalletViewModel @Inject constructor(
             }
         } ?: isTabletDevice
     }
-
-
-    fun createPendingTransactionResult(paymentType: String): TransactionResult {
-        return TransactionResult(
-            status = "pending",
-            transactionId = _transactionId ?: "",
-            paymentType = paymentType
-        )
-    }
-
     fun requestDownloadQrCode(imageUrl: String) {
         // Notify Activity that download was requested
         // Activity will handle permission check and provide context

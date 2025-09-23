@@ -190,7 +190,7 @@ class PaymentOptionActivity : BaseActivity() {
 
         transactionResult?.let { result ->
             paymentMethods = when (result.chargeType) {
-                PaymentType.QRIS, PaymentType.OTHER_QRIS -> {
+                PaymentType.QRIS -> {
                     viewModel.initiateList(paymentList, true)
                 }
                 PaymentType.GOPAY, PaymentType.SHOPEEPAY -> {
@@ -266,9 +266,6 @@ class PaymentOptionActivity : BaseActivity() {
                 PaymentType.SHOPEEPAY_QRIS
             } else if (result.chargeType == PaymentType.QRIS && result.qrisAcquirer == gopayResponse) {
                 PaymentType.GOPAY_QRIS
-            } else if (result.chargeType == PaymentType.OTHER_QRIS || 
-                      (result.chargeType == PaymentType.QRIS && result.qrisAcquirer.isNullOrEmpty())) {
-                PaymentType.OTHER_QRIS
             } else {
                 result.chargeType
             }
