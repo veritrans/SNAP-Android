@@ -41,7 +41,6 @@ import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActi
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.util.snapSafeBottomPadding
-import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_201
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
