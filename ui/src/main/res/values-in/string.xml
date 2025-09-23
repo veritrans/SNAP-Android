@@ -239,7 +239,7 @@
 
     <string-array name="scan_qr_instruction_other_qris">
         <item><data><![CDATA[Buka aplikasi yang mendukung pembayaran dengan QRIS.]]></data></item>
-        <item><data><![CDATA[Download atau pindai QRIS pada layar.]]></data></item>
+        <item><data><![CDATA[<b>Download</b> atau <b>pindai QRIS</b> pada layar.]]></data></item>
         <item><data><![CDATA[Konfirmasi pembayaran pada aplikasi.]]></data></item>
         <item><data><![CDATA[Pembayaran berhasil.]]></data></item>
     </string-array>
