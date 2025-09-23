@@ -73,7 +73,7 @@ internal class WalletViewModel @Inject constructor(
                         _chargeResultLiveData.value = TransactionResult(
                             status = transactionStatus.orEmpty(),
                             transactionId = transactionId.orEmpty(),
-                            paymentType = paymentType.orEmpty()
+                            paymentType = this.paymentType.orEmpty()
                         )
                     }
                     trackSnapChargeResult(
