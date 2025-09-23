@@ -195,25 +195,51 @@ internal class WalletActivity : BaseActivity() {
 
     private fun observeDownloadResult() {
         viewModel.downloadResultLiveData.observe(this) { result ->
-            when {
-                result.requiresPermission && result.imageUrl != null -> {
-                    if (Build.VERSION.SDK_INT in Build.VERSION_CODES.M..Build.VERSION_CODES.P) {
-                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                            pendingDownloadUrl = result.imageUrl
-                            requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                            return@observe
-                        }
-                    }
-                    viewModel.executeDownload(this, result.imageUrl)
-                }
-                result.success -> {
-                    Toast.makeText(this, getString(R.string.qris_saved_to_gallery), Toast.LENGTH_SHORT).show()
-                }
-                !result.success && !result.requiresPermission -> {
-                    Toast.makeText(this, getString(R.string.failed_to_save_qris), Toast.LENGTH_SHORT).show()
-                }
-            }
+            handleDownloadResult(result)
         }
+    }
+    
+    private fun handleDownloadResult(result: DownloadResult) {
+        if (result.success) {
+            showDownloadSuccessMessage()
+            return
+        }
+        if (!result.requiresPermission) {
+            showDownloadFailureMessage()
+            return
+        }
+
+        // Handle permission required case
+        val imageUrl = result.imageUrl ?: return
+        if (needsStoragePermission()) {
+            requestStoragePermission(imageUrl)
+        } else {
+            viewModel.executeDownload(this, imageUrl)
+        }
+    }
+    
+    private fun needsStoragePermission(): Boolean {
+        // Storage permission only needed for Android M to P
+        if (Build.VERSION.SDK_INT !in Build.VERSION_CODES.M..Build.VERSION_CODES.P) {
+            return false
+        }
+        return ContextCompat.checkSelfPermission(
+            this, 
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) != PackageManager.PERMISSION_GRANTED
+    }
+    
+    private fun requestStoragePermission(imageUrl: String) {
+        pendingDownloadUrl = imageUrl
+        requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    }
+    
+    private fun showDownloadSuccessMessage() {
+        Toast.makeText(this, getString(R.string.qris_saved_to_gallery), Toast.LENGTH_SHORT).show()
+    }
+    
+    private fun showDownloadFailureMessage() {
+        Toast.makeText(this, getString(R.string.failed_to_save_qris), Toast.LENGTH_SHORT).show()
     }
 
     private fun observeDeepLinkUrl() {
