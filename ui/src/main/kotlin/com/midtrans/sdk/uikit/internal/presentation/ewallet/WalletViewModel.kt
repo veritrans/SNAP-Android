@@ -15,13 +15,15 @@ import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.TIME_ZONE_UTC
 import com.midtrans.sdk.uikit.internal.model.DownloadResult
-import com.midtrans.sdk.uikit.internal.util.ImageDownloadHelper
+import com.midtrans.sdk.uikit.internal.domain.usecase.DownloadQrImageUseCase
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 internal class WalletViewModel @Inject constructor(
     private val snapCore: SnapCore,
     private val datetimeUtil: DateTimeUtil,
-    private val imageDownloadHelper: ImageDownloadHelper
+    private val downloadQrImageUseCase: DownloadQrImageUseCase
 ) : BaseViewModel() {
 
     init {
@@ -207,25 +209,25 @@ internal class WalletViewModel @Inject constructor(
             }
         } ?: isTabletDevice
     }
-    fun requestDownloadQrCode(imageUrl: String) {
-        // Notify Activity that download was requested
-        // Activity will handle permission check and provide context
-        _downloadResultLiveData.value = DownloadResult(
-            success = false,
-            requiresPermission = true,
-            imageUrl = imageUrl
-        )
-    }
-
-    fun executeDownload(context: android.content.Context, imageUrl: String) {
+    fun downloadQrImage(imageUrl: String) {
         observe {
-            imageDownloadHelper.downloadAndSaveImage(context, imageUrl)
+            downloadQrImageUseCase(imageUrl)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { success ->
-                        _downloadResultLiveData.value = DownloadResult(success = success)
+                        _downloadResultLiveData.value = DownloadResult(
+                            success = success,
+                            requiresPermission = false,
+                            imageUrl = null
+                        )
                     },
-                    { _ ->
-                        _downloadResultLiveData.value = DownloadResult(success = false)
+                    { throwable ->
+                        _downloadResultLiveData.value = DownloadResult(
+                            success = false,
+                            requiresPermission = false,
+                            imageUrl = null
+                        )
                     }
                 )
         }

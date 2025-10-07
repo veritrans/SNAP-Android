@@ -11,7 +11,7 @@ import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
-import com.midtrans.sdk.uikit.internal.util.ImageDownloadHelper
+import com.midtrans.sdk.uikit.internal.domain.usecase.DownloadQrImageUseCase
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -46,14 +46,14 @@ class WalletViewModelTest {
     fun chargeQrShouldInvokeSnapCorePay() {
         val snapCore: SnapCore = mock()
         val dateTimeUtil: DateTimeUtil = mock()
-        val imageDownloadHelper: ImageDownloadHelper = mock()
+        val downloadQrImageUseCase: DownloadQrImageUseCase = mock()
         val snapToken = "SnapToken"
         val paymentType = PaymentType.GOPAY
         val eventAnalytics: EventAnalytics = mock()
 
         whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
 
-        val walletViewModel = WalletViewModel(snapCore = snapCore, dateTimeUtil, imageDownloadHelper)
+        val walletViewModel = WalletViewModel(snapCore = snapCore, dateTimeUtil, downloadQrImageUseCase)
         walletViewModel.chargeQrPayment(
             snapToken = snapToken,
             paymentType = paymentType
@@ -112,8 +112,8 @@ class WalletViewModelTest {
 
         whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
 
-        val imageDownloadHelper: ImageDownloadHelper = mock()
-        val walletViewModel = WalletViewModel(snapCore = snapCore, dateTimeUtil, imageDownloadHelper)
+        val downloadQrImageUseCase: DownloadQrImageUseCase = mock()
+        val walletViewModel = WalletViewModel(snapCore = snapCore, dateTimeUtil, downloadQrImageUseCase)
         walletViewModel.chargeQrPayment(
             snapToken = snapToken,
             paymentType = paymentType

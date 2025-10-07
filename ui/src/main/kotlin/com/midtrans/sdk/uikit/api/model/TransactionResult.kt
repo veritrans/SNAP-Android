@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 import com.midtrans.sdk.corekit.api.model.TransactionResult
 
 @Parcelize
-class TransactionResult internal constructor(
+data class TransactionResult internal constructor(
     val status: String,
     val transactionId: String?,
     val paymentType: String,

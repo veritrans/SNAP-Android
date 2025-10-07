@@ -29,7 +29,8 @@ import javax.inject.Singleton
         ViewModelFactoryModule::class,
         ViewModelModule::class,
         CoreModule::class,
-        UtilModule::class
+        UtilModule::class,
+        RepositoryModule::class
     ]
 )
 internal interface UiKitComponent {
