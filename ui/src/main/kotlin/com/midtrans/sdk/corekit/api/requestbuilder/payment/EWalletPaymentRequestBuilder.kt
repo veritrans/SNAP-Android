@@ -27,8 +27,9 @@ class EWalletPaymentRequestBuilder : PaymentRequestBuilder() {
                 )
             }
             PaymentType.SHOPEEPAY,
-            PaymentType.GOPAY -> PaymentRequest(paymentType = paymentType)
-            else -> throw InvalidPaymentTypeException("Supported PaymentType are: GOPAY, SHOPEEPAY, SHOPEEPAY_QRIS")
+            PaymentType.GOPAY,
+            PaymentType.OTHER_QRIS -> PaymentRequest(paymentType = paymentType)
+            else -> throw InvalidPaymentTypeException("Supported PaymentType are: GOPAY, SHOPEEPAY, SHOPEEPAY_QRIS, OTHER_QRIS")
         }
     }
 }

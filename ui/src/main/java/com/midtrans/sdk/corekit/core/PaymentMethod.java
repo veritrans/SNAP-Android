@@ -27,5 +27,6 @@ public enum PaymentMethod {
     INDOMARET,
     AKULAKU,
     ALFAMART,
-    KREDIVO
+    KREDIVO,
+    OTHER_QRIS
 }

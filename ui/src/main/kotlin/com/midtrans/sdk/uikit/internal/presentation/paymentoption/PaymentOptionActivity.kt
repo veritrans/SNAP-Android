@@ -664,6 +664,7 @@ class PaymentOptionActivity : BaseActivity() {
             Pair(PaymentType.SHOPEEPAY_QRIS, eWalletPaymentLauncher),
             Pair(PaymentType.GOPAY, eWalletPaymentLauncher),
             Pair(PaymentType.GOPAY_QRIS, eWalletPaymentLauncher),
+            Pair(PaymentType.OTHER_QRIS, eWalletPaymentLauncher),
             Pair(PaymentType.ALFAMART, cStorePaymentLauncher),
             Pair(PaymentType.INDOMARET, cStorePaymentLauncher),
             Pair(PaymentType.AKULAKU, payLaterPaymentLauncher),

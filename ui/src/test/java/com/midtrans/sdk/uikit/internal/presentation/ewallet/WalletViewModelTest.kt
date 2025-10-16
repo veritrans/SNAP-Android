@@ -11,6 +11,7 @@ import com.midtrans.sdk.corekit.api.model.TransactionResponse
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
 import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
+import com.midtrans.sdk.uikit.internal.domain.usecase.DownloadQrImageUseCase
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -45,13 +46,14 @@ class WalletViewModelTest {
     fun chargeQrShouldInvokeSnapCorePay() {
         val snapCore: SnapCore = mock()
         val dateTimeUtil: DateTimeUtil = mock()
+        val downloadQrImageUseCase: DownloadQrImageUseCase = mock()
         val snapToken = "SnapToken"
         val paymentType = PaymentType.GOPAY
         val eventAnalytics: EventAnalytics = mock()
 
         whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
 
-        val walletViewModel = WalletViewModel(snapCore = snapCore, dateTimeUtil)
+        val walletViewModel = WalletViewModel(snapCore = snapCore, dateTimeUtil, downloadQrImageUseCase)
         walletViewModel.chargeQrPayment(
             snapToken = snapToken,
             paymentType = paymentType
@@ -110,7 +112,8 @@ class WalletViewModelTest {
 
         whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
 
-        val walletViewModel = WalletViewModel(snapCore = snapCore, dateTimeUtil)
+        val downloadQrImageUseCase: DownloadQrImageUseCase = mock()
+        val walletViewModel = WalletViewModel(snapCore = snapCore, dateTimeUtil, downloadQrImageUseCase)
         walletViewModel.chargeQrPayment(
             snapToken = snapToken,
             paymentType = paymentType
@@ -146,7 +149,7 @@ class WalletViewModelTest {
         `when`(dateTimeUtil.getExpiredHour(any())).thenReturn("00:00:01")
 
         val walletViewModel =
-            WalletViewModel(snapCore = snapCore, dateTimeUtil)
+            WalletViewModel(snapCore = snapCore, dateTimeUtil, mock())
         walletViewModel.chargeQrPayment(
             snapToken = snapToken,
             paymentType = paymentType
@@ -186,7 +189,7 @@ class WalletViewModelTest {
         `when`(dateTimeUtil.getExpiredHour(any())).thenReturn("00:00:01")
 
         val walletViewModel =
-            WalletViewModel(snapCore = snapCore, dateTimeUtil)
+            WalletViewModel(snapCore = snapCore, dateTimeUtil, mock())
         walletViewModel.chargeQrPayment(
             snapToken = snapToken,
             paymentType = paymentType
@@ -221,7 +224,7 @@ class WalletViewModelTest {
         val eventAnalytics: EventAnalytics = mock()
 
         whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
-        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil)
+        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil, mock())
 
         walletViewModel.trackSnapButtonClicked(
             ctaName = "cta-name",
@@ -241,7 +244,7 @@ class WalletViewModelTest {
         val eventAnalytics: EventAnalytics = mock()
 
         whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
-        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil)
+        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil, mock())
 
         walletViewModel.trackHowToPayClicked(paymentType = PaymentType.GOPAY)
         verify(eventAnalytics).trackSnapHowToPayViewed(
@@ -257,7 +260,7 @@ class WalletViewModelTest {
         val eventAnalytics: EventAnalytics = mock()
 
         whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
-        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil)
+        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil, mock())
 
         walletViewModel.trackOpenDeeplink(paymentType = PaymentType.GOPAY)
         verify(eventAnalytics).trackSnapOpenDeeplink(
@@ -273,7 +276,7 @@ class WalletViewModelTest {
         val eventAnalytics: EventAnalytics = mock()
 
         whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
-        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil)
+        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil, mock())
 
         walletViewModel.trackReloadClicked(paymentType = PaymentType.GOPAY)
         verify(eventAnalytics).trackSnapPaymentNumberButtonRetried(
@@ -289,7 +292,7 @@ class WalletViewModelTest {
         val eventAnalytics: EventAnalytics = mock()
 
         whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
-        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil)
+        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil, mock())
 
         walletViewModel.trackOrderDetailsViewed(paymentType = PaymentType.GOPAY)
         verify(eventAnalytics).trackSnapOrderDetailsViewed(
@@ -307,7 +310,7 @@ class WalletViewModelTest {
         val eventAnalytics: EventAnalytics = mock()
 
         whenever(snapCore.getEventAnalytics()) doReturn eventAnalytics
-        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil)
+        val walletViewModel = WalletViewModel(snapCore, dateTimeUtil, mock())
 
         walletViewModel.trackPageViewed(paymentType = PaymentType.GOPAY, stepNumber = 2)
         verify(eventAnalytics).trackSnapPageViewed(

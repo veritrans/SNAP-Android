@@ -1,10 +1,10 @@
 package com.midtrans.sdk.uikit.internal.presentation.ewallet
 
 import android.app.Activity
-import android.content.ClipData.Item
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -36,7 +36,6 @@ import com.midtrans.sdk.uikit.internal.presentation.statusscreen.ErrorScreenActi
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants
 import com.midtrans.sdk.uikit.internal.util.snapSafeBottomPadding
-import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_CODE_201
 import com.midtrans.sdk.uikit.internal.util.UiKitConstants.STATUS_PENDING
 import com.midtrans.sdk.uikit.internal.view.*
 import io.reactivex.Observable
@@ -112,27 +111,12 @@ internal class WalletActivity : BaseActivity() {
         var isTablet = isTabletDevice()
 
         transactionResult?.let { result ->
-            isTablet = when (result.chargeType) {
-                PaymentType.QRIS -> {
-                    true
-                }
-                PaymentType.GOPAY, PaymentType.SHOPEEPAY -> {
-                    false
-                }
-                else -> {
-                    isTabletDevice()
-                }
-            }
+            isTablet = viewModel.getDisplayMode(result, isTabletDevice())
             viewModel.getUsedToken(result)
-            if (result.statusCode == STATUS_CODE_201) {
-                if (!isTablet) {
-                    openDeepLink(result.deeplinkUrl)
-                }
-            }
-        } ?: run {
-            chargeQrPayment()
-            observeLiveData(isTablet)
         }
+        
+        chargeQrPayment()
+        observeLiveData(isTablet)
 
         if (DateTimeUtil.getExpiredSeconds(viewModel.getExpiredHour()) <= 0L && isFirstInit) {
             launchExpiredErrorScreen()
@@ -146,8 +130,17 @@ internal class WalletActivity : BaseActivity() {
                     itemInfo = itemInfo,
                     remainingTimeState = updateExpiredTime().subscribeAsState(initial = "00:00"),
                     qrCodeUrl = viewModel.qrCodeUrlLiveData.observeAsState(initial = ""),
+                    deepLinkUrlState = viewModel.deepLinkUrlLiveData.observeAsState(initial = ""),
                     paymentType = paymentType,
-                    isTablet = isTablet
+                    isTablet = isTablet,
+                    shouldShowQr = viewModel.shouldShowQrCode(paymentType, isTablet),
+                    isExpired = viewModel.isExpired.observeAsState(initial = false).value,
+                    transactionId = viewModel.chargeResultLiveData.observeAsState().value?.transactionId,
+                    onOrderDetailsViewed = { viewModel.trackOrderDetailsViewed(paymentType) },
+                    onSnapButtonClicked = { ctaName -> viewModel.trackSnapButtonClicked(ctaName, paymentType) },
+                    onReloadClicked = { viewModel.trackReloadClicked(paymentType) },
+                    onHowToPayClicked = { viewModel.trackHowToPayClicked(paymentType) },
+                    onDownloadQrCode = { url -> viewModel.downloadQrImage(url) }
                 )
             }
         }
@@ -186,11 +179,35 @@ internal class WalletActivity : BaseActivity() {
             observeDeepLinkUrl()
         }
         observeChargeResult()
+        observeDownloadResult()
+    }
+
+    private fun observeDownloadResult() {
+        viewModel.downloadResultLiveData.observe(this) { result ->
+            when {
+                result.success -> showDownloadSuccessMessage()
+                else -> showDownloadFailureMessage()
+            }
+        }
+    }
+    
+    private fun showDownloadSuccessMessage() {
+        Toast.makeText(this, getString(R.string.qris_saved_to_gallery), Toast.LENGTH_SHORT).show()
+    }
+    
+    private fun showDownloadFailureMessage() {
+        Toast.makeText(this, getString(R.string.failed_to_save_qris), Toast.LENGTH_SHORT).show()
     }
 
     private fun observeDeepLinkUrl() {
         viewModel.deepLinkUrlLiveData.observe(this) { url ->
             deepLinkUrl = url
+        }
+    }
+
+    private fun observeChargeResult() {
+        viewModel.chargeResultLiveData.observe(this) {
+            setResult(it)
         }
     }
 
@@ -210,11 +227,6 @@ internal class WalletActivity : BaseActivity() {
         }
     }
 
-    private fun observeChargeResult() {
-        viewModel.chargeResultLiveData.observe(this) {
-            setResult(it)
-        }
-    }
 
     private fun setResult(data: TransactionResult) {
         val resultIntent = Intent().putExtra(UiKitConstants.KEY_TRANSACTION_RESULT, data)
@@ -228,27 +240,41 @@ internal class WalletActivity : BaseActivity() {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+
     @Composable
     private fun Content(
         totalAmount: String,
         orderId: String,
         qrCodeUrl: State<String>,
+        deepLinkUrlState: State<String>,
         paymentType: String,
         isChargeError: State<Boolean>,
         customerInfo: CustomerInfo?,
         itemInfo: ItemInfo?,
         remainingTimeState: State<String>,
-        isTablet: Boolean = false
+        isTablet: Boolean = false,
+        shouldShowQr: Boolean = false,
+        isExpired: Boolean = false,
+        transactionId: String? = null,
+        onOrderDetailsViewed: () -> Unit = {},
+        onSnapButtonClicked: (String) -> Unit = {},
+        onReloadClicked: () -> Unit = {},
+        onHowToPayClicked: () -> Unit = {},
+        onDownloadQrCode: (String) -> Unit = {}
     ) {
         val remainingTime by remember { remainingTimeState }
         var expanding by remember {
             mutableStateOf(false)
         }
         var error by remember { mutableStateOf(false) }
-        var loading by remember { mutableStateOf(false) }
+        var loading = if (shouldShowQr) {
+            qrCodeUrl.value.isBlank() && !isChargeError.value
+        } else {
+            deepLinkUrlState.value.isBlank() && !isChargeError.value
+        }
 
         if (DateTimeUtil.getExpiredSeconds(remainingTime) <= 0L && isFirstInit) {
-            if (viewModel.isExpired.value == true) {
+            if (isExpired) {
                 launchExpiredErrorScreen()
             } else {
                 val data = Intent()
@@ -256,7 +282,7 @@ internal class WalletActivity : BaseActivity() {
                     UiKitConstants.KEY_TRANSACTION_RESULT,
                     TransactionResult(
                         status = STATUS_PENDING,
-                        transactionId = viewModel.chargeResultLiveData.value?.transactionId ?: STATUS_PENDING,
+                        transactionId = transactionId ?: STATUS_PENDING,
                         paymentType = paymentType
                     )
                 )
@@ -293,7 +319,7 @@ internal class WalletActivity : BaseActivity() {
                     }
                 },
                 expandingContent = {
-                    viewModel.trackOrderDetailsViewed(paymentType)
+                    onOrderDetailsViewed()
                     SnapPaymentOrderDetails(
                         customerInfo = customerInfo,
                         itemInfo = itemInfo
@@ -312,7 +338,7 @@ internal class WalletActivity : BaseActivity() {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(1f)
-                            .height(if (isTablet || isChargeError.value) 300.dp else 1.dp),
+                            .height(if (shouldShowQr || isChargeError.value || loading) 300.dp else 1.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         if (error || isChargeError.value) {
@@ -324,11 +350,8 @@ internal class WalletActivity : BaseActivity() {
                                     style = SnapButton.Style.TERTIARY,
                                     text = stringResource(id = R.string.qr_reload),
                                     onClick = {
-                                        viewModel.trackSnapButtonClicked(
-                                            ctaName = getStringResourceInEnglish(R.string.qr_reload),
-                                            paymentType = paymentType
-                                        )
-                                        viewModel.trackReloadClicked(paymentType = paymentType)
+                                        onSnapButtonClicked(getStringResourceInEnglish(R.string.qr_reload))
+                                        onReloadClicked()
                                         error = false
                                         if (isChargeError.value) {
                                             chargeQrPayment()
@@ -347,8 +370,8 @@ internal class WalletActivity : BaseActivity() {
                                 AsyncImage(
                                     model = qrCodeUrl.value, contentDescription = null,
                                     modifier = Modifier
-                                        .width(if (isTablet) 300.dp else 1.dp)
-                                        .height(if (isTablet) 300.dp else 1.dp),
+                                        .width(if (shouldShowQr) 300.dp else 1.dp)
+                                        .height(if (shouldShowQr) 300.dp else 1.dp),
                                     onError = {
                                         error = true
                                         loading = false
@@ -381,13 +404,13 @@ internal class WalletActivity : BaseActivity() {
                         iconResId = R.drawable.ic_help,
                         title = stringResource(id = R.string.payment_instruction_how_to_pay_title),
                         onExpandClick = {
-                            viewModel.trackHowToPayClicked(paymentType)
+                            onHowToPayClicked()
                             isExpanded = !isExpanded
                         },
                         expandingContent = {
                             AnimatedVisibility(visible = isExpanded) {
                                 val instruction =
-                                    if (isTablet) paymentInstructionQr else paymentInstructionDeepLink
+                                    if (shouldShowQr) paymentInstructionQr else paymentInstructionDeepLink
                                 instruction[paymentType]?.let {
                                     SnapNumberedList(list = stringArrayResource(id = it).toList())
                                 }
@@ -397,8 +420,23 @@ internal class WalletActivity : BaseActivity() {
                 }
             }
 
+            if (paymentType == PaymentType.OTHER_QRIS) {
+                SnapButton(
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                        .padding(horizontal = 16.dp),
+                    style = SnapButton.Style.TERTIARY,
+                    text = stringResource(id = R.string.download_qris),
+                    enabled = qrCodeUrl.value.isNotBlank() && !loading && !error && !isChargeError.value,
+                    onClick = {
+                        onSnapButtonClicked(getStringResourceInEnglish(R.string.download_qris))
+                        onDownloadQrCode(qrCodeUrl.value)
+                    }
+                )
+            }
+
             val ctaId =
-                if (isTablet) R.string.i_have_already_paid else R.string.redirection_instruction_gopay_cta
+                if (shouldShowQr) R.string.i_have_already_paid else R.string.redirection_instruction_gopay_cta
             SnapButton(
                 text = stringResource(ctaId),
                 modifier = Modifier
@@ -408,12 +446,9 @@ internal class WalletActivity : BaseActivity() {
                 enabled = !error && !loading,
                 style = if (!error && !loading) SnapButton.Style.PRIMARY else SnapButton.Style.PRIMARY
             ) {
-                viewModel.trackSnapButtonClicked(
-                    ctaName = getStringResourceInEnglish(ctaId),
-                    paymentType = paymentType
-                )
-                if (!isTablet) {
-                    openDeepLink(deepLinkUrl)
+                onSnapButtonClicked(getStringResourceInEnglish(ctaId))
+                if (!isTablet && paymentType != PaymentType.OTHER_QRIS) {
+                    openDeepLink(deepLinkUrlState.value)
                 } else {
                     onBackPressed()
                 }
@@ -437,15 +472,19 @@ internal class WalletActivity : BaseActivity() {
             paymentType = PaymentType.GOPAY,
             remainingTimeState = remember { mutableStateOf("00:00") },
             qrCodeUrl = remember { mutableStateOf("http://kkkk") },
-            isTablet = true
+            isTablet = true,
+            deepLinkUrlState = remember { mutableStateOf("http://kkkk") },
+            shouldShowQr = false,
+            isExpired = false,
+            transactionId = "PREVIEW-TXN-123"
         )
-
     }
 
     private val paymentInstructionQr by lazy {
         mapOf(
             Pair(PaymentType.GOPAY_QRIS, R.array.scan_qr_instruction_gopay),
-            Pair(PaymentType.SHOPEEPAY_QRIS, R.array.scan_qr_instruction_shopeepay_message)
+            Pair(PaymentType.SHOPEEPAY_QRIS, R.array.scan_qr_instruction_shopeepay_message),
+            Pair(PaymentType.OTHER_QRIS, R.array.scan_qr_instruction_other_qris)
         )
     }
 
@@ -461,7 +500,8 @@ internal class WalletActivity : BaseActivity() {
             Pair(PaymentType.GOPAY, R.string.payment_title_gopay),
             Pair(PaymentType.GOPAY_QRIS, R.string.payment_title_gopay),
             Pair(PaymentType.SHOPEEPAY, R.string.payment_title_shopeepay),
-            Pair(PaymentType.SHOPEEPAY_QRIS, R.string.payment_title_shopeepay)
+            Pair(PaymentType.SHOPEEPAY_QRIS, R.string.payment_title_shopeepay),
+            Pair(PaymentType.OTHER_QRIS, R.string.payment_title_other_qris)
         )
     }
 

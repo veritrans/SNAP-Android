@@ -10,6 +10,7 @@ import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.CREDIT_CARD
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.GOPAY
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.GOPAY_QRIS
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.KLIK_BCA
+import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.OTHER_QRIS
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY_QRIS
 import com.midtrans.sdk.corekit.internal.analytics.EventAnalytics
@@ -251,7 +252,7 @@ internal class PaymentOptionViewModelTest {
     @Test
     fun initiateListWhenDeviceIsTabletShouldReturnListForTablet() {
         val result = viewModel.initiateList(providePaymentMethodList(), true).paymentMethods
-        assertTrue(result.size == 5)
+        assertTrue(result.size == 6)
         assertThat(
             result,
             hasItems(
@@ -274,6 +275,10 @@ internal class PaymentOptionViewModelTest {
                 allOf(
                     HasPropertyWithValue("type", equalTo(GOPAY_QRIS)),
                     HasPropertyWithValue.hasProperty("icons", hasSize<String>(2))
+                ),
+                allOf(
+                    HasPropertyWithValue("type", equalTo(OTHER_QRIS)),
+                    HasPropertyWithValue.hasProperty("icons", hasSize<String>(4))
                 )
             )
         )
@@ -282,7 +287,7 @@ internal class PaymentOptionViewModelTest {
     @Test
     fun initiateListWhenDeviceIsPhoneShouldReturnListForPhone() {
         val result = viewModel.initiateList(providePaymentMethodList(), false).paymentMethods
-        assertTrue(result.size == 5)
+        assertTrue(result.size == 6)
         assertThat(
             result,
             hasItems(
@@ -305,6 +310,10 @@ internal class PaymentOptionViewModelTest {
                 allOf(
                     HasPropertyWithValue("type", equalTo(GOPAY)),
                     HasPropertyWithValue.hasProperty("icons", hasSize<String>(1))
+                ),
+                allOf(
+                    HasPropertyWithValue("type", equalTo(OTHER_QRIS)),
+                    HasPropertyWithValue.hasProperty("icons", hasSize<String>(4))
                 )
             )
         )
@@ -361,6 +370,10 @@ internal class PaymentOptionViewModelTest {
             ),
             PaymentMethod(
                 type = GOPAY_QRIS,
+                channels = emptyList()
+            ),
+            PaymentMethod(
+                type = OTHER_QRIS,
                 channels = emptyList()
             )
         )

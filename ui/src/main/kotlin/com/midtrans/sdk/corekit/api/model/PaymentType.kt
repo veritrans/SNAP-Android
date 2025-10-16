@@ -30,7 +30,8 @@ class PaymentType {
         UOB_EZPAY_APP,
         UOB_EZPAY,
         SHOPEEPAY_QRIS,
-        GOPAY_QRIS
+        GOPAY_QRIS,
+        OTHER_QRIS
     )
     @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
     annotation class Def
@@ -63,6 +64,7 @@ class PaymentType {
         const val SHOPEEPAY_QRIS = "shopeepay_qris"
         const val GOPAY_QRIS = "gopay_qris"
         const val QRIS = "qris"
+        const val OTHER_QRIS = "other_qris"
         const val GOPAY = "gopay"
         const val SHOPEEPAY = "shopeepay"
 

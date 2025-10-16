@@ -28,6 +28,7 @@ class PaymentType {
         UOB_EZPAY_WEB,
         UOB_EZPAY_APP,
         UOB_EZPAY,
+        OTHER_QRIS,
     )
     @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
     annotation class Def
@@ -59,6 +60,7 @@ class PaymentType {
         //E-WALLET
         const val GOPAY = "gopay"
         const val SHOPEEPAY = "shopeepay"
+        const val OTHER_QRIS = "other_qris"
 
         //PAY LATER
         const val AKULAKU = "akulaku"

@@ -14,11 +14,16 @@ import com.midtrans.sdk.corekit.internal.analytics.PageName
 import com.midtrans.sdk.uikit.internal.base.BaseViewModel
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil
 import com.midtrans.sdk.uikit.internal.util.DateTimeUtil.TIME_ZONE_UTC
+import com.midtrans.sdk.uikit.internal.model.DownloadResult
+import com.midtrans.sdk.uikit.internal.domain.usecase.DownloadQrImageUseCase
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 internal class WalletViewModel @Inject constructor(
     private val snapCore: SnapCore,
-    private val datetimeUtil: DateTimeUtil
+    private val datetimeUtil: DateTimeUtil,
+    private val downloadQrImageUseCase: DownloadQrImageUseCase
 ) : BaseViewModel() {
 
     init {
@@ -31,6 +36,7 @@ internal class WalletViewModel @Inject constructor(
     private var _transactionId: String? = null
     private val _isQrChargeErrorLiveData = MutableLiveData<Boolean>()
     private val _isExpired = MutableLiveData<Boolean>()
+    private val _downloadResultLiveData = MutableLiveData<DownloadResult>()
 
     val qrCodeUrlLiveData: LiveData<String> = _qrCodeUrlLiveData
     val deepLinkUrlLiveData: LiveData<String> = _deepLinkUrlLiveData
@@ -38,6 +44,7 @@ internal class WalletViewModel @Inject constructor(
     var expiredTime = 0L
     val isQrChargeErrorLiveData: LiveData<Boolean> = _isQrChargeErrorLiveData
     val isExpired: LiveData<Boolean> = _isExpired
+    val downloadResultLiveData: LiveData<DownloadResult> = _downloadResultLiveData
 
     fun chargeQrPayment(
         snapToken: String,
@@ -68,7 +75,7 @@ internal class WalletViewModel @Inject constructor(
                         _chargeResultLiveData.value = TransactionResult(
                             status = transactionStatus.orEmpty(),
                             transactionId = transactionId.orEmpty(),
-                            paymentType = paymentType
+                            paymentType = this.paymentType.orEmpty()
                         )
                     }
                     trackSnapChargeResult(
@@ -105,7 +112,7 @@ internal class WalletViewModel @Inject constructor(
         result.deeplinkUrl?.let { _deepLinkUrlLiveData.value = it }
         result.gopayExpirationRaw?.let { expiredTime = parseTime(it) }
         result.shopeepayExpirationRaw?.let { expiredTime = parseTime(it) }
-        result.qrisUrl?.let { expiredTime = parseTime(it) }
+        result.qrisExpirationRaw?.let { expiredTime = parseTime(it) }
     }
 
     private fun parseTime(dateString: String): Long {
@@ -123,6 +130,7 @@ internal class WalletViewModel @Inject constructor(
             PaymentType.GOPAY_QRIS -> PageName.GOPAY_QR_PAGE
             PaymentType.SHOPEEPAY -> PageName.SHOPEEPAY_DEEPLINK_PAGE
             PaymentType.SHOPEEPAY_QRIS -> PageName.SHOPEEPAY_QR_PAGE
+            PaymentType.OTHER_QRIS -> PageName.OTHER_QRIS_PAGE
             else -> ""
         }
     }
@@ -184,6 +192,44 @@ internal class WalletViewModel @Inject constructor(
     fun setDefaultExpiryTime(expiryTime: String?) {
         expiryTime?.let {
             expiredTime = parseTime(it)
+        }
+    }
+
+    fun shouldShowQrCode(paymentType: String, isTablet: Boolean): Boolean {
+        return isTablet || paymentType == PaymentType.OTHER_QRIS
+    }
+
+
+    fun getDisplayMode(result: TransactionResponse?, isTabletDevice: Boolean): Boolean {
+        return result?.let {
+            when (it.chargeType) {
+                PaymentType.QRIS, PaymentType.OTHER_QRIS -> true
+                PaymentType.GOPAY, PaymentType.SHOPEEPAY -> false
+                else -> isTabletDevice
+            }
+        } ?: isTabletDevice
+    }
+    fun downloadQrImage(imageUrl: String) {
+        observe {
+            downloadQrImageUseCase(imageUrl)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { success ->
+                        _downloadResultLiveData.value = DownloadResult(
+                            success = success,
+                            requiresPermission = false,
+                            imageUrl = null
+                        )
+                    },
+                    { throwable ->
+                        _downloadResultLiveData.value = DownloadResult(
+                            success = false,
+                            requiresPermission = false,
+                            imageUrl = null
+                        )
+                    }
+                )
         }
     }
 

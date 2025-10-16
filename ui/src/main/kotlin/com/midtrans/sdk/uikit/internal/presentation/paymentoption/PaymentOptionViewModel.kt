@@ -23,6 +23,7 @@ import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.GOPAY_QRIS
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.INDOMARET
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.KLIK_BCA
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.KREDIVO
+import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.OTHER_QRIS
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.OTHER_VA
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.PERMATA_VA
 import com.midtrans.sdk.corekit.api.model.PaymentType.Companion.SHOPEEPAY
@@ -83,6 +84,7 @@ internal class PaymentOptionViewModel @Inject constructor(
                 || (type == GOPAY_QRIS && isTabletDevice)
                 || (type == SHOPEEPAY && !isTabletDevice)
                 || (type == SHOPEEPAY_QRIS && isTabletDevice)
+                || type == OTHER_QRIS
     }
 
     private fun getIcons(type: String, channels: List<String>, isTabletDevice: Boolean): List<Int> {
@@ -118,6 +120,14 @@ internal class PaymentOptionViewModel @Inject constructor(
                     R.drawable.ic_outline_qris_40
                 )
             }
+            OTHER_QRIS -> {
+                listOf(
+                    R.drawable.ic_outline_qris_40,
+                    R.drawable.ic_outline_dana_40,
+                    R.drawable.ic_outline_ovo_40,
+                    R.drawable.ic_outline_linkaja_40
+                )
+            }
             INDOMARET -> listOf(R.drawable.ic_outline_indomaret_40, R.drawable.ic_outline_isaku_40)
             ALFAMART -> listOf(
                 R.drawable.ic_outline_alfamart_40,
@@ -145,6 +155,8 @@ internal class PaymentOptionViewModel @Inject constructor(
             SHOPEEPAY -> R.string.payment_title_shopeepay
             SHOPEEPAY_QRIS -> R.string.payment_summary_shopeepay
             GOPAY -> R.string.payment_title_gopay
+            GOPAY_QRIS -> R.string.payment_summary_gopay
+            OTHER_QRIS -> R.string.payment_title_other_qris
             else -> R.string.payment_summary_gopay
         }
     }

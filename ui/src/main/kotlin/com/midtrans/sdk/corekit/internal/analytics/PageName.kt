@@ -10,6 +10,7 @@ class PageName {
         GOPAY_DEEPLINK_PAGE,
         SHOPEEPAY_QR_PAGE,
         SHOPEEPAY_DEEPLINK_PAGE,
+        OTHER_QRIS_PAGE,
         INDOMARET_PAGE,
         ALFAMART_PAGE,
         AKULAKU_PAGE,
@@ -43,6 +44,7 @@ class PageName {
         const val GOPAY_DEEPLINK_PAGE = "Gopay Deeplink Instruction"
         const val SHOPEEPAY_QR_PAGE = "Shopeepay QR page"
         const val SHOPEEPAY_DEEPLINK_PAGE = "Shopeepay Deeplink Instruction"
+        const val OTHER_QRIS_PAGE = "Other QRIS Page"
         const val INDOMARET_PAGE = "Indomaret Page"
         const val ALFAMART_PAGE = "Alfamart Page"
         const val AKULAKU_PAGE = "Akulaku Instruction"

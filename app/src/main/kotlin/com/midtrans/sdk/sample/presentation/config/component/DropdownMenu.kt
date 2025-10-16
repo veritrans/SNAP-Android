@@ -137,6 +137,7 @@ fun AlertDialogDropdownMenu(
 
                 ListItem("Gopay", PaymentType.GOPAY, isSelected = false),
                 ListItem("ShopeePay", PaymentType.SHOPEEPAY, isSelected = false),
+                ListItem("Other QRIS", PaymentType.OTHER_QRIS, isSelected = false),
 
                 ListItem("KlikBCA", PaymentType.KLIK_BCA, isSelected = false),
                 ListItem("BCA KlikPay", PaymentType.BCA_KLIKPAY, isSelected = false),
