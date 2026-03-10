@@ -1,5 +1,14 @@
 # Snap SDK Android
 
+>[!important]
+>
+>❗️IMPORTANT NOTICE
+>
+>Starting June 2026, we will gradually cease support for Mobile SDK in Midtrans. We encourage you in the meantime to start migrating to our Snap Checkout or Core API to ensure you're getting the best experience and security standard for your payment gateway implementation.
+>
+>For new merchants onboarding/integrating after March 6th 2026, please use our Core API or Snap Checkout instead as newer integration will not be supported. This page will be maintained for our existing users, until support is completely ceased, to give enough time for merchants to migrate.
+
+
 
 ### Overview
 
