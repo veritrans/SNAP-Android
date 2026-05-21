@@ -10,16 +10,6 @@
 >Should you have any questions, please do not leave any questions in this repo. Please contact our support instead at [support@midtrans.com](mailto:email@example.com) or chat with our support team [here](https://midtrans.com/contact-us).
 
 
->[!important]
->
->❗️IMPORTANT NOTICE
->
->Starting June 2026, we will gradually cease support for Mobile SDK in Midtrans. We encourage you in the meantime to start migrating to our Snap Checkout or Core API to ensure you're getting the best experience and security standard for your payment gateway implementation.
->
->For new merchants onboarding/integrating after March 6th 2026, please use our Core API or Snap Checkout instead as newer integration will not be supported. This page will be maintained for our existing users, until support is completely ceased, to give enough time for merchants to migrate.
-
-
-
 ### Overview
 
 Midtrans's mobile Snap SDK helps integrating Midtrans's services into a mobile app. This makes it easier for merchants to add payment capabilities to their mobile app, without having to develop everything from scratch. By using Midtrans's mobile Snap SDK, merchants can focus on just building their own app without worrying about the payment integration.
