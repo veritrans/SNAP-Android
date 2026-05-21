@@ -1,5 +1,15 @@
 # Snap SDK Android
 
+>[!IMPORTANT]
+>❗️IMPORTANT NOTICE
+>
+>We would like to inform you that the Mobile SDK for both iOS and Android is being deprecated. Effective on June 2026, all support for Mobile SDK will be fully discontinued.
+>
+>Midtrans strongly recommends starting migrating to use [Midtrans Core API](https://docs.midtrans.com/docs/custom-interface-core-api)
+>
+>Should you have any questions, please do not leave any questions in this repo. Please contact our support instead at [support@midtrans.com](mailto:email@example.com) or chat with our support team [here](https://midtrans.com/contact-us).
+
+
 >[!important]
 >
 >❗️IMPORTANT NOTICE
